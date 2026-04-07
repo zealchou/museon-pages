@@ -46,11 +46,12 @@ body {
 .slide-inner {
   width: 90%;
   max-width: 1200px;
-  height: 85%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
+  transform-origin: top center;
 }
 
 /* ===== Typography ===== */
@@ -528,7 +529,7 @@ p, li {
         </div>
       </div>
       <div class="anim-5">
-        <div class="photo-frame" style="height:460px; border-radius:20px;">
+        <div class="photo-frame" style="height:min(460px,52vh); border-radius:20px;">
           <img src="hanhan-assets/aerial_yoga.jpg" alt="空中瑜珈" style="object-position: center center;">
           <div class="photo-badge" style="background:rgba(61,43,31,0.75);">空中瑜珈</div>
         </div>
@@ -586,16 +587,16 @@ p, li {
       </div>
       <div class="anim-5">
         <div class="photo-grid-2">
-          <div class="photo-frame" style="height:160px;">
+          <div class="photo-frame" style="height:min(160px,18vh);">
             <img src="hanhan-assets/before_severe_1.jpg" alt="皮膚狀況">
           </div>
-          <div class="photo-frame" style="height:160px;">
+          <div class="photo-frame" style="height:min(160px,18vh);">
             <img src="hanhan-assets/before_severe_2.jpg" alt="皮膚狀況">
           </div>
-          <div class="photo-frame" style="height:160px;">
+          <div class="photo-frame" style="height:min(160px,18vh);">
             <img src="hanhan-assets/before_severe_3.jpg" alt="皮膚狀況">
           </div>
-          <div class="photo-frame" style="height:160px;">
+          <div class="photo-frame" style="height:min(160px,18vh);">
             <img src="hanhan-assets/before_severe_4.jpg" alt="皮膚狀況">
           </div>
         </div>
@@ -684,11 +685,11 @@ p, li {
       </div>
       <div class="anim-5">
         <div style="display:flex; flex-direction:column; gap:1rem;">
-          <div class="photo-frame" style="height:280px;">
+          <div class="photo-frame" style="height:min(280px,30vh);">
             <img src="hanhan-assets/progress_collage.jpg" alt="改善過程">
             <div class="photo-badge">改善歷程</div>
           </div>
-          <div class="photo-frame" style="height:280px;">
+          <div class="photo-frame" style="height:min(280px,30vh);">
             <img src="hanhan-assets/progress_collage_2.jpg" alt="持續改善">
             <div class="photo-badge">持續進步</div>
           </div>
@@ -703,7 +704,7 @@ p, li {
   <div class="slide-inner">
     <div class="two-col">
       <div class="anim-1">
-        <div class="photo-frame" style="height:480px;">
+        <div class="photo-frame" style="height:min(480px,58vh);">
           <img src="hanhan-assets/before_after_best.jpg" alt="前後對比">
           <div class="photo-label" style="display:flex; justify-content:space-between; padding:1.5rem;">
             <span>BEFORE</span>
@@ -811,10 +812,10 @@ p, li {
       </div>
       <div class="anim-5">
         <div style="display:flex; flex-direction:column; gap:1rem;">
-          <div class="photo-frame" style="height:200px;">
+          <div class="photo-frame" style="height:min(200px,22vh);">
             <img src="hanhan-assets/team_event_1.jpg" alt="團隊活動" style="object-position: top center;">
           </div>
-          <div class="photo-frame" style="height:200px;">
+          <div class="photo-frame" style="height:min(200px,22vh);">
             <img src="hanhan-assets/award_group.jpg" alt="表揚大會">
             <div class="photo-badge">2026 表揚大會</div>
           </div>
@@ -913,7 +914,7 @@ p, li {
       <div class="gold-line-center" style="margin:1rem auto 0;"></div>
     </div>
     <div class="anim-2" style="width:100%; max-width:560px; margin-bottom:1.5rem;">
-      <div class="photo-frame" style="height:290px; border-radius:16px; overflow:hidden;">
+      <div class="photo-frame" style="height:min(290px,35vh); border-radius:16px; overflow:hidden;">
         <img src="hanhan-assets/closing_photo.jpg" alt="涵涵" style="width:100%; height:100%; object-fit:cover; object-position:top center;">
       </div>
     </div>
@@ -985,6 +986,58 @@ document.addEventListener('touchend', (e) => {
 });
 
 document.getElementById('total').textContent = total;
+
+// ===== Auto-fit: scale down slide-inner if content overflows =====
+function autoFitSlides() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const isMobile = vw <= 768;
+  if (isMobile) return; // mobile uses scroll layout, skip
+
+  const reserved = vh * 0.10; // 5% top + 5% bottom breathing room
+
+  slides.forEach((slide) => {
+    const inner = slide.querySelector('.slide-inner');
+    if (!inner) return;
+
+    // Reset transform to measure natural height
+    inner.style.transform = 'scale(1)';
+
+    // Temporarily reveal to measure (off-screen trick)
+    const wasHidden = !slide.classList.contains('active');
+    let origOpacity, origPointerEvents, origDisplay;
+    if (wasHidden) {
+      origOpacity = slide.style.opacity;
+      origPointerEvents = slide.style.pointerEvents;
+      slide.style.cssText += ';opacity:0!important;pointer-events:none!important;position:absolute!important;top:0!important;left:0!important;z-index:-1!important;display:flex!important;';
+    }
+
+    const innerH = inner.scrollHeight;
+    const available = vh - reserved;
+
+    if (innerH > available) {
+      const scale = (available / innerH).toFixed(4);
+      inner.style.transform = `scale(${scale})`;
+      // Account for shrunk height so slide still centers it
+      const shrunkH = innerH * scale;
+      inner.style.marginTop = `${(available - shrunkH) / 2}px`;
+    } else {
+      inner.style.marginTop = '';
+    }
+
+    if (wasHidden) {
+      slide.style.cssText = slide.style.cssText
+        .replace(/opacity:[^;]+;/g, '')
+        .replace(/pointer-events:[^;]+;/g, '')
+        .replace(/z-index:[^;]+;/g, '');
+    }
+  });
+}
+
+window.addEventListener('load', autoFitSlides);
+window.addEventListener('resize', () => { autoFitSlides(); });
+// Also run after fonts loaded
+document.fonts && document.fonts.ready.then(autoFitSlides);
 </script>
 
 </body>
