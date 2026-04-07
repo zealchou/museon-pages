@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARES 戰神系統 | Zeal × Tracy 合作博弈分析</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ember: #C4502A;
+  --ember-light: #E0714D;
+  --ember-dark: #9A3A1C;
+  --teal: #2A7A6E;
+  --gold: #B8923A;
+  --ink: #12121A;
+  --slate: #5A5A6E;
+  --mist: #9898A8;
+  --border: #E2E0DA;
+  --parchment: #F7F5F0;
+  --snow: #FDFCFA;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.hero {
+  background: linear-gradient(135deg, var(--ink) 0%, #1a1a2e 50%, var(--ember-dark) 100%);
+  color: var(--snow);
+  padding: 80px 40px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(196, 80, 42, 0.15) 0%, transparent 60%);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(196, 80, 42, 0.3);
+  border: 1px solid rgba(196, 80, 42, 0.5);
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .subtitle {
+  font-size: 20px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.section {
+  background: var(--snow);
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 32px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.section-number {
+  display: inline-block;
+  background: var(--ember);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: 12px;
+  vertical-align: middle;
+}
+
+.section h2 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 24px;
+  display: inline;
+  vertical-align: middle;
+}
+
+.section h3 {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ember-dark);
+  margin: 24px 0 12px;
+}
+
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .persona-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 32px; }
+  .hero { padding: 60px 24px 40px; }
+  .section { padding: 24px; }
+  .matrix-table { font-size: 14px; }
+}
+
+.persona-card {
+  background: var(--parchment);
+  border-radius: 12px;
+  padding: 28px;
+  border-left: 4px solid var(--ember);
+  position: relative;
+}
+
+.persona-card.right {
+  border-left-color: var(--teal);
+}
+
+.persona-card .name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.persona-card .type {
+  font-size: 13px;
+  color: var(--slate);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.persona-card p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+.weakness-tag {
+  display: inline-block;
+  background: rgba(196, 80, 42, 0.08);
+  color: var(--ember-dark);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin: 4px 4px 4px 0;
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.matrix-table th {
+  background: var(--ink);
+  color: var(--snow);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.matrix-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+}
+
+.matrix-table tr:nth-child(even) td {
+  background: var(--parchment);
+}
+
+.density {
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+.strategy-flow {
+  background: linear-gradient(135deg, var(--parchment), rgba(42, 122, 110, 0.05));
+  border-radius: 12px;
+  padding: 28px;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+}
+
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.flow-step:last-child { margin-bottom: 0; }
+
+.flow-step::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 40px;
+  bottom: -20px;
+  width: 2px;
+  background: var(--border);
+}
+
+.flow-step:last-child::before { display: none; }
+
+.flow-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ember);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-right: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-content h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.flow-content p {
+  font-size: 14px;
+  color: var(--slate);
+  line-height: 1.8;
+}
+
+.shadow-box {
+  background: linear-gradient(135deg, #1a1a2e 0%, var(--ink) 100%);
+  color: var(--snow);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 20px 0;
+}
+
+.shadow-box h4 {
+  color: var(--ember-light);
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.shadow-box p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.85);
+}
+
+.warning-card {
+  background: rgba(196, 80, 42, 0.06);
+  border-left: 4px solid var(--ember);
+  border-radius: 0 12px 12px 0;
+  padding: 20px 24px;
+  margin: 16px 0;
+}
+
+.warning-card .num {
+  font-weight: 700;
+  color: var(--ember);
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.warning-card .title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.warning-card p {
+  font-size: 15px;
+  color: var(--slate);
+  line-height: 1.8;
+}
+
+.next-step-box {
+  background: linear-gradient(135deg, var(--teal), #1d6058);
+  color: white;
+  border-radius: 16px;
+  padding: 36px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.next-step-box h3 {
+  color: white;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.next-step-box p {
+  font-size: 16px;
+  line-height: 1.9;
+  opacity: 0.9;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.sweetspot-tag {
+  display: inline-block;
+  background: rgba(184, 146, 58, 0.12);
+  color: var(--gold);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0;
+}
+
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--mist);
+  font-size: 13px;
+}
+
+.footer span {
+  color: var(--ember);
+}
+
+.highlight {
+  background: linear-gradient(180deg, transparent 60%, rgba(196, 80, 42, 0.15) 60%);
+  padding: 0 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">⚔️ ARES 戰神系統</div>
+  <h1>Zeal × Tracy 合作博弈分析</h1>
+  <p class="subtitle">雙方人格解碼 · 互補矩陣 · 陽謀陰謀 · 雷區預警</p>
+</div>
+
+<div class="container">
+
+  <!-- 一、雙方人格速寫 -->
+  <div class="section">
+    <span class="section-number">1</span>
+    <h2>雙方人格速寫</h2>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="name">Zeal</div>
+        <div class="type">系統建構型戰略家</div>
+        <p>決策快、數字驅動、行動優先。強項是把模糊問題轉成可執行架構——商業策略 Expert 0.92、顧問銷售 Expert 0.88。</p>
+        <p style="margin-top:12px;">弱點是情緒節奏偏快——跟感性主導型的人合作，容易顯得<span class="highlight">「太快太滿」</span>，讓對方感到被淹沒而不是被支持。</p>
+        <div style="margin-top:14px;">
+          <span class="weakness-tag">節奏過快</span>
+          <span class="weakness-tag">方案密度高</span>
+        </div>
+      </div>
+      <div class="persona-card right">
+        <div class="name">Tracy（子嫻）</div>
+        <div class="type">感性驅動的感知型創作者</div>
+        <p>好奇心 100/100，行動力 22/100。動力來自「這件事有沒有意義」，而不是 ROI。有潛藏的 PM 系統基因（三層配色法、花材角色法），商業面尚未啟動。</p>
+        <p style="margin-top:12px;">最關鍵的觀察：她問的從來不是「怎麼用」，而是<span class="highlight">「為什麼這樣設計」</span>——意義驅動的深度思考者。</p>
+        <div style="margin-top:14px;">
+          <span class="weakness-tag">商業界限薄弱</span>
+          <span class="weakness-tag">缺覆盤機制</span>
+          <span class="weakness-tag">決策慢熱</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 二、互補矩陣 -->
+  <div class="section">
+    <span class="section-number">2</span>
+    <h2>互補矩陣——你們為什麼是好的組合</h2>
+
+    <h3>她缺什麼 → 你能給</h3>
+    <table class="matrix-table">
+      <thead>
+        <tr><th>她的缺口</th><th>你能提供</th><th>密度</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>商業數字錨定</td>
+          <td>Business-12 診斷 + KPI 框架</td>
+          <td class="density">★★★★★</td>
+        </tr>
+        <tr>
+          <td>AI 工具整合</td>
+          <td>MUSEON 自動化文件、課程設計、社群文案</td>
+          <td class="density">★★★★★</td>
+        </tr>
+        <tr>
+          <td>說故事能力</td>
+          <td>C15 故事框架（她自承「超級不會說故事」）</td>
+          <td class="density">★★★★</td>
+        </tr>
+        <tr>
+          <td>課程產品化</td>
+          <td>Course Forge 模組化設計</td>
+          <td class="density">★★★★</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:32px;">你缺什麼 → 她能給</h3>
+    <table class="matrix-table">
+      <thead>
+        <tr><th>你的缺口</th><th>她能提供</th><th>密度</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>女性 / 感性客群入口</td>
+          <td>戀花宅：30-50 歲女性創業者 / 手作愛好者</td>
+          <td class="density">★★★★</td>
+        </tr>
+        <tr>
+          <td>感性產業案例</td>
+          <td>「情感經濟」完整示範，MUSEON 不只服務科技業</td>
+          <td class="density">★★★★</td>
+        </tr>
+        <tr>
+          <td>實體觸點展示</td>
+          <td>西門町店面可作 MUSEON 現場 Demo 場域</td>
+          <td class="density">★★★</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 三、陽謀佈局 -->
+  <div class="section">
+    <span class="section-number">3</span>
+    <h2>陽謀佈局</h2>
+    <p style="color:var(--slate); margin-bottom:20px;">明面策略：「體驗 → 案例 → 增殖」三層漏斗</p>
+
+    <div class="strategy-flow">
+      <div class="flow-step">
+        <div class="flow-icon">1</div>
+        <div class="flow-content">
+          <h4>客戶服務模式（已建立 ✓）</h4>
+          <p>她已經體驗到 MUSEON 能一天產出三份完整文件。認知錨定完成：「MUSEON = 我的 AI 秘書」。</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">2</div>
+        <div class="flow-content">
+          <h4>戀花宅作為 MUSEON 標竿案例（可談）</h4>
+          <p>她提供：感性創業完整故事 + 業界人脈。<br>你提供：免費/優惠顧問資源 + 系統使用權。<br>互換模式，降低財務壓力，同時建立深度綁定。</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">3</div>
+        <div class="flow-content">
+          <h4>Tracy 成為推薦源（未來）</h4>
+          <p>不是代理商，是「我用了，真的很厲害，你去找 Zeal 談」的自然口碑。在美業 / 體驗經濟圈的有機擴散。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sweetspot-tag">💡 對她說的甜頭</div>
+    <p style="font-size:15px; line-height:1.9; color:var(--slate);">4-6 月是她創業第二年的關鍵視窗。她需要的不是更多知識，是<strong>「看得見的成果」</strong>作為繼續前進的燃料。你可以給她的不是工具，是「讓你的方法論值錢的包裝機器」。</p>
+  </div>
+
+  <!-- 四、陰謀分析 -->
+  <div class="section">
+    <span class="section-number">4</span>
+    <h2>陰謀分析</h2>
+    <p style="color:var(--slate); margin-bottom:20px;">不說出口的那層——雙方的隱性動機與真實測試</p>
+
+    <div class="shadow-box">
+      <h4>Tracy 的隱性動機</h4>
+      <p>她花 2.5 小時做 ATHENA 諮詢，說明她要的不只是建議，是<strong>陪跑</strong>——有人「看見她、懂她、陪她走」。如果你只給工具，她會感謝你然後慢慢疏遠。如果你成為她決策路上的參照點，她會變成長期的忠實用戶。</p>
+    </div>
+
+    <div class="shadow-box">
+      <h4>你的隱性測試</h4>
+      <p>Tracy 有沒有能力「消化並落地」MUSEON 的方法論？昨天一天產三份文件是好訊號，但行動力評分 22/100 是警告——她的起點是好奇心驅動，能不能轉化成習慣，需要你設計一個<strong>低阻力的持續使用路徑</strong>。</p>
+    </div>
+
+    <div class="shadow-box">
+      <h4>潛在卡點：定價敏感度</h4>
+      <p>她目前月收應該未到 100 萬，MUSEON 正規費率可能構成壓力。是否願意特殊定價換案例價值——這個決策要在談合作前先在你心裡確認好。</p>
+    </div>
+  </div>
+
+  <!-- 五、合作雷區 -->
+  <div class="section">
+    <span class="section-number">5</span>
+    <h2>合作雷區</h2>
+    <p style="color:var(--slate); margin-bottom:20px;">必須提前繞開的三個坑</p>
+
+    <div class="warning-card">
+      <div class="title"><span class="num">01</span> 不要推得太快</div>
+      <p>她說「努力看」就是她被淹沒的訊號。你的節奏是 10 倍，她的吸收是 1 倍。每次給她一個「可以做的最小行動」，不是整套方案。</p>
+    </div>
+
+    <div class="warning-card">
+      <div class="title"><span class="num">02</span> 讓她覺得是自己的想法</div>
+      <p>她是創作者型，「被給答案」不會讓她買單，「被引導到自己發現答案」才會讓她發自內心執行。你的反問技術在這裡特別有用。</p>
+    </div>
+
+    <div class="warning-card">
+      <div class="title"><span class="num">03</span> 先建信任再談條件</div>
+      <p>她有 INFJ 傾向，有防衛心、需要信任建立期。昨天的諮詢已經打開了門，但門還沒完全開——這次見面的目標不是「談定合作結構」，而是「讓她感覺你真的看見了她」。</p>
+    </div>
+  </div>
+
+  <!-- 六、最小下一步 -->
+  <div class="section">
+    <span class="section-number">6</span>
+    <h2>最小下一步</h2>
+
+    <div class="next-step-box">
+      <h3>下次跟 Tracy 見面前，做一件事</h3>
+      <p>準備一張「她現在是什麼狀態、三個月後可以是什麼狀態」的對比圖——不要用數字，用場景描述。<br><br>例如：「現在你每次做課程簡介要花三天，三個月後你可以花三小時，剩下的時間拿去設計更多課。」<br><br><strong>讓她看到自己，而不是看到 MUSEON 的功能表。</strong></p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>ARES 戰神系統 · <span>MUSEON</span> · 2026-04-08</p>
+  <p style="margin-top:8px;">本報告由 MUSEON AI 決策系統生成，僅供內部策略參考</p>
+</div>
+
+</body>
+</html>
