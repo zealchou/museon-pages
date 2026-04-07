@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中國房地產投資分析報告 2026 | MUSEON</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+    --error: #C4402A;
+    --info: #2A6A8A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #12121A 0%, #1e1a16 60%, #2a1f14 100%);
+    color: white;
+    padding: 72px 48px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(196,80,42,0.15) 0%, transparent 60%);
+  }
+  .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(196,80,42,0.2); border: 1px solid rgba(196,80,42,0.4);
+    border-radius: 20px; padding: 4px 14px;
+    font-size: 12px; font-weight: 500; color: var(--ember-light);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .hero-badge span { width: 6px; height: 6px; background: var(--ember); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 600; line-height: 1.15;
+    margin-bottom: 16px; color: white;
+  }
+  .hero h1 em { font-style: italic; color: var(--ember-light); }
+  .hero-sub { font-size: 18px; color: rgba(255,255,255,0.65); max-width: 680px; line-height: 1.7; margin-bottom: 36px; }
+  .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .hero-meta-item { font-size: 13px; color: rgba(255,255,255,0.45); }
+  .hero-meta-item strong { color: rgba(255,255,255,0.75); margin-right: 4px; }
+
+  .verdict-band { background: var(--ink); color: white; padding: 20px 48px; }
+  .verdict-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .verdict-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mist); }
+  .verdict-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .verdict-tag {
+    padding: 4px 12px; border-radius: 4px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .tag-caution { background: rgba(201,148,58,0.2); color: #e8b35a; border: 1px solid rgba(201,148,58,0.3); }
+  .tag-opportunity { background: rgba(42,122,110,0.2); color: #4ab8a8; border: 1px solid rgba(42,122,110,0.3); }
+  .tag-risk { background: rgba(196,64,42,0.2); color: #e87060; border: 1px solid rgba(196,64,42,0.3); }
+
+  .page { max-width: 1100px; margin: 0 auto; padding: 48px 48px 80px; }
+
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 28px; height: 28px; background: var(--ember); color: white;
+    border-radius: 50%; font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--ink); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--snow); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 22px; position: relative; overflow: hidden;
+  }
+  .stat-card::after { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--ember); }
+  .stat-card.teal::after { background: var(--teal); }
+  .stat-card.gold::after { background: var(--gold); }
+  .stat-label { font-size: 11px; color: var(--mist); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 600; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+  .stat-value.negative { color: var(--error); }
+  .stat-value.positive { color: var(--success); }
+  .stat-value.warn { color: var(--warning); }
+  .stat-note { font-size: 12px; color: var(--slate); }
+
+  .card { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 16px; }
+  .card h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 12px; }
+  .card p { font-size: 15px; color: var(--slate); line-height: 1.75; margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; background: var(--snow); }
+  th { background: var(--ink); color: white; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 16px; text-align: left; }
+  td { padding: 12px 16px; font-size: 14px; color: var(--ink); border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #F2F0EA; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
+  .badge-green { background: rgba(45,138,110,0.12); color: #1e7a60; }
+  .badge-yellow { background: rgba(201,148,58,0.15); color: #a07820; }
+  .badge-red { background: rgba(196,64,42,0.12); color: #a02818; }
+  .badge-blue { background: rgba(42,106,138,0.12); color: #1a5878; }
+
+  .indicator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .indicator-card { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+  .indicator-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .indicator-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .icon-ember { background: rgba(196,80,42,0.1); }
+  .icon-teal { background: rgba(42,122,110,0.1); }
+  .icon-gold { background: rgba(184,146,58,0.1); }
+  .icon-info { background: rgba(42,106,138,0.1); }
+  .indicator-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .indicator-sub { font-size: 11px; color: var(--mist); }
+  .indicator-desc { font-size: 13px; color: var(--slate); line-height: 1.65; }
+  .indicator-threshold { margin-top: 10px; padding: 8px 12px; background: rgba(247,245,240,0.8); border-radius: 6px; border: 1px solid var(--border); font-size: 12px; color: var(--slate); }
+  .indicator-threshold strong { color: var(--ink); }
+
+  .risk-row { display: flex; gap: 12px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .risk-row:last-child { border-bottom: none; }
+  .risk-level { width: 60px; flex-shrink: 0; padding: 4px 0; border-radius: 4px; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+  .risk-l4 { background: rgba(196,64,42,0.12); color: #c4402a; }
+  .risk-l3 { background: rgba(201,148,58,0.15); color: #c9943a; }
+  .risk-l2 { background: rgba(184,146,58,0.1); color: #b8923a; }
+  .risk-l1 { background: rgba(45,138,110,0.1); color: #2d8a6e; }
+  .risk-content { flex: 1; }
+  .risk-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .risk-desc { font-size: 13px; color: var(--slate); line-height: 1.65; }
+
+  .voice-card {
+    background: var(--snow); border: 1px solid var(--border);
+    border-left: 3px solid var(--ember); border-radius: 12px;
+    padding: 24px 28px; margin-bottom: 14px;
+  }
+  .voice-card.teal { border-left-color: var(--teal); }
+  .voice-card.gold { border-left-color: var(--gold); }
+  .voice-org { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .voice-org-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .voice-org-type { font-size: 11px; color: var(--mist); margin-left: 8px; }
+  .voice-quote { font-size: 15px; color: var(--slate); line-height: 1.75; font-style: italic; }
+  .voice-stance { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .strategy-box { background: linear-gradient(135deg, #12121A, #1e1a16); border-radius: 16px; padding: 36px 40px; color: white; }
+  .strategy-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: white; margin-bottom: 20px; }
+  .strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .strategy-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; }
+  .strategy-item-num { font-size: 28px; font-weight: 700; color: var(--ember); line-height: 1; margin-bottom: 8px; }
+  .strategy-item-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 6px; }
+  .strategy-item-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  .city-tier { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .city-block { flex: 1; min-width: 200px; background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  .city-block-tier { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mist); margin-bottom: 8px; }
+  .city-block-name { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .city-block-cities { font-size: 12px; color: var(--slate); margin-bottom: 12px; line-height: 1.6; }
+  .city-block-score { display: flex; align-items: center; gap: 8px; }
+  .score-bar { height: 4px; background: var(--border); border-radius: 2px; flex: 1; }
+  .score-fill { height: 100%; border-radius: 2px; }
+  .fill-high { background: var(--success); width: 85%; }
+  .fill-mid { background: var(--warning); width: 55%; }
+  .fill-low { background: var(--error); width: 25%; }
+  .score-label { font-size: 11px; color: var(--mist); }
+
+  .highlight-box { background: rgba(196,80,42,0.06); border: 1px solid rgba(196,80,42,0.2); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  .highlight-box.teal { background: rgba(42,122,110,0.05); border-color: rgba(42,122,110,0.2); }
+  .highlight-box p { font-size: 14px; color: var(--ink); margin: 0; line-height: 1.65; }
+  .highlight-box strong { color: var(--ember); }
+  .highlight-box.teal strong { color: var(--teal); }
+
+  ul.styled { list-style: none; padding: 0; }
+  ul.styled li { padding: 8px 0 8px 20px; position: relative; font-size: 15px; color: var(--slate); border-bottom: 1px solid var(--border); line-height: 1.7; }
+  ul.styled li:last-child { border-bottom: none; }
+  ul.styled li::before { content: '▸'; position: absolute; left: 0; color: var(--ember); font-size: 10px; top: 10px; }
+  ul.styled li strong { color: var(--ink); }
+
+  .label-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 6px; }
+  .pill-red { background: rgba(196,64,42,0.1); color: var(--error); }
+  .pill-green { background: rgba(45,138,110,0.1); color: var(--success); }
+  .pill-gold { background: rgba(184,146,58,0.1); color: var(--gold); }
+
+  .disclaimer { background: rgba(90,90,110,0.06); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-size: 12px; color: var(--mist); line-height: 1.6; margin-top: 40px; }
+
+  footer { background: var(--ink); color: rgba(255,255,255,0.4); text-align: center; padding: 24px; font-size: 12px; }
+  footer strong { color: rgba(255,255,255,0.7); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span></span> MUSEON 投資研究報告</div>
+    <h1>中國房地產<br><em>投資全面診斷</em></h1>
+    <p class="hero-sub">整合總體經濟、個體市場、開發商風險與五大機構觀點，為投資決策提供多維框架</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>報告日期</strong> 2026 年 4 月</div>
+      <div class="hero-meta-item"><strong>資料截止</strong> 2026 Q1</div>
+      <div class="hero-meta-item"><strong>資料來源</strong> 國家統計局 · CBRE · Goldman Sachs · S&P · UBS</div>
+      <div class="hero-meta-item"><strong>製作</strong> MUSEON AI Research</div>
+    </div>
+  </div>
+</div>
+
+<div class="verdict-band">
+  <div class="verdict-inner">
+    <div>
+      <div class="verdict-label">整體研判</div>
+      <div class="verdict-text">市場處於「政策托底 vs 市場重力」拉鋸期——住宅真正筑底最快 2026 年底，結構性機會優先於整體抄底</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;">
+      <span class="verdict-tag tag-caution">謹慎觀察</span>
+      <span class="verdict-tag tag-opportunity">結構機會</span>
+      <span class="verdict-tag tag-risk">尾部風險</span>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- S1: 市場現況 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">市場現況：數字說話</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">2025 全年開發投資</div>
+        <div class="stat-value negative">▼17.2%</div>
+        <div class="stat-note">總額 ¥82,788 億；住宅 ¥63,514 億（-16.3%）</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">70 城房價指數（2026/2）</div>
+        <div class="stat-value negative">-3.2%</div>
+        <div class="stat-note">同比；連跌第 32 個月（四年未止）</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-label">2026 Q1 開發投資</div>
+        <div class="stat-value negative">▼11.1%</div>
+        <div class="stat-note">¥9,612 億；降幅較去年全年收窄 6.1 個百分點</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">2025 新房銷售額</div>
+        <div class="stat-value negative">-12.6%</div>
+        <div class="stat-note">¥83,937 億；銷售面積 -8.7%</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-label">一線城市新房（2026/2）</div>
+        <div class="stat-value warn">環比持平</div>
+        <div class="stat-note">一線止跌；二三線仍 -0.2% / -0.3%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">商業地產投資預測（2026）</div>
+        <div class="stat-value positive">+5~10%</div>
+        <div class="stat-note">CBRE 預測；辦公淨吸納 +10~15%（AI 科技驅動）</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>📊 <strong>一句話定調：</strong>住宅市場仍在「跌幅收窄」的磨底階段，真正止跌最早 2026 年底；商業地產（核心城市辦公）因 AI 科技業擴張出現局部回暖。兩個市場節奏完全不同，不能混為一談。</p>
+    </div>
+
+    <div class="card">
+      <h3>三步走框架：你現在在哪裡？</h3>
+      <p>機構普遍認為大陸房市復甦路徑是「<strong>交易量止跌 → 房價穩定 → 投資回升</strong>」的三步走。</p>
+      <p>目前（2026 Q1）仍在<strong>第一步尾聲</strong>——交易量跌幅在緩和，但尚未進入量升帶價升的第二步。等待第二步確認才是進場做住宅投資的信號，不是現在。</p>
+    </div>
+  </div>
+
+  <!-- S2: 城市選擇 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">如何選擇：城市分級框架</div>
+    </div>
+
+    <p style="color:var(--slate);margin-bottom:20px;font-size:15px;">城市分化是本輪週期最核心的特徵。同一個「中國房地產」裡，不同城市的風險回報差距可達數倍。</p>
+
+    <div class="city-tier">
+      <div class="city-block">
+        <div class="city-block-tier">第一梯隊 — 優先考慮</div>
+        <div class="city-block-name">超核心城市</div>
+        <div class="city-block-cities">上海、北京、深圳<br>核心區供應稀缺 · 人口年淨流入 50 萬+<br>一二手成交 > 2000 萬平米</div>
+        <div class="city-block-score">
+          <div class="score-bar"><div class="score-fill fill-high"></div></div>
+          <div class="score-label">投資吸引力高</div>
+        </div>
+      </div>
+      <div class="city-block">
+        <div class="city-block-tier">第二梯隊 — 選擇性參與</div>
+        <div class="city-block-name">強二線城市</div>
+        <div class="city-block-cities">杭州、成都、廣州、武漢<br>產業集聚明確 · 去化周期 14~18 個月</div>
+        <div class="city-block-score">
+          <div class="score-bar"><div class="score-fill fill-mid"></div></div>
+          <div class="score-label">中等吸引力</div>
+        </div>
+      </div>
+      <div class="city-block">
+        <div class="city-block-tier">第三梯隊 — 迴避</div>
+        <div class="city-block-name">弱二線 / 三四線</div>
+        <div class="city-block-cities">庫存去化 30+ 個月 · 人口外流<br>依賴政策補貼維持交易量</div>
+        <div class="city-block-score">
+          <div class="score-bar"><div class="score-fill fill-low"></div></div>
+          <div class="score-label">吸引力低</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>✅ 值得關注的細分賽道</h3>
+        <ul class="styled">
+          <li><strong>核心城市辦公樓：</strong>AI 科技公司擴張，淨吸納量預計 +10~15%</li>
+          <li><strong>「好房子」產品：</strong>政策明確推動改善型需求，品質住宅溢價持續</li>
+          <li><strong>保障房 REITs：</strong>政策強推保障房建設，可關注相關金融產品</li>
+          <li><strong>物業管理：</strong>數智化程度高、成本管控優的企業，受開發週期影響最小</li>
+          <li><strong>城市更新：</strong>舊城改造、存量活化，政策驅動型機會</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>❌ 現階段應迴避</h3>
+        <ul class="styled">
+          <li><strong>非白名單開發商期房：</strong>爛尾風險仍存，資金安全無保障</li>
+          <li><strong>三四線城市住宅：</strong>庫存去化需 3~5 年，缺乏需求支撐</li>
+          <li><strong>高槓桿民企開發商股：</strong>財務重組未完成，股權價值高度不確定</li>
+          <li><strong>三四線商業地產：</strong>零售消費回升集中在核心城市，外圍承壓</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: 觀察指標 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">觀察指標：投資人的雷達清單</div>
+    </div>
+
+    <p style="color:var(--slate);margin-bottom:24px;font-size:15px;">以下 12 個指標構成完整的投資監測框架，分為總體、供需、資金、政策四個維度。</p>
+
+    <div class="indicator-grid">
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-ember">📊</div>
+          <div><div class="indicator-name">70 城房價指數</div><div class="indicator-sub">總體 · 月度，國家統計局</div></div>
+        </div>
+        <div class="indicator-desc">一線城市新房環比由負轉正是最重要的反轉信號。每月 15 日前後發布。</div>
+        <div class="indicator-threshold"><strong>進場觸發：</strong>一線城市連續 2 個月環比為正</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-teal">🏗️</div>
+          <div><div class="indicator-name">房地產開發投資增速</div><div class="indicator-sub">總體 · 月度累計</div></div>
+        </div>
+        <div class="indicator-desc">跌幅持續收窄是好信號。從 -17% 收窄到 -11% 是趨勢改善，但轉正前不代表底部確認。</div>
+        <div class="indicator-threshold"><strong>關鍵閾值：</strong>年化降幅收窄到 -5% 以內</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-gold">📦</div>
+          <div><div class="indicator-name">庫存去化周期</div><div class="indicator-sub">供需 · 月度</div></div>
+        </div>
+        <div class="indicator-desc">健康水位約 12~16 個月。一線核心區約 12 個月，強二線 14~18 個月，三四線超過 30 個月。</div>
+        <div class="indicator-threshold"><strong>安全線：</strong>目標城市去化周期 ≤ 18 個月</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-ember">💰</div>
+          <div><div class="indicator-name">新房銷售面積 / 金額</div><div class="indicator-sub">供需 · 月度</div></div>
+        </div>
+        <div class="indicator-desc">三步走框架的第一步信號——量的企穩先於價的企穩。連續 3 個月同比降幅縮小是底部形成的先行指標。</div>
+        <div class="indicator-threshold"><strong>關鍵信號：</strong>單月同比由負轉正</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-teal">🏦</div>
+          <div><div class="indicator-name">房企融資環境（白名單）</div><div class="indicator-sub">資金 · 不定期</div></div>
+        </div>
+        <div class="indicator-desc">進入白名單的企業可獲銀行授信，融資成本下降代表存活率上升。白名單範圍擴大 = 系統性風險降低。</div>
+        <div class="indicator-threshold"><strong>觀察重點：</strong>白名單新增企業數量及授信總額</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-info">🏛️</div>
+          <div><div class="indicator-name">政策寬鬆信號</div><div class="indicator-sub">政策 · 事件驅動</div></div>
+        </div>
+        <div class="indicator-desc">限購放開城市數量、首付比例調降、LPR 降息、以舊換新補貼規模。政策加碼往往是短期行情觸發器。</div>
+        <div class="indicator-threshold"><strong>高影響事件：</strong>一線城市限購全面鬆綁</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-gold">📈</div>
+          <div><div class="indicator-name">土地成交溢價率</div><div class="indicator-sub">供需 · 月度（領先指標）</div></div>
+        </div>
+        <div class="indicator-desc">核心城市優質地塊溢價率回升，代表開發商看好未來銷售——是領先市場 6~12 個月的先行指標。</div>
+        <div class="indicator-threshold"><strong>積極信號：</strong>核心城市土地溢價率持續 > 10%</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-ember">🏠</div>
+          <div><div class="indicator-name">居民房貸數據</div><div class="indicator-sub">資金 · 月度，央行</div></div>
+        </div>
+        <div class="indicator-desc">央行每月公布新增居民中長期貸款（主要是房貸）。代表真實購房需求——早還貸 vs 新購房的博弈結果。</div>
+        <div class="indicator-threshold"><strong>關鍵轉折：</strong>新增居民中長期貸款由負轉正</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-teal">🏙️</div>
+          <div><div class="indicator-name">一線城市二手房成交量</div><div class="indicator-sub">供需 · 週度（鏈家/中原）</div></div>
+        </div>
+        <div class="indicator-desc">北上廣深每週二手房網簽數據是最高頻的市場溫度計，二手量是市場信心最直接的體現。</div>
+        <div class="indicator-threshold"><strong>基準線：</strong>四城週均成交 > 2019 年同期水平</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-info">⚠️</div>
+          <div><div class="indicator-name">開發商信用利差</div><div class="indicator-sub">資金 · 市場定價（美元債）</div></div>
+        </div>
+        <div class="indicator-desc">中資房企美元債利差。利差收窄代表信用擔憂下降，但目前部分規模房企仍維持 1500bp+ 超高利差。</div>
+        <div class="indicator-threshold"><strong>警戒線：</strong>規模房企利差 > 800bp = 違約風險高</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-gold">💼</div>
+          <div><div class="indicator-name">GDP 房地產貢獻度</div><div class="indicator-sub">總體 · 季度</div></div>
+        </div>
+        <div class="indicator-desc">房地產（含建築）曾佔 GDP 約 25%，現降至 ~15%，拖累 GDP 增速 0.5~1 個百分點。貢獻度穩定是底部信號。</div>
+        <div class="indicator-threshold"><strong>觀察重點：</strong>貢獻度能否穩定在 12% 以上</div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-header">
+          <div class="indicator-icon icon-ember">🏘️</div>
+          <div><div class="indicator-name">保障房建設進度</div><div class="indicator-sub">政策 · 季度</div></div>
+        </div>
+        <div class="indicator-desc">保障房對商品房有短期分流效應，長期讓商品房走向更純粹的改善型需求市場，有助於定價結構優化。</div>
+        <div class="indicator-threshold"><strong>追蹤指標：</strong>各大城市年度保障房竣工套數</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- S4: 風險矩陣 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">風險矩陣：進場前必須看清的代價</div>
+    </div>
+
+    <div class="card">
+      <div class="risk-row">
+        <div class="risk-level risk-l4">極高</div>
+        <div class="risk-content">
+          <div class="risk-title">開發商爛尾風險（期房）</div>
+          <div class="risk-desc">恒大（已清算，¥3 兆債務）、碧桂園（重組進行中，¥1.6 兆負債）的系統性信用危機尚未完全出清。購買非白名單開發商的期房，仍面臨「房款已付但房子無法竣工」的尾部風險。<span class="label-pill pill-red">資金安全</span></div>
+        </div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-level risk-l4">極高</div>
+        <div class="risk-content">
+          <div class="risk-title">持續通縮 / 資產負債表衰退風險</div>
+          <div class="risk-desc">家庭存款過去五年近乎翻倍，儲蓄意願遠強於消費。若房價預期繼續下跌，形成「跌了不買 → 更跌」負螺旋，類似日本 1990 年代情境。房地產佔都市家庭財富約 70%，持續縮水將連帶壓制消費。<span class="label-pill pill-red">系統性</span></div>
+        </div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-level risk-l3">高</div>
+        <div class="risk-content">
+          <div class="risk-title">地方政府財政壓力（城投風險）</div>
+          <div class="risk-desc">地方政府 40~50% 財政收入曾依賴土地出讓金，土地市場低迷直接衝擊地方財政。城投債務重組、地方服務品質下降可能影響特定城市房產的長期保值性。<span class="label-pill pill-red">財政</span></div>
+        </div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-level risk-l3">高</div>
+        <div class="risk-content">
+          <div class="risk-title">地緣政治 / 資金出入限制（台灣投資人專屬）</div>
+          <div class="risk-desc">外資投資大陸房地產面臨資金匯出限制、外匯管制收緊的隱性風險。兩岸政治局勢是不可忽略的底層假設，資金安全優先於收益率考量。<span class="label-pill pill-red">政治風險</span></div>
+        </div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-level risk-l2">中</div>
+        <div class="risk-content">
+          <div class="risk-title">政策落地效果不及預期</div>
+          <div class="risk-desc">「止跌回穩」是政策目標，不是市場自發行為。歷史上多次政策加碼後出現短暫脈衝但隨後再跌。政策力度足夠但需求端信心修復慢於預期，是最常見的執行落差。<span class="label-pill pill-gold">執行</span></div>
+        </div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-level risk-l2">中</div>
+        <div class="risk-content">
+          <div class="risk-title">供應過剩（大城市郊區 + 三四線）</div>
+          <div class="risk-desc">部分城市庫存去化周期超過 30~40 個月，即便需求回升也難以在中短期吸收。郊區新城、特定衛星城存在長達數年的去庫存壓力。<span class="label-pill pill-gold">供需</span></div>
+        </div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-level risk-l1">低</div>
+        <div class="risk-content">
+          <div class="risk-title">核心城市辦公供應過剩（中長期消化中）</div>
+          <div class="risk-desc">CBRE 指出中長期辦公供應已呈下降趨勢，AI 科技企業需求可填補部分空缺。核心城市商業地產供過於求問題預計在 2027 年前逐步消化。<span class="label-pill pill-green">可管理</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: 機構觀點 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">專業機構怎麼看</div>
+    </div>
+
+    <div class="voice-card">
+      <div class="voice-org">
+        <div class="voice-org-name">高盛（Goldman Sachs）</div>
+        <div class="voice-org-type">投行 · 全球</div>
+      </div>
+      <div class="voice-quote">「預計 2026~2027 年房價逐漸穩定，引領總資產價值恢復，房地產資產佔家庭財富比重將降至約 50%，重回長期可持續水位。住宅需求真正反彈預計要到 2027 年。」</div>
+      <div class="voice-stance">
+        <span class="verdict-tag tag-caution">謹慎</span>
+        <span style="font-size:12px;color:var(--mist);">建議等待 2027 年前明確底部信號</span>
+      </div>
+    </div>
+
+    <div class="voice-card teal">
+      <div class="voice-org">
+        <div class="voice-org-name">CBRE 世邦魏理仕</div>
+        <div class="voice-org-type">商業地產研究機構 · 全球</div>
+      </div>
+      <div class="voice-quote">「商業地產投資量預測 2026 年成長 5~10%，核心驅動力是 AI 科技公司擴租及政策支持下的估值修復。辦公樓淨吸納量預計增加 10~15%。中長期辦公供應已在下降，供需正在再平衡。」</div>
+      <div class="voice-stance">
+        <span class="verdict-tag tag-opportunity">商業機會</span>
+        <span style="font-size:12px;color:var(--mist);">核心城市辦公優先</span>
+      </div>
+    </div>
+
+    <div class="voice-card">
+      <div class="voice-org">
+        <div class="voice-org-name">標準普爾信評（S&P）</div>
+        <div class="voice-org-type">信評機構 · 全球</div>
+      </div>
+      <div class="voice-quote">「頂層設計已明晰，房企面臨全面轉型攻堅戰。行業邏輯從『活下去』轉向『再出發』。土儲集中於核心城市、產品力強的企業有望率先突圍，持有優質商業地產且運營能力強的企業值得關注。」</div>
+      <div class="voice-stance">
+        <span class="verdict-tag tag-opportunity">結構機會</span>
+        <span style="font-size:12px;color:var(--mist);">選股不選市，精選頭部企業</span>
+      </div>
+    </div>
+
+    <div class="voice-card gold">
+      <div class="voice-org">
+        <div class="voice-org-name">瑞銀（UBS）</div>
+        <div class="voice-org-type">投行 · 全球</div>
+      </div>
+      <div class="voice-quote">「中國 2026~27 年的主題是韌性與再平衡。房地產對 GDP 的拖累將從 2025 年的約 1.5 個百分點收窄到 0.5~1 個百分點。市場有望在 2026 年底前出現有意義的穩定，但全面反彈需要更長時間。」</div>
+      <div class="voice-stance">
+        <span class="verdict-tag tag-caution">等待穩定</span>
+        <span style="font-size:12px;color:var(--mist);">2026 底前觀察，2027 再評估進場</span>
+      </div>
+    </div>
+
+    <div class="voice-card teal">
+      <div class="voice-org">
+        <div class="voice-org-name">第一財經 / 本地機構綜合觀點</div>
+        <div class="voice-org-type">大陸研究機構彙整</div>
+      </div>
+      <div class="voice-quote">「2026 年是行業筑底、出清、分化、轉型的關鍵年。『好房子』政策明確推動改善型需求，核心城市成交量標準重新定義（一二手超 2000 萬平米）。數智化程度高的物管企業是受週期影響最小的防禦性資產。」</div>
+      <div class="voice-stance">
+        <span class="verdict-tag tag-opportunity">物管 / 改善型</span>
+        <span style="font-size:12px;color:var(--mist);">細分賽道選擇優於整體押注</span>
+      </div>
+    </div>
+
+    <div class="highlight-box teal" style="margin-top:24px;">
+      <p><strong>機構共識提煉：</strong>沒有一家主流機構建議現在全面進場做住宅多頭。一致立場是「選城市、選賽道、選時機」——等待底部確認（2026 年底），優先商業地產和優質物管，迴避高槓桿開發商和弱城市。</p>
+    </div>
+  </div>
+
+  <!-- S6: Business-12 診斷 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Business-12 診斷：如果你要參與</div>
+    </div>
+
+    <p style="color:var(--slate);margin-bottom:24px;font-size:15px;">用商模十二力框架解構「大陸房地產」這個投資機會的核心邏輯與陷阱：</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>🔍 感受力（BF01）：情緒 vs 基本面</h3>
+        <p>目前市場情緒仍偏悲觀（家庭儲蓄意願高），但基本面出現邊際改善（一線止跌）。<strong>情緒底往往早於價格底出現</strong>，但進場過早容易被套 2~3 年。等待「情緒反轉 + 量先於價」的雙重確認信號。</p>
+      </div>
+      <div class="card">
+        <h3>💎 累積力（BF02）：長線資產價值</h3>
+        <p>一線核心城市土地稀缺性是長期支撐，但短期 3~5 年仍面臨估值壓縮壓力。<strong>累積期做法</strong>：等待 2026 年底確認底部後分批佈局，不押單一資產，不借槓桿。</p>
+      </div>
+      <div class="card">
+        <h3>🛡️ 產品力（BF06）：「好房子」溢價</h3>
+        <p>政策明確導向「好房子」——高品質戶型、社區設施完善的項目有定價溢價。優先考慮有差異化產品力的開發商，而非純靠地段槓桿的剛需盤。</p>
+      </div>
+      <div class="card">
+        <h3>⚖️ 談判力（BF11）：資金談判空間</h3>
+        <p>目前是買方市場，開發商讓利幅度仍大。但這個優勢會在市場反轉時快速消失。<strong>底部區間購入現房（非期房）</strong>可鎖定談判最有利的時機，同時規避爛尾風險。</p>
+      </div>
+    </div>
+
+    <div class="strategy-box" style="margin-top:24px;">
+      <h3>四大核心行動原則</h3>
+      <div class="strategy-grid">
+        <div class="strategy-item">
+          <div class="strategy-item-num">01</div>
+          <div class="strategy-item-title">不搶跑，等信號</div>
+          <div class="strategy-item-desc">等待「一線城市房價連續 2 個月環比正增長」確認底部。寧可少賺底部 10%，也不要進場太早被套</div>
+        </div>
+        <div class="strategy-item">
+          <div class="strategy-item-num">02</div>
+          <div class="strategy-item-title">選城市過濾七成風險</div>
+          <div class="strategy-item-desc">上海/北京/深圳核心區 > 一線強二線 > 其他。地域選擇的重要性遠大於資產類型選擇</div>
+        </div>
+        <div class="strategy-item">
+          <div class="strategy-item-num">03</div>
+          <div class="strategy-item-title">現房優先，迴避期房</div>
+          <div class="strategy-item-desc">開發商信用風險尚未完全出清，購買期房等同於無意識承擔信用風險。現房溢價是合理的安全費用</div>
+        </div>
+        <div class="strategy-item">
+          <div class="strategy-item-num">04</div>
+          <div class="strategy-item-title">資金出入是首要前提</div>
+          <div class="strategy-item-desc">台灣投資人須先確認資金通道合規性（資金轉移、收益匯回）。地緣政治風險是所有收益計算的底層假設</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7: 快速對照表 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">快速對照：投資選擇矩陣</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>投資標的</th>
+            <th>城市梯隊</th>
+            <th>時機評估</th>
+            <th>主要風險</th>
+            <th>機構共識</th>
+            <th>建議</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>一線核心區住宅（現房）</strong></td>
+            <td>北上深</td>
+            <td>等信號（2026 Q3~Q4）</td>
+            <td>短期估值壓縮</td>
+            <td>GS: 2027 才穩</td>
+            <td><span class="badge badge-yellow">謹慎等待</span></td>
+          </tr>
+          <tr>
+            <td><strong>核心城市辦公樓</strong></td>
+            <td>北上深杭</td>
+            <td>現在可佈局</td>
+            <td>供應過剩尾聲</td>
+            <td>CBRE: +10~15%</td>
+            <td><span class="badge badge-green">可選擇性進場</span></td>
+          </tr>
+          <tr>
+            <td><strong>優質物業管理股</strong></td>
+            <td>全國龍頭</td>
+            <td>防禦性持有</td>
+            <td>母公司流動性</td>
+            <td>S&P: 推薦賽道</td>
+            <td><span class="badge badge-green">值得關注</span></td>
+          </tr>
+          <tr>
+            <td><strong>保障房 REITs</strong></td>
+            <td>全國</td>
+            <td>政策驅動期</td>
+            <td>收益率偏低</td>
+            <td>政策明確支持</td>
+            <td><span class="badge badge-blue">研究機會</span></td>
+          </tr>
+          <tr>
+            <td><strong>強二線住宅</strong></td>
+            <td>杭州 / 成都</td>
+            <td>等底部確認</td>
+            <td>去化周期長</td>
+            <td>機構分歧較大</td>
+            <td><span class="badge badge-yellow">謹慎等待</span></td>
+          </tr>
+          <tr>
+            <td><strong>弱二線 / 三四線住宅</strong></td>
+            <td>其他</td>
+            <td>—</td>
+            <td>人口外流 + 庫存高</td>
+            <td>一致迴避</td>
+            <td><span class="badge badge-red">迴避</span></td>
+          </tr>
+          <tr>
+            <td><strong>高槓桿民企開發商股</strong></td>
+            <td>全國</td>
+            <td>—</td>
+            <td>財務重組未完成</td>
+            <td>一致警示</td>
+            <td><span class="badge badge-red">迴避</span></td>
+          </tr>
+          <tr>
+            <td><strong>非白名單開發商期房</strong></td>
+            <td>全國</td>
+            <td>—</td>
+            <td>爛尾 / 資金損失</td>
+            <td>一致警示</td>
+            <td><span class="badge badge-red">禁止</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ <strong>免責聲明：</strong>本報告由 MUSEON AI 整合公開資料製作，僅供參考，不構成任何投資建議或要約。所引用數據來自國家統計局、CBRE、高盛、S&P、UBS 等公開報告（截至 2026 年 Q1），實際市場情況可能與報告有差異。投資大陸房地產涉及政策、匯率、法律等多重風險，建議在專業顧問指導下做出決策。<strong>台灣投資人尤須注意兩岸政策風險及資金出入合規性。</strong>
+    <br><br>
+    <strong>資料來源：</strong>國家統計局（2026/03/16 發布）· CBRE 2026 中國房地產展望 · Goldman Sachs 中國房地產行業展望 · S&P China Ratings 房企展望 2026 · UBS China Outlook 2026-27 · 第一財經 · 澎湃新聞 · Bernstein Research · GAM Investments
+  </div>
+
+</div>
+
+<footer>
+  <strong>MUSEON</strong> · AI 投資研究 · 報告日期：2026 年 4 月 8 日 · 版本 v1.0<br>
+  <span style="font-size:11px;margin-top:4px;display:block;">本報告為淑慧詢問後，MUSEON 依公開數據整合分析製作</span>
+</footer>
+
+</body>
+</html>
