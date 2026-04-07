@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>傳統市場高齡者下單系統 UX/UI 設計指南 — MUSEON</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+    --error: #C4402A;
+    --info: #2A6A8A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .page-wrapper { padding: 24px; }
+  }
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 16px; }
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    text-align: center;
+    padding: 96px 0 64px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.1);
+    color: var(--ember-dark);
+    border-radius: 100px;
+    padding: 3px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 32px; }
+  }
+  .hero-subtitle {
+    font-size: 18px;
+    color: var(--slate);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 24px;
+  }
+  .hero-meta {
+    font-size: 14px;
+    color: var(--mist);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ─── Typography ─── */
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-top: 64px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ember);
+  }
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-top: 48px;
+    margin-bottom: 16px;
+  }
+  h4 {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+  p {
+    margin-bottom: 1.25em;
+    line-height: 1.8;
+  }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    margin-bottom: 48px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+  }
+  .toc h3 {
+    margin-top: 0;
+    font-size: 24px;
+    color: var(--ember);
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+    padding: 0;
+  }
+  .toc ol li {
+    counter-increment: toc-counter;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toc ol li:last-child { border-bottom: none; }
+  .toc ol li a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: color 200ms ease;
+  }
+  .toc ol li a:hover { color: var(--ember); }
+  .toc ol li a::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ember);
+    min-width: 28px;
+  }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(18,18,26,0.08), 0 8px 24px rgba(18,18,26,0.06);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .card-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--snow);
+    background: var(--ember);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-title {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ─── Table ─── */
+  .table-wrapper {
+    overflow-x: auto;
+    margin: 24px 0;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  thead {
+    background: var(--deep-ink);
+    color: #fff;
+  }
+  thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  tbody tr {
+    background: var(--snow);
+    border-bottom: 1px solid var(--border);
+    transition: background 200ms ease;
+  }
+  tbody tr:hover { background: var(--parchment); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td {
+    padding: 12px 16px;
+    vertical-align: top;
+  }
+  tbody td:first-child { font-weight: 500; }
+
+  /* ─── Highlight Box ─── */
+  .highlight-box {
+    background: rgba(196,80,42,0.06);
+    border-left: 4px solid var(--ember);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-size: 16px;
+  }
+  .highlight-box.teal {
+    background: rgba(42,122,110,0.06);
+    border-left-color: var(--teal);
+  }
+  .highlight-box.gold {
+    background: rgba(184,146,58,0.06);
+    border-left-color: var(--gold);
+  }
+  .highlight-box.info {
+    background: rgba(42,106,138,0.06);
+    border-left-color: var(--info);
+  }
+
+  /* ─── List ─── */
+  ul, ol {
+    padding-left: 24px;
+    margin-bottom: 1.25em;
+  }
+  li { margin-bottom: 8px; }
+
+  /* ─── Badge inline ─── */
+  .badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.1);
+    color: var(--ember-dark);
+    border-radius: 100px;
+    padding: 2px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .badge.teal {
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+  }
+  .badge.gold {
+    background: rgba(184,146,58,0.1);
+    color: var(--gold);
+  }
+
+  /* ─── Wireframe ─── */
+  .wireframe {
+    background: var(--snow);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin: 24px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--slate);
+  }
+  .wireframe .screen-title {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-weight: 600;
+    color: var(--ember);
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .wireframe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .wireframe-cell {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .wireframe-cell .icon {
+    font-size: 32px;
+  }
+  .wireframe-btn {
+    display: inline-block;
+    background: var(--ember);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    margin: 8px 4px;
+  }
+  .wireframe-btn.outline {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--ink);
+  }
+  .wireframe-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--parchment);
+    border-radius: 8px;
+    margin: 8px 0;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .wireframe-qty {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .wireframe-qty-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--ember);
+    background: var(--snow);
+    color: var(--ember);
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wireframe-qty-num {
+    font-size: 28px;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: center;
+    color: var(--ink);
+  }
+
+  /* ─── Flow Diagram ─── */
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 32px 0;
+    padding: 32px 16px;
+    background: var(--snow);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .flow-step {
+    background: var(--ember);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .flow-step.alt { background: var(--teal); }
+  .flow-step.gold-bg { background: var(--gold); color: var(--ink); }
+  .flow-arrow {
+    font-size: 28px;
+    color: var(--mist);
+    font-weight: 300;
+  }
+
+  /* ─── Checklist ─── */
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+  }
+  .checklist li {
+    padding: 12px 16px;
+    border-left: 3px solid var(--border);
+    margin-bottom: 8px;
+    background: var(--snow);
+    border-radius: 0 8px 8px 0;
+    transition: border-color 200ms ease;
+  }
+  .checklist li:hover { border-left-color: var(--ember); }
+  .checklist li::before { content: none; }
+
+  /* ─── Comparison Grid ─── */
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    margin: 24px 0;
+  }
+  @media (max-width: 640px) {
+    .comparison-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .app-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+  }
+  .app-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .app-card-name {
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .app-card-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teal);
+    background: rgba(42,122,110,0.1);
+    padding: 2px 8px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .app-card h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ember);
+    margin: 12px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .app-card ul {
+    padding-left: 18px;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+  .app-card li { margin-bottom: 4px; }
+
+  /* ─── Footer ─── */
+  .footer {
+    margin-top: 96px;
+    padding: 48px 0 32px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--mist);
+    font-size: 14px;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ember);
+    margin-bottom: 8px;
+  }
+  .footer p { margin-bottom: 4px; }
+
+  /* ─── Print ─── */
+  @media print {
+    .page-wrapper { max-width: 100%; padding: 20px; }
+    .card:hover, tbody tr:hover { transform: none; box-shadow: none; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: auto; }
+  }
+
+  /* ─── Fade-in animation ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeIn 400ms ease-out forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in:nth-child(2) { animation-delay: 50ms; }
+  .fade-in:nth-child(3) { animation-delay: 100ms; }
+  .fade-in:nth-child(4) { animation-delay: 150ms; }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- ==================== HERO ==================== -->
+<header class="hero fade-in">
+  <div class="hero-badge">UX / UI Design Guide</div>
+  <h1>傳統市場高齡者<br>下單系統設計指南</h1>
+  <p class="hero-subtitle">
+    為 65-75 歲以上傳統市場攤商打造的批發下單系統，<br>
+    從認知科學到介面規範的全方位 UX 設計藍圖。
+  </p>
+  <p class="hero-meta">MUSEON &times; 馮士維 &mdash; 2026.04.06 &mdash; v1.0</p>
+</header>
+
+<!-- ==================== TOC ==================== -->
+<nav class="toc fade-in">
+  <h3>目錄</h3>
+  <ol>
+    <li><a href="#s1">專案背景與挑戰</a></li>
+    <li><a href="#s2">高齡者使用者特徵分析</a></li>
+    <li><a href="#s3">核心設計原則（8 Principles）</a></li>
+    <li><a href="#s4">介面設計具體規範</a></li>
+    <li><a href="#s5">參考 APP 與案例分析</a></li>
+    <li><a href="#s6">傳統市場下單系統 — Wireframe 建議</a></li>
+    <li><a href="#s7">關鍵操作流程圖</a></li>
+    <li><a href="#s8">常見地雷與解決方案</a></li>
+    <li><a href="#s9">開發實作建議</a></li>
+    <li><a href="#s10">下一步行動清單</a></li>
+  </ol>
+</nav>
+
+<!-- ==================== 1. 專案背景 ==================== -->
+<section id="s1" class="fade-in">
+  <h2>01 &mdash; 專案背景與挑戰</h2>
+
+  <h3>專案概述</h3>
+  <p>
+    本專案的目標是為<strong>傳統市場攤商</strong>（年齡層 65-75 歲以上）建構一套<strong>批發/供應鏈下單系統</strong>。這些使用者每天凌晨 3-5 點向供應商叫貨，長年以「電話、手寫單、LINE 文字訊息」完成。系統化的目的不是取代他們的習慣，而是<strong>讓習慣數位化的阻力降到最低</strong>。
+  </p>
+
+  <h3>四大核心挑戰</h3>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">1</div>
+      <div class="card-title">視覺退化（Vision Decline）</div>
+    </div>
+    <p>老花眼（presbyopia）導致近距離閱讀困難，對比敏感度下降，色覺偏移（藍-綠辨別力下降）。在傳統市場光線不均的環境下，螢幕可讀性更是嚴峻。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">2</div>
+      <div class="card-title">精細運動能力變化（Motor Skill Changes）</div>
+    </div>
+    <p>手指靈活度降低、輕微顫抖（tremor）導致點擊偏移、反應時間變長。在濕手（處理生鮮食材）或低溫環境下操作手機更加困難。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">3</div>
+      <div class="card-title">科技不熟悉（Tech Unfamiliarity）</div>
+    </div>
+    <p>多數目標使用者僅會使用 LINE 傳訊息、打電話、看 YouTube，對「APP 安裝、帳號註冊、密碼管理」等概念陌生。任何需要學習的新操作都是流失風險。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">4</div>
+      <div class="card-title">信任門檻（Trust Barrier）</div>
+    </div>
+    <p>高齡者對數位系統的信任建立時間長——「我按了之後東西真的會送來嗎？」「價格有沒有被改？」「我的資料會不會被偷？」每一個疑慮都需要在 UI 上給出明確、即時的答案。</p>
+  </div>
+
+  <div class="highlight-box">
+    <strong>設計核心原則：</strong>這不是一個「功能多就是好」的系統。每多一個按鈕，就多一個讓老闆放棄的理由。<strong>能減則減，能大則大，能熟悉則熟悉。</strong>
+  </div>
+</section>
+
+<!-- ==================== 2. 高齡者特徵分析 ==================== -->
+<section id="s2" class="fade-in">
+  <h2>02 &mdash; 高齡者使用者特徵分析</h2>
+
+  <h3>視覺系統（65-75+ 歲）</h3>
+  <ul>
+    <li><strong>老花眼（Presbyopia）</strong>：水晶體硬化，近距離聚焦困難。40 cm 以內的小字幾乎無法辨識。手機通常持在 35-45 cm 距離觀看。</li>
+    <li><strong>對比敏感度下降</strong>：淺灰色文字在白色背景上幾乎「消失」。需要至少 7:1 的對比度（WCAG AAA 等級）才能舒適閱讀。</li>
+    <li><strong>色覺偏移</strong>：藍-綠-紫色域的辨別力下降。紅色與黃色的辨識相對穩定。切勿僅用顏色傳達資訊（例如紅=錯誤），必須輔以圖示或文字。</li>
+    <li><strong>暗適應變慢</strong>：從亮處進入暗處（或反之），眼睛需要更長時間適應。避免介面中出現大面積深色/亮色的突然切換。</li>
+    <li><strong>眩光敏感</strong>：純白背景 (#FFFFFF) 在某些光線下造成不適。使用暖調背景如 #F7F5F0。</li>
+  </ul>
+
+  <h3>運動系統</h3>
+  <ul>
+    <li><strong>Fitts' Law 放大效應</strong>：觸控目標越小、距離越遠，高齡者的點擊錯誤率呈指數上升。標準 44px 按鈕對年輕人夠用，對高齡者不夠——需要 56-64px。</li>
+    <li><strong>手指顫抖</strong>：靜止性顫抖導致觸控容易偏移 5-10px。按鈕間距需 ≥12px 以防誤觸。</li>
+    <li><strong>握力變化</strong>：長時間單手持機困難。介面的核心操作區應集中在螢幕中央偏下（拇指自然觸及區）。</li>
+    <li><strong>反應時間</strong>：65+ 歲的平均反應時間比 25 歲慢 50-100%。任何有時間限制的操作（倒數計時、自動登出）都是地雷。</li>
+  </ul>
+
+  <h3>認知系統</h3>
+  <ul>
+    <li><strong>工作記憶容量下降</strong>：同時處理的資訊量從 7&plusmn;2 降到 4&plusmn;1。每個畫面不應超過 3-4 個需要決策的項目。</li>
+    <li><strong>資訊處理速度變慢</strong>：需要更多時間閱讀、理解、做決定。不要用動畫或自動輪播搶走他們的閱讀時間。</li>
+    <li><strong>程序性記憶穩健</strong>：「一旦學會，就不會忘」。如果操作流程固定且簡單，高齡者反而比年輕人更穩定執行。</li>
+    <li><strong>經驗與智慧</strong>：這些市場老闆做生意做了 30-50 年，對「叫貨」的流程比任何人都熟。系統應該<strong>映射他們既有的心智模型</strong>，而不是強迫他們學新的。</li>
+  </ul>
+
+  <h3>科技使用行為</h3>
+  <ul>
+    <li><strong>會用的</strong>：LINE（傳文字、語音訊息、看照片）、打電話、YouTube、相機</li>
+    <li><strong>勉強會用的</strong>：LINE Pay、全聯 PX Pay（因為子女幫忙設定）</li>
+    <li><strong>不會用的</strong>：Email、App Store 搜尋安裝、帳號密碼管理、通知設定</li>
+    <li><strong>恐懼的</strong>：「亂按會不會扣錢」「資料會不會外洩」「手機會不會壞掉」</li>
+  </ul>
+
+  <h3>關鍵量化指標</h3>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>一般標準</th>
+          <th>高齡者建議值</th>
+          <th>說明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>最小觸控目標</td>
+          <td>44 &times; 44 px</td>
+          <td><strong>56 &times; 56 px</strong>（建議 64px）</td>
+          <td>Apple HIG 44px 是最低標，手指顫抖需更大容錯</td>
+        </tr>
+        <tr>
+          <td>觸控目標間距</td>
+          <td>8px</td>
+          <td><strong>&ge; 12px</strong></td>
+          <td>防止顫抖造成的誤觸鄰近按鈕</td>
+        </tr>
+        <tr>
+          <td>最小內文字型</td>
+          <td>14-16px</td>
+          <td><strong>18px</strong>（建議 20-24px）</td>
+          <td>老花眼 + 35-45cm 持機距離</td>
+        </tr>
+        <tr>
+          <td>按鈕文字字型</td>
+          <td>14-16px</td>
+          <td><strong>20px</strong>（建議 22-24px）</td>
+          <td>按鈕文字需比內文更醒目</td>
+        </tr>
+        <tr>
+          <td>對比度</td>
+          <td>4.5:1 (WCAG AA)</td>
+          <td><strong>7:1</strong> (WCAG AAA)</td>
+          <td>對比敏感度下降，AA 不夠用</td>
+        </tr>
+        <tr>
+          <td>每頁選項數</td>
+          <td>不限</td>
+          <td><strong>&le; 4 個</strong></td>
+          <td>工作記憶限制 4&plusmn;1</td>
+        </tr>
+        <tr>
+          <td>操作步驟數</td>
+          <td>不限</td>
+          <td><strong>&le; 4 步</strong></td>
+          <td>超過 4 步流失率陡增</td>
+        </tr>
+        <tr>
+          <td>反應等待耐心</td>
+          <td>3 秒</td>
+          <td><strong>1.5 秒</strong>（需即時回饋）</td>
+          <td>高齡者會以為「壞了」而反覆點擊</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== 3. 核心設計原則 ==================== -->
+<section id="s3" class="fade-in">
+  <h2>03 &mdash; 核心設計原則</h2>
+  <p>以下八條原則從高齡者特徵研究直接推導，每條附帶具體數值與實作方式。</p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">1</div>
+      <div class="card-title">超大觸控目標</div>
+    </div>
+    <p><strong>原則：</strong>所有可點擊元素最小 56px，建議 64px。按鈕間距 &ge; 12px。</p>
+    <p><strong>原因：</strong>Fitts' Law + 手指顫抖。小目標的點擊錯誤率在 70+ 歲群體高達 23%（vs. 年輕人 4%）。每次誤觸都是一次挫折，三次挫折就會放棄。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>主要 CTA 按鈕：高度 64px，寬度至少佔螢幕 80%</li>
+      <li>數量 +/- 按鈕：56px 圓形，間距 16px</li>
+      <li>列表項目：整行可點擊（row height &ge; 64px）</li>
+      <li>底部導航列圖示：48px icon + 16px 文字標籤</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">2</div>
+      <div class="card-title">高對比文字</div>
+    </div>
+    <p><strong>原則：</strong>文字對比度 &ge; 7:1（WCAG AAA）。最小字型 18px，建議 20-24px。</p>
+    <p><strong>原因：</strong>65+ 歲的對比敏感度僅為年輕人的 60-70%。WCAG AA（4.5:1）是「年輕人可讀」的標準，不是「老花眼可讀」的標準。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>主文字 <code>#12121A</code> on <code>#F7F5F0</code>（對比 14.8:1）</li>
+      <li>次要文字用 <code>#5A5A6E</code>（對比 7.2:1），不可再淺</li>
+      <li>禁止淺灰色 placeholder 作為唯一提示——必須有標籤</li>
+      <li>禁止彩色背景上的白色小字（如淺藍底白字）</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">3</div>
+      <div class="card-title">減法導航</div>
+    </div>
+    <p><strong>原則：</strong>每個畫面最多 3-4 個選項。不使用巢狀選單。流程必須線性。</p>
+    <p><strong>原因：</strong>工作記憶 4&plusmn;1 + 決策疲勞。每多一個選項，決策時間指數增長（Hick's Law）。傳統市場老闆的決策模式是「每天叫差不多的貨」，系統應該反映這個現實。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>首頁只有：常用供應商（6 格）+ 歷史訂單 + 設定，三個概念</li>
+      <li>不使用漢堡選單或 Tab Bar 超過 4 個 Tab</li>
+      <li>每個畫面一個主要動作（Primary CTA）</li>
+      <li>「返回」永遠在固定位置（左上角），且觸控區域放大到 56px</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">4</div>
+      <div class="card-title">熟悉的隱喻</div>
+    </div>
+    <p><strong>原則：</strong>用現實世界的概念設計 UI。模仿紙本叫貨單、計算機、收據。</p>
+    <p><strong>原因：</strong>高齡者的長期記憶和程序性記憶穩健。他們用了幾十年的紙本叫貨流程是最好的設計參考。「讓 APP 看起來像他們已經會用的東西」。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>下單頁面的排版模仿手寫叫貨單：品名 | 數量 | 單位</li>
+      <li>數量輸入用大大的 +/- 按鈕，像計算機</li>
+      <li>確認頁模仿收據格式，有虛線分隔、總數統計</li>
+      <li>「打勾 = 完成」「紅色 = 注意」「綠色 = 安全」這些通用隱喻</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">5</div>
+      <div class="card-title">容錯設計</div>
+    </div>
+    <p><strong>原則：</strong>任何操作都可以撤銷。破壞性操作前必須確認。不設計有時間限制的操作。</p>
+    <p><strong>原因：</strong>「按錯了怎麼辦？」是高齡者最大的恐懼。如果一次誤操作導致「不可挽回的後果」，他們會永遠不敢再用。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>送出訂單後有 60 秒的「取消」視窗（大按鈕，不是小小的連結）</li>
+      <li>刪除操作需兩步確認：「確定要刪除？」→「是，刪除」</li>
+      <li>永遠不自動登出（或至少 24 小時以上）</li>
+      <li>沒有任何倒數計時的操作</li>
+      <li>誤觸返回鍵不會丟失已填的資料</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">6</div>
+      <div class="card-title">一致性</div>
+    </div>
+    <p><strong>原則：</strong>同樣的動作永遠在同樣的位置。同樣的顏色永遠代表同樣的意思。</p>
+    <p><strong>原因：</strong>程序性記憶的建立需要重複。一旦「送出在右下角」，就永遠在右下角。一次例外就破壞整個學習。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>所有頁面的主要 CTA 都在底部固定區（fixed bottom bar）</li>
+      <li>「返回」永遠在左上角</li>
+      <li>橙色/紅色 = 主要動作，灰色 = 次要/取消</li>
+      <li>頁面標題永遠在頂部中央，字型大小一致</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">7</div>
+      <div class="card-title">漸進式揭露</div>
+    </div>
+    <p><strong>原則：</strong>只顯示當下需要的資訊。進階功能隱藏在「更多」後面。</p>
+    <p><strong>原因：</strong>資訊過載是高齡者放棄使用的第一原因。「看不懂的東西太多了」=「這個太複雜我不會用」。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>首次使用只開放核心功能（叫貨 + 看歷史）</li>
+      <li>統計報表、進階設定等放在子頁面，首頁不顯示入口</li>
+      <li>商品列表優先顯示「常用品項」，完整品項需要主動展開</li>
+      <li>新功能不用彈窗介紹，用溫和的提示點（紅點）</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">8</div>
+      <div class="card-title">即時回饋</div>
+    </div>
+    <p><strong>原則：</strong>每個操作都有大幅度的視覺 + 觸覺 + 可選聽覺回饋。</p>
+    <p><strong>原因：</strong>高齡者的反應時間慢，如果按下按鈕後 0.5 秒沒反應，他們會以為「沒按到」而重複點擊，造成雙重送出或跳頁混亂。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>按鈕按下瞬間：顏色明顯變化（深 30%）+ 輕微縮小（scale 0.96）</li>
+      <li>加入數量：數字彈跳動畫 + 手機震動（haptic feedback）</li>
+      <li>送出訂單：全螢幕綠色打勾 + 「訂單已送出」大字 + 震動</li>
+      <li>載入等待：使用骨架屏（skeleton），不要空白頁面</li>
+      <li>可選：按鈕按下音效（咔噠聲），由使用者自行開關</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== 4. 介面設計規範 ==================== -->
+<section id="s4" class="fade-in">
+  <h2>04 &mdash; 介面設計具體規範</h2>
+  <p>以下數值為本系統的設計基準，開發時應作為 Design Token 統一管理。</p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>元素</th>
+          <th>最低值</th>
+          <th>建議值</th>
+          <th>備註</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>觸控目標尺寸</td>
+          <td>56 &times; 56 px</td>
+          <td>64 &times; 64 px</td>
+          <td>含 padding 的可點擊區域，非視覺尺寸</td>
+        </tr>
+        <tr>
+          <td>觸控目標間距</td>
+          <td>12px</td>
+          <td>16px</td>
+          <td>防止誤觸鄰近元素</td>
+        </tr>
+        <tr>
+          <td>頁面標題字型</td>
+          <td>24px / Bold</td>
+          <td>28px / Bold</td>
+          <td>每頁頂部，清楚告訴使用者在哪裡</td>
+        </tr>
+        <tr>
+          <td>區塊標題字型</td>
+          <td>20px / SemiBold</td>
+          <td>22px / SemiBold</td>
+          <td>段落或功能區塊標題</td>
+        </tr>
+        <tr>
+          <td>內文字型</td>
+          <td>18px / Regular</td>
+          <td>20px / Regular</td>
+          <td>主要閱讀文字</td>
+        </tr>
+        <tr>
+          <td>按鈕文字</td>
+          <td>20px / SemiBold</td>
+          <td>22px / Bold</td>
+          <td>CTA 按鈕內的文字</td>
+        </tr>
+        <tr>
+          <td>輔助標籤文字</td>
+          <td>16px / Regular</td>
+          <td>18px / Regular</td>
+          <td>次要資訊、說明文字</td>
+        </tr>
+        <tr>
+          <td>按鈕高度</td>
+          <td>56px</td>
+          <td>64px</td>
+          <td>主要 CTA；次要按鈕可 52px</td>
+        </tr>
+        <tr>
+          <td>輸入欄位高度</td>
+          <td>52px</td>
+          <td>56px</td>
+          <td>含 padding，搭配 18px 以上的輸入文字</td>
+        </tr>
+        <tr>
+          <td>列表行高</td>
+          <td>60px</td>
+          <td>72px</td>
+          <td>整行可點擊，包含品名+單位</td>
+        </tr>
+        <tr>
+          <td>圖示尺寸</td>
+          <td>32px</td>
+          <td>40px</td>
+          <td>導航圖示；行內小圖示至少 24px</td>
+        </tr>
+        <tr>
+          <td>文字對比度</td>
+          <td>7:1</td>
+          <td>10:1+</td>
+          <td>WCAG AAA；深色文字在暖白背景上</td>
+        </tr>
+        <tr>
+          <td>元件圓角</td>
+          <td>8px</td>
+          <td>12px</td>
+          <td>柔和圓角降低「科技感」，增加親和力</td>
+        </tr>
+        <tr>
+          <td>內邊距（Padding）</td>
+          <td>16px</td>
+          <td>20px</td>
+          <td>卡片、區塊的內部間距</td>
+        </tr>
+        <tr>
+          <td>區塊間距</td>
+          <td>24px</td>
+          <td>32px</td>
+          <td>功能區塊之間的留白</td>
+        </tr>
+        <tr>
+          <td>動畫時長</td>
+          <td>150ms</td>
+          <td>200ms</td>
+          <td>不可超過 300ms；載入動畫例外</td>
+        </tr>
+        <tr>
+          <td>底部安全區</td>
+          <td>80px</td>
+          <td>96px</td>
+          <td>固定底部操作列（含 safe area inset）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box teal">
+    <strong>色彩使用建議：</strong>
+    <ul style="margin-top:8px;margin-bottom:0;">
+      <li><strong>主要動作</strong>（送出、確認）：暖橙色（如 #C4502A），白色文字</li>
+      <li><strong>成功狀態</strong>（訂單完成、已送達）：綠色（#2D8A6E）</li>
+      <li><strong>警告/注意</strong>（缺貨、價格變動）：金黃色（#C9943A）+ 圖示</li>
+      <li><strong>錯誤/取消</strong>：紅色（#C4402A）+ 文字說明，不可只靠顏色</li>
+      <li><strong>背景</strong>：暖白（#F7F5F0 or #FAF8F5），不用純白</li>
+      <li><strong>禁止</strong>：藍色連結（高齡者常不知道藍色底線字可以按）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== 5. 參考 APP ==================== -->
+<section id="s5" class="fade-in">
+  <h2>05 &mdash; 參考 APP 與案例分析</h2>
+  <p>以下分析 8 款在「簡易操作」或「高齡友善」方面有參考價值的 APP，萃取可學習的設計模式。</p>
+
+  <div class="comparison-grid">
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">LINE</span>
+        <span class="app-card-tag">台灣首選</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>底部 Tab Bar 固定 4 個圖示 + 文字標籤，不隱藏</li>
+        <li>大頭貼 + 名字的辨識方式（人臉比文字好記）</li>
+        <li>語音訊息一鍵錄製，降低打字門檻</li>
+        <li>「已讀」回饋建立信任：「對方看到了」</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>設定頁巢狀層級太深，高齡者常迷路</li>
+        <li>廣告跳窗干擾，增加誤觸風險</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">健保快易通</span>
+        <span class="app-card-tag">政府 APP</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>首頁大圖示 + 大文字網格排列（2&times;3 或 3&times;3）</li>
+        <li>有專門的「大字版」模式可切換</li>
+        <li>口罩預購流程：線性步驟、一頁一任務</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>功能太多但沒有個人化推薦，首頁選項過載</li>
+        <li>驗證機制（健保卡 + 手機）對高齡者太複雜</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">拼多多（長輩模式）</span>
+        <span class="app-card-tag">最佳實踐</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>字型整體放大 30-40%，間距加倍</li>
+        <li>「常買清單」自動根據歷史推薦</li>
+        <li>一鍵再買（重複訂單）功能突出</li>
+        <li>精簡導航，只保留「首頁、訂單、我的」三個 Tab</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>拼團/分享裂變機制增加認知負擔</li>
+        <li>紅包彈窗引導誤觸</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">抖音/TikTok（適老模式）</span>
+        <span class="app-card-tag">中國經驗</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>系統級「適老模式」：字型 + 按鈕 + 對比度一鍵切換</li>
+        <li>極簡核心互動——上滑就是下一個，沒有其他需要學的</li>
+        <li>大播放按鈕、大暫停區域</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>手勢操作（滑動）不適合精細運動退化的高齡者</li>
+        <li>無限滾動沒有明確「邊界」感</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">Uber Eats / foodpanda</span>
+        <span class="app-card-tag">外送參考</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>商品卡片：大圖 + 品名 + 價格，三個資訊一目瞭然</li>
+        <li>數量選擇器 +/- 按鈕清晰</li>
+        <li>購物車浮動在底部，隨時可見總額</li>
+        <li>訂單進度追蹤的即時回饋</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>商品選項過多（大小、辣度、配料）增加決策負擔</li>
+        <li>促銷資訊太多、排版混亂</li>
+        <li>註冊流程需要 Email + 信用卡</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">7-ELEVEN ibon</span>
+        <span class="app-card-tag">Kiosk 設計</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>大面積按鈕佈局，每頁 4-6 個選項</li>
+        <li>明確的步驟指示：「Step 1 → 2 → 3」</li>
+        <li>完成後列印收據——實體憑證建立信任</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>觸控不夠靈敏，高齡者常「按了沒反應」</li>
+        <li>操作有超時限制（60 秒自動返回首頁）</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">全聯 PX Pay</span>
+        <span class="app-card-tag">台灣超市</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>首頁核心功能突出：付款碼佔半個螢幕</li>
+        <li>會員點數顯示直觀</li>
+        <li>操作極簡：掃碼 → 付款 → 完成</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>促銷 Banner 輪播搶走注意力</li>
+        <li>福利卡綁定流程需要太多資訊輸入</li>
+        <li>字型偏小，子頁面資訊密度過高</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-header">
+        <span class="app-card-name">日本 Mercari（メルカリ）</span>
+        <span class="app-card-tag">極簡電商</span>
+      </div>
+      <h5>值得學習</h5>
+      <ul>
+        <li>介面極度乾淨，留白充足，視覺層次分明</li>
+        <li>圖片優先——商品頁以大圖為主，文字為輔</li>
+        <li>操作用引導式步驟（wizard pattern），一步一步走</li>
+        <li>「傻瓜相機」式刊登流程：拍照 → 自動辨識 → 確認</li>
+      </ul>
+      <h5>需要避免</h5>
+      <ul>
+        <li>日本市場的 UI 慣例與台灣不同，需本地化</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="highlight-box gold">
+    <strong>綜合啟示：</strong>最成功的高齡友善設計有三個共同點——(1) 首頁只做一件事 (2) 核心流程不超過 3 步 (3) 有「重複上次」的快捷方式。拼多多的長輩模式和 Mercari 的極簡風格是最值得深入參考的兩個案例。
+  </div>
+</section>
+
+<!-- ==================== 6. Wireframe ==================== -->
+<section id="s6" class="fade-in">
+  <h2>06 &mdash; 傳統市場下單系統 — Wireframe 建議</h2>
+  <p>以下是建議的四個核心畫面設計。設計哲學：<strong>模仿手寫叫貨單的流程，數位化但不陌生化</strong>。</p>
+
+  <!-- 首頁 -->
+  <h3>畫面一：首頁（供應商選擇）</h3>
+  <div class="wireframe">
+    <div class="screen-title">
+      <span style="color:var(--ink);">首頁 — 今天要跟誰叫貨？</span>
+      <span class="badge">核心畫面</span>
+    </div>
+    <p style="color:var(--slate);margin-bottom:16px;font-family:'Noto Sans TC',sans-serif;font-size:14px;">設計要點：用人臉/商號照片 + 大名字，3&times;2 網格。常用的排前面。</p>
+    <div class="wireframe-grid">
+      <div class="wireframe-cell">
+        <div class="icon">&#x1F9D1;&#x200D;&#x1F33E;</div>
+        <div><strong>阿明蔬菜</strong></div>
+      </div>
+      <div class="wireframe-cell">
+        <div class="icon">&#x1F41F;</div>
+        <div><strong>大發海產</strong></div>
+      </div>
+      <div class="wireframe-cell">
+        <div class="icon">&#x1F357;</div>
+        <div><strong>正義肉品</strong></div>
+      </div>
+      <div class="wireframe-cell">
+        <div class="icon">&#x1F95A;</div>
+        <div><strong>金蛋農場</strong></div>
+      </div>
+      <div class="wireframe-cell">
+        <div class="icon">&#x1F9C6;</div>
+        <div><strong>永豐醬料</strong></div>
+      </div>
+      <div class="wireframe-cell">
+        <div class="icon">&#x2795;</div>
+        <div style="color:var(--mist);">新增供應商</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <span class="wireframe-btn outline" style="font-size:16px;">&#x1F4CB; 歷史訂單</span>
+      <span class="wireframe-btn outline" style="font-size:16px;">&#x2699;&#xFE0F; 設定</span>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>關鍵設計：「一鍵重複下單」</strong><br>
+    在每個供應商卡片上，如果昨天/上次有訂單，顯示一個醒目的 <span class="badge teal">再叫一次</span> 按鈕。點擊後直接帶入上次的品項和數量到確認頁——<strong>一鍵完成常規叫貨，這是整個系統最重要的功能。</strong>
+    <br><br>
+    傳統市場老闆每天叫的貨 80% 相同。「重複上次」可以把 4 步流程壓縮到 2 步（選供應商 → 確認送出）。
+  </div>
+
+  <!-- 下單頁 -->
+  <h3>畫面二：下單頁（品項選擇）</h3>
+  <div class="wireframe">
+    <div class="screen-title">
+      <span style="color:var(--ink);">下單 — 阿明蔬菜</span>
+    </div>
+    <p style="color:var(--slate);margin-bottom:16px;font-family:'Noto Sans TC',sans-serif;font-size:14px;">模仿叫貨單格式：品名 | +/- 按鈕 | 數量 | 單位。常用品項自動排在最上面。</p>
+
+    <div class="wireframe-item-row">
+      <div style="font-weight:600;font-size:20px;">高麗菜</div>
+      <div class="wireframe-qty">
+        <div class="wireframe-qty-btn">&minus;</div>
+        <div class="wireframe-qty-num">3</div>
+        <div class="wireframe-qty-btn">+</div>
+        <div style="color:var(--slate);font-size:18px;">箱</div>
+      </div>
+    </div>
+
+    <div class="wireframe-item-row">
+      <div style="font-weight:600;font-size:20px;">蔥（粗）</div>
+      <div class="wireframe-qty">
+        <div class="wireframe-qty-btn">&minus;</div>
+        <div class="wireframe-qty-num">5</div>
+        <div class="wireframe-qty-btn">+</div>
+        <div style="color:var(--slate);font-size:18px;">把</div>
+      </div>
+    </div>
+
+    <div class="wireframe-item-row">
+      <div style="font-weight:600;font-size:20px;">小白菜</div>
+      <div class="wireframe-qty">
+        <div class="wireframe-qty-btn">&minus;</div>
+        <div class="wireframe-qty-num">0</div>
+        <div class="wireframe-qty-btn">+</div>
+        <div style="color:var(--slate);font-size:18px;">斤</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px;">
+      <span style="color:var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:14px;">&#x25BC; 顯示更多品項</span>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:24px;">
+      <span class="wireframe-btn outline" style="flex:1;text-align:center;">&#x2190; 返回</span>
+      <span class="wireframe-btn" style="flex:2;text-align:center;">確認訂單（3 項）</span>
+    </div>
+  </div>
+
+  <!-- 確認頁 -->
+  <h3>畫面三：確認頁（收據格式）</h3>
+  <div class="wireframe">
+    <div class="screen-title">
+      <span style="color:var(--ink);">確認訂單 — 像收據一樣清楚</span>
+    </div>
+
+    <div style="border:1px dashed var(--border);border-radius:8px;padding:20px;margin:12px 0;font-family:'Noto Sans TC',sans-serif;background:var(--parchment);">
+      <div style="text-align:center;font-size:20px;font-weight:700;margin-bottom:16px;color:var(--ink);">阿明蔬菜 叫貨單</div>
+      <div style="border-bottom:1px dashed var(--mist);padding:8px 0;display:flex;justify-content:space-between;font-size:18px;color:var(--ink);">
+        <span>高麗菜</span><span><strong>3 箱</strong></span>
+      </div>
+      <div style="border-bottom:1px dashed var(--mist);padding:8px 0;display:flex;justify-content:space-between;font-size:18px;color:var(--ink);">
+        <span>蔥（粗）</span><span><strong>5 把</strong></span>
+      </div>
+      <div style="padding:8px 0;display:flex;justify-content:space-between;font-size:18px;color:var(--ink);">
+        <span>小白菜</span><span><strong>0 斤</strong></span>
+      </div>
+      <div style="border-top:2px solid var(--ink);margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;font-size:20px;font-weight:700;color:var(--ink);">
+        <span>共計</span><span>2 項</span>
+      </div>
+      <div style="text-align:center;color:var(--mist);font-size:14px;margin-top:12px;">4/7（一）凌晨送達</div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px;">
+      <span class="wireframe-btn outline" style="flex:1;text-align:center;">修改</span>
+      <span class="wireframe-btn" style="flex:2;text-align:center;background:var(--teal);">&#x2714; 送出叫貨</span>
+    </div>
+  </div>
+
+  <!-- 歷史訂單 -->
+  <h3>畫面四：歷史訂單（快速重複）</h3>
+  <div class="wireframe">
+    <div class="screen-title">
+      <span style="color:var(--ink);">歷史訂單</span>
+    </div>
+    <p style="color:var(--slate);margin-bottom:16px;font-family:'Noto Sans TC',sans-serif;font-size:14px;">每張訂單一行，右側有「再叫一次」大按鈕。</p>
+
+    <div class="wireframe-item-row" style="flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-weight:600;font-size:18px;color:var(--ink);">阿明蔬菜</div>
+        <div style="font-size:15px;color:var(--slate);">4/6（日）高麗菜3箱、蔥5把</div>
+      </div>
+      <span class="wireframe-btn" style="font-size:16px;padding:10px 20px;margin:0;">再叫一次</span>
+    </div>
+
+    <div class="wireframe-item-row" style="flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-weight:600;font-size:18px;color:var(--ink);">大發海產</div>
+        <div style="font-size:15px;color:var(--slate);">4/5（六）鱸魚10斤、蛤蜊5斤</div>
+      </div>
+      <span class="wireframe-btn" style="font-size:16px;padding:10px 20px;margin:0;">再叫一次</span>
+    </div>
+
+    <div class="wireframe-item-row" style="flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-weight:600;font-size:18px;color:var(--ink);">正義肉品</div>
+        <div style="font-size:15px;color:var(--slate);">4/5（六）五花肉8斤、排骨5斤</div>
+      </div>
+      <span class="wireframe-btn" style="font-size:16px;padding:10px 20px;margin:0;">再叫一次</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 7. 流程圖 ==================== -->
+<section id="s7" class="fade-in">
+  <h2>07 &mdash; 關鍵操作流程圖</h2>
+
+  <h3>標準下單流程（4 步）</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">開啟 APP</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">選供應商</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step alt">選品項<br>&amp; 數量</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step gold-bg">確認送出</div>
+  </div>
+  <p style="text-align:center;color:var(--slate);font-size:15px;">最多 4 步，每步一個畫面，絕不超過 5 步。</p>
+
+  <h3>快速重複下單流程（2 步）</h3>
+  <div class="flow-diagram">
+    <div class="flow-step">開啟 APP<br><small style="opacity:0.8;">看到「再叫一次」</small></div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step gold-bg">確認送出</div>
+  </div>
+  <p style="text-align:center;color:var(--slate);font-size:15px;">80% 的日常叫貨只需 2 步完成。這是系統的殺手級功能。</p>
+
+  <h3>首次使用引導流程</h3>
+  <div class="flow-diagram" style="flex-direction:column;align-items:stretch;gap:16px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="flow-step" style="min-width:200px;">由子女/業務<br>幫忙安裝 APP</div>
+      <div style="flex:1;font-size:14px;color:var(--slate);">PWA 安裝：不需要 App Store 帳號</div>
+    </div>
+    <div style="text-align:center;color:var(--mist);font-size:24px;">&darr;</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="flow-step alt" style="min-width:200px;">手機號碼登入<br>（OTP 簡訊）</div>
+      <div style="flex:1;font-size:14px;color:var(--slate);">不需要帳號密碼，只要手機號碼</div>
+    </div>
+    <div style="text-align:center;color:var(--mist);font-size:24px;">&darr;</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="flow-step" style="min-width:200px;">選擇常用供應商<br>（業務預設好）</div>
+      <div style="flex:1;font-size:14px;color:var(--slate);">供應商端先建好品項清單，使用者只要連結</div>
+    </div>
+    <div style="text-align:center;color:var(--mist);font-size:24px;">&darr;</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="flow-step gold-bg" style="min-width:200px;">開始叫貨</div>
+      <div style="flex:1;font-size:14px;color:var(--slate);">首次由子女/業務陪同操作一次即可</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 8. 常見地雷 ==================== -->
+<section id="s8" class="fade-in">
+  <h2>08 &mdash; 常見地雷與解決方案</h2>
+  <p>以下整理高齡者 UX 設計中最常見的錯誤，每個都附帶失敗原因和具體解法。</p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%;">地雷</th>
+          <th style="width:35%;">為什麼會失敗</th>
+          <th style="width:43%;">解決方案</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>文字太小</strong></td>
+          <td>老花眼在 35-45cm 距離無法閱讀 14px 以下文字，使用者會湊近螢幕、瞇眼、或直接放棄。</td>
+          <td>最小 18px，建議 20-24px。支援系統字型縮放。永遠允許放大。</td>
+        </tr>
+        <tr>
+          <td><strong>選項過多</strong></td>
+          <td>工作記憶 4&plusmn;1 + Hick's Law。一頁 10 個按鈕 = 高齡者看到的是「一片混亂」。</td>
+          <td>每頁最多 3-4 個核心選項。次要功能收到「更多」裡。優先顯示「常用」。</td>
+        </tr>
+        <tr>
+          <td><strong>純手勢操作</strong><br>（左滑刪除、下拉刷新）</td>
+          <td>手勢是隱藏指令，沒有視覺提示。高齡者根本不知道可以「滑」。手指顫抖也讓精確滑動困難。</td>
+          <td>所有操作必須有按鈕替代方案。手勢只是「快捷鍵」，不是唯一路徑。</td>
+        </tr>
+        <tr>
+          <td><strong>超時自動登出</strong></td>
+          <td>高齡者操作速度慢，5 分鐘填不完一張單。被登出後找不回進度 = 暴怒或放棄。</td>
+          <td>至少 24 小時不登出。離線狀態下保留草稿。重新登入只需手機 OTP。</td>
+        </tr>
+        <tr>
+          <td><strong>CAPTCHA 驗證碼</strong></td>
+          <td>圖形辨識困難（色覺退化 + 對比度低）。滑動驗證需要精確操控。耗時 > 30 秒 = 放棄。</td>
+          <td>用手機 OTP 簡訊取代。裝置信任機制：同一支手機免驗證。</td>
+        </tr>
+        <tr>
+          <td><strong>複雜密碼要求</strong></td>
+          <td>「需包含大小寫、數字、特殊符號」對日常只用注音的高齡者是天書。忘記密碼後無法自行重設。</td>
+          <td>免密碼登入：手機號碼 + OTP。或用 4-6 位數字 PIN 碼。生物辨識（指紋/Face ID）作為備選。</td>
+        </tr>
+        <tr>
+          <td><strong>漢堡選單</strong><br>（三條線圖示）</td>
+          <td>研究顯示 65+ 歲使用者有 60% 不認得漢堡選單圖示。「三條線代表選單」不是直覺。</td>
+          <td>用固定底部 Tab Bar（最多 4 個 Tab），每個 Tab 有圖示 + 文字標籤。</td>
+        </tr>
+        <tr>
+          <td><strong>彈出式對話框</strong><br>（Modal / Pop-up）</td>
+          <td>突然出現的東西打斷心流、造成恐慌（「這是什麼？是不是中毒了？」）。按「X」關閉的觸控區太小。</td>
+          <td>改用整頁轉場或底部滑出面板（bottom sheet）。必須用時，「關閉」按鈕 &ge; 56px，位於右上角或底部。</td>
+        </tr>
+        <tr>
+          <td><strong>僅靠顏色區分</strong></td>
+          <td>藍-綠色盲在 65+ 歲男性中比例高。「紅色 = 錯誤」如果沒有圖示或文字輔助，色覺退化的使用者看不出差異。</td>
+          <td>顏色 + 圖示 + 文字三重標記。如：紅色背景 + &times; 圖示 + 「訂單取消」文字。</td>
+        </tr>
+        <tr>
+          <td><strong>自動輪播 / Carousel</strong></td>
+          <td>自動切換的內容搶走閱讀時間。高齡者還沒看完第一張，就被切走了，造成焦慮和不信任。</td>
+          <td>靜態內容。如果需要多項展示，用上下滾動列表或分頁標籤（非自動切換）。</td>
+        </tr>
+        <tr>
+          <td><strong>雙欄/多欄排版</strong></td>
+          <td>視線在欄位間跳動增加認知負擔。手機螢幕上的雙欄文字太小。</td>
+          <td>全部單欄排版。一行一個資訊。上下滾動比左右移動直覺。</td>
+        </tr>
+        <tr>
+          <td><strong>英文介面/術語</strong></td>
+          <td>「Submit」「Cancel」「OK」「Error 404」——不是每個 65 歲的台灣人都看得懂英文。</td>
+          <td>100% 繁體中文介面。「送出」「取消」「確定」「出了點問題，請再試一次」。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== 9. 開發建議 ==================== -->
+<section id="s9" class="fade-in">
+  <h2>09 &mdash; 開發實作建議</h2>
+
+  <h3>技術架構建議</h3>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">1</div>
+      <div class="card-title">PWA 優先（Progressive Web App）</div>
+    </div>
+    <p><strong>為什麼：</strong>傳統市場老闆不會自己去 App Store 搜尋安裝。PWA 可以由子女或業務人員透過一個連結「加到主畫面」，看起來像原生 APP，但不需要 Apple/Google 帳號。更新也不需要使用者手動操作。</p>
+    <p><strong>注意：</strong>iOS 上 PWA 的推播通知支援有限（iOS 16.4+），需考慮 LINE Notify 或 SMS 作為通知備案。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">2</div>
+      <div class="card-title">離線優先（Offline-First）</div>
+    </div>
+    <p><strong>為什麼：</strong>傳統市場環境的網路訊號不穩定（地下室、鐵皮屋、人潮密集區）。凌晨 3-5 點叫貨時如果「讀取中...」轉 10 秒，老闆直接打電話了。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>Service Worker 快取供應商清單和品項資料</li>
+      <li>訂單先存在本地 IndexedDB，有網路時自動同步</li>
+      <li>離線狀態下顯示明確提示：「目前離線，訂單會在連上網路後自動送出」</li>
+      <li>同步成功後推送確認通知</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">3</div>
+      <div class="card-title">系統無障礙 API 整合</div>
+    </div>
+    <p><strong>為什麼：</strong>如果使用者已經在手機系統層級開啟了「大字體」或「高對比」，APP 應該自動跟隨，而不是忽略。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>CSS：<code>font-size</code> 使用 <code>rem</code> 不用 <code>px</code>（配合系統字型縮放）</li>
+      <li>iOS：尊重 Dynamic Type 設定</li>
+      <li>Android：尊重系統顯示大小設定</li>
+      <li><code>prefers-contrast: high</code> 媒體查詢，偵測高對比模式</li>
+      <li><code>prefers-reduced-motion</code> 偵測減少動態效果偏好</li>
+      <li>所有互動元素加 <code>aria-label</code>（為未來 VoiceOver / TalkBack 支援做準備）</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">4</div>
+      <div class="card-title">語音輸入支援</div>
+    </div>
+    <p><strong>為什麼：</strong>打字對高齡者是痛苦的——注音輸入法需要精確選字、手寫辨識需要精細運動控制。但他們很會「講話」。LINE 語音訊息是他們最常用的功能。</p>
+    <p><strong>實作：</strong></p>
+    <ul>
+      <li>搜尋供應商/品項時，提供麥克風按鈕</li>
+      <li>使用 Web Speech API 或原生語音辨識</li>
+      <li>支援台語/國語混用的語音輸入（考慮 Whisper API 作為後端）</li>
+      <li>語音備註功能：錄下「明天多送兩箱」，附在訂單上</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">5</div>
+      <div class="card-title">真實使用者測試</div>
+    </div>
+    <p><strong>為什麼：</strong>沒有任何設計規範可以取代「看著 70 歲的人操作你的 APP」的洞察。你會看到你完全意想不到的行為——用食指「戳」螢幕、不知道可以滾動、把所有東西都當成按鈕按。</p>
+    <p><strong>測試建議：</strong></p>
+    <ul>
+      <li>至少找 <strong>5 位 65+ 歲</strong>的傳統市場攤商做原型測試</li>
+      <li>先用<strong>紙本原型</strong>（paper prototype）測試流程邏輯</li>
+      <li>觀察他們<strong>拿手機的方式</strong>（單手/雙手）、<strong>眼睛到螢幕的距離</strong></li>
+      <li>記錄<strong>每次猶豫和誤操作</strong>——這些是最寶貴的設計線索</li>
+      <li>測試環境要在<strong>市場現場</strong>，不是辦公室（光線、噪音、濕手都是變數）</li>
+      <li>每次測試改善後再測，至少迭代<strong> 3 輪</strong></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-number">6</div>
+      <div class="card-title">數據監測與持續優化</div>
+    </div>
+    <p><strong>上線後必須追蹤的指標：</strong></p>
+    <ul>
+      <li><strong>任務完成率</strong>：「開始下單 → 成功送出」的轉換率（目標 > 90%）</li>
+      <li><strong>平均操作時間</strong>：完成一次下單的時間（目標 < 60 秒）</li>
+      <li><strong>誤觸率</strong>：「返回」「取消」「重新輸入」的頻率</li>
+      <li><strong>跳出點</strong>：使用者在哪個步驟放棄最多</li>
+      <li><strong>重複下單使用率</strong>：「再叫一次」功能的使用比例（目標 > 60%）</li>
+      <li><strong>客服求助率</strong>：多少使用者需要打電話問「怎麼用」</li>
+    </ul>
+  </div>
+
+  <h3>技術選型建議</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>面向</th>
+          <th>建議方案</th>
+          <th>原因</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>前端框架</td>
+          <td>React / Vue + PWA</td>
+          <td>成熟的 PWA 生態系，離線支援完善</td>
+        </tr>
+        <tr>
+          <td>UI 組件庫</td>
+          <td>自建（Design Token 驅動）</td>
+          <td>現有組件庫的預設值都太小，自建才能確保高齡友善</td>
+        </tr>
+        <tr>
+          <td>狀態管理</td>
+          <td>本地快取 + API 同步</td>
+          <td>離線優先架構</td>
+        </tr>
+        <tr>
+          <td>登入機制</td>
+          <td>手機號碼 + OTP</td>
+          <td>零密碼，裝置信任後免登入</td>
+        </tr>
+        <tr>
+          <td>通知</td>
+          <td>LINE Notify + SMS 備案</td>
+          <td>高齡者最常看 LINE，推播通知可能被忽略</td>
+        </tr>
+        <tr>
+          <td>語音辨識</td>
+          <td>Web Speech API / Whisper</td>
+          <td>支援國台語，降低打字需求</td>
+        </tr>
+        <tr>
+          <td>後端</td>
+          <td>Node.js / Python + REST API</td>
+          <td>快速開發，容易維護</td>
+        </tr>
+        <tr>
+          <td>資料庫</td>
+          <td>PostgreSQL + Redis</td>
+          <td>訂單資料 + 快取</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== 10. 行動清單 ==================== -->
+<section id="s10" class="fade-in">
+  <h2>10 &mdash; 下一步行動清單</h2>
+  <p>以下是建議 Feng 團隊依序執行的行動項目，每項附帶預估時間和交付物。</p>
+
+  <h3>Phase 1：使用者研究（1-2 週）</h3>
+  <ul class="checklist">
+    <li>
+      <strong>田野調查</strong>：拜訪 3-5 個傳統市場攤位，觀察他們目前的叫貨流程（電話/LINE/手寫單）。拍照記錄（經同意）。
+      <br><span style="color:var(--slate);font-size:14px;">交付物：使用者旅程地圖（Current State Journey Map）</span>
+    </li>
+    <li>
+      <strong>裝置調查</strong>：記錄目標使用者實際使用的手機型號、螢幕尺寸、作業系統版本。
+      <br><span style="color:var(--slate);font-size:14px;">交付物：裝置清單 + 最低規格基準（e.g., iPhone 8 / Android 10）</span>
+    </li>
+    <li>
+      <strong>痛點訪談</strong>：用口語化的方式問：「你最怕手機的什麼？」「你用 LINE 的時候最困擾的是？」「如果可以按一個按鈕就叫好貨，你會想用嗎？」
+      <br><span style="color:var(--slate);font-size:14px;">交付物：5 份訪談摘要 + 痛點排序</span>
+    </li>
+  </ul>
+
+  <h3>Phase 2：原型設計（1-2 週）</h3>
+  <ul class="checklist">
+    <li>
+      <strong>紙本原型</strong>：根據本報告的 Wireframe 建議，畫出紙本版的四個畫面。帶到市場給攤商操作。
+      <br><span style="color:var(--slate);font-size:14px;">交付物：紙本原型 + 3 份使用者測試紀錄</span>
+    </li>
+    <li>
+      <strong>數位原型</strong>：用 Figma 製作可互動原型，在真實手機上測試。重點驗證：觸控目標大小是否足夠、文字是否可讀、流程是否直覺。
+      <br><span style="color:var(--slate);font-size:14px;">交付物：Figma 互動原型 + 可用性測試報告</span>
+    </li>
+    <li>
+      <strong>無障礙審計</strong>：用 Lighthouse / axe 等工具檢查對比度、觸控目標、ARIA 標籤。
+      <br><span style="color:var(--slate);font-size:14px;">交付物：無障礙審計清單（Accessibility Audit Checklist）</span>
+    </li>
+  </ul>
+
+  <h3>Phase 3：開發與測試（4-6 週）</h3>
+  <ul class="checklist">
+    <li>
+      <strong>Design Token 系統建立</strong>：將本報告第 4 章的規範轉化為 CSS Variables / Design Tokens，確保全系統一致性。
+    </li>
+    <li>
+      <strong>核心功能開發</strong>：MVP 只做三件事——(1) 選供應商 (2) 下單 (3) 重複上次訂單。其他功能全部 Phase 2。
+    </li>
+    <li>
+      <strong>真實環境測試</strong>：在市場現場、凌晨時段、用目標使用者的手機測試。至少 3 輪迭代。
+    </li>
+    <li>
+      <strong>競品研究</strong>：調查台灣現有的市場批發數位化系統（如：批發市場交易系統、LINE 機器人叫貨群組），了解已有的解決方案和不足之處。
+    </li>
+  </ul>
+
+  <h3>Phase 4：上線與優化（持續）</h3>
+  <ul class="checklist">
+    <li>
+      <strong>軟啟動</strong>：先找 5-10 個友好攤商使用，收集回饋。不要一次大規模推廣。
+    </li>
+    <li>
+      <strong>數據監測</strong>：部署本報告第 9 章建議的監測指標，每週檢視。
+    </li>
+    <li>
+      <strong>持續迭代</strong>：根據使用數據和使用者回饋，每 2 週迭代一次 UI 改進。
+    </li>
+  </ul>
+
+  <div class="highlight-box info">
+    <strong>給 Feng 的提醒：</strong>這個系統的成功指標不是「功能有多完整」，而是「70 歲的阿嬤能不能在 30 秒內叫好貨」。任何讓這件事變複雜的功能，都應該被拿掉。<strong>Less is more，在高齡者 UX 中不是口號，是生存法則。</strong>
+  </div>
+</section>
+
+<!-- ==================== Footer ==================== -->
+<footer class="footer">
+  <div class="footer-brand">MUSEON</div>
+  <p>Warm Precision &mdash; 溫暖的精密感</p>
+  <p style="margin-top:16px;font-size:13px;color:var(--mist);">
+    Prepared for 馮士維 &mdash; 2026.04.06<br>
+    &copy; 2026 MUSEON. All rights reserved.<br>
+    This report is confidential and intended for the named recipient only.
+  </p>
+</footer>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>

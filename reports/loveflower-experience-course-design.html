@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>戀花宅 × 為你而開 — 永生花體驗課完整執行手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── 戀花宅品牌色系 ── */
+    --parchment: #f5f3f2;       /* 象牙白 */
+    --snow: #fefefe;
+    --ink: #0a2813;             /* 墨松綠 */
+    --slate: #484d4c;           /* 木炭灰 */
+    --mist: #79895f;            /* 苔蘚綠 */
+    --border: #d8d2b0;          /* 金色調邊框 */
+    --ember: #ab1d22;           /* 鵝絨紅 */
+    --ember-light: #c4393e;     /* 鵝絨紅淺版（品牌紅的明度調整） */
+    --ember-dark: #881519;      /* 鵝絨紅深版 */
+    --rose: #ab1d22;            /* 鵝絨紅（別名） */
+    --rose-light: #ab1d22;      /* 鵝絨紅（保持品牌主色） */
+    --rose-pale: #ebe2b3;       /* 麥穗米 */
+    --rose-deep: #881519;       /* 鵝絨紅深版 */
+    --blush: #ebe2b3;           /* 麥穗米 */
+    --gold: #b59948;            /* 礦石金 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--ink);
+    font-family: 'Noto Sans TC', 'Outfit', sans-serif;
+  }
+
+  /* ── Slideshow ── */
+  .slideshow {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.42s ease, transform 0.42s ease;
+    pointer-events: none;
+    overflow-y: auto;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  /* ── Nav ── */
+  .nav-bar {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 100;
+    background: rgba(10,40,19,0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 9px 18px;
+    border-radius: 100px;
+    border: 1px solid rgba(181,153,72,0.22);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  .nav-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.18);
+    background: transparent;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    transition: all 0.18s ease;
+    user-select: none;
+  }
+
+  .nav-btn:hover {
+    background: rgba(171,29,34,0.28);
+    border-color: var(--gold);
+    color: #fff;
+  }
+
+  .nav-dots { display: flex; gap: 5px; align-items: center; }
+
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    cursor: pointer;
+    transition: all 0.22s ease;
+  }
+
+  .nav-dot.active {
+    background: var(--rose-light);
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  .slide-counter {
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.07em;
+    min-width: 38px;
+    text-align: center;
+  }
+
+  /* ── Layout ── */
+  .slide-inner {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 52px 44px 96px;
+    position: relative;
+  }
+
+  .slide-content {
+    width: 100%;
+    max-width: 920px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ── Backgrounds ── */
+  .bg-parchment  { background: var(--parchment); }
+  .bg-snow       { background: var(--snow); }
+  .bg-dark       { background: var(--ink); }
+  .bg-warm-grad  { background: linear-gradient(140deg, #ede5c0 0%, #f5f3f2 55%, #ebe2b3 100%); }
+  .bg-rose-tint  { background: linear-gradient(160deg, #f5f3f2 0%, #ebe2b3 55%, #f5f3f2 100%); }
+
+  /* ── Decorative Petals (CSS only) ── */
+  .deco { position: absolute; pointer-events: none; overflow: hidden; inset: 0; z-index: 1; }
+
+  /* ── Typography ── */
+  .eyebrow {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .eyebrow-light { color: rgba(181,153,72,0.7); }
+
+  h1.display {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 6.5vw, 80px);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  h2.section-title {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 4.5vw, 56px);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  h3.card-title {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    font-size: clamp(19px, 2.3vw, 26px);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 300;
+    color: var(--slate);
+    line-height: 1.85;
+  }
+
+  .body-text {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 400;
+    color: var(--slate);
+    line-height: 1.8;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 44px; height: 2px;
+    background: var(--rose);
+    margin: 20px 0;
+    border-radius: 2px;
+  }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    background: rgba(171,29,34,0.1);
+    color: var(--rose-deep);
+    border-radius: 100px;
+    padding: 3px 11px;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+  }
+  .badge-ember { background: rgba(171,29,34,0.1); color: var(--ember-dark); }
+  .badge-gold  { background: rgba(181,153,72,0.1); color: var(--gold); }
+  .badge-ghost { background: rgba(171,29,34,0.08); color: var(--rose-light); border: 1px solid rgba(181,153,72,0.3); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(10,40,19,0.05), 0 4px 14px rgba(10,40,19,0.04);
+  }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+
+  /* ── Stat Block ── */
+  .stat-block { text-align: center; padding: 26px 16px; }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 4vw, 50px);
+    font-weight: 600; color: var(--rose); line-height: 1; display: block;
+  }
+  .stat-label { font-family: 'Noto Sans TC',sans-serif; font-size: 12px; color: var(--slate); margin-top: 5px; }
+
+  /* ── Quote ── */
+  .quote-block {
+    border-left: 3px solid var(--gold);
+    padding: 14px 20px;
+    background: rgba(181,153,72,0.05);
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+  }
+  .quote-text {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 500; font-style: italic;
+    color: var(--ink); line-height: 1.5;
+  }
+  .quote-source { font-size: 11px; color: var(--mist); margin-top: 6px; font-family: 'Outfit',sans-serif; }
+
+  /* ── Highlight Box ── */
+  .hl-box {
+    background: linear-gradient(135deg, rgba(181,153,72,0.1) 0%, rgba(171,29,34,0.05) 100%);
+    border: 1px solid rgba(181,153,72,0.28);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  /* ── Tip / Warn ── */
+  .tip-box, .warn-box {
+    border-radius: 8px;
+    padding: 11px 15px;
+    font-size: 13px;
+    color: var(--slate);
+    font-family: 'Noto Sans TC',sans-serif;
+    display: flex; gap: 9px; align-items: flex-start;
+  }
+  .tip-box  { background: rgba(181,153,72,0.07); border: 1px solid rgba(181,153,72,0.22); }
+  .warn-box { background: rgba(171,29,34,0.05);  border: 1px solid rgba(171,29,34,0.18); }
+  .tip-icon  { color: var(--gold);  font-size: 13px; flex-shrink: 0; margin-top: 2px; }
+  .warn-icon { color: var(--ember); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Step List ── */
+  .step-list { list-style: none; }
+  .step-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(226,224,218,0.5);
+    font-size: 13px; color: var(--slate);
+    font-family: 'Noto Sans TC',sans-serif; line-height: 1.7;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    width: 23px; height: 23px; border-radius: 50%;
+    background: rgba(171,29,34,0.1);
+    color: var(--rose-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    font-family: 'Outfit',sans-serif; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* ── Table ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: 'Noto Sans TC',sans-serif; }
+  .data-table thead th {
+    text-align: left; padding: 9px 14px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mist); font-family: 'Outfit',sans-serif;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table tbody td {
+    padding: 11px 14px; color: var(--slate);
+    border-bottom: 1px solid rgba(226,224,218,0.45);
+    vertical-align: top;
+  }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover td { background: rgba(181,153,72,0.04); }
+  .data-table td:first-child { font-weight: 500; color: var(--ink); }
+
+  /* ── Phase Timeline ── */
+  .phase-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 22px; padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-icon {
+    width: 46px; height: 46px; border-radius: 11px;
+    background: rgba(181,153,72,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .phase-num { font-family: 'Outfit',sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); margin-bottom: 3px; }
+  .phase-main-title { font-family: 'Cormorant Garamond',serif; font-size: clamp(20px,2.8vw,30px); font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .phase-main-sub { font-size: 12px; color: var(--mist); font-family: 'Outfit',sans-serif; margin-top: 2px; }
+
+  .timeline-item { display: flex; gap: 16px; margin-bottom: 18px; align-items: flex-start; }
+  .timeline-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 52px; }
+  .timeline-time { font-family:'Outfit',sans-serif; font-size: 12px; font-weight: 600; color: var(--rose); letter-spacing: 0.04em; text-align: center; }
+  .timeline-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); margin: 5px 0; box-shadow: 0 0 0 3px rgba(181,153,72,0.22); flex-shrink: 0; }
+  .timeline-line { width: 1px; flex: 1; background: var(--border); min-height: 18px; }
+  .timeline-body { flex: 1; padding-bottom: 6px; }
+  .timeline-title { font-family:'Noto Sans TC',sans-serif; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+  .timeline-desc  { font-size: 12px; color: var(--slate); line-height: 1.7; }
+
+  /* ── Convert Card ── */
+  .convert-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    position: relative; overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .convert-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+    border-radius: 3px 0 0 3px;
+  }
+  .convert-card.ember::before { background: var(--ember); }
+  .convert-card.gold::before  { background: var(--gold); }
+
+  /* ── Dark overrides ── */
+  .dark-slide h2.section-title,
+  .dark-slide h1.display,
+  .dark-slide h3.card-title { color: #f5f3f2; }
+  .dark-slide .subtitle,
+  .dark-slide .body-text { color: rgba(235,226,179,0.72); }
+  .dark-slide .eyebrow { color: rgba(181,153,72,0.8); }
+  .dark-slide .divider { background: var(--gold); }
+
+  /* ── Scrollbar ── */
+  .slide::-webkit-scrollbar { width: 3px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: rgba(181,153,72,0.3); border-radius: 2px; }
+
+  /* ── Spacing ── */
+  .mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+  .mt20{margin-top:20px}.mt24{margin-top:24px}.mt28{margin-top:28px}.mt32{margin-top:32px}
+
+  /* ── Cover specific ── */
+  .cover-brand {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond',serif;
+    font-size: clamp(52px,8.5vw,100px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .cover-cross { color: var(--gold); font-weight: 300; margin: 0 10px; }
+  .cover-tagline {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond',serif;
+    font-size: clamp(26px,4vw,50px);
+    font-weight: 400; font-style: italic;
+    color: var(--ember);
+    line-height: 1.2;
+  }
+  .cover-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(181,153,72,0.1);
+    border: 1px solid rgba(181,153,72,0.28);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 13px; color: var(--ink);
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .cover-pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+  .cover-pill.ember-pill { background: rgba(171,29,34,0.08); border-color: rgba(171,29,34,0.22); color: var(--ember-dark); }
+  .cover-pill.ember-pill .cover-pill-dot { background: var(--ember); }
+
+  /* ── Responsive ── */
+  @media (max-width:768px) {
+    .slide-inner { padding: 32px 20px 96px; }
+    .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+  }
+  @media (max-width:640px) {
+    .slide-inner { padding: 24px 16px 90px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slideshow" id="slideshow">
+
+<!-- ════════════════════════════════════════
+     SLIDE 1 — COVER
+════════════════════════════════════════ -->
+<div class="slide active bg-warm-grad" data-index="0">
+  <div class="deco">
+    <svg style="position:absolute;top:-40px;right:-30px;width:420px;height:420px;opacity:.13;" viewBox="0 0 420 420" fill="none">
+      <ellipse cx="320" cy="90"  rx="130" ry="62" fill="#ab1d22" transform="rotate(-28 320 90)"/>
+      <ellipse cx="370" cy="180" rx="100" ry="50" fill="#ab1d22" transform="rotate(12 370 180)"/>
+      <ellipse cx="250" cy="50"  rx="80"  ry="38" fill="#ab1d22" transform="rotate(-52 250 50)"/>
+      <ellipse cx="390" cy="110" rx="65"  ry="30" fill="#ab1d22" transform="rotate(40 390 110)"/>
+      <circle cx="210" cy="95"  r="9"  fill="#ab1d22" opacity=".45"/>
+      <circle cx="300" cy="190" r="6"  fill="#ab1d22" opacity=".35"/>
+      <circle cx="340" cy="240" r="7"  fill="#ab1d22" opacity=".3"/>
+    </svg>
+    <svg style="position:absolute;bottom:-50px;left:-40px;width:300px;height:300px;opacity:.07;" viewBox="0 0 300 300" fill="none">
+      <ellipse cx="60"  cy="240" rx="100" ry="48" fill="#ab1d22" transform="rotate(18 60 240)"/>
+      <ellipse cx="130" cy="275" rx="75"  ry="36" fill="#ab1d22" transform="rotate(-38 130 275)"/>
+      <circle cx="160" cy="210" r="11" fill="#ab1d22" opacity=".55"/>
+    </svg>
+  </div>
+  <div class="slide-inner">
+    <div class="slide-content">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.4vw,14px);font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">LOVE FLOWER HOME</div>
+      <span class="badge mt4">完整執行手冊</span>
+      <div class="mt20">
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:2px;">
+          <span class="cover-brand">戀花宅</span>
+          <span class="cover-brand cover-cross">×</span>
+        </div>
+        <div class="cover-tagline mt8">「為你而開」</div>
+      </div>
+      <div class="divider" style="margin:26px 0;background:var(--gold);width:60px;height:1px;"></div>
+      <p class="subtitle" style="font-size:clamp(15px,1.9vw,19px);max-width:500px;">永生花體驗課<br>完整執行手冊</p>
+      <p style="font-family:'Noto Serif TC',serif;font-size:clamp(12px,1.4vw,14px);font-style:italic;color:var(--slate);margin-top:10px;letter-spacing:0.06em;">形色之間見心，一筆一畫成願</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;">
+        <div class="cover-pill"><span class="cover-pill-dot"></span>6 人小班</div>
+        <div class="cover-pill"><span class="cover-pill-dot"></span>3 小時</div>
+        <div class="cover-pill ember-pill"><span class="cover-pill-dot"></span>一個讓人哭的下午</div>
+      </div>
+      <div style="margin-top:44px;font-size:11px;color:var(--mist);letter-spacing:.1em;text-transform:uppercase;font-family:'Outfit',sans-serif;">
+        子嫻 × MUSEON ／ 品牌體驗設計文件
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 2 — 設計理念
+════════════════════════════════════════ -->
+<div class="slide bg-snow" data-index="1">
+  <div class="deco">
+    <svg style="position:absolute;top:-20px;right:-20px;width:220px;height:220px;opacity:.07;" viewBox="0 0 220 220" fill="none">
+      <ellipse cx="170" cy="60"  rx="90" ry="45" fill="#ab1d22" transform="rotate(-22 170 60)"/>
+      <ellipse cx="200" cy="130" rx="70" ry="35" fill="#ab1d22" transform="rotate(15 200 130)"/>
+    </svg>
+  </div>
+  <div class="slide-inner">
+    <div class="slide-content">
+      <span class="eyebrow">Design Philosophy</span>
+      <h2 class="section-title">設計理念</h2>
+      <div class="divider"></div>
+
+      <div class="quote-block">
+        <p class="quote-text">「人不會因為花漂亮而哭，會因為想起一個人而哭。」</p>
+        <p class="quote-source">— 戀花宅品牌洞察</p>
+      </div>
+
+      <div class="grid-2 mt24">
+        <div class="card">
+          <span class="eyebrow">核心洞察</span>
+          <h3 class="card-title">技術是載體，情感是目的</h3>
+          <p class="body-text mt8">課程的核心不是教技術，是製造「想起來」的時刻。學員帶走的不是一束花，是一段被觸動的記憶。</p>
+        </div>
+        <div class="card">
+          <span class="eyebrow">品牌宣言</span>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;">
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:30px;height:30px;border-radius:8px;background:rgba(171,29,34,0.1);display:flex;align-items:center;justify-content:center;font-size:15px;">🌸</div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">照顧</div>
+                <div style="font-size:12px;color:var(--slate);">每個人在這裡都被看見</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:30px;height:30px;border-radius:8px;background:rgba(171,29,34,0.08);display:flex;align-items:center;justify-content:center;font-size:15px;">✦</div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">坦率</div>
+                <div style="font-size:12px;color:var(--slate);">說真實的故事，不表演</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:30px;height:30px;border-radius:8px;background:rgba(181,153,72,0.08);display:flex;align-items:center;justify-content:center;font-size:15px;">🍃</div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">界限</div>
+                <div style="font-size:12px;color:var(--slate);">不強迫分享，給空間沉澱</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hl-box mt20">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,21px);color:var(--ink);font-style:italic;line-height:1.6;">
+          課程設計原則：<strong style="font-style:normal;color:var(--rose-deep);">安全感先於感動，感動先於技術，技術只是讓愛有了形狀。</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 3 — 基本設定
+════════════════════════════════════════ -->
+<div class="slide bg-parchment" data-index="2">
+  <div class="deco">
+    <svg style="position:absolute;bottom:-30px;left:-30px;width:260px;height:260px;opacity:.06;" viewBox="0 0 260 260" fill="none">
+      <ellipse cx="60" cy="200" rx="110" ry="52" fill="#ab1d22" transform="rotate(22 60 200)"/>
+      <circle cx="140" cy="180" r="12" fill="#ab1d22" opacity=".5"/>
+    </svg>
+    <svg style="position:absolute;top:-20px;right:60px;width:180px;height:180px;opacity:.07;" viewBox="0 0 180 180" fill="none">
+      <ellipse cx="130" cy="50" rx="80" ry="38" fill="#ab1d22" transform="rotate(-35 130 50)"/>
+    </svg>
+  </div>
+  <div class="slide-inner">
+    <div class="slide-content">
+      <span class="eyebrow">Basic Settings</span>
+      <h2 class="section-title">基本設定</h2>
+      <div class="divider"></div>
+
+      <div class="grid-4" style="margin-top:4px;">
+        <div class="card stat-block"><span class="stat-number">6</span><div class="stat-label">人（上限）</div></div>
+        <div class="card stat-block"><span class="stat-number">3h</span><div class="stat-label">體驗時長</div></div>
+        <div class="card stat-block"><span class="stat-number">1,980</span><div class="stat-label">元／人</div></div>
+        <div class="card stat-block"><span class="stat-number">33%</span><div class="stat-label">目標轉換率</div></div>
+      </div>
+
+      <div class="grid-2 mt18">
+        <div class="card">
+          <span class="eyebrow">費用包含</span>
+          <ul class="step-list">
+            <li><span style="color:var(--rose);font-size:15px;flex-shrink:0;">✦</span><span>永生花材料（主花 2-3 朵 + 配花配葉）</span></li>
+            <li><span style="color:var(--rose);font-size:15px;flex-shrink:0;">✦</span><span>手寫小卡片</span></li>
+            <li><span style="color:var(--rose);font-size:15px;flex-shrink:0;">✦</span><span>精美包裝</span></li>
+            <li><span style="color:var(--rose);font-size:15px;flex-shrink:0;">✦</span><span>入場一杯茶</span></li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <span class="eyebrow">隱藏 KPI</span>
+            <div class="hl-box" style="margin-top:8px;padding:14px 18px;">
+              <p style="font-size:14px;color:var(--rose-deep);font-family:'Noto Sans TC',sans-serif;font-weight:500;line-height:1.6;">每堂至少 1-2 人眼眶濕潤</p>
+            </div>
+          </div>
+          <div class="card">
+            <span class="eyebrow">材料成本</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--rose);font-weight:600;">300–400</span>
+              <span style="font-size:12px;color:var(--mist);">元／份</span>
+            </div>
+            <p style="font-size:12px;color:var(--slate);margin-top:6px;font-family:'Noto Sans TC',sans-serif;">場地：西門町實體店。親密感比場地大更重要。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 4 — 道具清單
+════════════════════════════════════════ -->
+<div class="slide bg-rose-tint" data-index="3">
+  <div class="slide-inner" style="justify-content:flex-start;padding-top:58px;">
+    <div class="slide-content">
+      <span class="eyebrow">Props List</span>
+      <h2 class="section-title">道具清單</h2>
+      <div class="divider"></div>
+
+      <div class="card mt8" style="overflow:hidden;padding:0;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:33%;padding-left:20px;">項目</th>
+              <th style="width:16%;">數量</th>
+              <th style="padding-right:20px;">備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding-left:20px;">🌸 永生花材料包</td>
+              <td><span class="badge">6 份</span></td>
+              <td style="padding-right:20px;">主花 2-3 朵 + 配花配葉，預算 300-400 元／份</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">🃏 花語卡片組</td>
+              <td><span class="badge">12-15 張</span></td>
+              <td style="padding-right:20px;">花語 + 對應顏色，引導情感連結</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">✉️ 手寫小卡片</td>
+              <td><span class="badge">6 張</span></td>
+              <td style="padding-right:20px;">「這束花記得你為誰而做的心意」</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">🤍 面紙</td>
+              <td><span class="badge">2 盒</span></td>
+              <td style="padding-right:20px;">放桌上，自然不刻意——它在說「這裡可以哭」</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">🎵 藍牙音響</td>
+              <td><span class="badge">1 台</span></td>
+              <td style="padding-right:20px;">輕音樂（鋼琴 / 自然音），音量剛好聽得到</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">📱 手機腳架</td>
+              <td><span class="badge">1 支</span></td>
+              <td style="padding-right:20px;">固定機位拍照用</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">💡 柔光燈</td>
+              <td><span class="badge">1 盞</span></td>
+              <td style="padding-right:20px;">打卡區，Logo 入鏡</td>
+            </tr>
+            <tr>
+              <td style="padding-left:20px;">🪞 小鏡子</td>
+              <td><span class="badge">6 面</span></td>
+              <td style="padding-right:20px;">讓她們看自己拿著花的樣子——那個畫面很珍貴</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2 mt16">
+        <div class="tip-box">
+          <span class="tip-icon">◈</span>
+          <span>面紙放桌上不要放角落，位置本身在說話。</span>
+        </div>
+        <div class="tip-box">
+          <span class="tip-icon">◈</span>
+          <span>鏡子是隱藏武器——捧花的樣子會讓她想到要送的那個人。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 5 — Phase 1
+════════════════════════════════════════ -->
+<div class="slide bg-parchment" data-index="4">
+  <div class="deco">
+    <svg style="position:absolute;top:-30px;right:-10px;width:200px;height:200px;opacity:.08;" viewBox="0 0 200 200" fill="none">
+      <ellipse cx="160" cy="70"  rx="90" ry="44" fill="#ab1d22" transform="rotate(-30 160 70)"/>
+      <ellipse cx="180" cy="130" rx="65" ry="30" fill="#ab1d22" transform="rotate(10 180 130)"/>
+    </svg>
+  </div>
+  <div class="slide-inner">
+    <div class="slide-content">
+      <div class="phase-header">
+        <div class="phase-icon">🌿</div>
+        <div>
+          <div class="phase-num">Phase 01 · 30 分鐘</div>
+          <div class="phase-main-title">抵達 + 破冰</div>
+          <div class="phase-main-sub">18:30 — 19:00</div>
+        </div>
+        <div style="margin-left:auto;"><span class="badge badge-gold">入場儀式</span></div>
+      </div>
+
+      <div class="grid-2">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card" style="border-left:3px solid var(--rose);border-radius:0 12px 12px 0;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--rose);font-family:'Outfit',sans-serif;margin-bottom:8px;">18:30 — 入場</div>
+            <p class="body-text">輕音樂已開啟，暖燈光已亮起。</p>
+            <p class="body-text mt4">桌上已擺好材料包 + 一杯茶。</p>
+            <p class="body-text mt8" style="font-size:12px;color:var(--mist);">在她們抵達前就佈好場——讓進門第一秒就感覺被照顧。</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--ember);border-radius:0 12px 12px 0;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ember);font-family:'Outfit',sans-serif;margin-bottom:8px;">18:40 — 自我介紹</div>
+            <p class="body-text">每人 1 分鐘：</p>
+            <div class="quote-block" style="margin:10px 0;padding:10px 14px;">
+              <p class="quote-text" style="font-size:15px;">「今天為什麼來？」</p>
+            </div>
+            <p class="body-text" style="font-size:12px;color:var(--mist);">問「為什麼來」比問名字更快讓人說真話。</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card" style="border-left:3px solid var(--gold);border-radius:0 12px 12px 0;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--gold);font-family:'Outfit',sans-serif;margin-bottom:8px;">18:50 — 抽花語卡</div>
+            <p class="body-text">每人抽一張花語卡，然後說：</p>
+            <div class="hl-box mt10">
+              <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,19px);color:var(--ink);font-style:italic;line-height:1.6;">
+                「如果這束花要送給一個人，你心裡第一個浮現的是誰？不用說出來，記在心裡就好。」
+              </p>
+            </div>
+          </div>
+          <div class="tip-box">
+            <span class="tip-icon">◈</span>
+            <div>
+              <strong style="display:block;margin-bottom:3px;">關鍵台詞設計</strong>
+              「不用說出來」給了她安全感，但種子已經落下。這是整堂課最重要的一句話。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 6 — Phase 2
+════════════════════════════════════════ -->
+<div class="slide bg-snow" data-index="5">
+  <div class="slide-inner" style="justify-content:flex-start;padding-top:56px;">
+    <div class="slide-content">
+      <div class="phase-header">
+        <div class="phase-icon">✂️</div>
+        <div>
+          <div class="phase-num">Phase 02 · 90 分鐘</div>
+          <div class="phase-main-title">做花時間</div>
+          <div class="phase-main-sub">19:00 — 20:30</div>
+        </div>
+        <div style="margin-left:auto;"><span class="badge badge-ember">操作核心</span></div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="timeline-item">
+            <div class="timeline-left"><span class="timeline-time">19:00</span><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+            <div class="timeline-body">
+              <div class="timeline-title">你先講自己的故事（5 分鐘）</div>
+              <p class="timeline-desc">示範脆弱，打開場域的情感安全感。分享一個與花有關的真實故事。</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-left"><span class="timeline-time">19:05</span><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+            <div class="timeline-body">
+              <div class="timeline-title">配色引導 — 走到每個人旁邊</div>
+              <div class="quote-block" style="margin:7px 0;padding:8px 12px;">
+                <p class="quote-text" style="font-size:14px;">「你想到的那個人，她喜歡什麼顏色？」</p>
+              </div>
+              <p class="timeline-desc">一對一私語比公開提問更能打開心防。</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-left"><span class="timeline-time">19:30</span><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+            <div class="timeline-body">
+              <div class="timeline-title">花材搭配</div>
+              <p class="timeline-desc">穿插小故事 + 留 2-3 分鐘安靜時間。<br><span style="color:var(--rose);font-style:italic;">安靜不是尷尬，是讓情緒有空間成形。</span></p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="timeline-item">
+            <div class="timeline-left"><span class="timeline-time">20:00</span><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+            <div class="timeline-body">
+              <div class="timeline-title">組裝</div>
+              <p class="timeline-desc">手把手帶，輕聲問：</p>
+              <div class="quote-block" style="margin:7px 0;padding:8px 12px;">
+                <p class="quote-text" style="font-size:14px;">「你做的時候在想什麼？」</p>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item" style="margin-bottom:0;">
+            <div class="timeline-left"><span class="timeline-time">20:20</span><div class="timeline-dot"></div></div>
+            <div class="timeline-body">
+              <div class="timeline-title">包裝</div>
+              <div class="hl-box mt8">
+                <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.8vw,18px);color:var(--ink);font-style:italic;line-height:1.55;">
+                  「想像你要把這個遞到她手上的那個畫面。」
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tip-box mt16">
+            <span class="tip-icon">◈</span>
+            <span>包裝時放最慢的音樂，讓她有充分時間停在那個畫面裡。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 7 — Phase 3（靈魂）
+════════════════════════════════════════ -->
+<div class="slide bg-warm-grad" data-index="6">
+  <div class="deco">
+    <svg style="position:absolute;top:-20px;right:-10px;width:180px;height:180px;opacity:.07;" viewBox="0 0 180 180" fill="none">
+      <ellipse cx="140" cy="60"  rx="85" ry="40" fill="#ab1d22" transform="rotate(-25 140 60)"/>
+      <ellipse cx="160" cy="110" rx="60" ry="28" fill="#ab1d22" transform="rotate(10 160 110)"/>
+    </svg>
+  </div>
+  <div class="slide-inner">
+    <div class="slide-content">
+      <div class="phase-header">
+        <div class="phase-icon" style="background:rgba(171,29,34,0.1);">💬</div>
+        <div>
+          <div class="phase-num">Phase 03 · 45 分鐘</div>
+          <div class="phase-main-title">故事時刻</div>
+          <div class="phase-main-sub">20:30 — 21:15</div>
+        </div>
+        <div style="margin-left:auto;"><span class="badge badge-ember" style="font-size:10px;">整堂課的靈魂</span></div>
+      </div>
+
+      <div class="grid-2">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card" style="background:rgba(171,29,34,0.04);border-color:rgba(171,29,34,0.18);">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ember);font-family:'Outfit',sans-serif;margin-bottom:8px;">20:30 — 你先示範脆弱</div>
+            <p class="body-text">用 3 分鐘說一個自己的真實故事。</p>
+            <p class="body-text mt8" style="font-size:12px;color:var(--slate);">不是表演感動，是真的把那個時刻帶進來。她們感覺到你是真的，才會跟著打開。</p>
+          </div>
+          <div class="card">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--rose);font-family:'Outfit',sans-serif;margin-bottom:8px;">20:33 — 每人輪流分享</div>
+            <p class="body-text">每人 3-5 分鐘：</p>
+            <div class="quote-block" style="margin:10px 0;padding:10px 14px;">
+              <p class="quote-text" style="font-size:15px;">「這束花要送給誰？為什麼是她？」</p>
+            </div>
+            <p class="body-text" style="font-size:12px;color:var(--mist);">你的工作是聽，不是引導。點頭，維持眼神。</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="warn-box" style="flex-direction:column;align-items:flex-start;gap:8px;padding:16px;">
+            <div style="display:flex;gap:9px;align-items:center;">
+              <span class="warn-icon">⚠</span>
+              <strong style="font-family:'Noto Sans TC',sans-serif;font-size:13px;color:var(--ink);">有人哭的時候</strong>
+            </div>
+            <p style="font-size:13px;color:var(--slate);line-height:1.7;">不急著遞面紙，讓情緒多留幾秒。眼淚是她信任你的最高形式，不要急著「解決」它。</p>
+          </div>
+          <div class="card" style="background:linear-gradient(135deg,rgba(171,29,34,0.07) 0%,var(--snow) 100%);">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--rose);font-family:'Outfit',sans-serif;margin-bottom:10px;">21:05 — 你的結語</div>
+            <div class="hl-box">
+              <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,20px);color:var(--ink);font-style:italic;line-height:1.55;">
+                「今天每個人帶走的不只是一束花，是你為那個人用心的三個小時。」
+              </p>
+            </div>
+          </div>
+          <div class="tip-box">
+            <span class="tip-icon">◈</span>
+            <span>結語說完後不要急著收攤，讓這句話在空氣裡停留 3-5 秒。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 8 — Phase 4
+════════════════════════════════════════ -->
+<div class="slide bg-snow" data-index="7">
+  <div class="slide-inner">
+    <div class="slide-content">
+      <div class="phase-header">
+        <div class="phase-icon" style="background:rgba(181,153,72,0.1);">📸</div>
+        <div>
+          <div class="phase-num">Phase 04 · 15 分鐘</div>
+          <div class="phase-main-title">拍照 + 送別</div>
+          <div class="phase-main-sub">21:15 — 21:30</div>
+        </div>
+        <div style="margin-left:auto;"><span class="badge badge-gold">收尾儀式</span></div>
+      </div>
+
+      <div class="grid-2">
+        <ul class="step-list">
+          <li>
+            <span class="step-num">1</span>
+            <div>
+              <strong style="display:block;font-size:13px;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">打卡區拍照</strong>
+              <span>Logo 入鏡，柔光燈打開。讓照片夠好看——她願意發，品牌才走出去。</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <strong style="display:block;font-size:13px;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">互相拍 → 你幫每人拍一張肖像照</strong>
+              <span>捧花的人像，構圖有意識。這張照片她會留著。</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div>
+              <strong style="display:block;font-size:13px;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">送手寫小卡</strong>
+              <span>遞卡片時叫她的名字——「OO，這是給你的。」</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <div>
+              <strong style="display:block;font-size:13px;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">門口送走</strong>
+              <div class="quote-block" style="margin-top:7px;padding:9px 13px;">
+                <p class="quote-text" style="font-size:14px;">「下次想做什麼風格的，隨時跟我說。」</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card" style="background:rgba(181,153,72,0.05);">
+            <h3 class="card-title" style="font-size:18px;">送走的藝術</h3>
+            <p class="body-text mt8">叫名字是關鍵。</p>
+            <p class="body-text mt4">「下次想做什麼風格」隱含了一個預設：<em style="color:var(--rose-deep);">你會再來。</em></p>
+            <p class="body-text mt8" style="font-size:12px;color:var(--mist);">這不是推銷，是把下一次的可能性植入她離開前的最後一刻。</p>
+          </div>
+          <div class="hl-box">
+            <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,20px);color:var(--rose-deep);font-style:italic;line-height:1.55;">
+              她帶走的是花、照片、小卡，還有一個說不清楚但會想再來的感覺。
+            </p>
+          </div>
+          <div class="tip-box">
+            <span class="tip-icon">◈</span>
+            <span>送走的那 30 秒比整堂課更被記住。不要讓她在門口等你找零。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 9 — 課後 24 小時
+════════════════════════════════════════ -->
+<div class="slide bg-parchment" data-index="8">
+  <div class="slide-inner">
+    <div class="slide-content">
+      <span class="eyebrow">Post-Course 24h</span>
+      <h2 class="section-title">課後 24 小時</h2>
+      <div class="divider"></div>
+      <p class="subtitle mt4">你的任務才剛開始。</p>
+
+      <div class="grid-2 mt24">
+        <div style="display:flex;flex-direction:column;gap:13px;">
+          <div class="card" style="border-left:3px solid var(--rose);border-radius:0 12px 12px 0;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">
+              <span class="step-num" style="width:26px;height:26px;">1</span>
+              <strong style="font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--ink);">發一則限動</strong>
+            </div>
+            <p class="body-text">課堂照片 + 一句話。不是廣告，是你當天真實的感受。她們看到會想分享。</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--ember);border-radius:0 12px 12px 0;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">
+              <span class="step-num" style="width:26px;height:26px;background:rgba(171,29,34,0.1);color:var(--ember-dark);">2</span>
+              <strong style="font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--ink);">私訊每位學員</strong>
+            </div>
+            <p class="body-text">感謝 + 附上你幫她拍的照片。一對一，叫名字，一句真心話。不超過 3 行。</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:13px;">
+          <div class="card" style="border-left:3px solid var(--gold);border-radius:0 12px 12px 0;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;">
+              <span class="step-num" style="width:26px;height:26px;background:rgba(181,153,72,0.1);color:var(--gold);">3</span>
+              <strong style="font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--ink);">Google 表單問卷（3 題）</strong>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div style="font-size:13px;color:var(--slate);display:flex;gap:8px;"><span style="color:var(--gold);font-weight:700;">Q1</span> 最觸動的一刻是什麼？</div>
+              <div style="font-size:13px;color:var(--slate);display:flex;gap:8px;"><span style="color:var(--gold);font-weight:700;">Q2</span> 推薦分數 1-10 分？</div>
+              <div style="font-size:13px;color:var(--slate);display:flex;gap:8px;"><span style="color:var(--gold);font-weight:700;">Q3</span> 有興趣進階課程嗎？</div>
+            </div>
+          </div>
+          <div class="card" style="border-left:3px solid var(--mist);border-radius:0 12px 12px 0;">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">
+              <span class="step-num" style="width:26px;height:26px;background:rgba(121,137,95,0.12);color:var(--mist);">4</span>
+              <strong style="font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--ink);">記錄學員故事</strong>
+            </div>
+            <p class="body-text">去識別化記錄 → 下週社群素材。「有個學員做花的時候想到了媽媽……」比任何廣告都有力量。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box mt16">
+        <span class="tip-icon">◈</span>
+        <span>私訊不要用複製貼上的模板。哪怕只改一句話，她都能感覺到。</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 10 — 轉換機制
+════════════════════════════════════════ -->
+<div class="slide bg-rose-tint" data-index="9">
+  <div class="slide-inner">
+    <div class="slide-content">
+      <span class="eyebrow">Conversion System</span>
+      <h2 class="section-title">轉換機制</h2>
+      <div class="divider"></div>
+      <p class="subtitle mt4">不推銷的推銷。</p>
+
+      <div style="margin-top:24px;">
+        <div class="convert-card">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:rgba(171,29,34,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🌱</div>
+            <div>
+              <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--rose);font-family:'Outfit',sans-serif;margin-bottom:5px;">做花時 — 自然植入</div>
+              <p class="body-text">「這個技法在證照班會學得更深。」</p>
+              <p class="body-text mt4" style="font-size:12px;color:var(--mist);">說完就繼續教學，不停留解釋，讓她自己產生好奇。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="convert-card ember">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:rgba(171,29,34,0.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💭</div>
+            <div>
+              <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ember);font-family:'Outfit',sans-serif;margin-bottom:5px;">故事環節後 — 輕放選項</div>
+              <p class="body-text">「有興趣的話課後私訊我就好，不急。」</p>
+              <p class="body-text mt4" style="font-size:12px;color:var(--mist);">「不急」是最有力的三個字。讓她覺得你不是在賣她，是在等她。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="convert-card gold">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:rgba(181,153,72,0.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">⏱</div>
+            <div>
+              <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--gold);font-family:'Outfit',sans-serif;margin-bottom:5px;">時機守則</div>
+              <p class="body-text">永遠不要在情緒高點推銷。讓她回家沉澱一天，隔天她自己會問。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-box mt4" style="padding:14px 16px;">
+        <span class="warn-icon">⚠</span>
+        <div>
+          <strong style="display:block;margin-bottom:3px;font-size:13px;color:var(--ink);font-family:'Noto Sans TC',sans-serif;">情緒高點是最糟的推銷時機</strong>
+          她在那一刻最脆弱、最容易答應，也最容易後悔。後悔 = 退費 + 不再推薦。等她沉澱，等她主動問，她的「是」才是真的「是」。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SLIDE 11 — 結語
+════════════════════════════════════════ -->
+<div class="slide bg-dark dark-slide" data-index="10">
+  <div class="deco">
+    <svg style="position:absolute;top:0;right:0;width:480px;height:480px;opacity:.07;" viewBox="0 0 480 480" fill="none">
+      <ellipse cx="380" cy="100" rx="150" ry="72" fill="#ab1d22" transform="rotate(-24 380 100)"/>
+      <ellipse cx="430" cy="210" rx="115" ry="55" fill="#ab1d22" transform="rotate(11 430 210)"/>
+      <ellipse cx="320" cy="55"  rx="90"  ry="43" fill="#ab1d22" transform="rotate(-50 320 55)"/>
+      <circle cx="280" cy="160" r="14" fill="#ab1d22" opacity=".45"/>
+      <circle cx="400" cy="290" r="9"  fill="#ab1d22" opacity=".35"/>
+    </svg>
+    <svg style="position:absolute;bottom:-40px;left:-30px;width:320px;height:320px;opacity:.08;" viewBox="0 0 320 320" fill="none">
+      <ellipse cx="70"  cy="260" rx="120" ry="56" fill="#ab1d22" transform="rotate(18 70 260)"/>
+      <ellipse cx="150" cy="300" rx="90"  ry="42" fill="#ab1d22" transform="rotate(-35 150 300)"/>
+    </svg>
+  </div>
+  <div class="slide-inner">
+    <div class="slide-content" style="max-width:780px;">
+      <div style="text-align:center;">
+        <span class="eyebrow eyebrow-light">Closing</span>
+
+        <h1 class="display mt16" style="color:#f5f3f2;">
+          從第一束花，<br>到自己的花店
+        </h1>
+
+        <div style="width:44px;height:1px;background:var(--gold);margin:26px auto;border-radius:2px;opacity:0.7;"></div>
+
+        <div style="display:flex;flex-direction:column;gap:20px;text-align:left;max-width:580px;margin:0 auto;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:30px;height:30px;border-radius:8px;background:rgba(181,153,72,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;">🌸</div>
+            <p style="font-family:'Noto Sans TC',sans-serif;font-size:clamp(14px,1.7vw,17px);color:rgba(250,248,244,0.72);line-height:1.85;">
+              這堂課不是賺錢的，是製造鐵粉的。
+            </p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:30px;height:30px;border-radius:8px;background:rgba(181,153,72,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;">✦</div>
+            <p style="font-family:'Noto Sans TC',sans-serif;font-size:clamp(14px,1.7vw,17px);color:rgba(250,248,244,0.72);line-height:1.85;">
+              6 個人的眼淚，比 600 個讚更有力量。
+            </p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:30px;height:30px;border-radius:8px;background:rgba(181,153,72,0.12);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;">🍃</div>
+            <p style="font-family:'Noto Sans TC',sans-serif;font-size:clamp(14px,1.7vw,17px);color:rgba(250,248,244,0.72);line-height:1.85;">
+              每一次「她說她哭了」，都是品牌在說話。
+            </p>
+          </div>
+        </div>
+
+        <div style="margin:36px auto 0;padding:22px 28px;background:rgba(181,153,72,0.1);border:1px solid rgba(181,153,72,0.35);border-radius:16px;max-width:520px;">
+          <p style="font-family:'Noto Serif TC','Cormorant Garamond',serif;font-size:clamp(20px,3vw,32px);font-weight:600;font-style:italic;color:#f5f3f2;line-height:1.4;">
+            「讓花替你說出她說不出的那句話。」
+          </p>
+          <p style="font-size:11px;color:rgba(235,226,179,0.55);margin-top:10px;font-family:'Cormorant Garamond',serif;letter-spacing:.14em;text-transform:uppercase;">LOVE FLOWER HOME · 戀花宅 × 子嫻</p>
+          <p style="font-size:11px;color:rgba(235,226,179,0.38);margin-top:4px;font-family:'Noto Serif TC',serif;font-style:italic;letter-spacing:.06em;">形色之間見心，一筆一畫成願</p>
+        </div>
+
+        <div style="margin-top:32px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+          <span class="badge badge-ghost">照顧</span>
+          <span class="badge badge-ghost">坦率</span>
+          <span class="badge badge-ghost">界限</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Large BG number -->
+  <div style="position:absolute;bottom:-10px;right:20px;font-family:'Cormorant Garamond',serif;font-size:clamp(80px,14vw,180px);font-weight:600;color:rgba(250,248,244,0.04);line-height:1;pointer-events:none;user-select:none;">11</div>
+</div>
+
+</div><!-- /slideshow -->
+
+<!-- ── Navigation ── -->
+<nav class="nav-bar">
+  <button class="nav-btn" onclick="navigate(-1)" aria-label="上一頁">&#8592;</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="nav-btn" onclick="navigate(1)"  aria-label="下一頁">&#8594;</button>
+  <span class="slide-counter" id="slideCounter">1 / 11</span>
+</nav>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsEl = document.getElementById('navDots');
+  const counterEl = document.getElementById('slideCounter');
+  let cur = 0, busy = false;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(idx) {
+    if (busy || idx === cur || idx < 0 || idx >= slides.length) return;
+    busy = true;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    const prev = cur;
+    cur = idx;
+    // wait for exit anim, then activate new
+    setTimeout(() => {
+      slides[prev].classList.remove('exit');
+      slides[prev].scrollTop = 0;
+      slides[cur].classList.add('active');
+      slides[cur].scrollTop = 0;
+      updateUI();
+      busy = false;
+    }, 430);
+  }
+
+  function navigate(dir) { goTo(cur + dir); }
+
+  function updateUI() {
+    dotsEl.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === cur);
+    });
+    counterEl.textContent = (cur + 1) + ' / ' + slides.length;
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); navigate(1); }
+    else if (['ArrowLeft','ArrowUp'].includes(e.key))   { e.preventDefault(); navigate(-1); }
+  });
+
+  // Touch
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 44) navigate(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Click half-screen
+  document.getElementById('slideshow').addEventListener('click', e => {
+    if (e.target.closest('.nav-bar,a,button,table')) return;
+    navigate(e.clientX > window.innerWidth / 2 ? 1 : -1);
+  });
+
+  updateUI();
+</script>
+</body>
+</html>

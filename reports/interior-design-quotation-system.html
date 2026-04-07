@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>室內設計公司智慧報價系統規劃書 — MUSEON</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --parchment: #F7F5F0;
+      --snow: #FDFCFA;
+      --ember: #C4502A;
+      --ember-light: #E8684A;
+      --ember-dark: #A03E20;
+      --teal: #2A7A6E;
+      --teal-light: #3D9B8C;
+      --gold: #B8923A;
+      --gold-light: #D4A94E;
+      --ink: #12121A;
+      --slate: #5A5A6E;
+      --border: #E2E0DA;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 24px rgba(0,0,0,0.09);
+      --radius: 8px;
+    }
+
+    body {
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #1A1018 0%, #2C1A10 40%, #3A1F0E 100%);
+      color: white;
+      padding: 80px 40px 70px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(196,80,42,0.25) 0%, transparent 70%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 30%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(42,122,110,0.18) 0%, transparent 70%);
+    }
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(196,80,42,0.25);
+      border: 1px solid rgba(196,80,42,0.5);
+      color: #F0A080;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 span { color: #E8684A; }
+    .hero-subtitle {
+      font-size: 18px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 300;
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-meta-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      font-weight: 500;
+    }
+    .hero-meta-value {
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .section {
+      padding: 56px 0;
+    }
+    .section + .section {
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ember);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 28px;
+    }
+    .section-lead {
+      font-size: 16px;
+      color: var(--slate);
+      max-width: 700px;
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 32px;
+    }
+    .card-grid {
+      display: grid;
+      gap: 20px;
+    }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    /* ── PAIN POINTS ── */
+    .pain-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 28px;
+      border-left: 4px solid var(--ember);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pain-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .pain-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .pain-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .pain-desc {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+
+    /* ── VISION STRIP ── */
+    .vision-strip {
+      background: linear-gradient(135deg, var(--ember-dark) 0%, var(--ember) 60%, #E8684A 100%);
+      border-radius: var(--radius);
+      padding: 44px 48px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin: 0 0 36px;
+    }
+    .vision-strip::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .vision-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .vision-quote::before {
+      content: '"';
+      font-size: 60px;
+      line-height: 0;
+      vertical-align: -24px;
+      margin-right: 6px;
+      opacity: 0.4;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .vision-sub {
+      font-size: 14px;
+      opacity: 0.75;
+      position: relative;
+      z-index: 1;
+    }
+
+    .value-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .value-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .value-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .value-num.ember { color: var(--ember); }
+    .value-num.teal  { color: var(--teal); }
+    .value-num.gold  { color: var(--gold); }
+    .value-label {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .value-desc {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    /* ── ARCHITECTURE ── */
+    .module-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .module-card.ember::before { background: var(--ember); }
+    .module-card.teal::before  { background: var(--teal); }
+    .module-card.gold::before  { background: var(--gold); }
+    .module-card.ink::before   { background: #3A3A4E; }
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .module-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .module-icon.ember { background: rgba(196,80,42,0.1); }
+    .module-icon.teal  { background: rgba(42,122,110,0.1); }
+    .module-icon.gold  { background: rgba(184,146,58,0.1); }
+    .module-icon.ink   { background: rgba(58,58,78,0.1); }
+
+    .module-name {
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--ink);
+    }
+    .module-subtitle {
+      font-size: 13px;
+      color: var(--slate);
+    }
+    .module-desc {
+      font-size: 14px;
+      color: var(--slate);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+    .tag.ember { color: var(--ember); border-color: rgba(196,80,42,0.3); background: rgba(196,80,42,0.06); }
+    .tag.teal  { color: var(--teal);  border-color: rgba(42,122,110,0.3); background: rgba(42,122,110,0.06); }
+    .tag.gold  { color: var(--gold);  border-color: rgba(184,146,58,0.3); background: rgba(184,146,58,0.06); }
+    .tag.slate { color: var(--slate); border-color: var(--border); background: var(--parchment); }
+
+    /* ── FEATURE TABLE ── */
+    .feature-table-wrap {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .feature-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--snow);
+    }
+    .feature-table th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .feature-table th.phase-mvp {
+      background: rgba(196,80,42,0.08);
+      color: var(--ember-dark);
+    }
+    .feature-table th.phase-adv {
+      background: rgba(42,122,110,0.08);
+      color: var(--teal);
+    }
+    .feature-table th.col-feature {
+      background: #F0EDE8;
+      color: var(--slate);
+      width: 30%;
+    }
+    .feature-table td {
+      padding: 13px 20px;
+      font-size: 14px;
+      vertical-align: top;
+      border-top: 1px solid var(--border);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .feature-table tr:hover td { background: rgba(247,245,240,0.6); }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .badge-mvp  { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
+    .badge-adv  { background: rgba(42,122,110,0.12); color: var(--teal); }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 16px; bottom: 16px; left: 14px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--ember), var(--teal));
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -32px;
+      top: 6px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px var(--border);
+      z-index: 1;
+    }
+    .timeline-dot.ember { background: var(--ember); box-shadow: 0 0 0 2px rgba(196,80,42,0.25); }
+    .timeline-dot.teal  { background: var(--teal);  box-shadow: 0 0 0 2px rgba(42,122,110,0.25); }
+    .timeline-dot.gold  { background: var(--gold);  box-shadow: 0 0 0 2px rgba(184,146,58,0.25); }
+
+    .timeline-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 24px;
+    }
+    .timeline-phase {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .timeline-phase.ember { color: var(--ember); }
+    .timeline-phase.teal  { color: var(--teal); }
+    .timeline-phase.gold  { color: var(--gold); }
+
+    .timeline-title {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .timeline-weeks {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    .timeline-weeks.ember { background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+    .timeline-weeks.teal  { background: rgba(42,122,110,0.1); color: var(--teal); }
+
+    .timeline-items {
+      list-style: none;
+      font-size: 13.5px;
+      color: var(--slate);
+    }
+    .timeline-items li {
+      padding: 3px 0 3px 18px;
+      position: relative;
+    }
+    .timeline-items li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--border);
+      font-size: 12px;
+    }
+    .milestone-flag {
+      background: rgba(184,146,58,0.1);
+      border: 1px solid rgba(184,146,58,0.25);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #8A6A20;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* ── INFO NEEDED ── */
+    .info-needed-header {
+      background: linear-gradient(135deg, #FFF3F0 0%, #FFE8E0 100%);
+      border: 2px solid rgba(196,80,42,0.3);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .info-needed-icon {
+      width: 40px; height: 40px;
+      background: var(--ember);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .info-needed-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ember-dark);
+    }
+    .info-needed-sub {
+      font-size: 13px;
+      color: #A04020;
+    }
+    .info-needed-body {
+      background: var(--snow);
+      border: 2px solid rgba(196,80,42,0.3);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+    .info-item {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      padding: 20px 28px;
+      align-items: start;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-item:last-child { border-bottom: none; }
+    .info-num {
+      width: 32px; height: 32px;
+      background: rgba(196,80,42,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ember);
+      flex-shrink: 0;
+    }
+    .info-q {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 5px;
+    }
+    .info-hint {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+    .info-hint strong {
+      color: var(--ember-dark);
+      font-weight: 600;
+    }
+
+    /* ── BEFORE/AFTER ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 0;
+      align-items: start;
+    }
+    .compare-before {
+      background: #FFF8F6;
+      border: 1px solid rgba(196,80,42,0.2);
+      border-radius: var(--radius) 0 0 var(--radius);
+      padding: 24px 24px;
+    }
+    .compare-after {
+      background: #F2FAF8;
+      border: 1px solid rgba(42,122,110,0.2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 24px 24px;
+    }
+    .compare-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 80px;
+      font-size: 24px;
+      color: var(--slate);
+    }
+    .compare-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .compare-label.before { color: #A04020; }
+    .compare-label.after  { color: var(--teal); }
+    .compare-item {
+      font-size: 14px;
+      padding: 5px 0 5px 18px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .compare-item::before {
+      position: absolute;
+      left: 0;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .compare-before .compare-item { color: #8A3010; }
+    .compare-before .compare-item::before { content: '✕'; color: var(--ember); }
+    .compare-after .compare-item  { color: #1A5A50; }
+    .compare-after .compare-item::before  { content: '✓'; color: var(--teal); }
+
+    /* ── PROCESS FLOW ── */
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      flex: 1;
+      min-width: 140px;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .flow-step-icon { font-size: 22px; margin-bottom: 6px; }
+    .flow-step-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .flow-step-sub  { font-size: 11px; color: var(--slate); margin-top: 2px; }
+    .flow-arrow {
+      font-size: 18px;
+      color: var(--slate);
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #12121A;
+      color: rgba(255,255,255,0.6);
+      padding: 48px 40px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    .footer-logo span { color: var(--ember); }
+    .footer-tagline {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+    .footer-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+      margin: 20px auto;
+    }
+    .footer-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.8;
+    }
+    .footer-contact {
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 36px; }
+      .hero { padding: 56px 24px 48px; }
+      .container { padding: 0 20px; }
+      .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .compare-before { border-radius: var(--radius) var(--radius) 0 0; }
+      .compare-after  { border-radius: 0 0 var(--radius) var(--radius); }
+      .compare-arrow  { padding: 12px 0; transform: rotate(90deg); }
+      .flow-steps { flex-direction: column; align-items: stretch; }
+      .flow-arrow { transform: rotate(90deg); text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">系統規劃提案 · 通用框架版</div>
+    <h1>室內設計公司<br><span>智慧報價系統</span>規劃書</h1>
+    <p class="hero-subtitle">從手工 Excel 到 15 分鐘專業報價——以 AI 驅動的智慧工具，重塑設計公司的報價流程與客戶體驗</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">規劃方</span>
+        <span class="hero-meta-value">MUSEON 顧問團隊</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">版本</span>
+        <span class="hero-meta-value">v1.0 · 通用框架版</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">日期</span>
+        <span class="hero-meta-value">2026 年 4 月</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">文件性質</span>
+        <span class="hero-meta-value">能力展示 · 待客製化</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 1：專案背景與挑戰 ═══ -->
+<div class="container">
+  <div class="section">
+    <div class="section-num">01 · 背景與挑戰</div>
+    <h2 class="section-title">為什麼室內設計業<br>需要一套智慧報價系統？</h2>
+    <p class="section-lead">
+      室內設計業的報價，長期依賴設計師個人經驗與 Excel 手工作業。每次報價都是一場從零開始的戰役——工項繁雜、客製化高、改稿頻繁。這不只是效率問題，更是品質一致性與公司管理能見度的問題。
+    </p>
+
+    <!-- Before/After -->
+    <div class="compare-grid" style="margin-bottom: 40px;">
+      <div class="compare-before">
+        <div class="compare-label before">現況痛點</div>
+        <div class="compare-item">報價通常耗時 2–5 個工作天</div>
+        <div class="compare-item">不同設計師的報價標準不一致</div>
+        <div class="compare-item">工項複雜，容易漏項或重複計算</div>
+        <div class="compare-item">客戶拿到的是難懂的 Excel 表格</div>
+        <div class="compare-item">老闆無法即時掌握毛利與報價動態</div>
+        <div class="compare-item">修改紀錄靠人工記憶，難以追溯</div>
+      </div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-after">
+        <div class="compare-label after">系統目標</div>
+        <div class="compare-item">15 分鐘內完成一份完整報價</div>
+        <div class="compare-item">全公司統一工項庫，標準一致</div>
+        <div class="compare-item">自動防漏項提醒，減少人為失誤</div>
+        <div class="compare-item">客戶收到品牌化專業報價文件</div>
+        <div class="compare-item">老闆即時看到毛利分析儀表板</div>
+        <div class="compare-item">所有版本變更自動留存、可追蹤</div>
+      </div>
+    </div>
+
+    <!-- Pain cards -->
+    <div class="card-grid card-grid-2">
+      <div class="pain-card">
+        <div class="pain-icon">🏗️</div>
+        <div class="pain-title">工項複雜度極高</div>
+        <div class="pain-desc">拆除、泥作、水電、木作、油漆、系統櫃、衛浴、家具、家電、軟裝——每個類別下都有細項差異，全部靠腦記容易出錯。</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔁</div>
+        <div class="pain-title">改稿頻繁、版本混亂</div>
+        <div class="pain-desc">客戶看完報價要改，設計師修改後另存新檔，幾輪下來根本搞不清楚哪份是最新版、哪些工項改過了。</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📊</div>
+        <div class="pain-title">標準不一、難以管理</div>
+        <div class="pain-desc">每個設計師各有自己習慣的工項分類與單價認知，公司無法保證報價品質的一致性，也難以分析比較。</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🎨</div>
+        <div class="pain-title">客戶體驗落差</div>
+        <div class="pain-desc">競爭者已開始提供精美的數位報價單，而公司還在傳送 Excel 附件，無形中降低了客戶對設計品牌的第一印象。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ SECTION 2：系統願景 ═══ -->
+<div class="container">
+  <div class="section">
+    <div class="section-num">02 · 系統願景</div>
+    <h2 class="section-title">三個核心承諾</h2>
+
+    <div class="vision-strip">
+      <div class="vision-quote">設計師 15 分鐘內完成一份專業報價單，<br>客戶看得懂、老闆管得住</div>
+      <div class="vision-sub">這是整個系統設計的北極星指標——每一個功能決策都回歸這句話來驗證</div>
+    </div>
+
+    <div class="card-grid card-grid-3">
+      <div class="value-card">
+        <div class="value-num ember">快</div>
+        <div class="value-label">從 2 天縮短到 15 分鐘</div>
+        <div class="value-desc">標準工項庫 + 歷史案例套用 + 自動計算，讓報價不再是最耗時的工作</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num teal">準</div>
+        <div class="value-label">系統性防漏項保障</div>
+        <div class="value-desc">根據房型與選項自動提示常被遺漏的工項，降低因漏項而被客訴的風險</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num gold">美</div>
+        <div class="value-label">品牌化客戶文件</div>
+        <div class="value-desc">客戶收到的不是 Excel，而是帶有公司品牌、清晰易讀的專業報價頁面或 PDF</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ SECTION 3：系統架構 ═══ -->
+<div class="container">
+  <div class="section">
+    <div class="section-num">03 · 系統架構設計</div>
+    <h2 class="section-title">四大核心模組</h2>
+    <p class="section-lead">
+      整個系統由四個彼此連動的模組組成，各自解決一個核心問題，合力達成「快、準、美」的目標。
+    </p>
+
+    <!-- Flow -->
+    <div class="flow-steps" style="margin-bottom: 40px;">
+      <div class="flow-step">
+        <div class="flow-step-icon">🗂️</div>
+        <div class="flow-step-name">工項資料庫</div>
+        <div class="flow-step-sub">標準化基礎</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-icon">⚡</div>
+        <div class="flow-step-name">報價引擎</div>
+        <div class="flow-step-sub">快速生成核心</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-icon">📄</div>
+        <div class="flow-step-name">客戶端展示</div>
+        <div class="flow-step-sub">品牌化輸出</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-icon">📊</div>
+        <div class="flow-step-name">管理後台</div>
+        <div class="flow-step-sub">老闆管控視角</div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-2">
+
+      <!-- M1 -->
+      <div class="module-card ember">
+        <div class="module-header">
+          <div class="module-icon ember">🗂️</div>
+          <div>
+            <div class="module-name">模組一：工項資料庫</div>
+            <div class="module-subtitle">全公司標準化的工項知識庫</div>
+          </div>
+        </div>
+        <div class="module-desc">
+          將公司的報價知識系統化沉澱。每個工項包含標準名稱、施工單位、單價範圍（低/標準/高）、施工說明與注意事項。支援版本管理，價格調整時有歷史可查。
+        </div>
+        <div class="tag-list">
+          <span class="tag ember">拆除工程</span>
+          <span class="tag ember">泥作工程</span>
+          <span class="tag ember">水電工程</span>
+          <span class="tag ember">木作工程</span>
+          <span class="tag ember">油漆工程</span>
+          <span class="tag slate">系統櫃</span>
+          <span class="tag slate">衛浴設備</span>
+          <span class="tag slate">家具軟裝</span>
+          <span class="tag slate">家電 / 雜項</span>
+        </div>
+      </div>
+
+      <!-- M2 -->
+      <div class="module-card teal">
+        <div class="module-header">
+          <div class="module-icon teal">⚡</div>
+          <div>
+            <div class="module-name">模組二：報價引擎</div>
+            <div class="module-subtitle">從輸入到報價單的核心流程</div>
+          </div>
+        </div>
+        <div class="module-desc">
+          設計師選定房型後，從資料庫選取工項、填入數量，系統自動計算小計、合計、施工工期。可快速套用歷史相似案例作為起點，大幅節省重複工作。
+        </div>
+        <div class="tag-list">
+          <span class="tag teal">房型選擇器</span>
+          <span class="tag teal">工項勾選</span>
+          <span class="tag teal">數量計算</span>
+          <span class="tag teal">歷史案例套用</span>
+          <span class="tag teal">工期估算</span>
+          <span class="tag teal">版本快照</span>
+        </div>
+      </div>
+
+      <!-- M3 -->
+      <div class="module-card gold">
+        <div class="module-header">
+          <div class="module-icon gold">📄</div>
+          <div>
+            <div class="module-name">模組三：客戶端展示</div>
+            <div class="module-subtitle">品牌化的客戶體驗層</div>
+          </div>
+        </div>
+        <div class="module-desc">
+          客戶收到的不再是密密麻麻的 Excel，而是帶有公司品牌 Logo、清晰分類的工項說明、預估工期甘特圖、以及付款階段規劃的專業文件——PDF 或可分享的網頁連結。
+        </div>
+        <div class="tag-list">
+          <span class="tag gold">品牌化 PDF</span>
+          <span class="tag gold">線上報價頁面</span>
+          <span class="tag gold">工期說明</span>
+          <span class="tag gold">付款分期規劃</span>
+          <span class="tag gold">工項說明文字</span>
+        </div>
+      </div>
+
+      <!-- M4 -->
+      <div class="module-card ink">
+        <div class="module-header">
+          <div class="module-icon ink">📊</div>
+          <div>
+            <div class="module-name">模組四：管理後台</div>
+            <div class="module-subtitle">老闆的數據管控視角</div>
+          </div>
+        </div>
+        <div class="module-desc">
+          老闆可以在後台看到全公司的報價概覽：哪些案件在報價中、毛利分佈、設計師報價一致性分析，以及某個工項的市場定價趨勢——真正做到「管得住」。
+        </div>
+        <div class="tag-list">
+          <span class="tag slate">報價統計總覽</span>
+          <span class="tag slate">毛利分析</span>
+          <span class="tag slate">設計師比對</span>
+          <span class="tag slate">案件追蹤</span>
+          <span class="tag slate">工項成本資料庫</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ SECTION 4：功能清單 ═══ -->
+<div class="container">
+  <div class="section">
+    <div class="section-num">04 · 關鍵功能清單</div>
+    <h2 class="section-title">MVP 第一期 vs. 進階第二期</h2>
+    <p class="section-lead">
+      以「快速上線，真實解痛」為原則，第一期 MVP 聚焦最核心的工作流，讓團隊能夠在最短時間內感受到效率提升；第二期再引入智慧分析與流程優化功能。
+    </p>
+
+    <div class="feature-table-wrap">
+      <table class="feature-table">
+        <thead>
+          <tr>
+            <th class="col-feature">功能類別</th>
+            <th class="phase-mvp">🔴 MVP 第一期（8-10 週）</th>
+            <th class="phase-adv">🟢 進階第二期（6-8 週）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>工項管理</strong></td>
+            <td>標準工項庫建置，含 200+ 常用工項預設；十大分類支援；單位/單價/備註管理</td>
+            <td>AI 智慧推薦（根據坪數/房型自動建議工項組合）；工項成本價 vs. 報價雙欄顯示（老闆限定）</td>
+          </tr>
+          <tr>
+            <td><strong>報價生成</strong></td>
+            <td>選工項→填數量→系統自動加總；歷史報價快速套用；多版本儲存；估算工期</td>
+            <td>變更追蹤（記錄哪些工項改過、改了幾次）；智慧比價（同類案件的報價對比分析）</td>
+          </tr>
+          <tr>
+            <td><strong>文件輸出</strong></td>
+            <td>品牌化 PDF 一鍵輸出；可自訂 Logo、公司資訊；清晰的工項分類排版</td>
+            <td>線上報價頁面（可分享連結）；客戶端線上簽核確認；PDF 含工期甘特圖、付款分期說明</td>
+          </tr>
+          <tr>
+            <td><strong>查詢與搜尋</strong></td>
+            <td>歷史報價查詢（依客戶/案件/日期篩選）；工項庫關鍵字搜尋</td>
+            <td>跨案件報價趨勢分析；工項使用頻率統計；設計師報價偏差儀表板</td>
+          </tr>
+          <tr>
+            <td><strong>權限管理</strong></td>
+            <td>三種角色：老闆（全覽）/ 設計師（自己的案件）/ 助理（輔助建檔）</td>
+            <td>毛利數據僅老闆可見；審核流程（設計師出稿→老闆審核→對外發送）；操作日誌</td>
+          </tr>
+          <tr>
+            <td><strong>系統整合</strong></td>
+            <td>工項庫 Excel 批量匯入；基本客戶資料管理</td>
+            <td>與現有 CRM / 會計系統 API 串接；自動提醒（報價逾期未確認、工項價格到期更新）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ SECTION 5：開發時程 ═══ -->
+<div class="container">
+  <div class="section">
+    <div class="section-num">05 · 開發時程估算</div>
+    <h2 class="section-title">從啟動到上線的里程碑</h2>
+    <p class="section-lead">
+      以兩期規劃為主軸：第一期 MVP 優先解決最痛的問題，快速上線讓團隊開始使用；第二期在實際使用回饋基礎上，引入更智慧的分析功能。
+    </p>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot ember"></div>
+        <div class="timeline-card">
+          <div class="timeline-phase ember">第一期 MVP</div>
+          <div class="timeline-title">需求確認與工項庫建置</div>
+          <div class="timeline-weeks ember">第 1–2 週</div>
+          <ul class="timeline-items">
+            <li>確認公司現有工項分類與報價邏輯（⭐ 需對方配合提供）</li>
+            <li>匯入現有工項清單與單價資料</li>
+            <li>確認報價單格式規範與品牌素材</li>
+            <li>確認使用者角色與權限需求</li>
+          </ul>
+          <div class="milestone-flag">📌 里程碑：需求文件定版 → 雙方確認後正式啟動開發</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot ember"></div>
+        <div class="timeline-card">
+          <div class="timeline-phase ember">第一期 MVP</div>
+          <div class="timeline-title">核心功能開發</div>
+          <div class="timeline-weeks ember">第 3–8 週</div>
+          <ul class="timeline-items">
+            <li>工項資料庫系統建置（分類、搜尋、管理界面）</li>
+            <li>報價生成引擎（工項選取、數量計算、版本管理）</li>
+            <li>品牌化 PDF 輸出模板設計與實作</li>
+            <li>歷史報價查詢與案件管理</li>
+            <li>三角色權限系統</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot ember"></div>
+        <div class="timeline-card">
+          <div class="timeline-phase ember">第一期 MVP</div>
+          <div class="timeline-title">內部測試與上線</div>
+          <div class="timeline-weeks ember">第 9–10 週</div>
+          <ul class="timeline-items">
+            <li>設計師試用測試（實際案件跑一遍）</li>
+            <li>問題修復與細節調整</li>
+            <li>教育訓練（30 分鐘操作說明）</li>
+            <li>正式上線</li>
+          </ul>
+          <div class="milestone-flag">📌 里程碑：設計師能用系統獨立完成一份完整報價 → MVP 驗收</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot teal"></div>
+        <div class="timeline-card">
+          <div class="timeline-phase teal">第二期進階</div>
+          <div class="timeline-title">智慧功能開發（上線後 4 週啟動）</div>
+          <div class="timeline-weeks teal">第 15–22 週</div>
+          <ul class="timeline-items">
+            <li>AI 智慧工項推薦引擎</li>
+            <li>毛利即時計算（成本價 vs 報價對照）</li>
+            <li>線上報價頁面 + 客戶簽核功能</li>
+            <li>變更追蹤與版本比較</li>
+            <li>管理儀表板：設計師報價一致性分析</li>
+          </ul>
+          <div class="milestone-flag">📌 里程碑：老闆能從後台看到全公司毛利分析 → 第二期驗收</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ SECTION 6：需要對方補充的資訊 ═══ -->
+<div class="container">
+  <div class="section">
+    <div class="section-num">06 · 需要補充的資訊</div>
+    <h2 class="section-title">讓規劃更精準的六個問題</h2>
+    <p class="section-lead">
+      以下是在通用框架基礎上，需要了解貴公司具體情況才能進一步客製化規劃的關鍵資訊。這些問題的答案，將直接影響技術選型、工項庫設計方向與時程估算。
+    </p>
+
+    <div class="info-needed-header">
+      <div class="info-needed-icon">⭐</div>
+      <div>
+        <div class="info-needed-title">請貴公司協助提供以下資訊</div>
+        <div class="info-needed-sub">這份規劃書是通用框架版，以下資訊確認後我們可以提供更精準的客製化方案</div>
+      </div>
+    </div>
+    <div class="info-needed-body">
+
+      <div class="info-item">
+        <div class="info-num">1</div>
+        <div>
+          <div class="info-q">目前的報價流程是什麼？</div>
+          <div class="info-hint">使用 Excel？Google 試算表？紙本？還是其他工具？有沒有固定的報價單模板格式？<br><strong>影響：</strong>決定資料匯入方式與系統介面設計的起點</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-num">2</div>
+        <div>
+          <div class="info-q">設計師人數？每月平均出幾份報價？</div>
+          <div class="info-hint">例如：5 位設計師，每人每月 4-6 份報價，合計約 20-30 份/月。<br><strong>影響：</strong>系統規模、授權方式、對「快」的迫切程度</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-num">3</div>
+        <div>
+          <div class="info-q">工項的分類方式跟規劃書中的是否一致？</div>
+          <div class="info-hint">規劃書預設十大分類：拆除/泥作/水電/木作/油漆/系統櫃/衛浴/家具/家電/雜項。貴公司是否有不同的分類習慣或特殊工項？<br><strong>影響：</strong>工項庫的架構設計，是最耗建置時間的部分</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-num">4</div>
+        <div>
+          <div class="info-q">有沒有現成的工項價格表可以提供匯入？</div>
+          <div class="info-hint">若有現成的 Excel 工項清單（含品項、單位、參考單價），可大幅縮短工項庫建置時間（從 2 週壓縮到 3-5 天）。<br><strong>影響：</strong>第一期時程估算（第 1-2 週的里程碑達成速度）</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-num">5</div>
+        <div>
+          <div class="info-q">預算範圍的概念是什麼？</div>
+          <div class="info-hint">不需要精確數字，大致的心理預算區間即可（例如：20-50 萬 / 50-100 萬 / 100 萬以上）。<br><strong>影響：</strong>技術選型（雲端 SaaS vs. 客製開發）、功能優先級、開發方式</div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-num">6</div>
+        <div>
+          <div class="info-q">最想先解決的痛點排序？</div>
+          <div class="info-hint">以下三個方向，哪個對你們最迫切？<br>
+          <strong>A. 報價速度</strong>（減少設計師花在整理報價的時間）<br>
+          <strong>B. 客戶印象</strong>（提升對外的報價文件品質與品牌感）<br>
+          <strong>C. 老闆管控</strong>（看清楚每個案件的毛利與設計師一致性）<br>
+          優先順序將決定 MVP 的功能取捨</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ CLOSING CTA ═══ -->
+<div class="container">
+  <div class="section" style="text-align: center; padding: 64px 0;">
+    <div class="section-num" style="justify-content: center; display: block;">下一步</div>
+    <h2 class="section-title" style="margin-bottom: 16px;">讓我們從一次對話開始</h2>
+    <p style="font-size: 16px; color: var(--slate); max-width: 540px; margin: 0 auto 36px; line-height: 1.8;">
+      這份規劃書是基於產業通用痛點設計的框架版本。透過一次 30–60 分鐘的需求訪談，我們可以提供更精準的技術方案與時程估算。
+    </p>
+    <div class="card-grid card-grid-3" style="max-width: 600px; margin: 0 auto;">
+      <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 24px; margin-bottom: 8px;">📋</div>
+        <div style="font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 4px;">需求訪談</div>
+        <div style="font-size: 12px; color: var(--slate);">30–60 分鐘，確認核心需求</div>
+      </div>
+      <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 24px; margin-bottom: 8px;">🎯</div>
+        <div style="font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 4px;">客製化方案</div>
+        <div style="font-size: 12px; color: var(--slate);">精準報價、功能取捨建議</div>
+      </div>
+      <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 24px; margin-bottom: 8px;">🚀</div>
+        <div style="font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 4px;">快速啟動</div>
+        <div style="font-size: 12px; color: var(--slate);">需求確認後 2 週內開工</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+  <div class="footer-logo">M<span>U</span>SEON</div>
+  <div class="footer-tagline">AI-Powered Business Intelligence · 智慧商業顧問系統</div>
+  <div class="footer-divider"></div>
+  <div class="footer-note">
+    本規劃書為 MUSEON 顧問團隊依產業通用痛點設計之框架版本<br>
+    所有功能範圍、時程估算與成本，需待需求訪談確認後才能最終定案<br>
+    文件版本：v1.0 · 2026 年 4 月
+  </div>
+  <div class="footer-contact" style="margin-top: 16px; font-size: 12px; color: rgba(255,255,255,0.3);">
+    © 2026 MUSEON · 保留一切權利
+  </div>
+</div>
+
+</body>
+</html>

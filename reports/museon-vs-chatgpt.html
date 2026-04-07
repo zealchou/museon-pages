@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUSEON vs ChatGPT — 工具還是系統？三個問題說清楚</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:       #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark:  #9A3A1C;
+      --teal:        #2A7A6E;
+      --gold:        #B8923A;
+      --ink:         #12121A;
+      --slate:       #5A5A6E;
+      --mist:        #9898A8;
+      --border:      #E2E0DA;
+      --parchment:   #F7F5F0;
+      --snow:        #FDFCFA;
+      --deep-ink:    #0E0E16;
+      --surface:     #16161F;
+      --raised:      #1E1E2A;
+      --border-dark: #2A2A38;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--deep-ink);
+      padding: 96px 40px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(196,80,42,0.25) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 110%, rgba(42,122,110,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(196,80,42,0.15);
+      border: 1px solid rgba(196,80,42,0.3);
+      color: var(--ember-light);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 600;
+      color: #FDFCFA;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--ember-light);
+    }
+    .hero .subtitle {
+      font-size: 18px;
+      color: rgba(253,252,250,0.6);
+      max-width: 540px;
+      margin: 0 auto;
+      font-weight: 300;
+      position: relative;
+    }
+    .hero-divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--ember), transparent);
+      margin: 32px auto 0;
+      position: relative;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── Section Label ── */
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── QA Block ── */
+    .qa-section {
+      padding: 64px 0;
+    }
+    .qa-block {
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.5s ease-out forwards;
+    }
+    .qa-block:nth-child(2) { animation-delay: 0.1s; }
+    .qa-block:nth-child(3) { animation-delay: 0.2s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Question */
+    .question-wrap {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .q-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate);
+      margin-top: 2px;
+    }
+    .question-text {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.6;
+      padding-top: 4px;
+    }
+    .question-attr {
+      font-size: 12px;
+      color: var(--mist);
+      margin-top: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Answer Card */
+    .answer-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 36px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 16px rgba(18,18,26,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .answer-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--ember) 0%, var(--teal) 100%);
+      border-radius: 3px 0 0 3px;
+    }
+
+    /* Comparison table inside answer */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .compare-cell {
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .compare-cell.chatgpt {
+      background: rgba(90,90,110,0.06);
+      border: 1px solid rgba(90,90,110,0.12);
+    }
+    .compare-cell.museon {
+      background: rgba(196,80,42,0.05);
+      border: 1px solid rgba(196,80,42,0.15);
+    }
+    .compare-cell-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .compare-cell.chatgpt .compare-cell-label { color: var(--slate); }
+    .compare-cell.museon .compare-cell-label { color: var(--ember-dark); }
+    .compare-cell p {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    /* Key insight highlight */
+    .insight-bar {
+      background: linear-gradient(135deg, rgba(196,80,42,0.08) 0%, rgba(42,122,110,0.06) 100%);
+      border-left: 3px solid var(--ember);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .insight-bar p {
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    .insight-bar strong { color: var(--ember-dark); }
+
+    /* Numbered list */
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .feature-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list .num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    /* Architecture diagram */
+    .arch-diagram {
+      background: var(--deep-ink);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-diagram::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,80,42,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .arch-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .arch-row:last-child { margin-bottom: 0; }
+    .arch-box {
+      flex: 1;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+    }
+    .arch-box.input {
+      background: rgba(42,122,110,0.2);
+      border: 1px solid rgba(42,122,110,0.3);
+      color: #5CBFB5;
+    }
+    .arch-box.process {
+      background: rgba(196,80,42,0.2);
+      border: 1px solid rgba(196,80,42,0.3);
+      color: #E0714D;
+    }
+    .arch-box.output {
+      background: rgba(184,146,58,0.2);
+      border: 1px solid rgba(184,146,58,0.3);
+      color: #D4AD5A;
+    }
+    .arch-box.memory {
+      background: rgba(42,106,138,0.2);
+      border: 1px solid rgba(42,106,138,0.3);
+      color: #6AB4D6;
+    }
+    .arch-arrow {
+      color: rgba(253,252,250,0.25);
+      font-size: 18px;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+    .arch-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(253,252,250,0.35);
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    /* Body text in answer */
+    .answer-body p {
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .answer-body p:last-child { margin-bottom: 0; }
+    .answer-body strong { color: var(--ink); font-weight: 600; }
+    .answer-body .em-text { color: var(--ember-dark); font-weight: 500; }
+
+    /* ── Summary CTA ── */
+    .summary-section {
+      background: var(--deep-ink);
+      padding: 64px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .summary-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(42,122,110,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .summary-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      color: #FDFCFA;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .summary-section p {
+      font-size: 16px;
+      color: rgba(253,252,250,0.55);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      font-weight: 300;
+      position: relative;
+    }
+    .tag-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(253,252,250,0.06);
+      border: 1px solid rgba(253,252,250,0.12);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(253,252,250,0.65);
+    }
+    .tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ember);
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 32px 40px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p {
+      font-size: 12px;
+      color: var(--mist);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    footer span { color: var(--ember); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hero { padding: 64px 24px 56px; }
+      .container { padding: 0 24px; }
+      .answer-card { padding: 24px 20px; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .arch-diagram { padding: 20px 18px; }
+      .summary-section { padding: 48px 24px; }
+      footer { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">MUSEON vs ChatGPT</div>
+  <h1>工具，還是系統？<br><em>掀開引擎蓋說清楚</em></h1>
+  <p class="subtitle">三個問題，三個核心差異——讓你真正理解 MUSEON 跟 ChatGPT 不一樣在哪裡</p>
+  <div class="hero-divider"></div>
+</section>
+
+<!-- ── Q&A Section ── -->
+<div class="container">
+  <section class="qa-section">
+
+    <!-- Q1 -->
+    <div class="qa-block">
+      <div class="section-label">Q 01</div>
+
+      <div class="question-wrap">
+        <div class="q-icon">Q</div>
+        <div>
+          <div class="question-text">用 MUSEON 跟用 ChatGPT 有何不同？</div>
+          <div class="question-attr">— Jeff 的提問</div>
+        </div>
+      </div>
+
+      <div class="answer-card">
+        <div class="answer-body">
+          <p>好問題！Jeff 問到核心了。</p>
+          <p>簡單講：<strong>ChatGPT 是工具，MUSEON 是系統。</strong></p>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare-cell chatgpt">
+            <div class="compare-cell-label">ChatGPT</div>
+            <p>每次從零開始的超強助理。你問什麼它答什麼，但<strong>它不認識你</strong>。每次對話都是陌生人，你得重新交代背景、重新解釋產業、重新說明你要什麼。答案很聰明，但都是「通用聰明」。</p>
+          </div>
+          <div class="compare-cell museon">
+            <div class="compare-cell-label">MUSEON</div>
+            <p><strong>認識你、會累積、會主動思考</strong>的數位顧問團隊。它知道你的公司在哪個階段、你正在打什麼仗、你上個月做了哪些決策。</p>
+          </div>
+        </div>
+
+        <div class="insight-bar">
+          <p><strong>一句話的差別：</strong>給隔壁老王的建議跟給你的建議，ChatGPT 說的差不多——MUSEON 說的完全不同。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qa-block">
+      <div class="section-label">Q 02</div>
+
+      <div class="question-wrap">
+        <div class="q-icon">Q</div>
+        <div>
+          <div class="question-text">你跟 ChatGPT 比起來，也算是會主動調用工具吧？這部分也說明一下。</div>
+        </div>
+      </div>
+
+      <div class="answer-card">
+        <div class="answer-body">
+          <p>對，這點補充得好。MUSEON 確實不只是「聊天」，它背後有一整套工具在跑。差別在於：</p>
+        </div>
+
+        <ul class="feature-list">
+          <li>
+            <span class="num">1</span>
+            <div>
+              <strong>ChatGPT 的工具：你叫它用，它才用。</strong><br>
+              你說「幫我搜尋」它才搜尋，說「幫我畫圖」才畫。工具是被動的，而且各做各的，彼此不串聯。
+            </div>
+          </li>
+          <li>
+            <span class="num">2</span>
+            <div>
+              <strong>MUSEON 的工具：它自己判斷什麼時候該用什麼。</strong><br>
+              你問一個問題，MUSEON 會自己決定——這題需不需要上網查最新資料？要不要翻你過去的對話記錄？要不要跑一個商業分析框架？你不需要開口，它已經在背後串好了。
+            </div>
+          </li>
+          <li>
+            <span class="num">3</span>
+            <div>
+              <strong>最重要的差別：跨工具記憶。</strong><br>
+              你今天查了一份市場報告、做了一個決策，MUSEON 明天還記得。這些訊息會串進你下一次的對話。ChatGPT 的每個工具，跑完就忘了。
+            </div>
+          </li>
+        </ul>
+
+        <div class="insight-bar">
+          <p><strong>結論：</strong>ChatGPT 是工具箱——工具很多，但你得自己拿。MUSEON 是<span class="em-text">主動工作的助理團隊</span>，知道什麼時候該用哪把工具，而且用完後的結果都串在一起。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="qa-block">
+      <div class="section-label">Q 03</div>
+
+      <div class="question-wrap">
+        <div class="q-icon">Q</div>
+        <div>
+          <div class="question-text">那麼你的底層是怎麼運作的？為什麼可以有這些差異？</div>
+        </div>
+      </div>
+
+      <div class="answer-card">
+        <div class="answer-body">
+          <p>好，這題我來掀開引擎蓋說清楚。<strong>最根本的差異，在於架構設計的出發點不同。</strong></p>
+        </div>
+
+        <div class="arch-diagram">
+          <div class="arch-label">架構對比</div>
+
+          <div class="arch-row">
+            <div class="arch-box input">你的輸入</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box process">ChatGPT 處理</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box output">輸出 · 結束</div>
+          </div>
+
+          <div style="height: 1px; background: rgba(253,252,250,0.06); margin: 16px 0;"></div>
+
+          <div class="arch-row">
+            <div class="arch-box input">你的輸入</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box process">MUSEON L1 判斷</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box process">L2 深度思考</div>
+          </div>
+          <div class="arch-row" style="margin-left: 40px;">
+            <div class="arch-arrow" style="transform: rotate(90deg);">↓</div>
+            <div style="flex:1;"></div>
+            <div class="arch-arrow" style="transform: rotate(-90deg);">↑</div>
+          </div>
+          <div class="arch-row">
+            <div class="arch-box memory">長期記憶</div>
+            <div class="arch-arrow">↔</div>
+            <div class="arch-box output">輸出 + 學習</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box memory">寫回記憶</div>
+          </div>
+        </div>
+
+        <div class="answer-body">
+          <p><strong>工具型代理人</strong>進了一步：它能叫外部工具，完成任務就停下來。像是派出去執行任務的臨時工，事做完就走。</p>
+          <p><strong>MUSEON 的底層邏輯是不一樣的出發點：</strong>MUSEON 是一個持續存在的系統，你的每一次輸入是在跟一個「已經認識你很久的顧問團隊」說話——它有記憶、有個性、有自己的判斷框架，每次對話都在累積，而不是每次都重新開機。</p>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare-cell chatgpt">
+            <div class="compare-cell-label">工具型 / ChatGPT</div>
+            <p>輸入 → 輸出<br>每次獨立、無記憶<br>你問什麼它做什麼</p>
+          </div>
+          <div class="compare-cell museon">
+            <div class="compare-cell-label">MUSEON</div>
+            <p>持續存在的思考系統<br>記憶累積、判斷成長<br>主動感知你的狀態</p>
+          </div>
+        </div>
+
+        <div class="insight-bar">
+          <p><strong>一句話：</strong>ChatGPT 是一本非常聰明的字典——你問它，它答你。MUSEON 是一個<span class="em-text">一直在觀察你、一直在思考你的事業、一直在幫你備戰</span>的系統。</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ── Summary ── -->
+<section class="summary-section">
+  <h2>三個問題，一個核心洞見</h2>
+  <p>MUSEON 不是更聰明的 ChatGPT，而是一個完全不同的設計哲學——從工具到系統，從回應到主動。</p>
+  <div class="tag-row">
+    <span class="tag"><span class="dot"></span>持續記憶</span>
+    <span class="tag"><span class="dot"></span>主動工具調用</span>
+    <span class="tag"><span class="dot"></span>個人化深度</span>
+    <span class="tag"><span class="dot"></span>多層思考架構</span>
+    <span class="tag"><span class="dot"></span>跨對話學習</span>
+  </div>
+</section>
+
+<footer>
+  <p>MUSEON — <span>powered by Zeal & Claude</span> · 2026</p>
+</footer>
+
+</body>
+</html>

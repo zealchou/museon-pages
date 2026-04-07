@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUSEON 報告書庫</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Outfit:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── 設計令牌 ── */
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --shadow-card:  0 1px 3px rgba(18,18,26,.06), 0 4px 12px rgba(18,18,26,.04);
+      --radius:       10px;
+      --max-w:        860px;
+    }
+    [data-theme="dark"] {
+      --ink:          #F0EDE8;
+      --slate:        #A8A8BC;
+      --mist:         #686878;
+      --border:       #2A2A38;
+      --parchment:    #0E0E16;
+      --snow:         #16161F;
+      --shadow-card:  0 1px 3px rgba(0,0,0,.2), 0 4px 12px rgba(0,0,0,.15);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+      transition: background .25s, color .25s;
+    }
+
+    /* ── 版面 ── */
+    .page-wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 48px 32px 96px;
+    }
+    @media (max-width: 768px) {
+      .page-wrap { padding: 32px 20px 64px; }
+    }
+    @media (max-width: 640px) {
+      .page-wrap { padding: 24px 16px 60px; }
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(135deg, #12121A 0%, #1A1018 60%, #0E0E16 100%);
+      border-radius: 14px;
+      padding: 40px 40px 36px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(196,80,42,.03) 40px,
+        rgba(196,80,42,.03) 41px
+      );
+      pointer-events: none;
+    }
+    .header-inner {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .brand-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px;
+      font-weight: 600;
+      color: #F0EDE8;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+    }
+    .brand-logo span {
+      color: var(--ember);
+    }
+    .brand-tagline {
+      font-size: 13px;
+      color: rgba(240,237,232,.5);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .header-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .stat-badge {
+      background: rgba(196,80,42,.15);
+      border: 1px solid rgba(196,80,42,.3);
+      color: #E0714D;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 4px 12px;
+      white-space: nowrap;
+    }
+    .stat-sub {
+      font-size: 12px;
+      color: rgba(240,237,232,.35);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .theme-btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(240,237,232,.6);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+      line-height: 1;
+    }
+    .theme-btn:hover {
+      background: rgba(196,80,42,.2);
+      border-color: rgba(196,80,42,.4);
+      color: #E0714D;
+    }
+    @media (max-width: 640px) {
+      .site-header { padding: 28px 24px 24px; }
+      .brand-logo { font-size: 34px; }
+      .header-inner { flex-wrap: wrap; }
+      .header-stats { align-items: flex-start; }
+    }
+
+    /* ── 搜尋框 ── */
+    .search-wrap {
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--mist);
+      font-size: 15px;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      height: 46px;
+      padding: 0 16px 0 42px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--snow);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .search-input::placeholder { color: var(--mist); }
+    .search-input:focus {
+      border-color: var(--ember);
+      box-shadow: 0 0 0 3px rgba(196,80,42,.15);
+    }
+
+    /* ── 分類區塊 (details/summary) ── */
+    .category-section {
+      margin-bottom: 32px;
+    }
+    .category-summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      background: transparent;
+      transition: background .15s;
+      margin-bottom: 10px;
+    }
+    .category-summary::-webkit-details-marker { display: none; }
+    .category-summary::before {
+      content: '▸';
+      color: var(--ember);
+      font-size: 12px;
+      transition: transform .2s ease;
+      flex-shrink: 0;
+    }
+    details[open] > .category-summary::before {
+      transform: rotate(90deg);
+    }
+    .category-summary:hover {
+      background: rgba(196,80,42,.05);
+    }
+    .cat-emoji {
+      font-size: 18px;
+      line-height: 1;
+    }
+    .cat-label {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      flex: 1;
+    }
+    .category-count {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      color: var(--slate);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 100px;
+      padding: 2px 9px;
+    }
+
+    /* ── 報告卡片 ── */
+    .report-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-left: 8px;
+    }
+    .report-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow-card);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      animation: fadeUp .35s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(18,18,26,.1);
+      border-color: var(--ember-light);
+    }
+    .report-card.hidden {
+      display: none;
+    }
+    .report-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--mist);
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: 84px;
+    }
+    .report-title {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    .report-arrow {
+      color: var(--ember);
+      font-size: 15px;
+      flex-shrink: 0;
+      opacity: .5;
+      transition: opacity .15s, transform .15s;
+    }
+    .report-card:hover .report-arrow {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+    @media (max-width: 480px) {
+      .report-card { flex-wrap: wrap; gap: 6px; padding: 11px 14px; }
+      .report-date { min-width: auto; }
+      .report-arrow { display: none; }
+    }
+
+    /* ── 搜尋空結果提示 ── */
+    .no-results {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--mist);
+      font-size: 15px;
+      display: none;
+    }
+    .no-results.visible { display: block; }
+
+    /* ── 頁腳 ── */
+    footer {
+      margin-top: 64px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--mist);
+      font-family: 'IBM Plex Mono', monospace;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    footer .ember { color: var(--ember); }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand-block">
+          <div class="brand-logo">MU<span>S</span>EON</div>
+          <div class="brand-tagline">Report Library · 報告書庫</div>
+        </div>
+        <div class="header-stats">
+          <div class="stat-badge">共 58 份報告</div>
+          <div class="stat-badge" style="background:rgba(42,122,110,.12);border-color:rgba(42,122,110,.25);color:#4AADA0;">橫跨 12 個主題</div>
+          <div class="stat-sub">更新於 2026-04-06 14:41</div>
+          <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切換深色 / 淺色模式">🌙</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 搜尋框 -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        class="search-input"
+        id="searchInput"
+        type="text"
+        placeholder="搜尋報告標題..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
+
+    <!-- 分類區塊 -->
+    
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">🎯</span>
+        <span class="cat-label">戰略情報</span>
+        <span class="category-count">2</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./scout-one-muse-analysis-20260401.html" target="_blank" rel="noopener" data-title="scout su 競選最後一個月戰略簡報 | one muse × museon">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">Scout Su 競選最後一個月戰略簡報 | One Muse × MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./athena_v2.html" target="_blank" rel="noopener" data-title="athena — 洪岳裕 戰略情報簡報">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">ATHENA — 洪岳裕 戰略情報簡報</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">📊</span>
+        <span class="cat-label">市場分析</span>
+        <span class="category-count">8</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./elderly-market-ordering-ux-report.html" target="_blank" rel="noopener" data-title="傳統市場高齡者下單系統 ux/ui 設計指南">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">傳統市場高齡者下單系統 UX/UI 設計指南 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./manufacturing-digital-marketing-proposal.html" target="_blank" rel="noopener" data-title="數位行銷轉型提案 — 製造業專屬方案">
+            <span class="report-date">2026-04-05</span>
+            <span class="report-title">數位行銷轉型提案 — 製造業專屬方案</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./insurance_2026_2027_expansion.html" target="_blank" rel="noopener" data-title="產險業 2026-2027：從售賣保險到風險顧問的價值重塑">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">產險業 2026-2027：從售賣保險到風險顧問的價值重塑</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./insurance_report_2027_expansion.html" target="_blank" rel="noopener" data-title="台灣產險業 2027：保險業務人員的四大新拓展方向">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">台灣產險業 2027：保險業務人員的四大新拓展方向</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./property-casualty-2026-2027.html" target="_blank" rel="noopener" data-title="產險業 2026-2027 發展與拓展策略分析">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">產險業 2026-2027 發展與拓展策略分析</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./tainan-real-estate-2026-2027.html" target="_blank" rel="noopener" data-title="台南房地產市場報告 2026–2027">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">台南房地產市場報告 2026–2027 | MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./china-market-macro-report.html" target="_blank" rel="noopener" data-title="大陸市場總體經濟調查報告 — deep taiwan tour 戰略參考">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">大陸市場總體經濟調查報告 — Deep Taiwan Tour 戰略參考</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./wealth_succession_2026.html" target="_blank" rel="noopener" data-title="2026 高資產傳承與資產配置分析報告">
+            <span class="report-date">2026-03-26</span>
+            <span class="report-title">2026 高資產傳承與資產配置分析報告 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">💼</span>
+        <span class="cat-label">商業提案</span>
+        <span class="category-count">11</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./interior-design-quotation-system.html" target="_blank" rel="noopener" data-title="室內設計公司智慧報價系統規劃書">
+            <span class="report-date">2026-04-05</span>
+            <span class="report-title">室內設計公司智慧報價系統規劃書 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./bni-partner-table-v2.html" target="_blank" rel="noopener" data-title="museon × bni 合作夥伴戰略手冊">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">MUSEON × BNI 合作夥伴戰略手冊</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./lpf-ssa-i-20260401.html" target="_blank" rel="noopener" data-title="ssa × museon — ai 創業加速器 | 5/6、5/7、5/8">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">SSA × MUSEON — AI 創業加速器 | 5/6、5/7、5/8</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./bonus_system_analysis_luo.html" target="_blank" rel="noopener" data-title="獎金制度演化分析報告 2022–2025">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">獎金制度演化分析報告 2022–2025</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./oasis-museon-partnership.html" target="_blank" rel="noopener" data-title="綠洲計劃 × museon — 合作提案">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">綠洲計劃 × MUSEON — 合作提案</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-brand-identity.html" target="_blank" rel="noopener" data-title="museon — 品牌定位規劃 v1.0">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">MUSEON — 品牌定位規劃 v1.0</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-positioning-pyramid.html" target="_blank" rel="noopener" data-title="museon — 決策金字塔定位圖">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">MUSEON — 決策金字塔定位圖</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./pricing_slides_v2.html" target="_blank" rel="noopener" data-title="定價與談判：利潤力">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">定價與談判：利潤力 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-muc-strategic-playbook.html" target="_blank" rel="noopener" data-title="museon muc — 市場戰略與目標客群定位手冊">
+            <span class="report-date">2026-03-24</span>
+            <span class="report-title">MUSEON MUC — 市場戰略與目標客群定位手冊</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon_pricing_and_sales_kit.html" target="_blank" rel="noopener" data-title="museon 定價方案 &amp; 銷售話術卡">
+            <span class="report-date">2026-03-24</span>
+            <span class="report-title">MUSEON 定價方案 &amp; 銷售話術卡</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./feng_muc_mvp_progress_2026-03-23.html" target="_blank" rel="noopener" data-title="feng muc mvp 開發進度 — 2026-03-23">
+            <span class="report-date">2026-03-23</span>
+            <span class="report-title">Feng MUC MVP 開發進度 — 2026-03-23</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">📝</span>
+        <span class="cat-label">會議記錄</span>
+        <span class="category-count">3</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./meeting_intel_20260331.html" target="_blank" rel="noopener" data-title="museon meeting intelligence — 2026-03-31">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">MUSEON Meeting Intelligence — 2026-03-31</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./meeting_intel_20260330_top_auto.html" target="_blank" rel="noopener" data-title="頂好汽車集團 × museon 顧問會議 — meeting intelligence report">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">頂好汽車集團 × MUSEON 顧問會議 — Meeting Intelligence Report</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./group_meeting_notes_evvon_20260329.html" target="_blank" rel="noopener" data-title="會議記錄 — 蔡董提案對話 2026-03-29">
+            <span class="report-date">2026-03-29</span>
+            <span class="report-title">會議記錄 — 蔡董提案對話 2026-03-29</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">☀️</span>
+        <span class="cat-label">晨報</span>
+        <span class="category-count">4</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./morning-case-2026-04-06-ai-business-model-crisis-beyond-code.html" target="_blank" rel="noopener" data-title="晨報 · 80% 失敗在代碼之外：ai 初創的商業模式危機 · 2026-04-06">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">晨報 · 80% 失敗在代碼之外：AI 初創的商業模式危機 · 2026-04-06</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./morning-case-2026-04-01-business-crossroads.html" target="_blank" rel="noopener" data-title="晨報 · 商業決策的十字路口 · 2026-04-01">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">晨報 · 商業決策的十字路口 · 2026-04-01</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./morning-brief-2026-03-26.html" target="_blank" rel="noopener" data-title="晨報 · ai 裁員的真相與謊言 · 2026-03-26">
+            <span class="report-date">2026-03-26</span>
+            <span class="report-title">晨報 · AI 裁員的真相與謊言 · 2026-03-26</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./morning_case_2026-03-25_ai-execution-trap.html" target="_blank" rel="noopener" data-title="晨報 · ai 企業的執行陷阱：技術不足以決定勝負 · 2026-03-25">
+            <span class="report-date">2026-03-25</span>
+            <span class="report-title">晨報 · AI 企業的執行陷阱：技術不足以決定勝負 · 2026-03-25</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">🌿</span>
+        <span class="cat-label">永續英文</span>
+        <span class="category-count">7</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./sustainability-evvon-day06.html" target="_blank" rel="noopener" data-title="永續英文 day 06 — sustainability">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">永續英文 Day 06 — Sustainability | MUSEON for Evvon</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./sustainability-evvon-day05.html" target="_blank" rel="noopener" data-title="永續英文 day 05 — biodiversity">
+            <span class="report-date">2026-04-02</span>
+            <span class="report-title">永續英文 Day 05 — Biodiversity | MUSEON for Evvon</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./sustainability_evvon_day04.html" target="_blank" rel="noopener" data-title="永續英文 day 04 — renewable energy">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">永續英文 Day 04 — Renewable Energy | MUSEON for Evvon</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./sustainability_evvon_day03.html" target="_blank" rel="noopener" data-title="永續英文 day 03 — carbon footprint">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">永續英文 Day 03 — Carbon Footprint | MUSEON for Evvon</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./sustainability_evvon_day02.html" target="_blank" rel="noopener" data-title="永續英文 day 02 — circularity">
+            <span class="report-date">2026-03-28</span>
+            <span class="report-title">永續英文 Day 02 — Circularity | MUSEON for Evvon</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./sustainability_evvon_day01.html" target="_blank" rel="noopener" data-title="永續英文 day 01 — green">
+            <span class="report-date">2026-03-27</span>
+            <span class="report-title">永續英文 Day 01 — Green | MUSEON for Evvon</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./sustainability_day01.html" target="_blank" rel="noopener" data-title="sustainability english · day 01 · decarbonization">
+            <span class="report-date">2026-03-27</span>
+            <span class="report-title">Sustainability English · Day 01 · Decarbonization</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">🔬</span>
+        <span class="cat-label">探索報告</span>
+        <span class="category-count">1</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./explore_20260330_000817.html" target="_blank" rel="noopener" data-title="探索報告 — 日本侘寂美學（wabi-sabi）中「不完美即完美」的設計哲學如何在當代視覺設計中驅動溢價——從茶道到 apple 的美學脈絡">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">探索報告 — 日本侘寂美學（Wabi-Sabi）中「不完美即完美」的設計哲學如何在當代視覺設計中驅動溢價——從茶道到 Apple 的美學脈絡 | MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">🧬</span>
+        <span class="cat-label">系統文件</span>
+        <span class="category-count">10</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./museon-three-in-one-framework-2026.html" target="_blank" rel="noopener" data-title="ssa × onemuse × museon — 三位一體商業模式">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">SSA × OneMuse × MUSEON — 三位一體商業模式</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-beta-update-complete-2026.html" target="_blank" rel="noopener" data-title="museon 進化報告 — 封測夥伴專屬">
+            <span class="report-date">2026-04-05</span>
+            <span class="report-title">MUSEON 進化報告 — 封測夥伴專屬</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-beta-gift-2026.html" target="_blank" rel="noopener" data-title="給封測夥伴的禮物">
+            <span class="report-date">2026-04-05</span>
+            <span class="report-title">給封測夥伴的禮物 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-beta-update-2026.html" target="_blank" rel="noopener" data-title="museon 封測更新 — 三週進化報告">
+            <span class="report-date">2026-04-05</span>
+            <span class="report-title">MUSEON 封測更新 — 三週進化報告</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./the-creators-blueprint.html" target="_blank" rel="noopener" data-title="創造者的藍圖 — the creator's blueprint">
+            <span class="report-date">2026-04-05</span>
+            <span class="report-title">創造者的藍圖 — The Creator's Blueprint</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./mastery-dse-research-20260401.html" target="_blank" rel="noopener" data-title="大師境界 dse 深度研究">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">大師境界 DSE 深度研究 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon-handbook-shih-wei.html" target="_blank" rel="noopener" data-title="museon 使用手冊 — 士維專屬版">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">MUSEON 使用手冊 — 士維專屬版</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./museon_genesis.html" target="_blank" rel="noopener" data-title="鍛造之書—">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">鍛造之書——MUSEON 創世自白</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./five-marshals-investor-v2.0.html" target="_blank" rel="noopener" data-title="museon 五虎將 — 自主維運引擎 | 投資人技術簡報">
+            <span class="report-date">2026-03-25</span>
+            <span class="report-title">MUSEON 五虎將 — 自主維運引擎 | 投資人技術簡報</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./five-marshals-investor-v1.0.html" target="_blank" rel="noopener" data-title="museon 五虎將系統 — 自主維運引擎">
+            <span class="report-date">2026-03-25</span>
+            <span class="report-title">MUSEON 五虎將系統 — 自主維運引擎</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">👤</span>
+        <span class="cat-label">人物分析</span>
+        <span class="category-count">4</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./scott-su-personality-analysis.html" target="_blank" rel="noopener" data-title="scott su — one muse 人格深度分析">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">Scott Su — One Muse 人格深度分析</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./he_soul_blueprint_20260401.html" target="_blank" rel="noopener" data-title="he 的靈魂藍圖">
+            <span class="report-date">2026-04-01</span>
+            <span class="report-title">HE 的靈魂藍圖 — MUSEON 人格解析報告</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./onemuse_reading_20260329_zeal.html" target="_blank" rel="noopener" data-title="one muse 能量解讀 — zeal · 2026.03.29">
+            <span class="report-date">2026-03-29</span>
+            <span class="report-title">One Muse 能量解讀 — Zeal · 2026.03.29</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./bazi_consultant_2026.html" target="_blank" rel="noopener" data-title="2026 五行八字命理師發展報告">
+            <span class="report-date">2026-03-28</span>
+            <span class="report-title">2026 五行八字命理師發展報告 — MUSEON</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">🎓</span>
+        <span class="cat-label">教學素材</span>
+        <span class="category-count">4</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./day2-afternoon-presentation.html" target="_blank" rel="noopener" data-title="身心靈心創育成計畫 day2 — 下午">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">身心靈心創育成計畫 DAY2 — 下午</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./day2-morning-presentation.html" target="_blank" rel="noopener" data-title="身心靈心創育成計畫 day2 — 上午">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">身心靈心創育成計畫 DAY2 — 上午</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./tianliao-tour-guide-v4-english.html" target="_blank" rel="noopener" data-title="tianliao moon world cultural field trip tour guide v4.0 — for american chinese-studies students">
+            <span class="report-date">2026-04-04</span>
+            <span class="report-title">Tianliao Moon World Cultural Field Trip Tour Guide v4.0 — For American Chinese-Studies Students</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./tianliao_tour_guide_20260329_rita_v2.html" target="_blank" rel="noopener" data-title="田寮月世界文化踏查導覽解說稿 v4.0｜美國中文系學生版">
+            <span class="report-date">2026-03-29</span>
+            <span class="report-title">田寮月世界文化踏查導覽解說稿 v4.0｜美國中文系學生版</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">📈</span>
+        <span class="cat-label">產業報告</span>
+        <span class="category-count">3</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./future_work_report_2025_2030.html" target="_blank" rel="noopener" data-title="未來工作型態趨勢報告 2025–2030">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">未來工作型態趨勢報告 2025–2030 | MUSEON Intelligence</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./deep-taiwan-tour-gap-analysis.html" target="_blank" rel="noopener" data-title="deep taiwan tour — 網站差距分析報告">
+            <span class="report-date">2026-03-31</span>
+            <span class="report-title">Deep Taiwan Tour — 網站差距分析報告</span>
+            <span class="report-arrow">→</span>
+          </a>
+          <a class="report-card" href="./deep-taiwan-tour-website-audit.html" target="_blank" rel="noopener" data-title="deep taiwan tour — 網站診斷報告">
+            <span class="report-date">2026-03-30</span>
+            <span class="report-title">Deep Taiwan Tour — 網站診斷報告</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+    <details class="category-section" open>
+      <summary class="category-summary">
+        <span class="cat-emoji">📋</span>
+        <span class="cat-label">其他報告</span>
+        <span class="category-count">1</span>
+      </summary>
+      <div class="report-list">
+          <a class="report-card" href="./深遊台灣-TDNA贊助提案-v1.html" target="_blank" rel="noopener" data-title="深遊台灣 × tdna 2026 贊助合作提案">
+            <span class="report-date">2026-04-06</span>
+            <span class="report-title">深遊台灣 × TDNA 2026 贊助合作提案</span>
+            <span class="report-arrow">→</span>
+          </a>
+      </div>
+    </details>
+
+    <!-- 搜尋無結果 -->
+    <div class="no-results" id="noResults">沒有符合的報告</div>
+
+    <!-- 頁腳 -->
+    <footer>
+      由 <span class="ember">MUSEON</span> 自動產生 · 2026-04-06 14:41
+    </footer>
+  </div>
+
+  <script>
+    // ── 深色模式 ────────────────────────────────────────────────────────────
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.dataset.theme === 'dark';
+      html.dataset.theme = isDark ? 'light' : 'dark';
+      document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+      localStorage.setItem('museon-theme', html.dataset.theme);
+    }
+    (function initTheme() {
+      const saved = localStorage.getItem('museon-theme');
+      if (saved) {
+        document.documentElement.dataset.theme = saved;
+        document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️' : '🌙';
+      }
+    })();
+
+    // ── 即時搜尋 ────────────────────────────────────────────────────────────
+    const searchInput = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
+
+    searchInput.addEventListener('input', function() {
+      const q = this.value.trim().toLowerCase();
+      const cards = document.querySelectorAll('.report-card');
+      const sections = document.querySelectorAll('.category-section');
+      let visibleTotal = 0;
+
+      cards.forEach(card => {
+        const titleText = card.dataset.title || '';
+        const fullText  = card.querySelector('.report-title').textContent.toLowerCase();
+        const match = !q || fullText.includes(q) || titleText.includes(q);
+        card.classList.toggle('hidden', !match);
+        if (match) visibleTotal++;
+      });
+
+      // 若搜尋中，展開所有分類；清空則維持原狀
+      sections.forEach(sec => {
+        if (q) sec.open = true;
+        const visibleInSection = sec.querySelectorAll('.report-card:not(.hidden)').length;
+        sec.style.display = visibleInSection === 0 && q ? 'none' : '';
+      });
+
+      noResults.classList.toggle('visible', visibleTotal === 0 && q.length > 0);
+    });
+  </script>
+</body>
+</html>

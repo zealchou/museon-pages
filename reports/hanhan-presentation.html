@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涵涵的鑽石之路 — RENE CELL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: #1a1a1a;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.slide-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  background: linear-gradient(135deg, #FDF8F0 0%, #F5EDE0 40%, #EDE4D4 100%);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide-inner {
+  width: 90%;
+  max-width: 1200px;
+  min-height: 85%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+  .slide-inner {
+    justify-content: flex-start;
+    padding: 1.5rem 0 3rem;
+  }
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: #3D2B1F;
+  line-height: 1.4;
+  margin-bottom: 1.2rem;
+}
+
+h2 {
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  color: #5A3E2B;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+p, li {
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  color: #4A3728;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: #8B7355;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+
+.highlight {
+  color: #B8860B;
+  font-weight: 700;
+}
+
+.highlight-red {
+  color: #C0392B;
+  font-weight: 700;
+}
+
+.emotional {
+  font-family: 'Noto Serif TC', serif;
+  font-style: italic;
+  color: #6B4226;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 2;
+}
+
+.big-number {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 900;
+  color: #B8860B;
+  line-height: 1;
+}
+
+.big-quote {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: #3D2B1F;
+  line-height: 1.6;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* ===== Decorative ===== */
+.feather-left, .feather-right {
+  position: absolute;
+  width: 200px;
+  height: 100%;
+  top: 0;
+  opacity: 0.08;
+  background: radial-gradient(ellipse at center, #B8860B 0%, transparent 70%);
+  pointer-events: none;
+}
+.feather-left { left: -50px; }
+.feather-right { right: -50px; }
+
+.diamond-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #E8D5B7, #B8860B);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  margin: 0 0.3rem;
+  vertical-align: middle;
+}
+
+.gold-line {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #B8860B, transparent);
+  margin: 1.5rem 0;
+}
+
+.gold-line-center {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #B8860B, transparent);
+  margin: 1.5rem auto;
+}
+
+/* ===== Layout helpers ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  height: 100%;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+
+/* ===== Photo styles ===== */
+.photo-frame {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  position: relative;
+}
+
+.photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.photo-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.photo-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.photo-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: white;
+  padding: 1.5rem 1rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.photo-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(184, 134, 11, 0.9);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #B8860B, #E8D5B7);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2.35rem;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  background: #B8860B;
+  border-radius: 50%;
+  border: 3px solid #FDF8F0;
+}
+
+.timeline-item.active::before {
+  background: #C0392B;
+  box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.2);
+}
+
+/* ===== Stats ===== */
+.stat-card {
+  background: rgba(255,255,255,0.6);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(184,134,11,0.15);
+}
+
+.stat-card .number {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #B8860B;
+}
+
+.stat-card .label {
+  font-size: 0.95rem;
+  color: #6B4226;
+  margin-top: 0.3rem;
+}
+
+/* ===== Progress bar ===== */
+.progress-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 1.5rem 0;
+}
+
+.progress-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.progress-step .month {
+  font-weight: 700;
+  color: #3D2B1F;
+  font-size: 1.1rem;
+}
+
+.progress-step .score {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #B8860B;
+  margin: 0.3rem 0;
+}
+
+.progress-step .note {
+  font-size: 0.85rem;
+  color: #8B7355;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #E8D5B7;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.progress-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, #B8860B, #D4A843);
+  border-radius: 4px;
+}
+
+/* ===== CTA box ===== */
+.cta-box {
+  background: linear-gradient(135deg, #3D2B1F, #5A3E2B);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.cta-box h2, .cta-box p {
+  color: #F5EDE0;
+}
+
+.cta-box .highlight {
+  color: #E8D5B7;
+}
+
+/* ===== Navigation ===== */
+.nav-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 100;
+  background: rgba(61, 43, 31, 0.8);
+  padding: 8px 16px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(232, 213, 183, 0.4);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-dot.active {
+  background: #B8860B;
+  transform: scale(1.3);
+}
+
+.slide-counter {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  font-size: 0.85rem;
+  color: #8B7355;
+  z-index: 100;
+}
+
+/* ===== Brand mark ===== */
+.brand-mark {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.8rem;
+  color: #B8860B;
+  letter-spacing: 0.3em;
+  z-index: 100;
+  opacity: 0.6;
+}
+
+/* ===== Special slides ===== */
+.dark-slide {
+  background: linear-gradient(135deg, #1C1410 0%, #2C1E14 50%, #3D2B1F 100%) !important;
+}
+
+.dark-slide h1, .dark-slide h2 { color: #E8D5B7; }
+.dark-slide p, .dark-slide li, .dark-slide .emotional { color: #C4A882; }
+.dark-slide .subtitle { color: #8B7355; }
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide.active .anim-1 { animation: fadeInUp 0.6s ease 0.2s both; }
+.slide.active .anim-2 { animation: fadeInUp 0.6s ease 0.4s both; }
+.slide.active .anim-3 { animation: fadeInUp 0.6s ease 0.6s both; }
+.slide.active .anim-4 { animation: fadeInUp 0.6s ease 0.8s both; }
+.slide.active .anim-5 { animation: fadeInUp 0.6s ease 1.0s both; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+  .three-col { grid-template-columns: 1fr; }
+  .slide-inner { width: 92%; height: 90%; }
+}
+</style>
+</head>
+<body>
+
+<div class="brand-mark">RENE CELL</div>
+<div class="slide-counter"><span id="current">1</span> / <span id="total">12</span></div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- ========== SLIDE 1: 封面 ========== -->
+<div class="slide active" id="slide-1">
+  <div class="feather-left"></div>
+  <div class="feather-right"></div>
+  <div class="slide-inner text-center">
+    <div class="anim-1">
+      <p class="subtitle" style="letter-spacing:0.4em; margin-bottom:1.5rem;">RENE CELL ✦ 事業分享</p>
+    </div>
+    <div class="anim-2">
+      <h1 style="font-size:clamp(2.2rem,4.5vw,3.5rem); margin-bottom:0.5rem;">
+        從九年皮膚地獄<br>到鑽石事業之路
+      </h1>
+    </div>
+    <div class="anim-3">
+      <div class="gold-line-center"></div>
+      <p style="font-size:clamp(1.1rem,2vw,1.4rem); color:#6B4226; margin-top:1rem;">
+        涵涵 ── 空中瑜珈老師 / 店長<br>鑽石事業經營者
+      </p>
+    </div>
+    <div class="anim-4" style="margin-top:3rem;">
+      <p class="subtitle">2026.04</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 2: 認識我 ========== -->
+<div class="slide" id="slide-2">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <p class="subtitle anim-1">ABOUT ME</p>
+        <h1 class="anim-2">我是涵涵</h1>
+        <div class="gold-line anim-2"></div>
+        <p class="anim-3" style="margin-bottom:1.5rem;">
+          空中瑜珈老師，同時也是一間店的店長。
+        </p>
+        <p class="anim-3" style="margin-bottom:1.5rem;">
+          很多人看到現在的我，<br>會覺得我很健康、很有活力。
+        </p>
+        <p class="emotional anim-4">
+          但其實我的身體，<br>曾經走過一段很辛苦的路。
+        </p>
+      </div>
+      <div class="anim-5">
+        <div class="photo-frame" style="height:420px; border-radius:16px;">
+          <img src="hanhan-assets/award_banner.jpg" alt="涵涵 — 全球銷售總監" style="object-position: top center;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 3: 低谷 ========== -->
+<div class="slide dark-slide" id="slide-3">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <p class="subtitle anim-1">THE DARK YEARS</p>
+        <h1 class="anim-2">差點離開這個世界<br>的那一年</h1>
+        <div class="gold-line anim-2"></div>
+        <div class="timeline anim-3">
+          <div class="timeline-item active">
+            <p><strong style="color:#E8D5B7;">大四那年</strong> — 得了水痘，<br>嚴重到住進隔離病房整整一個禮拜</p>
+          </div>
+          <div class="timeline-item">
+            <p>免疫系統整個變得非常脆弱</p>
+          </div>
+          <div class="timeline-item">
+            <p>皮膚開始出現各種問題</p>
+          </div>
+          <div class="timeline-item">
+            <p><strong style="color:#E8D5B7;">將近九年</strong> — 不斷看醫生、<br>嘗試各種保養品與藥物</p>
+          </div>
+        </div>
+        <p class="emotional anim-4" style="margin-top:1.5rem; color:#C4A882;">
+          輕輕一碰就可能引發蕁麻疹<br>
+          痘痘幾乎都是大顆的膿包型，反覆發作
+        </p>
+      </div>
+      <div class="anim-5">
+        <div class="photo-grid-2">
+          <div class="photo-frame" style="height:200px;">
+            <img src="hanhan-assets/before_severe_1.jpg" alt="皮膚狀況">
+          </div>
+          <div class="photo-frame" style="height:200px;">
+            <img src="hanhan-assets/before_severe_2.jpg" alt="皮膚狀況">
+          </div>
+          <div class="photo-frame" style="height:200px;">
+            <img src="hanhan-assets/before_severe_3.jpg" alt="皮膚狀況">
+          </div>
+          <div class="photo-frame" style="height:200px;">
+            <img src="hanhan-assets/before_severe_4.jpg" alt="皮膚狀況">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 4: 花了50萬 ========== -->
+<div class="slide dark-slide" id="slide-4">
+  <div class="slide-inner text-center">
+    <div class="anim-1">
+      <p class="subtitle" style="letter-spacing:0.3em;">THE COST OF TRYING</p>
+    </div>
+    <div class="anim-2" style="margin:2rem 0;">
+      <p class="big-number">50萬+</p>
+      <p style="font-size:1.3rem; color:#C4A882; margin-top:0.5rem;">花在醫美上的費用</p>
+    </div>
+    <div class="anim-3" style="max-width:700px; margin:0 auto;">
+      <p class="emotional" style="color:#C4A882; margin-bottom:1.5rem;">
+        抽自己的血做自體修復、打水光針——<br>
+        只要是別人說有效的，我幾乎都願意去試。
+      </p>
+      <div style="background:rgba(192,57,43,0.15); border-radius:12px; padding:1.5rem; border-left:4px solid #C0392B;">
+        <p style="color:#E8D5B7; font-size:1.2rem;">
+          一次療程動輒十幾萬<br>
+          但每次都<span class="highlight-red">只維持一兩個禮拜</span><br>
+          之後，又全部回到原點
+        </p>
+      </div>
+    </div>
+    <div class="anim-4" style="margin-top:2rem;">
+      <p class="emotional" style="font-size:1.4rem; color:#8B7355;">
+        那是一種——<br>怎麼努力，都好不起來的無力感。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 5: 轉折 — 遇見卡麗斯 ========== -->
+<div class="slide" id="slide-5">
+  <div class="slide-inner text-center">
+    <div class="anim-1">
+      <p class="subtitle" style="letter-spacing:0.3em;">TURNING POINT</p>
+    </div>
+    <div class="anim-2">
+      <h1 style="font-size:clamp(2rem,4vw,3rem); margin:1.5rem 0;">
+        直到我遇見了<br>「卡麗斯潤妮秀」
+      </h1>
+      <div class="gold-line-center"></div>
+    </div>
+    <div class="anim-3" style="max-width:650px; margin:0 auto;">
+      <p class="emotional" style="margin-bottom:2rem;">
+        一開始，其實我也是抱持著懷疑與不確定。<br>
+        畢竟，我真的失敗過太多次了。
+      </p>
+    </div>
+    <div class="anim-4" style="background:rgba(184,134,11,0.08); border-radius:16px; padding:2rem; max-width:600px; margin:0 auto;">
+      <p style="font-size:clamp(1.3rem,2.5vw,1.8rem); font-family:'Noto Serif TC',serif; font-weight:700; color:#3D2B1F;">
+        但這一次，<br>
+        我選擇<span class="highlight">再相信一次</span>。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 6: 改變的過程 ========== -->
+<div class="slide" id="slide-6">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <p class="subtitle anim-1">THE TRANSFORMATION</p>
+        <h1 class="anim-2">從裡面開始改變</h1>
+        <div class="gold-line anim-2"></div>
+        <p class="anim-3" style="margin-bottom:1.2rem;">
+          從開始「種鑽石」<span class="diamond-icon"></span>，<br>讓皮膚慢慢把基底層累積的問題代謝出來——
+        </p>
+        <div class="anim-3" style="background:rgba(184,134,11,0.06); border-radius:12px; padding:1.2rem; margin-bottom:1.2rem;">
+          <p style="margin-bottom:0.5rem;">✦ 敏感減少了</p>
+          <p style="margin-bottom:0.5rem;">✦ 痘痘穩定了</p>
+          <p>✦ 困擾很久的問題，居然慢慢都在變好</p>
+        </div>
+        <p class="emotional anim-4">
+          那種感覺，真的很 amazing
+        </p>
+      </div>
+      <div class="anim-5">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="photo-frame" style="height:200px;">
+            <img src="hanhan-assets/progress_collage.jpg" alt="改善過程">
+            <div class="photo-badge">改善歷程</div>
+          </div>
+          <div class="photo-frame" style="height:200px;">
+            <img src="hanhan-assets/progress_collage_2.jpg" alt="持續改善">
+            <div class="photo-badge">持續進步</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 7: 前後對比 — 身邊的人開始問 ========== -->
+<div class="slide" id="slide-7">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div class="anim-1">
+        <div class="photo-frame" style="height:480px;">
+          <img src="hanhan-assets/before_after_best.jpg" alt="前後對比">
+          <div class="photo-label" style="display:flex; justify-content:space-between; padding:1.5rem;">
+            <span>BEFORE</span>
+            <span>AFTER ✦</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="subtitle anim-2">THE MOMENT EVERYTHING CHANGED</p>
+        <h1 class="anim-2">到第三顆鑽石的時候</h1>
+        <div class="gold-line anim-2"></div>
+        <div class="anim-3" style="background:rgba(184,134,11,0.06); border-radius:16px; padding:1.5rem; margin-bottom:1.5rem;">
+          <p style="font-size:1.15rem; font-family:'Noto Serif TC',serif; color:#5A3E2B;">
+            「涵涵，你最近到底用了什麼？<br>
+            　皮膚怎麼越來越好了？」
+          </p>
+          <p style="font-size:0.9rem; color:#8B7355; margin-top:0.8rem;">
+            — 老師、學生、甚至路人，都開始主動問
+          </p>
+        </div>
+        <p class="emotional anim-4">
+          不只是皮膚的改變，<br>
+          還有我對自己的信心。
+        </p>
+        <div class="anim-5" style="margin-top:1.5rem;">
+          <p style="font-size:1.3rem; font-weight:700; color:#B8860B;">
+            也因為這樣，<br>我開啟了我的「鑽石事業」<span class="diamond-icon"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 8: 業績成長 ========== -->
+<div class="slide" id="slide-8">
+  <div class="slide-inner">
+    <p class="subtitle anim-1 text-center">MY GROWTH</p>
+    <h1 class="anim-1 text-center" style="margin-bottom:2rem;">三個月，從零到總監</h1>
+
+    <div class="anim-2" style="display:flex; align-items:end; justify-content:center; gap:2rem; margin-bottom:2rem;">
+      <div style="text-align:center;">
+        <div style="width:80px; height:60px; background:linear-gradient(to top, #B8860B, #D4A843); border-radius:8px 8px 0 0; margin:0 auto;"></div>
+        <p style="font-weight:700; margin-top:0.5rem;">11月</p>
+        <p class="highlight" style="font-size:1.5rem;">1,000分</p>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:80px; height:80px; background:linear-gradient(to top, #B8860B, #D4A843); border-radius:8px 8px 0 0; margin:0 auto;"></div>
+        <p style="font-weight:700; margin-top:0.5rem;">12月</p>
+        <p class="highlight" style="font-size:1.5rem;">1,000分</p>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:80px; height:220px; background:linear-gradient(to top, #B8860B, #E8D5B7); border-radius:8px 8px 0 0; margin:0 auto; position:relative;">
+          <div style="position:absolute; top:-30px; left:50%; transform:translateX(-50%); font-size:1.5rem;">🔥</div>
+        </div>
+        <p style="font-weight:700; margin-top:0.5rem;">1月</p>
+        <p class="highlight" style="font-size:1.8rem; font-weight:900;">7,000分</p>
+        <p style="font-size:0.85rem; color:#8B7355;">大半個月不在台南<br>依然衝出成績</p>
+      </div>
+    </div>
+
+    <div class="anim-3" style="display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap;">
+      <div class="stat-card" style="min-width:200px;">
+        <div class="number">3</div>
+        <div class="label">個月達成總監</div>
+      </div>
+      <div class="stat-card" style="min-width:200px;">
+        <div class="number">7x</div>
+        <div class="label">第三個月業績翻倍成長</div>
+      </div>
+      <div class="stat-card" style="min-width:200px;">
+        <div class="number">斜槓</div>
+        <div class="label">瑜珈老師 + 店長 + 卡麗斯</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 9: 團隊成果 ========== -->
+<div class="slide" id="slide-9">
+  <div class="slide-inner">
+    <div class="two-col">
+      <div>
+        <p class="subtitle anim-1">TEAM GROWTH</p>
+        <h1 class="anim-2">不只是我一個人的成長</h1>
+        <div class="gold-line anim-2"></div>
+        <div class="anim-3" style="margin-bottom:1.5rem;">
+          <div style="display:flex; gap:1.5rem; margin-bottom:1.5rem;">
+            <div class="stat-card" style="flex:1;">
+              <div class="number">1</div>
+              <div class="label">四月新進總監</div>
+            </div>
+            <div class="stat-card" style="flex:1;">
+              <div class="number">20+</div>
+              <div class="label">經理誕生</div>
+            </div>
+          </div>
+        </div>
+        <p class="emotional anim-4">
+          感恩公司提供的平台、制度，<br>
+          還有 CP 值非常高、<br>真正有感的產品，<br>
+          讓原本只是素人的我，<br>
+          慢慢累積出穩定且不錯的收入。
+        </p>
+      </div>
+      <div class="anim-5">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="photo-frame" style="height:260px; background:#1a1a1a;">
+            <img src="hanhan-assets/team_event_1.jpg" alt="團隊活動" style="object-fit:contain; object-position:center center;">
+          </div>
+          <div class="photo-frame" style="height:260px; background:#1a1a1a;">
+            <img src="hanhan-assets/award_group.jpg" alt="表揚大會" style="object-fit:contain; object-position:center center;">
+            <div class="photo-badge">2026 表揚大會</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 10: 斜槓不是問題 ========== -->
+<div class="slide" id="slide-10">
+  <div class="slide-inner text-center">
+    <div class="anim-1">
+      <p class="subtitle" style="letter-spacing:0.3em;">NOT JUST FULL-TIME</p>
+    </div>
+    <div class="anim-2">
+      <h1 style="margin:1.5rem 0;">這份事業，<br>不需要你放棄現在的生活</h1>
+      <div class="gold-line-center"></div>
+    </div>
+    <div class="anim-3" style="display:flex; justify-content:center; gap:2rem; margin:2rem 0; flex-wrap:wrap;">
+      <div style="background:rgba(184,134,11,0.06); border-radius:16px; padding:2rem 1.5rem; width:200px;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">🧘‍♀️</div>
+        <p style="font-weight:700; color:#3D2B1F;">空中瑜珈老師</p>
+        <p style="font-size:0.85rem; color:#8B7355; margin-top:0.3rem;">白天的熱愛</p>
+      </div>
+      <div style="background:rgba(184,134,11,0.06); border-radius:16px; padding:2rem 1.5rem; width:200px;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">🏪</div>
+        <p style="font-weight:700; color:#3D2B1F;">店長</p>
+        <p style="font-size:0.85rem; color:#8B7355; margin-top:0.3rem;">穩定的基礎</p>
+      </div>
+      <div style="background:rgba(184,134,11,0.10); border-radius:16px; padding:2rem 1.5rem; width:200px; border:2px solid rgba(184,134,11,0.3);">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">💎</div>
+        <p style="font-weight:700; color:#B8860B;">鑽石事業</p>
+        <p style="font-size:0.85rem; color:#8B7355; margin-top:0.3rem;">第二條收入線</p>
+      </div>
+    </div>
+    <div class="anim-4" style="max-width:600px; margin:0 auto;">
+      <p style="font-size:1.2rem; color:#5A3E2B; line-height:1.8;">
+        不是取代你原本的工作，<br>
+        而是<span class="highlight">為人生多開一條路</span>。<br><br>
+        不是最厲害的人才成功，<br>
+        而是<span class="highlight">願意努力、有行動力</span>的人就能看到成果。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 11: 核心訊息 ========== -->
+<div class="slide" id="slide-11">
+  <div class="slide-inner text-center">
+    <div class="anim-1">
+      <div style="display:flex; justify-content:center; gap:0.5rem; margin-bottom:2rem;">
+        <span class="diamond-icon" style="width:16px; height:16px;"></span>
+        <span class="diamond-icon" style="width:16px; height:16px;"></span>
+        <span class="diamond-icon" style="width:16px; height:16px;"></span>
+      </div>
+    </div>
+    <div class="anim-2">
+      <div class="big-quote">
+        連我的皮膚這樣，<br>
+        都可以在短時間內<br>經營起來。
+      </div>
+    </div>
+    <div class="anim-3">
+      <div class="gold-line-center"></div>
+      <div class="big-quote" style="margin-top:1rem;">
+        <span class="highlight">相信大家一定也可以。</span>
+      </div>
+    </div>
+    <div class="anim-4" style="margin-top:2rem; display:flex; justify-content:center; gap:2rem; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <p style="font-size:1.5rem; font-weight:700; color:#B8860B;">相信公司</p>
+        <p style="font-size:0.9rem; color:#8B7355;">平台、制度、完整支持</p>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:1.5rem; font-weight:700; color:#B8860B;">相信產品</p>
+        <p style="font-size:0.9rem; color:#8B7355;">真正有感的改變</p>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:1.5rem; font-weight:700; color:#B8860B;">相信團隊</p>
+        <p style="font-size:0.9rem; color:#8B7355;">有溫度的夥伴同行</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 12: 結尾 ========== -->
+<div class="slide dark-slide" id="slide-12">
+  <div class="slide-inner text-center">
+    <div class="anim-1">
+      <p class="subtitle" style="letter-spacing:0.5em; margin-bottom:2rem;">THANK YOU</p>
+    </div>
+    <div class="anim-2">
+      <h1 style="font-size:clamp(1.8rem,3.5vw,2.8rem); color:#E8D5B7; line-height:1.8;">
+        人生或許不完美，<br>
+        但只要你願意再相信一次——
+      </h1>
+    </div>
+    <div class="anim-3">
+      <div class="gold-line-center" style="margin:2rem auto;"></div>
+      <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:#B8860B; font-family:'Noto Serif TC',serif; font-weight:700;">
+        給自己一個機會，<br>
+        讓我們一起努力衝刺，<br>
+        邁向成功的未來。
+      </p>
+    </div>
+    <div class="anim-4" style="margin-top:3rem;">
+      <div style="display:flex; justify-content:center; gap:0.5rem;">
+        <span class="diamond-icon" style="width:12px; height:12px;"></span>
+        <span class="diamond-icon" style="width:12px; height:12px;"></span>
+        <span class="diamond-icon" style="width:12px; height:12px;"></span>
+      </div>
+      <p style="color:#8B7355; margin-top:1rem; font-size:0.95rem;">
+        涵涵的鑽石之路 — RENE CELL
+      </p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /slide-container -->
+
+<!-- Navigation -->
+<div class="nav-bar" id="navBar"></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+// Build nav dots
+const navBar = document.getElementById('navBar');
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(i));
+  navBar.appendChild(dot);
+}
+
+function goTo(n) {
+  if (n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  navBar.children[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  navBar.children[current].classList.add('active');
+  document.getElementById('current').textContent = current + 1;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault();
+    goTo(current + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    goTo(current - 1);
+  }
+});
+
+// Touch support
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', (e) => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? goTo(current + 1) : goTo(current - 1);
+  }
+});
+
+document.getElementById('total').textContent = total;
+</script>
+
+</body>
+</html>

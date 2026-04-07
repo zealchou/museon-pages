@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身心靈心創育成計畫 DAY2 — 下午</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #FAF8F5;
+  --bg-warm: #F5F0EA;
+  --text: #2D2420;
+  --text-light: #6B5E54;
+  --accent: #8B6914;
+  --accent-gold: #C4962C;
+  --accent-warm: #A0724A;
+  --dark-bg: #3D2B1F;
+  --dark-bg2: #4A3328;
+  --border-warm: #D4C4B0;
+  --card-bg: #FFFFFF;
+  --card-shadow: rgba(61, 43, 31, 0.08);
+  --quote-border: #C4962C;
+  --check-border: #A0724A;
+}
+
+html { scroll-behavior: smooth; overflow: hidden; }
+body {
+  font-family: 'Noto Sans TC', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-warm), var(--accent-gold));
+  z-index: 1000; transition: width 0.4s ease;
+}
+
+#page-counter {
+  position: fixed; bottom: 28px; right: 36px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; color: var(--text-light);
+  opacity: 0.5; z-index: 999; letter-spacing: 2px;
+}
+#page-counter.on-dark { color: rgba(255,255,255,0.4); }
+
+.slide {
+  width: 100vw; height: 100vh;
+  display: none; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 60px 100px; position: relative;
+  opacity: 0; transition: opacity 0.5s ease;
+}
+.slide.active { display: flex; opacity: 1; }
+
+.slide--default { background: var(--bg); }
+.slide--warm { background: var(--bg-warm); }
+.slide--transition {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg2) 100%);
+  color: #F5F0EA;
+}
+.slide--activity { background: var(--bg-warm); }
+.slide--practice { background: linear-gradient(135deg, #F0E8DD 0%, #EDE4D8 100%); }
+.slide--template { background: #FDFCFA; }
+
+.slide-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--accent-warm); margin-bottom: 16px; font-weight: 600;
+}
+.slide--transition .slide-tag { color: rgba(196, 150, 44, 0.7); }
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px; font-weight: 700; line-height: 1.3;
+  margin-bottom: 24px; text-align: center; max-width: 900px;
+}
+.slide--transition h1 { font-size: 58px; color: #F5F0EA; }
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 600; line-height: 1.35;
+  margin-bottom: 20px; text-align: center; max-width: 850px;
+}
+
+.subtitle {
+  font-size: 20px; color: var(--text-light); line-height: 1.7;
+  text-align: center; max-width: 680px; font-weight: 300;
+}
+.slide--transition .subtitle { color: rgba(245, 240, 234, 0.6); }
+
+.big-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px; font-weight: 600; line-height: 1.45;
+  text-align: center; max-width: 820px; margin-bottom: 20px;
+}
+
+.core-sentence {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 600; color: var(--accent);
+  text-align: center; max-width: 750px; margin-bottom: 28px; line-height: 1.55;
+}
+
+.explain {
+  font-size: 18px; color: var(--text-light); line-height: 1.8;
+  text-align: center; max-width: 680px; margin-top: 8px;
+}
+
+/* Activity card */
+.activity-card {
+  background: var(--card-bg); border-radius: 20px;
+  padding: 44px 52px; max-width: 720px; width: 100%;
+  box-shadow: 0 8px 40px var(--card-shadow);
+  border: 1px solid rgba(212, 196, 176, 0.3);
+}
+.activity-card h2 { text-align: left; margin-bottom: 24px; font-size: 30px; }
+.activity-card ul { list-style: none; padding: 0; }
+.activity-card li {
+  font-size: 18px; line-height: 1.8; padding: 6px 0 6px 28px;
+  position: relative; color: var(--text);
+}
+.activity-card li::before {
+  content: ''; position: absolute; left: 0; top: 14px;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent-gold);
+}
+.activity-time {
+  display: inline-block; margin-top: 22px; padding: 8px 20px;
+  background: rgba(196, 150, 44, 0.1); border-radius: 8px;
+  font-size: 15px; color: var(--accent); font-weight: 500;
+}
+
+/* Quote box */
+.quote-box {
+  background: var(--card-bg); border-left: 5px solid var(--quote-border);
+  border-radius: 0 16px 16px 0; padding: 36px 48px;
+  max-width: 750px; width: 100%;
+  box-shadow: 0 6px 30px var(--card-shadow); margin-bottom: 16px;
+}
+.quote-box p { font-size: 18px; line-height: 1.9; color: var(--text); margin-bottom: 8px; }
+.quote-box .hl { color: var(--accent); font-weight: 500; }
+.quote-box .takeaway {
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-warm);
+  font-family: 'Playfair Display', serif; font-size: 19px;
+  font-weight: 600; color: var(--accent);
+}
+
+/* Checklist */
+.checklist { max-width: 680px; width: 100%; }
+.check-item {
+  display: flex; align-items: flex-start;
+  padding: 16px 0; border-bottom: 1px solid rgba(212, 196, 176, 0.3);
+}
+.check-item:last-child { border-bottom: none; }
+.check-box {
+  flex-shrink: 0; width: 26px; height: 26px;
+  border: 2px solid var(--check-border); border-radius: 6px;
+  margin-right: 18px; margin-top: 3px;
+}
+.check-text { font-size: 19px; line-height: 1.6; color: var(--text); }
+
+/* Timer */
+.timer-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 110px; font-weight: 300; color: var(--accent-warm);
+  opacity: 0.25; margin-top: 16px;
+}
+
+/* Product layers */
+.product-layers {
+  display: flex; max-width: 820px; width: 100%; margin: 16px 0;
+}
+.product-layer { flex: 1; padding: 28px 22px; text-align: center; position: relative; }
+.product-layer:not(:last-child)::after {
+  content: '→'; position: absolute; right: -14px; top: 50%;
+  transform: translateY(-50%); font-size: 22px; color: var(--accent-gold); z-index: 2;
+}
+.layer-hook { background: rgba(160,114,74,0.08); border: 2px solid rgba(160,114,74,0.2); border-radius: 16px 0 0 16px; }
+.layer-core { background: rgba(196,150,44,0.1); border: 2px solid rgba(196,150,44,0.25); border-left: none; border-right: none; }
+.layer-extend { background: rgba(139,105,20,0.12); border: 2px solid rgba(139,105,20,0.28); border-radius: 0 16px 16px 0; }
+.layer-label { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-warm); margin-bottom: 8px; font-weight: 600; }
+.layer-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.layer-desc { font-size: 14px; color: var(--text-light); line-height: 1.7; margin-bottom: 8px; }
+.layer-price { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--accent); }
+
+/* Session overview */
+.session-overview { display: flex; gap: 16px; max-width: 820px; width: 100%; }
+.session-block { flex: 1; padding: 26px 20px; border-radius: 14px; text-align: center; }
+.sb-time { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 2px; color: var(--accent-warm); margin-bottom: 8px; font-weight: 600; }
+.sb-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+.sb-desc { font-size: 13px; color: var(--text-light); line-height: 1.6; }
+.sb-output { margin-top: 12px; padding: 7px 10px; background: rgba(196,150,44,0.1); border-radius: 7px; font-size: 12px; color: var(--accent); font-weight: 500; }
+.sb-1 { background: rgba(160,114,74,0.06); border: 2px solid rgba(160,114,74,0.2); }
+.sb-2 { background: rgba(196,150,44,0.06); border: 2px solid rgba(196,150,44,0.2); }
+.sb-3 { background: rgba(139,105,20,0.08); border: 2px solid rgba(139,105,20,0.22); }
+
+/* Pairing card */
+.pairing-card {
+  background: var(--card-bg); border-radius: 16px; padding: 40px 48px;
+  max-width: 700px; width: 100%;
+  box-shadow: 0 8px 36px var(--card-shadow);
+  border: 2px solid rgba(196,150,44,0.2); text-align: center;
+}
+.pairing-question { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--accent); margin-bottom: 22px; line-height: 1.5; }
+.pairing-prompt { font-size: 17px; color: var(--text-light); line-height: 1.85; }
+
+/* Principle blocks */
+.principle-row { display: flex; gap: 18px; max-width: 820px; width: 100%; margin: 12px 0; }
+.principle-block {
+  flex: 1; background: var(--card-bg); border-radius: 14px;
+  padding: 26px 22px; box-shadow: 0 4px 20px var(--card-shadow); border-top: 4px solid var(--accent-gold);
+}
+.pb-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--accent-gold); opacity: 0.5; line-height: 1; margin-bottom: 8px; }
+.pb-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.pb-desc { font-size: 14px; color: var(--text-light); line-height: 1.7; }
+
+/* Social table */
+.funnel-table { width: 100%; max-width: 800px; border-collapse: collapse; font-size: 16px; }
+.funnel-table th {
+  font-family: 'Cormorant Garamond', serif; font-size: 13px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--accent-warm); padding: 12px 16px;
+  text-align: left; border-bottom: 2px solid var(--border-warm); font-weight: 600;
+}
+.funnel-table td { padding: 15px 16px; border-bottom: 1px solid rgba(212,196,176,0.3); color: var(--text); vertical-align: top; line-height: 1.6; }
+.funnel-table tr:last-child td { border-bottom: none; }
+.tag { display: inline-block; padding: 2px 10px; border-radius: 6px; font-size: 13px; font-weight: 500; }
+.tag-s1 { background: rgba(160,114,74,0.1); color: var(--accent-warm); }
+.tag-s2 { background: rgba(196,150,44,0.12); color: var(--accent); }
+.tag-s3 { background: rgba(139,105,20,0.15); color: var(--accent); }
+
+/* A3 Template */
+.a3-template {
+  width: 100%; max-width: 960px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  border: 2px solid var(--border-warm); border-radius: 12px;
+  overflow: hidden; box-shadow: 0 8px 40px var(--card-shadow);
+}
+.a3-header {
+  grid-column: 1 / -1; background: var(--dark-bg); color: #F5F0EA;
+  padding: 18px 28px; display: flex; align-items: center; justify-content: space-between;
+}
+.a3-header-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; }
+.a3-header-sub { font-size: 13px; color: rgba(245,240,234,0.5); letter-spacing: 1px; }
+.a3-col { padding: 20px 24px; border-right: 1px solid var(--border-warm); background: var(--bg); min-height: 180px; }
+.a3-col:last-child { border-right: none; }
+.a3-col-title { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-warm); font-weight: 600; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(212,196,176,0.4); }
+.a3-field { margin-bottom: 12px; }
+.a3-field-label { font-size: 11px; color: var(--text-light); margin-bottom: 5px; font-weight: 500; }
+.a3-field-box { background: rgba(212,196,176,0.15); border: 1px dashed rgba(160,114,74,0.3); border-radius: 7px; padding: 10px 12px; min-height: 38px; font-size: 12px; color: var(--text-light); font-style: italic; }
+.a3-social-row {
+  grid-column: 1 / -1; padding: 16px 24px;
+  border-top: 1px solid var(--border-warm); background: rgba(245,240,234,0.5);
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px;
+}
+.a3-social-col-title { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 600; margin-bottom: 8px; }
+.a3-social-item { font-size: 12px; color: var(--text-light); padding: 7px 10px; background: rgba(212,196,176,0.15); border: 1px dashed rgba(160,114,74,0.25); border-radius: 5px; margin-bottom: 6px; font-style: italic; }
+.red-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #C4502A; margin-right: 5px; vertical-align: middle; }
+
+/* Closing grid */
+.closing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; max-width: 860px; width: 100%; margin-top: 16px; }
+.closing-item { background: rgba(245,240,234,0.6); border: 1px solid rgba(212,196,176,0.4); border-radius: 14px; padding: 26px 20px; text-align: center; }
+.ci-icon { font-size: 26px; margin-bottom: 10px; }
+.ci-label { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-warm); font-weight: 600; margin-bottom: 8px; }
+.ci-text { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.ci-output { margin-top: 10px; font-size: 13px; color: var(--text-light); line-height: 1.5; }
+
+/* Nav hint */
+.nav-hint { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); font-size: 13px; color: var(--text-light); opacity: 0.3; letter-spacing: 1px; z-index: 999; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="page-counter"></div>
+<div class="nav-hint">← → 切換頁面</div>
+
+<!-- S1: 開場 -->
+<div class="slide slide--transition active" id="s1">
+  <div class="slide-tag">Day 2 · Afternoon Session</div>
+  <h1>把早上學的<br>做出來</h1>
+  <p class="subtitle">13:30 — 17:30<br>產品組合 · 行銷鉤子 · 社群漏斗</p>
+</div>
+
+<!-- S2: 下午總覽 -->
+<div class="slide slide--default" id="s2">
+  <div class="slide-tag">今天下午</div>
+  <h2 style="margin-bottom:28px;">三個環節，一張完整的商業藍圖</h2>
+  <div class="session-overview">
+    <div class="session-block sb-1">
+      <div class="sb-time">13:30 — 15:30</div>
+      <div class="sb-title">產品組合設計</div>
+      <div class="sb-desc">從 A→B 出發<br>設計你的三層產品梯隊</div>
+      <div class="sb-output">帶走：A3 商業藍圖</div>
+    </div>
+    <div class="session-block sb-2">
+      <div class="sb-time">15:30 — 16:30</div>
+      <div class="sb-title">行銷鉤子設計</div>
+      <div class="sb-desc">讓人主動問<br>「然後呢？」</div>
+      <div class="sb-output">帶走：鉤子腳本</div>
+    </div>
+    <div class="session-block sb-3">
+      <div class="sb-time">16:30 — 17:30</div>
+      <div class="sb-title">社群漏斗</div>
+      <div class="sb-desc">從陌生到信任<br>的三層路線圖</div>
+      <div class="sb-output">帶走：社群斷點標記</div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: 環節一轉場 -->
+<div class="slide slide--transition" id="s3">
+  <div class="slide-tag">環節一 · 2 小時</div>
+  <h1>產品組合設計</h1>
+  <p class="subtitle">你的客戶被你服務完之後<br>從 A 變成什麼樣的 B？</p>
+</div>
+
+<!-- S4: 暖場 -->
+<div class="slide slide--warm" id="s4">
+  <div class="slide-tag">暖場</div>
+  <div class="big-text" style="font-size:34px; color:var(--text-light); margin-bottom:28px;">閉上眼睛，想一個畫面：</div>
+  <div class="core-sentence">你最想幫助的那個人<br>被你服務完之後，她的樣子是什麼？</div>
+  <p class="explain">記住這個畫面。今天下午，你要把這個畫面變成一個可以賣的結構。</p>
+</div>
+
+<!-- S5: 活動 — 一句話變現 -->
+<div class="slide slide--activity" id="s5">
+  <div class="activity-card">
+    <div class="slide-tag">活動 · 20 分鐘</div>
+    <h2>一句話變現練習</h2>
+    <ul>
+      <li>每人寫一張卡：「我幫 <strong>___（A 狀態）</strong>，在 <strong>___（時間）</strong> 內，變成 <strong>___（B 狀態）</strong>。」</li>
+      <li style="margin-top:8px;">站起來走動，跟至少三個人交換卡片</li>
+      <li style="margin-top:8px;">讀完對方的卡，只能問一個問題：</li>
+    </ul>
+    <div style="margin-top:22px; padding:20px 24px; background:rgba(196,150,44,0.08); border-radius:12px; border-left:4px solid var(--accent-gold);">
+      <p style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--accent); line-height:1.5;">「你怎麼知道她真的變了？」</p>
+    </div>
+    <div class="activity-time">⏱ 15 分鐘走動 + 5 分鐘回座修改</div>
+  </div>
+</div>
+
+<!-- S6: 計時 -->
+<div class="slide slide--practice" id="s6">
+  <div class="slide-tag">進行中</div>
+  <div class="big-text">走動、交換、問問題</div>
+  <p class="explain">「你怎麼知道她真的變了？」</p>
+  <div class="timer-display">15'</div>
+</div>
+
+<!-- S7: 反思 -->
+<div class="slide slide--default" id="s7">
+  <div class="slide-tag">反思</div>
+  <div class="core-sentence">回到座位，修改你的卡片</div>
+  <div class="checklist">
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">你的 B 是不是太模糊？（「更好」「更有自信」）</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">被問完後，你能不能寫出可觀測的 B？（數字、頻率、具體狀態）</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">這個 B，是你相信的，還是你覺得別人想聽的？</div>
+    </div>
+  </div>
+  <p class="explain" style="margin-top:24px;">3-4 人分享修改前 vs 修改後</p>
+</div>
+
+<!-- S8: 原理轉場 -->
+<div class="slide slide--transition" id="s8">
+  <div class="slide-tag">原理</div>
+  <h1>你的 A → B<br>就是你的產品</h1>
+  <p class="subtitle">大部分身心靈老師只有「核心品」——<br>沒有入口，也沒有延伸</p>
+</div>
+
+<!-- S9: 三層產品梯隊 -->
+<div class="slide slide--default" id="s9">
+  <div class="slide-tag">三層產品梯隊</div>
+  <h2 style="margin-bottom:24px;">每一層都有它的 A→B</h2>
+  <div class="product-layers">
+    <div class="product-layer layer-hook">
+      <div class="layer-label">鉤子品</div>
+      <div class="layer-name">讓人嚐到一口</div>
+      <div class="layer-desc">A → A+<br>微移動，體驗感覺</div>
+      <div class="layer-price">免費或極低價</div>
+    </div>
+    <div class="product-layer layer-core">
+      <div class="layer-label">核心品 ★</div>
+      <div class="layer-name">真正的轉變</div>
+      <div class="layer-desc">A → B<br>你的主要服務</div>
+      <div class="layer-price">主要營收</div>
+    </div>
+    <div class="product-layer layer-extend">
+      <div class="layer-label">延伸品</div>
+      <div class="layer-name">讓 B 穩住</div>
+      <div class="layer-desc">B → B+<br>不退回 A 的支撐</div>
+      <div class="layer-price">長期收入</div>
+    </div>
+  </div>
+  <p class="explain">這三層，就是你早上學的逆熵流在商品上的體現</p>
+</div>
+
+<!-- S10: 案例 — 瑜珈老師 -->
+<div class="slide slide--warm" id="s10">
+  <div class="slide-tag">案例</div>
+  <div class="quote-box">
+    <p>一位瑜珈老師以前只有「<span class="hl">200小時師資培訓</span>」（核心品）。前面沒入口、後面沒承接。每期招生從零開始。</p>
+    <p style="margin-top:12px;">加了<span class="hl">「7天早晨冥想挑戰」</span>（免費 LINE 群）作為鉤子品，再加<span class="hl">「每月進階工作坊」</span>作為延伸品——</p>
+    <div class="takeaway">半年內師培報名從一期 6 人 → 一期 15 人。<br>她沒有改變自己的能力，她改變的是讓人進來、留下來的路。</div>
+  </div>
+</div>
+
+<!-- S11: 實作指引 -->
+<div class="slide slide--activity" id="s11">
+  <div class="activity-card">
+    <div class="slide-tag">實作 · 30 分鐘</div>
+    <h2>畫你的產品梯隊</h2>
+    <ul>
+      <li>拿出 A3 商業藍圖（下一頁模板）</li>
+      <li style="margin-top:6px;"><strong>先從核心品開始</strong>——你現在在賣的，A→B 是什麼？</li>
+      <li style="margin-top:6px;"><strong>往前推（鉤子品）</strong>——什麼能讓人嚐到一口 B 的感覺？</li>
+      <li style="margin-top:6px;"><strong>往後推（延伸品）</strong>——B 之後她還需要什麼才不會退回 A？</li>
+    </ul>
+    <div style="margin-top:18px; padding:14px 18px; background:rgba(160,114,74,0.08); border-radius:10px;">
+      <p style="font-size:15px; color:var(--accent-warm); line-height:1.6;">💡 卡住就回到你的卡片——你的 B 是什麼？從 B 往回推，鉤子自然浮現。</p>
+    </div>
+    <div class="activity-time">⏱ 30 分鐘</div>
+  </div>
+</div>
+
+<!-- S12: A3 模板 -->
+<div class="slide slide--template" id="s12" style="padding: 36px 56px;">
+  <div class="slide-tag" style="margin-bottom:12px;">A3 商業藍圖 — 可列印模板</div>
+  <div class="a3-template">
+    <div class="a3-header">
+      <div class="a3-header-title">我的商業藍圖</div>
+      <div class="a3-header-sub">姓名：________________　DAY2 產出</div>
+    </div>
+    <div class="a3-col">
+      <div class="a3-col-title">鉤子品</div>
+      <div class="a3-field"><div class="a3-field-label">形式（體驗課 / 挑戰 / 免費資源）</div><div class="a3-field-box">填入你的鉤子設計</div></div>
+      <div class="a3-field"><div class="a3-field-label">她體驗到的 A → A+</div><div class="a3-field-box">微轉變是什麼？</div></div>
+      <div class="a3-field"><div class="a3-field-label">通往下一步的橋</div><div class="a3-field-box">體驗後的下一步</div></div>
+    </div>
+    <div class="a3-col">
+      <div class="a3-col-title">核心品 ★</div>
+      <div class="a3-field"><div class="a3-field-label">A 狀態（你最想幫助的人）</div><div class="a3-field-box">她現在是誰？</div></div>
+      <div class="a3-field"><div class="a3-field-label">B 狀態（可觀測的轉變）</div><div class="a3-field-box">她完成後變成什麼？</div></div>
+      <div class="a3-field"><div class="a3-field-label">課程形式 / 時間 / 定價</div><div class="a3-field-box">具體設計</div></div>
+    </div>
+    <div class="a3-col">
+      <div class="a3-col-title">延伸品</div>
+      <div class="a3-field"><div class="a3-field-label">B 之後她還需要什麼</div><div class="a3-field-box">不退回 A 的支撐</div></div>
+      <div class="a3-field"><div class="a3-field-label">形式（群組 / 月課 / 1:1）</div><div class="a3-field-box">如何持續陪伴</div></div>
+      <div class="a3-field"><div class="a3-field-label"><span class="red-dot"></span>目前最大的缺口</div><div class="a3-field-box" style="border-color:rgba(196,80,42,0.3); background:rgba(196,80,42,0.04);">紅圈：哪一格是斷的？</div></div>
+    </div>
+    <div class="a3-social-row">
+      <div>
+        <div class="a3-social-col-title">S1 外圈 — 認識你</div>
+        <div class="a3-social-item">鉤子品如何帶人進 S1？</div>
+        <div class="a3-social-item">你如何持續讓人看見你？</div>
+      </div>
+      <div>
+        <div class="a3-social-col-title">S2 中圈 — 信任你</div>
+        <div class="a3-social-item">核心品學員在哪裡繼續學習？</div>
+        <div class="a3-social-item">你如何陪伴和追蹤進度？</div>
+      </div>
+      <div>
+        <div class="a3-social-col-title">S3 內圈 — 擁護你</div>
+        <div class="a3-social-item">哪些人會主動推薦你？</div>
+        <div class="a3-social-item"><span class="red-dot"></span>哪一層目前是空的？</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S13: 現場配對 -->
+<div class="slide slide--activity" id="s13">
+  <div class="pairing-card">
+    <div class="slide-tag" style="text-align:center; margin-bottom:18px;">現場配對 · 15 分鐘</div>
+    <div class="pairing-question">「你的延伸品<br>可以是我的鉤子品嗎？」</div>
+    <div class="pairing-prompt">
+      兩人互看 A3 藍圖，找一個合作可能性<br><br>
+      <span style="color:var(--accent); font-weight:500;">例：</span>芳療師的「持續自我照顧」延伸品，正好可以導入頌缽老師的「居家頌缽 21 天」鉤子品。<br><br>
+      <span style="font-size:14px; color:var(--text-light);">你的學員，本來就可以是她的學員——這就是槓桿思維在現實中的樣子。</span>
+    </div>
+  </div>
+</div>
+
+<!-- S14: 環節一收網 -->
+<div class="slide slide--warm" id="s14">
+  <div class="slide-tag">環節一 · 收網</div>
+  <div class="core-sentence">你不是缺產品。<br>你缺的是讓學員<br>自動走到下一步的設計。</div>
+  <div style="display:flex; gap:14px; margin-top:24px; max-width:680px; width:100%;">
+    <div style="flex:1; padding:18px; background:rgba(196,150,44,0.08); border-radius:12px; text-align:center;">
+      <div style="font-size:12px; letter-spacing:2px; color:var(--accent-warm); margin-bottom:6px; font-family:'Cormorant Garamond',serif; font-weight:600;">早上呼應</div>
+      <div style="font-size:14px; color:var(--text-light); line-height:1.6;">逆熵流：從終點（B）逆向拆解</div>
+    </div>
+    <div style="flex:1; padding:18px; background:rgba(160,114,74,0.08); border-radius:12px; text-align:center;">
+      <div style="font-size:12px; letter-spacing:2px; color:var(--accent-warm); margin-bottom:6px; font-family:'Cormorant Garamond',serif; font-weight:600;">早上呼應</div>
+      <div style="font-size:14px; color:var(--text-light); line-height:1.6;">荒謬六：槓桿思維——現場就是人脈網</div>
+    </div>
+  </div>
+</div>
+
+<!-- S15: 環節二轉場 -->
+<div class="slide slide--transition" id="s15">
+  <div class="slide-tag">環節二 · 1 小時</div>
+  <h1>行銷鉤子設計</h1>
+  <p class="subtitle">好的鉤子讓人主動問你「然後呢？」<br>壞的鉤子讓你自己追著問「要不要報名？」</p>
+</div>
+
+<!-- S16: 90秒電梯簡報 -->
+<div class="slide slide--activity" id="s16">
+  <div class="activity-card">
+    <div class="slide-tag">活動 · 15 分鐘</div>
+    <h2>90 秒電梯簡報</h2>
+    <ul>
+      <li>每人用 <strong>90 秒</strong>把你的鉤子品講給旁邊的人聽</li>
+      <li style="margin-top:8px;">聽的人只能給一個評分：「想不想試？<strong>1-10 分</strong>」</li>
+      <li style="margin-top:8px;">低於 7 分，對方問：</li>
+    </ul>
+    <div style="margin-top:20px; padding:18px 22px; background:rgba(196,150,44,0.08); border-radius:12px; border-left:4px solid var(--accent-gold);">
+      <p style="font-family:'Playfair Display',serif; font-size:21px; font-weight:600; color:var(--accent); line-height:1.5;">「少了什麼你才會想試？」</p>
+    </div>
+    <div class="activity-time">⏱ 輪流上場，每人 90 秒</div>
+  </div>
+</div>
+
+<!-- S17: 計時 -->
+<div class="slide slide--practice" id="s17">
+  <div class="slide-tag">進行中</div>
+  <div class="big-text">90 秒說清楚你的鉤子</div>
+  <p class="explain">聽的人打分：「想不想試？1-10」</p>
+  <div class="timer-display">90"</div>
+</div>
+
+<!-- S18: 鉤子三原則 -->
+<div class="slide slide--default" id="s18">
+  <div class="slide-tag">原理</div>
+  <h2 style="margin-bottom:26px;">鉤子設計三原則</h2>
+  <div class="principle-row">
+    <div class="principle-block">
+      <div class="pb-num">1</div>
+      <div class="pb-title">體驗 > 資訊</div>
+      <div class="pb-desc">「免費講座」人人在做。「7天挑戰」讓人動起來——動了才記住，記住才買。</div>
+    </div>
+    <div class="principle-block">
+      <div class="pb-num">2</div>
+      <div class="pb-title">承諾遞進</div>
+      <div class="pb-desc">微承諾（填問卷）→ 小承諾（免費活動）→ 中承諾（付費體驗）→ 大承諾（報名課程）。不能跳階。</div>
+    </div>
+    <div class="principle-block">
+      <div class="pb-num">3</div>
+      <div class="pb-title">場景觸發</div>
+      <div class="pb-desc">你的學員在什麼「痛的瞬間」會想到你？那個瞬間就是鉤子投放的時機。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S19: 案例 — 人類圖分析師 -->
+<div class="slide slide--warm" id="s19">
+  <div class="slide-tag">案例</div>
+  <div class="quote-box">
+    <p>一位人類圖分析師以前的鉤子是「<span class="hl">免費 30 分鐘諮詢</span>」——結果來的人只想免費聊天，沒有轉化。她以為是自己講得不夠好。</p>
+    <p style="margin-top:12px;">後來改成：<span class="hl">「測你的人類圖類型 + 一個這週可以立刻做的調整」</span>（LINE 自動回覆）——</p>
+    <div class="takeaway">同樣的時間投入，篩選效率提高 3 倍。<br>「立刻做的調整」讓人嚐到了 A → A+ 的感覺。問題不在她，在鉤子設計。</div>
+  </div>
+</div>
+
+<!-- S20: 實作 — 鉤子四問 -->
+<div class="slide slide--activity" id="s20">
+  <div class="activity-card">
+    <div class="slide-tag">實作 · 20 分鐘</div>
+    <h2>設計你的鉤子，回答四個問題</h2>
+    <ul>
+      <li><strong>形式</strong>是什麼？（問卷 / 挑戰 / 體驗課 / 免費資源）</li>
+      <li style="margin-top:6px;"><strong>成本</strong>多少？對方花多少時間和錢？（越低越好）</li>
+      <li style="margin-top:6px;">她體驗到什麼<strong>改變</strong>？（A → A+ 的那個「+」）</li>
+      <li style="margin-top:6px;">體驗完後，她的<strong>下一步</strong>是什麼？（通往核心品的路）</li>
+    </ul>
+    <div style="margin-top:18px; padding:14px 18px; background:rgba(196,150,44,0.08); border-radius:10px; border-left:3px solid var(--accent-gold);">
+      <p style="font-size:14px; color:var(--accent-warm); line-height:1.6;">把答案填進 A3 藍圖的鉤子品欄位</p>
+    </div>
+    <div class="activity-time">⏱ 20 分鐘</div>
+  </div>
+</div>
+
+<!-- S21: 可傳播性測試 -->
+<div class="slide slide--activity" id="s21">
+  <div class="pairing-card">
+    <div class="slide-tag" style="text-align:center; margin-bottom:18px;">再次配對 · 5 分鐘</div>
+    <div class="pairing-question">「如果我幫你推你的鉤子<br>我要怎麼介紹？」</div>
+    <div class="pairing-prompt">
+      跟剛才「你是誰的鉤子」的夥伴互看<br><br>
+      說不清楚 = 還沒有傳播性。重新調整描述方式，不是改設計。<br><br>
+      <span style="font-size:14px; color:var(--text-light);">好的鉤子，別人能用一句話幫你說清楚。</span>
+    </div>
+  </div>
+</div>
+
+<!-- S22: 環節二收網 -->
+<div class="slide slide--warm" id="s22">
+  <div class="slide-tag">環節二 · 收網</div>
+  <div class="core-sentence" style="font-size:28px;">好的鉤子讓人主動問你「然後呢？」<br>如果你要自己追著說「要不要報名？」——鉤子還不夠。</div>
+  <div style="margin-top:24px; padding:16px 26px; background:rgba(196,150,44,0.08); border-radius:12px; max-width:560px; width:100%;">
+    <p style="font-size:15px; color:var(--text-light); text-align:center; line-height:1.7;">早上的呼應：荒謬三「GAP 不知」<br>你以為問題是曝光，其實問題是鉤子沒設計好</p>
+  </div>
+</div>
+
+<!-- S23: 環節三轉場 -->
+<div class="slide slide--transition" id="s23">
+  <div class="slide-tag">環節三 · 1 小時</div>
+  <h1>社群漏斗</h1>
+  <p class="subtitle">社群不是群組<br>是一條讓人從陌生走到信任的路</p>
+</div>
+
+<!-- S24: 同心圓活動 -->
+<div class="slide slide--activity" id="s24">
+  <div class="activity-card">
+    <div class="slide-tag">活動 · 15 分鐘</div>
+    <h2>「你的學員現在在哪？」畫圈</h2>
+    <ul>
+      <li>在 A3 藍圖右下角畫三個同心圓</li>
+      <li style="margin-top:6px;"><strong>外圈（S1）</strong>：知道你但沒買過</li>
+      <li style="margin-top:6px;"><strong>中圈（S2）</strong>：買過一次</li>
+      <li style="margin-top:6px;"><strong>內圈（S3）</strong>：買過兩次以上 / 會主動推薦你</li>
+      <li style="margin-top:6px;">把你認識的學員名字（或代號）寫進對應的圈</li>
+    </ul>
+    <div style="margin-top:16px; padding:14px 18px; background:rgba(196,80,42,0.06); border-radius:10px; border-left:3px solid #C4502A;">
+      <p style="font-size:15px; color:#8B4020; line-height:1.6;">⚠️ 大部分人外圈爆滿，內圈空的。看到這個，你就知道問題在哪裡。</p>
+    </div>
+    <div class="activity-time">⏱ 10 分鐘畫 + 5 分鐘確認</div>
+  </div>
+</div>
+
+<!-- S25: 雙螺旋原理 -->
+<div class="slide slide--default" id="s25">
+  <div class="slide-tag">原理</div>
+  <h2 style="margin-bottom:22px;">行銷漏斗 × 社群漏斗：兩條平行的螺旋</h2>
+  <div style="display:flex; gap:32px; max-width:820px; width:100%; align-items:center;">
+    <div style="flex:1;">
+      <div style="padding:18px; background:rgba(160,114,74,0.06); border-radius:12px; border:1px solid rgba(160,114,74,0.2); margin-bottom:12px;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:12px; letter-spacing:2px; color:var(--accent-warm); margin-bottom:6px; font-weight:600;">行銷漏斗（帶人進來）</div>
+        <div style="font-size:15px; color:var(--text); line-height:1.8;">問卷 / 分享會 → 體驗課 → 核心課 → 包月服務</div>
+      </div>
+      <div style="padding:18px; background:rgba(196,150,44,0.06); border-radius:12px; border:1px solid rgba(196,150,44,0.2);">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:12px; letter-spacing:2px; color:var(--accent-warm); margin-bottom:6px; font-weight:600;">社群漏斗（把人養起來）</div>
+        <div style="font-size:15px; color:var(--text); line-height:1.8;">S1 輕量分享 → S2 學習陪伴 → S3 核心圈擁護</div>
+      </div>
+    </div>
+    <div style="font-size:26px; color:var(--border-warm); flex-shrink:0;">⇌</div>
+    <div style="flex:1; padding:22px; background:rgba(139,105,20,0.06); border-radius:12px; border:1px solid rgba(139,105,20,0.2);">
+      <div style="font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--accent); margin-bottom:10px; line-height:1.4;">兩條螺旋互相餵食</div>
+      <div style="font-size:14px; color:var(--text-light); line-height:1.9;">
+        行銷帶進來的人 → 進 S1<br>
+        S1 活躍的人 → 進 S2<br>
+        S2 持續投入的 → 進 S3<br>
+        <strong style="color:var(--accent);">S3 的人反過來幫你做行銷</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S26: 三層對照表 -->
+<div class="slide slide--warm" id="s26">
+  <div class="slide-tag">三層社群運作指南</div>
+  <table class="funnel-table">
+    <thead>
+      <tr>
+        <th>層</th><th>她在想什麼</th><th>你該做什麼</th><th>不該做什麼</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-s1">S1 外圈</span></td>
+        <td>「這人有料嗎？」</td>
+        <td>持續輕量輸出<br><span style="font-size:13px; color:var(--text-light);">每週一則有料的分享</span></td>
+        <td style="color:#C4502A; font-weight:500;">推銷</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-s2">S2 中圈</span></td>
+        <td>「學了之後能不能用？」</td>
+        <td>陪伴、追蹤進度<br><span style="font-size:13px; color:var(--text-light);">慶祝小勝利</span></td>
+        <td style="color:#C4502A; font-weight:500;">放牛吃草</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-s3">S3 內圈</span></td>
+        <td>「我想幫她」</td>
+        <td>給專屬感<br><span style="font-size:13px; color:var(--text-light);">先知道消息、參與設計</span></td>
+        <td style="color:#C4502A; font-weight:500;">把她當一般學員</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- S27: 案例 — 塔羅老師 -->
+<div class="slide slide--default" id="s27">
+  <div class="slide-tag">案例</div>
+  <div class="quote-box">
+    <p>一位塔羅老師的社群架構：</p>
+    <p style="margin-top:10px;"><span class="hl">S1：</span>IG 每週塔羅週報（3,000 追蹤）</p>
+    <p><span class="hl">S2：</span>「塔羅學習會」LINE 群（200 人，每月一聚）</p>
+    <p><span class="hl">S3：</span>「塔羅私塾」（15 人，每週案例討論）</p>
+    <div class="takeaway">S3 的 15 人貢獻了她 60% 的年營收。<br>不是 3,000 人，是 15 人。不是追蹤數的遊戲，是把對的人推進更深的圈。</div>
+  </div>
+</div>
+
+<!-- S28: 實作 — 回到 A3 -->
+<div class="slide slide--activity" id="s28">
+  <div class="activity-card">
+    <div class="slide-tag">實作 · 20 分鐘</div>
+    <h2>回到 A3 藍圖，填社群欄位</h2>
+    <ul>
+      <li>把社群三層跟產品梯隊連起來：
+        <ul style="margin-top:8px; margin-left:18px;">
+          <li style="margin-bottom:4px;">鉤子品 → 帶人進 <strong>S1</strong></li>
+          <li style="margin-bottom:4px;">核心品 → 把 S1 推進 <strong>S2</strong></li>
+          <li>延伸品 → 把 S2 養成 <strong>S3</strong></li>
+        </ul>
+      </li>
+      <li style="margin-top:12px;">回答：<strong>「你的社群，哪一層是斷的？」</strong></li>
+      <li style="margin-top:8px;">用紅筆在 A3 社群欄位圈起那個斷點</li>
+    </ul>
+    <div class="activity-time">⏱ 20 分鐘</div>
+  </div>
+</div>
+
+<!-- S29: 最後配對 -->
+<div class="slide slide--activity" id="s29">
+  <div class="pairing-card">
+    <div class="slide-tag" style="text-align:center; margin-bottom:18px;">最後一次配對 · 5 分鐘</div>
+    <div class="pairing-question">互換 A3，<br>在對方的紅圈旁邊寫一個建議</div>
+    <div class="pairing-prompt">
+      問對方一個問題：<br><br>
+      <span style="font-family:'Playfair Display',serif; font-size:20px; color:var(--accent); font-weight:600; display:block; margin-bottom:14px;">「如果我是你的 S1 學員<br>什麼會讓我願意進 S2？」</span>
+      <span style="font-size:14px; color:var(--text-light);">把答案寫在 A3 的紅圈旁邊——這就是你回去要做的第一件事。</span>
+    </div>
+  </div>
+</div>
+
+<!-- S30: DAY2 收網轉場 -->
+<div class="slide slide--transition" id="s30">
+  <div class="slide-tag">Day 2 · 收網</div>
+  <h1>上午你看清了<br>下午你做出來了</h1>
+  <p class="subtitle">A3 藍圖上的紅圈<br>就是你明天 DAY3 要學的東西</p>
+</div>
+
+<!-- S31: 今天帶走 -->
+<div class="slide slide--default" id="s31">
+  <div class="slide-tag">今天帶走</div>
+  <h2 style="margin-bottom:24px;">三件事，一張紙</h2>
+  <div class="closing-grid">
+    <div class="closing-item">
+      <div class="ci-icon">📐</div>
+      <div class="ci-label">產品梯隊</div>
+      <div class="ci-text">鉤子品 → 核心品 → 延伸品</div>
+      <div class="ci-output">每一層的 A→B 都寫清楚了</div>
+    </div>
+    <div class="closing-item">
+      <div class="ci-icon">🪝</div>
+      <div class="ci-label">鉤子腳本</div>
+      <div class="ci-text">讓人主動問「然後呢？」</div>
+      <div class="ci-output">下週就能用的入口設計</div>
+    </div>
+    <div class="closing-item">
+      <div class="ci-icon">🔴</div>
+      <div class="ci-label">社群斷點</div>
+      <div class="ci-text">S1→S2→S3<br>哪一層是斷的</div>
+      <div class="ci-output">明天 DAY3 要填滿的地方</div>
+    </div>
+  </div>
+  <div style="margin-top:24px; padding:16px 28px; background:rgba(196,150,44,0.08); border-radius:12px; max-width:660px; width:100%; text-align:center;">
+    <p style="font-family:'Playfair Display',serif; font-size:18px; color:var(--accent); font-weight:600; line-height:1.6;">DAY3 小竺會教你——<br>怎麼用語言和表達，把紅圈填滿。</p>
+  </div>
+</div>
+
+<!-- S32: 結束 -->
+<div class="slide slide--transition" id="s32">
+  <div class="slide-tag">Day 2 · Afternoon</div>
+  <h1>你已經有藍圖了</h1>
+  <p class="subtitle" style="margin-top:20px; font-size:21px; line-height:2.0;">
+    鉤子品讓人進來<br>
+    核心品讓人改變<br>
+    延伸品讓人留下<br>
+    社群讓人回來找你
+  </p>
+  <div style="margin-top:36px; font-family:'Cormorant Garamond',serif; font-size:15px; color:rgba(245,240,234,0.35); letter-spacing:3px;">身心靈心創育成計畫 · DAY 2</div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const bar = document.getElementById('progress-bar');
+const counter = document.getElementById('page-counter');
+let cur = 0;
+const total = slides.length;
+
+function go(idx) {
+  if (idx < 0 || idx >= total) return;
+  slides[cur].style.display = 'none';
+  slides[cur].style.opacity = '0';
+  cur = idx;
+  slides[cur].style.display = 'flex';
+  setTimeout(() => { slides[cur].style.opacity = '1'; }, 10);
+  bar.style.width = ((cur + 1) / total * 100) + '%';
+  counter.textContent = (cur + 1) + ' / ' + total;
+  counter.className = slides[cur].classList.contains('slide--transition') ? 'on-dark' : '';
+}
+
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+  else if (['ArrowLeft','ArrowUp'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+});
+
+let tx = null;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (tx === null) return;
+  const d = tx - e.changedTouches[0].clientX;
+  if (Math.abs(d) > 50) go(d > 0 ? cur + 1 : cur - 1);
+  tx = null;
+});
+
+// Init
+slides[0].style.display = 'flex';
+slides[0].style.opacity = '1';
+for (let i = 1; i < total; i++) { slides[i].style.display = 'none'; slides[i].style.opacity = '0'; }
+bar.style.width = (1 / total * 100) + '%';
+counter.textContent = '1 / ' + total;
+</script>
+</body>
+</html>
