@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSEON 產品說明對話地圖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+      --raised:       #1E1E2A;
+      --border-dark:  #2A2A38;
+      --success:      #2D8A6E;
+      --warning:      #C9943A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    /* ─── Layout ─── */
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 40px 120px;
+    }
+    @media (max-width: 1024px) { .page-wrap { padding: 24px 24px 120px; } }
+    @media (max-width: 640px)  { .page-wrap { padding: 16px 16px 140px; } }
+
+    /* ─── Hero ─── */
+    .hero {
+      background: var(--deep-ink);
+      border-radius: 16px;
+      padding: 48px 48px 40px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(196,80,42,0.18) 0%, transparent 60%),
+                  radial-gradient(ellipse at 10% 80%, rgba(42,122,110,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      background: rgba(196,80,42,0.15);
+      border: 1px solid rgba(196,80,42,0.3);
+      border-radius: 100px;
+      padding: 3px 12px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 600;
+      color: var(--snow);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--ember-light);
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: rgba(253,252,250,0.6);
+      max-width: 560px;
+    }
+
+    /* ─── Section Header ─── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .layer-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-dark);
+      background: rgba(196,80,42,0.1);
+      border-radius: 100px;
+      padding: 4px 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .layer-badge.teal  { color: #1D6059; background: rgba(42,122,110,0.1); }
+    .layer-badge.gold  { color: #8A6B28; background: rgba(184,146,58,0.12); }
+    .layer-badge.dark  { color: var(--snow); background: rgba(255,255,255,0.08); }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(18,18,26,0.1), 0 1px 3px rgba(18,18,26,0.06);
+    }
+    .card-dark {
+      background: var(--surface);
+      border-color: var(--border-dark);
+      color: rgba(253,252,250,0.9);
+    }
+    .card-ember {
+      background: rgba(196,80,42,0.06);
+      border-color: rgba(196,80,42,0.2);
+    }
+
+    /* ─── Quote Box ─── */
+    .quote-box {
+      border-left: 3px solid var(--ember);
+      background: rgba(196,80,42,0.05);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .quote-box p {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.65;
+    }
+    .quote-box .quote-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 6px;
+    }
+
+    .quote-box-teal {
+      border-left-color: var(--teal);
+      background: rgba(42,122,110,0.05);
+    }
+    .quote-box-gold {
+      border-left-color: var(--gold);
+      background: rgba(184,146,58,0.06);
+    }
+
+    /* ─── Layer 0：開場鉤 ─── */
+    .hook-main {
+      background: var(--deep-ink);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hook-main::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,80,42,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hook-main .hook-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      margin-bottom: 12px;
+    }
+    .hook-main .hook-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-style: italic;
+      color: var(--snow);
+      line-height: 1.4;
+    }
+    .hook-main .hook-text em {
+      color: var(--ember-light);
+      font-style: normal;
+    }
+
+    .variants-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .variants-grid { grid-template-columns: 1fr; } }
+
+    .variant-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .variant-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .variant-tag.casual { color: var(--teal); }
+    .variant-tag.biz    { color: var(--gold); }
+    .variant-card p {
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    /* ─── Layer 1：入口觸發 ─── */
+    .trigger-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .trigger-grid { grid-template-columns: 1fr; } }
+
+    .trigger-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .trigger-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(18,18,26,0.1);
+    }
+    .trigger-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ember);
+      background: rgba(196,80,42,0.1);
+      border-radius: 100px;
+      padding: 3px 10px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .trigger-signal {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .trigger-signal .quote-char {
+      color: var(--mist);
+    }
+    .trigger-step {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .trigger-step-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .step-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-dot.open  { background: rgba(196,80,42,0.15); color: var(--ember); }
+    .step-dot.start { background: rgba(42,122,110,0.15); color: var(--teal); }
+    .step-dot.next  { background: rgba(184,146,58,0.15); color: var(--gold); }
+
+    .step-text {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+    .step-text strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .step-text .say {
+      display: block;
+      margin-top: 4px;
+      font-style: italic;
+      color: var(--ember-dark);
+      font-size: 13px;
+      background: rgba(196,80,42,0.05);
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .arrow-connector {
+      display: flex;
+      align-items: center;
+      padding: 2px 0;
+    }
+    .arrow-connector::before {
+      content: '↓';
+      color: var(--mist);
+      font-size: 14px;
+      margin-left: 7px;
+    }
+
+    /* ─── Layer 2：客戶類型 ─── */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px)  { .persona-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px)  { .persona-grid { grid-template-columns: 1fr; } }
+
+    .persona-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    }
+    .persona-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .persona-type {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .persona-eg {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--mist);
+      margin-bottom: 16px;
+    }
+    .persona-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .persona-points li {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.55;
+      padding-left: 16px;
+      position: relative;
+    }
+    .persona-points li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--ember);
+      font-weight: 600;
+    }
+    .persona-hook {
+      margin-top: 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .persona-hook-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 6px;
+    }
+    .persona-hook p {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--ember-dark);
+      line-height: 1.6;
+    }
+
+    /* ─── Layer 3：卡點 ─── */
+    .objection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .objection-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    }
+    .objection-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .objection-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ember-dark);
+      background: rgba(196,80,42,0.1);
+      border-radius: 100px;
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .objection-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .objection-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 640px) { .objection-body { grid-template-columns: 1fr; } }
+    .obj-col-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .obj-col-label.read { color: var(--slate); }
+    .obj-col-label.say  { color: var(--ember); }
+
+    .obj-body-text {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+    .obj-say-box {
+      background: rgba(196,80,42,0.05);
+      border: 1px solid rgba(196,80,42,0.15);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* ─── Layer 4：收尾 ─── */
+    .closing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px)  { .closing-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px)  { .closing-grid { grid-template-columns: 1fr; } }
+
+    .closing-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06);
+    }
+    .closing-signal {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .closing-signal.demo    { color: var(--teal); }
+    .closing-signal.report  { color: var(--gold); }
+    .closing-signal.meeting { color: var(--ember); }
+    .closing-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .closing-trigger {
+      font-size: 13px;
+      color: var(--slate);
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+    .closing-line {
+      background: rgba(196,80,42,0.05);
+      border-left: 2px solid var(--ember);
+      border-radius: 0 6px 6px 0;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--ember-dark);
+      line-height: 1.6;
+    }
+
+    /* ─── Flow Divider ─── */
+    .flow-arrow {
+      text-align: center;
+      padding: 8px 0;
+      color: var(--mist);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    /* ─── Section spacing ─── */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    /* ─── Quick Cheatsheet (fixed) ─── */
+    .cheatsheet {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 320px;
+      background: var(--deep-ink);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      z-index: 100;
+      transition: transform 300ms ease, opacity 300ms ease;
+    }
+    .cheatsheet.collapsed .cheatsheet-body {
+      display: none;
+    }
+    .cheatsheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+    .cheatsheet-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+    }
+    .cheatsheet-toggle {
+      font-size: 14px;
+      color: var(--mist);
+      transition: transform 200ms ease;
+    }
+    .collapsed .cheatsheet-toggle {
+      transform: rotate(180deg);
+    }
+    .cheatsheet-body {
+      margin-top: 16px;
+    }
+    .cheatsheet-item {
+      border-bottom: 1px solid var(--border-dark);
+      padding: 10px 0;
+    }
+    .cheatsheet-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .cheatsheet-item-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--mist);
+      margin-bottom: 4px;
+    }
+    .cheatsheet-item p {
+      font-size: 13px;
+      color: rgba(253,252,250,0.9);
+      line-height: 1.6;
+      font-style: italic;
+    }
+    @media (max-width: 640px) {
+      .cheatsheet {
+        bottom: 12px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+      }
+    }
+
+    /* ─── Flow Map visual connector ─── */
+    .map-connector {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0 24px;
+    }
+    .map-connector-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .map-connector-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mist);
+      white-space: nowrap;
+    }
+
+    /* ─── Fade-in animation ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .section {
+      animation: fadeInUp 400ms ease-out both;
+    }
+    .section:nth-child(1) { animation-delay: 0ms; }
+    .section:nth-child(2) { animation-delay: 60ms; }
+    .section:nth-child(3) { animation-delay: 120ms; }
+    .section:nth-child(4) { animation-delay: 180ms; }
+    .section:nth-child(5) { animation-delay: 240ms; }
+    .section:nth-child(6) { animation-delay: 300ms; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ══ Hero ══ -->
+  <div class="hero section">
+    <div class="hero-label">Sales Conversation Map · MUSEON</div>
+    <h1>產品說明<em>對話地圖</em></h1>
+    <p class="hero-sub">從開場鉤到收尾，清晰導航每個客戶對話的轉場邏輯。不管對話怎麼岔開，你永遠知道下一步在哪裡。</p>
+  </div>
+
+
+  <!-- ══ Layer 0：萬用開場鉤 ══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="layer-badge dark">Layer 0</span>
+      <h2 class="section-title">萬用開場鉤</h2>
+    </div>
+
+    <div class="hook-main">
+      <div class="hook-tag">主要版本 · 任何場合適用</div>
+      <div class="hook-text">
+        「MUSEON 不是幫你回答問題——<br/>是幫你發現，<em>你沒意識到自己在問的問題</em>。」
+      </div>
+    </div>
+
+    <div class="variants-grid">
+      <div class="variant-card">
+        <div class="variant-tag casual">輕鬆版 · 朋友聚會 / 閒聊</div>
+        <p>「你有沒有用 AI 用到一個感覺——它在回答你，但它根本不知道你真正想問什麼？MUSEON 就是解這個問題的。」</p>
+      </div>
+      <div class="variant-card">
+        <div class="variant-tag biz">商務版 · 正式簡報 / 初次拜訪</div>
+        <p>「多數企業用 AI 的問題不是工具不夠強，而是根本不知道要問什麼問題。我們做的事就是——把『問題本身』變成一個可以訓練的資產。」</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ Layer 1：四個入口觸發 ══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="layer-badge">Layer 1</span>
+      <h2 class="section-title">四個入口觸發</h2>
+    </div>
+
+    <div class="trigger-grid">
+
+      <!-- 入口 1 -->
+      <div class="trigger-card">
+        <span class="trigger-num">入口 01</span>
+        <div class="trigger-signal"><span class="quote-char">「</span>你是做什麼的？<span class="quote-char">」</span></div>
+        <div class="trigger-step">
+          <div class="trigger-step-item">
+            <div class="step-dot open">O</div>
+            <div class="step-text">
+              <strong>觸發訊號：</strong>完全不了解，白紙一張，開放探索
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot start">S</div>
+            <div class="step-text">
+              <strong>開場白：</strong>先說一句定位（用主要版本開場鉤），然後問：
+              <span class="say">「你現在有在用任何 AI 工具嗎？」</span>
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot next">→</div>
+            <div class="step-text">
+              <strong>下一步：</strong>根據回答，分流到「技術型」或「老闆決策型」客戶路線 (Layer 2)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 入口 2 -->
+      <div class="trigger-card">
+        <span class="trigger-num">入口 02</span>
+        <div class="trigger-signal"><span class="quote-char">「</span>跟 ChatGPT 差在哪？<span class="quote-char">」</span></div>
+        <div class="trigger-step">
+          <div class="trigger-step-item">
+            <div class="step-dot open">O</div>
+            <div class="step-text">
+              <strong>觸發訊號：</strong>有基礎 AI 認知，想比較差異，有購買意願但需要被說服
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot start">S</div>
+            <div class="step-text">
+              <strong>開場白：</strong>不比較，先轉移框架：
+              <span class="say">「問題不是哪個 AI 更強——問題是你用 ChatGPT 的時候，有沒有遇過它回答很正確，但你看完還是不知道怎麼辦的情況？」</span>
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot next">→</div>
+            <div class="step-text">
+              <strong>下一步：</strong>等對方說「有」→ 接「那就是我們在解的問題」→ 展開 Layer 2 差異化說明
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 入口 3 -->
+      <div class="trigger-card">
+        <span class="trigger-num">入口 03</span>
+        <div class="trigger-signal"><span class="quote-char">「</span>我想了解看看<span class="quote-char">」</span></div>
+        <div class="trigger-step">
+          <div class="trigger-step-item">
+            <div class="step-dot open">O</div>
+            <div class="step-text">
+              <strong>觸發訊號：</strong>被動探索，沒有明確痛點，可能是別人介紹來的
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot start">S</div>
+            <div class="step-text">
+              <strong>開場白：</strong>不要急著說產品，先挖痛點：
+              <span class="say">「好，在我介紹之前，我想先問你——你現在最花時間、但又感覺做了沒什麼效果的事是什麼？」</span>
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot next">→</div>
+            <div class="step-text">
+              <strong>下一步：</strong>根據對方說的痛點，選 Layer 2 對應客戶類型，用案例故事切入
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 入口 4 -->
+      <div class="trigger-card">
+        <span class="trigger-num">入口 04</span>
+        <div class="trigger-signal"><span class="quote-char">「</span>多少錢？<span class="quote-char">」</span></div>
+        <div class="trigger-step">
+          <div class="trigger-step-item">
+            <div class="step-dot open">O</div>
+            <div class="step-text">
+              <strong>觸發訊號：</strong>直接型決策者，已有購買預算意識，但還沒確認價值
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot start">S</div>
+            <div class="step-text">
+              <strong>開場白：</strong>不逃避，先建立錨點：
+              <span class="say">「方案從月費到顧問制都有，但在我報數字之前，我想先確認——你現在最想解決的是效率問題、還是決策品質問題？這兩個答案，方案完全不一樣。」</span>
+            </div>
+          </div>
+          <div class="arrow-connector"></div>
+          <div class="trigger-step-item">
+            <div class="step-dot next">→</div>
+            <div class="step-text">
+              <strong>下一步：</strong>對方回答後 → 報對應層級方案 → 帶入 ROI 試算（決策時間 × 時薪）
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══ Layer 2：客戶類型 ══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="layer-badge teal">Layer 2</span>
+      <h2 class="section-title">三種客戶類型說明重點</h2>
+    </div>
+
+    <div class="persona-grid">
+
+      <!-- 技術型 -->
+      <div class="persona-card">
+        <div class="persona-icon">⚙️</div>
+        <div class="persona-type">技術型</div>
+        <div class="persona-eg">// 如 Feng · 工程師 · CTO</div>
+        <ul class="persona-points">
+          <li>強調 MUSEON 的模組架構可擴展、API 可整合</li>
+          <li>說清楚自動化觸發邏輯（事件 → 判斷 → 行動）</li>
+          <li>展示系統拓撲圖，讓他看到「工程質量」</li>
+          <li>避免說太多感性話術，他要的是「怎麼接」</li>
+          <li>主動說限制：「現在不能做什麼」比說假的更贏得信任</li>
+        </ul>
+        <div class="persona-hook">
+          <div class="persona-hook-label">關鍵一句</div>
+          <p>「你現在如果要自己搭一個，需要多少工程時間？我們的方案是讓你直接跳過那個部分。」</p>
+        </div>
+      </div>
+
+      <!-- 老闆決策型 -->
+      <div class="persona-card">
+        <div class="persona-icon">🎯</div>
+        <div class="persona-type">老闆決策型</div>
+        <div class="persona-eg">// 如 Evvon · 旅行社老闆 · 傳產主管</div>
+        <ul class="persona-points">
+          <li>絕對不說技術細節，說「幫你省多少時間」</li>
+          <li>強調決策品質：用 AI 思考 vs. 靠直覺猜</li>
+          <li>你不需要懂技術，團隊用即可</li>
+          <li>用「時間槓桿」框架：一個決策省幾小時 × 一年幾百次</li>
+          <li>結尾一定要有明確下一步（Demo/報告/試跑）</li>
+        </ul>
+        <div class="persona-hook">
+          <div class="persona-hook-label">關鍵一句</div>
+          <p>「你每週花多少時間在『我要怎麼辦』這件事上？我們就是在縮短這段時間。」</p>
+        </div>
+      </div>
+
+      <!-- 探索型 -->
+      <div class="persona-card">
+        <div class="persona-icon">🔍</div>
+        <div class="persona-type">探索型</div>
+        <div class="persona-eg">// 陌生客戶 · 被介紹來 · 不確定需求</div>
+        <ul class="persona-points">
+          <li>先問痛點，不要急著說產品</li>
+          <li>用案例故事切入（旅行社案例、顧問案例）</li>
+          <li>讓他說「這跟我遇到的很像」，然後才展開說明</li>
+          <li>語速放慢，留空間讓他打斷問問題</li>
+          <li>確認他的「決策角色」：他是買單的人還是研究的人？</li>
+        </ul>
+        <div class="persona-hook">
+          <div class="persona-hook-label">關鍵一句</div>
+          <p>「讓我跟你說一個上個月的客戶故事，我覺得你可能有相似的情況……」</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══ Layer 3：五個卡點 ══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="layer-badge gold">Layer 3</span>
+      <h2 class="section-title">5 個常見卡點 + 應對話術</h2>
+    </div>
+
+    <div class="objection-list">
+
+      <!-- 卡點 1 -->
+      <div class="objection-card">
+        <div class="objection-header">
+          <span class="objection-num">卡點 01</span>
+          <span class="objection-text">「我自己用 ChatGPT 就好了」</span>
+        </div>
+        <div class="objection-body">
+          <div>
+            <div class="obj-col-label read">你心裡要先讀到</div>
+            <p class="obj-body-text">這不是反對你，是他還不知道差距在哪。他在說「我有工具了」，但沒說「我的問題解決了」。不要辯論，要讓他自己說出差距。</p>
+          </div>
+          <div>
+            <div class="obj-col-label say">你可以說</div>
+            <div class="obj-say-box">「完全理解，很多人一開始都這樣覺得。那我問你——你用 ChatGPT 的時候，有沒有過這種感覺：它給你的答案很完整，但你看完還是不確定要怎麼辦？」<br/><br/>（對方說有）→「那就是它回答了你的問題，但沒有幫你發現『真正的問題』。這就是我們解的事。」</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡點 2 -->
+      <div class="objection-card">
+        <div class="objection-header">
+          <span class="objection-num">卡點 02</span>
+          <span class="objection-text">「太貴了 / 預算不夠」</span>
+        </div>
+        <div class="objection-body">
+          <div>
+            <div class="obj-col-label read">你心裡要先讀到</div>
+            <p class="obj-body-text">「太貴」通常是「我還不確定這值這麼多」的委婉說法。不要急著降價，先確認他是否已看到價值。如果他看到價值，你可以談方案；如果他沒看到，降價也沒用。</p>
+          </div>
+          <div>
+            <div class="obj-col-label say">你可以說</div>
+            <div class="obj-say-box">「我理解。在我們談數字之前，我想先確認——如果你現在的決策速度可以快三倍，你覺得一個月你會多省多少時間？」<br/><br/>（讓他算）→「按你的時薪，這個數字是多少？我們的方案有沒有可能比這個低？」</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡點 3 -->
+      <div class="objection-card">
+        <div class="objection-header">
+          <span class="objection-num">卡點 03</span>
+          <span class="objection-text">「先給我試用看看」</span>
+        </div>
+        <div class="objection-body">
+          <div>
+            <div class="obj-col-label read">你心裡要先讀到</div>
+            <p class="obj-body-text">這是好信號，他有興趣。但「試用」定義模糊 → 可能試了沒感受就消失。要把試用轉成「有明確目標的 POC」，讓他在試用期就看到具體成果。</p>
+          </div>
+          <div>
+            <div class="obj-col-label say">你可以說</div>
+            <div class="obj-say-box">「可以，我們有導入方案。不過我想先問你——你最想解決的那個問題是什麼？因為試用期最有效的方式，是針對一個具體問題跑，你看到那個問題被解了，才算真的感受到。」</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡點 4 -->
+      <div class="objection-card">
+        <div class="objection-header">
+          <span class="objection-num">卡點 04</span>
+          <span class="objection-text">「跟其他 AI 顧問公司差在哪？」</span>
+        </div>
+        <div class="objection-body">
+          <div>
+            <div class="obj-col-label read">你心裡要先讀到</div>
+            <p class="obj-body-text">他在做比較決策。大部分 AI 顧問賣「工具廣度」，我們賣「思維品質」。不要在工具清單上競爭——重新定義競爭維度。</p>
+          </div>
+          <div>
+            <div class="obj-col-label say">你可以說</div>
+            <div class="obj-say-box">「大多數 AI 顧問的邏輯是：幫你導入更多工具、跑更多流程自動化。我們的邏輯不一樣——我們的核心是提升你的判斷品質。工具是手段，思維才是資產。你用完其他公司的方案，你的判斷有比以前更好嗎？」</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡點 5 -->
+      <div class="objection-card">
+        <div class="objection-header">
+          <span class="objection-num">卡點 05</span>
+          <span class="objection-text">「你們現在有哪些客戶案例？」</span>
+        </div>
+        <div class="objection-body">
+          <div>
+            <div class="obj-col-label read">你心裡要先讀到</div>
+            <p class="obj-body-text">他在問「有沒有跟我類似的成功案例」。初期客戶不多時不要虛張聲勢，但要把每個已有的案例用最大力說透，重點是讓他看到「可遷移性」。</p>
+          </div>
+          <div>
+            <div class="obj-col-label say">你可以說</div>
+            <div class="obj-say-box">「讓我分享一個最近的案例——（簡述旅行社 / Feng 案例）。我問你，你的情況跟這個有沒有相似的地方？」<br/><br/>（讓他說）→ 這樣他自己建立了連結，比你說「我們很厲害」強十倍。</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══ Layer 4：收尾動作 ══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="layer-badge">Layer 4</span>
+      <h2 class="section-title">收尾動作</h2>
+    </div>
+
+    <div class="closing-grid">
+
+      <div class="closing-card">
+        <div class="closing-signal demo">→ Demo 路線</div>
+        <div class="closing-title">現場展示</div>
+        <div class="closing-trigger">適用：技術型 / 對方說「我想看實際操作」/ 對話已建立信任</div>
+        <div class="closing-line">「我現在可以花 10 分鐘跑一個真實場景給你看。你告訴我你最近最煩的一個決策，我們用你的問題當素材。」</div>
+      </div>
+
+      <div class="closing-card">
+        <div class="closing-signal report">→ 報告路線</div>
+        <div class="closing-title">產出診斷報告</div>
+        <div class="closing-trigger">適用：老闆決策型 / 對方已說出明確痛點但需要內部說服</div>
+        <div class="closing-line">「你給我三個你現在最想弄清楚的問題，我這週給你一份針對你公司情況的分析報告，你拿去跟團隊討論。」</div>
+      </div>
+
+      <div class="closing-card">
+        <div class="closing-signal meeting">→ 下次會議</div>
+        <div class="closing-title">定下一次對話</div>
+        <div class="closing-trigger">適用：探索型 / 對話良好但需要帶關鍵人 / 決策鏈不明</div>
+        <div class="closing-line">「我覺得你說的這個方向很有意思。你們公司在這個問題上，你是最終決策的人嗎？還是還有其他人要一起看？我想確認下次要帶誰進來。」</div>
+      </div>
+
+    </div>
+
+    <div class="map-connector" style="margin-top:24px;">
+      <div class="map-connector-line"></div>
+      <div class="map-connector-label">確認成交信號後的最後一句</div>
+      <div class="map-connector-line"></div>
+    </div>
+
+    <div class="quote-box" style="max-width:680px;margin:0 auto;">
+      <div class="quote-label">通用收尾句 · 任何路線都適用</div>
+      <p>「不管你最後有沒有跟我們合作，我希望這次對話幫你把問題想得更清楚一點。這才是我覺得最有價值的事。」</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══ Quick Cheatsheet ══ -->
+<div class="cheatsheet" id="cheatsheet">
+  <div class="cheatsheet-header" onclick="toggleSheet()">
+    <span class="cheatsheet-title">⚡ 快速備忘條</span>
+    <span class="cheatsheet-toggle">▲</span>
+  </div>
+  <div class="cheatsheet-body">
+    <div class="cheatsheet-item">
+      <div class="cheatsheet-item-label">開場 · 任何人</div>
+      <p>「MUSEON 不是幫你回答問題，是幫你發現你沒意識到自己在問的問題。」</p>
+    </div>
+    <div class="cheatsheet-item">
+      <div class="cheatsheet-item-label">差異化 · 對比 ChatGPT</div>
+      <p>「它回答了你的問題，但有沒有幫你發現真正的問題？這就是差距。」</p>
+    </div>
+    <div class="cheatsheet-item">
+      <div class="cheatsheet-item-label">收尾 · 任何階段</div>
+      <p>「不管最後有沒有合作，我希望這次對話讓你把問題想得更清楚。」</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function toggleSheet() {
+    const el = document.getElementById('cheatsheet');
+    el.classList.toggle('collapsed');
+  }
+</script>
+
+</body>
+</html>
