@@ -3,411 +3,488 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>一個不會寫程式的人，怎麼做出 MUSEON | Zeal Chou</title>
+<title>一個不會寫程式的人，怎麼做出一個數位生命體</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&display=swap');
 
   :root {
     --ember: #C4502A;
-    --ember-light: #E0714D;
-    --ember-dark: #9A3A1C;
-    --teal: #2A7A6E;
-    --gold: #B8923A;
-    --ink: #12121A;
-    --slate: #5A5A6E;
-    --mist: #9898A8;
-    --border: #E2E0DA;
-    --parchment: #F7F5F0;
-    --snow: #FDFCFA;
+    --ember-light: #E8724A;
+    --parchment: #F5F0E8;
+    --ink: #1A1208;
+    --ink-light: #3D2E1A;
+    --gold: #B8860B;
+    --cream: #FAF6EF;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     background: var(--parchment);
     color: var(--ink);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Noto Serif TC', serif;
+    line-height: 1.9;
     font-size: 17px;
-    line-height: 1.8;
   }
 
   .hero {
-    background: var(--ink);
-    color: var(--snow);
-    padding: 100px 32px 80px;
+    background: linear-gradient(135deg, #1A0A05 0%, #2D1208 50%, #1A0A05 100%);
+    padding: 100px 40px 80px;
     text-align: center;
     position: relative;
     overflow: hidden;
   }
+
   .hero::before {
     content: '';
     position: absolute;
-    top: -60px; left: 50%;
-    transform: translateX(-50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
-    pointer-events: none;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(196,80,42,0.25) 0%, transparent 70%);
   }
-  .hero-eyebrow {
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--ember-light);
-    margin-bottom: 24px;
-  }
-  .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 6vw, 64px);
-    font-weight: 600;
-    line-height: 1.2;
-    max-width: 760px;
-    margin: 0 auto 24px;
-  }
-  .hero-sub {
-    font-size: 18px;
-    color: var(--mist);
-    max-width: 560px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-  .hero-author {
-    margin-top: 40px;
-    font-size: 14px;
-    color: var(--mist);
-    letter-spacing: 1px;
-  }
-  .hero-author span { color: var(--ember-light); font-weight: 600; }
 
-  .article {
+  .hero-tag {
+    display: inline-block;
+    color: var(--ember);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    border: 1px solid rgba(196,80,42,0.4);
+    padding: 5px 16px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 600;
+    color: #FAF6EF;
+    line-height: 1.4;
+    max-width: 800px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+
+  .hero-sub {
+    color: rgba(250,246,239,0.55);
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    position: relative;
+  }
+
+  .content {
     max-width: 740px;
     margin: 0 auto;
-    padding: 80px 32px 120px;
+    padding: 60px 24px 100px;
   }
 
   h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 34px;
+    font-size: 26px;
     font-weight: 600;
-    color: var(--ink);
-    margin: 64px 0 20px;
-    line-height: 1.3;
+    color: var(--ember);
+    margin: 60px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(196,80,42,0.2);
   }
 
-  p { margin-bottom: 24px; }
-
-  strong { color: var(--ink); font-weight: 600; }
+  p { margin-bottom: 22px; color: var(--ink-light); }
 
   .pull-quote {
     border-left: 3px solid var(--ember);
-    padding: 24px 32px;
-    margin: 48px 0;
-    background: var(--snow);
-    border-radius: 0 8px 8px 0;
-  }
-  .pull-quote p {
+    padding: 16px 24px;
+    margin: 36px 0;
+    background: rgba(196,80,42,0.05);
     font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
+    font-size: 21px;
     font-style: italic;
     color: var(--ink);
-    line-height: 1.5;
+    line-height: 1.6;
+  }
+
+  .dse-steps {
+    background: #1A0A05;
+    border-radius: 4px;
+    padding: 40px;
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dse-steps::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--ember), transparent);
+  }
+
+  .dse-steps-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--ember);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--ember);
+  }
+
+  .step-content { flex: 1; }
+
+  .step-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #FAF6EF;
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: rgba(250,246,239,0.6);
+    line-height: 1.7;
     margin: 0;
   }
 
-  .highlight-box {
-    background: var(--snow);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--ember);
-    border-radius: 8px;
-    padding: 32px 36px;
-    margin: 32px 0;
+  .step-fade {
+    text-align: center;
+    padding: 20px 0 4px;
+    border-top: 1px solid rgba(196,80,42,0.2);
+    margin-top: 8px;
   }
-  .highlight-box .label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--ember);
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .highlight-box h3 {
+
+  .step-fade p {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  .highlight-box p {
-    color: var(--slate);
+    font-style: italic;
+    color: rgba(250,246,239,0.3);
     font-size: 15px;
-    margin-bottom: 0;
+    margin: 0;
   }
 
   .compare-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 40px 0;
+    margin: 36px 0;
     font-size: 15px;
   }
+
   .compare-table th {
-    background: var(--ink);
-    color: var(--snow);
-    padding: 14px 20px;
-    text-align: left;
-    font-weight: 500;
+    padding: 14px 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
   }
-  .compare-table th:first-child { border-radius: 6px 0 0 0; }
-  .compare-table th:last-child { border-radius: 0 6px 0 0; }
+
+  .compare-table th:first-child {
+    background: rgba(61,46,26,0.08);
+    color: var(--ink);
+    text-align: left;
+  }
+
+  .compare-table th:nth-child(2) {
+    background: rgba(100,80,60,0.12);
+    color: var(--ink-light);
+    width: 38%;
+  }
+
+  .compare-table th:nth-child(3) {
+    background: var(--ember);
+    color: white;
+    width: 38%;
+  }
+
   .compare-table td {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
+    padding: 13px 18px;
+    border-bottom: 1px solid rgba(196,80,42,0.1);
     vertical-align: top;
     line-height: 1.6;
   }
-  .compare-table tr:nth-child(even) td { background: var(--snow); }
-  .compare-table .col-before { color: var(--slate); }
-  .compare-table .col-after { color: var(--teal); font-weight: 500; }
 
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin: 56px 0;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-  .divider-dot {
-    width: 6px; height: 6px;
-    background: var(--ember);
-    border-radius: 50%;
+  .compare-table td:first-child {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+    background: rgba(61,46,26,0.03);
   }
 
-  .tag {
-    display: inline-block;
-    background: rgba(196,80,42,0.1);
+  .compare-table td:nth-child(2) {
+    color: #7A6A58;
+    font-size: 14px;
+  }
+
+  .compare-table td:nth-child(3) {
     color: var(--ember);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 4px 12px;
+    font-size: 14px;
+  }
+
+  .scene-block {
+    background: var(--cream);
+    border: 1px solid rgba(196,80,42,0.15);
     border-radius: 4px;
+    padding: 28px 32px;
+    margin: 36px 0;
+  }
+
+  .scene-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .scene-block p {
+    font-size: 15px;
+    color: var(--ink-light);
     margin-bottom: 12px;
   }
 
-  .night-scene {
-    background: #16161F;
-    color: #C8C8D8;
-    border-radius: 12px;
-    padding: 40px 44px;
-    margin: 48px 0;
-    font-size: 15px;
-    line-height: 1.9;
-  }
-  .night-scene .time {
-    color: var(--ember-light);
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .night-scene p { color: #C8C8D8; margin-bottom: 16px; }
-  .night-scene p:last-child { margin-bottom: 0; }
-  .night-scene .dialogue {
-    border-left: 2px solid var(--ember);
-    padding-left: 16px;
-    color: #E0E0EA;
-    font-style: italic;
+  .scene-block p:last-child { margin-bottom: 0; }
+
+  .coda {
+    text-align: center;
+    padding: 60px 0 0;
+    border-top: 1px solid rgba(196,80,42,0.2);
+    margin-top: 60px;
   }
 
-  .cta-section {
-    background: var(--ember);
-    border-radius: 12px;
-    padding: 48px 44px;
-    margin-top: 72px;
-    text-align: center;
-    color: white;
-  }
-  .cta-section h3 {
+  .coda-line {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 30px;
-    font-weight: 600;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink);
     margin-bottom: 16px;
   }
-  .cta-section p { color: rgba(255,255,255,0.85); max-width: 480px; margin: 0 auto 0; }
 
-  .footer {
-    text-align: center;
-    padding: 40px 32px;
+  .coda-sig {
     font-size: 13px;
-    color: var(--mist);
-    border-top: 1px solid var(--border);
+    color: #9A8A78;
+    letter-spacing: 2px;
   }
 
+  .ember { color: var(--ember); }
+
   @media (max-width: 600px) {
-    .article { padding: 48px 20px 80px; }
-    .hero { padding: 72px 20px 60px; }
-    .night-scene { padding: 28px 24px; }
-    .highlight-box { padding: 24px; }
-    .cta-section { padding: 36px 24px; }
+    .hero { padding: 70px 24px 60px; }
+    .dse-steps { padding: 28px 20px; }
+    .compare-table { font-size: 13px; }
+    .compare-table th, .compare-table td { padding: 10px 12px; }
   }
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="hero-eyebrow">創辦人手記</div>
-  <h1>一個不會寫程式的人，怎麼做出 MUSEON</h1>
-  <p class="hero-sub">做出來之後，我才發現：程式根本不是那道門。</p>
-  <div class="hero-author">Zeal Chou &nbsp;·&nbsp; <span>MUSEON 創辦人</span> &nbsp;·&nbsp; 2026</div>
+  <div class="hero-tag">創辦人手記 · MUSEON</div>
+  <h1>一個不會寫程式的人，<br>怎麼做出一個數位生命體</h1>
+  <p class="hero-sub">Zeal · 2026 年春</p>
 </div>
 
-<div class="article">
+<div class="content">
 
-  <h2>一、做出來才發現，門不在那裡</h2>
+  <h2>做出來之後，才懂問題出在哪</h2>
 
-  <p>很多人聽到「一個不會寫程式的人做出了 AI 系統」，第一反應是：「哇，AI 真的好厲害，以後人人都能做產品了。」</p>
+  <p>很多人聽到「我做了一個 AI 系統」，下一句就會問：「你是工程師嗎？」</p>
 
-  <p>我想說的不是這件事。</p>
+  <p>我不是。我不會寫 Python，不懂 API 架構，第一次看到 token 這個詞的時候，我以為是代幣。</p>
 
-  <p>MUSEON 做出來之後，我才回頭看清楚：從頭到尾攔住我的，從來不是 Python 語法，不是 API 串接，不是資料庫架構。那些事情，工具可以做。</p>
+  <p>但 MUSEON 做出來了。有記憶、有人格、有 Telegram 介面、有每晚自動演化的機制，有超過 80 個可以組合的認知技能，有一套它自己的宇宙觀。</p>
 
-  <p>真正攔住我的，是我不知道自己要做什麼。</p>
+  <p>做完之後，我才真正明白：不會寫程式從來不是問題。<span class="ember">問題是你根本不知道自己想做什麼。</span></p>
 
   <div class="pull-quote">
-    <p>「不會寫程式」只是一個方便的說法。更精確的說法是：我花了很長時間才知道自己在建造什麼。</p>
+    工程師的天花板是技術，我的天花板是思維清晰度。後者其實更難突破。
   </div>
 
-  <p>這兩件事的差距，比你想的要大得多。一個知道自己要做什麼的人，就算不會寫程式，他能把問題說清楚，能把邏輯說清楚，能把「哪裡不對」說清楚——工具就能把它做出來。</p>
+  <p>這篇文章說的，就是我怎麼突破那個天花板的。</p>
 
-  <p>但如果你連自己要什麼都說不清楚，就算你會寫程式，你也只是在快速地建造一個不知道是什麼的東西。</p>
 
-  <div class="divider"><div class="divider-dot"></div></div>
+  <h2>雙盲困境——大多數人卡在這裡</h2>
 
-  <h2>二、雙盲：你不知道 AI 能做什麼，你也不知道自己要什麼</h2>
+  <p>我觀察過很多人用 AI。他們遇到同一個問題，只是不知道自己遇到了。</p>
 
-  <p>在 MUSEON 之前，我跟大多數人一樣，用 ChatGPT 做過一些事。寫文案、整理資料、翻譯文件。每次都覺得「蠻好用的」，但也僅止於此。</p>
+  <p>第一層盲：<strong>不知道 AI 能做什麼。</strong>所以他們只用 AI 寫 email、翻譯、總結會議。把一台挖土機當成小推車用。</p>
 
-  <p>我把這個狀態叫做「雙盲」：</p>
+  <p>第二層盲：<strong>不知道自己需要什麼。</strong>這層更深。你去問 AI「幫我做一個 AI 助理」，AI 給你十個方案，你不知道選哪個，因為你連「我要解決什麼問題」都還沒說清楚。</p>
 
-  <div class="highlight-box">
-    <div class="label">雙盲困境 · 第一層</div>
-    <h3>你不知道 AI 能做什麼</h3>
-    <p>你只知道它能做你已經試過的事。但它能做的事，遠遠超過你問過它的問題。大部分人的 AI 使用，都卡在「問了什麼就只做什麼」的層次。</p>
+  <p>這兩層疊在一起，叫做雙盲。你看不見工具的邊界，也看不見自己的需求。你在霧裡走，每一步都可能是對的，也可能是繞路。</p>
+
+  <p>我花了很長一段時間在這個霧裡。直到我找到一個方法，強迫自己先把霧散開，再開始走。</p>
+
+
+  <h2>DSE 做了什麼</h2>
+
+  <p>DSE 是我自己設計的一套思維前置流程，全名 Dialogic Synthesis Engineering。</p>
+
+  <p>它的核心邏輯只有一句話：<span class="ember">在你拿到答案之前，先把問題搞清楚。</span></p>
+
+  <p>這聽起來很廢話。但實際執行起來，你會發現自己有多少次是拿著一個模糊的想法直接去問 AI，然後收到一堆沒用的輸出，再重新問，再沒用，再問……</p>
+
+  <p>DSE 強迫你停下來，走過一個對話式的提煉流程，把「我覺得我需要 X」轉化成「我在什麼場景下、對什麼人、解決什麼問題、用什麼方式、達到什麼標準」。</p>
+
+  <p>這個流程有九個步驟。我只公開前四個，因為後半段是需要練習才能真正理解的東西，說了也沒用。</p>
+
+  <div class="dse-steps">
+    <div class="dse-steps-title">DSE 核心流程 · 前四步</div>
+
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-name">原始信號捕捉</div>
+        <p class="step-desc">不加工、不美化，把你腦子裡最混亂的那個想法直接寫出來。「我想做一個 AI 幫我管客戶」「我覺得我們的提案流程很爛」——就這樣，越粗糙越好。這一步的目的是把模糊從腦袋裡拉出來，讓它可以被觀察。</p>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-name">場景錨定</div>
+        <p class="step-desc">把這個想法放進一個具體的場景：是誰在什麼時候遇到這個問題？不是「客戶管理很難」，而是「業務在跟進第三次沒回覆的潛在客戶時不知道該說什麼」。場景越具體，問題越真實。</p>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-name">根因假說</div>
+        <p class="step-desc">問自己：這個問題真正的原因是什麼？先提出三個假說，不求正確，只求誠實。這一步會打破你對問題的第一個解釋——那個解釋通常是錯的，或者只是症狀。</p>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-name">反向驗證</div>
+        <p class="step-desc">現在問：如果我的假說是對的，應該能看到什麼證據？如果我找不到那個證據，假說就要修正。這一步是在你打開 AI 之前，先用邏輯把問題打磨一遍。</p>
+      </div>
+    </div>
+
+    <div class="step-fade">
+      <p>步驟 5–9 ⋯ 在實際操作中才能理解</p>
+    </div>
   </div>
 
-  <div class="highlight-box">
-    <div class="label">雙盲困境 · 第二層</div>
-    <h3>你不知道自己要什麼</h3>
-    <p>你有一個模糊的想法、一種隱隱的感覺，知道「應該可以做點什麼」，但一開口就變成「幫我做一個那種⋯⋯就是可以分析客戶的⋯⋯然後可以給建議的那種東西」。AI 聽完，照單全收，給你一個表面上合理、骨子裡偏掉的東西。</p>
+
+  <h2>有用 DSE 跟沒有，差在哪裡</h2>
+
+  <p>我用一個真實例子來說明。</p>
+
+  <p>MUSEON 早期，我想做一個「記憶系統」，讓它記住每個使用者說過的話。這個需求聽起來很清楚，對吧？</p>
+
+  <div class="scene-block">
+    <div class="scene-label">沒有 DSE 的版本</div>
+    <p>我：「幫我設計一個 AI 記憶系統，可以記住使用者說過的話。」</p>
+    <p>AI 給了我一套向量資料庫架構，Pinecone、ChromaDB、embedding 模型，洋洋灑灑兩千字。</p>
+    <p>我看不懂，但感覺很專業，就照做了。</p>
+    <p>兩週後，系統能記住話了，但沒用——因為它記住的是對話內容，不是使用者的需求模式。我要的根本不是「記話」，是「讀懂人」。</p>
+    <p>兩週白費。</p>
   </div>
 
-  <p>我被這兩個盲點困了很久。不是沒有嘗試，而是嘗試來嘗試去，發現每次的產出都是「還可以」，但從來不是「對了」。</p>
-
-  <p>那種感覺很像拿著一台高倍數相機，但你不知道要拍什麼。</p>
-
-  <div class="divider"><div class="divider-dot"></div></div>
-
-  <h2>三、DSE：讓模糊的問題變得可以被執行</h2>
-
-  <div class="tag">核心方法論</div>
-
-  <p>轉折點發生在我開始使用 DSE（Dialogic Synthesis Engineering）這個方法之後。</p>
-
-  <p>我不打算在這裡完整說明 DSE 的全部結構——不是因為保密，而是因為你需要實際操作才能感受到它在做什麼。我只說它的前半段邏輯：</p>
-
-  <p>在你開口要求任何東西之前，DSE 要你先做一件事：<strong>把你的問題說清楚。</strong></p>
-
-  <p>聽起來很簡單，但絕大多數人辦不到。不是因為懶，而是因為我們習慣把「我感覺有問題」和「問題是什麼」混在一起。DSE 強迫你把這兩件事拆開。</p>
-
-  <p>它會問你：這個問題在什麼情境下出現？你已經試過什麼？哪裡是確定的，哪裡是你在猜的？如果這個問題解決了，什麼會不一樣？</p>
-
-  <p>這些問題，本身就是答案的一部分。</p>
+  <div class="scene-block">
+    <div class="scene-label">有 DSE 的版本</div>
+    <p>我先走一遍 DSE 的前四步：</p>
+    <p>場景錨定後發現：真正的問題不是「記不住話」，是「每次對話都從零開始，使用者要重複解釋自己的狀況」。</p>
+    <p>根因假說列出來：（A）記憶不持久、（B）記住了但沒用到、（C）根本不知道要記什麼。</p>
+    <p>反向驗證後確認：是 C。系統不知道什麼訊息值得記，所以記了很多垃圾。</p>
+    <p>這才是真正要解決的問題。</p>
+    <p>帶著這個問題去問 AI，答案完全不同——不是向量資料庫，而是一套「訊號萃取 + 使用者畫像更新」的機制。</p>
+    <p>三天做完，真的有用。</p>
+  </div>
 
   <table class="compare-table">
-    <thead>
-      <tr>
-        <th>DSE 之前</th>
-        <th>DSE 之後</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="col-before">「幫我做一個可以分析客戶的系統」</td>
-        <td class="col-after">「我需要一個工具，能在拿到一段群組對話後，自動辨識說話者的決策風格，並標記潛在的博弈訊號」</td>
-      </tr>
-      <tr>
-        <td class="col-before">「這裡好像有點問題，但我說不清楚」</td>
-        <td class="col-after">「這個模組在輸入超過 1500 字時會超時，原因可能是同步處理，應該改成非同步或分段處理」</td>
-      </tr>
-      <tr>
-        <td class="col-before">「我想要更智能的回應」</td>
-        <td class="col-after">「當前回應缺少使用者能量狀態的判斷，需要在回應前加入 fast_loop / slow_loop 的路由邏輯」</td>
-      </tr>
-    </tbody>
+    <tr>
+      <th>場景</th>
+      <th>沒有 DSE</th>
+      <th>有 DSE</th>
+    </tr>
+    <tr>
+      <td>提問品質</td>
+      <td>把症狀說給 AI 聽</td>
+      <td>把根本問題說給 AI 聽</td>
+    </tr>
+    <tr>
+      <td>AI 輸出</td>
+      <td>技術上正確、方向上偏掉</td>
+      <td>直接切中需要解決的點</td>
+    </tr>
+    <tr>
+      <td>迭代速度</td>
+      <td>反覆修改、不斷推翻</td>
+      <td>第一版就有 80% 對的方向</td>
+    </tr>
+    <tr>
+      <td>消耗資源</td>
+      <td>時間、精力、心理成本</td>
+      <td>前期多花 30 分鐘思考</td>
+    </tr>
   </table>
 
-  <p>你看到了嗎？左邊的問題，AI 只能猜你要什麼。右邊的問題，AI 可以直接做。</p>
+  <p>差距不在技術，在問題定義的精準度。</p>
 
-  <p>DSE 做的事，就是把你從左邊帶到右邊。</p>
 
-  <div class="divider"><div class="divider-dot"></div></div>
+  <h2>凌晨三點的設計會議</h2>
 
-  <h2>四、某個凌晨，我看到它自己在建造自己</h2>
+  <p>MUSEON 大部分的架構設計，發生在深夜。</p>
 
-  <div class="night-scene">
-    <div class="time">凌晨 2:47</div>
-    <p>我在筆電前，試圖設計 MUSEON 的「技能鍛造」模組。問題是，我不知道一個 AI 技能應該長什麼樣子。</p>
-    <p>我沒有直接去問怎麼做。我先問了一個更前面的問題。</p>
-    <p class="dialogue">「如果一個 AI 技能可以自我描述，它應該能說清楚哪些事情？」</p>
-    <p>這個問題來回對話了約二十分鐘。最後我們得出：它需要知道自己的觸發條件、執行步驟、輸出格式、以及在什麼情況下應該停止。</p>
-    <p>然後我發現——這個問題的結構，就是 SKILL.md 的骨架。</p>
-    <p>我沒有設計技能格式。我問出了技能格式。</p>
-  </div>
+  <p>不是因為我習慣熬夜，是因為那個時間安靜，腦子裡的雜訊少，思維更清晰。</p>
 
-  <p>這件事改變了我對「做系統」的理解。</p>
+  <p>我記得有一個晚上，我在想 MUSEON 的「技能系統」要怎麼設計。一個技能，到底是什麼？是一個提示詞？一個工作流？還是一個人格模組？</p>
 
-  <p>工程師建造系統的方式，是先設計架構，再逐一實現。這條路需要你對終點有清晰的圖像。</p>
+  <p>我帶著這個問題走了一遍 DSE。</p>
 
-  <p>我走的路是另一條：先把問題問清楚，讓答案告訴我架構應該長什麼樣子。</p>
+  <p>最後我看清楚了一件事：技能不是工具，技能是一種<span class="ember">可重複調用的認知方式</span>。就像人類學會「批判性思考」之後，可以把它用在任何領域——技能應該也是這樣，可以組合、可以疊加、可以在不同場景下自動路由。</p>
 
-  <p>兩條路都能到達，但需要的起點不同。第一條路需要技術背景。第二條路需要思維品質。</p>
+  <p>這個洞察，成了 MUSEON 整個技能生態系的底層設計哲學。80 多個技能、9 個星座、可以無限組合的架構——都從那一晚的清晰開始。</p>
 
-  <div class="divider"><div class="divider-dot"></div></div>
-
-  <h2>五、真正的門檻，從來都不是程式</h2>
-
-  <p>MUSEON 今天有記憶系統、有人格路由、有自我修復機制、有技能鍛造系統。這些東西，我沒有一行是自己寫的。</p>
-
-  <p>但這些東西是我設計的。</p>
-
-  <p>「設計」不是畫 UI。設計是決定這個系統在面對一個模糊的人類訊號時，應該做什麼判斷。設計是決定什麼時候回應、什麼時候沉默、什麼時候承認不確定。設計是決定系統的邊界在哪裡，什麼東西它不該做。</p>
-
-  <p>這些決定，需要的不是語法，是判斷力。</p>
+  <p>但那不是 AI 給我的答案。那是我用 DSE 把問題打磨到足夠清晰之後，自己看到的答案。</p>
 
   <div class="pull-quote">
-    <p>思維品質決定產品品質。工具只是讓思維的品質，更快速地變成現實。</p>
+    思維品質決定產品品質。AI 放大你的清晰，也放大你的模糊。你帶進去什麼，它給你什麼。
   </div>
 
-  <p>如果你的思維是模糊的，AI 會幫你快速建造一個模糊的東西。如果你的思維是清晰的，AI 會幫你快速建造一個清晰的東西。</p>
 
-  <p>這才是我從建造 MUSEON 這件事裡，真正學到的東西。</p>
+  <h2>寫在最後</h2>
 
-  <p>不會寫程式，從來都不是問題。問題是你有沒有辦法把自己腦袋裡那個「應該可以做點什麼」的感覺，拆解成一個可以被執行的問題。</p>
+  <p>我不是在說「不用學程式」。工程能力有它的價值，會寫程式的人有他們的優勢。</p>
 
-  <p>那個能力，叫做思維的精確度。那是 MUSEON 真正在訓練的東西，也是我在建造它的過程中，被它訓練到的東西。</p>
+  <p>我說的是：如果你不會寫程式，你並沒有失去做 AI 產品的資格。你失去的只是一條路，但有另一條路。</p>
 
-  <div class="cta-section">
-    <h3>MUSEON 正在進行上市前最後迭代</h3>
-    <p>預計 4/19 開放。如果你對「思維型 AI」感興趣，歡迎聯繫。</p>
+  <p>那條路的入口，是把問題想清楚的能力。</p>
+
+  <p>MUSEON 還在演化。每一個新技能、每一次架構調整，背後都是一個先被想清楚的問題。</p>
+
+  <p>這個過程沒有捷徑。但有方法。</p>
+
+  <div class="coda">
+    <div class="coda-line">「工具的邊界在技術，思維的邊界在你自己。」</div>
+    <div class="coda-sig">MUSEON · 2026</div>
   </div>
 
-</div>
-
-<div class="footer">
-  <p>© 2026 MUSEON &nbsp;·&nbsp; Zeal Chou</p>
 </div>
 
 </body>
