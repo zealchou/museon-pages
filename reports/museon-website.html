@@ -1007,15 +1007,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(14,14,22,.96
         <div class="contact-form">
           <div class="form-group">
             <label>姓名</label>
-            <input type="text" placeholder="您的姓名">
+            <input id="cf-name" type="text" placeholder="您的姓名">
           </div>
           <div class="form-group">
             <label>公司名稱</label>
-            <input type="text" placeholder="公司名稱">
+            <input id="cf-company" type="text" placeholder="公司名稱">
           </div>
           <div class="form-group">
             <label>產業別</label>
-            <select>
+            <select id="cf-industry">
               <option value="">請選擇產業</option>
               <option>顧問 / 服務業</option>
               <option>零售 / 電商</option>
@@ -1029,13 +1029,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(14,14,22,.96
           </div>
           <div class="form-group">
             <label>目前最想解決的問題</label>
-            <textarea placeholder="簡單描述您目前最想解決的商業問題，幫助我們為您準備更精準的初次諮詢"></textarea>
+            <textarea id="cf-problem" placeholder="簡單描述您目前最想解決的商業問題，幫助我們為您準備更精準的初次諮詢"></textarea>
           </div>
           <div class="form-group">
             <label>聯絡方式（Telegram / 手機）</label>
-            <input type="text" placeholder="Telegram ID 或手機號碼">
+            <input id="cf-contact" type="text" placeholder="Telegram ID 或手機號碼">
           </div>
-          <button class="submit-btn" onclick="alert('感謝您的預約！我們將在 24 小時內與您聯繫。')">提交預約請求</button>
+          <button class="submit-btn" onclick="submitContactForm()">提交預約請求</button>
         </div>
       </div>
     </div>
@@ -1043,6 +1043,36 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(14,14,22,.96
 </div>
 
 <script>
+function submitContactForm() {
+  const name     = document.getElementById('cf-name').value.trim();
+  const company  = document.getElementById('cf-company').value.trim();
+  const industry = document.getElementById('cf-industry').value;
+  const problem  = document.getElementById('cf-problem').value.trim();
+  const contact  = document.getElementById('cf-contact').value.trim();
+
+  if (!name || !contact) {
+    alert('請填寫姓名與聯絡方式，方便我們與您聯繫。');
+    return;
+  }
+
+  const subject = encodeURIComponent('【MUSEON 預約諮詢】' + name + (company ? '｜' + company : ''));
+  const body = encodeURIComponent(
+    '姓名：' + name + '\n' +
+    '公司：' + (company || '（未填）') + '\n' +
+    '產業：' + (industry || '（未填）') + '\n' +
+    '聯絡方式：' + contact + '\n\n' +
+    '想解決的問題：\n' + (problem || '（未填）') + '\n\n' +
+    '──\n此預約透過 MUSEON 官網表單送出'
+  );
+
+  window.location.href = 'mailto:zeal.chou@gmail.com?subject=' + subject + '&body=' + body;
+
+  // 送出後顯示提示
+  setTimeout(() => {
+    alert('感謝您的預約！\n\n您的郵件用戶端已開啟，請確認並送出。\n我們將在 24 小時內與您聯繫。');
+  }, 500);
+}
+
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
