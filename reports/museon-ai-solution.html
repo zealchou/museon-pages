@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON — AI Solution Proposal 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ember: #C4502A;
+  --ember-light: #E0714D;
+  --ember-dark: #9A3A1C;
+  --teal: #2A7A6E;
+  --gold: #B8923A;
+  --ink: #12121A;
+  --slate: #5A5A6E;
+  --mist: #9898A8;
+  --border: #E2E0DA;
+  --parchment: #F7F5F0;
+  --snow: #FDFCFA;
+  --deep-ink: #0E0E16;
+  --surface: #16161F;
+  --raised: #1E1E2A;
+  --border-dark: #2A2A38;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--parchment);
+  color:var(--ink);
+  font-family:'Noto Sans TC','Outfit',sans-serif;
+  font-size:16px;
+  line-height:1.75;
+}
+
+/* ─── HERO ─── */
+.hero{
+  background:var(--deep-ink);
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:96px 24px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%, rgba(196,80,42,0.18) 0%, transparent 70%),
+             radial-gradient(ellipse 50% 40% at 20% 80%, rgba(42,122,110,0.1) 0%, transparent 60%);
+}
+.hero-badge{
+  display:inline-block;
+  background:rgba(196,80,42,0.15);
+  border:1px solid rgba(196,80,42,0.4);
+  color:var(--ember-light);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:5px 16px;
+  border-radius:100px;
+  margin-bottom:32px;
+  position:relative;
+}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,8vw,96px);
+  font-weight:600;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  margin-bottom:16px;
+  position:relative;
+}
+.hero h1 span{color:var(--ember-light);}
+.hero-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(20px,3vw,28px);
+  font-style:italic;
+  color:rgba(255,255,255,0.6);
+  margin-bottom:48px;
+  position:relative;
+}
+.hero-meta{
+  display:flex;gap:48px;flex-wrap:wrap;justify-content:center;
+  position:relative;
+}
+.hero-meta-item{text-align:center;}
+.hero-meta-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;font-weight:600;
+  color:var(--ember-light);
+  line-height:1;
+  display:block;
+}
+.hero-meta-label{
+  font-size:13px;color:rgba(255,255,255,0.5);
+  font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.06em;text-transform:uppercase;
+}
+.hero-scroll{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,0.3);font-size:13px;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.scroll-line{width:1px;height:40px;background:rgba(255,255,255,0.2);}
+
+/* ─── SECTION SHARED ─── */
+.section{
+  max-width:1100px;margin:0 auto;
+  padding:80px 40px;
+}
+.section-dark{
+  background:var(--deep-ink);color:#fff;
+  padding-top:80px;padding-bottom:80px;
+}
+.section-dark .section{color:#fff;}
+
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ember);
+  margin-bottom:12px;
+}
+.section-dark .eyebrow{color:var(--ember-light);}
+
+h2.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,4vw,52px);
+  font-weight:600;line-height:1.15;
+  margin-bottom:48px;
+}
+h3.card-title{
+  font-family:'Outfit',sans-serif;
+  font-size:18px;font-weight:600;
+  margin-bottom:8px;
+}
+
+/* ─── PROBLEM ─── */
+.problem-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:48px;
+}
+.problem-card{
+  background:var(--snow);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:28px 24px;
+  position:relative;
+  overflow:hidden;
+}
+.problem-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--ember);
+}
+.problem-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:56px;font-weight:600;
+  color:rgba(196,80,42,0.12);
+  line-height:1;
+  position:absolute;top:16px;right:20px;
+}
+.problem-icon{font-size:28px;margin-bottom:12px;}
+.problem-text{font-size:14px;color:var(--slate);line-height:1.7;}
+
+/* ─── SOLUTION ─── */
+.solution-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.solution-visual{
+  background:var(--surface);
+  border:1px solid var(--border-dark);
+  border-radius:16px;
+  padding:48px 36px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.solution-visual::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(196,80,42,0.12) 0%, transparent 70%);
+}
+.universe-label{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-style:italic;
+  color:rgba(255,255,255,0.5);
+  margin-bottom:8px;
+  position:relative;
+}
+.universe-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:600;
+  color:#fff;
+  line-height:1;
+  position:relative;
+  margin-bottom:24px;
+}
+.universe-name span{color:var(--ember-light);}
+.orbit-list{
+  display:flex;flex-direction:column;gap:8px;
+  position:relative;
+}
+.orbit-item{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:10px 16px;
+  text-align:left;
+}
+.orbit-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--ember-light);flex-shrink:0;
+}
+.orbit-dot.teal{background:#2A7A6E;}
+.orbit-dot.gold{background:#B8923A;}
+.orbit-text{font-size:13px;color:rgba(255,255,255,0.7);}
+
+/* ─── PILLARS ─── */
+.pillar-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:8px;
+}
+.pillar-card{
+  background:var(--surface);
+  border:1px solid var(--border-dark);
+  border-radius:10px;padding:28px 24px;
+  color:#fff;
+}
+.pillar-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:rgba(196,80,42,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:16px;
+}
+.pillar-card p{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;margin-top:8px;}
+
+/* ─── HOW IT WORKS ─── */
+.steps-flow{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+  margin-top:48px;position:relative;
+}
+.steps-flow::before{
+  content:'';position:absolute;
+  top:28px;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--ember),var(--ember),transparent);
+  opacity:0.3;
+}
+.step-item{text-align:center;padding:0 8px;}
+.step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--snow);
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:16px;font-weight:600;
+  color:var(--ember);
+  position:relative;z-index:1;
+}
+.step-label{font-size:13px;font-weight:600;margin-bottom:6px;}
+.step-desc{font-size:12px;color:var(--slate);line-height:1.6;}
+
+/* ─── USE CASES ─── */
+.case-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:8px;
+}
+.case-card{
+  background:var(--snow);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:28px 24px;
+}
+.case-tag{
+  display:inline-block;
+  background:rgba(196,80,42,0.1);
+  color:var(--ember-dark);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+  margin-bottom:14px;
+}
+.case-result{
+  margin-top:16px;
+  padding:12px 16px;
+  background:var(--parchment);
+  border-radius:6px;
+  font-size:13px;
+  color:var(--slate);
+  border-left:3px solid var(--teal);
+}
+.case-result strong{color:var(--teal);display:block;margin-bottom:4px;}
+
+/* ─── DIFF TABLE ─── */
+.diff-table-wrap{overflow-x:auto;margin-top:40px;}
+.diff-table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.diff-table th{
+  background:var(--ink);color:#fff;
+  padding:14px 20px;text-align:left;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;letter-spacing:0.06em;text-transform:uppercase;
+  font-weight:500;
+}
+.diff-table th:first-child{background:var(--slate);}
+.diff-table th.highlight{background:var(--ember);}
+.diff-table td{
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;vertical-align:top;
+}
+.diff-table tr:last-child td{border-bottom:none;}
+.diff-table td:first-child{
+  font-weight:600;color:var(--slate);
+  background:rgba(90,90,110,0.04);
+  font-size:13px;
+}
+.diff-table td.museon{background:rgba(196,80,42,0.04);}
+.check{color:var(--teal);}
+.cross{color:rgba(90,90,110,0.4);}
+
+/* ─── METRICS ─── */
+.metrics-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  margin-top:8px;
+}
+.metric-card{
+  text-align:center;
+  background:var(--surface);
+  border:1px solid var(--border-dark);
+  border-radius:10px;padding:32px 20px;
+  color:#fff;
+}
+.metric-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:600;
+  color:var(--ember-light);
+  line-height:1;display:block;margin-bottom:6px;
+}
+.metric-label{font-size:13px;color:rgba(255,255,255,0.5);font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;}
+
+/* ─── TEAM ─── */
+.team-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:32px;
+  margin-top:40px;
+}
+.team-card{
+  background:var(--snow);
+  border:1px solid var(--border);
+  border-radius:10px;padding:28px 24px;text-align:center;
+}
+.team-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--ember),var(--ember-dark));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:600;color:#fff;
+}
+.team-name{font-size:18px;font-weight:600;margin-bottom:4px;}
+.team-role{font-size:13px;color:var(--ember);font-family:'IBM Plex Mono',monospace;font-weight:500;margin-bottom:10px;}
+.team-desc{font-size:13px;color:var(--slate);line-height:1.65;}
+
+/* ─── VISION CTA ─── */
+.vision{
+  background:var(--deep-ink);
+  color:#fff;
+  padding:96px 40px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.vision::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 50%, rgba(196,80,42,0.14) 0%, transparent 70%);
+}
+.vision h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,64px);
+  font-weight:600;line-height:1.1;
+  margin-bottom:24px;position:relative;
+}
+.vision h2 span{color:var(--ember-light);}
+.vision p{
+  font-size:18px;color:rgba(255,255,255,0.6);
+  max-width:640px;margin:0 auto 48px;
+  position:relative;line-height:1.8;
+}
+.cta-buttons{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  position:relative;
+}
+.btn-primary{
+  background:var(--ember);color:#fff;
+  padding:14px 32px;border-radius:6px;
+  font-size:15px;font-weight:600;
+  text-decoration:none;
+  transition:background 120ms;
+}
+.btn-primary:hover{background:var(--ember-dark);}
+.btn-secondary{
+  background:transparent;
+  border:1.5px solid rgba(255,255,255,0.25);
+  color:#fff;
+  padding:14px 32px;border-radius:6px;
+  font-size:15px;font-weight:500;
+  text-decoration:none;
+  transition:border-color 120ms;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--ink);color:rgba(255,255,255,0.4);
+  text-align:center;padding:32px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;letter-spacing:0.06em;
+}
+
+/* ─── DIVIDER ─── */
+.section-divider{
+  height:1px;background:var(--border);
+  max-width:1100px;margin:0 auto;
+}
+.divider-dark{background:var(--border-dark);}
+
+/* ─── QUOTE ─── */
+.pull-quote{
+  border-left:3px solid var(--ember);
+  padding:20px 28px;
+  margin:32px 0;
+  background:rgba(196,80,42,0.04);
+  border-radius:0 8px 8px 0;
+}
+.pull-quote p{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-style:italic;
+  color:var(--ink);line-height:1.5;
+}
+.pull-quote cite{
+  font-size:13px;color:var(--slate);
+  font-style:normal;margin-top:8px;display:block;
+  font-family:'IBM Plex Mono',monospace;
+}
+
+/* ─── TIMELINE ─── */
+.timeline{margin-top:40px;}
+.timeline-item{
+  display:grid;grid-template-columns:120px 1fr;gap:24px;
+  padding:24px 0;border-bottom:1px solid var(--border);
+}
+.timeline-item:last-child{border-bottom:none;}
+.tl-date{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;font-weight:600;color:var(--ember);
+  letter-spacing:0.06em;padding-top:2px;
+}
+.tl-content h4{font-size:16px;font-weight:600;margin-bottom:4px;}
+.tl-content p{font-size:14px;color:var(--slate);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .problem-grid,.pillar-grid,.case-grid,.metrics-grid{grid-template-columns:1fr 1fr;}
+  .solution-wrap,.team-grid{grid-template-columns:1fr;}
+  .steps-flow{grid-template-columns:1fr 1fr;gap:16px;}
+  .steps-flow::before{display:none;}
+}
+@media(max-width:640px){
+  .problem-grid,.pillar-grid,.case-grid,.metrics-grid,.team-grid{grid-template-columns:1fr;}
+  .section{padding:48px 20px;}
+  .hero{padding:64px 20px;}
+  .hero-meta{gap:32px;}
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero>*{animation:fadeUp 500ms ease-out both;}
+.hero .hero-badge{animation-delay:0ms;}
+.hero h1{animation-delay:80ms;}
+.hero .hero-sub{animation-delay:160ms;}
+.hero .hero-meta{animation-delay:240ms;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-badge">TAIA AI Award 2026 — AI Solution Submission</div>
+  <h1>MUSEON<br><span>思維型 AI 顧問系統</span></h1>
+  <p class="hero-sub">The Thinking Engine Behind Every Decisive Move</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">86+</span>
+      <span class="hero-meta-label">Skill Modules</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">1,300+</span>
+      <span class="hero-meta-label">Real Interactions</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">5</span>
+      <span class="hero-meta-label">Core Team</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">2026</span>
+      <span class="hero-meta-label">Launch Year</span>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    SCROLL
+  </div>
+</section>
+
+<!-- ═══════════════ EXECUTIVE SUMMARY ═══════════════ -->
+<div style="background:var(--ember);color:#fff;padding:40px;">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:48px;align-items:center;">
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;margin-bottom:8px;">Executive Summary</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1.2;">一句話說清楚</div>
+    </div>
+    <div style="font-size:18px;line-height:1.9;opacity:0.92;">
+      MUSEON 是台灣首個<strong>具備自主演化能力的思維型 AI 顧問系統</strong>——不是工具，不是 Chatbot，而是一個持續學習、主動偵測決策盲點、並在每次互動後自我修正的<strong>認知夥伴</strong>。專為台灣中小企業主設計，讓老闆從「用 AI 查資料」進化為「用 AI 做更好的決策」。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PROBLEM ═══════════════ -->
+<section style="padding:80px 0 0;">
+  <div class="section">
+    <div class="eyebrow">Problem Statement</div>
+    <h2 class="section-title">台灣中小企業主面臨的<br>三層決策困境</h2>
+    <p style="max-width:640px;color:var(--slate);font-size:17px;line-height:1.8;margin-bottom:8px;">
+      根據資策會 2025 年調查，台灣有 78% 的中小企業主「知道 AI 時代來了，但不知道自己能怎麼用」。問題不在工具，在思維框架。
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <div class="problem-icon">🧱</div>
+        <h3 class="card-title">雙盲困境</h3>
+        <p class="problem-text">不知道 AI 能做什麼（功能盲），也不知道自己需要什麼（需求盲）。諾貝爾經濟學獎得主 Herbert Simon 稱之為「問題空間的有限理性」——人們甚至難以定義自己真正想解決的問題。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <div class="problem-icon">🔄</div>
+        <h3 class="card-title">迭代失憶</h3>
+        <p class="problem-text">每次 AI 對話都從零開始。沒有跨 session 的學習積累，同一個問題兩週後又回到起點。Ebbinghaus 遺忘曲線告訴我們：沒有主動鞏固機制，知識流失不可避免。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <div class="problem-icon">🪞</div>
+        <h3 class="card-title">洞見缺乏</h3>
+        <p class="problem-text">一般 AI 只回答「被問到的問題」，卻不主動揭露盲點。Daniel Kahneman 指出：人類系統一思維的直覺偏誤往往是最危險的決策陷阱，而這正是老闆最需要被看見的地方。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SOLUTION ═══════════════ -->
+<section style="padding:80px 0;">
+  <div class="section">
+    <div class="eyebrow">Our Solution</div>
+    <h2 class="section-title">MUSEON 的答案：<br>一個活的認知宇宙</h2>
+    <div class="solution-wrap">
+      <div>
+        <p style="font-size:17px;line-height:1.85;color:var(--slate);margin-bottom:24px;">
+          MUSEON 不是「功能清單」，而是一個<strong style="color:var(--ink);">有記憶、有脈搏、有演化能力的認知系統</strong>。它以宇宙結構作為架構隱喻——有核心定律（DNA27）、有星座模組（Skill Galaxy）、有衛星功能（satellite tools）——每個元素都在引力規則下協同運作。
+        </p>
+        <div class="pull-quote">
+          <p>「工具解決『做什麼』，MUSEON 解決『為什麼這麼決定』——這是本質上不同的兩件事。」</p>
+          <cite>— MUSEON 設計哲學，2026</cite>
+        </div>
+        <p style="font-size:15px;line-height:1.8;color:var(--slate);">
+          Andy Clark 的<em>延伸心智論</em>（Extended Mind Theory）指出，人類認知從未侷限於大腦——我們借助工具、筆記、他人來延伸思考邊界。MUSEON 就是這個延伸的下一個演化形態：一個真正理解你的思考脈絡、並在你的決策過程中提供結構化支撐的認知夥伴。
+        </p>
+      </div>
+      <div class="solution-visual">
+        <div class="universe-label">MUSEON Architecture</div>
+        <div class="universe-name">認知<span>宇宙</span></div>
+        <div class="orbit-list">
+          <div class="orbit-item">
+            <div class="orbit-dot"></div>
+            <div class="orbit-text"><strong style="color:#fff;">DNA27 核心</strong> — 不可變的行為憲法與價值觀引力場</div>
+          </div>
+          <div class="orbit-item">
+            <div class="orbit-dot teal"></div>
+            <div class="orbit-text"><strong style="color:#fff;">技能星座</strong> — 86+ 個可自主演化的認知能力模組</div>
+          </div>
+          <div class="orbit-item">
+            <div class="orbit-dot gold"></div>
+            <div class="orbit-text"><strong style="color:#fff;">記憶晶格</strong> — 每次互動後自動結晶的知識資產</div>
+          </div>
+          <div class="orbit-item">
+            <div class="orbit-dot" style="background:#6A8ACA;"></div>
+            <div class="orbit-text"><strong style="color:#fff;">ANIMA 脈搏</strong> — 自主感知系統狀態的生命徵象</div>
+          </div>
+          <div class="orbit-item">
+            <div class="orbit-dot" style="background:#9A6A4A;"></div>
+            <div class="orbit-text"><strong style="color:#fff;">Ares 人物檔案</strong> — 博弈分析與關係網絡記憶庫</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CORE TECH ═══════════════ -->
+<div class="section-dark">
+  <div class="section">
+    <div class="eyebrow">Core Technology</div>
+    <h2 class="section-title" style="color:#fff;">三大核心技術支柱</h2>
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <div class="pillar-icon">🔬</div>
+        <h3 class="card-title">DSE 拆解方法論</h3>
+        <p>Dialogic Synthesis Engineering（對話合成工程）——一套九步驟的需求拆解框架，將模糊的業主問題轉化為可執行的 AI 行動方案。哲學根源來自 Karl Popper 的否證論：好問題比好答案更稀缺。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">🧬</div>
+        <h3 class="card-title">ACSF 技能鍛造系統</h3>
+        <p>Ability Crystallization &amp; Skill Forge——技能不是預設的 function，而是從真實對話中生長出來的認知結構。Hebb 法則：一起激發的神經元形成迴路。重複出現的需求自動結晶為可複用技能。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">💎</div>
+        <h3 class="card-title">Knowledge Crystal 記憶系統</h3>
+        <p>失敗教訓和成功模式自動提取為結晶規則，下次相似情境直接觸發防護。不像 RAG 只是檢索，Knowledge Crystal 是帶著「為什麼」的活知識——每顆結晶都記得當時的場景和代價。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">🎭</div>
+        <h3 class="card-title">PersonaRouter 人格感知</h3>
+        <p>融合 Wan-Miu 16 型人格、Human Design 人類圖、八原語能量系統，為每位使用者建立動態人格檔案。在不同對話情境中自動調整溝通策略，如 Goffman 的「日常生活中的自我呈現」。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">⚔️</div>
+        <h3 class="card-title">Ares 博弈分析引擎</h3>
+        <p>整合博弈論（Nash Equilibrium）、行為經濟學（Thaler 推力理論）和中國兵法（孫子「知勢」），為商務談判、合夥評估、客戶預測提供結構化的人性洞察地圖。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">🔄</div>
+        <h3 class="card-title">Morphenix 自主演化引擎</h3>
+        <p>每晚 Nightly 批次回收當日互動教訓，自動判斷哪些模式值得結晶成正式技能。Nassim Taleb 的反脆弱理論：系統不只要能承受衝擊，更要從衝擊中變得更強。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section style="padding:80px 0;">
+  <div class="section">
+    <div class="eyebrow">How It Works</div>
+    <h2 class="section-title">從一個問題到一個決策<br>五步驟運作流程</h2>
+    <div class="steps-flow">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-label">訊號接收</div>
+        <div class="step-desc">Telegram / API 接收使用者問題，millisecond 級讀取個人快取（人格、歷史、規則）</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-label">意圖解碼</div>
+        <div class="step-desc">DSE 方法論拆解表面問題，找到底層需求。區分「問的問題」與「真正的問題」</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-label">星座召喚</div>
+        <div class="step-desc">語意搜尋匹配最相關技能星座，組合多個認知模組協同分析</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-label">結構化輸出</div>
+        <div class="step-desc">產出決策地圖：甜頭 + 代價 + Plan B。不給清單，給思考框架</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">05</div>
+        <div class="step-label">記憶結晶</div>
+        <div class="step-desc">L4 觀察者自動提取本次洞見，寫入 Knowledge Crystal 供未來互動調用</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════ USE CASES ═══════════════ -->
+<section style="padding:80px 0;">
+  <div class="section">
+    <div class="eyebrow">Real-World Applications</div>
+    <h2 class="section-title">三個真實應用場景</h2>
+    <div class="case-grid">
+      <div class="case-card">
+        <div class="case-tag">Brand Strategy</div>
+        <h3 class="card-title">品牌策略與 CIS 設計</h3>
+        <p style="font-size:14px;color:var(--slate);line-height:1.7;">旅遊業客戶需要重建品牌識別，從模糊的「我想改變形象」到清晰的 CIS 設計規格書。MUSEON 透過 Brand Builder + DSE 方法論，將客戶零散的感性描述轉化為可交付的設計方向與競品對照圖。</p>
+        <div class="case-result">
+          <strong>✓ 交付成果</strong>
+          3 天完成從「我想要不一樣」到「可以直接給設計師執行」的完整品牌簡報，包含目標客群畫像、視覺語言規則、5 個競品差異化定位
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">Partnership Evaluation</div>
+        <h3 class="card-title">合夥人博弈分析</h3>
+        <p style="font-size:14px;color:var(--slate);line-height:1.7;">企業主考慮引進合夥人，卻不確定對方的決策傾向和潛在衝突點。Ares 引擎從過去對話中提取人格特質，結合博弈論建立「決策可能性地圖」，預測衝突場景並提供應對策略。</p>
+        <div class="case-result">
+          <strong>✓ 交付成果</strong>
+          完整合夥人評估報告：性格矩陣 × 觸發點清單 × 股權設計建議 × 三個潛在衝突場景預演
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">Investment Analysis</div>
+        <h3 class="card-title">投資決策輔助</h3>
+        <p style="font-size:14px;color:var(--slate);line-height:1.7;">面對市場信號過多、判斷依據不清的困境，Market-Core + Sentiment Radar 組合實時掃描總體經濟、產業動態、情緒偏差，用 MUSEON 特有的「陽謀 × 陰謀雙螺旋分析」揭露表象下的真實邏輯。</p>
+        <div class="case-result">
+          <strong>✓ 交付成果</strong>
+          每週投資洞察報告：宏觀信號解讀 + 情緒偏差標記 + 3 個可執行決策建議（含風險代價）
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ DIFFERENTIATION ═══════════════ -->
+<div class="section-dark">
+  <div class="section">
+    <div class="eyebrow">Competitive Edge</div>
+    <h2 class="section-title" style="color:#fff;">MUSEON vs. 一般工具型 Agent</h2>
+    <p style="color:rgba(255,255,255,0.6);max-width:640px;margin-bottom:40px;">最根本的差異不在功能數量，在於系統的認識論基礎——工具型 Agent 預設使用者知道自己要什麼；MUSEON 預設使用者需要幫助找到「真正的問題」。</p>
+    <div class="diff-table-wrap">
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>比較維度</th>
+            <th>一般工具型 Agent（ChatGPT/GPTs）</th>
+            <th class="highlight">MUSEON 思維型顧問系統</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>記憶機制</td>
+            <td>Session 內暫存，跨對話歸零</td>
+            <td class="museon"><span class="check">✓</span> 持久記憶 + Knowledge Crystal 自動結晶，跨 session 累積</td>
+          </tr>
+          <tr>
+            <td>技能來源</td>
+            <td>工程師預先寫定，靜態 function</td>
+            <td class="museon"><span class="check">✓</span> 從真實對話中生長，ACSF 自動鍛造，帶「為什麼」的活知識</td>
+          </tr>
+          <tr>
+            <td>問題處理</td>
+            <td>直接回答被問到的問題</td>
+            <td class="museon"><span class="check">✓</span> DSE 先解碼真實需求，再回答「對的問題」</td>
+          </tr>
+          <tr>
+            <td>人格適應</td>
+            <td>無個人化，所有人相同回應</td>
+            <td class="museon"><span class="check">✓</span> PersonaRouter：16 型人格 × 能量狀態 × 歷史偏好動態調整</td>
+          </tr>
+          <tr>
+            <td>失敗學習</td>
+            <td>每次從零，不記得犯過的錯</td>
+            <td class="museon"><span class="check">✓</span> 失敗即觸發結晶，下次相似情境自動啟動防護規則</td>
+          </tr>
+          <tr>
+            <td>盲點偵測</td>
+            <td>被動等問，不主動揭示盲點</td>
+            <td class="museon"><span class="check">✓</span> 主動偵測決策偏誤，在使用者「忘記問」之前先問</td>
+          </tr>
+          <tr>
+            <td>技能協同</td>
+            <td>功能相互獨立，無法組合推理</td>
+            <td class="museon"><span class="check">✓</span> 星座銀河架構：多個 Skill 在引力規則下協同，湧現跨域洞見</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ METRICS ═══════════════ -->
+<div style="background:var(--ink);color:#fff;padding:80px 0;">
+  <div class="section">
+    <div class="eyebrow" style="color:var(--ember-light);">Traction & Impact</div>
+    <h2 class="section-title" style="color:#fff;">從概念到實戰的成績單</h2>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-num">86+</span>
+        <span class="metric-label">Active Skill Modules</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">113</span>
+        <span class="metric-label">Knowledge Crystals</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">1,336</span>
+        <span class="metric-label">Real Interactions</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">3x</span>
+        <span class="metric-label">Decision Speed Improvement</span>
+      </div>
+    </div>
+    <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+      <div style="padding:24px;background:var(--surface);border:1px solid var(--border-dark);border-radius:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ember-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">使用 DSE 前</div>
+        <ul style="list-style:none;font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">
+          <li>⏱ 平均 2 週才能產出有用報告</li>
+          <li>🔁 同一問題每次從零開始</li>
+          <li>📉 AI 輸出與業務場景脫節</li>
+          <li>💸 每月 Token 消耗無法控制</li>
+        </ul>
+      </div>
+      <div style="padding:24px;background:var(--surface);border:1px solid var(--border-dark);border-radius:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ember-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">使用 MUSEON 後</div>
+        <ul style="list-style:none;font-size:14px;color:rgba(255,255,255,0.85);line-height:2;">
+          <li>⚡ 3 天內交付可執行報告</li>
+          <li>🧠 跨 session 記憶持續累積</li>
+          <li>🎯 輸出直接對應決策節點</li>
+          <li>📊 Token 消耗下降 40%（CPU 前置）</li>
+        </ul>
+      </div>
+      <div style="padding:24px;background:rgba(196,80,42,0.1);border:1px solid rgba(196,80,42,0.3);border-radius:10px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ember-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">核心價值主張</div>
+        <ul style="list-style:none;font-size:14px;color:rgba(255,255,255,0.85);line-height:2;">
+          <li>✅ 不替代決策，提升決策品質</li>
+          <li>✅ 不奪取主權，強化思維清晰度</li>
+          <li>✅ 不製造依賴，建立可複製方法論</li>
+          <li>✅ 不只是工具，是長期認知夥伴</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ROADMAP ═══════════════ -->
+<section style="padding:80px 0;">
+  <div class="section">
+    <div class="eyebrow">Roadmap</div>
+    <h2 class="section-title">2026 發展路線圖</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="tl-date">Q1 2026<br><span style="color:var(--teal);font-size:11px;">✓ 完成</span></div>
+        <div class="tl-content">
+          <h4>MUSEON v2 架構完工</h4>
+          <p>四層架構（L1主持人 / L2思考者 / L4觀察者 / Skill Worker）穩定上線，CPU-first 設計降低 Token 消耗 40%，Telegram Bot 實時部署。</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-date">Q2 2026<br><span style="color:var(--ember);font-size:11px;">進行中</span></div>
+        <div class="tl-content">
+          <h4>企業版測試與早期客戶招募</h4>
+          <p>邀請 5-10 家台灣中小企業主進行 Beta 測試，收集決策品質改善數據，打磨 3 條核心工作流（品牌顧問 / AI 導入 / 投資分析）。</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-date">Q3 2026</div>
+        <div class="tl-content">
+          <h4>OpenClaw 開放平台上線</h4>
+          <p>讓外部開發者和顧問可以基於 MUSEON 核心鍛造自己的 Skill，形成 AI 顧問技能生態系。目標：50 個外部 Skill 上架。</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-date">Q4 2026</div>
+        <div class="tl-content">
+          <h4>SaaS 商業化正式啟動</h4>
+          <p>訂閱制上線（月費 NT$9,800 起），整合認證培訓課程，建立首批認證顧問師資，目標月營收 NT$200 萬。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════ TEAM ═══════════════ -->
+<section style="padding:80px 0;">
+  <div class="section">
+    <div class="eyebrow">The Team</div>
+    <h2 class="section-title">打造 MUSEON 的人</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">Z</div>
+        <div class="team-name">Zeal（周逸達）</div>
+        <div class="team-role">Founder & Chief Architect</div>
+        <div class="team-desc">30 年創業歷程，非工程背景親手打造 MUSEON 系統。自研 Business-12、SSA、DSE、OneMuse 等方法論體系，今年 9 月入讀淡江資工所。相信「創業者就是最好的 AI 設計師」。</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,var(--teal),#1a5a52);">士</div>
+        <div class="team-name">馮士維（Feng）</div>
+        <div class="team-role">Technology Partner</div>
+        <div class="team-desc">資訊公司背景，負責 MUSEON 技術架構與系統整合。與 Zeal 共同推動 AI 顧問服務的技術落地，主力開發 API 串接與企業系統整合方案。</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,var(--gold),#8A6A2A);">R</div>
+        <div class="team-name">Rita（小麗）</div>
+        <div class="team-role">BD / Sales / Pre-Sales</div>
+        <div class="team-desc">2026 年 3 月加入核心團隊，負責商務開發與銷售推進。擅長與中小企業主建立信任關係，將 MUSEON 複雜的技術能力轉化為客戶聽得懂的商業價值。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ VISION ═══════════════ -->
+<div class="vision">
+  <h2>讓每個中小企業主<br>都擁有<span>一個思考夥伴</span></h2>
+  <p>不是替你做決策的 AI，是讓你做出更好決策的認知系統。在不奪權、不失真、不成癮的前提下，打造可長期陪伴的人類對齊 AI 決策夥伴。</p>
+  <div class="cta-buttons">
+    <a href="https://zealchou.github.io/museon-pages/" class="btn-primary">了解更多</a>
+    <a href="#" class="btn-secondary">申請 Beta 體驗</a>
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div>MUSEON &nbsp;·&nbsp; AI Solution Proposal &nbsp;·&nbsp; TAIA AI Award 2026</div>
+  <div style="margin-top:8px;opacity:0.6;">© 2026 MUSEON. Built with thinking, not just tools.</div>
+</footer>
+
+</body>
+</html>
