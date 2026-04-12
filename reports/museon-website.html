@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON — AI 決策夥伴</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;700&family=Noto+Serif+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --warm-gold: #D4A853;
+    --parchment: #F5F0E8;
+    --deep-ink: #1C1A17;
+    --muted-slate: #8A8580;
+    --sage: #7A8C6E;
+    --dusty-rose: #C4867A;
+    --steel-blue: #5A7A9A;
+    --card-bg: #FDFAF4;
+    --shadow: 0 2px 16px rgba(28,26,23,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background: var(--parchment);
+    color: var(--deep-ink);
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(28,26,23,0.96);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    border-bottom: 1px solid rgba(196,80,42,0.3);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--parchment);
+    letter-spacing: 0.15em;
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    display: block;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--warm-gold);
+    font-family: 'Noto Serif TC', serif;
+    margin-top: -2px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(245,240,232,0.7);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--warm-gold);
+  }
+
+  .nav-cta {
+    background: var(--ember);
+    color: var(--parchment) !important;
+    padding: 8px 20px;
+    font-size: 12px !important;
+    border-radius: 2px;
+  }
+
+  .nav-cta:hover {
+    background: #a8411e;
+    color: var(--parchment) !important;
+  }
+
+  /* ── PAGES ── */
+  .page {
+    display: none;
+    min-height: 100vh;
+    padding-top: 64px;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 80px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--deep-ink);
+  }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--deep-ink);
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--deep-ink);
+  }
+
+  p {
+    font-size: 15px;
+    color: #3a3835;
+    line-height: 1.85;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--deep-ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 64px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 60%, rgba(196,80,42,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(212,168,83,0.08) 0%, transparent 50%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  .hero h1 {
+    color: var(--parchment);
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    color: var(--warm-gold);
+    font-style: italic;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: rgba(245,240,232,0.65);
+    max-width: 560px;
+    margin-bottom: 48px;
+    line-height: 1.8;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .tag {
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.35);
+    color: var(--parchment);
+    padding: 6px 16px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--ember);
+    color: var(--parchment);
+    padding: 14px 36px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: #a8411e; }
+
+  .btn-ghost {
+    display: inline-block;
+    background: transparent;
+    color: rgba(245,240,232,0.75);
+    padding: 14px 36px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgba(245,240,232,0.25);
+    transition: all 0.2s;
+    margin-left: 16px;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--warm-gold);
+    color: var(--warm-gold);
+  }
+
+  /* ── PAIN POINTS ── */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(196,80,42,0.1);
+    margin-top: 48px;
+  }
+
+  .pain-item {
+    background: var(--deep-ink);
+    padding: 32px 28px;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .pain-item:hover { border-left-color: var(--ember); }
+
+  .pain-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--ember);
+    opacity: 0.6;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .pain-item h4 {
+    font-size: 14px;
+    color: var(--warm-gold);
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .pain-item p {
+    font-size: 13px;
+    color: rgba(245,240,232,0.5);
+    line-height: 1.7;
+  }
+
+  /* ── WHY PAGE ── */
+  .why-hero {
+    background: var(--deep-ink);
+    padding: 80px 48px;
+  }
+
+  .why-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .why-hero h2 { color: var(--parchment); margin-bottom: 16px; }
+
+  .why-hero p { color: rgba(245,240,232,0.65); max-width: 600px; }
+
+  .contrast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: rgba(196,80,42,0.08);
+    max-width: 1200px;
+    margin: 48px auto 0;
+    padding: 0 48px;
+  }
+
+  .contrast-col {
+    background: var(--card-bg);
+    padding: 40px;
+  }
+
+  .contrast-col.highlight {
+    background: var(--deep-ink);
+  }
+
+  .contrast-col h4 {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 24px;
+  }
+
+  .contrast-col.highlight h4 { color: var(--warm-gold); }
+  .contrast-col:not(.highlight) h4 { color: var(--muted-slate); }
+
+  .contrast-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+
+  .contrast-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .contrast-col.highlight .contrast-dot { background: var(--warm-gold); }
+  .contrast-col:not(.highlight) .contrast-dot { background: var(--muted-slate); }
+
+  .contrast-col.highlight .contrast-item p { color: rgba(245,240,232,0.75); font-size: 14px; }
+  .contrast-col:not(.highlight) .contrast-item p { color: var(--muted-slate); font-size: 14px; }
+
+  .six-blind-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  .blind-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .blind-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(196,80,42,0.12);
+    border-left: 3px solid var(--ember);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .blind-card .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--ember);
+    opacity: 0.4;
+  }
+
+  .blind-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 8px 0;
+    color: var(--deep-ink);
+  }
+
+  .blind-card p {
+    font-size: 13px;
+    color: var(--muted-slate);
+    line-height: 1.7;
+  }
+
+  .blind-card .solution {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--ember);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── CAPABILITY PAGE ── */
+  .cap-intro {
+    background: var(--deep-ink);
+    padding: 80px 48px;
+  }
+
+  .cap-intro-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cap-intro h2 { color: var(--parchment); margin-bottom: 16px; }
+  .cap-intro p { color: rgba(245,240,232,0.6); max-width: 600px; }
+
+  .cap-tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid rgba(196,80,42,0.15);
+    margin-top: 48px;
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    padding: 14px 24px;
+    font-size: 13px;
+    font-family: 'Noto Serif TC', serif;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted-slate);
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+
+  .tab-btn:hover { color: var(--deep-ink); }
+
+  .tab-btn.active {
+    color: var(--ember);
+    border-bottom-color: var(--ember);
+  }
+
+  .tab-panel {
+    display: none;
+    padding: 48px 0;
+  }
+
+  .tab-panel.active { display: block; }
+
+  .cap-feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .cap-feature {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .cap-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(196,80,42,0.08);
+    border: 1px solid rgba(196,80,42,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    border-radius: 2px;
+  }
+
+  .cap-feature h4 {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .cap-feature p {
+    font-size: 13px;
+    color: var(--muted-slate);
+    line-height: 1.7;
+  }
+
+  .scenario-box {
+    background: rgba(212,168,83,0.06);
+    border-left: 4px solid var(--warm-gold);
+    padding: 20px 24px;
+    margin-top: 20px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .scenario-box .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--warm-gold);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .scenario-box p {
+    font-size: 13px;
+    color: #4a4845;
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  /* ── CONSTELLATION PAGE ── */
+  .constellation-hero {
+    background: var(--deep-ink);
+    padding: 80px 48px;
+  }
+
+  .constellation-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .constellation-hero h2 { color: var(--parchment); margin-bottom: 16px; }
+  .constellation-hero p { color: rgba(245,240,232,0.6); max-width: 600px; }
+
+  .constellation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 48px;
+  }
+
+  .const-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(196,80,42,0.12);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .const-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(28,26,23,0.12);
+  }
+
+  .const-card-header {
+    background: var(--deep-ink);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .const-symbol {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .const-card-header h3 {
+    color: var(--parchment);
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  .const-card-header p {
+    color: var(--warm-gold);
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.1em;
+  }
+
+  .const-card-body {
+    padding: 24px;
+  }
+
+  .const-card-body p {
+    font-size: 13px;
+    color: var(--muted-slate);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+
+  .const-dimensions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .const-dim {
+    background: rgba(196,80,42,0.06);
+    border: 1px solid rgba(196,80,42,0.15);
+    color: var(--ember);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .const-example {
+    background: rgba(90,122,154,0.06);
+    border-left: 3px solid var(--steel-blue);
+    padding: 14px 16px;
+    margin-top: 16px;
+  }
+
+  .const-example .ex-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--steel-blue);
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .const-example p {
+    font-size: 12px;
+    color: #4a6070;
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* ── MEMORY SECTION ── */
+  .memory-section {
+    background: var(--deep-ink);
+    padding: 80px 48px;
+  }
+
+  .memory-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .memory-inner h2 { color: var(--parchment); margin-bottom: 16px; }
+  .memory-inner > p { color: rgba(245,240,232,0.6); max-width: 600px; margin-bottom: 48px; }
+
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: rgba(196,80,42,0.1);
+  }
+
+  .mem-col {
+    background: rgba(28,26,23,0.8);
+    padding: 32px 24px;
+    border-top: 3px solid transparent;
+  }
+
+  .mem-col.t1 { border-top-color: var(--ember); }
+  .mem-col.t2 { border-top-color: var(--warm-gold); }
+  .mem-col.t3 { border-top-color: var(--sage); }
+  .mem-col.t4 { border-top-color: var(--steel-blue); }
+
+  .mem-col h4 {
+    color: var(--parchment);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .mem-col p {
+    font-size: 12px;
+    color: rgba(245,240,232,0.45);
+    line-height: 1.7;
+  }
+
+  /* ── CASE STUDY PAGE ── */
+  .case-hero {
+    background: var(--deep-ink);
+    padding: 80px 48px;
+  }
+
+  .case-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .case-hero h2 { color: var(--parchment); margin-bottom: 16px; }
+  .case-hero p { color: rgba(245,240,232,0.6); max-width: 500px; }
+
+  .case-list {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 48px;
+  }
+
+  .case-item {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    padding: 56px 0;
+    border-bottom: 1px solid rgba(196,80,42,0.1);
+    align-items: start;
+  }
+
+  .case-item:last-child { border-bottom: none; }
+
+  .case-meta { }
+
+  .case-industry {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .case-meta h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: var(--deep-ink);
+  }
+
+  .case-meta .result {
+    font-size: 13px;
+    color: var(--sage);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .case-body h4 {
+    font-size: 16px;
+    color: var(--deep-ink);
+    margin-bottom: 12px;
+  }
+
+  .case-body p {
+    font-size: 14px;
+    color: #4a4845;
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+
+  .quote-block {
+    border-left: 4px solid var(--warm-gold);
+    padding: 20px 24px;
+    background: rgba(212,168,83,0.06);
+    margin: 24px 0;
+  }
+
+  .quote-block p {
+    font-style: italic;
+    font-size: 15px;
+    color: #3a3835;
+    margin: 0;
+  }
+
+  .skills-used {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .skill-tag {
+    background: rgba(90,122,154,0.08);
+    border: 1px solid rgba(90,122,154,0.2);
+    color: var(--steel-blue);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── CONTACT PAGE ── */
+  .contact-hero {
+    background: var(--deep-ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 48px;
+  }
+
+  .contact-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .contact-left h2 {
+    color: var(--parchment);
+    margin-bottom: 20px;
+  }
+
+  .contact-left p {
+    color: rgba(245,240,232,0.6);
+    margin-bottom: 32px;
+    line-height: 1.85;
+  }
+
+  .contact-info-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(245,240,232,0.08);
+  }
+
+  .contact-info-row .ci-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--warm-gold);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-info-row .ci-value {
+    font-size: 14px;
+    color: var(--parchment);
+  }
+
+  .contact-right {
+    background: rgba(245,240,232,0.04);
+    border: 1px solid rgba(196,80,42,0.2);
+    padding: 48px;
+  }
+
+  .contact-right h3 {
+    color: var(--parchment);
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.5);
+    margin-bottom: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    background: rgba(245,240,232,0.04);
+    border: 1px solid rgba(245,240,232,0.12);
+    color: var(--parchment);
+    padding: 12px 16px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--ember);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  .form-group select option { background: var(--deep-ink); }
+
+  /* ── MISC ── */
+  .divider {
+    height: 1px;
+    background: rgba(196,80,42,0.12);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .text-ember { color: var(--ember); }
+  .text-gold { color: var(--warm-gold); }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .hero-content { padding: 60px 20px; }
+    .pain-grid, .blind-grid, .constellation-grid, .memory-grid { grid-template-columns: 1fr; }
+    .contrast-grid, .cap-feature-grid, .contact-inner { grid-template-columns: 1fr; }
+    .case-item { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    MUSEON
+    <span>AI 決策夥伴</span>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">首頁</a></li>
+    <li><a onclick="showPage('why')" id="nav-why">為什麼選 MUSEON</a></li>
+    <li><a onclick="showPage('capability')" id="nav-capability">核心能力</a></li>
+    <li><a onclick="showPage('constellation')" id="nav-constellation">智慧星座群</a></li>
+    <li><a onclick="showPage('cases')" id="nav-cases">真實案例</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact" class="nav-cta">預約諮詢</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════
+     PAGE 1: 首頁
+═══════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="section-label">思維型 AI 決策夥伴</div>
+      <h1>你的企業需要的<br>不是更多工具，<br>而是<em>更深的判斷力</em></h1>
+      <p class="hero-sub">
+        MUSEON 不是問答機器，也不是自動化程式。<br>
+        它是一個能記住你、讀懂你的人、看穿局面的 AI 決策夥伴。
+      </p>
+      <div class="hero-tags">
+        <span class="tag">人格側寫與博弈分析</span>
+        <span class="tag">陽謀 × 陰謀雙軌推演</span>
+        <span class="tag">長期記憶系統</span>
+        <span class="tag">企業傳承知識庫</span>
+        <span class="tag">盲點自動補遺</span>
+      </div>
+      <a class="btn-primary" onclick="showPage('why')">了解 MUSEON 的不同</a>
+      <a class="btn-ghost" onclick="showPage('cases')">看真實案例</a>
+    </div>
+  </div>
+
+  <!-- SIX PAIN POINTS -->
+  <div style="background: var(--deep-ink); padding: 0 0 2px;">
+    <div style="max-width:1200px; margin:0 auto; padding: 64px 48px 32px;">
+      <div class="section-label" style="color: var(--warm-gold);">企業主最常有的六大盲點</div>
+      <h2 style="color: var(--parchment); max-width: 560px; margin-bottom: 8px;">你知道公司有問題，但看不清楚問題在哪</h2>
+    </div>
+    <div class="pain-grid" style="max-width:1200px; margin: 0 auto 64px; padding: 0 48px;">
+      <div class="pain-item">
+        <span class="pain-num">01</span>
+        <h4>現況不清</h4>
+        <p>每天忙，但不知道自己的生意真正在哪個位置。</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">02</span>
+        <h4>方向不明</h4>
+        <p>看到機會，但不確定這條路對不對、值不值。</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">03</span>
+        <h4>GAP 不見</h4>
+        <p>現在和目標之間有差距，但不知道差在哪幾個關鍵點。</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">04</span>
+        <h4>累積缺失</h4>
+        <p>決策、教訓、客戶洞見，全在腦子裡，沒有系統性沉澱。</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">05</span>
+        <h4>人脈無法槓桿</h4>
+        <p>認識很多人，但每次都從頭建關係，沒有積累效應。</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">06</span>
+        <h4>槓桿思維缺乏</h4>
+        <p>靠人力硬拚，不知道哪裡可以用系統和資源乘倍。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOT CHATGPT -->
+  <section style="text-align: center; padding: 80px 48px;">
+    <div class="section-label">最重要的一件事</div>
+    <h2 style="max-width: 640px; margin: 0 auto 24px;">MUSEON 不是 ChatGPT，也不是自動化工具</h2>
+    <p style="max-width: 560px; margin: 0 auto 48px; font-size: 16px; color: var(--muted-slate);">
+      市場上的 AI 工具給你更快的執行力。MUSEON 給你更好的判斷力。<br>
+      差別在於：它知道你是誰、你在做什麼、上週你說了什麼決定。
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 900px; margin: 0 auto;">
+      <div style="text-align: left; background: var(--card-bg); border: 1px solid rgba(196,80,42,0.12); border-top: 3px solid var(--ember); padding: 28px; box-shadow: var(--shadow);">
+        <div style="font-size: 28px; margin-bottom: 12px;">🧠</div>
+        <h4 style="margin-bottom: 8px;">前置思考</h4>
+        <p style="font-size: 13px; color: var(--muted-slate);">在你開口問之前，它已經在看你可能忽略的盲點。</p>
+      </div>
+      <div style="text-align: left; background: var(--card-bg); border: 1px solid rgba(196,80,42,0.12); border-top: 3px solid var(--warm-gold); padding: 28px; box-shadow: var(--shadow);">
+        <div style="font-size: 28px; margin-bottom: 12px;">🎯</div>
+        <h4 style="margin-bottom: 8px;">情境感知</h4>
+        <p style="font-size: 13px; color: var(--muted-slate);">記得你說過的話、你的客戶是誰、你的核心挑戰在哪。</p>
+      </div>
+      <div style="text-align: left; background: var(--card-bg); border: 1px solid rgba(196,80,42,0.12); border-top: 3px solid var(--steel-blue); padding: 28px; box-shadow: var(--shadow);">
+        <div style="font-size: 28px; margin-bottom: 12px;">⚡</div>
+        <h4 style="margin-bottom: 8px;">越用越強</h4>
+        <p style="font-size: 13px; color: var(--muted-slate);">不是每次重新開始。它累積你的決策，自動進化理解。</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 2: 為什麼選 MUSEON
+═══════════════════════════════════════ -->
+<div id="page-why" class="page">
+
+  <div class="why-hero">
+    <div class="why-hero-inner">
+      <div class="section-label" style="color: var(--warm-gold);">核心差異</div>
+      <h2>思維型 AI vs 工具型 AI</h2>
+      <p>問答工具幫你快，MUSEON 幫你對。兩者解決的根本問題不同。</p>
+    </div>
+  </div>
+
+  <div class="contrast-grid">
+    <div class="contrast-col">
+      <h4>一般 AI 工具能做的</h4>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>快速生成文案、報告、代碼</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>回答你問的問題（前提是你知道要問什麼）</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>每次對話重新開始，不記得你是誰</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>給你執行速度</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>你問什麼它答什麼，不挑戰你的前提</p>
+      </div>
+    </div>
+    <div class="contrast-col highlight">
+      <h4>MUSEON 額外能做的</h4>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>在你問錯問題之前，先指出你的盲點</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>記住你、你的團隊、你的客戶，越用越懂你</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>分析你開會時的對話，讀出對方的真實立場</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>為你的商業決策建立可傳承的知識體系</p>
+      </div>
+      <div class="contrast-item">
+        <div class="contrast-dot"></div>
+        <p>幫你設計人才組合、OKR 配對、博弈策略</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="six-blind-section">
+    <div class="section-label">六大盲點自動補遺</div>
+    <h2>MUSEON 主動找到你看不見的缺口</h2>
+    <p style="color: var(--muted-slate); max-width: 560px; margin-top: 12px;">不用你問，它自動對照你的行動模式，發現你忽略的六個關鍵盲點。</p>
+
+    <div class="blind-grid">
+      <div class="blind-card">
+        <div class="num">01</div>
+        <h4>現況不清 → 全景掃描</h4>
+        <p>透過五大星座群從多個維度同時分析你的市場定位，把模糊感受轉成清晰數字。</p>
+        <div class="solution">→ 市場七芒星 + 商業十二力</div>
+      </div>
+      <div class="blind-card">
+        <div class="num">02</div>
+        <h4>方向不明 → 策略推演</h4>
+        <p>Darwin 策略引擎模擬 52 週內不同決策的演化路徑，讓你看到每條路的終點。</p>
+        <div class="solution">→ Darwin + Master Strategy</div>
+      </div>
+      <div class="blind-card">
+        <div class="num">03</div>
+        <h4>GAP 不見 → 落差定位</h4>
+        <p>比對現況與目標，找出具體的關鍵差距，不給模糊建議，給可執行的缺口清單。</p>
+        <div class="solution">→ Business-12 診斷</div>
+      </div>
+      <div class="blind-card">
+        <div class="num">04</div>
+        <h4>累積缺失 → 知識結晶</h4>
+        <p>每次對話、每個決策都自動沉澱，形成你的企業知識庫，不讓寶貴教訓隨時間消失。</p>
+        <div class="solution">→ 記憶系統 + Knowledge Lattice</div>
+      </div>
+      <div class="blind-card">
+        <div class="num">05</div>
+        <h4>人脈無槓桿 → 人物圖譜</h4>
+        <p>Ares 人物檔案追蹤你的每個關鍵人物，在對的時機提醒你如何槓桿這段關係。</p>
+        <div class="solution">→ Ares + Relationship Dynamics</div>
+      </div>
+      <div class="blind-card">
+        <div class="num">06</div>
+        <h4>槓桿缺失 → 系統化思維</h4>
+        <p>X-Model 破框引擎從跨領域角度識別你的槓桿點，找到用最小資源創造最大效果的路徑。</p>
+        <div class="solution">→ X-Model + SSA 商務槓桿</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESSION -->
+  <div style="background: var(--deep-ink); padding: 80px 48px;">
+    <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+      <div class="section-label" style="color: var(--warm-gold);">殺手級應用場景</div>
+      <h2 style="color: var(--parchment); margin-bottom: 20px;">企業傳承，終於有了 AI 解法</h2>
+      <p style="color: rgba(245,240,232,0.6); max-width: 560px; margin: 0 auto 40px; font-size: 16px; line-height: 1.85;">
+        創辦人的判斷邏輯、客戶關係脈絡、多年累積的市場直覺——
+        這些最難傳承的東西，MUSEON 的記憶系統能系統性地保存並傳遞。
+      </p>
+      <div style="display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;">
+        <div style="text-align: left; max-width: 240px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ember); letter-spacing: 0.15em; margin-bottom: 8px;">傳統方法</div>
+          <p style="font-size: 13px; color: rgba(245,240,232,0.4);">口耳相傳、教育訓練、SOP 文件——三至五年還不一定傳得到位。</p>
+        </div>
+        <div style="width: 1px; background: rgba(196,80,42,0.3);"></div>
+        <div style="text-align: left; max-width: 240px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--warm-gold); letter-spacing: 0.15em; margin-bottom: 8px;">MUSEON 方式</div>
+          <p style="font-size: 13px; color: rgba(245,240,232,0.65);">每次決策自動記錄 → 建立可查詢的判斷邏輯庫 → 新人直接調用創辦人思維。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 3: 核心能力
+═══════════════════════════════════════ -->
+<div id="page-capability" class="page">
+
+  <div class="cap-intro">
+    <div class="cap-intro-inner">
+      <div class="section-label" style="color: var(--warm-gold);">能力架構</div>
+      <h2>五大應用場景，覆蓋企業主最關鍵的決策需求</h2>
+      <p>每個能力模組背後都有真實的業務情境驅動，不是功能堆疊，是問題解法。</p>
+    </div>
+  </div>
+
+  <div class="cap-tabs">
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="showTab('people')">人 — 讀人與博弈</button>
+      <button class="tab-btn" onclick="showTab('strategy')">局 — 市場與策略</button>
+      <button class="tab-btn" onclick="showTab('brand')">品牌與行銷</button>
+      <button class="tab-btn" onclick="showTab('team')">組織與人才</button>
+      <button class="tab-btn" onclick="showTab('memory')">記憶與傳承</button>
+    </div>
+
+    <!-- TAB: 讀人與博弈 -->
+    <div id="tab-people" class="tab-panel active">
+      <div class="cap-feature-grid">
+        <div class="cap-feature">
+          <div class="cap-icon">🎭</div>
+          <div>
+            <h4>人格側寫（Ares 人物檔案）</h4>
+            <p>為每個關鍵人物建立七層檔案：人格特質、溝通偏好、決策模式、槓桿點。下次見面前自動生成戰前簡報。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「跟客戶開會前，MUSEON 告訴我：這個人問問題的背後有隱藏立場，先問他意圖再回答，否則直接答等於給他武器。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">⚔️</div>
+          <div>
+            <h4>陽謀 × 陰謀雙軌分析</h4>
+            <p>解析對話或會議記錄中的顯性訴求（陽謀）和隱性動機（陰謀），幫你看清楚對方真正想要的是什麼。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「合作談判中，對方的報價問題其實是在試探我的底線。MUSEON 幫我識別了這個模式，讓我先問意圖而非直接回答。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🔍</div>
+          <div>
+            <h4>會議與對話情報分析</h4>
+            <p>把會議逐字稿餵給 MUSEON，它會分析每個人的真實立場、潛在動機、決策壓力點，給你後續策略建議。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「業務和客戶開完會，把錄音轉文字給 MUSEON，它找出了三個客戶沒說出口的擔憂，下次跟進直接打痛點。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🕸️</div>
+          <div>
+            <h4>關係動態與人脈拓樸</h4>
+            <p>視覺化你的關鍵人脈網絡，追蹤每段關係的溫度變化，在對的時機提醒你維繫或槓桿某段關係。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「三個月沒聯絡的潛在合作夥伴，MUSEON 主動提醒我：上次他說的那件事有後續了，是重新連絡的好時機。」</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: 市場與策略 -->
+    <div id="tab-strategy" class="tab-panel">
+      <div class="cap-feature-grid">
+        <div class="cap-feature">
+          <div class="cap-icon">🌐</div>
+          <div>
+            <h4>全維度市場掃描</h4>
+            <p>五大智慧星座群從七個市場維度、十二個商業力度、五個思維維度同時掃描，比你自己做市調看得更全面。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「過去做市場分析只看競爭對手。MUSEON 的掃描讓我發現：我真正的競品不是同行，而是客戶的慣性思維。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🔮</div>
+          <div>
+            <h4>Darwin 策略模擬引擎</h4>
+            <p>輸入你的策略，Darwin 模擬 52 週內在不同市場條件下的演化結果，讓你在執行前就看到可能的終局。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「決定要不要進新市場前，MUSEON 模擬了三個路徑的 12 個月演化，讓我在投入資源前就看到風險點。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">💡</div>
+          <div>
+            <h4>X-Model 破框解方</h4>
+            <p>當你陷入「怎麼做都不對」的困局，X-Model 從跨領域角度重新定義問題，找到你沒想到的槓桿點。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「業績卡了半年，以為是銷售問題。X-Model 診斷後發現根本原因是：我在解決客戶沒有的問題。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">📊</div>
+          <div>
+            <h4>商業十二力診斷</h4>
+            <p>從十二個維度系統性診斷你的商業模式，找出最薄弱的那個環節，給你可執行的強化路徑。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「診斷後才知道：我們的問題不在產品，在獲客成本太高。重新設計了轉介紹機制，三個月回本。」</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: 品牌與行銷 -->
+    <div id="tab-brand" class="tab-panel">
+      <div class="cap-feature-grid">
+        <div class="cap-feature">
+          <div class="cap-icon">🏛️</div>
+          <div>
+            <h4>品牌建構（奧美級流程）</h4>
+            <p>從品牌 DNA、定位、視覺識別到傳播策略，走一遍完整的品牌建構流程，不是給模板，是給你量身的品牌邏輯。</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">📄</div>
+          <div>
+            <h4>一頁式銷售頁鍛造</h4>
+            <p>根據你的產品和目標客群，從頭設計轉換型銷售頁的結構、文案、視覺層次，直接可上線使用。</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🎬</div>
+          <div>
+            <h4>短影音策略引擎</h4>
+            <p>分析你的品牌定位和目標受眾，設計可持續執行的短影音內容策略，包含主題規劃、腳本框架、發布節奏。</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">📈</div>
+          <div>
+            <h4>轉換三角分析</h4>
+            <p>診斷你的行銷漏斗，找出流量、轉換、留存三個環節中最薄弱的那個，集中資源修復。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: 組織與人才 -->
+    <div id="tab-team" class="tab-panel">
+      <div class="cap-feature-grid">
+        <div class="cap-feature">
+          <div class="cap-icon">🧩</div>
+          <div>
+            <h4>團隊能量配對</h4>
+            <p>分析每個成員的人格特質、能量強項、決策模式，為你的核心任務設計最佳團隊組合，不靠直覺，靠數據。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「兩個主管一直有摩擦，以為是個性問題。MUSEON 分析後：他們的決策框架根本不同，配合錯了任務類型。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🎯</div>
+          <div>
+            <h4>OKR 人格配對</h4>
+            <p>根據每個人的驅動力特質，設計最能激發他們表現的 OKR，讓目標不只是紙上的數字，而是每個人都在乎的方向。</p>
+            <div class="scenario-box">
+              <div class="label">真實場景</div>
+              <p>「業務的 OKR 都達標，但老闆不滿意。MUSEON 發現問題：KPI 設計跟業務的核心驅動力完全脫節。」</p>
+            </div>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🌱</div>
+          <div>
+            <h4>人才招募智能篩選</h4>
+            <p>根據職位需求和既有團隊的能量缺口，設計招募人格特質標準，讓你找到真正補齊你的人，而不是找最像你的人。</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🔗</div>
+          <div>
+            <h4>合夥股權架構建議</h4>
+            <p>分析合夥人的角色定位、貢獻預期、風險偏好，設計讓合夥關係長久的股權結構，避免未來爭議。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: 記憶與傳承 -->
+    <div id="tab-memory" class="tab-panel">
+      <div style="margin-bottom: 40px;">
+        <p style="font-size: 16px; color: #3a3835; max-width: 640px; line-height: 1.85;">
+          MUSEON 最獨特的能力是它的多層記憶系統。不是聊天紀錄，是有結構的知識積累——
+          它知道你是誰，你的客戶是誰，你做過什麼決定，為什麼做。
+        </p>
+      </div>
+      <div class="cap-feature-grid">
+        <div class="cap-feature">
+          <div class="cap-icon">💾</div>
+          <div>
+            <h4>長期對話記憶</h4>
+            <p>不像一般 AI 每次忘光。MUSEON 記住你的偏好、你說過的話、你的重要決定，每次對話都在上次的基礎上繼續。</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🔮</div>
+          <div>
+            <h4>決策知識結晶</h4>
+            <p>每個重要決策自動沉澱為可搜尋的知識結晶。六個月後你還能問：「當時為什麼做這個決定？後來證明對不對？」</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">👥</div>
+          <div>
+            <h4>客戶關係記憶庫</h4>
+            <p>每個客戶的互動歷史、偏好、溝通風格、承諾紀錄，隨時調出。換了業務，關係脈絡不中斷。</p>
+          </div>
+        </div>
+        <div class="cap-feature">
+          <div class="cap-icon">🏛️</div>
+          <div>
+            <h4>企業知識傳承庫</h4>
+            <p>把創辦人的判斷邏輯、市場直覺、應對策略系統化存入，讓接班人直接調用，不從零開始。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 4: 智慧星座群
+═══════════════════════════════════════ -->
+<div id="page-constellation" class="page">
+
+  <div class="constellation-hero">
+    <div class="constellation-hero-inner">
+      <div class="section-label" style="color: var(--warm-gold);">多維感知系統</div>
+      <h2>五大智慧星座群</h2>
+      <p>每個星座群是一組從不同角度分析同一個問題的「多維視角」。
+      單一維度永遠會有盲點，星座群確保你不遺漏關鍵訊號。</p>
+    </div>
+  </div>
+
+  <div style="max-width:1200px; margin: 0 auto; padding: 48px 48px 0;">
+    <div style="background: rgba(212,168,83,0.06); border-left: 4px solid var(--warm-gold); padding: 20px 24px; margin-bottom: 48px;">
+      <p style="font-size: 14px; color: #3a3835; font-style: italic; margin: 0;">
+        「一個老闆問我的市場在哪，我用市場七芒星從七個角度掃描後，發現他誤判了主要競品。
+        他以為是同類服務業者，但真正的競爭是來自客戶的『不改變』慣性。」
+      </p>
+    </div>
+  </div>
+
+  <div class="constellation-grid">
+
+    <div class="const-card">
+      <div class="const-card-header">
+        <div class="const-symbol">✦</div>
+        <div>
+          <h3>品牌七芒星</h3>
+          <p>BRAND HEPTAGRAM</p>
+        </div>
+      </div>
+      <div class="const-card-body">
+        <p>從七個維度全面掃描品牌健康度：定位清晰度、差異化、目標受眾精準度、訊息一致性、視覺識別、信任感建立、傳播效率。</p>
+        <div class="const-dimensions">
+          <span class="const-dim">定位</span>
+          <span class="const-dim">差異化</span>
+          <span class="const-dim">受眾精準</span>
+          <span class="const-dim">訊息一致</span>
+          <span class="const-dim">視覺識別</span>
+          <span class="const-dim">信任感</span>
+          <span class="const-dim">傳播效率</span>
+        </div>
+        <div class="const-example">
+          <div class="ex-label">應用情境</div>
+          <p>「為什麼我做了很多內容，但沒人記得我是誰？」——品牌七芒星掃描出訊息一致性分數最低，找到根因。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="const-card">
+      <div class="const-card-header">
+        <div class="const-symbol">⬡</div>
+        <div>
+          <h3>市場七芒星</h3>
+          <p>MARKET HEPTAGRAM</p>
+        </div>
+      </div>
+      <div class="const-card-body">
+        <p>從七個維度掃描市場格局：市場規模、成長動能、競爭密度、進入門檻、客戶痛點深度、時機窗口、替代威脅。</p>
+        <div class="const-dimensions">
+          <span class="const-dim">市場規模</span>
+          <span class="const-dim">成長動能</span>
+          <span class="const-dim">競爭密度</span>
+          <span class="const-dim">進入門檻</span>
+          <span class="const-dim">痛點深度</span>
+          <span class="const-dim">時機窗口</span>
+          <span class="const-dim">替代威脅</span>
+        </div>
+        <div class="const-example">
+          <div class="ex-label">應用情境</div>
+          <p>「要不要進這個新市場？」——七芒星在 20 分鐘內給出七個維度的評分，讓決策有依據而不只是直覺。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="const-card">
+      <div class="const-card-header">
+        <div class="const-symbol">⬢</div>
+        <div>
+          <h3>商業十二力</h3>
+          <p>BUSINESS TWELVE</p>
+        </div>
+      </div>
+      <div class="const-card-body">
+        <p>從十二個商業維度診斷企業健康度：產品力、銷售力、定價力、獲客力、轉換力、留客力、人才力、系統力、財務力、品牌力、創新力、傳承力。</p>
+        <div class="const-dimensions">
+          <span class="const-dim">產品力</span>
+          <span class="const-dim">銷售力</span>
+          <span class="const-dim">獲客力</span>
+          <span class="const-dim">留客力</span>
+          <span class="const-dim">系統力</span>
+          <span class="const-dim">傳承力</span>
+          <span class="const-dim">+6維</span>
+        </div>
+        <div class="const-example">
+          <div class="ex-label">應用情境</div>
+          <p>「業績停滯半年，到底哪裡出問題？」——十二力診斷找出最薄弱的三個環節，給出集中資源修復的優先順序。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="const-card">
+      <div class="const-card-header">
+        <div class="const-symbol">△</div>
+        <div>
+          <h3>轉換三角</h3>
+          <p>CONVERSION TRIANGLE</p>
+        </div>
+      </div>
+      <div class="const-card-body">
+        <p>聚焦行銷漏斗的三個核心節點：流量獲取、潛客轉換、客戶留存，找出你的轉換瓶頸在哪一個環節。</p>
+        <div class="const-dimensions">
+          <span class="const-dim">流量獲取</span>
+          <span class="const-dim">潛客轉換</span>
+          <span class="const-dim">客戶留存</span>
+        </div>
+        <div class="const-example">
+          <div class="ex-label">應用情境</div>
+          <p>「廣告跑了很多，但成交率很低。」——轉換三角診斷出問題在「轉換」環節，建議的修改讓成交率提升 40%。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="const-card">
+      <div class="const-card-header">
+        <div class="const-symbol">✦✦</div>
+        <div>
+          <h3>思維五芒星</h3>
+          <p>THINKING PENTAGRAM</p>
+        </div>
+      </div>
+      <div class="const-card-body">
+        <p>從五個思維維度診斷決策品質：問題定義清晰度、假設意識、資訊完整度、選項多樣性、後果預見力。</p>
+        <div class="const-dimensions">
+          <span class="const-dim">問題定義</span>
+          <span class="const-dim">假設意識</span>
+          <span class="const-dim">資訊完整</span>
+          <span class="const-dim">選項多樣</span>
+          <span class="const-dim">後果預見</span>
+        </div>
+        <div class="const-example">
+          <div class="ex-label">應用情境</div>
+          <p>「這個決定到底對不對？」——思維五芒星讓你在拍板前看清楚自己的思維在哪個環節最薄弱、可能犯什麼錯。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholder for future -->
+    <div class="const-card" style="opacity: 0.5;">
+      <div class="const-card-header" style="background: #2a2825;">
+        <div class="const-symbol">◎</div>
+        <div>
+          <h3>更多星座</h3>
+          <p>COMING SOON</p>
+        </div>
+      </div>
+      <div class="const-card-body">
+        <p>MUSEON 持續新增星座群模組，每個新星座都對應真實用戶場景的需求。</p>
+        <div class="const-example">
+          <div class="ex-label">規劃中</div>
+          <p>財務健康星座、供應鏈脆弱度掃描、客戶生命週期分析……</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 5: 真實案例
+═══════════════════════════════════════ -->
+<div id="page-cases" class="page">
+
+  <div class="case-hero">
+    <div class="case-hero-inner">
+      <div class="section-label" style="color: var(--warm-gold);">真實應用場景</div>
+      <h2>不是功能展示，<br>是真實業務挑戰的解法</h2>
+      <p style="color: rgba(245,240,232,0.6);">所有案例均已匿名處理，細節經過模糊化，保留真實情境脈絡。</p>
+    </div>
+  </div>
+
+  <div class="case-list">
+
+    <!-- CASE 1: 旅行社 -->
+    <div class="case-item">
+      <div class="case-meta">
+        <div class="case-industry">旅遊服務業</div>
+        <h3>中型旅行社
+的業務轉型</h3>
+        <div class="result">✓ 找到核心競爭缺口</div>
+        <div class="result" style="margin-top: 4px;">✓ 重新定位目標客群</div>
+        <div class="result" style="margin-top: 4px;">✓ 建立差異化服務主張</div>
+      </div>
+      <div class="case-body">
+        <h4>挑戰：同質化競爭，不知道怎麼突圍</h4>
+        <p>
+          一家台灣中型旅行社，面對線上旅遊平台的價格競爭，業績逐年下滑。
+          老闆知道要轉型，但不確定方向：降價跟進？走高端？開發特殊路線？
+          每條路都看起來有道理，但也都有風險。
+        </p>
+        <div class="quote-block">
+          <p>「每次開會都在討論要不要降價。但降了還是贏不了平台，那我們的存在意義是什麼？」</p>
+        </div>
+        <h4>MUSEON 的介入方式</h4>
+        <p>
+          用市場七芒星掃描後，MUSEON 發現一個關鍵：這家旅行社的真正競爭對手不是其他旅行社，
+          而是「客戶的懶得動」。他們的高轉換率來自願意幫客戶做所有決定的服務模式，
+          但卻在行銷上強調「最低價格」，完全打錯點。
+        </p>
+        <p>
+          接著用商業十二力診斷，找出「品牌力」和「訊息一致性」是最薄弱的兩個環節——
+          不是產品問題，是說錯話的問題。MUSEON 重新設計了客戶溝通主軸和業務話術框架。
+        </p>
+        <div class="skills-used">
+          <span class="skill-tag">市場七芒星</span>
+          <span class="skill-tag">商業十二力</span>
+          <span class="skill-tag">品牌七芒星</span>
+          <span class="skill-tag">X-Model 破框</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 2: 美業 -->
+    <div class="case-item">
+      <div class="case-meta">
+        <div class="case-industry">美容服務業</div>
+        <h3>美業工作室
+的客戶留存危機</h3>
+        <div class="result">✓ 找到流失主因</div>
+        <div class="result" style="margin-top: 4px;">✓ 設計回購機制</div>
+        <div class="result" style="margin-top: 4px;">✓ 重建客戶關係節奏</div>
+      </div>
+      <div class="case-body">
+        <h4>挑戰：新客轉舊客的轉換率極低</h4>
+        <p>
+          一家美容工作室，新客體驗口碑好，但回購率只有 20%。
+          老闆嘗試過發優惠券、辦活動，短期有效，但無法持續。
+          問題出在哪，沒有人說得清楚。
+        </p>
+        <div class="quote-block">
+          <p>「客人說喜歡，但就是不回來。我以為是我的技術問題，但同行的技術不比我好，回購率卻更高。」</p>
+        </div>
+        <h4>MUSEON 的介入方式</h4>
+        <p>
+          轉換三角診斷發現：問題不在「轉換」，在「留存節奏」。
+          這家工作室沒有系統性的「回訪提醒 + 情感維繫」機制，客人體驗很好，
+          但下次想預約時找不到理由主動聯繫。
+        </p>
+        <p>
+          MUSEON 結合 Ares 人物檔案，為每類客人設計不同的維繫頻率和溝通方式：
+          高需求客人每三週一次主動提醒，低頻客人在特定季節前觸達，讓「被記得的感覺」成為留客核心。
+        </p>
+        <div class="skills-used">
+          <span class="skill-tag">轉換三角</span>
+          <span class="skill-tag">Ares 人物檔案</span>
+          <span class="skill-tag">關係動態</span>
+          <span class="skill-tag">客戶記憶庫</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 3: 顧問公司 -->
+    <div class="case-item">
+      <div class="case-meta">
+        <div class="case-industry">B2B 顧問服務</div>
+        <h3>合夥提案
+中的談判危機</h3>
+        <div class="result">✓ 識別對方隱藏動機</div>
+        <div class="result" style="margin-top: 4px;">✓ 重新設計提案策略</div>
+        <div class="result" style="margin-top: 4px;">✓ 達成合作協議</div>
+      </div>
+      <div class="case-body">
+        <h4>挑戰：談判陷入僵局，感覺對方說的不是真正的反對原因</h4>
+        <p>
+          一家顧問公司在跟潛在合作夥伴談異業結盟，對方不斷提出不同的反對意見——
+          先說預算不夠，後來說時機不對，再後來說要再研究。
+          每次以為解決了一個問題，又出現新的疑慮。
+        </p>
+        <div class="quote-block">
+          <p>「感覺對方在繞圈子。他說的每個理由都能解決，但他就是不答應。我不知道他真正在顧慮什麼。」</p>
+        </div>
+        <h4>MUSEON 的介入方式</h4>
+        <p>
+          把三次會議的對話紀錄輸入 MUSEON，進行陽謀 × 陰謀雙軌分析。
+          表層（陽謀）：預算和時機的疑慮是真實的，但不是最核心的。
+          深層（陰謀）：對方在擔心合作後自己的籌碼會被稀釋，他需要的是一個「我還是主導方」的心理安全感。
+        </p>
+        <p>
+          重新設計提案結構，把「共同主導」的框架明確化，給對方保留主導感的空間，
+          同時讓利潤分配方式更透明。下一次會議，對方在 30 分鐘內拍板。
+        </p>
+        <div class="skills-used">
+          <span class="skill-tag">陽謀陰謀分析</span>
+          <span class="skill-tag">會議情報解析</span>
+          <span class="skill-tag">Ares 人物檔案</span>
+          <span class="skill-tag">Shadow 博弈識別</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE 6: 聯絡 / 預約諮詢
+═══════════════════════════════════════ -->
+<div id="page-contact" class="page">
+
+  <div class="contact-hero">
+    <div class="contact-inner">
+      <div class="contact-left">
+        <div class="section-label" style="color: var(--warm-gold);">開始合作</div>
+        <h2>讓我們了解<br>你的業務挑戰</h2>
+        <p>
+          MUSEON 不提供標準方案，每個企業的問題都不同。
+          我們的業務顧問會先了解你的業務現況，再討論 MUSEON 能如何幫助你。
+        </p>
+        <div class="contact-info-row">
+          <span class="ci-label">服務對象</span>
+          <span class="ci-value">台灣中小企業、顧問公司、服務業</span>
+        </div>
+        <div class="contact-info-row">
+          <span class="ci-label">諮詢方式</span>
+          <span class="ci-value">30 分鐘線上或面對面初診</span>
+        </div>
+        <div class="contact-info-row">
+          <span class="ci-label">方案定價</span>
+          <span class="ci-value">依業務規模與需求，請洽業務顧問</span>
+        </div>
+        <div class="contact-info-row">
+          <span class="ci-label">回覆時間</span>
+          <span class="ci-value">工作日 24 小時內</span>
+        </div>
+      </div>
+      <div class="contact-right">
+        <h3>預約免費初診</h3>
+        <div class="form-group">
+          <label>您的姓名</label>
+          <input type="text" placeholder="王總 / 陳小姐">
+        </div>
+        <div class="form-group">
+          <label>公司名稱</label>
+          <input type="text" placeholder="公司名稱">
+        </div>
+        <div class="form-group">
+          <label>主要業務</label>
+          <select>
+            <option value="">選擇業務類型</option>
+            <option>旅遊 / 餐旅服務</option>
+            <option>美容 / 身心健康</option>
+            <option>顧問 / 培訓</option>
+            <option>零售 / 電商</option>
+            <option>製造 / B2B</option>
+            <option>其他服務業</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>目前最大的挑戰（自由填寫）</label>
+          <textarea placeholder="例如：業績停滯、客戶流失、不知道下一步怎麼走..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>聯絡方式（電話或 Email）</label>
+          <input type="text" placeholder="方便聯絡您的方式">
+        </div>
+        <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="alert('感謝您的諮詢申請！我們的顧問將於工作日內與您聯繫。')">送出預約申請</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer style="background: var(--deep-ink); border-top: 1px solid rgba(196,80,42,0.2); padding: 32px 48px; text-align: center;">
+  <div style="font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--parchment); letter-spacing: 0.15em; margin-bottom: 8px;">MUSEON</div>
+  <div style="font-size: 12px; color: rgba(245,240,232,0.3); letter-spacing: 0.06em;">思維型 AI 決策夥伴 · 台灣</div>
+</footer>
+
+<script>
+  function showPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    // Show target page
+    document.getElementById('page-' + pageId).classList.add('active');
+    // Update nav
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + pageId);
+    if (navEl) navEl.classList.add('active');
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
