@@ -384,9 +384,10 @@ const GALAXIES = {
     name: "治理星系 Governance", color: "#F97316",
     orbitR: [4, 10], armOffset: Math.PI * 1.6, tiltX: 0.30, rotSpeed: 0.0040,  // +17°
     constellations: [
-      {id: "ops_pentagram", label: "五虎將運維五芒星", en: "Ops", dims: 5, layer: "system"},
+      {id: "ops_pentagram", label: "五虎將免疫防禦五芒星", en: "Immune", dims: 5, layer: "system"},
       {id: "doctor_constellation", label: "診斷七芒星", en: "Doctor", dims: 7, layer: "system"},
       {id: "governance_pentagram", label: "治理五芒星", en: "Governance", dims: 5, layer: "system"},
+      {id: "federation_hexagram", label: "子機聯邦六芒星", en: "Federation", dims: 6, layer: "system"},
     ]
   }
 };
@@ -411,6 +412,7 @@ const SKILL_REGISTRY = {
   "ops_pentagram": ["qa-auditor", "dev-preflight", "dev-retro", "fix-verify"],
   "doctor_constellation": ["system-health-check", "x-ray", "qa-auditor"],
   "governance_pentagram": ["orchestrator", "plan-engine", "info-architect"],
+  "federation_hexagram": [],
 };
 
 const CROSS_LINKS = [
@@ -457,6 +459,10 @@ const CROSS_LINKS = [
   {from: "conversion_triangle", to: "business_twelve", type: "boost"},
   {from: "strategy_prism", to: "business_twelve", type: "boost"},
   {from: "market_heptagram", to: "strategy_prism", type: "boost"},
+  {from: "federation_hexagram", to: "governance_pentagram", type: "boost"},
+  {from: "nightly_health", to: "federation_hexagram", type: "trigger"},
+  {from: "federation_hexagram", to: "ops_pentagram", type: "boost"},
+  {from: "doctor_constellation", to: "federation_hexagram", type: "trigger"},
 ];
 
 const LAYER_LABELS = {
