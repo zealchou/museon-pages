@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>認知路由器：當 GPT 遇上思維瓶頸 | MUSEON</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --fog-gold: #b6853d;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+    --navy: #181737;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* Header */
+  header {
+    background: var(--deep-ink);
+    padding: 72px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 10%;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(182,133,61,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fog-gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-label::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: var(--fog-gold);
+    opacity: 0.6;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: #FDFCFA;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em {
+    color: var(--ember-light);
+    font-style: italic;
+  }
+
+  .header-subtitle {
+    font-size: 16px;
+    color: rgba(253,252,250,0.6);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 560px;
+  }
+
+  .header-meta {
+    margin-top: 32px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .meta-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(253,252,250,0.45);
+    letter-spacing: 0.06em;
+  }
+
+  .meta-divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(253,252,250,0.2);
+  }
+
+  /* Main content */
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 64px 40px 96px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 56px;
+  }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 24px;
+    line-height: 1.3;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h2 .section-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--ember);
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 32px 0 12px;
+    letter-spacing: 0.02em;
+  }
+
+  p {
+    color: var(--ink);
+    margin-bottom: 20px;
+    font-size: 15.5px;
+    line-height: 1.85;
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  em {
+    font-style: italic;
+    color: var(--slate);
+  }
+
+  /* Highlight callout */
+  .callout {
+    background: var(--snow);
+    border-left: 3px solid var(--ember);
+    padding: 20px 24px;
+    margin: 32px 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .callout p {
+    margin: 0;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  .callout p strong {
+    color: var(--ember-dark);
+    font-style: normal;
+  }
+
+  /* Five layers table */
+  .layers-grid {
+    display: grid;
+    gap: 12px;
+    margin: 32px 0;
+  }
+
+  .layer-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: start;
+    transition: border-color 0.2s;
+  }
+
+  .layer-card:hover {
+    border-color: var(--ember-light);
+  }
+
+  .layer-num {
+    width: 40px;
+    height: 40px;
+    background: var(--deep-ink);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    flex-shrink: 0;
+  }
+
+  .layer-content h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+  }
+
+  .layer-content .layer-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ember);
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  .layer-content p {
+    font-size: 13.5px;
+    color: var(--slate);
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  /* Problem list */
+  .problem-list {
+    list-style: none;
+    margin: 24px 0;
+  }
+
+  .problem-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .problem-list li:last-child {
+    border-bottom: none;
+  }
+
+  .problem-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ember-dark);
+    padding-top: 2px;
+    letter-spacing: 0.03em;
+  }
+
+  .problem-desc {
+    font-size: 14.5px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* Stats bar */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 40px 0;
+  }
+
+  .stat-card {
+    background: var(--deep-ink);
+    border-radius: 10px;
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(253,252,250,0.5);
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+  }
+
+  /* Reference section */
+  .references {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 64px;
+  }
+
+  .references h2 {
+    color: rgba(253,252,250,0.85);
+    border-color: var(--border-dark);
+    font-size: 22px;
+  }
+
+  .ref-list {
+    list-style: none;
+  }
+
+  .ref-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-dark);
+    font-size: 13.5px;
+    color: rgba(253,252,250,0.5);
+    line-height: 1.6;
+  }
+
+  .ref-list li:last-child {
+    border-bottom: none;
+  }
+
+  .ref-list li em {
+    color: rgba(253,252,250,0.35);
+    font-style: italic;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--deep-ink);
+    padding: 32px 40px;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(253,252,250,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    header { padding: 48px 24px 40px; }
+    h1 { font-size: 32px; }
+    main { padding: 40px 24px 64px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .problem-list li { grid-template-columns: 1fr; gap: 8px; }
+    .layer-card { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-label">MUSEON 白皮書 · 認知路由</div>
+    <h1>認知路由器：<br>當 GPT 遇上<em>思維瓶頸</em></h1>
+    <p class="header-subtitle">傳統工具路由器為什麼不夠用，以及 MUSEON 如何用五層認知架構解決這個問題</p>
+    <div class="header-meta">
+      <span class="meta-tag">MUSEON Research</span>
+      <span class="meta-divider"></span>
+      <span class="meta-tag">2026 · April</span>
+      <span class="meta-divider"></span>
+      <span class="meta-tag">約 2,600 字</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="section">
+    <h2><span class="section-num">一</span>引言：GPT 問世後的路由困境</h2>
+    <p>2023 年是 AI 工具爆炸的元年。Toolformer（Schick et al., 2023）向世界示範了語言模型可以自學呼叫外部工具——搜尋引擎、計算機、翻譯 API——從此「工具路由」成為 AI 系統設計的顯學。隨後 HuggingGPT（Shen et al., 2023）將這個概念推向極端：一個 ChatGPT 核心協調數百個 HuggingFace 模型，彷彿一位無所不知的總指揮。ReAct（Yao et al., 2023）則提供了推理與行動交織的執行框架，讓 AI 在行動之前先思考，思考之後再行動，再根據結果繼續推理。</p>
+    <p>然而，每一個在真實場景中部署過 AI 助理的工程師都曾遇到同樣的挫敗感：使用者說了一句話，系統呼叫了工具，工具回傳了結果，但使用者還是皺著眉頭說「這不是我要的」。問題不在工具本身，也不在路由演算法的精確度——問題在於系統根本不知道使用者此刻的思維狀態是什麼。他是在釐清方向，還是在尋求確認？他是真的問了他想問的問題，還是問了一個他以為自己想問的問題？</p>
+
+    <div class="callout">
+      <p>這正是「<strong>認知路由器（Cognitive Router）</strong>」試圖解決的困境。它不是工具路由器的替代品，而是工具路由器的前置層——在任何技能被觸發之前，先讀懂思維。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">二</span>傳統 Skill/Tool Router 的五個結構性缺陷</h2>
+
+    <ul class="problem-list">
+      <li>
+        <span class="problem-label">意圖歧義</span>
+        <span class="problem-desc">「我想了解 AI 的未來」可以是學術探索，也可以是對職涯轉型的隱性恐懼。傳統路由器只對最表層的語義特徵回應，挑選出「AI 趨勢分析」技能，卻錯過使用者真正需要的策略對話。Kahneman（2011）區分的系統一（直覺、快速）與系統二（分析、緩慢），大多數工具路由器停留在系統一層次。</span>
+      </li>
+      <li>
+        <span class="problem-label">單層比對</span>
+        <span class="problem-desc">基於 cosine similarity 或微調分類模型，在「輸入文字」與「工具描述」之間做一維相似度計算。但現實中，一個請求橫跨多個認知維度：需要哪種情緒基調、處於決策漏斗的哪個階段、使用者的熟悉程度如何——這些在單層比對架構中幾乎完全不可見。</span>
+      </li>
+      <li>
+        <span class="problem-label">情境盲視</span>
+        <span class="problem-desc">沒有捕捉使用者的歷史軌跡：他上週問了什麼、他對哪類答案的反應是滿意還是厭倦、他的思維是否正在繞同一個問題打轉。Reflexion（Shinn et al., 2023）的反饋迴路仍以任務完成度為核心，而非使用者認知狀態的演變。</span>
+      </li>
+      <li>
+        <span class="problem-label">冷啟動失靈</span>
+        <span class="problem-desc">新使用者缺乏歷史數據，退回最泛用的技能路徑。初次互動通常是使用者最需要精準引導的時刻，卻也是系統最迷茫的時刻，形成一個諷刺的悖論。</span>
+      </li>
+      <li>
+        <span class="problem-label">ReAct 模式的局限</span>
+        <span class="problem-desc">ReAct 預設推理鏈是線性且目標明確的。當使用者的需求本身就是模糊的、矛盾的，ReAct 的「推理-行動-觀察」迴圈可能只是在一個錯誤的前提上不斷疊加行動。更根本的問題是：它假設 AI 知道在解決「什麼問題」，但認知路由的挑戰恰恰是——那個「什麼問題」本身就是需要被先行確認的未知量。</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">三</span>MUSEON 認知路由器的設計哲學</h2>
+    <p>MUSEON 系統的核心洞察可以用一句話概括：<strong>路由決策的品質，取決於對思維狀態的理解深度，而非對工具能力的覆蓋廣度。</strong></p>
+    <p>這個哲學的起點來自一個反直覺的觀察。在真實部署的 AI 顧問系統中，使用者往往無法準確描述自己的需求——不是因為表達能力不足，而是因為需求本身尚未成形。一位企業主說「我想分析競爭對手」，但他真正的困境可能是對自身定位的迷茫；一位創業者問「我的 MRR 應該多高」，但他真正需要的可能是一個重新框架問題的視角，而非一個數字。</p>
+    <p>Li et al.（2023）在 CAMEL 中探索了多智能體之間的「心智探索」（Mind Exploration），讓 AI 角色扮演者通過對話逐步釐清任務定義。這個方向觸及了認知路由的核心精神：在行動之前，先理解「誰在問、為什麼問、處於什麼思維狀態下問」。</p>
+    <p>MUSEON 的認知路由器因此被設計為一個前置判斷層，它的工作不是「找到最好的工具」，而是「判斷使用者的認知準備度是否允許任何工具在此刻產生真正的效益」。這個設計引入了六個維度的清晰度評分——自我覺察、方向清晰度、差距可見性、累積感知、人際槓桿、策略整合——構成一個立體的思維狀態地圖，在路由決策的最上游發揮作用。</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">四</span>認知路由器如何運作：五層堆疊架構</h2>
+    <p>MUSEON 的認知路由器並非單一演算法，而是一個五層堆疊的決策系統，每一層負責不同粒度的判斷，從毫秒級的訊號偵測到跨日的自動校準，形成一個完整的認知感知迴路。</p>
+
+    <div class="layers-grid">
+      <div class="layer-card">
+        <div class="layer-num">1</div>
+        <div class="layer-content">
+          <div class="layer-sub">訊號快篩層 · &lt;5ms</div>
+          <h4>Signal Keywords Layer</h4>
+          <p>在任何 LLM 運算啟動之前，用純 CPU 關鍵字引擎做亞 5 毫秒的初步掃描，識別七種認知狀態：方向迷失、決策疲勞、確認偏誤迴圈、能量低落、高衝勁、焦慮型探索、以及清晰行動。借鑒 Kahneman 系統一的速度優勢，為後續深度判斷提供第一手情境線索。</p>
+        </div>
+      </div>
+
+      <div class="layer-card">
+        <div class="layer-num">2</div>
+        <div class="layer-content">
+          <div class="layer-sub">語意向量層 · 係數 1.5</div>
+          <h4>Semantic Vector Layer</h4>
+          <p>啟動 Qdrant 向量資料庫進行語意搜尋，計算輸入與技能庫中各技能描述的語意距離。與傳統路由器不同，這一層的向量分數乘以 1.5 的加權係數，但它不是決策的終點，而是五層評分機制的一個組成部分。單純的語意相似度可以告訴系統「使用者在討論什麼」，但無法告訴系統「使用者需要什麼方式的介入」。</p>
+        </div>
+      </div>
+
+      <div class="layer-card">
+        <div class="layer-num">3</div>
+        <div class="layer-content">
+          <div class="layer-sub">原型親和層 · 係數 2.0（最高）</div>
+          <h4>Eight-Primal Affinity Layer</h4>
+          <p>MUSEON 系統定義了八種原型認知模式（Eight Primals），代表使用者在不同思維狀態下的深層需求傾向。每個技能被預先標記其對各原型的親和係數，以 2.0 的最高加權係數介入，反映了認知路由器對「思維風格匹配」的最高重視程度。</p>
+        </div>
+      </div>
+
+      <div class="layer-card">
+        <div class="layer-num">4</div>
+        <div class="layer-content">
+          <div class="layer-sub">荒謬差距層 · 係數 1.0</div>
+          <h4>Absurdity Gap Layer</h4>
+          <p>MUSEON 最具原創性的設計。「荒謬差距」指使用者當前認知狀態與某個技能所需認知前提之間的落差。如果一個自我覺察評分很低的使用者被路由到需要高度自我洞察的策略規劃技能，這個錯位被量化為抑制訊號，降低該技能的最終路由分數。防止系統把「使用者問了什麼」凌駕於「使用者準備好接收什麼」之上。</p>
+        </div>
+      </div>
+
+      <div class="layer-card">
+        <div class="layer-num">5</div>
+        <div class="layer-content">
+          <div class="layer-sub">使用頻率衰減層 · 公式 1/(1+count×0.15)</div>
+          <h4>Usage Frequency Decay Layer</h4>
+          <p>處理路由系統的長期健康問題：技能壟斷（Skill Monopolization）。當某個技能因廣泛適用而被頻繁呼叫，其路由優先級隨呼叫次數增加而逐漸衰減。一個被呼叫了一百次的技能，在相同語意分數下，會讓位給更少被使用但同樣相關的技能。成長需要多樣性，而非重複強化既有路徑。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">87%</div>
+        <div class="stat-label">路由準確率<br>SkillRouter v11 實測</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">決策成功率<br>DeterministicRouter</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">49→100</div>
+        <div class="stat-label">關鍵路徑成功率<br>JSON 解析穩定化</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">五</span>與技能/工具路由器的協作機制</h2>
+    <p>需要明確的是，認知路由器並非要取代傳統的工具路由器，而是在其上游建立一個思維狀態的感知前置層，二者的關係是垂直整合而非平行競爭。</p>
+    <p>在協作架構中，認知路由器首先輸出一組認知狀態向量，這組向量不僅包含「使用者意圖的最佳猜測」，還包含「當前認知狀態對各類技能的接受度評分」以及「路由的置信區間」。這些輸出被作為<strong>軟性約束（Soft Constraints）</strong>傳遞給工具路由器，而非硬性過濾器——工具路由器仍然保有最終決策權，但決策的基礎被大幅豐富。</p>
+    <p>MUSEON 系統中的 39 條「結晶規則」（Crystal Rules）是這個協作機制的具體化。這些規則是從真實路由決策的成功與失敗案例中提煉的已驗證教訓，涵蓋「在低自我覺察狀態下避免呼叫策略規劃技能」、「確認偏誤迴圈中優先觸發反向提問機制」等場景特定的路由智慧。它們以軟性約束的形式嵌入技能路由的評分計算，讓系統在統計模型之外，擁有一套可解釋、可更新的規則記憶。</p>
+
+    <p>三個時間尺度的路由迴路同時運作：</p>
+    <ul style="list-style: none; margin: 20px 0;">
+      <li style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 16px;"><span style="font-weight: 600; color: var(--ember); min-width: 120px; font-size: 13px;">快速迴路 50ms</span><span style="color: var(--slate); font-size: 14px;">處理即時訊息路由</span></li>
+      <li style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 16px;"><span style="font-weight: 600; color: var(--ember); min-width: 120px; font-size: 13px;">探索迴路 30s</span><span style="color: var(--slate); font-size: 14px;">處理需要深度記憶搜尋的複雜請求</span></li>
+      <li style="padding: 10px 0; display: flex; gap: 16px;"><span style="font-weight: 600; color: var(--ember); min-width: 120px; font-size: 13px;">夜間校準 Nightly</span><span style="color: var(--slate); font-size: 14px;">維護整體技能庫就緒率在 60% 以上</span></li>
+    </ul>
+    <p style="font-size: 14px; color: var(--slate); margin-top: 16px;">這三層迴路的設計，正是對 Kahneman 快思慢想二元框架的三元延伸：快思應對日常、慢思應對複雜、深夜沉澱應對系統性漂移。</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">六</span>使用者價值與精準度提升</h2>
+    <p>認知路由的價值最終必須落地於可量測的使用者體驗改善。路由準確率的提升（87% vs v10 基線）意味著使用者收到「恰好符合其當前思維狀態的回應」的比例顯著提高，而不只是收到「語意上相關的資訊」。</p>
+
+    <div class="callout">
+      <p>這兩者之間的差距，正是傳統工具路由器與認知路由器在使用者感知上最核心的分野：<strong>前者解決「你問了什麼」，後者解決「你現在需要什麼」。</strong></p>
+    </div>
+
+    <p>MuseRouter 的六維清晰度評分為使用者提供了另一個維度的價值：自我認知的鏡子。當系統能夠準確評估使用者在「方向清晰度」或「差距可見性」上的現況，它就能在提供答案的同時，提供思維框架的補足——不是替使用者思考，而是讓使用者的思考變得更清晰。</p>
+    <p>使用頻率衰減機制則保障了長期使用的豐富性。一個使用 AI 助理數月的使用者不應該每次都收到同樣的技能組合，即使那些技能在每次的語意比對中都排名第一。認知成長需要多樣性的刺激，而路由系統有責任在保持精準的同時，維持探索的可能性。</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">七</span>結語：認知路由作為未來 AI 基礎設施</h2>
+    <p>工具路由器解決的是「如何連接輸入與能力」的工程問題；認知路由器解決的是「如何在正確的時機、以正確的方式、觸達處於正確思維狀態的使用者」的設計哲學問題。這兩個層次的問題都不可或缺，但前者是後者的先決條件——如果路由發生在錯誤的認知時機，再精確的工具也可能產生適得其反的效果。</p>
+    <p>Wei et al.（2022）的鏈式思考（Chain-of-Thought）研究示範了引導 LLM 進行顯式推理步驟的價值；但在人機互動的場景中，需要被引導進行顯式思考的不只是 AI，更包括使用者本身。認知路由器的終極野心，是讓每一次互動都成為使用者思維品質提升的一個微小觸媒——不是替代思考，而是使思考更清晰。</p>
+    <p>在 AI 系統從「工具集合」向「思維夥伴」演進的過程中，認知路由將從一個架構創新逐漸成為基礎設施的必要組成。就如同網路需要 DNS 在 IP 地址之上建立語意尋址層，AI 系統也需要認知路由在技能呼叫之上建立思維狀態感知層。這不是未來的選項，而是 AI 系統走向真正有用的必然路徑。</p>
+  </div>
+
+  <div class="references">
+    <h2>參考文獻</h2>
+    <ul class="ref-list">
+      <li>Kahneman, D. (2011). <em>Thinking, Fast and Slow.</em> Farrar, Straus and Giroux.</li>
+      <li>Li, G., Hammoud, H., Itani, H., Khizbullin, D., & Ghanem, B. (2023). CAMEL: Communicative Agents for "Mind" Exploration of Large Scale Language Model Society. <em>NeurIPS 2023.</em></li>
+      <li>Nakano, R., Hilton, J., Balwit, A., et al. (2021). WebGPT: Browser-assisted question-answering with human feedback. <em>arXiv:2112.09332.</em></li>
+      <li>Schick, T., Dwivedi-Yu, J., Dessì, R., et al. (2023). Toolformer: Language Models Can Teach Themselves to Use Tools. <em>NeurIPS 2023.</em></li>
+      <li>Shen, Y., Song, K., Tan, X., et al. (2023). HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in HuggingFace. <em>NeurIPS 2023.</em></li>
+      <li>Shinn, N., Cassano, F., Labash, B., et al. (2023). Reflexion: Language Agents with Verbal Reinforcement Learning. <em>NeurIPS 2023.</em></li>
+      <li>Wei, J., Wang, X., Schuurmans, D., et al. (2022). Chain-of-Thought Prompting Elicits Reasoning in Large Language Models. <em>NeurIPS 2022.</em></li>
+      <li>Yao, S., Zhao, J., Yu, D., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. <em>ICLR 2023.</em></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">MUSEON</span>
+    <span class="footer-copy">© 2026 MUSEON · All rights reserved</span>
+  </div>
+</footer>
+
+</body>
+</html>
