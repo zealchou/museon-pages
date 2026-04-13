@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON Business Card — Zeal Chou v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #181737;
+    --gold:   #b6853d;
+    --gold-lt:#d4a85c;
+    --parch:  #f3ede0;
+    --ink:    #0d0c1a;
+    --smoke:  #8a8a9a;
+  }
+
+  body {
+    background: #eae4d9;
+    font-family: 'DM Sans', sans-serif;
+    padding: 52px 36px;
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    color: var(--navy);
+    opacity: 0.5;
+    margin-bottom: 52px;
+    text-transform: uppercase;
+  }
+
+  .section { margin-bottom: 64px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 28px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(24,23,55,0.12);
+  }
+
+  .card-pair {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  /* ── Card shell ── */
+  .card {
+    width: 354px;
+    height: 200px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 8px 36px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.10);
+  }
+
+  /* ── v2: Deep Navy Luxury ── */
+  .v2 { background: var(--navy); }
+
+  .v2-glow {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      radial-gradient(ellipse 50% 55% at 108% 108%, rgba(182,133,61,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 35% 40% at -5% -5%,   rgba(182,133,61,0.07) 0%, transparent 55%);
+  }
+  .v2-lattice {
+    position: absolute; inset: 0; z-index: 1; opacity: 0.035;
+    background-image:
+      linear-gradient(45deg,  #b6853d 1px, transparent 1px),
+      linear-gradient(-45deg, #b6853d 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  /* vertical gold rule on the left */
+  .v2-rule {
+    position: absolute;
+    left: 26px; top: 24px; bottom: 24px;
+    width: 1.5px;
+    background: linear-gradient(180deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+    z-index: 3;
+    opacity: 0.5;
+  }
+
+  /* ── card-inner: flex column, NO absolute children ── */
+  .card-inner {
+    position: absolute;
+    inset: 0;
+    padding: 26px 26px 22px 42px;   /* left padding clears the v2-rule */
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+  }
+
+  /* Logo */
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+  }
+  .logo-svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .logo-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--gold);
+  }
+
+  /* flex spacer */
+  .flex-gap { flex: 1; }
+
+  /* Contact rows — sit between logo and identity */
+  .contact-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 10px;
+  }
+  .contact-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 8px;
+    letter-spacing: 0.07em;
+    color: #f3ede0;
+    opacity: 0.75;
+    line-height: 1.5;
+  }
+  .contact-row .lbl {
+    font-size: 7px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    width: 34px;
+    flex-shrink: 0;
+  }
+
+  /* Identity: name + title */
+  .identity {
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .name-zh {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.32em;
+    color: #f3ede0;
+    opacity: 0.62;
+    margin-bottom: 3px;
+  }
+  .name-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: #f3ede0;
+    line-height: 1.05;
+    margin-bottom: 5px;
+  }
+  .title-line {
+    font-size: 7.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f3ede0;
+    opacity: 0.52;
+    line-height: 1.4;
+  }
+
+  /* Company footer — IN FLOW, not absolute */
+  .company-footer-inline {
+    flex-shrink: 0;
+    margin-top: 9px;
+    padding-top: 7px;
+    border-top: 1px solid rgba(182,133,61,0.28);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .company-zh {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
+    color: #f3ede0;
+    opacity: 0.48;
+    line-height: 1.3;
+    flex-shrink: 0;
+  }
+  .company-en {
+    font-size: 6.5px;
+    letter-spacing: 0.12em;
+    color: #f3ede0;
+    opacity: 0.33;
+    line-height: 1.4;
+    text-transform: uppercase;
+    text-align: right;
+  }
+
+  /* ── BACK ── */
+  .back-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    z-index: 2;
+  }
+  .back-logo { width: 62px; height: 62px; }
+  .back-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12.5px;
+    letter-spacing: 0.15em;
+    color: #f3ede0;
+    opacity: 0.6;
+    text-align: center;
+  }
+  .back-sub {
+    font-size: 7.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #f3ede0;
+    opacity: 0.32;
+  }
+
+  /* Print note */
+  .print-note {
+    margin-top: 18px;
+    font-size: 10px;
+    color: var(--smoke);
+    line-height: 1.8;
+    letter-spacing: 0.03em;
+    max-width: 760px;
+  }
+  .print-note strong { color: var(--navy); opacity: 0.75; }
+
+  @media (max-width: 800px) {
+    .card { width: 100%; max-width: 354px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>MUSEON · Business Card — Zeal Chou</h1>
+
+<!-- SVG symbol defs -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <!-- gold on dark bg -->
+    <symbol id="logo-gold" viewBox="0 0 60 60">
+      <rect x="8" y="8" width="44" height="44" rx="11"
+        stroke="#b6853d" stroke-width="1.4" fill="none" opacity="0.72"
+        transform="rotate(10 30 30)"/>
+      <polygon points="30,15 45,30 30,45 15,30"
+        stroke="#b6853d" stroke-width="1.3" fill="none" opacity="0.9"/>
+      <circle cx="30" cy="30" r="3.8" fill="#b6853d"/>
+      <circle cx="30" cy="30" r="7" fill="rgba(182,133,61,0.2)"/>
+    </symbol>
+    <!-- large gold for back -->
+    <symbol id="logo-gold-lg" viewBox="0 0 80 80">
+      <rect x="10" y="10" width="60" height="60" rx="14"
+        stroke="#b6853d" stroke-width="1.2" fill="none" opacity="0.62"
+        transform="rotate(10 40 40)"/>
+      <polygon points="40,18 62,40 40,62 18,40"
+        stroke="#b6853d" stroke-width="1.3" fill="none" opacity="0.88"/>
+      <circle cx="40" cy="40" r="5" fill="#b6853d"/>
+      <circle cx="40" cy="40" r="11" fill="rgba(182,133,61,0.18)"/>
+    </symbol>
+  </defs>
+</svg>
+
+
+<!-- ══════════════════════════════════════
+     DEEP NAVY LUXURY — Front + Back
+     ══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Deep Navy Luxury &nbsp;·&nbsp; 02 &nbsp;·&nbsp; 夜空深藍 · 高管感 · 令人印象深刻</div>
+  <div class="card-pair">
+
+    <!-- FRONT -->
+    <div class="card v2">
+      <div class="v2-glow"></div>
+      <div class="v2-lattice"></div>
+      <div class="v2-rule"></div>
+      <div class="card-inner">
+
+        <!-- TOP: Logo -->
+        <div class="logo-group">
+          <svg class="logo-svg"><use href="#logo-gold"/></svg>
+          <span class="logo-wordmark">MUSEON</span>
+        </div>
+
+        <!-- SPACER -->
+        <div class="flex-gap"></div>
+
+        <!-- Contact rows -->
+        <div class="contact-block">
+          <div class="contact-row">
+            <span class="lbl">Tel</span>
+            <span>+886 921 125 350 &nbsp;·&nbsp; Telegram</span>
+          </div>
+          <div class="contact-row">
+            <span class="lbl">Email</span>
+            <span>zeal.chou@gmail.com</span>
+          </div>
+        </div>
+
+        <!-- Identity: name + title -->
+        <div class="identity">
+          <div class="name-zh">周逸達</div>
+          <div class="name-en">Zeal Chou</div>
+          <div class="title-line">Founder &nbsp;·&nbsp; Chief Intelligence Architect</div>
+        </div>
+
+        <!-- Company — IN FLOW, separated by gold rule -->
+        <div class="company-footer-inline">
+          <span class="company-zh">臥龍崗管理顧問有限公司</span>
+          <span class="company-en">Dragon Hill Intelligent Consultant LTC, Co.</span>
+        </div>
+
+      </div>
+    </div><!-- /front -->
+
+    <!-- BACK -->
+    <div class="card v2">
+      <div class="v2-glow"></div>
+      <div class="v2-lattice"></div>
+      <div class="back-inner">
+        <svg class="back-logo"><use href="#logo-gold-lg"/></svg>
+        <div class="back-tagline">Stop the Leak · Start the Forge</div>
+        <div class="back-sub">停止損耗 · 開始鍛造</div>
+      </div>
+    </div><!-- /back -->
+
+  </div><!-- card-pair -->
+
+  <div class="print-note">
+    <strong>送印建議：</strong>350gsm 黑卡 &nbsp;·&nbsp; 全版霧面護貝 &nbsp;·&nbsp; 燙霧金（Pantone 873C）在姓名「Zeal Chou」與 Logo 線條 &nbsp;·&nbsp; 菱形 Logo 核心做局部 UV 光油（亮點對比霧面，觸感細緻）&nbsp;·&nbsp; 效果沉穩有重量感，適合送給關鍵客戶
+  </div>
+</div>
+
+</body>
+</html>
