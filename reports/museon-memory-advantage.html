@@ -3,324 +3,770 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MUSEON — 記憶、認知、自我成長</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<title>MUSEON 記憶系統優勢</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
     --ember: #C4502A;
-    --ember-light: #E8956D;
-    --parchment: #F5EFE6;
-    --parchment-dark: #EDE4D6;
-    --ink: #2C2416;
-    --ink-mid: #5C4A32;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
     --fog-gold: #b6853d;
     --navy: #181737;
-    --smoke: #F9F6F1;
+    --teal: #2A7A6E;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background-color: var(--parchment); color: var(--ink); font-family: 'Noto Serif TC', serif; font-size: 16px; line-height: 1.8; }
 
-  header { background: var(--navy); padding: 64px 48px 52px; text-align: center; position: relative; overflow: hidden; }
-  header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(182,133,61,0.18) 0%, transparent 70%); pointer-events: none; }
-  .logo-line { font-family: 'Cormorant Garamond', serif; font-size: 13px; letter-spacing: 6px; color: var(--fog-gold); text-transform: uppercase; margin-bottom: 18px; opacity: 0.85; }
-  header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 5vw, 52px); font-weight: 600; color: #fff; line-height: 1.25; margin-bottom: 16px; }
-  header h1 span { color: var(--fog-gold); }
-  .header-sub { font-size: 15px; color: rgba(255,255,255,0.6); letter-spacing: 1px; font-style: italic; }
+  html { scroll-behavior: smooth; }
 
-  .container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
-  section { padding: 72px 0 56px; }
-  section + section { border-top: 1px solid rgba(92,74,50,0.12); }
-  .section-label { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 5px; text-transform: uppercase; color: var(--fog-gold); margin-bottom: 12px; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 38px); font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 20px; }
-  .section-intro { font-size: 15px; color: var(--ink-mid); max-width: 680px; line-height: 1.9; margin-bottom: 40px; }
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
 
-  .layer-grid { display: flex; flex-direction: column; gap: 16px; }
-  .layer-card { display: flex; align-items: flex-start; gap: 20px; background: var(--smoke); border: 1px solid rgba(92,74,50,0.1); border-left: 4px solid var(--ember); padding: 22px 24px; border-radius: 6px; }
-  .layer-num { flex-shrink: 0; font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: var(--ember); line-height: 1; width: 36px; text-align: center; margin-top: 2px; }
-  .layer-content h3 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-  .layer-content p { font-size: 14px; color: var(--ink-mid); line-height: 1.75; }
-  .layer-content .tag { display: inline-block; background: rgba(196,80,42,0.1); color: var(--ember); font-size: 11px; letter-spacing: 1px; padding: 2px 8px; border-radius: 3px; margin-top: 8px; font-weight: 600; }
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #0f0e2a 60%, #1a1540 100%);
+    border-bottom: 2px solid var(--fog-gold);
+    padding: 80px 40px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
 
-  .benefit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 8px; }
-  .benefit-card { background: var(--smoke); border: 1px solid rgba(92,74,50,0.1); border-radius: 8px; padding: 28px 24px; }
-  .benefit-icon { font-size: 28px; margin-bottom: 14px; display: block; }
-  .benefit-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
-  .benefit-card p { font-size: 14px; color: var(--ink-mid); line-height: 1.8; }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(182,133,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
 
-  .compare-wrap { overflow-x: auto; margin-top: 8px; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  thead tr { background: var(--navy); color: #fff; }
-  thead th { padding: 14px 18px; text-align: left; font-weight: 600; letter-spacing: 0.5px; }
-  thead th:first-child { border-radius: 6px 0 0 0; }
-  thead th:last-child  { border-radius: 0 6px 0 0; }
-  tbody tr:nth-child(even) { background: var(--smoke); }
-  tbody tr:nth-child(odd)  { background: var(--parchment-dark); }
-  td { padding: 13px 18px; vertical-align: top; border-bottom: 1px solid rgba(92,74,50,0.08); line-height: 1.7; color: var(--ink-mid); }
-  td:first-child { font-weight: 700; color: var(--ink); white-space: nowrap; }
-  .yes  { color: #2D7A4F; font-weight: 700; }
-  .no   { color: #A63020; }
-  .mid  { color: var(--fog-gold); font-weight: 600; }
+  .header-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fog-gold);
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
 
-  .forge-flow { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
-  .forge-step { display: flex; align-items: flex-start; gap: 20px; position: relative; padding-bottom: 32px; }
-  .forge-step:last-child { padding-bottom: 0; }
-  .forge-step:not(:last-child)::before { content: ''; position: absolute; left: 19px; top: 44px; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--ember), rgba(196,80,42,0.15)); }
-  .forge-dot { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--ember); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; margin-top: 2px; }
-  .forge-body h3 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-  .forge-body p { font-size: 14px; color: var(--ink-mid); line-height: 1.75; }
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
 
-  .quote-block { background: var(--navy); border-radius: 8px; padding: 36px 40px; margin: 48px 0 0; position: relative; overflow: hidden; }
-  .quote-block::after { content: '\201C'; position: absolute; bottom: -20px; right: 24px; font-family: 'Cormorant Garamond', serif; font-size: 160px; color: rgba(182,133,61,0.12); line-height: 1; pointer-events: none; }
-  .quote-block p { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 2.5vw, 24px); font-style: italic; color: #fff; line-height: 1.65; position: relative; z-index: 1; }
-  .quote-block .attr { display: block; margin-top: 16px; font-family: 'Noto Serif TC', serif; font-size: 13px; font-style: normal; color: var(--fog-gold); letter-spacing: 2px; }
+  header h1 em {
+    font-style: italic;
+    color: var(--fog-gold);
+  }
 
-  footer { background: var(--navy); text-align: center; padding: 36px 32px; margin-top: 80px; }
-  footer .brand { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #fff; letter-spacing: 4px; margin-bottom: 8px; }
-  footer .sub { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 2px; }
+  header .subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  /* ─── LAYOUT ─── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 40px 96px;
+  }
+
+  @media (max-width: 768px) {
+    header { padding: 56px 24px 48px; }
+    main { padding: 48px 24px 64px; }
+  }
+
+  /* ─── SECTION ─── */
+  .section {
+    margin-bottom: 72px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.4s ease-out forwards;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.12s; }
+  .section:nth-child(3) { animation-delay: 0.18s; }
+  .section:nth-child(4) { animation-delay: 0.24s; }
+  .section:nth-child(5) { animation-delay: 0.30s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ember-dark);
+    background: rgba(196,80,42,0.08);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .section-desc {
+    font-size: 15px;
+    color: var(--slate);
+    margin-bottom: 32px;
+    max-width: 680px;
+    line-height: 1.8;
+  }
+
+  /* ─── CARD GRID ─── */
+  .card-grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+  .card-grid-5 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+  @media (max-width: 1024px) {
+    .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  }
 
   @media (max-width: 640px) {
-    header { padding: 48px 24px 40px; }
-    .container { padding: 0 20px; }
-    section { padding: 52px 0 40px; }
-    .quote-block { padding: 28px 24px; }
+    .card-grid-5, .card-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(18,18,26,0.1), 0 8px 24px rgba(18,18,26,0.06);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .card-body {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* ─── DIMENSION CARD (記憶五維度) ─── */
+  .dim-card {
+    border-top: 3px solid var(--ember);
+  }
+
+  .dim-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ember);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* ─── PROFILE LAYERS ─── */
+  .layer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .layer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    transition: transform 200ms ease;
+  }
+
+  .layer-item:hover { transform: translateX(4px); }
+
+  .layer-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    background: rgba(182,133,61,0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .layer-content {}
+
+  .layer-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .layer-desc {
+    font-size: 13.5px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* ─── HERMES STEPS ─── */
+  .steps-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+  }
+
+  @media (max-width: 768px) {
+    .steps-container { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .steps-container { grid-template-columns: 1fr; }
+  }
+
+  .step-item {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 200ms ease;
+  }
+
+  .step-item:last-child { border-right: none; }
+
+  .step-item:hover { background: rgba(196,80,42,0.03); }
+
+  .step-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember), var(--fog-gold));
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .step-item:hover::before { opacity: 1; }
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: rgba(196,80,42,0.12);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-size: 13.5px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .compare-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a1540 100%);
+  }
+
+  thead th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  thead th:first-child {
+    color: rgba(255,255,255,0.7);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  thead th.col-museon {
+    color: var(--fog-gold);
+    border-bottom: 2px solid var(--fog-gold);
+  }
+
+  thead th.col-chatgpt { color: rgba(255,255,255,0.7); }
+  thead th.col-agent { color: rgba(255,255,255,0.55); }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 150ms ease;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(196,80,42,0.03); }
+
+  td {
+    padding: 14px 20px;
+    line-height: 1.6;
+  }
+
+  td:first-child {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 13px;
+    white-space: nowrap;
+    border-right: 1px solid var(--border);
+  }
+
+  .val-museon { color: var(--teal); font-weight: 600; }
+  .val-mid { color: var(--slate); }
+  .val-low { color: var(--mist); }
+
+  .val-check::before { content: '✓  '; color: var(--teal); font-weight: 700; }
+  .val-partial::before { content: '△  '; color: var(--fog-gold); font-weight: 600; }
+  .val-cross::before { content: '✗  '; color: var(--mist); }
+
+  /* ─── CTA CARDS (三件事) ─── */
+  .cta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .cta-grid { grid-template-columns: 1fr; }
+  }
+
+  .cta-card {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a1540 100%);
+    border-radius: 12px;
+    padding: 32px 28px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .cta-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(24,23,55,0.3);
+  }
+
+  .cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember), var(--fog-gold));
+  }
+
+  .cta-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 600;
+    color: rgba(182,133,61,0.25);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .cta-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .cta-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.75;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 48px 0;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--deep-ink);
+    border-top: 1px solid rgba(182,133,61,0.2);
+    padding: 32px 40px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .footer-tagline {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.04em;
   }
 </style>
 </head>
 <body>
 
+<!-- ═══ HEADER ═══ -->
 <header>
-  <div class="logo-line">MUSEON · AI Intelligence System</div>
-  <h1>記憶、認知、<span>自我成長</span></h1>
-  <p class="header-sub">為什麼 MUSEON 跟你用過的所有 AI 工具都不一樣</p>
+  <p class="header-eyebrow">Memory Architecture · MUSEON AI</p>
+  <h1>記憶，是 MUSEON<br><em>最深的護城河</em></h1>
+  <p class="subtitle">不只是對話——每一次互動都在累積關於你的認知，形成真正懂你的夥伴。</p>
 </header>
 
-<div class="container">
+<!-- ═══ MAIN ═══ -->
+<main>
 
-  <section id="memory">
-    <div class="section-label">01 · Memory Architecture</div>
-    <h2 class="section-title">會記住你、記住你的客戶、<br>記住你的公司如何運作</h2>
-    <p class="section-intro">
-      一般 AI 工具每次對話都從零開始。MUSEON 的記憶不是「記住你說過什麼」這麼簡單——
-      它記的是<strong>人、事、時、地、物</strong>五個維度，而且越用越深。
-    </p>
-    <div class="layer-grid">
-      <div class="layer-card">
-        <div class="layer-num">人</div>
+  <!-- ── S1: 記憶五維度 ── -->
+  <section class="section">
+    <span class="section-label">Memory Five Dimensions</span>
+    <h2 class="section-title">記憶五維度：人、事、時、地、物</h2>
+    <p class="section-desc">MUSEON 的記憶系統超越「聊天紀錄」的層次，對每一則資訊沿五個維度進行結構化儲存與索引，讓它能在未來精準召回最相關的脈絡。</p>
+
+    <div class="card-grid card-grid-5">
+
+      <div class="card dim-card">
+        <span class="dim-tag">人</span>
+        <div class="card-title">Who</div>
+        <div class="card-body">誰說了什麼、對方的角色與立場、關係強度與互動模式——建立動態人物網絡。</div>
+      </div>
+
+      <div class="card dim-card">
+        <span class="dim-tag">事</span>
+        <div class="card-title">What</div>
+        <div class="card-body">發生了什麼事、決策內容、行動項目、結果與後續影響，形成可查詢的事件圖譜。</div>
+      </div>
+
+      <div class="card dim-card">
+        <span class="dim-tag">時</span>
+        <div class="card-title">When</div>
+        <div class="card-body">時間戳記、時序關係、週期規律——讓 MUSEON 知道「這件事現在是否仍然相關」。</div>
+      </div>
+
+      <div class="card dim-card">
+        <span class="dim-tag">地</span>
+        <div class="card-title">Where</div>
+        <div class="card-body">情境脈絡、場景定位——會議室裡的一句話 vs 私訊裡的告白，意義截然不同。</div>
+      </div>
+
+      <div class="card dim-card">
+        <span class="dim-tag">物</span>
+        <div class="card-title">What Object</div>
+        <div class="card-body">涉及的專案、產品、文件、資產——把資訊錨定到具體的業務對象，不再凌空漂浮。</div>
+      </div>
+
+    </div><!-- .card-grid -->
+
+    <div style="margin-top:20px; background:var(--snow); border:1px solid var(--border); border-radius:10px; padding:24px; border-left: 3px solid var(--ember);">
+      <div style="font-weight:600; color:var(--navy); margin-bottom:6px; font-size:15px;">機制說明</div>
+      <div style="font-size:14px; color:var(--slate); line-height:1.8;">每次對話結束後，L4 CPU Observer 自動萃取五維度資訊寫入向量資料庫（Qdrant），並觸發語義索引。下次提問時，MUSEON 在 <strong style="color:var(--ink);">&lt; 100ms</strong> 內完成相關記憶的向量搜尋，無感召回精準脈絡——不需要你每次重新解釋背景。</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── S2: 五層認知輪廓 ── -->
+  <section class="section">
+    <span class="section-label">Cognitive Profile · 5 Layers</span>
+    <h2 class="section-title">五層認知輪廓：真正懂你的思維方式</h2>
+    <p class="section-desc">MUSEON 不只記住你說過什麼，更會主動建構你的認知輪廓——讓它逐漸內化你的思考邏輯，而不是每次都重新適應。</p>
+
+    <div class="layer-list">
+
+      <div class="layer-item">
+        <div class="layer-num">L1</div>
         <div class="layer-content">
-          <h3>每個人都有獨立的七層人物檔案</h3>
-          <p>每個客戶、員工、合作夥伴，MUSEON 都建立獨立檔案——不只記姓名，更記人格特質、溝通偏好、談判風格、槓桿點。下次跟同一個人互動，MUSEON 帶著完整背景進場。</p>
-          <span class="tag">ARES 人物檔案系統</span>
+          <div class="layer-title">認知風格（Cognitive Style）</div>
+          <div class="layer-desc">你習慣用系統思維還是直覺跳躍？傾向第一性原理還是類比推演？MUSEON 觀察你的提問模式，逐漸校準自己的回應框架與資訊密度。</div>
         </div>
       </div>
-      <div class="layer-card">
-        <div class="layer-num">事</div>
+
+      <div class="layer-item">
+        <div class="layer-num">L2</div>
         <div class="layer-content">
-          <h3>決策記錄、行動足跡、會議洞見</h3>
-          <p>每次重要決策、每個有效的解題方式，都被記錄下來形成「足跡」。六個月後你忘了，MUSEON 還記得，而且能在相似情境時主動調用。</p>
-          <span class="tag">Footprints · Decisions</span>
+          <div class="layer-title">方法論體系（Methodology Stack）</div>
+          <div class="layer-desc">你使用哪些思維框架？Business-12、SSA、X-Model、DHARMA——MUSEON 記住你的工具箱，在合適時機主動套用，不用你每次說「用 X 方法來分析」。</div>
         </div>
       </div>
-      <div class="layer-card">
-        <div class="layer-num">時</div>
+
+      <div class="layer-item">
+        <div class="layer-num">L3</div>
         <div class="layer-content">
-          <h3>記憶有生命週期，不會被舊資料淹沒</h3>
-          <p>Nightly 機制每天凌晨自動運作：常被使用的記憶升級，長期未用的降級封存。不是什麼都記、什麼都不忘，而是「當下最相關的永遠在最前面」。</p>
-          <span class="tag">Nightly 升降級機制</span>
+          <div class="layer-title">審計標準（Quality Standards）</div>
+          <div class="layer-desc">你對什麼品質不滿意？曾糾正過哪些失誤？這些都會成為 MUSEON 的內化標準——它會在輸出前自我審計，用你的標準過濾，不用你反覆教同樣的事。</div>
         </div>
       </div>
-      <div class="layer-card">
-        <div class="layer-num">地</div>
+
+      <div class="layer-item">
+        <div class="layer-num">L4</div>
         <div class="layer-content">
-          <h3>群組隔離——不同場景的記憶不交叉</h3>
-          <p>你的內部討論、客戶群組、個人諮詢，三個空間的記憶完全隔離。跟客戶 A 說的話不會不小心影響到對客戶 B 的判斷，公司機密不外洩。</p>
-          <span class="tag">Group Context 隔離</span>
+          <div class="layer-title">能力邊界（Capability Boundaries）</div>
+          <div class="layer-desc">哪些任務你已經很強、不需要 AI 提意見？哪些領域你需要深度協助？MUSEON 知道在哪裡補位、在哪裡收手，成為真正的共同創作者而非管理工具。</div>
         </div>
       </div>
-      <div class="layer-card">
-        <div class="layer-num">物</div>
+
+      <div class="layer-item">
+        <div class="layer-num">L5</div>
         <div class="layer-content">
-          <h3>知識結晶——把重複的模式變成永久資產</h3>
-          <p>Nightly 會掃描重複出現的成功模式，提煉成「結晶規則」。下次遇到類似問題，MUSEON 不需要重新推理，直接調用已驗證的答案，速度更快、更準。</p>
-          <span class="tag">Crystal 知識結晶</span>
+          <div class="layer-title">工作流偏好（Workflow Preferences）</div>
+          <div class="layer-desc">你喜歡先有大綱再填細節？還是邊做邊演化？上午決策、下午執行？MUSEON 學習你的節奏，讓協作摩擦趨近於零。</div>
         </div>
+      </div>
+
+    </div><!-- .layer-list -->
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── S3: Hermes 模式 ── -->
+  <section class="section">
+    <span class="section-label">Hermes Mode · Auto Skill Forge</span>
+    <h2 class="section-title">Hermes 模式：自動技能鍛造，越用越強</h2>
+    <p class="section-desc">一般 AI 工具每次對話都從零開始。MUSEON 的 Hermes 模式會在你解決複雜問題後，自動將成功路徑鍛造為可重複呼叫的 Skill——知識不只保存，而是進化。</p>
+
+    <div class="steps-container">
+
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-title">觸發偵測</div>
+        <div class="step-desc">任務完成後，系統自動偵測是否命中鍛造條件：複雜多步驟任務、試錯後找到正確路徑、使用者糾正後的新方向……</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-title">路徑萃取</div>
+        <div class="step-desc">從本次對話中萃取有效工作流——哪些步驟是關鍵轉折點、哪些工具組合最有效、前提條件是什麼。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-title">Skill 鍛造</div>
+        <div class="step-desc">將萃取出的工作流結構化為 ACSF 格式的 Skill 定義，含觸發條件、執行步驟、品質護欄，自動安裝至技能庫。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-title">語義索引</div>
+        <div class="step-desc">新 Skill 立即向量化寫入 Qdrant，下次遇到類似場景時，MUSEON 在路由時自動匹配並呼叫——無需你記住 Skill 名稱。</div>
+      </div>
+
+    </div><!-- .steps-container -->
+
+    <div style="margin-top:20px; background:rgba(182,133,61,0.06); border:1px solid rgba(182,133,61,0.25); border-radius:10px; padding:24px; display:flex; gap:16px; align-items:flex-start;">
+      <div style="font-size:24px; flex-shrink:0;">⚡</div>
+      <div>
+        <div style="font-weight:600; color:var(--navy); margin-bottom:6px; font-size:15px;">護欄設計</div>
+        <div style="font-size:14px; color:var(--slate); line-height:1.8;">同一任務最多觸發一次；若現有 Skill 已覆蓋此場景則跳過；鍛造在背景進行，不中斷主線對話。目前技能庫已累積 <strong style="color:var(--ember);">100+ 個</strong>客製化 Skill，涵蓋商業分析、品牌設計、財務建模、市場情報等領域。</div>
       </div>
     </div>
   </section>
 
-  <section id="cognition">
-    <div class="section-label">02 · Five-Layer Cognition</div>
-    <h2 class="section-title">不只記你說了什麼，<br>而是記你怎麼思考</h2>
-    <p class="section-intro">
-      MUSEON 追蹤的不是對話紀錄，而是使用者的<strong>認知能力輪廓</strong>。
-      對一個老闆，這代表它會越來越了解你如何判斷、如何決策、你的標準是什麼。
-    </p>
-    <div class="benefit-grid">
-      <div class="benefit-card">
-        <span class="benefit-icon">🧠</span>
-        <h3>認知深度</h3>
-        <p>你對某個議題理解到哪個層次？MUSEON 記錄你的思考框架，下次同一主題直接從你已知的地方繼續，不從零解釋。</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">🧭</span>
-        <h3>方法論偏好</h3>
-        <p>你慣用案例思考還是數據思考？傾向先定方向再細化，還是邊做邊調整？MUSEON 記住你的解題套路，用你的語言說話。</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">📐</span>
-        <h3>審計標準</h3>
-        <p>你判斷「夠好了」的內部標準是什麼？什麼讓你滿意、什麼讓你不放心？MUSEON 從互動中偵測你的品質閥值。</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">⚡</span>
-        <h3>實際能力邊界</h3>
-        <p>跟你說「你可以試試 X」之前，MUSEON 知道你的執行資源和時間。不給你做不到的建議，只給你能接住的方向。</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">🔄</span>
-        <h3>工作流慣性</h3>
-        <p>你習慣的協作節奏、回報頻率、溝通方式——讓 MUSEON 主動配合你的工作節奏，而不是你去配合工具。</p>
-      </div>
-    </div>
-    <div class="quote-block">
-      <p>MUSEON 記住的不是「你說了什麼」，而是「你是怎樣的人」。
-      這是它與所有工具型 AI 最根本的差異——工具在你，MUSEON 認識你。</p>
-      <span class="attr">— MUSEON Design Philosophy</span>
-    </div>
-  </section>
+  <div class="divider"></div>
 
-  <section id="forge">
-    <div class="section-label">03 · Autonomous Skill Forging</div>
-    <h2 class="section-title">不需要你指示，<br>它自己判斷什麼時候該升級自己</h2>
-    <p class="section-intro">
-      傳統 AI 工具永遠停在你第一次用它的樣子。MUSEON 會自動偵測有價值的工作模式，
-      在你不需要多說一個字的情況下，把這個模式鍛造成可複用的能力。
-    </p>
-    <div class="forge-flow">
-      <div class="forge-step">
-        <div class="forge-dot">1</div>
-        <div class="forge-body">
-          <h3>偵測有效模式</h3>
-          <p>每次對話完成後，系統自動判斷：這次解題的路徑夠複雜、夠新穎嗎？如果你之前糾正過我，我找到了正確方法——這就值得被記住並結晶。</p>
-        </div>
-      </div>
-      <div class="forge-step">
-        <div class="forge-dot">2</div>
-        <div class="forge-body">
-          <h3>自動啟動鍛造</h3>
-          <p>命中條件就直接執行 ACSF 鍛造流程，不等你說「幫我記住這個」。這是 Hermes 模式——你不在場，它也在工作。</p>
-        </div>
-      </div>
-      <div class="forge-step">
-        <div class="forge-dot">3</div>
-        <div class="forge-body">
-          <h3>能力永久上架</h3>
-          <p>新能力安裝到 Skill 庫，未來遇到類似場景自動調用。你用 MUSEON 越久，它累積的能力就越多，服務品質曲線持續向上。</p>
-        </div>
-      </div>
-      <div class="forge-step">
-        <div class="forge-dot">4</div>
-        <div class="forge-body">
-          <h3>護欄：不重複鍛造</h3>
-          <p>同一任務最多觸發一次；若現有能力已覆蓋此場景，跳過。AI 自我進化，但有紀律——不是為了增加數量，而是為了提升品質。</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- ── S4: 對比表 ── -->
+  <section class="section">
+    <span class="section-label">Competitive Comparison · 9 Dimensions</span>
+    <h2 class="section-title">MUSEON vs ChatGPT vs 工具型 Agent</h2>
+    <p class="section-desc">同樣是 AI，差距在記憶的深度與進化機制。以下九個維度，是真實業務場景中最常被問到的差異。</p>
 
-  <section id="compare">
-    <div class="section-label">04 · Comparison</div>
-    <h2 class="section-title">跟你現在用的 AI 工具，<br>到底差在哪？</h2>
-    <p class="section-intro">
-      這不是功能比較，而是本質差異。工具型 AI 做的是「你說什麼我做什麼」，
-      MUSEON 做的是「我理解你在做什麼，主動協助你做得更好」。
-    </p>
-    <div class="compare-wrap">
+    <div class="compare-wrapper">
       <table>
         <thead>
           <tr>
-            <th>維度</th>
-            <th>一般 GPT / 工具型 Agent</th>
-            <th>MUSEON</th>
+            <th>比較維度</th>
+            <th class="col-museon">MUSEON</th>
+            <th class="col-chatgpt">ChatGPT Plus</th>
+            <th class="col-agent">工具型 Agent</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>記憶長度</td>
-            <td class="no">每次對話重新開始，無跨 session 記憶</td>
-            <td class="yes">永久記憶，語義召回，數月前的對話仍可提取</td>
+            <td>跨會話記憶</td>
+            <td class="val-museon val-check">結構化持久記憶，五維索引</td>
+            <td class="val-mid val-partial">有限記憶（Projects 功能）</td>
+            <td class="val-low val-cross">無，每次從零開始</td>
           </tr>
           <tr>
-            <td>記憶維度</td>
-            <td class="no">只記「說了什麼」</td>
-            <td class="yes">記人・事・時・地・物五維度</td>
+            <td>個人化深度</td>
+            <td class="val-museon val-check">五層認知輪廓，主動建構</td>
+            <td class="val-mid val-partial">依賴手動設定偏好</td>
+            <td class="val-low val-cross">無個人化機制</td>
           </tr>
           <tr>
-            <td>認識使用者</td>
-            <td class="no">每次都是陌生人</td>
-            <td class="yes">七層人物檔案，人格・慣性・標準・槓桿點</td>
+            <td>技能自我進化</td>
+            <td class="val-museon val-check">Hermes 自動鍛造 Skill</td>
+            <td class="val-low val-cross">無自動學習機制</td>
+            <td class="val-low val-cross">固定工具集，不進化</td>
           </tr>
           <tr>
-            <td>知識累積</td>
-            <td class="no">不累積，下次同樣問題重新推理</td>
-            <td class="yes">結晶規則自動提煉，越用越準</td>
+            <td>回應速度（簡單訊息）</td>
+            <td class="val-museon val-check">L1 快取路徑，&lt; 2 秒</td>
+            <td class="val-mid val-partial">~3-5 秒</td>
+            <td class="val-mid val-partial">~2-8 秒（視工具）</td>
           </tr>
           <tr>
-            <td>能力成長</td>
-            <td class="no">永遠固定在發布時的能力</td>
-            <td class="yes">自動偵測有效模式，自動鍛造新能力</td>
+            <td>知識不流失</td>
+            <td class="val-museon val-check">向量 DB + 結晶規則雙層保存</td>
+            <td class="val-low val-cross">工作區間刪除即消失</td>
+            <td class="val-low val-cross">無持久化設計</td>
           </tr>
           <tr>
-            <td>群組隔離</td>
-            <td class="no">無場景隔離，容易資訊混淆</td>
-            <td class="yes">不同群組/客戶完全隔離，機密不外洩</td>
+            <td>客戶關係記憶</td>
+            <td class="val-museon val-check">ANIMA 人物追蹤引擎</td>
+            <td class="val-low val-cross">無 CRM 整合</td>
+            <td class="val-low val-cross">需要外掛 CRM</td>
           </tr>
           <tr>
-            <td>資料主權</td>
-            <td class="mid">資料存在雲端廠商</td>
-            <td class="yes">本地部署，資料不離開你的設備</td>
+            <td>多通道整合</td>
+            <td class="val-museon val-check">Telegram / Email / 日曆原生整合</td>
+            <td class="val-low val-cross">Web / App 介面</td>
+            <td class="val-mid val-partial">API 整合，需開發</td>
           </tr>
           <tr>
-            <td>主動偵測</td>
-            <td class="no">被動回答，你不問它不說</td>
-            <td class="yes">主動偵測盲點，Nightly 自動整理洞見</td>
+            <td>部署門檻</td>
+            <td class="val-museon val-check">開箱即用，無需工程師</td>
+            <td class="val-mid val-partial">訂閱即用</td>
+            <td class="val-low val-cross">需技術人員建置</td>
           </tr>
           <tr>
-            <td>使用者主權</td>
-            <td class="mid">廠商可隨時改變行為</td>
-            <td class="yes">DNA 五權憲法，決策權永遠在你手上</td>
+            <td>業務場景對齊</td>
+            <td class="val-museon val-check">預設中小企業主工作流</td>
+            <td class="val-mid val-partial">通用，缺業務場景優化</td>
+            <td class="val-mid val-partial">依垂直領域差異大</td>
           </tr>
         </tbody>
       </table>
-    </div>
+    </div><!-- .compare-wrapper -->
   </section>
 
-  <section id="value">
-    <div class="section-label">05 · For Business Owners</div>
-    <h2 class="section-title">對中小企業主來說，<br>這三件事最重要</h2>
-    <div class="benefit-grid">
-      <div class="benefit-card">
-        <span class="benefit-icon">📦</span>
-        <h3>員工離職，知識不流失</h3>
-        <p>每次內部討論、每個決策背後的邏輯，都被記錄。新人進來不是從零開始——他站在整間公司過去的肩膀上。</p>
+  <div class="divider"></div>
+
+  <!-- ── S5: 三件事 ── -->
+  <section class="section">
+    <span class="section-label">Why It Matters · SMB Owners</span>
+    <h2 class="section-title">中小企業主最在意的三件事</h2>
+    <p class="section-desc">技術架構不是重點。對你來說，MUSEON 記憶系統解決的是這三個真實痛點。</p>
+
+    <div class="cta-grid">
+
+      <div class="cta-card">
+        <div class="cta-num">01</div>
+        <div class="cta-title">知識不再因人而流失</div>
+        <div class="cta-desc">老員工離職、交接不完整、跨部門資訊孤島——這些問題在 MUSEON 裡不存在。每一次會議、每一個決策，都被系統化記錄，以可搜尋的形式永久保存。</div>
       </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">🤝</span>
-        <h3>每個客戶都被好好記住</h3>
-        <p>跟客戶開第二次會，MUSEON 帶著第一次的所有脈絡進場。你不需要「先讓我查一下筆記」，它比你更記得。</p>
+
+      <div class="cta-card">
+        <div class="cta-num">02</div>
+        <div class="cta-title">記住每位客戶的細節</div>
+        <div class="cta-desc">上次見面提到的孩子名字、對某個方案的疑慮、偏好的溝通風格——MUSEON 的 ANIMA 系統讓你在每次接觸前都能快速取回完整的客戶輪廓，而不是從頭翻記事本。</div>
       </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">📈</span>
-        <h3>越用越強，不是越用越貴</h3>
-        <p>傳統 SaaS 每個月付費，功能不增加。MUSEON 每次互動都在積累能力——你投入的每一分鐘，都在增加它的服務品質。</p>
+
+      <div class="cta-card">
+        <div class="cta-num">03</div>
+        <div class="cta-title">AI 夥伴越用越強</div>
+        <div class="cta-desc">普通工具用久了沒有成長；MUSEON 用得越多，對你越了解、Skill 庫越豐富、判斷越精準。你投入的每一次對話，都在讓這個夥伴變得更聰明、更適合你的業務。</div>
       </div>
-    </div>
+
+    </div><!-- .cta-grid -->
   </section>
 
-</div>
+</main>
 
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="brand">MUSEON</div>
-  <div class="sub">Thinking Partner · Memory System · Autonomous Growth</div>
+  <div class="footer-logo">MUSEON</div>
+  <div class="footer-tagline">思維品質引擎 · Memory Architecture · 2026</div>
 </footer>
 
 </body>
