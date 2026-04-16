@@ -333,8 +333,8 @@ console.log('[MUSEON 3D] Three.js loaded OK, version:', THREE.REVISION);
 //  SYNC META — 拓撲同步狀態
 // ═══════════════════════════════════════
 const SYNC_META = {
-  topologyVersion: 'v1.96',
-  syncDate: '2026-04-13',
+  topologyVersion: 'v1.98',
+  syncDate: '2026-04-16',
   nodeCount: 0, // auto-calculated below
   linkCount: 0, // auto-calculated below
   skillUpgrades: [
@@ -446,6 +446,7 @@ const nodes = [
   {id:"dispatch",label:"Dispatch",zh:"多技能編排",group:"agent",r:1.0,p:"brain",galaxy:"cognition",arm:1},
   {id:"dispatcher",label:"L1 Dispatcher",zh:"調度員：收訊 → 1 秒內 spawn L2 思考者 → 處理下一則",group:"agent",r:1.2,p:"brain",desc:"調度員：收訊 → 1 秒內 spawn L2 思考者 → 處理下一則（CLAUDE.md 定義行為）",galaxy:"cognition",arm:1},
   {id:"dissent-engine",label:"Dissent Engine",zh:"Crystal Lattice 矛盾偵測，分階段表達異見",group:"agent",r:0.9,p:"brain",desc:"Crystal Lattice 矛盾偵測，分階段表達異見（Step 3.655）",galaxy:"cognition",arm:1},
+  {id:"dna-graph",label:"DNA Graph",zh:"DNA36 量子場：36 RC 語義比對 + 安全閘門 + 清晰度閘門 + Phase Tracker + ANIMA 動態調參",group:"agent",r:1.0,p:"brain",galaxy:"cognition",arm:1},
   {id:"drift-detector",label:"Drift Detector",zh:"漂移偵測",group:"agent",r:0.8,p:"brain",galaxy:"cognition",arm:1},
   {id:"eval-engine",label:"Eval Engine",zh:"Q-Score",group:"agent",r:1.0,p:"brain",galaxy:"cognition",arm:1},
   {id:"fact-correction",label:"Fact Correction",zh:"事實覆寫引擎",group:"agent",r:0.9,p:"brain",galaxy:"cognition",arm:1},
@@ -745,6 +746,7 @@ const links = [
   {source:"brain",target:"diary-store",label:"日記記錄",type:"internal"},
   {source:"brain",target:"dispatch",label:"多技能分派",type:"internal"},
   {source:"brain",target:"dissent-engine",label:"Step 3.655 矛盾偵測呼叫",type:"internal"},
+  {source:"brain",target:"dna-graph",label:"Step 3.1 DNA36 激活（v11.0 新增）",type:"internal"},
   {source:"brain",target:"drift-detector",label:"漂移檢查",type:"internal"},
   {source:"brain",target:"eval-engine",label:"品質評分",type:"internal"},
   {source:"brain",target:"fact-correction",label:"事實更正偵測+覆寫",type:"internal"},
@@ -809,6 +811,10 @@ const links = [
   {source:"dendritic-fusion",target:"eval-engine",label:"並行品質評分",type:"internal"},
   {source:"dendritic-fusion",target:"metacognition",label:"並行預認知審查",type:"internal"},
   {source:"dispatcher",target:"thinker",label:"L1→L2：收訊後 spawn 思考者（run_in_background, model: sonnet）",type:"internal"},
+  {source:"dna-graph",target:"ANIMA_MC.json",label:"讀取八元素 + C-traits",type:"internal"},
+  {source:"dna-graph",target:"absurdity-radar",label:"讀取六大盲點歷史分數",type:"internal"},
+  {source:"dna-graph",target:"brain-prompt-builder",label:"DNA signal 傳入 _get_dna36_compact()",type:"internal"},
+  {source:"dna-graph",target:"skill-router",label:"DNA skill_boost + context_flags 傳入 Layer 6",type:"internal"},
   {source:"doctor",target:"auto-repair",label:"修復",type:"internal"},
   {source:"doctor",target:"code-analyzer",label:"代碼",type:"internal"},
   {source:"doctor",target:"health-check",label:"檢查",type:"internal"},
@@ -846,6 +852,7 @@ const links = [
   {source:"governor",target:"dendritic-scorer",label:"immunity 未解決→健康分數",type:"internal"},
   {source:"governor",target:"immunity",label:"learn() 抗體學習",type:"internal"},
   {source:"l4-cpu-observer",target:"context-cache",label:"signal_cache JSON 寫入（訊號更新）",type:"internal"},
+  {source:"l4-cpu-observer",target:"dna-graph",label:"Step 11 DNA blindspot_hint 門檻判斷",type:"internal"},
   {source:"l4-cpu-observer",target:"memory",label:"記憶寫入（訊息 > 20 字 + 非問候時觸發，optional）",type:"internal"},
   {source:"l4-cpu-observer",target:"semantic-response-cache",label:"回覆後寫入快取",type:"internal"},
   {source:"l4-cpu-observer",target:"session-adjustments",label:"品質調整寫入（規則引擎輸出）",type:"internal"},
@@ -1400,6 +1407,8 @@ const links = [
   {source:"verified-user",target:"anima-mc-store",label:"配對使用者互動更新 ANIMA_USER（L1-L8 觀察）",type:"async"},
   {source:"zeal",target:"anima-mc-store",label:"Owner 互動觸發 ANIMA_MC 更新（boss_name、self_awareness）",type:"async"},
 ];
+
+
 
 
 
