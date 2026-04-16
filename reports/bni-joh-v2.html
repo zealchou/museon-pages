@@ -2,510 +2,214 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>符君賢 — AI 商業轉型顧問</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --ember: #C4502A;
-    --gold: #b6853d;
-    --navy: #0E0E16;
-    --panel: #16161F;
-    --border: #2A2A38;
-    --text: #F7F5F0;
-    --muted: #9898A8;
-    --accent: #E0714D;
+    --ember: #C4502A; --gold: #b6853d; --ink: #0E0E16; --ink2: #16161F;
+    --border: #2A2A38; --text: #F7F5F0; --text-soft: #C8C6C0; --text-muted: #9898A8;
   }
+  body { background: var(--ink); color: var(--text); font-family: 'Noto Sans TC', sans-serif; min-height: 100vh; }
 
-  body {
-    background: var(--navy);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    /* Presentation-safe: prevent zoom on double-tap */
-    touch-action: manipulation;
+  .hero {
+    background: linear-gradient(160deg, #1A1A26 0%, var(--ink) 70%);
+    padding: 48px 32px 40px; text-align: center;
+    border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
   }
-
-  /* ─── NAV DOTS ─── */
-  .nav-dots {
-    position: fixed;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 100;
+  .hero::before {
+    content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(196,80,42,0.12) 0%, transparent 70%); pointer-events: none;
   }
-  .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  .dot.active { background: var(--gold); transform: scale(1.4); }
-
-  /* ─── SLIDES ─── */
-  .slide {
-    min-height: 100svh;
-    padding: 40px 28px 56px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    scroll-margin-top: 0;
-  }
-
-  /* ─── SLIDE 0: HERO ─── */
-  .slide-hero {
-    background: linear-gradient(160deg, #1A1A26 0%, #0E0E16 60%);
-    text-align: center;
-    overflow: hidden;
-  }
-  .slide-hero::before {
-    content: '';
-    position: absolute;
-    top: -80px; left: 50%; transform: translateX(-50%);
-    width: 420px; height: 420px;
-    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
   .badge {
-    display: inline-block;
-    background: rgba(196,80,42,0.15);
-    border: 1px solid rgba(196,80,42,0.45);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    padding: 6px 18px;
-    border-radius: 20px;
-    margin-bottom: 28px;
+    display: inline-block; background: rgba(196,80,42,0.15); border: 1px solid rgba(196,80,42,0.45);
+    color: #E0714D; font-size: 13px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; padding: 7px 18px; border-radius: 24px; margin-bottom: 24px;
   }
-
   .avatar {
-    width: 100px; height: 100px;
-    border-radius: 50%;
+    width: 96px; height: 96px; border-radius: 50%;
     background: linear-gradient(135deg, var(--ember), var(--gold));
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 44px;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 auto 28px;
-    border: 3px solid rgba(182,133,61,0.55);
-    box-shadow: 0 0 40px rgba(196,80,42,0.25);
+    font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 700;
+    color: #fff; margin: 0 auto 24px; border: 3px solid rgba(182,133,61,0.5);
+    box-shadow: 0 0 32px rgba(196,80,42,0.25);
   }
-
-  .hero-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 44px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.5px;
-    line-height: 1.15;
-  }
-  .hero-en {
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--muted);
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 2px;
-    margin-top: 6px;
-  }
+  .hero-name { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 700; color: var(--text); letter-spacing: 1px; margin-bottom: 6px; }
+  .hero-en { font-size: 18px; font-weight: 400; color: var(--text-muted); letter-spacing: 3px; margin-bottom: 16px; }
   .hero-tagline {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px; font-weight: 600;
     background: linear-gradient(90deg, var(--gold), var(--ember));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.5;
-    letter-spacing: 0.2px;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1.4; max-width: 380px; margin: 0 auto;
   }
 
-  /* ─── SECTION LABEL ─── */
+  .section { padding: 40px 28px; border-bottom: 1px solid var(--border); }
   .section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
+    font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(182,133,61,0.4), transparent); }
+
+  .story-blocks { display: flex; flex-direction: column; gap: 14px; }
+  .story-block {
+    background: var(--ink2); border: 1px solid var(--border); border-left: 4px solid transparent;
+    border-radius: 14px; padding: 20px 22px; font-size: 19px; font-weight: 400;
+    color: var(--text-soft); line-height: 1.75;
+  }
+  .story-block.accent { border-left-color: var(--ember); background: rgba(196,80,42,0.06); }
+  .story-block.gold-left { border-left-color: var(--gold); background: rgba(182,133,61,0.06); }
+  .story-block strong { color: var(--text); font-weight: 700; }
+  .story-block .chip {
+    display: inline-block; background: rgba(196,80,42,0.2); color: #E0714D;
+    font-size: 15px; font-weight: 700; padding: 3px 12px; border-radius: 20px; margin: 0 2px;
   }
 
-  /* ─── SLIDE: STORY ─── */
-  .story-statement {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.55;
-    margin-bottom: 20px;
-  }
-  .story-statement .em {
-    color: var(--accent);
+  .keyword-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .kpill {
+    background: rgba(182,133,61,0.12); border: 1px solid rgba(182,133,61,0.35);
+    color: #D4A85A; font-size: 15px; font-weight: 600; padding: 8px 18px; border-radius: 30px;
   }
 
-  .story-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 8px;
-  }
-  .story-card {
-    background: #1C1C28;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--ember);
-    border-radius: 12px;
-    padding: 18px 20px;
-    font-size: 17px;
-    line-height: 1.65;
-    color: #CCCAC4;
-  }
-  .story-card strong {
-    color: var(--text);
-    font-weight: 700;
+  .big-q { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 20px; text-align: center; }
+  .answer-block {
+    background: linear-gradient(135deg, rgba(196,80,42,0.1), rgba(182,133,61,0.08));
+    border: 1px solid rgba(196,80,42,0.35); border-radius: 18px;
+    padding: 24px 26px; font-size: 20px; font-weight: 600; color: var(--text); line-height: 1.7; text-align: center;
   }
 
-  /* ─── SLIDE: VALUE PROPS ─── */
-  .prop-card {
-    background: #1C1C28;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px 22px;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .prop-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--ember), var(--gold));
-    border-radius: 16px 16px 0 0;
-  }
-  .prop-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 36px;
-    font-weight: 700;
-    color: rgba(196,80,42,0.2);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .prop-icon-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .prop-icon {
-    font-size: 28px;
-    line-height: 1;
-  }
-  .prop-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.2px;
-  }
-  .prop-desc {
-    font-size: 16px;
-    color: #ABABBA;
-    line-height: 1.7;
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-    margin-top: 4px;
-  }
-  .prop-keyword {
-    display: inline-block;
-    background: rgba(196,80,42,0.12);
-    border: 1px solid rgba(196,80,42,0.3);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-top: 10px;
-    letter-spacing: 0.5px;
+  .props-grid { display: flex; flex-direction: column; gap: 16px; }
+  .prop-card { background: var(--ink2); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; display: flex; gap: 18px; align-items: flex-start; }
+  .prop-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(196,80,42,0.12); border: 1px solid rgba(196,80,42,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .prop-body { flex: 1; }
+  .prop-body h3 { font-size: 21px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+  .prop-body p { font-size: 17px; color: var(--text-soft); line-height: 1.7; }
+  .prop-body .hl {
+    display: inline-block; background: linear-gradient(90deg, rgba(196,80,42,0.2), transparent);
+    border-left: 3px solid var(--ember); padding: 4px 12px; margin-top: 8px;
+    font-size: 15px; font-weight: 600; color: #E0714D; border-radius: 0 6px 6px 0;
   }
 
-  /* ─── SLIDE: CTA ─── */
-  .slide-cta {
-    text-align: center;
-  }
-  .cta-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 10px;
-    line-height: 1.3;
-  }
-  .cta-sub {
-    font-size: 17px;
-    color: var(--muted);
-    margin-bottom: 36px;
-    line-height: 1.7;
-  }
-  .cta-sub strong { color: var(--text); }
-
-  .qr-box {
-    background: #fff;
-    border-radius: 20px;
-    padding: 22px;
-    display: inline-block;
-    margin-bottom: 18px;
-    box-shadow: 0 8px 40px rgba(196,80,42,0.2);
-  }
+  .cta-section { padding: 40px 28px 56px; text-align: center; }
+  .cta-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .cta-sub { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.7; }
+  .qr-box { background: #fff; border-radius: 20px; padding: 20px; display: inline-block; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
   .qr-box img { width: 180px; height: 180px; display: block; }
+  .qr-label { font-size: 16px; color: var(--text-muted); margin-bottom: 28px; }
+  .qr-label strong { color: var(--text); font-size: 18px; }
+  .line-btn { display: inline-flex; align-items: center; gap: 12px; background: #00B900; color: #fff; font-size: 18px; font-weight: 700; padding: 18px 40px; border-radius: 60px; text-decoration: none; box-shadow: 0 6px 28px rgba(0,185,0,0.35); }
+  .contact-row { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; align-items: center; }
+  .contact-item { display: flex; align-items: center; gap: 14px; font-size: 18px; color: var(--text-soft); background: var(--ink2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 24px; width: 100%; max-width: 320px; justify-content: center; }
 
-  .qr-label {
-    font-size: 15px;
-    color: var(--muted);
-    margin-bottom: 28px;
-  }
-  .qr-label strong { color: var(--text); font-size: 17px; }
-
-  .line-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #00B900;
-    color: #fff;
-    font-size: 17px;
-    font-weight: 700;
-    padding: 16px 40px;
-    border-radius: 50px;
-    text-decoration: none;
-    letter-spacing: 0.3px;
-    box-shadow: 0 4px 24px rgba(0,185,0,0.35);
-  }
-
-  .contact-row {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 32px;
-    align-items: center;
-  }
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 16px;
-    color: var(--muted);
-  }
-  .contact-item span:first-child { font-size: 20px; }
-
-  /* ─── FOOTER ─── */
-  .footer {
-    padding: 24px;
-    text-align: center;
-    font-size: 12px;
-    color: #5A5A6E;
-    border-top: 1px solid var(--border);
-  }
-  .footer .museon-brand {
-    color: var(--gold);
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-
-  /* ─── SCROLL ARROW ─── */
-  .scroll-hint {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    color: var(--muted);
-    font-size: 12px;
-    letter-spacing: 1px;
-    opacity: 0.6;
-    animation: bounce 2s infinite;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
+  .footer { padding: 22px 28px; text-align: center; font-size: 13px; color: #5A5A6E; border-top: 1px solid var(--border); }
+  .footer .museon-brand { color: var(--gold); font-weight: 700; letter-spacing: 1.5px; }
 </style>
 </head>
 <body>
 
-<!-- NAV DOTS -->
-<nav class="nav-dots" id="navDots">
-  <div class="dot active" onclick="goSlide(0)"></div>
-  <div class="dot" onclick="goSlide(1)"></div>
-  <div class="dot" onclick="goSlide(2)"></div>
-  <div class="dot" onclick="goSlide(3)"></div>
-  <div class="dot" onclick="goSlide(4)"></div>
-  <div class="dot" onclick="goSlide(5)"></div>
-  <div class="dot" onclick="goSlide(6)"></div>
-</nav>
-
-<!-- ─── SLIDE 0: HERO ─── -->
-<section class="slide slide-hero" id="slide-0">
-  <div class="badge">AI 商業轉型顧問</div>
+<div class="hero">
+  <div class="badge">BNI 推薦人介紹</div>
   <div class="avatar">符</div>
   <div class="hero-name">符君賢</div>
   <div class="hero-en">Johnson Fu</div>
-  <div class="hero-tagline">讓每個行業的人<br>專注做自己最擅長的事</div>
-  <div class="scroll-hint">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-    往下滑
-  </div>
-</section>
+  <div class="hero-tagline">讓每個行業的人，專注做自己最擅長的事</div>
+</div>
 
-<!-- ─── SLIDE 1: 我的故事 ─── -->
-<section class="slide" id="slide-1">
+<div class="section">
   <div class="section-label">我的故事</div>
-  <div class="story-statement">
-    旅行業打滾多年，<br>我最懂那種<span class="em">一個人扛全場</span>的辛苦。
+  <div class="story-blocks">
+    <div class="story-block accent">
+      我在旅行業深耕多年，<strong>親身體驗過老闆要同時兼顧客戶、營運、行銷、服務品質</strong>的壓力。
+    </div>
+    <div class="story-block">
+      有一天我遇到了 <strong>MUSEON</strong>——一套真正理解你生意的 AI 系統。
+    </div>
+    <div class="story-block gold-left">
+      它不是一個 App，而是一個<span class="chip">懂你行業的 AI 夥伴</span>，能幫你分析、規劃、對話客戶、整理資訊。
+    </div>
+    <div class="story-block accent">
+      <strong>你應該把時間花在你的專業上——而不是研究怎麼導入 AI。</strong>
+    </div>
+    <div class="story-block">
+      這正是我現在在做的事：<strong>幫助各行業的人，用對的方式讓 AI 真正為你工作。</strong>
+    </div>
   </div>
-  <div class="story-cards">
-    <div class="story-card">
-      客戶、營運、行銷、服務品質——<strong>全部同時壓在一個老闆身上</strong>，沒有人告訴你哪個最重要。
-    </div>
-    <div class="story-card">
-      後來我遇到了 MUSEON——它不是一個 App，而是一個<strong>真正懂你行業的 AI 夥伴</strong>，幫你分析、規劃、對話客戶。
-    </div>
-    <div class="story-card">
-      從那天起我相信：<strong>你的時間應該花在你的專業上——而不是研究怎麼導入 AI。</strong>
-    </div>
+  <div class="keyword-row">
+    <div class="kpill">旅行業背景</div>
+    <div class="kpill">AI 商業導入</div>
+    <div class="kpill">實戰驗證</div>
+    <div class="kpill">全程陪跑</div>
   </div>
-</section>
+</div>
 
-<!-- ─── SLIDE 2: 價值 1 ─── -->
-<section class="slide" id="slide-2">
-  <div class="section-label">MUSEON 能為你做什麼 · 1/4</div>
-  <div class="prop-card">
-    <div class="prop-icon-row">
-      <span class="prop-icon">🎯</span>
-      <span class="prop-title">專注你的專業</span>
-    </div>
-    <div class="prop-desc">
-      你不需要懂 AI、不需要研究自動化。<br><br>
-      <strong>只要告訴 AI 你在做什麼生意——它自己去學你的行業邏輯，幫你處理你不擅長的部分。</strong>
-    </div>
-    <span class="prop-keyword">零學習門檻</span>
+<div class="section">
+  <div class="section-label">核心訴求</div>
+  <div class="big-q">你花多少時間在<br>「不是你專業」的事情上？</div>
+  <div class="answer-block">
+    MUSEON 幫你把這些時間<br>還給你的核心業務
   </div>
-</section>
+</div>
 
-<!-- ─── SLIDE 3: 價值 2 ─── -->
-<section class="slide" id="slide-3">
-  <div class="section-label">MUSEON 能為你做什麼 · 2/4</div>
-  <div class="prop-card">
-    <div class="prop-icon-row">
-      <span class="prop-icon">🧠</span>
-      <span class="prop-title">有記憶的 AI 夥伴</span>
+<div class="section">
+  <div class="section-label">MUSEON 能為你做什麼</div>
+  <div class="props-grid">
+    <div class="prop-card">
+      <div class="prop-icon">🎯</div>
+      <div class="prop-body">
+        <h3>專注你的專業</h3>
+        <p>你不需要懂 AI，不需要研究自動化</p>
+        <div class="hl">告訴 AI 你在做什麼生意，它自己去學</div>
+      </div>
     </div>
-    <div class="prop-desc">
-      記住你的客戶、你的習慣、你說過的每一件事。<br><br>
-      <strong>每次對話都越來越懂你——不是每次從頭解釋，而是真的記得你。</strong>
+    <div class="prop-card">
+      <div class="prop-icon">🧠</div>
+      <div class="prop-body">
+        <h3>有記憶的 AI 夥伴</h3>
+        <p>記住你的客戶、你的習慣、你說過的每一件事</p>
+        <div class="hl">每次對話都越來越懂你</div>
+      </div>
     </div>
-    <span class="prop-keyword">越用越聰明</span>
+    <div class="prop-card">
+      <div class="prop-icon">📈</div>
+      <div class="prop-body">
+        <h3>客戶管理 × 商業分析</h3>
+        <p>從客戶溝通到市場判斷</p>
+        <div class="hl">MUSEON 幫你做你沒時間做的那些事</div>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-icon">🤝</div>
+      <div class="prop-body">
+        <h3>由我親自陪跑</h3>
+        <p>不是買完就不管你</p>
+        <div class="hl">全程協助導入，確認你真的用起來</div>
+      </div>
+    </div>
   </div>
-</section>
+</div>
 
-<!-- ─── SLIDE 4: 價值 3 ─── -->
-<section class="slide" id="slide-4">
-  <div class="section-label">MUSEON 能為你做什麼 · 3/4</div>
-  <div class="prop-card">
-    <div class="prop-icon-row">
-      <span class="prop-icon">📈</span>
-      <span class="prop-title">客戶管理 × 商業分析</span>
-    </div>
-    <div class="prop-desc">
-      從客戶溝通到市場判斷，MUSEON 幫你做你沒時間做的那些事。<br><br>
-      <strong>本來需要一個助理才能搞定的工作，現在一個人就能跑。</strong>
-    </div>
-    <span class="prop-keyword">效率 × 10</span>
-  </div>
-</section>
-
-<!-- ─── SLIDE 5: 價值 4 ─── -->
-<section class="slide" id="slide-5">
-  <div class="section-label">MUSEON 能為你做什麼 · 4/4</div>
-  <div class="prop-card">
-    <div class="prop-icon-row">
-      <span class="prop-icon">🤝</span>
-      <span class="prop-title">顧問親自陪跑</span>
-    </div>
-    <div class="prop-desc">
-      不是買完就不管你。<br><br>
-      <strong>我會全程協助你導入，確認你真的用得起來——直到 AI 真正為你的生意工作。</strong>
-    </div>
-    <span class="prop-keyword">人 + AI 雙保障</span>
-  </div>
-</section>
-
-<!-- ─── SLIDE 6: CTA ─── -->
-<section class="slide slide-cta" id="slide-6">
-  <div class="section-label" style="text-align:center;">加我 LINE 聊聊</div>
-  <div class="cta-title">15 分鐘<br>判斷 AI 是否適合你</div>
-  <div class="cta-sub">
-    掃描下方 QR code 直接加我 LINE<br>
-    <strong>免費諮詢，沒有壓力</strong>
-  </div>
-
+<div class="cta-section">
+  <div class="section-label" style="justify-content:center;">加我 LINE 聊聊</div>
+  <div class="cta-title">想了解更多？</div>
+  <div class="cta-sub">掃描 QR code 直接加我 LINE<br>15 分鐘，我幫你判斷<br>MUSEON 適不適合你的行業</div>
   <div class="qr-box">
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://line.me/ti/p/~buffstour&color=0E0E16&bgcolor=ffffff" alt="LINE QR Code">
   </div>
   <div class="qr-label">LINE ID：<strong>buffstour</strong></div>
-
   <a href="https://line.me/ti/p/~buffstour" class="line-btn">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
     立即加好友
   </a>
-
   <div class="contact-row">
-    <div class="contact-item">
-      <span>📞</span>
-      <span>0966-007-999</span>
-    </div>
-    <div class="contact-item">
-      <span>✉️</span>
-      <span>Buffstour@gmail.com</span>
-    </div>
+    <div class="contact-item">📞 0966-007-999</div>
+    <div class="contact-item">✉️ Buffstour@gmail.com</div>
   </div>
-</section>
+</div>
 
-<!-- Footer -->
 <div class="footer">
   Powered by <span class="museon-brand">MUSEON</span> — AI 商業決策系統
 </div>
-
-<script>
-  // Update nav dots on scroll
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = Array.from(slides).indexOf(entry.target);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      }
-    });
-  }, { threshold: 0.5 });
-
-  slides.forEach(s => observer.observe(s));
-
-  function goSlide(idx) {
-    slides[idx].scrollIntoView({ behavior: 'smooth' });
-  }
-</script>
 
 </body>
 </html>
