@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 看圖產報價單系統 — 室內設計業導入討論 | 會議記錄</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy:        #181737;
+      --deep-ink:    #0E0E16;
+      --surface:     #16161F;
+      --raised:      #1E1E2A;
+      --border-dark: #2A2A38;
+      --gold:        #b6853d;
+      --gold-light:  #d4a85a;
+      --gold-dim:    rgba(182,133,61,0.15);
+      --gold-dim2:   rgba(182,133,61,0.08);
+      --ember:       #C4502A;
+      --ember-light: #E0714D;
+      --teal:        #2A7A6E;
+      --teal-dim:    rgba(42,122,110,0.15);
+      --text-primary:   #F2EFE8;
+      --text-secondary: #A09880;
+      --text-muted:     #6A6458;
+      --border:         rgba(182,133,61,0.2);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--deep-ink);
+      color: var(--text-primary);
+      font-family: 'Noto Sans TC', sans-serif;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    /* ── 頁面頂部裝飾條 ── */
+    .top-bar {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--navy) 0%, var(--gold) 40%, var(--ember) 70%, var(--navy) 100%);
+    }
+
+    /* ── 主容器 ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+
+    /* ── Hero 區 ── */
+    .hero {
+      padding: 64px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(182,133,61,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-dim);
+      border: 1px solid rgba(182,133,61,0.3);
+      border-radius: 100px;
+      padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .hero h1 em {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .meta-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── Section 標題 ── */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      min-width: 28px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── 通用卡片 ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-gold {
+      border-color: rgba(182,133,61,0.25);
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(182,133,61,0.04) 100%);
+    }
+
+    /* ── 核心結論 ── */
+    .conclusion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .conclusion-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      padding: 16px 20px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .conclusion-item:hover {
+      border-color: rgba(182,133,61,0.3);
+      transform: translateY(-1px);
+    }
+
+    .conclusion-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      min-width: 24px;
+      padding-top: 1px;
+    }
+
+    .conclusion-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .conclusion-text strong {
+      color: var(--gold-light);
+    }
+
+    /* ── 三階段行動計畫 ── */
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .phase-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .phase-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .phase-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .phase-1::before { background: var(--teal); }
+    .phase-2::before { background: var(--gold); }
+    .phase-3::before { background: var(--ember); }
+
+    .phase-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .phase-1 .phase-label { color: var(--teal); }
+    .phase-2 .phase-label { color: var(--gold); }
+    .phase-3 .phase-label { color: var(--ember-light); }
+
+    .phase-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .phase-tasks {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .phase-tasks li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .phase-tasks li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+      font-size: 10px;
+      top: 8px;
+    }
+
+    .phase-tasks li:last-child {
+      border-bottom: none;
+    }
+
+    .collab-tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-top: 4px;
+    }
+
+    .collab-all {
+      background: rgba(42,122,110,0.15);
+      color: #5EC4B0;
+      border: 1px solid rgba(42,122,110,0.25);
+    }
+
+    .collab-tech {
+      background: rgba(182,133,61,0.12);
+      color: var(--gold-light);
+      border: 1px solid rgba(182,133,61,0.2);
+    }
+
+    .collab-j {
+      background: rgba(196,80,42,0.12);
+      color: var(--ember-light);
+      border: 1px solid rgba(196,80,42,0.2);
+    }
+
+    /* ── 未解決問題 ── */
+    .open-questions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .oq-item {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      transition: border-color 0.2s;
+    }
+
+    .oq-item:hover {
+      border-left-color: var(--ember);
+    }
+
+    .oq-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* ── 人格分析 ── */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .persona-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .persona-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .persona-role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .persona-j .persona-role     { color: var(--ember-light); }
+    .persona-id .persona-role    { color: var(--teal); }
+    .persona-eng .persona-role   { color: var(--gold); }
+
+    .persona-name {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .persona-tagline {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .persona-body {
+      padding: 20px 24px;
+    }
+
+    .trait-row {
+      margin-bottom: 18px;
+    }
+
+    .trait-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .persona-j .trait-label     { color: var(--ember-light); }
+    .persona-id .trait-label    { color: #5EC4B0; }
+    .persona-eng .trait-label   { color: var(--gold-light); }
+
+    .trait-content {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .trait-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .persona-divider {
+      height: 1px;
+      background: var(--border-dark);
+      margin: 16px 0;
+    }
+
+    .risk-block {
+      background: rgba(196,80,42,0.07);
+      border: 1px solid rgba(196,80,42,0.18);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #E0856A;
+      line-height: 1.65;
+    }
+
+    .risk-block .risk-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .advice-block {
+      background: rgba(42,122,110,0.08);
+      border: 1px solid rgba(42,122,110,0.2);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #7DD4C9;
+      line-height: 1.65;
+      margin-top: 10px;
+    }
+
+    .advice-block .advice-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #5EC4B0;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── 行動清單 ── */
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .action-item:hover {
+      transform: translateX(3px);
+      border-color: rgba(182,133,61,0.25);
+    }
+
+    /* 純 CSS 假 checkbox */
+    .cb-wrap {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .cb-box {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--text-muted);
+      border-radius: 4px;
+      display: block;
+    }
+
+    .priority-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      padding: 2px 9px;
+      border-radius: 100px;
+      margin-left: auto;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .p1 {
+      background: rgba(196,80,42,0.15);
+      color: var(--ember-light);
+      border: 1px solid rgba(196,80,42,0.25);
+    }
+
+    .p2 {
+      background: rgba(182,133,61,0.12);
+      color: var(--gold-light);
+      border: 1px solid rgba(182,133,61,0.2);
+    }
+
+    .p3 {
+      background: rgba(42,122,110,0.12);
+      color: #5EC4B0;
+      border: 1px solid rgba(42,122,110,0.2);
+    }
+
+    /* ── footer ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+      margin-top: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-brand strong {
+      color: var(--gold);
+    }
+
+    .footer-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── 引言塊 ── */
+    .quote-block {
+      border-left: 3px solid var(--gold);
+      padding: 10px 18px;
+      margin: 12px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.65;
+    }
+
+    .quote-block em {
+      color: var(--text-secondary);
+    }
+
+    /* ── 頁面淡入 ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeUp 0.4s ease-out both;
+    }
+
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.10s; }
+    .delay-3 { animation-delay: 0.15s; }
+    .delay-4 { animation-delay: 0.20s; }
+    .delay-5 { animation-delay: 0.25s; }
+    .delay-6 { animation-delay: 0.30s; }
+
+    /* ── RWD ── */
+    @media (max-width: 900px) {
+      .phases-grid     { grid-template-columns: 1fr; }
+      .persona-grid    { grid-template-columns: 1fr; }
+      .open-questions  { grid-template-columns: 1fr; }
+      .hero h1         { font-size: 28px; }
+      .container       { padding: 0 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<div class="container">
+
+  <!-- ── HERO ── -->
+  <header class="hero fade-in">
+    <div class="hero-badge">MUSEON · 會議記錄 · INTELLIGENCE REPORT</div>
+    <h1>AI 看圖產報價單系統<br><em>室內設計業導入討論</em></h1>
+    <p class="hero-subtitle">從圖紙零散到自動報價，探討 AI 三層架構落地的完整路徑</p>
+    <div class="meta-row">
+      <div class="meta-item">
+        <span class="meta-dot"></span>
+        <span class="meta-label">日期</span>
+        <span>2026-04-16</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-dot"></span>
+        <span class="meta-label">地點</span>
+        <span>商務討論（線下）</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-dot"></span>
+        <span class="meta-label">與會者</span>
+        <span>J（主導）、室內設計師、外部工程師</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-dot"></span>
+        <span class="meta-label">文件產生</span>
+        <span>MUSEON AI 分析</span>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ── SECTION 1：核心結論 ── -->
+  <section class="section fade-in delay-1">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">核心結論</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="conclusion-list">
+      <div class="conclusion-item">
+        <span class="conclusion-num">C1</span>
+        <p class="conclusion-text"><strong>AI 自動報價可行，路徑清晰。</strong>三層架構（基礎知識 → 公司文化知識 → 個案學習）已獲共識，目標精準度 90–99%，技術上可行，關鍵瓶頸在於「圖紙標準化」與「前期樣本歸類」。</p>
+      </div>
+      <div class="conclusion-item">
+        <span class="conclusion-num">C2</span>
+        <p class="conclusion-text"><strong>圖紙標準化是系統成功的地基。</strong>現行符號不統一、圖紙零散是 AI 訓練的根本障礙。建議以業界公版格式為基準強制標準化，並作為初期 20 個樣本專案的前置動作。</p>
+      </div>
+      <div class="conclusion-item">
+        <span class="conclusion-num">C3</span>
+        <p class="conclusion-text"><strong>「最小變動、最大價值」是核心設計原則。</strong>J 明確不更改客戶現有 SOP，AI 系統需在既有流程外圍協作，而非顛覆，這將決定整個產品的易採用性（Adoptability）。</p>
+      </div>
+      <div class="conclusion-item">
+        <span class="conclusion-num">C4</span>
+        <p class="conclusion-text"><strong>合規驗證（法規審查）是第二波機會，但現階段刻意延後。</strong>AI 比對建築法規、消防法規的需求真實存在，類比「軟體自動測試」角色，但三方共識是「先搞定看圖+報價，再談合規」。</p>
+      </div>
+      <div class="conclusion-item">
+        <span class="conclusion-num">C5</span>
+        <p class="conclusion-text"><strong>護城河需盡快建立，預估半年內出現競爭者。</strong>J 已預見被抄的風險，建議從<strong>品牌壁壘</strong>與<strong>資料飛輪</strong>（歷史案例積累）兩方向建立差異化，「跑出台灣」是終極目標。</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SECTION 2：三階段行動計畫 ── -->
+  <section class="section fade-in delay-2">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">三階段行動計畫</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="phases-grid">
+      <!-- Phase 1 -->
+      <div class="phase-card phase-1">
+        <div class="phase-label">第一階段 · Foundation</div>
+        <div class="phase-title">資料歸類與 AI 看圖驗證</div>
+        <ul class="phase-tasks">
+          <li>選取 20 個具代表性的已完成專案</li>
+          <li>圖紙以業界公版格式重新標準化整理</li>
+          <li>以 io 格式將圖轉換為結構化文字，供 AI 解析</li>
+          <li>AI 讀圖後自動生成初版分類與材料清單</li>
+          <li>室內設計師逐一 double check，標記錯誤模式</li>
+          <li>收集錯誤回饋，建立修正資料集</li>
+        </ul>
+        <div class="collab-tag collab-all">需要：三方全員</div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase-card phase-2">
+        <div class="phase-label">第二階段 · System</div>
+        <div class="phase-title">系統建構與比價資料庫</div>
+        <ul class="phase-tasks">
+          <li>建立「手法 / 工法 / 五金」知識庫（公司文化知識層）</li>
+          <li>串接市場行情資料（材料單價、工班費用）</li>
+          <li>開發 AI 比對報價模組（圖 → 工項 → 單價計算）</li>
+          <li>建立公司個案學習資料庫（每個新案自動累積）</li>
+          <li>對「無標準化」外部公司提供圖紙顧問服務（額外商模）</li>
+        </ul>
+        <div class="collab-tag collab-tech">主要：外部工程師主導</div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase-card phase-3">
+        <div class="phase-label">第三階段 · Output</div>
+        <div class="phase-title">完整報價單輸出與商業化</div>
+        <ul class="phase-tasks">
+          <li>AI 看圖自動輸出完整報價單（含工項分解）</li>
+          <li>附帶市場行情分析報告（合理範圍判斷）</li>
+          <li>建立品牌護城河（資料飛輪 + 行業知名度）</li>
+          <li>評估「兩家公司共投新公司」的合作結構</li>
+          <li>規劃台灣以外市場的 Pilot 計畫</li>
+        </ul>
+        <div class="collab-tag collab-j">主要：J 主導商業決策</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SECTION 3：未解決問題 ── -->
+  <section class="section fade-in delay-3">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">未解決問題 · 待確認事項</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="open-questions">
+      <div class="oq-item">
+        <span class="oq-label">商業結構</span>
+        「兩家公司共同投資新公司」的股份比例、各方出資方式（資金 vs 技術 vs 客戶資源）尚未談妥，需安排正式討論。
+      </div>
+      <div class="oq-item">
+        <span class="oq-label">樣本門檻</span>
+        20 個專案的選取標準為何？是否需要涵蓋不同工程類型（住宅/商辦/餐飲）？多樣性設計會直接影響 AI 泛化能力。
+      </div>
+      <div class="oq-item">
+        <span class="oq-label">精準度門檻</span>
+        「90–99%」的精準度是指什麼維度的精準？金額誤差 ±5%？工項覆蓋率？需明確定義驗收標準，才能有效 double check。
+      </div>
+      <div class="oq-item">
+        <span class="oq-label">合規延伸</span>
+        建築法規合規驗證（消防/建照）是真實需求，但「何時啟動」、「誰負責法規資料庫維護更新」尚未討論。
+      </div>
+      <div class="oq-item">
+        <span class="oq-label">外部工程師角色</span>
+        外部工程師是技術外包顧問？股東？還是第一階段 POC 完成後退出？角色邊界模糊，影響責任分配。
+      </div>
+      <div class="oq-item">
+        <span class="oq-label">客戶端 SOP 衝突</span>
+        J 強調「不改 SOP」，但圖紙標準化本身就是在改作業習慣。如何在「最小變動」與「資料品質門檻」間取得平衡，需要更細化的落地方案。
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SECTION 4：人格分析 ── -->
+  <section class="section fade-in delay-4">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">人格分析 · Stakeholder Intelligence</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="persona-grid">
+
+      <!-- J -->
+      <div class="persona-card persona-j">
+        <div class="persona-header">
+          <div class="persona-role">主導者 · Entrepreneur</div>
+          <div class="persona-name">J</div>
+          <div class="persona-tagline">「終點倒推法的純種實踐者」</div>
+        </div>
+        <div class="persona-body">
+
+          <div class="trait-row">
+            <div class="trait-label">決策風格</div>
+            <div class="trait-content">
+              <strong>以終為始、主動收斂。</strong>思維從終點往前推，對於偏題或過早深入細節有本能抵制——「這個細節回來再聊，先把第一階段搞定」是他的內建剪枝機制。對 AI 技術理性懷疑，但決策果斷，不因不確定性而停擺。
+            </div>
+          </div>
+
+          <div class="persona-divider"></div>
+
+          <div class="trait-row">
+            <div class="trait-label">溝通模式</div>
+            <div class="trait-content">
+              問題精準，喜歡「先確認我說的是不是你想要的」，再推進下一步。對模糊答案容忍度極低，偏好對方給出是/否之後再展開討論。語言風格直接、口語化。
+            </div>
+          </div>
+
+          <div class="persona-divider"></div>
+
+          <div class="trait-row">
+            <div class="trait-label">核心驅動力</div>
+            <div class="trait-content">
+              <strong>商業版圖的擴張欲</strong>。每個討論都有隱性的「這能不能成為另一條商業路徑」評估——不滿足於單一客戶成功，眼光盯著可複製、可授權、可跑出台灣的系統性產品。
+            </div>
+          </div>
+
+          <div class="quote-block">
+            <em>「半年後你就被抄了，你怎麼辦？」</em><br>
+            — 自我催逼式風險思維，焦慮即動力
+          </div>
+
+          <div class="risk-block">
+            <span class="risk-title">潛在盲點</span>
+            對技術落地複雜度的低估風險。「以終為始」有時會跳過中間步驟的不確定性，若外部工程師無法給出明確時程，可能出現預期管理落差。另外，對 AI 的「不相信」若持續主導，可能在第二階段阻礙投入深度。
+          </div>
+
+          <div class="advice-block">
+            <span class="advice-title">與 J 合作的建議</span>
+            每次會議都先對齊「當下要解決的具體問題」；用 milestone 而非功能清單溝通進度；遇到技術不確定性，先給範圍（best/worst case），不要給模糊回答。
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 室內設計師 -->
+      <div class="persona-card persona-id">
+        <div class="persona-header">
+          <div class="persona-role">潛在合作者 · Domain Expert</div>
+          <div class="persona-name">室內設計師</div>
+          <div class="persona-tagline">「從現場跑出來的行業知識庫」</div>
+        </div>
+        <div class="persona-body">
+
+          <div class="trait-row">
+            <div class="trait-label">決策風格</div>
+            <div class="trait-content">
+              <strong>務實導向，需要「看到具體怎麼落地」才能決定投入。</strong>對新技術抱持開放但謹慎的態度，傾向先確認自己的工作量增減，再評估是否採用。對於改變有顧慮，但一旦看到好處（如報價效率提升），轉折速度快。
+            </div>
+          </div>
+
+          <div class="persona-divider"></div>
+
+          <div class="trait-row">
+            <div class="trait-label">溝通模式</div>
+            <div class="trait-content">
+              細節豐富，敘述時喜歡帶例子與脈絡（「我這邊圖標是 X 代表 Y，另一家可能完全不一樣」）。有時過度鋪陳背景，但其中藏有真正的業界痛點訊號，需要耐心傾聽萃取。
+            </div>
+          </div>
+
+          <div class="persona-divider"></div>
+
+          <div class="trait-row">
+            <div class="trait-label">核心驅動力</div>
+            <div class="trait-content">
+              <strong>用專業換取更高槓桿的轉型渴望。</strong>「你要轉型了，真正可以靠嘴吃飯」一句話透露出他對「從執行者到顧問」身份的嚮往——AI 工具是他從勞動密集跳脫的出口。
+            </div>
+          </div>
+
+          <div class="quote-block">
+            <em>「業主壓力大，圖來不及整理...」</em><br>
+            — 真正的痛點訊號：效率瓶頸在上游，不在 AI 本身
+          </div>
+
+          <div class="risk-block">
+            <span class="risk-title">潛在盲點</span>
+            細節控傾向可能導致「標準化討論」陷入個人慣用符號系統的捍衛，而非聚焦於「可被 AI 解析的通用格式」設計。若不主動拉出討論框架，細節討論容易失焦。
+          </div>
+
+          <div class="advice-block">
+            <span class="advice-title">與 J 合作的建議</span>
+            給他「你的專業不會被取代，AI 幫你做雜活」的定位框架；讓他參與樣本選取，建立主人翁感；遇到細節鋪陳時，適時重新導向「所以這個情況下 AI 要怎麼判斷」。
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 外部工程師 -->
+      <div class="persona-card persona-eng">
+        <div class="persona-header">
+          <div class="persona-role">技術顧問 · Engineer</div>
+          <div class="persona-name">外部工程師</div>
+          <div class="persona-tagline">「愛玩新工具的實用主義者」</div>
+        </div>
+        <div class="persona-body">
+
+          <div class="trait-row">
+            <div class="trait-label">決策風格</div>
+            <div class="trait-content">
+              <strong>工具導向，先問「能不能做到」，再問「怎麼做」。</strong>技術方案提出快速，偏好用已有工具組合解決問題，較少從商業需求反推技術架構。面對不確定性時以「先試試看」為預設立場。
+            </div>
+          </div>
+
+          <div class="persona-divider"></div>
+
+          <div class="trait-row">
+            <div class="trait-label">溝通模式</div>
+            <div class="trait-content">
+              發散性強，話題跳躍（從 io 格式跳到桃園機場朋友再跳到馬爾地夫）。表達有時模糊，倚賴對方主動釐清。善於提出類比（AI 合規驗證 ≈ 軟體自動測試），是溝通中難得的亮點。
+            </div>
+          </div>
+
+          <div class="persona-divider"></div>
+
+          <div class="trait-row">
+            <div class="trait-label">核心驅動力</div>
+            <div class="trait-content">
+              <strong>對新技術的好奇心與參與感。</strong>喜歡在前沿問題上「試一把」，但對長期維運與商業可持續性的關心程度明顯低於技術挑戰本身。合作吸引力主要來自「有趣」與「技術突破」，而非財務回報。
+            </div>
+          </div>
+
+          <div class="quote-block">
+            <em>「就是 1 個類似這個東西...不是他是我這邊要處理的」</em><br>
+            — 表達細節時跳躍，需要對方協助結構化
+          </div>
+
+          <div class="risk-block">
+            <span class="risk-title">潛在盲點</span>
+            發散思維可能將第一階段的技術範疇無限擴張（io 格式 → 合規驗證 → AI 畫圖），導致交付失焦。另外，對自己在合作中的角色邊界認知不清，可能引發未來的期待落差。
+          </div>
+
+          <div class="advice-block">
+            <span class="advice-title">與 J 合作的建議</span>
+            每次會議結束前給他一個具體的「下次要帶來的東西」（如 io 格式 POC demo）；討論中避免讓他無限延伸到新工具探索；將發散的類比轉化為正式的技術評估點，保留其價值但控制範圍。
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ── SECTION 5：下一步行動清單 ── -->
+  <section class="section fade-in delay-5">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">下一步行動清單</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="action-list">
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【J + 室內設計師】</strong>選定 20 個代表性已完成專案，確認涵蓋住宅、商辦等主要類型，作為第一階段訓練樣本。</span>
+        <span class="priority-badge p1">P1 · 立即</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【室內設計師】</strong>整理現行圖紙符號標準，對照業界公版格式，列出需要轉換的符號清單，提供給外部工程師作為轉換規則依據。</span>
+        <span class="priority-badge p1">P1 · 立即</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【外部工程師】</strong>建立 io 格式轉換的 POC（概念驗證）Demo：取 1–2 張圖，轉換為結構化文字，確認 AI 可解析，並展示初步分類能力。</span>
+        <span class="priority-badge p1">P1 · 本週</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【J】</strong>明確定義「精準度 90–99%」的驗收標準：是金額誤差範圍？工項覆蓋率？還是類別分類正確率？給出可量化定義，讓 double check 有依據。</span>
+        <span class="priority-badge p1">P1 · 本週</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【J + 外部工程師】</strong>安排正式的商業結構討論，釐清「共投新公司」的股份比例、角色分工（技術外包 vs 股東 vs 顧問）與資金配置。</span>
+        <span class="priority-badge p2">P2 · 兩週內</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【外部工程師】</strong>研究並提案「手法 / 工法 / 五金」知識庫的技術架構，包含如何與市場行情資料串接、更新機制設計。</span>
+        <span class="priority-badge p2">P2 · 兩週內</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【J】</strong>評估「無標準化公司的圖紙顧問服務」作為獨立商模的可行性：市場規模估算、定價策略、與主線產品的協同效益。</span>
+        <span class="priority-badge p2">P2 · 一個月內</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【三方】</strong>第一階段 20 個樣本的 double check 完成後，召開中期評估會議，決定是否進入第二階段系統建構，並更新時程計畫。</span>
+        <span class="priority-badge p3">P3 · 視進度</span>
+      </div>
+      <div class="action-item">
+        <span class="cb-wrap"><span class="cb-box"></span></span>
+        <span><strong>【J】</strong>開始規劃品牌護城河策略：資料飛輪建立機制（每案自動學習）、行業影響力計畫（案例發表、合作擴展），防禦「半年內被抄」風險。</span>
+        <span class="priority-badge p3">P3 · 視進度</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer fade-in delay-6">
+    <div class="footer-brand">
+      Generated by <strong>MUSEON</strong> · Meeting Intelligence Engine
+    </div>
+    <div class="footer-note">2026-04-16 · 本文件為 AI 輔助生成，內容基於逐字稿分析</div>
+  </footer>
+
+</div><!-- /container -->
+
+</body>
+</html>
