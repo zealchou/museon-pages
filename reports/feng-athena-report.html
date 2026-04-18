@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATHENA 分析報告 — 馮士維 Feng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --deep-ink:       #0E0E16;
+      --surface:        #16161F;
+      --raised:         #1E1E2A;
+      --border-dark:    #2A2A38;
+      --fog-gold:       #b6853d;
+      --fog-gold-dim:   rgba(182,133,61,0.15);
+      --fog-gold-glow:  rgba(182,133,61,0.08);
+      --ember:          #C4502A;
+      --ember-dim:      rgba(196,80,42,0.12);
+      --teal:           #2A7A6E;
+      --teal-dim:       rgba(42,122,110,0.12);
+      --text-primary:   #F0EBE0;
+      --text-secondary: #9898A8;
+      --text-muted:     #5A5A6E;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--deep-ink);
+      color: var(--text-primary);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-wrap {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 96px;
+    }
+
+    @media (max-width: 768px) { .page-wrap { padding: 0 16px 64px; } }
+
+    h1, h2, h3, .display-font { font-family: 'Cormorant Garamond', serif; }
+
+    .section-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--fog-gold);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .hero {
+      position: relative;
+      padding: 96px 0 64px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(ellipse at center, rgba(182,133,61,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(ellipse at center, rgba(42,122,110,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--fog-gold);
+      border: 1px solid rgba(182,133,61,0.3);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 28px;
+      background: var(--fog-gold-glow);
+    }
+
+    .hero-title {
+      font-size: clamp(52px, 7vw, 80px);
+      font-weight: 600; font-style: italic;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #F0EBE0 0%, var(--fog-gold) 60%, #2A7A6E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+      font-size: 18px; font-weight: 300;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      margin-bottom: 48px;
+    }
+
+    .hero-meta { display: flex; gap: 40px; flex-wrap: wrap; }
+    .meta-item { display: flex; flex-direction: column; gap: 4px; }
+
+    .meta-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .meta-value { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+    .meta-value.gold { color: var(--fog-gold); }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--border-dark) 20%, rgba(182,133,61,0.2) 50%, var(--border-dark) 80%, transparent 100%);
+      margin: 64px 0;
+    }
+
+    .section {
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .section.visible { opacity: 1; transform: translateY(0); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 28px 32px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover { border-color: rgba(182,133,61,0.25); transform: translateY(-2px); }
+    .card-gold  { border-left: 3px solid var(--fog-gold); }
+    .card-ember { border-left: 3px solid var(--ember); }
+    .card-teal  { border-left: 3px solid var(--teal); }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 24px; align-items: start;
+    }
+
+    @media (max-width: 768px) { .overview-grid { grid-template-columns: 1fr; } }
+
+    .identity-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 32px 28px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+
+    .identity-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--fog-gold));
+    }
+
+    .identity-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--raised) 0%, var(--border-dark) 100%);
+      border: 2px solid rgba(182,133,61,0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 600;
+      color: var(--fog-gold);
+    }
+
+    .identity-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 4px;
+    }
+
+    .identity-alias {
+      font-size: 11px; color: var(--text-secondary);
+      font-family: 'IBM Plex Mono', monospace;
+      margin-bottom: 20px; letter-spacing: 0.06em;
+    }
+
+    .trust-bar-wrap { margin: 20px 0 16px; }
+
+    .trust-label {
+      display: flex; justify-content: space-between;
+      font-size: 11px; font-family: 'IBM Plex Mono', monospace;
+      color: var(--text-secondary); margin-bottom: 6px;
+    }
+
+    .trust-bar { height: 4px; background: var(--border-dark); border-radius: 2px; overflow: hidden; }
+
+    .trust-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--fog-gold));
+      border-radius: 2px;
+    }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px; }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 100px;
+    }
+
+    .tag-gold  { background: var(--fog-gold-dim); color: var(--fog-gold); border: 1px solid rgba(182,133,61,0.2); }
+    .tag-ember { background: var(--ember-dim); color: #E0714D; border: 1px solid rgba(196,80,42,0.2); }
+    .tag-teal  { background: var(--teal-dim); color: #3FA08C; border: 1px solid rgba(42,122,110,0.2); }
+
+    .summary-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px; padding: 20px 24px;
+    }
+
+    .summary-card-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--fog-gold); margin-bottom: 8px;
+    }
+
+    .summary-card-body { font-size: 14px; color: var(--text-primary); line-height: 1.7; }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 40px;
+    }
+
+    @media (max-width: 640px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px; padding: 20px; text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px; font-weight: 600;
+      color: var(--fog-gold); line-height: 1.1;
+    }
+
+    .stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted); margin-top: 4px;
+    }
+
+    .persona-type-card {
+      background: var(--raised);
+      border: 1px solid rgba(182,133,61,0.2);
+      border-radius: 14px; padding: 36px 40px;
+      position: relative; overflow: hidden; margin-bottom: 24px;
+    }
+
+    .persona-type-card::after {
+      content: '';
+      position: absolute; right: -60px; top: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(42,122,110,0.08) 0%, transparent 70%);
+    }
+
+    .persona-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--fog-gold); margin-bottom: 12px;
+    }
+
+    .persona-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 40px; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 8px;
+    }
+
+    .persona-desc {
+      font-size: 15px; color: var(--text-secondary);
+      max-width: 520px; line-height: 1.7;
+    }
+
+    .confidence-row { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
+
+    .confidence-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+    }
+
+    .confidence-bar { flex: 1; height: 4px; background: var(--border-dark); border-radius: 2px; }
+
+    .confidence-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--fog-gold), #E0A840);
+    }
+
+    .confidence-pct {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px; font-weight: 600; color: var(--fog-gold);
+    }
+
+    .evidence-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+
+    .evidence-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+    }
+
+    .evidence-icon { color: var(--fog-gold); font-size: 13px; margin-top: 2px; flex-shrink: 0; }
+
+    .radar-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px; align-items: start;
+    }
+
+    @media (max-width: 768px) { .radar-container { grid-template-columns: 1fr; } }
+
+    .radar-svg-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px; padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .primal-bars { display: flex; flex-direction: column; gap: 16px; }
+    .primal-row { display: flex; flex-direction: column; gap: 6px; }
+
+    .primal-header { display: flex; justify-content: space-between; align-items: baseline; }
+
+    .primal-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+
+    .primal-score {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; font-weight: 600; color: var(--fog-gold);
+    }
+
+    .primal-bar-bg { height: 6px; background: var(--border-dark); border-radius: 3px; overflow: hidden; }
+    .primal-bar-fill { height: 100%; border-radius: 3px; }
+
+    .bar-gold   { background: linear-gradient(90deg, #b6853d, #E0A840); }
+    .bar-ember  { background: linear-gradient(90deg, #C4502A, #E0714D); }
+    .bar-teal   { background: linear-gradient(90deg, #2A7A6E, #3FA08C); }
+    .bar-purple { background: linear-gradient(90deg, #6B4FA0, #9B7FD4); }
+    .bar-muted  { background: var(--border-dark); }
+
+    .primal-insight { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+    .leverage-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) { .leverage-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .leverage-box {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px; padding: 18px 16px; text-align: center;
+    }
+
+    .leverage-icon { font-size: 24px; margin-bottom: 8px; }
+
+    .leverage-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-secondary); margin-bottom: 6px;
+    }
+
+    .leverage-level {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600;
+    }
+
+    .lv-high { color: var(--fog-gold); }
+    .lv-med  { color: #3FA08C; }
+    .lv-low  { color: var(--text-muted); }
+
+    .dynamic-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px; padding: 24px 28px; margin-bottom: 16px;
+    }
+
+    .dynamic-title {
+      font-size: 14px; font-weight: 600;
+      color: var(--fog-gold); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .dynamic-body { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+    .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 640px) { .do-dont-grid { grid-template-columns: 1fr; } }
+
+    .do-card {
+      background: rgba(42,122,110,0.06);
+      border: 1px solid rgba(42,122,110,0.2);
+      border-radius: 12px; padding: 24px;
+    }
+
+    .dont-card {
+      background: rgba(196,80,42,0.06);
+      border: 1px solid rgba(196,80,42,0.2);
+      border-radius: 12px; padding: 24px;
+    }
+
+    .do-card h4   { color: #3FA08C; font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+    .dont-card h4 { color: #E0714D; font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+
+    .do-list, .dont-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .do-item, .dont-item {
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.6; padding-left: 18px; position: relative;
+    }
+
+    .do-item::before   { content: '✓'; position: absolute; left: 0; color: #3FA08C; font-weight: 600; }
+    .dont-item::before { content: '✗'; position: absolute; left: 0; color: #E0714D; font-weight: 600; }
+
+    .strategy-window {
+      background: var(--raised);
+      border: 1px solid rgba(182,133,61,0.15);
+      border-radius: 14px; padding: 32px 36px;
+      position: relative; overflow: hidden;
+    }
+
+    .strategy-window::before {
+      content: 'STRATEGIC BRIEF';
+      position: absolute; top: 20px; right: 28px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+      color: var(--text-muted);
+    }
+
+    .strategy-item { display: flex; gap: 16px; margin-bottom: 24px; }
+
+    .strategy-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 600;
+      color: rgba(182,133,61,0.3); line-height: 1.2;
+      flex-shrink: 0; width: 32px;
+    }
+
+    .strategy-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .strategy-body  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+    .report-footer {
+      padding: 48px 0 24px;
+      border-top: 1px solid var(--border-dark);
+      display: flex; justify-content: space-between; align-items: flex-end;
+      flex-wrap: wrap; gap: 16px;
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600; color: var(--fog-gold);
+    }
+
+    .footer-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: var(--text-muted);
+      line-height: 1.6; text-align: right;
+    }
+
+    .scroll-indicator { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--border-dark); z-index: 100; }
+    .scroll-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--fog-gold)); width: 0%; transition: width 0.1s; }
+
+    .sticky-nav {
+      position: sticky; top: 0;
+      background: rgba(14,14,22,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 12px 40px;
+      display: flex; gap: 32px; z-index: 50; overflow-x: auto;
+    }
+
+    .nav-item {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-muted); text-decoration: none; white-space: nowrap;
+      transition: color 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active { color: var(--fog-gold); }
+
+    .highlight-box {
+      background: var(--fog-gold-glow);
+      border: 1px solid rgba(182,133,61,0.2);
+      border-radius: 8px; padding: 16px 20px;
+      font-size: 13px; color: var(--text-primary); line-height: 1.7; margin-top: 16px;
+    }
+
+    .warning-box {
+      background: rgba(196,80,42,0.08);
+      border: 1px solid rgba(196,80,42,0.25);
+      border-radius: 8px; padding: 16px 20px;
+      font-size: 13px; color: #E0BBA5; line-height: 1.7; margin-top: 16px;
+    }
+
+    .warning-box strong { color: #E0714D; }
+
+    .insight-quote {
+      border-left: 3px solid var(--fog-gold);
+      padding: 12px 20px; margin: 20px 0;
+      font-size: 14px; font-style: italic;
+      color: var(--text-secondary); line-height: 1.7;
+    }
+
+    .network-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px; padding: 28px;
+    }
+
+    .network-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted); margin-bottom: 20px;
+    }
+
+    .network-node {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border-dark);
+    }
+
+    .network-node:last-child { border-bottom: none; }
+
+    .node-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .node-gold  { background: var(--fog-gold); }
+    .node-teal  { background: var(--teal); }
+    .node-ember { background: var(--ember); }
+    .node-muted { background: var(--text-muted); }
+
+    .node-name { font-size: 13px; font-weight: 500; color: var(--text-primary); min-width: 120px; }
+    .node-relation { font-size: 12px; color: var(--text-secondary); }
+
+    .node-heat {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 4px;
+    }
+
+    .heat-hot  { background: var(--ember-dim); color: #E0714D; }
+    .heat-warm { background: var(--fog-gold-dim); color: var(--fog-gold); }
+    .heat-cool { background: var(--teal-dim); color: #3FA08C; }
+  </style>
+</head>
+<body>
+
+<div class="scroll-indicator"><div class="scroll-fill" id="scrollFill"></div></div>
+
+<nav class="sticky-nav">
+  <a href="#overview"    class="nav-item active">概觀</a>
+  <a href="#personality" class="nav-item">人格解碼</a>
+  <a href="#energy"      class="nav-item">驅力矩陣</a>
+  <a href="#leverage"    class="nav-item">槓桿地圖</a>
+  <a href="#dynamics"    class="nav-item">互動動力學</a>
+  <a href="#strategy"    class="nav-item">戰略建議</a>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="hero">
+    <div class="hero-badge">ATHENA · 人物深度分析報告</div>
+    <h1 class="hero-title">馮士維</h1>
+    <p class="hero-subtitle">Feng · 資訊科技創辦人 · MUSEON 核心合作夥伴</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">人格代碼</span>
+        <span class="meta-value gold">ENTJ — 目的導向執行者</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">信任等級</span>
+        <span class="meta-value">Warm — 148 次互動</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">關係分類</span>
+        <span class="meta-value">技術合作夥伴 / 潛在經銷</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">分析置信度</span>
+        <span class="meta-value gold">74%</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">報告日期</span>
+        <span class="meta-value">2026-04-18</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 概觀 -->
+  <section class="section" id="overview">
+    <div class="section-heading">概觀</div>
+    <div class="section-subtitle">Overview · Identity Matrix · Interaction Stats</div>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">148</div>
+        <div class="stat-label">總互動次數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">100</div>
+        <div class="stat-label">好奇心指數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">48</div>
+        <div class="stat-label">邊界守護力</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">74%</div>
+        <div class="stat-label">分析置信度</div>
+      </div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="identity-card">
+        <div class="identity-avatar">馮</div>
+        <div class="identity-name">馮士維</div>
+        <div class="identity-alias">FENG · UID: 8252847174</div>
+        <div class="trust-bar-wrap">
+          <div class="trust-label">
+            <span>關係溫度</span>
+            <span style="color: var(--fog-gold);">Warm</span>
+          </div>
+          <div class="trust-bar">
+            <div class="trust-fill" style="width: 68%;"></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="tag tag-teal">技術型</span>
+          <span class="tag tag-gold">行動力強</span>
+          <span class="tag tag-ember">高標準</span>
+          <span class="tag tag-teal">資訊公司</span>
+        </div>
+      </div>
+
+      <div class="summary-panel">
+        <div class="summary-card card-gold">
+          <div class="summary-card-title">核心定位</div>
+          <div class="summary-card-body">
+            資訊科技公司創辦人，深厚技術背景 + 廣泛商業人脈。在 MUSEON 生態中扮演<strong>技術驗證者 + 潛在經銷商</strong>雙重角色——他對系統架構有真實見解，同時手握南部 UI/UX、家具業、室設等跨域人脈網絡。
+          </div>
+        </div>
+        <div class="summary-card card-teal">
+          <div class="summary-card-title">關鍵特徵</div>
+          <div class="summary-card-body">
+            決策極快、不喜重複確認。每個問題背後都有預設立場——他問的「是什麼」，往往不是他真正想問的。他的人脈是他最核心的資產，引薦節奏快，但信用一旦受損會迅速冷卻關係。
+          </div>
+        </div>
+        <div class="summary-card card-ember">
+          <div class="summary-card-title">與 Zeal 的合作潛力</div>
+          <div class="summary-card-body">
+            高度互補：Feng 有技術判斷力 + 南部人脈，MUSEON 有思維框架 + AI 系統。最有價值的合作路徑是<strong>讓他成為帶案經銷商</strong>，而不是讓他深入內部決策。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- 人格解碼 -->
+  <section class="section" id="personality">
+    <div class="section-heading">人格解碼</div>
+    <div class="section-subtitle">Personality Decode · ENTJ Analysis · Decision DNA</div>
+
+    <div class="persona-type-card">
+      <div class="persona-code">萬謬16型 · ENTJ</div>
+      <div class="persona-name">目的導向的技術執行者</div>
+      <div class="persona-desc">
+        外向直覺思考判斷型。每個對話都有目的，每個問題都有答案預設。他不是在探索，他在驗證。知識對他而言是行動的彈藥，不是自我滿足的終點。
+      </div>
+      <div class="confidence-row">
+        <span class="confidence-label">置信度</span>
+        <div class="confidence-bar"><div class="confidence-fill" style="width: 74%;"></div></div>
+        <span class="confidence-pct">74%</span>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 24px;">
+      <div class="card card-gold">
+        <div class="summary-card-title" style="margin-bottom: 12px;">四維拆解</div>
+        <div class="evidence-list">
+          <div class="evidence-item">
+            <span class="evidence-icon">E</span>
+            <span><strong style="color: var(--text-primary);">外向（E）</strong>：主動引薦、主動設定議程、群組中常佔主導。能量來自行動而非反思。</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-icon">N</span>
+            <span><strong style="color: var(--text-primary);">直覺（N）</strong>：好奇心滿分，但更像「戰略性好奇」——掃描多個可能性，找到最佳路徑後快速收斂。</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-icon">T</span>
+            <span><strong style="color: var(--text-primary);">思考（T）</strong>：情緒模式低（16），遇問題先找邏輯。但信任受損時，冷卻速度驚人。</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-icon">J</span>
+            <span><strong style="color: var(--text-primary);">判斷（J）</strong>：邊界守護高（48），自有節奏，不輕易被外部框架重置。一旦形成判斷，需要強力新資訊才能打開。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-teal">
+        <div class="summary-card-title" style="margin-bottom: 12px;">核心決策 DNA</div>
+        <div class="evidence-list">
+          <div class="evidence-item">
+            <span class="evidence-icon">→</span>
+            <span><strong style="color: var(--text-primary);">問題有隱藏立場</strong>：他問的問題已有答案框架，直接回答等於被他定義。正確做法：先解碼意圖，再回應。</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-icon">→</span>
+            <span><strong style="color: var(--text-primary);">速度是標準</strong>：他對「反應快」有強預期。延遲或多次往返確認，會被解讀為能力不足。</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-icon">→</span>
+            <span><strong style="color: var(--text-primary);">實操 > 報告</strong>：群組一次 live demo 比十頁 deck 更能建立信任。他要看的是「能不能在真實場景跑起來」。</span>
+          </div>
+          <div class="evidence-item">
+            <span class="evidence-icon">→</span>
+            <span><strong style="color: var(--text-primary);">主動談定價</strong>：他主動開口問定價是信任信號，不是談判信號。他在評估是否值得投入。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-quote">
+      「Feng 的問題裡有答案，他的引薦裡有測試，他的安靜裡有判斷。與他互動的關鍵不是說服，而是讓他自己得出結論。」
+    </div>
+
+    <div class="highlight-box">
+      <strong style="color: var(--fog-gold);">ENTJ 的結構性盲點</strong>：執行力是資產，但也讓他在「節點學」（How）層面非常強，在「管道學」（Why / When to stop）層面有缺口。MUSEON 最有價值的地方，恰好是補這個缺口。
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- 驅力矩陣 -->
+  <section class="section" id="energy">
+    <div class="section-heading">驅力矩陣</div>
+    <div class="section-subtitle">Eight Primals · Energy Distribution · Signature Patterns</div>
+
+    <div class="radar-container">
+      <div class="radar-svg-wrap">
+        <svg viewBox="0 0 240 240" width="240" height="240">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <circle cx="120" cy="120" r="100" fill="none" stroke="#2A2A38" stroke-width="1"/>
+          <circle cx="120" cy="120" r="75"  fill="none" stroke="#2A2A38" stroke-width="1"/>
+          <circle cx="120" cy="120" r="50"  fill="none" stroke="#2A2A38" stroke-width="1"/>
+          <circle cx="120" cy="120" r="25"  fill="none" stroke="#2A2A38" stroke-width="1"/>
+          <line x1="120" y1="20"  x2="120" y2="220" stroke="#2A2A38" stroke-width="0.5"/>
+          <line x1="20"  y1="120" x2="220" y2="120" stroke="#2A2A38" stroke-width="0.5"/>
+          <line x1="49"  y1="49"  x2="191" y2="191" stroke="#2A2A38" stroke-width="0.5"/>
+          <line x1="191" y1="49"  x2="49"  y2="191" stroke="#2A2A38" stroke-width="0.5"/>
+          <!-- curiosity=100→top, aspiration=27→top-right, action=30→right, accumulation=20→bot-right, emotion=16→bottom, blindspot=10→bot-left, boundary=48→left, relation=17→top-left -->
+          <polygon
+            points="120,20 162,90 190,120 152,154 120,204 96,180 72,120 91,76"
+            fill="rgba(182,133,61,0.12)"
+            stroke="#b6853d"
+            stroke-width="1.5"
+            filter="url(#glow)"
+          />
+          <text x="120" y="14"  text-anchor="middle" font-size="9" fill="#9898A8" font-family="IBM Plex Mono">好奇</text>
+          <text x="196" y="78"  text-anchor="start"  font-size="9" fill="#9898A8" font-family="IBM Plex Mono">志向</text>
+          <text x="224" y="124" text-anchor="start"  font-size="9" fill="#9898A8" font-family="IBM Plex Mono">行動</text>
+          <text x="196" y="178" text-anchor="start"  font-size="9" fill="#9898A8" font-family="IBM Plex Mono">累積</text>
+          <text x="120" y="235" text-anchor="middle" font-size="9" fill="#9898A8" font-family="IBM Plex Mono">情緒</text>
+          <text x="18"  y="178" text-anchor="end"    font-size="9" fill="#9898A8" font-family="IBM Plex Mono">盲點</text>
+          <text x="10"  y="124" text-anchor="end"    font-size="9" fill="#9898A8" font-family="IBM Plex Mono">邊界</text>
+          <text x="18"  y="78"  text-anchor="end"    font-size="9" fill="#9898A8" font-family="IBM Plex Mono">關係</text>
+          <circle cx="120" cy="20"  r="3" fill="#b6853d"/>
+          <circle cx="162" cy="90"  r="3" fill="#b6853d"/>
+          <circle cx="190" cy="120" r="3" fill="#b6853d"/>
+          <circle cx="152" cy="154" r="3" fill="#b6853d"/>
+          <circle cx="120" cy="204" r="3" fill="#b6853d"/>
+          <circle cx="96"  cy="180" r="3" fill="#b6853d"/>
+          <circle cx="72"  cy="120" r="3" fill="#b6853d"/>
+          <circle cx="91"  cy="76"  r="3" fill="#b6853d"/>
+        </svg>
+      </div>
+
+      <div class="primal-bars">
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">好奇心（探索驅力）</span>
+            <span class="primal-score">100</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-gold" style="width:100%"></div></div>
+          <div class="primal-insight">滿分，但是「戰略性掃描」——不斷找更好路徑與工具，不是學習型好奇。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">邊界守護力</span>
+            <span class="primal-score">48</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-teal" style="width:48%"></div></div>
+          <div class="primal-insight">清楚自己底線，不容易被框架重置。一旦說不，很少回頭。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">行動力（執行動力）</span>
+            <span class="primal-score">30</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-ember" style="width:30%"></div></div>
+          <div class="primal-insight">短爆發型，決策快但需要清晰的「行動邊界」才能持續。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">志向（使命驅動）</span>
+            <span class="primal-score">27</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-purple" style="width:27%"></div></div>
+          <div class="primal-insight">有商業野心，但更接近「戰術性擴張」而非使命型創業。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">累積沉澱</span>
+            <span class="primal-score">20</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-teal" style="width:20%"></div></div>
+          <div class="primal-insight">偏行動多於沉澱，傾向快速迭代而非深度建構。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">關係深度</span>
+            <span class="primal-score">17</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-muted" style="width:17%"></div></div>
+          <div class="primal-insight">廣而不深，人脈是工具性的，需時間才能進入真實連結。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">情緒模式</span>
+            <span class="primal-score">16</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-muted" style="width:16%"></div></div>
+          <div class="primal-insight">情緒表達低，但安靜不代表沒有情緒積累——可能被低估。</div>
+        </div>
+        <div class="primal-row">
+          <div class="primal-header">
+            <span class="primal-name">盲點覺察</span>
+            <span class="primal-score">10</span>
+          </div>
+          <div class="primal-bar-bg"><div class="primal-bar-fill bar-ember" style="width:10%"></div></div>
+          <div class="primal-insight">最值得注意。對「自己不知道什麼」的感知較弱。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- 槓桿地圖 -->
+  <section class="section" id="leverage">
+    <div class="section-heading">槓桿地圖</div>
+    <div class="section-subtitle">SSA Eight Leverages · Feng's Asset Map</div>
+
+    <div class="leverage-grid" style="margin-bottom: 32px;">
+      <div class="leverage-box">
+        <div class="leverage-icon">🔗</div>
+        <div class="leverage-name">人脈槓桿</div>
+        <div class="leverage-level lv-high">極高</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">💻</div>
+        <div class="leverage-name">知識槓桿</div>
+        <div class="leverage-level lv-high">高</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">⚡</div>
+        <div class="leverage-name">行動槓桿</div>
+        <div class="leverage-level lv-high">高</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">🏗️</div>
+        <div class="leverage-name">平台槓桿</div>
+        <div class="leverage-level lv-med">中</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">🎯</div>
+        <div class="leverage-name">信用槓桿</div>
+        <div class="leverage-level lv-med">中</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">🔬</div>
+        <div class="leverage-name">研發槓桿</div>
+        <div class="leverage-level lv-med">中</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">⏱️</div>
+        <div class="leverage-name">時間槓桿</div>
+        <div class="leverage-level lv-low">低</div>
+      </div>
+      <div class="leverage-box">
+        <div class="leverage-icon">💰</div>
+        <div class="leverage-name">金錢槓桿</div>
+        <div class="leverage-level lv-med">中</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="network-card">
+        <div class="network-title">已知人脈網絡</div>
+        <div class="network-node">
+          <div class="node-dot node-gold"></div>
+          <span class="node-name">南部 UI/UX 圈</span>
+          <span class="node-relation">設計師社群，可帶設計類客戶</span>
+          <span class="node-heat heat-hot">熱</span>
+        </div>
+        <div class="network-node">
+          <div class="node-dot node-teal"></div>
+          <span class="node-name">家具業主</span>
+          <span class="node-relation">台南在地製造業，AI 導入潛力</span>
+          <span class="node-heat heat-warm">暖</span>
+        </div>
+        <div class="network-node">
+          <div class="node-dot node-teal"></div>
+          <span class="node-name">室內設計師群</span>
+          <span class="node-relation">估價/報告自動化需求</span>
+          <span class="node-heat heat-warm">暖</span>
+        </div>
+        <div class="network-node">
+          <div class="node-dot node-ember"></div>
+          <span class="node-name">美業（SPA/美容）</span>
+          <span class="node-relation">會議記錄 + 客戶管理場景</span>
+          <span class="node-heat heat-warm">暖</span>
+        </div>
+        <div class="network-node">
+          <div class="node-dot node-muted"></div>
+          <span class="node-name">BNI 商務合作圈</span>
+          <span class="node-relation">結構化引薦網絡</span>
+          <span class="node-heat heat-cool">冷</span>
+        </div>
+      </div>
+
+      <div class="card card-gold" style="padding: 24px 28px;">
+        <div class="summary-card-title" style="margin-bottom: 16px;">槓桿交換方程式</div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">Feng 能給 MUSEON</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">真實客戶引薦（南部人脈）、技術可信度背書、市場情報反饋、早期壓力測試</div>
+          </div>
+          <div style="width: 100%; height: 1px; background: var(--border-dark);"></div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">MUSEON 能給 Feng</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">差異化 AI 解決方案（他能賣給客戶）、思維框架提升顧問定位、陪跑客戶交付品質</div>
+          </div>
+          <div class="highlight-box" style="margin-top: 0;">
+            <strong style="color: var(--fog-gold);">最佳合作模型</strong>：授權經銷，而非技術委外。讓他帶案，MUSEON 提供方案，他拿分潤。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- 互動動力學 -->
+  <section class="section" id="dynamics">
+    <div class="section-heading">互動動力學</div>
+    <div class="section-subtitle">Communication Patterns · Traps · Signals</div>
+
+    <div class="dynamic-card">
+      <div class="dynamic-title">⚡ 溝通陷阱：問題有隱藏預設</div>
+      <div class="dynamic-body">
+        Feng 的問題往往不是「開放式探索」，而是「封閉式驗證」。他問「子體能否多工並發？」真正在問的是「我能怎麼設計我的服務定價？」直接回答技術問題，等於接受了他的框架。
+        <div class="warning-box">
+          <strong>正確做法</strong>：先問「你問這個是因為想解決什麼問題？」——解碼意圖，再回應。直接回答等於給他武器，讓他用你的答案推導出他想要的結論。
+        </div>
+      </div>
+    </div>
+
+    <div class="dynamic-card">
+      <div class="dynamic-title">🔍 關鍵信號清單</div>
+      <div class="dynamic-body">
+        <div class="grid-2" style="margin-top: 12px;">
+          <div>
+            <div style="font-size: 12px; font-weight: 600; color: #3FA08C; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em;">正面信號</div>
+            <div class="evidence-list">
+              <div class="evidence-item">
+                <span class="evidence-icon">✓</span>
+                <span>主動問定價 → 信任建立，在認真考慮合作</span>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-icon">✓</span>
+                <span>帶新人引薦 → 他在用自己的信用背書你</span>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-icon">✓</span>
+                <span>在群組問架構問題 → 在深度評估，不只是試用</span>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-icon">✓</span>
+                <span>說「我再試試」 → 不是拒絕，是自我驗證中</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 12px; font-weight: 600; color: #E0714D; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em;">警示信號</div>
+            <div class="evidence-list">
+              <div class="evidence-item">
+                <span class="evidence-icon" style="color: #E0714D;">!</span>
+                <span>突然變安靜 → 在重新評估，主動問清楚</span>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-icon" style="color: #E0714D;">!</span>
+                <span>同一問題問第二次 → 第一次沒打中，重新框架</span>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-icon" style="color: #E0714D;">!</span>
+                <span>引薦後沒跟進 → 交付體驗有問題，主動詢問</span>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-icon" style="color: #E0714D;">!</span>
+                <span>開始談「其他方案」 → 在測試你的替代方案感知</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont-grid">
+      <div class="do-card">
+        <h4>做這些</h4>
+        <div class="do-list">
+          <div class="do-item">用 live demo 展示，讓他看到真實場景跑起來</div>
+          <div class="do-item">快速回應——他對反應速度的預期極高</div>
+          <div class="do-item">先問「你問這個想解決什麼」，再回答技術問題</div>
+          <div class="do-item">給他清楚的「可以賣什麼」，不要讓他自己拼圖</div>
+          <div class="do-item">第一個引薦案交付好，他的人脈才會繼續打開</div>
+          <div class="do-item">把引薦案的成果回饋給他，讓他知道信用有回報</div>
+        </div>
+      </div>
+      <div class="dont-card">
+        <h4>避免這些</h4>
+        <div class="dont-list">
+          <div class="dont-item">別在群組貼長篇 PDF 報告當成展示材料</div>
+          <div class="dont-item">別重複確認同樣的事——他會解讀為不信任</div>
+          <div class="dont-item">別在他問技術問題時跳過解碼直接回答</div>
+          <div class="dont-item">別讓他等太久，好奇心爆發快也冷得快</div>
+          <div class="dont-item">別把他拉進內部決策流程</div>
+          <div class="dont-item">別把他的沉默解讀為接受，要主動確認</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- 戰略建議 -->
+  <section class="section" id="strategy">
+    <div class="section-heading">戰略建議</div>
+    <div class="section-subtitle">For Zeal · Partnership Strategy · Next 90 Days</div>
+
+    <div class="strategy-window">
+      <div class="strategy-item">
+        <div class="strategy-num">01</div>
+        <div class="strategy-content">
+          <div class="strategy-title">確認他的「可賣包」</div>
+          <div class="strategy-body">Feng 需要一個清楚的「我能帶案帶什麼去賣」的包裹。不要讓他自己去解釋 MUSEON 是什麼——給他一頁的「場景說明 + 你能解決什麼」，他才能帶人來。</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">02</div>
+        <div class="strategy-content">
+          <div class="strategy-title">讓第一個引薦案完美落地</div>
+          <div class="strategy-body">他引薦過來的客戶代表他的個人信用。第一個案子交付不到位，他不會明說，但關係會迅速冷卻。把他引薦的案子列為 VIP 追蹤，完成後主動把成果回饋給他。</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">03</div>
+        <div class="strategy-content">
+          <div class="strategy-title">解碼架構問題背後的意圖</div>
+          <div class="strategy-body">他問系統架構往往不是純技術好奇，而是在評估「這個系統能不能支撐我設計的服務模型」。下次他問架構，先問：「你在設計什麼樣的服務？我從那個角度來回答。」</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">04</div>
+        <div class="strategy-content">
+          <div class="strategy-title">南部市場切入點</div>
+          <div class="strategy-body">他的人脈主要在台南，這是 MUSEON 的真實切入口。透過他引薦的客戶做一個「台南在地中小企業 AI 導入」的成功案例，反過來強化他的引薦信用，形成正向循環。</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">05</div>
+        <div class="strategy-content">
+          <div class="strategy-title">給他「技術人看得懂的」更新</div>
+          <div class="strategy-body">他是技術人，喜歡看系統怎麼跑。功能更新時給他「技術說明 + 這對他能帶的客戶意味著什麼」的簡短版本，讓他感覺在「共同建構」，不只是「被說服使用」。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box" style="margin-top: 32px;">
+      <strong>關鍵風險</strong>：Feng 的低盲點覺察（10分）意味著對「自己不知道什麼」感知薄弱。如果 MUSEON 的某些能力超出他能理解的框架，他可能直接跳過而非追問。解法：用「他的框架」包裝「我們的能力」——讓他覺得是在擴充自己已有的東西，不是在學全新系統。
+    </div>
+  </section>
+
+  <div class="report-footer">
+    <div>
+      <div class="footer-brand">MUSEON · ATHENA</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">智慧戰略情報平台</div>
+    </div>
+    <div class="footer-meta">
+      分析對象：馮士維 Feng<br/>
+      分析日期：2026-04-18<br/>
+      資料來源：148 次 MUSEON 互動記錄<br/>
+      置信度：74%（持續更新）
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    document.getElementById('scrollFill').style.width = (p * 100) + '%';
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+  const navObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const active = document.querySelector('.nav-item[href="#' + e.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -40% 0px' });
+  sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
