@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEON 10分鐘專講 — Rita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: #0E0E16;
+            color: #12121A;
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            line-height: 1.6;
+        }
+
+        .presentation {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0E0E16 0%, #16161F 100%);
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.6s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .slide-content {
+            width: 90%;
+            max-width: 1400px;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 60px;
+        }
+
+        /* 背景漸層圖案 */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(196,80,42,0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(42,122,110,0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 80px;
+            font-weight: 600;
+            color: #FDFCFA;
+            margin-bottom: 24px;
+            line-height: 1.1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 600;
+            color: #C4502A;
+            margin-bottom: 32px;
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            font-weight: 600;
+            color: #FDFCFA;
+            margin-bottom: 20px;
+        }
+
+        .slide-subtitle {
+            font-size: 28px;
+            color: #B8923A;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .slide-body {
+            font-size: 24px;
+            color: #E2E0DA;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pill-container {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 60px;
+        }
+
+        .pill {
+            width: 200px;
+            height: 300px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .pill:hover {
+            transform: scale(1.05);
+        }
+
+        .pill-blue {
+            background: linear-gradient(135deg, #4A90E2 0%, #2A6A8A 100%);
+            color: #FDFCFA;
+            border: 3px solid #2A6A8A;
+        }
+
+        .pill-red {
+            background: linear-gradient(135deg, #C4502A 0%, #9A3A1C 100%);
+            color: #FDFCFA;
+            border: 3px solid #9A3A1C;
+        }
+
+        .section-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            color: #B8923A;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: rgba(253,252,250,0.08);
+            border: 1.5px solid rgba(196,80,42,0.2);
+            border-radius: 12px;
+            padding: 30px 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(253,252,250,0.12);
+            border-color: rgba(196,80,42,0.4);
+            transform: translateY(-4px);
+        }
+
+        .feature-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #C4502A;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            color: #D2D0CA;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 16px 48px;
+            background: linear-gradient(135deg, #C4502A 0%, #E0714D 100%);
+            color: #FDFCFA;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(196,80,42,0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(196,80,42,0.4);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #C4502A;
+            background: rgba(196,80,42,0.1);
+            color: #C4502A;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background: #C4502A;
+            color: #FDFCFA;
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 14px;
+            color: #B8923A;
+            letter-spacing: 0.08em;
+        }
+
+        .intro-text {
+            font-size: 32px;
+            color: #E2E0DA;
+            margin-top: 60px;
+            line-height: 1.9;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .emphasis {
+            color: #C4502A;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: rgba(196,80,42,0.15);
+            border-left: 4px solid #C4502A;
+            padding: 24px;
+            border-radius: 8px;
+            margin: 24px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="slide-content">
+                <h1>MUSEON</h1>
+                <div class="slide-subtitle">決策者版｜10 分鐘專講</div>
+                <p class="slide-body">思維品質 × 決策加速 × 風險守護</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: 兩顆藥丸 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>兩顆藥丸</h2>
+                <p class="intro-text">《駭客任務》的寓言</p>
+                <div class="pill-container">
+                    <div class="pill pill-blue">
+                        <div>
+                            <strong>藍色藥丸</strong><br>
+                            <small style="font-size: 16px; margin-top: 10px; display: block;">什麼都不變<br>繼續睡</small>
+                        </div>
+                    </div>
+                    <div class="pill pill-red">
+                        <div>
+                            <strong>紅色藥丸</strong><br>
+                            <small style="font-size: 16px; margin-top: 10px; display: block;">看見真實<br>覺醒世界</small>
+                        </div>
+                    </div>
+                </div>
+                <p class="intro-text" style="margin-top: 80px; font-size: 24px;">今天，MUSEON 就是那顆<span class="emphasis">紅色藥丸</span></p>
+            </div>
+        </div>
+
+        <!-- Slide 3: 現實：三個盲點 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>企業的三個盲點</h2>
+                <div class="three-column" style="margin-top: 60px;">
+                    <div class="feature-card">
+                        <h4>① 現況不清</h4>
+                        <p>知道營收數字，不知道決策質量、人脈槓桿、市場機會在哪</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>② 方向不明</h4>
+                        <p>有年度目標，沒有破局策略。AI 大潮來了，卻不知怎麼用</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>③ GAP 不知</h4>
+                        <p>想要A不知道B，不知道自己在哪一級，技術債堆積</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: MUSEON 能做什麼 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>MUSEON 的答案</h2>
+                <div class="highlight-box" style="max-width: 900px;">
+                    <p style="font-size: 20px; color: #FDFCFA; line-height: 1.8;">
+                        <strong>用系統化的思維引擎</strong>，幫你：<br><br>
+                        ✓ 摸清現況（策略診斷 × 市場情報 × 競品分析）<br>
+                        ✓ 找到方向（第一性原理破局 × 人脈槓桿設計）<br>
+                        ✓ 填補 GAP（人才培養 × 系統建置 × 決策加速）
+                    </p>
+                </div>
+                <p class="slide-body" style="margin-top: 60px;">不是工具廣度比拼，而是<span class="emphasis">思維品質</span>的差異</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: 決策者關心：安全 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>決策者最關心的：安全</h2>
+                <div class="two-column" style="margin-top: 60px; text-align: left;">
+                    <div>
+                        <h3 style="font-size: 32px; text-align: left;">絕不走偏</h3>
+                        <ul style="font-size: 20px; color: #E2E0DA; line-height: 2.2; list-style: none;">
+                            <li>✓ 客戶框架優先</li>
+                            <li>✓ AI 建議，你決策</li>
+                            <li>✓ 多方案呈現（不誘導）</li>
+                            <li>✓ 可追溯性 100%</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 32px; text-align: left;">絕不被竊密</h3>
+                        <ul style="font-size: 20px; color: #E2E0DA; line-height: 2.2; list-style: none;">
+                            <li>✓ 數據留在你這裡</li>
+                            <li>✓ 結晶知識自有</li>
+                            <li>✓ 客戶機密不外傳</li>
+                            <li>✓ 簽 NDA + 保險</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 背書：創作人背景 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>為什麼信任 MUSEON？</h2>
+                <div class="highlight-box" style="max-width: 1000px; text-align: left;">
+                    <h3 style="color: #C4502A; font-size: 28px; margin-bottom: 16px;">創辦人 Zeal 的背景</h3>
+                    <p style="font-size: 18px; color: #FDFCFA; line-height: 2;">
+                        • <strong>30 年創業經歷</strong>：自己做過、失敗過、成功過——知道企業實戰的痛點<br>
+                        • <strong>自研方法論體系</strong>：Business-12、SSA、OneMuse、X-Model——不是照搬理論的顧問<br>
+                        • <strong>淡江資工背景</strong>：技術思維 + 商業直覺的罕見組合<br>
+                        • <strong>武術傳承</strong>：長拳螳螂門——做事有章法、有節奏、有力度
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: MUSEON 的三級產品 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>三個產品級能力</h2>
+                <div class="three-column" style="margin-top: 60px;">
+                    <div class="feature-card">
+                        <h4>1️⃣ 診斷</h4>
+                        <p>現況掃描（策略、市場、人脈、技術）一份報告，見山見水</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>2️⃣ 戰術設計</h4>
+                        <p>破局方案設計、定價重組、人才構型、決策流程優化</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>3️⃣ 深度賦能</h4>
+                        <p>團隊思維升級、系統建置、持續決策支持（顧問駐場式）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: MUSEON 在哪一級 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>MUSEON 在哪一級？</h2>
+                <div class="highlight-box" style="max-width: 1000px; margin-top: 60px;">
+                    <p style="font-size: 24px; color: #FDFCFA; line-height: 2; text-align: center;">
+                        不是「工具」⛔<br>
+                        不是「SaaS 平台」⛔<br>
+                        <br>
+                        是<span class="emphasis">思維品質引擎</span> ✓<br>
+                        <strong>讓 AI 更懂你，讓決策更有把握</strong>
+                    </p>
+                </div>
+                <p class="slide-body" style="margin-top: 60px;">從診斷 → 到設計 → 到賦能<br>我們陪你走完這一段</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: 下一步 -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>下一步？</h2>
+                <p class="slide-body" style="margin: 60px 0;">
+                    紅色藥丸已經在這裡<br><br>
+                    <strong>選擇看見現實</strong><br>
+                    安排 30 分鐘的免費診斷對談
+                </p>
+                <button class="cta-button">聯絡 MUSEON 團隊</button>
+                <p style="margin-top: 80px; color: #B8923A; font-size: 16px;">
+                    由 Rita 為您服務 | MUSEON © 2026
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current">1</span> / <span id="total">9</span>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-button" id="prevBtn" onclick="prevSlide()">‹</button>
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">›</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        document.getElementById('total').textContent = totalSlides;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            document.getElementById('current').textContent = currentSlide;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
