@@ -1327,14 +1327,10 @@
     </div>
 
     <div class="ai-input-area">
-      <div id="attachPreview" class="attach-preview" style="display:none">
-        <span>📄</span>
-        <span class="attach-preview-name" id="attachName"></span>
-        <span class="attach-remove" onclick="clearAttach()">✕</span>
-      </div>
+      <div id="attachPreview" class="attach-preview" style="display:none;flex-wrap:wrap;gap:4px;padding:6px 10px;"></div>
       <div class="ai-input-wrap">
         <button class="ai-attach" onclick="document.getElementById('fileInput').click()" title="上傳素材">📎</button>
-        <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx,.json,.csv,image/*" style="display:none" onchange="handleFileAttach(this)">
+        <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx,.json,.csv,image/*" style="display:none" multiple onchange="handleFileAttach(this)">
         <textarea class="ai-input" id="aiIn" placeholder="說說你的想法，或直接丟素材…" rows="1"
           onkeydown="handleKey(event)" oninput="autoH(this)"></textarea>
         <button class="ai-send" onclick="send()">↑</button>
@@ -1869,14 +1865,16 @@
   async function send(preText) {
     const inp = document.getElementById('aiIn');
     let msg = preText || inp.value.trim();
-    if (!msg && !attachedFileContent) return;
-    if (!msg) msg = '幫我分析這份素材：';
-    const fullMsg = attachedFileContent ? msg + '\n\n' + attachedFileContent : msg;
+    if (!msg && !attachedFiles.length) return;
+    if (!msg && attachedFiles.length) msg = '幫我分析這份素材：';
+    const extraContent = attachedFiles.map(f => f.content).filter(Boolean).join('\n\n');
+    const fullMsg = extraContent ? msg + '\n\n' + extraContent : msg;
+    const fileNames = attachedFiles.map(f => f.name);
 
     const box = document.getElementById('aiMsgs');
     const u = document.createElement('div');
     u.className = 'msg msg-user';
-    u.textContent = attachedFileName ? msg + `\n📄 ${attachedFileName}` : msg;
+    u.textContent = fileNames.length ? msg + '\n' + fileNames.map(n => `📄 ${n}`).join(' ') : msg;
     box.appendChild(u);
     if (!preText) { inp.value = ''; inp.style.height = 'auto'; }
     clearAttach();
@@ -1984,41 +1982,52 @@
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
   }
 
-  let attachedFileContent = null;
-  let attachedFileName = null;
+  let attachedFiles = []; // [{name, content}]
 
   function handleFileAttach(input) {
-    const file = input.files[0];
-    if (!file) return;
-    attachedFileName = file.name;
-    document.getElementById('attachName').textContent = file.name;
-    document.getElementById('attachPreview').style.display = 'flex';
-
-    const isText = file.type.startsWith('text/') || /\.(txt|md|json|csv)$/i.test(file.name);
-    const isImage = file.type.startsWith('image/');
-
-    if (isText) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        attachedFileContent = `【附件：${file.name}】\n${e.target.result.slice(0, 8000)}`;
-      };
-      reader.readAsText(file, 'utf-8');
-    } else if (isImage) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        attachedFileContent = `【圖片附件：${file.name}】`;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      attachedFileContent = `【附件：${file.name}（格式：${file.type || '未知'}，大小：${(file.size/1024).toFixed(1)}KB）】`;
-    }
+    const files = Array.from(input.files);
+    if (!files.length) return;
+    let pending = files.length;
+    files.forEach(file => {
+      const entry = { name: file.name, content: null };
+      attachedFiles.push(entry);
+      const isText = file.type.startsWith('text/') || /\.(txt|md|json|csv)$/i.test(file.name);
+      const isImage = file.type.startsWith('image/');
+      if (isText) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          entry.content = `【附件：${file.name}】\n${e.target.result.slice(0, 8000)}`;
+          if (--pending === 0) renderAttachPreview();
+        };
+        reader.readAsText(file, 'utf-8');
+      } else if (isImage) {
+        entry.content = `【圖片附件：${file.name}】`;
+        if (--pending === 0) renderAttachPreview();
+      } else {
+        entry.content = `【附件：${file.name}（格式：${file.type || '未知'}，大小：${(file.size/1024).toFixed(1)}KB）】`;
+        if (--pending === 0) renderAttachPreview();
+      }
+    });
     input.value = '';
   }
 
+  function renderAttachPreview() {
+    const preview = document.getElementById('attachPreview');
+    if (!attachedFiles.length) { preview.style.display = 'none'; preview.innerHTML = ''; return; }
+    preview.style.display = 'flex';
+    preview.innerHTML = attachedFiles.map((f, i) =>
+      `<span style="display:inline-flex;align-items:center;gap:3px;background:rgba(196,80,42,0.08);border:1px solid rgba(196,80,42,0.2);border-radius:4px;padding:2px 6px;font-size:11px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">📄 ${f.name} <span onclick="removeAttach(${i})" style="cursor:pointer;margin-left:2px;opacity:0.6;">✕</span></span>`
+    ).join('');
+  }
+
+  function removeAttach(i) {
+    attachedFiles.splice(i, 1);
+    renderAttachPreview();
+  }
+
   function clearAttach() {
-    attachedFileContent = null;
-    attachedFileName = null;
-    document.getElementById('attachPreview').style.display = 'none';
+    attachedFiles = [];
+    renderAttachPreview();
   }
 
   function autoH(el) {
