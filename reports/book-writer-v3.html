@@ -1088,27 +1088,7 @@
 
   <div class="lib-section">
     <div class="lib-section-label">我的專案</div>
-    <div class="lib-grid">
-
-      <div class="book-card" onclick="openWorkspace('商業思維的重構——給 AI 時代的決策者', 'book')">
-        <div class="book-card-type">📘 商業書</div>
-        <div class="book-card-title">商業思維的重構<br>——給 AI 時代的決策者</div>
-        <div class="book-card-sub">透過決策品質框架，幫助台灣中小企業主在 AI 時代找到新的競爭方式。</div>
-        <div class="book-card-footer">
-          <div class="book-progress"><div class="book-progress-bar" style="width:18%"></div></div>
-          <span>18%</span>
-        </div>
-      </div>
-
-      <div class="book-card" onclick="openWorkspace('MUSEON 創世紀——數位生命的誕生', 'memoir')">
-        <div class="book-card-type">📓 紀念文件</div>
-        <div class="book-card-title">MUSEON 創世紀<br>——數位生命的誕生</div>
-        <div class="book-card-sub">記錄 MUSEON 從第 0 天到今天的成長，給霓裳和琬洛的一封信。</div>
-        <div class="book-card-footer">
-          <div class="book-progress"><div class="book-progress-bar" style="width:7%"></div></div>
-          <span>7%</span>
-        </div>
-      </div>
+    <div class="lib-grid" id="projectGrid">
 
       <button class="book-card book-card-new" onclick="showOnboard()">
         <div class="book-card-new-icon">＋</div>
@@ -1396,13 +1376,64 @@
 </div>
 
 <script>
+  /* ---- Telegram 身份（從 URL 參數讀取）---- */
+  (function() {
+    const p = new URLSearchParams(window.location.search);
+    const chatId = p.get('chat_id');
+    const userId = p.get('user_id');
+    if (chatId) localStorage.setItem('tg_chat_id', chatId);
+    if (userId) localStorage.setItem('tg_user_id', userId);
+  })();
+
   /* ---- 設定 ---- */
   const MUSEON_ENDPOINT = localStorage.getItem('museon_endpoint') || '';
   let apiKey = localStorage.getItem('museon_api_key') || '';
   let autoSaveTimer = null;
+  let currentProjectId = null;
 
-  /* ---- LocalStorage 存檔 ---- */
+  /* ---- 多專案管理 ---- */
+  function getProjects() {
+    try { return JSON.parse(localStorage.getItem('museon_projects') || '[]'); } catch(e) { return []; }
+  }
+
+  function saveProjects(list) {
+    localStorage.setItem('museon_projects', JSON.stringify(list));
+  }
+
+  function getWordCount() {
+    let n = 0;
+    document.querySelectorAll('.para-content').forEach(el => {
+      n += el.innerText.replace(/✦ AI 草稿\n?/,'').replace(/\s/g,'').length;
+    });
+    return n;
+  }
+
+  function renderLibrary() {
+    const grid = document.getElementById('projectGrid');
+    grid.querySelectorAll('.book-card:not(.book-card-new)').forEach(el => el.remove());
+    const newBtn = grid.querySelector('.book-card-new');
+    const icons = { book:'📘', novel:'📖', film:'🎬', game:'🎮', memoir:'📓' };
+    const labels = { book:'商業書', novel:'小說', film:'電影劇本', game:'遊戲設定', memoir:'紀念文件' };
+    const projects = getProjects().sort((a,b) => b.updatedAt - a.updatedAt);
+    projects.forEach(proj => {
+      const pct = Math.min(Math.round((proj.wordCount || 0) / 500 * 100), 99);
+      const card = document.createElement('div');
+      card.className = 'book-card';
+      card.onclick = () => openWorkspace(proj.id, proj.title, proj.type);
+      card.innerHTML = `
+        <div class="book-card-type">${icons[proj.type]||'📄'} ${labels[proj.type]||proj.type}</div>
+        <div class="book-card-title">${proj.title}</div>
+        <div class="book-card-footer">
+          <div class="book-progress"><div class="book-progress-bar" style="width:${pct}%"></div></div>
+          <span>${pct}%</span>
+        </div>`;
+      grid.insertBefore(card, newBtn);
+    });
+  }
+
+  /* ---- LocalStorage 存檔（per-project）---- */
   function saveState() {
+    if (!currentProjectId) return;
     const paras = [...document.querySelectorAll('.para-block')].map(b => ({
       label: b.querySelector('.para-num')?.textContent || '',
       content: b.querySelector('.para-content')?.innerHTML || '',
@@ -1413,18 +1444,21 @@
       paras,
       savedAt: Date.now()
     };
-    localStorage.setItem('museon_book_state', JSON.stringify(state));
+    localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
+    const projects = getProjects();
+    const idx = projects.findIndex(p => p.id === currentProjectId);
+    if (idx >= 0) {
+      projects[idx].updatedAt = Date.now();
+      projects[idx].wordCount = getWordCount();
+      saveProjects(projects);
+    }
   }
 
-  function loadState() {
-    const raw = localStorage.getItem('museon_book_state');
+  function loadState(projId) {
+    const raw = localStorage.getItem('museon_state_' + projId);
     if (!raw) return;
     try {
       const state = JSON.parse(raw);
-      if (state.bookTitle) {
-        const el = document.getElementById('wsBookTitle');
-        if (el) el.textContent = state.bookTitle;
-      }
       if (state.paras && state.paras.length > 0) {
         state.paras.forEach((p, i) => {
           const existing = document.querySelectorAll('.para-block')[i];
@@ -1465,7 +1499,8 @@
     renderObStep();
   }
 
-  function openWorkspace(title, type) {
+  function openWorkspace(projId, title, type) {
+    currentProjectId = projId;
     currentProjectType = type || 'book';
     document.getElementById('libraryView').classList.add('hidden');
     document.getElementById('workspaceView').classList.remove('hidden');
@@ -1474,13 +1509,15 @@
     renderWiki(currentProjectType);
     updateAIWelcome(currentProjectType);
     countWords();
-    loadState();
+    loadState(projId);
   }
 
   function backToLibrary() {
+    currentProjectId = null;
     document.getElementById('workspaceView').classList.add('hidden');
     document.getElementById('libraryView').classList.remove('hidden');
     document.title = 'MUSEON 書寫工作台';
+    renderLibrary();
   }
 
   /* ---- Onboarding ---- */
@@ -1512,8 +1549,12 @@
     if (obStep === 1 && !selectedType) selectType('book', document.getElementById('t-book'));
     if (obStep === 3) {
       const name = document.getElementById('obName').value.trim() || '未命名作品';
+      const projId = 'proj_' + Date.now();
+      const projects = getProjects();
+      projects.push({ id: projId, title: name, type: selectedType || 'book', updatedAt: Date.now(), wordCount: 0 });
+      saveProjects(projects);
       document.getElementById('onboardOverlay').classList.add('hidden');
-      openWorkspace(name, selectedType);
+      openWorkspace(projId, name, selectedType);
       return;
     }
     obStep++;
@@ -1524,8 +1565,12 @@
 
   function skipOnboard() {
     const name = document.getElementById('obName')?.value.trim() || '未命名作品';
+    const projId = 'proj_' + Date.now();
+    const projects = getProjects();
+    projects.push({ id: projId, title: name, type: selectedType || 'book', updatedAt: Date.now(), wordCount: 0 });
+    saveProjects(projects);
     document.getElementById('onboardOverlay').classList.add('hidden');
-    openWorkspace(name, selectedType || 'book');
+    openWorkspace(projId, name, selectedType || 'book');
   }
 
   function pickReader(text) {
@@ -2002,6 +2047,9 @@
       document.getElementById('tEditor').classList.add('active');
     }
   }
+
+  /* ---- 初始化 ---- */
+  renderLibrary();
 </script>
 <!-- 設定 Modal -->
 <div id="settingsModal" class="hidden" style="position:fixed;inset:0;background:rgba(18,18,26,0.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;">
