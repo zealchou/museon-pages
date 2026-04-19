@@ -1545,8 +1545,14 @@
       }
       if (state.wikiData) {
         wikiData = state.wikiData;
-        // Re-render wiki with stored data
         renderWiki(currentProjectType);
+      }
+      // Restore chat history
+      const chatRaw = localStorage.getItem('museon_chat_' + projId);
+      if (chatRaw) {
+        try { chatHistory = JSON.parse(chatRaw); } catch(e) { chatHistory = []; }
+      } else {
+        chatHistory = [];
       }
     } catch(e) {}
   }
@@ -1590,6 +1596,7 @@
   }
 
   function backToLibrary() {
+    chatHistory = [];
     currentProjectId = null;
     document.getElementById('workspaceView').classList.add('hidden');
     document.getElementById('libraryView').classList.remove('hidden');
@@ -2029,6 +2036,7 @@
 
     _lastMsg = msg;
     chatHistory.push({ role: 'user', content: fullMsg });
+    if (currentProjectId) localStorage.setItem('museon_chat_' + currentProjectId, JSON.stringify(chatHistory));
 
     const endpoint = localStorage.getItem('museon_endpoint') || '';
     const key = localStorage.getItem('museon_api_key') || '';
@@ -2127,6 +2135,7 @@
 
       clearInterval(elapsedTimer);
       chatHistory.push({ role: 'assistant', content: fullText });
+      if (currentProjectId) localStorage.setItem('museon_chat_' + currentProjectId, JSON.stringify(chatHistory));
       const wikiUpdates = parseWikiTags(fullText);
       const displayText = stripWikiTags(fullText);
       ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才${wikiUpdates.length ? ' <span style="font-size:10px;color:var(--ember)">✦ Wiki 已更新</span>' : ''}</div><p>${displayText.replace(/\n/g,'<br>')}</p>
@@ -2147,13 +2156,17 @@
   function retryLastMsg() { if (_lastMsg) send(_lastMsg); }
 
   async function extractWikiFromHistory() {
-    if (!chatHistory.length) {
-      alert('目前還沒有對話記錄，請先跟 AI 聊一下書的內容再補 Wiki。');
-      return;
-    }
     const box = document.getElementById('aiMsgs');
     if (!box) return;
     if (window.innerWidth <= 880) switchTab('ai');
+    if (!chatHistory.length) {
+      const notice = document.createElement('div');
+      notice.className = 'msg msg-ai';
+      notice.innerHTML = `<div class="msg-meta">MUSEON · 提示</div><p>目前這個專案還沒有對話記錄（或剛重新整理過頁面）。請先把素材貼入聊天框，告訴 AI「幫我分析這份素材」，AI 回覆後再按「補 Wiki」。</p>`;
+      box.appendChild(notice);
+      box.scrollTop = box.scrollHeight;
+      return;
+    }
     const bubble = document.createElement('div');
     bubble.className = 'msg msg-ai';
     bubble.innerHTML = `<div class="msg-meta">MUSEON <span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div><p>📋 正在從 ${chatHistory.length} 條對話記錄萃取 Wiki 資訊…</p>`;
