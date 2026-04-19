@@ -1209,100 +1209,7 @@
     </div>
   </header>
 
-  <aside class="wiki" id="wiki">
-    <div class="wiki-header">書籍 Wiki</div>
-
-    <div class="wiki-section">
-      <button class="wiki-sec-btn" onclick="toggleSec(this)">
-        <span>📖</span><span>章節大綱</span>
-        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="wiki-items">
-        <button class="wiki-item active" onclick="loadCh(this,'序言','序言——為什麼這本書存在')">
-          <span class="wiki-item-icon">◎</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">序言</div>
-            <div class="wiki-item-sub">為什麼這本書存在</div>
-          </div>
-        </button>
-        <button class="wiki-item" onclick="loadCh(this,'第一章','第一章・框架崩塌')">
-          <span class="wiki-item-icon">1</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">第一章・框架崩塌</div>
-            <div class="wiki-item-sub">舊商業思維的終結</div>
-          </div>
-          <span class="wiki-ai-tag">AI稿</span>
-        </button>
-        <button class="wiki-item" onclick="loadCh(this,'第二章','第二章・決策品質')">
-          <span class="wiki-item-icon">2</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">第二章・決策品質</div>
-            <div class="wiki-item-sub">待規劃</div>
-          </div>
-        </button>
-        <button class="wiki-add" onclick="qReply('幫我規劃下一章的標題和摘要')">＋ 與 AI 聊出下一章</button>
-      </div>
-    </div>
-
-    <div class="wiki-section">
-      <button class="wiki-sec-btn" onclick="toggleSec(this)">
-        <span>👤</span><span>人物 / 讀者</span>
-        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="wiki-items">
-        <button class="wiki-item">
-          <span class="wiki-item-icon">🎯</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">目標讀者</div>
-            <div class="wiki-item-sub">月營收百萬以上的決策者</div>
-          </div>
-          <span class="wiki-ai-tag">AI推導</span>
-        </button>
-        <button class="wiki-add" onclick="qReply('幫我深化目標讀者的畫像，他們最痛的問題是什麼？')">＋ 與 AI 聊出讀者</button>
-      </div>
-    </div>
-
-    <div class="wiki-section">
-      <button class="wiki-sec-btn" onclick="toggleSec(this)">
-        <span>🌍</span><span>核心設定</span>
-        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="wiki-items">
-        <button class="wiki-item">
-          <span class="wiki-item-icon">💡</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">核心論點</div>
-            <div class="wiki-item-sub">AI 時代決策者的三個轉變</div>
-          </div>
-          <span class="wiki-ai-tag">AI推導</span>
-        </button>
-        <button class="wiki-item">
-          <span class="wiki-item-icon">🔑</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">主題關鍵詞</div>
-            <div class="wiki-item-sub">決策品質、AI 協作、框架重構</div>
-          </div>
-        </button>
-        <button class="wiki-add" onclick="qReply('幫我整理書的核心論點和貫穿全書的主題線')">＋ 與 AI 聊出設定</button>
-      </div>
-    </div>
-
-    <div class="wiki-section">
-      <button class="wiki-sec-btn collapsed" onclick="toggleSec(this)">
-        <span>⚡</span><span>脈絡警示</span>
-        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="wiki-items" style="display:none">
-        <button class="wiki-item" onclick="qReply('說明第一章和序言論點的潛在矛盾在哪')">
-          <span class="wiki-item-icon">⚠️</span>
-          <div class="wiki-item-body">
-            <div class="wiki-item-title">第一章 ↔ 序言需對齊</div>
-            <div class="wiki-item-sub">AI 偵測到論點落差</div>
-          </div>
-        </button>
-      </div>
-    </div>
-  </aside>
+  <aside class="wiki" id="wiki"></aside>
 
   <main class="editor-area">
     <div class="editor-toolbar">
@@ -1546,6 +1453,7 @@
     }, 800);
   }
 
+  let currentProjectType = 'book';
   let obStep = 1;
   let selectedType = '';
   let paraIdx = 2;
@@ -1558,10 +1466,13 @@
   }
 
   function openWorkspace(title, type) {
+    currentProjectType = type || 'book';
     document.getElementById('libraryView').classList.add('hidden');
     document.getElementById('workspaceView').classList.remove('hidden');
     document.getElementById('wsBookTitle').textContent = title;
     document.title = title + ' — MUSEON';
+    renderWiki(currentProjectType);
+    updateAIWelcome(currentProjectType);
     countWords();
     loadState();
   }
@@ -1674,6 +1585,118 @@
     a.click();
   }
 
+  /* ---- Multi-type Wiki ---- */
+  function renderWiki(type) {
+    const wiki = document.getElementById('wiki');
+    const sv = (icon, title, collapsed) =>
+      `<button class="wiki-sec-btn${collapsed?' collapsed':''}" onclick="toggleSec(this)"><span>${icon}</span><span>${title}</span><svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>`;
+    const ab = (label, prompt) =>
+      `<button class="wiki-add" onclick="qReply(\`${prompt}\`)">${label}</button>`;
+    const sec = (icon, title, items, collapsed) =>
+      `<div class="wiki-section">${sv(icon,title,collapsed)}<div class="wiki-items"${collapsed?' style="display:none"':''}>` +
+      items.join('') + `</div></div>`;
+
+    const defs = {
+      book: {
+        header: '書籍 Wiki',
+        sections: [
+          sec('📖','章節大綱',[ab('＋ 與 AI 聊出章節架構','幫我規劃全書架構，建議 6-8 章，每章給出標題和 2-3 句摘要')]),
+          sec('👤','目標讀者',[ab('＋ 與 AI 聊出讀者畫像','幫我深化目標讀者畫像，他們最痛的問題是什麼？讀完這本書會發生什麼改變？')]),
+          sec('💡','核心論點',[ab('＋ 與 AI 聊出核心論點','幫我整理書的核心論點、貫穿全書的主題線、以及每章的知識累積邏輯')]),
+          sec('⚡','脈絡警示',[ab('⚠️ 一致性檢查','檢查目前章節的論點一致性，找出跳躍或矛盾之處')],true)
+        ]
+      },
+      novel: {
+        header: '小說 Wiki',
+        sections: [
+          sec('📖','章節大綱',[ab('＋ 與 AI 聊出章節','幫我規劃小說架構：故事弧、轉折點、高潮、結局，建議分幾章')]),
+          sec('👥','人物列表',[
+            ab('＋ 與 AI 建立主角','幫我建立主角：性格、動機、恐懼、成長弧、關係'),
+            ab('＋ 新增配角','幫我建立配角，說明他在故事中的作用和與主角的關係')
+          ]),
+          sec('🌍','世界觀',[ab('＋ 與 AI 建立世界觀','幫我建立小說世界觀：時代背景、地理環境、社會結構、特殊規則')]),
+          sec('🎭','情節線',[
+            ab('＋ 主線情節','幫我梳理主線情節，從開始到結束的完整事件鏈'),
+            ab('＋ 支線情節','幫我規劃支線情節，與主線的交織點是哪裡')
+          ]),
+          sec('⚡','脈絡警示',[ab('⚠️ 角色一致性','檢查所有章節的角色行為是否符合性格設定')],true)
+        ]
+      },
+      game: {
+        header: '遊戲設定 Wiki（結晶物語框架）',
+        sections: [
+          sec('🌍','G1 世界觀（哲學主題）',[
+            ab('＋ 建立世界哲學','幫我建立遊戲世界的哲學主題、宇宙觀、歷史背景、核心矛盾'),
+            ab('＋ 地理與歷史','幫我設計世界的地理結構、歷史時間線、重大事件')
+          ]),
+          sec('👥','G2 人格層（NPC 系統）',[
+            ab('＋ 建立 NPC 人格矩陣','幫我設計主要 NPC 的人格類型、語氣風格、行為模式和隱藏動機'),
+            ab('＋ 陣營與派系','幫我設計各陣營的信念、目標、對立關係')
+          ]),
+          sec('⚙️','G3 結構層（敘事引擎）',[
+            ab('＋ 主線敘事','幫我設計主線故事：開場事件、中期衝突、高潮轉折、結局走向'),
+            ab('＋ 支線任務','幫我規劃支線任務系統：觸發條件、獎勵、與主線關聯')
+          ]),
+          sec('⚡','G4 能量層（能力系統）',[
+            ab('＋ 建立能量/能力系統','幫我設計玩家的能量與能力系統：獲得方式、成長曲線、上限設計'),
+            ab('＋ 道具與裝備','幫我設計道具和裝備系統：分類、稀有度、合成規則')
+          ]),
+          sec('🕸️','G7 關係場',[
+            ab('＋ 角色關係圖','幫我建立主要角色的關係網路：盟友、對手、隱藏關係、情感連結'),
+            ab('＋ 好感度系統','幫我設計 NPC 好感度系統：影響因素、解鎖事件、結局分支')
+          ]),
+          sec('📋','宏觀模式（7 種）',[ab('＋ 設計宏觀模式','幫我設計遊戲的 7 種宏觀模式：劇情旅途、NPC 互動、國家戰爭、派系鬥爭、商會競合、夢境、事件結算，每種模式的特色玩法是什麼')]),
+          sec('🎭','微場景（7 種）',[ab('＋ 設計微場景','幫我設計遊戲的 7 種微場景：密談、三角談判、合約桌、票號窗口、遠行踩點、閉關修行、教學場，每種場景的互動規則和 NPC 行為')]),
+          sec('⚔️','規則核心',[
+            ab('＋ 戰鬥系統','幫我設計戰鬥系統：回合制或即時、技能樹、勝負條件、平衡設計'),
+            ab('＋ 數值設計','幫我設計核心數值：HP、MP、屬性、成長公式、難度曲線')
+          ],true),
+          sec('⚡','脈絡警示',[ab('⚠️ 設定一致性','檢查目前所有設定的邏輯一致性，找出矛盾或漏洞')],true)
+        ]
+      },
+      script: {
+        header: '劇本 Wiki',
+        sections: [
+          sec('🎬','場景列表',[
+            ab('＋ 與 AI 建立場景','幫我規劃劇本場景列表：按場景號、地點、時間、在場角色、場景功能'),
+            ab('＋ 分析場景功能','分析這個場景在三幕結構中的位置和功能')
+          ]),
+          sec('👥','人物弧',[
+            ab('＋ 建立主角弧','幫我設計主角的角色弧：開始狀態→觸發事件→掙扎→轉化→結束狀態'),
+            ab('＋ 建立對立人物','幫我設計對立人物：動機、與主角的核心衝突、改變主角的方式')
+          ]),
+          sec('🏗️','故事結構',[
+            ab('＋ 三幕結構','幫我用三幕結構規劃劇本：第一幕建立世界，第二幕衝突升級，第三幕高潮解決'),
+            ab('＋ 設計轉折點','幫我設計劇本的 3 個關鍵轉折點，每個轉折點的功能是什麼')
+          ]),
+          sec('💬','對話風格',[ab('＋ 建立角色語氣','幫我為每個主要角色定義說話風格：語氣、口頭禪、說話節奏、與其他角色的對話差異')]),
+          sec('🎞️','視覺設定',[ab('＋ 場景氛圍','幫我描述這個場景的視覺風格：光線、色調、鏡頭語言建議')],true),
+          sec('⚡','脈絡警示',[ab('⚠️ 邏輯一致性','檢查所有場景的時間線和角色動機一致性，找出邏輯漏洞')],true)
+        ]
+      }
+    };
+
+    const d = defs[type] || defs.book;
+    wiki.innerHTML = `<div class="wiki-header">${d.header}</div>` + d.sections.join('');
+  }
+
+  function updateAIWelcome(type) {
+    const welcomes = {
+      book: '書寫工作台已連線，<strong>book-architect</strong> Skill 已載入。<br><br>Wiki 側邊欄不用你手填——我們一起聊出來。你說素材跟想法，我整理成結構。<br><br>先從最重要的問題開始：這本書，你最想讓誰讀完之後發生什麼改變？',
+      novel: '小說工作台已連線，<strong>novel-craft</strong> Skill 已載入。<br><br>世界觀、角色弧、情節線——Wiki 的每個欄位都可以聊出來。<br><br>先問你：這個故事最核心的衝突是什麼？主角要克服什麼？',
+      game: '遊戲設計工作台已連線，<strong>結晶物語框架</strong>（G1-G8 八層架構）已載入。<br><br>融合「結晶物語：夢迴」的世界觀層、人格層、結構層、能量層、關係場，加上 7 種宏觀模式和 7 種微場景。<br><br>從哪裡開始？世界哲學（G1）、NPC 人格矩陣（G2），還是先聊遊戲的核心玩法循環？',
+      script: '劇本工作台已連線，<strong>script-optimizer</strong> Skill 已載入。<br><br>場景列表、人物弧、三幕結構——Wiki 的每個欄位都可以聊出來。<br><br>先從核心問題開始：這個故事的前提（premise）是什麼？用一句話說。'
+    };
+    const skillNames = { book: 'book-architect', novel: 'novel-craft', game: '結晶物語框架', script: 'script-optimizer' };
+    const typeLabels = { book: '📘 書籍', novel: '📖 小說', game: '🎮 遊戲', script: '🎬 劇本' };
+    const msgs = document.getElementById('aiMsgs');
+    if (msgs) msgs.innerHTML = `<div class="msg msg-ai"><div class="msg-meta">MUSEON · 剛才</div>${welcomes[type]||welcomes.book}<div class="msg-actions"><button class="mabtn" onclick="qReply('幫我整理目前的想法，建立初始 Wiki 架構')">建立 Wiki</button><button class="mabtn" onclick="qReply('先跳過設定，我們直接開始創作')">直接開始</button></div></div>`;
+    const ctxChip = document.getElementById('ctxChip');
+    if (ctxChip) ctxChip.textContent = typeLabels[type] || '📖 書籍';
+    const skillChip = document.querySelector('.chip-skill');
+    if (skillChip) skillChip.textContent = '✦ ' + (skillNames[type] || 'book-architect');
+  }
+
   /* ---- Wiki / Editor ---- */
   function toggleSec(btn) {
     btn.classList.toggle('collapsed');
@@ -1704,7 +1727,18 @@
     const paras = [...document.querySelectorAll('.para-content')].map(el =>
       el.innerText.replace(/^✦ AI 草稿\n?/, '').trim()
     ).filter(Boolean).join('\n\n');
-    return `書名：${title}\n\n目前內容：\n${paras || '（尚未撰寫）'}`;
+    const typeLabels = { book: '商業書', novel: '小說', game: '遊戲設定', script: '電影劇本' };
+    return `作品類型：${typeLabels[currentProjectType]||'書籍'}\n作品名稱：${title}\n\n目前內容：\n${paras || '（尚未撰寫）'}`;
+  }
+
+  function getSystemPrompt() {
+    const prompts = {
+      book: '你是 MUSEON，一個專業的書稿創作 AI 夥伴，搭載 book-architect Skill。幫助用戶規劃架構、撰寫章節、提煉論點。繁體中文回應，詳細深入，每次至少 300 字。',
+      novel: '你是 MUSEON，一個專業的小說創作 AI 夥伴，搭載 novel-craft Skill。幫助用戶建立世界觀、發展人物弧、規劃情節線。繁體中文回應，富有文學性，每次至少 300 字。',
+      game: '你是 MUSEON，一個專業的遊戲設計 AI 夥伴，整合「結晶物語：夢迴」的 8 層世界架構（G1 世界觀、G2 人格層、G3 結構層、G4 能量層、G7 關係場）和 7 種宏觀模式（劇情旅途、NPC 互動、國家戰爭、派系鬥爭、商會競合、夢境、事件結算）以及 7 種微場景（密談、三角談判、合約桌、票號窗口、遠行踩點、閉關修行、教學場）。幫助用戶建立世界觀、設計 NPC 系統、規劃宏觀模式和微場景。繁體中文回應，系統性且細節豐富，每次至少 400 字。',
+      script: '你是 MUSEON，一個專業的劇本創作 AI 夥伴，搭載 script-optimizer Skill。幫助用戶規劃場景結構、建立人物弧、優化對話。熟悉三幕結構和場景功能。繁體中文回應，每次至少 300 字。'
+    };
+    return (prompts[currentProjectType] || prompts.book) + '\n\n當前作品資訊：\n';
   }
 
   async function send(preText) {
@@ -1759,7 +1793,9 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             messages: chatHistory,
+            system_prompt: getSystemPrompt(),
             book_context: getBookContext(),
+            project_type: currentProjectType,
             model: 'claude-opus-4-7-20250914'
           })
         });
@@ -1790,7 +1826,7 @@
           body: JSON.stringify({
             model: 'claude-opus-4-7-20250914',
             max_tokens: 4096,
-            system: '你是 MUSEON，一個專業的書稿創作 AI 夥伴。繁體中文回應。\n\n當前書稿：\n' + getBookContext(),
+            system: getSystemPrompt() + getBookContext(),
             messages: chatHistory
           })
         });
