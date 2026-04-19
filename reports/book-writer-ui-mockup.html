@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON 寫書工作台 — UI 預覽</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+    --sidebar-w: 220px;
+    --ai-w: 300px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    background: var(--deep-ink);
+    padding: 0 16px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .topbar-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: #b6853d;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .topbar-book {
+    font-size: 13px;
+    color: var(--mist);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .book-title {
+    color: #FDFCFA;
+    font-weight: 500;
+  }
+  .topbar-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-sm {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--mist);
+    border: 1px solid var(--border-dark);
+  }
+  .btn-ghost:hover { background: var(--raised); color: #fff; }
+  .btn-primary {
+    background: var(--ember);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--ember-light); }
+
+  /* ── MAIN AREA ── */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── LEFT SIDEBAR: WIKI ── */
+  .sidebar-wiki {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border-dark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar-header {
+    padding: 12px 14px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mist);
+    border-bottom: 1px solid var(--border-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sidebar-header .icon-btn {
+    background: none;
+    border: none;
+    color: var(--mist);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    line-height: 1;
+  }
+  .sidebar-header .icon-btn:hover { color: var(--ember-light); }
+  .wiki-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .wiki-section {
+    margin-bottom: 4px;
+  }
+  .wiki-section-label {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .wiki-section-label:hover { color: #d4a85a; }
+  .wiki-item {
+    padding: 5px 14px 5px 28px;
+    font-size: 12.5px;
+    color: #9898A8;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    margin-left: 8px;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 0 4px 4px 0;
+  }
+  .wiki-item:hover { color: #FDFCFA; background: var(--raised); }
+  .wiki-item.active {
+    color: var(--ember-light);
+    border-left-color: var(--ember);
+    background: rgba(196,80,42,0.12);
+  }
+  .wiki-badge {
+    margin-left: auto;
+    background: var(--raised);
+    color: var(--mist);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 10px;
+  }
+  .wiki-add {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border-dark);
+  }
+  .btn-wiki-add {
+    width: 100%;
+    padding: 6px;
+    background: rgba(196,80,42,0.1);
+    border: 1px dashed rgba(196,80,42,0.3);
+    color: var(--ember-light);
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .btn-wiki-add:hover { background: rgba(196,80,42,0.18); border-color: var(--ember); }
+
+  /* ── CENTER: EDITOR ── */
+  .editor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--snow);
+  }
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 6px;
+    background: white;
+    flex-shrink: 0;
+  }
+  .editor-toolbar .chapter-breadcrumb {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--slate);
+    flex: 1;
+  }
+  .editor-toolbar .chapter-breadcrumb strong { color: var(--ink); }
+  .toolbar-btn {
+    padding: 4px 8px;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--slate);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .toolbar-btn:hover { background: var(--border); color: var(--ink); }
+  .toolbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 2px; }
+
+  .editor-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 40px;
+  }
+  .chapter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 24px;
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    line-height: 1.3;
+  }
+  .paragraph-block {
+    margin-bottom: 20px;
+    position: relative;
+    border-radius: 8px;
+    transition: all 0.15s;
+    padding: 12px 14px;
+    border: 1.5px solid transparent;
+    background: transparent;
+  }
+  .paragraph-block:hover {
+    border-color: var(--border);
+    background: white;
+  }
+  .paragraph-block.focused {
+    border-color: rgba(196,80,42,0.3);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(196,80,42,0.06);
+  }
+  .para-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 8px;
+  }
+  .para-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--mist);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .para-actions {
+    margin-left: auto;
+    display: none;
+    gap: 4px;
+  }
+  .paragraph-block:hover .para-actions,
+  .paragraph-block.focused .para-actions { display: flex; }
+  .para-action-btn {
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 11px;
+    color: var(--slate);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .para-action-btn:hover { background: var(--ember); color: white; border-color: var(--ember); }
+  .para-action-btn.ai { border-color: rgba(42,122,110,0.4); color: var(--teal); }
+  .para-action-btn.ai:hover { background: var(--teal); color: white; border-color: var(--teal); }
+  .para-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--ink);
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+    min-height: 60px;
+  }
+  .msg-highlight {
+    background: rgba(184,146,58,0.08);
+    border: 1px solid rgba(184,146,58,0.2);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #d4a85a;
+    margin-top: 6px;
+  }
+  .msg-highlight strong { display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .word-count-bar {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-top: 1px solid var(--border);
+    background: white;
+    flex-shrink: 0;
+    gap: 16px;
+  }
+  .wc-item { font-size: 11px; color: var(--mist); }
+  .wc-item strong { color: var(--slate); }
+  .wc-save {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--teal);
+  }
+
+  /* ── RIGHT: AI PANEL ── */
+  .ai-panel {
+    width: var(--ai-w);
+    background: var(--surface);
+    border-left: 1px solid var(--border-dark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .ai-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ai-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ember) 0%, #b6853d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .ai-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #FDFCFA;
+    flex: 1;
+  }
+  .ai-status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 6px rgba(42,122,110,0.6);
+  }
+
+  .quick-actions {
+    padding: 10px 10px 6px;
+    border-bottom: 1px solid var(--border-dark);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .qa-btn {
+    padding: 7px 8px;
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    font-size: 11px;
+    color: #9898A8;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .qa-btn:hover {
+    background: rgba(196,80,42,0.15);
+    border-color: rgba(196,80,42,0.4);
+    color: var(--ember-light);
+  }
+  .qa-btn .icon { font-size: 13px; flex-shrink: 0; }
+
+  .ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .msg { max-width: 100%; }
+  .msg-user .bubble {
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.25);
+    color: #E8D8CC;
+    border-radius: 10px 10px 2px 10px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    margin-left: auto;
+    max-width: 85%;
+    width: fit-content;
+  }
+  .msg-ai .bubble {
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    color: #C8C8D8;
+    border-radius: 2px 10px 10px 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+  .msg-time {
+    font-size: 10px;
+    color: var(--mist);
+    margin-top: 3px;
+    padding: 0 2px;
+  }
+  .msg-user .msg-time { text-align: right; }
+  .ai-typing {
+    display: flex;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    border-radius: 2px 10px 10px 10px;
+    width: fit-content;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ember-light);
+    animation: bounce 1.2s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  .ai-input-area {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border-dark);
+    background: var(--raised);
+  }
+  .ai-input-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: border-color 0.15s;
+  }
+  .ai-input-box:focus-within { border-color: rgba(196,80,42,0.5); }
+  .ai-textarea {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #FDFCFA;
+    font-size: 12.5px;
+    resize: none;
+    min-height: 20px;
+    max-height: 80px;
+    line-height: 1.5;
+    font-family: 'Inter', sans-serif;
+  }
+  .ai-textarea::placeholder { color: var(--mist); }
+  .ai-send {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--ember);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+  .ai-send:hover { background: var(--ember-light); }
+  .ai-hint {
+    font-size: 10px;
+    color: var(--mist);
+    margin-top: 5px;
+    text-align: center;
+  }
+
+  /* ── NOTICE BAR ── */
+  .notice-bar {
+    background: rgba(42,122,110,0.12);
+    border-top: 1px solid rgba(42,122,110,0.25);
+    padding: 8px 16px;
+    font-size: 11px;
+    color: #5aaf9f;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .notice-bar strong { color: var(--teal); }
+
+  .demo-tag {
+    display: inline-block;
+    background: rgba(184,146,58,0.15);
+    color: var(--gold);
+    border: 1px solid rgba(184,146,58,0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-left: 6px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .sidebar-wiki, .ai-panel { display: none; }
+    .mobile-tabs {
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid var(--border-dark);
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+    }
+    .mobile-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--mist);
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .mobile-tab.active { color: var(--ember-light); }
+    .mobile-tab .tab-icon { font-size: 18px; }
+    body { overflow-y: auto; height: auto; }
+    .main { height: calc(100vh - 96px); }
+    .editor-content { padding: 16px 16px 80px; }
+    .topbar-book { display: none; }
+  }
+  @media (min-width: 769px) {
+    .mobile-tabs { display: none; }
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">MUSEON <span style="color:#5A5A6E;font-size:13px;font-weight:400;">寫書工作台</span></div>
+  <div class="topbar-book">
+    <span>📖</span>
+    <span class="book-title">商業進化論</span>
+    <span style="color:var(--border-dark)">›</span>
+    <span>第一章：開始的代價</span>
+    <span class="demo-tag">UI 預覽版</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn-sm btn-ghost">+ 新書</button>
+    <button class="btn-sm btn-ghost">⚙ 設定</button>
+    <button class="btn-sm btn-primary">儲存</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: WIKI SIDEBAR -->
+  <div class="sidebar-wiki">
+    <div class="sidebar-header">
+      書籍結構
+      <button class="icon-btn" title="搜尋">🔍</button>
+    </div>
+    <div class="wiki-scroll">
+
+      <div class="wiki-section">
+        <div class="wiki-section-label">📖 大綱</div>
+        <div class="wiki-item">序言：時代的裂縫</div>
+        <div class="wiki-item">引言：為什麼要寫這本書</div>
+        <div class="wiki-item active">第一章：開始的代價 <span class="wiki-badge">進行中</span></div>
+        <div class="wiki-item">第二章：系統思維</div>
+        <div class="wiki-item">第三章：決策的代價</div>
+        <div class="wiki-item">第四章：未來</div>
+        <div class="wiki-item" style="color:var(--mist);font-style:italic;">+ 新增章節</div>
+      </div>
+
+      <div class="wiki-section">
+        <div class="wiki-section-label">👥 人物</div>
+        <div class="wiki-item">▸ 主角 — 創業者 A</div>
+        <div class="wiki-item">▸ 導師 — 老王</div>
+        <div class="wiki-item">▸ 競爭者 — B 公司</div>
+        <div class="wiki-item" style="color:var(--mist);font-style:italic;">+ 新增人物</div>
+      </div>
+
+      <div class="wiki-section">
+        <div class="wiki-section-label">🌍 世界觀</div>
+        <div class="wiki-item">台灣 2025 商業環境</div>
+        <div class="wiki-item">AI 轉型浪潮背景</div>
+        <div class="wiki-item">中小企業困境地圖</div>
+      </div>
+
+      <div class="wiki-section">
+        <div class="wiki-section-label">🔑 核心主題</div>
+        <div class="wiki-item">決策代價與成本</div>
+        <div class="wiki-item">系統思維 vs 線性思維</div>
+        <div class="wiki-item">人機協作新形態</div>
+      </div>
+
+      <div class="wiki-section">
+        <div class="wiki-section-label">📌 脈絡線索</div>
+        <div class="wiki-item" style="color:#d4a85a;">「代價」貫穿全書</div>
+        <div class="wiki-item">隱喻：珊瑚礁生態系</div>
+        <div class="wiki-item">每章結尾設問</div>
+      </div>
+
+      <div class="wiki-section">
+        <div class="wiki-section-label">📝 寫作備忘</div>
+        <div class="wiki-item">目標讀者：中小企業主</div>
+        <div class="wiki-item">語氣：直白、不說教</div>
+        <div class="wiki-item">字數目標：8 萬字</div>
+      </div>
+
+    </div>
+    <div class="wiki-add">
+      <button class="btn-wiki-add">+ 新增 Wiki 條目</button>
+    </div>
+  </div>
+
+  <!-- CENTER: EDITOR -->
+  <div class="editor-panel">
+    <div class="editor-toolbar">
+      <span style="font-size:12px;color:var(--mist);">第一章</span>
+      <span style="font-size:12px;color:var(--mist);">›</span>
+      <span class="chapter-breadcrumb"><strong>開始的代價</strong></span>
+      <button class="toolbar-btn">B</button>
+      <button class="toolbar-btn"><i>I</i></button>
+      <button class="toolbar-btn">H1</button>
+      <button class="toolbar-btn">H2</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn">引言</button>
+      <button class="toolbar-btn">重點段</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn" style="color:var(--teal)">✦ AI 寫這段</button>
+      <button class="toolbar-btn" style="color:var(--ember)">一致性檢查</button>
+    </div>
+
+    <div class="editor-content">
+      <input class="chapter-title" value="第一章：開始的代價" placeholder="章節標題…" />
+
+      <!-- PARAGRAPH 1 -->
+      <div class="paragraph-block focused">
+        <div class="para-header">
+          <span class="para-label">段落 1 / 引言</span>
+          <div class="para-actions">
+            <button class="para-action-btn ai">✦ AI 改寫</button>
+            <button class="para-action-btn ai">💡 靈感</button>
+            <button class="para-action-btn">↕ 移動</button>
+            <button class="para-action-btn">🗑</button>
+          </div>
+        </div>
+        <textarea class="para-text" rows="4">所有開始，都有代價。
+
+這不是一句老生常談的勵志語——它是我在創業第七年，親眼看著公司帳上剩下最後三個月現金流時，真正理解的事情。代價不只是金錢，不只是時間；代價是你為了某件事，選擇不去做另一件事。</textarea>
+      </div>
+
+      <!-- PARAGRAPH 2 -->
+      <div class="paragraph-block">
+        <div class="para-header">
+          <span class="para-label">段落 2</span>
+          <div class="para-actions">
+            <button class="para-action-btn ai">✦ AI 改寫</button>
+            <button class="para-action-btn ai">💡 靈感</button>
+            <button class="para-action-btn">↕ 移動</button>
+            <button class="para-action-btn">🗑</button>
+          </div>
+        </div>
+        <textarea class="para-text" rows="3">在台灣，有超過一百五十萬家中小企業。它們撐起這個島嶼七成的就業、六成的出口。但你很少聽說它們的故事。不是因為故事不精彩，而是因為代價太沉默了——沉默到就連老闆自己，都習慣了不說出口。</textarea>
+      </div>
+
+      <!-- PARAGRAPH 3: AI GENERATED -->
+      <div class="paragraph-block" style="border-color:rgba(42,122,110,0.25);background:rgba(42,122,110,0.03);">
+        <div class="para-header">
+          <span class="para-label" style="color:var(--teal)">段落 3 / ✦ AI 生成稿</span>
+          <div class="para-actions" style="display:flex;">
+            <button class="para-action-btn" style="color:var(--teal);border-color:rgba(42,122,110,0.4);">✓ 採用</button>
+            <button class="para-action-btn ai">♻ 重生成</button>
+            <button class="para-action-btn">✏ 編輯</button>
+            <button class="para-action-btn">🗑</button>
+          </div>
+        </div>
+        <textarea class="para-text" rows="4" style="color:#4a9a8a;">我認識一位做餐飲的朋友，在 2021 年疫情最嚴峻的時候，他決定開新店。所有人都說他瘋了。但他說：「不開，才是最大的代價。」三年後，他的第三家店開幕了，客座率每天九成。
+
+那個當下的選擇，就是本書想談的事。</textarea>
+        <div class="msg-highlight" style="margin-top:8px;">
+          <strong>AI 備注</strong>
+          這段以具體故事帶入主題，與「代價」核心呼應，也和第二段台灣中小企業脈絡銜接。建議採用後，把故事主角換成你實際案例會更有說服力。
+        </div>
+      </div>
+
+      <!-- ADD PARAGRAPH -->
+      <div id="add-para" style="padding:8px 14px;border:1.5px dashed var(--border);border-radius:8px;text-align:center;cursor:pointer;color:var(--mist);font-size:13px;margin-top:8px;transition:all 0.15s;">
+        + 新增段落 &nbsp;｜&nbsp; ✦ 讓 AI 接著寫
+      </div>
+    </div>
+
+    <div class="word-count-bar">
+      <span class="wc-item">字數 <strong>386</strong></span>
+      <span class="wc-item">段落 <strong>3</strong></span>
+      <span class="wc-item">章節進度 <strong>4.8%</strong></span>
+      <span class="wc-item">本書總字數 <strong>2,140 / 80,000</strong></span>
+      <span class="wc-save">● 已自動儲存</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: AI PANEL -->
+  <div class="ai-panel">
+    <div class="ai-header">
+      <div class="ai-avatar">🧠</div>
+      <div class="ai-name">MUSEON</div>
+      <div class="ai-status"></div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="qa-btn"><span class="icon">✦</span>幫我寫這段</button>
+      <button class="qa-btn"><span class="icon">🔍</span>一致性檢查</button>
+      <button class="qa-btn"><span class="icon">💡</span>靈感激發</button>
+      <button class="qa-btn"><span class="icon">✏</span>語氣調整</button>
+      <button class="qa-btn"><span class="icon">📌</span>摘要本章</button>
+      <button class="qa-btn"><span class="icon">⚡</span>繼續寫</button>
+    </div>
+
+    <div class="ai-messages" id="ai-msgs">
+
+      <div class="msg msg-ai">
+        <div class="bubble">
+          我看了目前的第一章，整體方向很清晰。「代價」這個主軸在前兩段都出現了，但第三段的故事想帶出的核心是什麼？是「逆勢決策的勇氣」還是「機會成本的計算」？這會影響故事選材。
+        </div>
+        <div class="msg-time">07:21</div>
+      </div>
+
+      <div class="msg msg-user">
+        <div class="bubble">幫我寫第三段，用真實感的小故事帶進來</div>
+        <div class="msg-time">07:22</div>
+      </div>
+
+      <div class="msg msg-ai">
+        <div class="bubble">
+          好，用「逆勢開店」的框架——這和「開始的代價」最接近。生成了一個草稿，你可以在編輯區看到高亮的 AI 稿。<br><br>
+          主角我設定為餐飲業，如果你有更真實的案例可以換掉，真人故事的說服力會再提升三倍。
+        </div>
+        <div class="msg-time">07:23</div>
+      </div>
+
+      <div class="msg msg-user">
+        <div class="bubble">看起來不錯，但我想要帶一個 MUSEON 的案例進來</div>
+        <div class="msg-time">07:24</div>
+      </div>
+
+      <div class="msg msg-ai">
+        <div class="bubble">好主意。我搜尋了一下記憶裡你分享過的案例——有幾個方向：</div>
+        <div class="msg-highlight">
+          <strong>脈絡快查</strong>
+          ① 顧問案：Feng 技術整合案（決策極快型）<br>
+          ② 符大哥旅行社 AI 導入（傳統產業轉型）<br>
+          ③ MUSEON 自身從 1 人到 12 人的擴張史
+        </div>
+        <div class="bubble" style="margin-top:8px;">
+          哪個更適合第一章的「代價感」？③ 本身就是代價最重的故事。
+        </div>
+        <div class="msg-time">07:25</div>
+      </div>
+
+      <div class="msg msg-ai">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="ai-typing">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span style="font-size:11px;color:var(--mist);">思考中…</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ai-input-area">
+      <div class="ai-input-box">
+        <textarea class="ai-textarea" id="ai-input" placeholder="問 MUSEON… 或直接說「幫我寫」" rows="1"></textarea>
+        <button class="ai-send">↑</button>
+      </div>
+      <div class="ai-hint">直連 MUSEON · 記憶 + Skill 全開</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NOTICE BAR -->
+<div class="notice-bar">
+  <strong>UI 預覽版</strong>｜這是靜態展示，確認版面後將接線 MUSEON 後端（Cloudflare Tunnel + /webchat API），Skill、記憶、認知路由器全繼承。
+</div>
+
+<!-- MOBILE TABS -->
+<div class="mobile-tabs">
+  <button class="mobile-tab" onclick="switchTab(0,this)">
+    <span class="tab-icon">📖</span><span>Wiki</span>
+  </button>
+  <button class="mobile-tab active" onclick="switchTab(1,this)">
+    <span class="tab-icon">✏</span><span>寫作</span>
+  </button>
+  <button class="mobile-tab" onclick="switchTab(2,this)">
+    <span class="tab-icon">🧠</span><span>MUSEON</span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll('.para-text, .ai-textarea').forEach(ta => {
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+  });
+
+  document.querySelectorAll('.para-text').forEach(ta => {
+    ta.addEventListener('focus', function() {
+      document.querySelectorAll('.paragraph-block').forEach(b => b.classList.remove('focused'));
+      this.closest('.paragraph-block').classList.add('focused');
+    });
+  });
+
+  const addPara = document.getElementById('add-para');
+  if (addPara) {
+    addPara.addEventListener('mouseover', () => {
+      addPara.style.borderColor = 'rgba(196,80,42,0.4)';
+      addPara.style.color = 'var(--ember-light)';
+    });
+    addPara.addEventListener('mouseout', () => {
+      addPara.style.borderColor = 'var(--border)';
+      addPara.style.color = 'var(--mist)';
+    });
+  }
+
+  const msgs = document.getElementById('ai-msgs');
+  if (msgs) msgs.scrollTop = msgs.scrollHeight;
+
+  function switchTab(idx, el) {
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const sidebar = document.querySelector('.sidebar-wiki');
+    const editor = document.querySelector('.editor-panel');
+    const ai = document.querySelector('.ai-panel');
+    [sidebar, editor, ai].forEach(p => p && (p.style.display = 'none'));
+    if (idx === 0 && sidebar) sidebar.style.display = 'flex';
+    if (idx === 1 && editor) editor.style.display = 'flex';
+    if (idx === 2 && ai) ai.style.display = 'flex';
+  }
+</script>
+</body>
+</html>
