@@ -1006,8 +1006,13 @@
     .editor-area { grid-column: 1; overflow-y: auto; }
     .editor-scroll { padding: 24px 18px 32px; max-width: 100%; }
     .chapter-title { font-size: 21px; }
-    .editor-toolbar { padding: 6px 14px; gap: 5px; }
+    .editor-toolbar { padding: 6px 10px; gap: 5px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .editor-toolbar::-webkit-scrollbar { display: none; }
+    .editor-breadcrumb { flex-shrink: 0; }
+    .tbtn { white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 5px 9px; }
     .topbar-meta { display: none; }
+    .topbar-logo { display: none; }
+    .topbar-sep:not(:first-of-type) { display: none; }
     .para-actions { opacity: 1; }
 
     .mobile-tabs {
@@ -1376,13 +1381,15 @@
 </div>
 
 <script>
-  /* ---- Telegram 身份（從 URL 參數讀取）---- */
+  /* ---- Telegram 身份 + API endpoint（從 URL 參數讀取）---- */
   (function() {
     const p = new URLSearchParams(window.location.search);
     const chatId = p.get('chat_id');
     const userId = p.get('user_id');
+    const endpoint = p.get('endpoint');
     if (chatId) localStorage.setItem('tg_chat_id', chatId);
     if (userId) localStorage.setItem('tg_user_id', userId);
+    if (endpoint) localStorage.setItem('museon_endpoint', decodeURIComponent(endpoint));
   })();
 
   /* ---- 設定 ---- */
