@@ -1313,7 +1313,9 @@
       <button class="tbtn" onclick="qReply('根據目前段落，幫我繼續起草下一段')">✦ AI 寫</button>
       <button class="tbtn" onclick="qReply('檢查目前章節的論點一致性，找出跳躍或矛盾')">⊙ 一致性</button>
       <button class="tbtn" onclick="showPreview()" style="font-weight:600">👁 預覽全書</button>
-      <button class="tbtn primary" onclick="doSave(this)">儲存</button>
+      <span id="saveIndicator" style="font-size:12px;color:var(--teal);font-weight:500;"></span>
+      <button class="tbtn primary save-btn" onclick="doSave(this)">儲存</button>
+      <button class="tbtn" onclick="showSettings()" title="API 設定">⚙</button>
     </div>
 
     <div class="editor-scroll">
@@ -1330,7 +1332,7 @@
           <span class="para-num">段落 01</span>
           <span>開場白</span>
         </div>
-        <div class="para-content ai-draft" contenteditable="true" oninput="countWords()">
+        <div class="para-content ai-draft" contenteditable="true" oninput="countWords();triggerAutoSave()">
           <div class="ai-badge">✦ AI 草稿</div>
           <p>你上一次做了一個你後來後悔的決定，是什麼時候？</p>
           <p>不是因為資訊不夠。不是因為你不夠聰明。而是因為你用的框架，是為另一個時代設計的。</p>
@@ -1348,7 +1350,7 @@
           <span class="para-num">段落 02</span>
           <span>作者視角</span>
         </div>
-        <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords()"></div>
+        <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords();triggerAutoSave()"></div>
         <div class="para-actions">
           <button class="pabtn" onclick="qReply('幫我起草「作者視角」段落，作者是一位 AI 顧問，服務台灣中小企業主 10 年')">✦ AI 起草</button>
           <button class="pabtn" onclick="qReply('給我這段落的三個切入角度供選擇')">💡 給選項</button>
@@ -1487,6 +1489,63 @@
 </div>
 
 <script>
+  /* ---- 設定 ---- */
+  const MUSEON_ENDPOINT = localStorage.getItem('museon_endpoint') || '';
+  let apiKey = localStorage.getItem('museon_api_key') || '';
+  let autoSaveTimer = null;
+
+  /* ---- LocalStorage 存檔 ---- */
+  function saveState() {
+    const paras = [...document.querySelectorAll('.para-block')].map(b => ({
+      label: b.querySelector('.para-num')?.textContent || '',
+      content: b.querySelector('.para-content')?.innerHTML || '',
+      isDraft: b.querySelector('.para-content')?.classList.contains('ai-draft') || false
+    }));
+    const state = {
+      bookTitle: document.getElementById('wsBookTitle')?.textContent || '',
+      paras,
+      savedAt: Date.now()
+    };
+    localStorage.setItem('museon_book_state', JSON.stringify(state));
+  }
+
+  function loadState() {
+    const raw = localStorage.getItem('museon_book_state');
+    if (!raw) return;
+    try {
+      const state = JSON.parse(raw);
+      if (state.bookTitle) {
+        const el = document.getElementById('wsBookTitle');
+        if (el) el.textContent = state.bookTitle;
+      }
+      if (state.paras && state.paras.length > 0) {
+        state.paras.forEach((p, i) => {
+          const existing = document.querySelectorAll('.para-block')[i];
+          if (existing) {
+            const content = existing.querySelector('.para-content');
+            if (content) {
+              content.innerHTML = p.content;
+              if (p.isDraft) content.classList.add('ai-draft');
+            }
+          }
+        });
+        countWords();
+      }
+    } catch(e) {}
+  }
+
+  function triggerAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+      saveState();
+      const indicator = document.getElementById('saveIndicator');
+      if (indicator) {
+        indicator.textContent = '✓ 已自動儲存';
+        setTimeout(() => { indicator.textContent = ''; }, 2000);
+      }
+    }, 800);
+  }
+
   let obStep = 1;
   let selectedType = '';
   let paraIdx = 2;
@@ -1504,6 +1563,7 @@
     document.getElementById('wsBookTitle').textContent = title;
     document.title = title + ' — MUSEON';
     countWords();
+    loadState();
   }
 
   function backToLibrary() {
@@ -1637,7 +1697,17 @@
     if (window.innerWidth <= 880) switchTab('ai');
   }
 
-  function send(preText) {
+  let chatHistory = [];
+
+  function getBookContext() {
+    const title = document.getElementById('wsBookTitle')?.textContent || '';
+    const paras = [...document.querySelectorAll('.para-content')].map(el =>
+      el.innerText.replace(/^✦ AI 草稿\n?/, '').trim()
+    ).filter(Boolean).join('\n\n');
+    return `書名：${title}\n\n目前內容：\n${paras || '（尚未撰寫）'}`;
+  }
+
+  async function send(preText) {
     const inp = document.getElementById('aiIn');
     const msg = preText || inp.value.trim();
     if (!msg) return;
@@ -1647,7 +1717,7 @@
     u.className = 'msg msg-user';
     u.textContent = msg;
     box.appendChild(u);
-    if (!preText) { inp.value=''; inp.style.height='auto'; }
+    if (!preText) { inp.value = ''; inp.style.height = 'auto'; }
 
     const thinking = document.createElement('div');
     thinking.className = 'msg msg-ai';
@@ -1655,27 +1725,95 @@
     box.appendChild(thinking);
     box.scrollTop = box.scrollHeight;
 
-    const replies = {
-      '幫我繼續寫下一段': '根據序言脈絡，下一段可以這樣展開：<br><br><em>「2022 年底，當 ChatGPT 第一次出現在商業會議室的投影布幕上，大多數人的反應是：哇，它會寫文章。幾乎沒有人注意到，真正的轉變不在能力，而在速度——決策週期從週壓縮到了分鐘。」</em>',
-      '給我三個不同風格的開場方式': '三個方向：<br><br>① <strong>衝擊式</strong>——「你的公司，可能已經在用 2010 年的框架，做 2026 年的決定。」<br><br>② <strong>故事式</strong>——一位台灣連鎖餐飲老闆，三個月連關兩店的決策黑洞。<br><br>③ <strong>問題式</strong>——「什麼是好的決定？你上一次問自己這個問題，是什麼時候？」<br><br>你偏哪個方向？',
-      '先幫我規劃全書架構，六到八章': '建議架構：<br><br><strong>序言</strong> — 為什麼現在<br><strong>第一章</strong> — 框架崩塌：舊商業思維的終結<br><strong>第二章</strong> — 決策品質：慢思快行<br><strong>第三章</strong> — AI 協作：人機分工的藝術<br><strong>第四章</strong> — 資訊過載：篩選比收集更重要<br><strong>第五章</strong> — 不確定性設計<br><strong>第六章</strong> — 複利思維：長期主義操作手冊<br><strong>後記</strong> — 給下一個十年的自己<br><br>要調整哪章的方向？',
-      '更新 Wiki 中的核心設定，根據我們的對話': '根據目前對話，已更新 Wiki：<br><br>• <strong>核心讀者</strong>：月營收百萬以上、面臨 AI 轉型壓力的決策者<br>• <strong>主要痛點</strong>：用舊框架做新決策，資訊過載但洞見不足<br>• <strong>書的承諾</strong>：讀完後能辨識並修正自己的決策盲點',
-      default: '收到你的方向。根據 book-architect Skill，建議先確立「書的核心張力」——這本書在對抗什麼？讀者讀完前後，認知上最大的轉折點是什麼？先聊清楚這個，所有段落才有主心骨。'
-    };
+    chatHistory.push({ role: 'user', content: msg });
 
-    setTimeout(() => {
+    const endpoint = localStorage.getItem('museon_endpoint') || '';
+    const key = localStorage.getItem('museon_api_key') || '';
+
+    if (!endpoint && !key) {
       thinking.remove();
       const ai = document.createElement('div');
       ai.className = 'msg msg-ai';
-      const reply = replies[msg] || replies.default;
-      ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才</div>${reply}
+      ai.innerHTML = `<div class="msg-meta">MUSEON · 設定提示</div>
+        <p>尚未設定 API 連線。請點右上角 ⚙ 設定 MUSEON 端點或 Anthropic API Key。</p>
         <div class="msg-actions">
-          <button class="mabtn insert" onclick="insertDraft(this)">插入段落</button>
-          <button class="mabtn" onclick="this.textContent='重新中…';setTimeout(()=>{this.textContent='重新生成'},700)">重新生成</button>
+          <button class="mabtn insert" onclick="showSettings()">前往設定</button>
         </div>`;
       box.appendChild(ai);
       box.scrollTop = box.scrollHeight;
-    }, 850);
+      return;
+    }
+
+    const ai = document.createElement('div');
+    ai.className = 'msg msg-ai';
+    ai.innerHTML = '<div class="msg-meta">MUSEON · 生成中</div><p class="stream-content"></p>';
+    thinking.replaceWith(ai);
+    box.scrollTop = box.scrollHeight;
+    const streamEl = ai.querySelector('.stream-content');
+    let fullText = '';
+
+    try {
+      if (endpoint) {
+        const resp = await fetch(endpoint + '/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: chatHistory,
+            book_context: getBookContext(),
+            model: 'claude-opus-4-7-20250914'
+          })
+        });
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          chunk.split('\n').forEach(line => {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              try {
+                const d = JSON.parse(line.slice(6));
+                if (d.text) { fullText += d.text; streamEl.textContent = fullText; box.scrollTop = box.scrollHeight; }
+              } catch(e) {}
+            }
+          });
+        }
+      } else {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-allow-browser': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-opus-4-7-20250914',
+            max_tokens: 4096,
+            system: '你是 MUSEON，一個專業的書稿創作 AI 夥伴。繁體中文回應。\n\n當前書稿：\n' + getBookContext(),
+            messages: chatHistory
+          })
+        });
+        const d = await resp.json();
+        fullText = d.content?.[0]?.text || '（無回應）';
+        streamEl.textContent = fullText;
+      }
+
+      chatHistory.push({ role: 'assistant', content: fullText });
+      ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才</div><p>${fullText.replace(/\n/g,'<br>')}</p>
+        <div class="msg-actions">
+          <button class="mabtn insert" onclick="insertDraft(this)">插入段落</button>
+          <button class="mabtn" onclick="regenerate(this,'${encodeURIComponent(msg)}')">重新生成</button>
+        </div>`;
+      box.scrollTop = box.scrollHeight;
+    } catch(err) {
+      ai.innerHTML = `<div class="msg-meta">MUSEON · 錯誤</div><p style="color:var(--ember)">連線失敗：${err.message}</p><div class="msg-actions"><button class="mabtn insert" onclick="showSettings()">前往設定</button></div>`;
+    }
+  }
+
+  function regenerate(btn, encodedMsg) {
+    chatHistory.pop();
+    send(decodeURIComponent(encodedMsg));
   }
 
   function handleKey(e) {
@@ -1715,7 +1853,7 @@
         <span class="para-num">段落 ${String(paraIdx).padStart(2,'0')}</span>
         <span>新段落</span>
       </div>
-      <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords()"></div>
+      <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords();triggerAutoSave()"></div>
       <div class="para-actions" style="opacity:1">
         <button class="pabtn" onclick="qReply('幫我起草第${paraIdx}段，根據前面的脈絡')">✦ AI 起草</button>
         <button class="pabtn" onclick="qReply('給我段落${paraIdx}的三個切入角度')">💡 給選項</button>
@@ -1738,6 +1876,7 @@
   }
 
   function doSave(btn) {
+    saveState();
     btn.textContent = '✓ 已儲存';
     setTimeout(() => btn.textContent = '儲存', 1600);
   }
@@ -1751,6 +1890,30 @@
     });
     const el = document.getElementById('wordCount');
     if (el) el.textContent = '約 ' + n + ' 字';
+  }
+
+  function showSettings() {
+    document.getElementById('settingEndpoint').value = localStorage.getItem('museon_endpoint') || '';
+    document.getElementById('settingKey').value = localStorage.getItem('museon_api_key') || '';
+    document.getElementById('settingsModal').classList.remove('hidden');
+    document.getElementById('settingsModal').style.display = 'flex';
+  }
+
+  function closeSettings() {
+    document.getElementById('settingsModal').classList.add('hidden');
+    document.getElementById('settingsModal').style.display = 'none';
+  }
+
+  function saveSettings() {
+    const ep = document.getElementById('settingEndpoint').value.trim();
+    const k = document.getElementById('settingKey').value.trim();
+    if (ep) localStorage.setItem('museon_endpoint', ep);
+    else localStorage.removeItem('museon_endpoint');
+    if (k) localStorage.setItem('museon_api_key', k);
+    else localStorage.removeItem('museon_api_key');
+    closeSettings();
+    const btn = document.querySelector('.ws-btn.save-btn') || document.querySelector('[onclick="doSave(this)"]');
+    if (btn) { btn.textContent = '✓ 設定已儲存'; setTimeout(() => btn.textContent = '儲存', 1600); }
   }
 
   function switchTab(tab) {
@@ -1768,5 +1931,26 @@
     }
   }
 </script>
+<!-- 設定 Modal -->
+<div id="settingsModal" class="hidden" style="position:fixed;inset:0;background:rgba(18,18,26,0.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--snow);border-radius:20px;padding:40px;max-width:480px;width:100%;box-shadow:var(--shadow-lg);">
+    <div style="font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ember);margin-bottom:24px;">API 設定</div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:13px;font-weight:600;color:var(--slate);display:block;margin-bottom:8px;">MUSEON 後端 URL（路線 B）</label>
+      <input id="settingEndpoint" type="text" placeholder="https://xxxxx.trycloudflare.com" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);outline:none;">
+      <div style="font-size:12px;color:var(--mist);margin-top:6px;">Cloudflare Tunnel URL，留空則用 API Key 直連</div>
+    </div>
+    <div style="margin-bottom:28px;">
+      <label style="font-size:13px;font-weight:600;color:var(--slate);display:block;margin-bottom:8px;">Anthropic API Key（備用）</label>
+      <input id="settingKey" type="password" placeholder="sk-ant-api03-..." style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);outline:none;">
+      <div style="font-size:12px;color:var(--mist);margin-top:6px;">存在瀏覽器本地，不會上傳</div>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button onclick="saveSettings()" style="flex:1;padding:13px;background:var(--ember);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">儲存設定</button>
+      <button onclick="closeSettings()" style="padding:13px 20px;background:none;border:1px solid var(--border);border-radius:10px;font-size:15px;cursor:pointer;">取消</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
