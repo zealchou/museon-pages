@@ -532,7 +532,75 @@
 
   .wiki-add:hover { background: rgba(196,80,42,0.04); border-color: var(--ember); }
 
+  /* ---- Wiki item click -> open in editor ---- */
+  .wiki-data-item { cursor: pointer; }
+  .wiki-data-item:hover { background: rgba(196,80,42,0.07); }
+  .wiki-data-item.editing { background: rgba(196,80,42,0.1); border-left-color: var(--ember-dark); }
+
   .editor-area { display: flex; flex-direction: column; overflow: hidden; background: var(--parchment); }
+
+  /* ---- Editor empty state ---- */
+  .editor-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--mist);
+    padding: 40px;
+    text-align: center;
+  }
+  .editor-empty-icon { font-size: 32px; opacity: 0.4; }
+  .editor-empty-title { font-size: 14px; font-weight: 500; color: var(--slate); }
+  .editor-empty-sub { font-size: 12px; line-height: 1.6; max-width: 300px; }
+
+  /* ---- Item editor ---- */
+  .item-editor-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    outline: none;
+    border: none;
+    border-bottom: 1.5px solid transparent;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    transition: border-color var(--t);
+    width: 100%;
+  }
+  .item-editor-title:focus { border-bottom-color: rgba(196,80,42,0.25); }
+  .item-editor-title:empty::before { content: attr(placeholder); color: var(--mist); pointer-events: none; display: block; }
+
+  .item-editor-content {
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink);
+    outline: none;
+    border: none;
+    min-height: 280px;
+    width: 100%;
+    white-space: pre-wrap;
+    font-family: var(--font);
+  }
+  .item-editor-content:focus { outline: none; }
+  .item-editor-content:empty::before { content: attr(placeholder); color: var(--mist); pointer-events: none; display: block; font-style: italic; }
+
+  .item-save-banner {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(42,122,110,0.08);
+    border: 1px solid rgba(42,122,110,0.2);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .item-save-banner.show { display: flex; }
 
   .editor-toolbar {
     display: flex;
@@ -1283,62 +1351,36 @@
 
   <aside class="wiki" id="wiki"></aside>
 
-  <main class="editor-area">
-    <div class="editor-toolbar">
-      <div class="editor-breadcrumb">
-        <span>書稿</span><span>›</span>
-        <strong id="chLabel">序言</strong>
-      </div>
-      <button class="tbtn" onclick="qReply('根據目前段落，幫我繼續起草下一段')">✦ AI 寫</button>
-      <button class="tbtn" onclick="qReply('檢查目前章節的論點一致性，找出跳躍或矛盾')">⊙ 一致性</button>
-      <button class="tbtn" onclick="showPreview()" style="font-weight:600">👁 預覽全書</button>
-      <span id="saveIndicator" style="font-size:12px;color:var(--teal);font-weight:500;"></span>
-      <button class="tbtn primary save-btn" onclick="doSave(this)">儲存</button>
-      <button class="tbtn" onclick="extractWikiFromHistory()" title="從現有對話記錄補齊 Wiki">📋 補 Wiki</button>
-      <button class="tbtn" onclick="showSettings()" title="API 設定">⚙</button>
+  <main class="editor-area" id="editorArea">
+
+    <!-- Empty state (default) -->
+    <div class="editor-empty" id="editorEmpty" style="flex:1;display:flex;flex-direction:column;">
+      <div class="editor-empty-icon">✦</div>
+      <div class="editor-empty-title">點擊左側 Wiki 條目開始編輯</div>
+      <div class="editor-empty-sub">從 Wiki 選擇一個主題，在這裡展開內容，或與右側 AI 對話建立新條目。</div>
     </div>
 
-    <div class="editor-scroll">
-      <div class="chapter-title" contenteditable="true" id="chTitle">序言——為什麼這本書存在</div>
-      <div class="chapter-meta">
-        <span class="meta-tag">序言</span>
-        <span id="wordCount">約 0 字</span>
-        <span>•</span>
-        <span>AI 助寫：啟動中</span>
+    <!-- Item editor (shown when Wiki item selected) -->
+    <div id="itemEditorPanel" style="display:none;flex-direction:column;height:100%;overflow:hidden;">
+      <div class="editor-toolbar">
+        <div class="editor-breadcrumb">
+          <span id="editorSecLabel">Wiki</span>
+          <span>›</span>
+          <strong id="editorItemLabel">條目</strong>
+        </div>
+        <button class="tbtn" onclick="aiCollaborate()">✦ AI 協作</button>
+        <div class="item-save-banner" id="itemSaveBanner">✓ 已儲存</div>
+        <button class="tbtn primary" onclick="saveItemEdit()">儲存</button>
+        <button class="tbtn" onclick="clearWikiData()" title="清除所有 Wiki 資料" style="color:var(--ember)">🗑 清 Wiki</button>
+        <button class="tbtn" onclick="extractWikiFromHistory()" title="補 Wiki">📋 補</button>
+        <button class="tbtn" onclick="showSettings()">⚙</button>
       </div>
-
-      <div class="para-block" id="pb1">
-        <div class="para-label">
-          <span class="para-num">段落 01</span>
-          <span>開場白</span>
-        </div>
-        <div class="para-content ai-draft" contenteditable="true" oninput="countWords();triggerAutoSave()">
-          <div class="ai-badge">✦ AI 草稿</div>
-          <p>你上一次做了一個你後來後悔的決定，是什麼時候？</p>
-          <p>不是因為資訊不夠。不是因為你不夠聰明。而是因為你用的框架，是為另一個時代設計的。</p>
-        </div>
-        <div class="para-actions">
-          <button class="pabtn accept" onclick="acceptPara(this)">✓ 採用</button>
-          <button class="pabtn" onclick="rejectPara(this)">✕ 棄用</button>
-          <button class="pabtn" onclick="qReply('調整這段語氣，讓它更有力量，像一記直拳而非說教')">↺ 調語氣</button>
-          <button class="pabtn" onclick="qReply('展開這段，加入一個真實商業情境作為例子')">↕ 展開</button>
-        </div>
+      <div class="editor-scroll">
+        <div class="item-editor-title" id="itemEditorTitle" contenteditable="true" placeholder="條目標題…"></div>
+        <div class="item-editor-content" id="itemEditorContent" contenteditable="true" placeholder="在這裡展開這個條目的完整內容。可以自由撰寫，或點擊右上角「✦ AI 協作」讓 AI 幫你深化…"></div>
       </div>
-
-      <div class="para-block" id="pb2">
-        <div class="para-label">
-          <span class="para-num">段落 02</span>
-          <span>作者視角</span>
-        </div>
-        <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords();triggerAutoSave()"></div>
-        <div class="para-actions">
-          <button class="pabtn" onclick="qReply('幫我起草「作者視角」段落，作者是一位 AI 顧問，服務台灣中小企業主 10 年')">✦ AI 起草</button>
-          <button class="pabtn" onclick="qReply('給我這段落的三個切入角度供選擇')">💡 給選項</button>
-        </div>
-      </div>
-
-      <button class="add-para" onclick="addPara()">＋ 新增段落</button>
     </div>
+
   </main>
 
   <aside class="ai-panel" id="aiPanel">
@@ -1575,8 +1617,10 @@
       }
       if (state.wikiData) {
         wikiData = state.wikiData;
-        // Re-render wiki with stored data
         renderWiki(currentProjectType);
+      }
+      if (state.wikiContent) {
+        wikiContent = state.wikiContent;
       }
     } catch(e) {}
   }
@@ -1746,8 +1790,8 @@
       `<button class="wiki-add" onclick="qReply(\`${prompt}\`)">${label}</button>`;
     const sec = (icon, title, secKey, items, collapsed) => {
       const stored = (wikiData[secKey] || []);
-      const dataItems = stored.map(t =>
-        `<div class="wiki-item wiki-data-item" data-sec="${secKey}"><span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${t.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="deleteWikiItem('${secKey}',this)" title="刪除">✕</button></div>`
+      const dataItems = stored.map((t, idx) =>
+        `<div class="wiki-item wiki-data-item" data-sec="${secKey}" data-idx="${idx}" onclick="openWikiItemInEditor('${secKey}',${idx},${JSON.stringify(t)})"><span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${t.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="event.stopPropagation();deleteWikiItem('${secKey}',this)" title="刪除">✕</button></div>`
       ).join('');
       const hasData = stored.length > 0;
       const isCollapsed = hasData ? false : (collapsed || false);
@@ -1874,20 +1918,103 @@
   }
 
   /* ---- Wiki / Editor ---- */
+  let currentEditingSec = null;
+  let currentEditingIdx = null;
+  let wikiContent = {}; // {sec: {idx: fullBodyText}}
+
   function toggleSec(btn) {
     btn.classList.toggle('collapsed');
     const items = btn.nextElementSibling;
     items.style.display = items.style.display === 'none' ? 'block' : 'none';
   }
 
+  function openWikiItemInEditor(secKey, idx, label) {
+    // Mark active in wiki
+    document.querySelectorAll('.wiki-data-item').forEach(i => i.classList.remove('editing'));
+    const dataItem = document.querySelector(`.wiki-data-item[data-sec="${secKey}"][data-idx="${idx}"]`);
+    if (dataItem) dataItem.classList.add('editing');
+
+    currentEditingSec = secKey;
+    currentEditingIdx = idx;
+
+    // Show item editor, hide empty state
+    document.getElementById('editorEmpty').style.display = 'none';
+    const panel = document.getElementById('itemEditorPanel');
+    panel.style.display = 'flex';
+
+    // Populate editor
+    const secLabel = WIKI_SEC_LABELS[secKey] || secKey;
+    document.getElementById('editorSecLabel').textContent = secLabel;
+    document.getElementById('editorItemLabel').textContent = label;
+    document.getElementById('itemEditorTitle').textContent = label;
+
+    // Load body content from wikiContent store
+    const body = (wikiContent[secKey] && wikiContent[secKey][idx]) ? wikiContent[secKey][idx] : '';
+    const contentEl = document.getElementById('itemEditorContent');
+    contentEl.textContent = body;
+
+    // Update AI context chip
+    const ctxChip = document.getElementById('ctxChip');
+    if (ctxChip) ctxChip.textContent = '📌 ' + label;
+
+    if (window.innerWidth <= 880) switchTab('editor');
+  }
+
+  function saveItemEdit() {
+    if (currentEditingSec === null || currentEditingIdx === null) return;
+    const newLabel = document.getElementById('itemEditorTitle').textContent.trim();
+    const newBody = document.getElementById('itemEditorContent').textContent.trim();
+
+    // Update wikiData label
+    if (wikiData[currentEditingSec] && wikiData[currentEditingSec][currentEditingIdx] !== undefined) {
+      if (newLabel) wikiData[currentEditingSec][currentEditingIdx] = newLabel;
+    }
+
+    // Update wikiContent body
+    if (!wikiContent[currentEditingSec]) wikiContent[currentEditingSec] = {};
+    wikiContent[currentEditingSec][currentEditingIdx] = newBody;
+
+    // Update DOM label in wiki sidebar
+    const dataItem = document.querySelector(`.wiki-data-item[data-sec="${currentEditingSec}"][data-idx="${currentEditingIdx}"]`);
+    if (dataItem) {
+      const titleEl = dataItem.querySelector('.wiki-item-title');
+      if (titleEl && newLabel) titleEl.textContent = newLabel;
+    }
+
+    // Persist to localStorage
+    try {
+      const state = JSON.parse(localStorage.getItem('museon_state_' + currentProjectId) || '{}');
+      state.wikiData = wikiData;
+      state.wikiContent = wikiContent;
+      localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
+    } catch(e) {}
+
+    // Flash save banner
+    const banner = document.getElementById('itemSaveBanner');
+    banner.classList.add('show');
+    setTimeout(() => banner.classList.remove('show'), 2000);
+
+    document.getElementById('editorItemLabel').textContent = newLabel || document.getElementById('editorItemLabel').textContent;
+  }
+
+  function aiCollaborate() {
+    const title = document.getElementById('itemEditorTitle').textContent.trim();
+    const body = document.getElementById('itemEditorContent').textContent.trim();
+    const secLabel = document.getElementById('editorSecLabel').textContent;
+    const prompt = `我正在編輯 Wiki 條目「${secLabel} › ${title}」。\n\n目前內容：\n${body || '（尚未填寫）'}\n\n請幫我深化展開這個條目，讓它更完整、有深度。`;
+    qReply(prompt);
+    if (window.innerWidth <= 880) switchTab('ai');
+  }
+
   function loadCh(btn, label, title) {
+    // Legacy — for built-in outline buttons in wiki, show empty state + update context
     document.querySelectorAll('.wiki-item').forEach(i => i.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('chLabel').textContent = label;
-    document.getElementById('chTitle').textContent = title;
     const ctxChip = document.getElementById('ctxChip');
     if (ctxChip) ctxChip.textContent = '📖 ' + label;
-    if (window.innerWidth <= 880) switchTab('editor');
+    // Pre-fill AI with a relevant prompt
+    qReply(`幫我展開「${title || label}」這個主題，先提問確認方向，再整理成 Wiki 條目建議。`);
+    if (window.innerWidth <= 880) switchTab('ai');
   }
 
   function qReply(text) {
@@ -1927,21 +2054,34 @@
 `;
 
   const WIKI_PROTOCOL = `
-【對話探索優先協議】
-重要：不要自動把資訊塞進 Wiki。先在對話中探索、確認、討論，像 Claude 一樣互動。
-只有當資訊已在對話中被用戶確認後，才在回覆末尾附上建議標記（需用戶手動點擊才會寫入 Wiki）。
-格式：[WIKI_SUGGEST:section_key:建議內容（一行，精簡）]
+【核心工作流程：素材 → 對話討論 → Wiki 分類（絕不塞文章）】
+
+當用戶上傳檔案、貼入大段文字、或描述想法時：
+① 先分析理解內容，用自己的語言精煉提問（「我理解你說的是…，這樣對嗎？」）
+② 對話中逐步確認重要概念，不要一次塞所有資訊
+③ 確認後，把已理解的資訊分類成 Wiki 建議標記（最多 5 條）
+④ 標記放在回覆最末尾，用戶手動點擊才會寫入 Wiki
+
+⛔ 禁止行為：
+- 禁止把素材內容直接塞進對話作為大段文字「分析報告」
+- 禁止未經確認就輸出 WIKI_SUGGEST 標記
+- 禁止自動生成整段文章放入編輯區
+
+✅ 正確行為：
+- 讀懂素材後，先提 2-3 個精準的確認問題
+- 等用戶回覆確認後，再輸出 WIKI_SUGGEST
+- 每次回覆聚焦一個主題，保持對話感
+
+Wiki 標記格式：[WIKI_SUGGEST:section_key:精簡的一行描述]
 可用 section_key：
   書籍：outline/readers/theme/blindspot
   小說：outline/characters/worldview/plot/tension/blindspot
   遊戲：g1/g2/g3/g4/g7/macro/micro/rules/blindspot
   劇本：scenes/characters/structure/dialogue/visual/blindspot
-規則：
-  - 遇到不確定的資訊，先提問確認，不要猜測後直接建議
-  - 確認過的資訊才附建議標記，一次最多 3 條
-  - 若還在討論中、資訊未確認，不加任何標記
-  - 標記放在回覆最末尾
-範例：[WIKI_SUGGEST:characters:主角李明——動機：尋父；恐懼：再次失去]
+
+範例回覆模式：
+「我看到你提到了三個核心角色，讓我先確認：主角的主要動機是 X 還是 Y？」
+→ 用戶確認後 → 回覆末尾加 [WIKI_SUGGEST:characters:主角——動機：X；與配角的張力關係]
 `;
 
   function getSystemPrompt() {
@@ -2020,7 +2160,8 @@
         div.className = 'wiki-item wiki-data-item';
         div.dataset.sec = secKey;
         div.dataset.idx = idx;
-        div.innerHTML = `<span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${t.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="deleteWikiItem('${secKey}',this)" title="刪除">✕</button>`;
+        div.setAttribute('onclick', `openWikiItemInEditor('${secKey}',${idx},${JSON.stringify(t)})`);
+        div.innerHTML = `<span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${t.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="event.stopPropagation();deleteWikiItem('${secKey}',this)" title="刪除">✕</button>`;
         frag.appendChild(div);
       });
       itemsDiv.insertBefore(frag, itemsDiv.firstChild);
@@ -2042,6 +2183,30 @@
       state.wikiData = wikiData;
       localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
     } catch(e) {}
+  }
+
+  function clearWikiData() {
+    if (!confirm('確定要清除所有 Wiki 資料嗎？此操作無法復原。')) return;
+    wikiData = {};
+    wikiContent = {};
+    currentEditingSec = null;
+    currentEditingIdx = null;
+    renderWiki(currentProjectType);
+    // Back to empty state
+    document.getElementById('editorEmpty').style.display = '';
+    document.getElementById('itemEditorPanel').style.display = 'none';
+    try {
+      const state = JSON.parse(localStorage.getItem('museon_state_' + currentProjectId) || '{}');
+      state.wikiData = {};
+      state.wikiContent = {};
+      localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
+    } catch(e) {}
+    const box = document.getElementById('aiMsgs');
+    const notice = document.createElement('div');
+    notice.className = 'msg msg-ai';
+    notice.innerHTML = '<div class="msg-meta">MUSEON · 系統</div>Wiki 已全部清空。重新上傳素材，這次 AI 會先跟你討論確認再分類。';
+    box.appendChild(notice);
+    box.scrollTop = box.scrollHeight;
   }
 
   function deleteWikiItem(secKey, btn) {
