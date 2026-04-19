@@ -476,6 +476,29 @@
     margin-top: 2px;
   }
 
+  .wiki-data-item {
+    border-left: 2px solid var(--ember);
+    margin: 4px 0;
+    padding: 5px 8px;
+    background: rgba(196,80,42,0.04);
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .wiki-del-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--mist); font-size: 10px; padding: 0 2px;
+    flex-shrink: 0; margin-top: 1px;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .wiki-data-item:hover .wiki-del-btn { opacity: 1; }
+  .wiki-updated-badge {
+    font-size: 10px; color: var(--ember);
+    margin-left: 4px; font-weight: 600;
+    animation: fadeout 3s forwards;
+  }
+  @keyframes fadeout { 0%{opacity:1} 70%{opacity:1} 100%{opacity:0} }
   .wiki-add {
     display: flex;
     align-items: center;
@@ -1519,6 +1542,11 @@
         });
         countWords();
       }
+      if (state.wikiData) {
+        wikiData = state.wikiData;
+        // Re-render wiki with stored data
+        renderWiki(currentProjectType);
+      }
     } catch(e) {}
   }
 
@@ -1538,6 +1566,7 @@
   let obStep = 1;
   let selectedType = '';
   let paraIdx = 2;
+  let wikiData = {};
 
   /* ---- Library ---- */
   function showOnboard() {
@@ -1684,41 +1713,48 @@
       `<button class="wiki-sec-btn${collapsed?' collapsed':''}" onclick="toggleSec(this)"><span>${icon}</span><span>${title}</span><svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>`;
     const ab = (label, prompt) =>
       `<button class="wiki-add" onclick="qReply(\`${prompt}\`)">${label}</button>`;
-    const sec = (icon, title, items, collapsed) =>
-      `<div class="wiki-section">${sv(icon,title,collapsed)}<div class="wiki-items"${collapsed?' style="display:none"':''}>` +
-      items.join('') + `</div></div>`;
+    const sec = (icon, title, secKey, items, collapsed) => {
+      const stored = (wikiData[secKey] || []);
+      const dataItems = stored.map(t =>
+        `<div class="wiki-item wiki-data-item" data-sec="${secKey}"><span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${t.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="deleteWikiItem('${secKey}',this)" title="刪除">✕</button></div>`
+      ).join('');
+      const hasData = stored.length > 0;
+      const isCollapsed = hasData ? false : (collapsed || false);
+      return `<div class="wiki-section" data-sec="${secKey}">${sv(icon,title,isCollapsed)}<div class="wiki-items"${isCollapsed?' style="display:none"':''}>` +
+        dataItems + items.join('') + `</div></div>`;
+    };
 
     const defs = {
       book: {
         header: '書籍 Wiki',
         sections: [
-          sec('📖','章節大綱',[ab('＋ 與 AI 聊出章節架構','幫我規劃全書架構，建議 6-8 章，每章給出標題和 2-3 句摘要')]),
-          sec('👤','目標讀者',[ab('＋ 與 AI 聊出讀者畫像','幫我深化目標讀者畫像，他們最痛的問題是什麼？讀完這本書會發生什麼改變？')]),
-          sec('💡','核心論點',[ab('＋ 與 AI 聊出核心論點','幫我整理書的核心論點、貫穿全書的主題線、以及每章的知識累積邏輯')]),
-          sec('⚡','脈絡警示',[ab('⚠️ 一致性檢查','檢查目前章節的論點一致性，找出跳躍或矛盾之處')],true)
+          sec('📖','章節大綱','outline',[ab('＋ 與 AI 聊出章節架構','幫我規劃全書架構，建議 6-8 章，每章給出標題和 2-3 句摘要')]),
+          sec('👤','目標讀者','readers',[ab('＋ 與 AI 聊出讀者畫像','幫我深化目標讀者畫像，他們最痛的問題是什麼？讀完這本書會發生什麼改變？')]),
+          sec('💡','核心論點','theme',[ab('＋ 與 AI 聊出核心論點','幫我整理書的核心論點、貫穿全書的主題線、以及每章的知識累積邏輯')]),
+          sec('⚡','脈絡警示','blindspot',[ab('⚠️ 一致性檢查','檢查目前章節的論點一致性，找出跳躍或矛盾之處')],true)
         ]
       },
       novel: {
         header: '小說 Wiki',
         sections: [
-          sec('📖','章節大綱',[ab('＋ 與 AI 聊出章節','幫我規劃小說架構：故事弧、轉折點、高潮、結局，建議分幾章')]),
-          sec('👤','角色深度設定（ANIMA 人格維度）',[
+          sec('📖','章節大綱','outline',[ab('＋ 與 AI 聊出章節','幫我規劃小說架構：故事弧、轉折點、高潮、結局，建議分幾章')]),
+          sec('👤','角色深度設定（ANIMA 人格維度）','characters',[
             ab('＋ 建立主角完整人格','幫我建立主角的完整人格畫像，涵蓋六個維度：\n①核心動機：最深的渴望是什麼？從哪裡來？\n②核心恐懼：最怕什麼？如何左右每個選擇？\n③隱藏陰影：外表與內在的矛盾，別人看不見的那一面\n④說話風格：語氣節奏、口頭禪，以及壓力下語言如何變化\n⑤成長弧：開始狀態→觸發事件→核心掙扎→轉化時刻→結束狀態\n⑥關係動態：誰讓他安心？誰讓他失控？如何對待弱者/強者/陌生人？'),
             ab('＋ 建立反派人格','幫我建立反派的完整人格：從他自己的視角看，行為有沒有邏輯？動機是否真實可信？他映照主角哪個最深的陰影？'),
             ab('＋ 建立次要角色','幫我建立次要角色：他的故事功能是什麼——是鏡子（映照主角）、催化劑（改變主角）還是代價（讓主角學到教訓）？'),
             ab('＋ 角色關係圖','幫我建立角色關係網路：誰信任誰？誰有隱藏動機？誰是關鍵槓桿？哪段關係會在故事中逆轉？逆轉的根因是什麼？')
           ]),
-          sec('🌍','世界觀',[ab('＋ 與 AI 建立世界觀','幫我建立小說世界觀：時代背景、地理環境、社會結構，以及那些「沒人說出口但每個人都遵守」的潛規則')]),
-          sec('🎭','情節線',[
+          sec('🌍','世界觀','worldview',[ab('＋ 與 AI 建立世界觀','幫我建立小說世界觀：時代背景、地理環境、社會結構，以及那些「沒人說出口但每個人都遵守」的潛規則')]),
+          sec('🎭','情節線','plot',[
             ab('＋ 主線情節','幫我梳理主線情節，從開始到結束的完整事件鏈。確認每個轉折點都源於角色的主動選擇，不是外力推動'),
             ab('＋ 支線情節','幫我規劃支線情節：與主線交織點在哪裡？這條支線如何映照或強化主線的核心主題？')
           ]),
-          sec('🎨','敘事張力（C15 StoryForge）',[
+          sec('🎨','敘事張力（C15 StoryForge）','tension',[
             ab('＋ 場景鉤子設計','幫我為關鍵場景設計開場鉤子：前三行內必須埋下懸念。這個場景最大的懸念是什麼？'),
             ab('＋ 選擇代價分析','幫我分析主角的核心決策時刻：他選了什麼？他放棄了什麼？讀者能感受到這個代價的重量嗎？'),
             ab('＋ 感官細節注入','幫我為當前場景注入五感細節（視覺/聽覺/嗅覺/觸覺/味覺），讓讀者不只是「知道」這個場景，而是「身在其中」感受它')
           ]),
-          sec('🔍','盲點偵測',[
+          sec('🔍','盲點偵測','blindspot',[
             ab('⚠️ 角色一致性掃描','掃描全書角色行為：每個選擇是否都能從「動機＋恐懼＋陰影」三角推導？找出任何「為情節服務但違背人性邏輯」的行為'),
             ab('⚠️ 敘事張力漏洞','找出敘事張力漏洞：哪些場景沒有衝突？哪裡節奏過於平緩？哪個角色的情緒弧太過線性？列出前三個需要強化的點'),
             ab('⚠️ 世界觀邏輯裂縫','掃描世界觀裂縫：哪些設定互相矛盾？有哪些「讀者會問但故事沒有回答」的問題正在累積？'),
@@ -1729,54 +1765,54 @@
       game: {
         header: '遊戲設定 Wiki（結晶物語框架）',
         sections: [
-          sec('🌍','G1 世界觀（哲學主題）',[
+          sec('🌍','G1 世界觀（哲學主題）','g1',[
             ab('＋ 建立世界哲學','幫我建立遊戲世界的哲學主題、宇宙觀、歷史背景、核心矛盾'),
             ab('＋ 地理與歷史','幫我設計世界的地理結構、歷史時間線、重大事件')
           ]),
-          sec('👥','G2 人格層（NPC 系統）',[
+          sec('👥','G2 人格層（NPC 系統）','g2',[
             ab('＋ 建立 NPC 人格矩陣','幫我設計主要 NPC 的人格類型、語氣風格、行為模式和隱藏動機'),
             ab('＋ 陣營與派系','幫我設計各陣營的信念、目標、對立關係')
           ]),
-          sec('⚙️','G3 結構層（敘事引擎）',[
+          sec('⚙️','G3 結構層（敘事引擎）','g3',[
             ab('＋ 主線敘事','幫我設計主線故事：開場事件、中期衝突、高潮轉折、結局走向'),
             ab('＋ 支線任務','幫我規劃支線任務系統：觸發條件、獎勵、與主線關聯')
           ]),
-          sec('⚡','G4 能量層（能力系統）',[
+          sec('⚡','G4 能量層（能力系統）','g4',[
             ab('＋ 建立能量/能力系統','幫我設計玩家的能量與能力系統：獲得方式、成長曲線、上限設計'),
             ab('＋ 道具與裝備','幫我設計道具和裝備系統：分類、稀有度、合成規則')
           ]),
-          sec('🕸️','G7 關係場',[
+          sec('🕸️','G7 關係場','g7',[
             ab('＋ 角色關係圖','幫我建立主要角色的關係網路：盟友、對手、隱藏關係、情感連結'),
             ab('＋ 好感度系統','幫我設計 NPC 好感度系統：影響因素、解鎖事件、結局分支')
           ]),
-          sec('📋','宏觀模式（7 種）',[ab('＋ 設計宏觀模式','幫我設計遊戲的 7 種宏觀模式：劇情旅途、NPC 互動、國家戰爭、派系鬥爭、商會競合、夢境、事件結算，每種模式的特色玩法是什麼')]),
-          sec('🎭','微場景（7 種）',[ab('＋ 設計微場景','幫我設計遊戲的 7 種微場景：密談、三角談判、合約桌、票號窗口、遠行踩點、閉關修行、教學場，每種場景的互動規則和 NPC 行為')]),
-          sec('⚔️','規則核心',[
+          sec('📋','宏觀模式（7 種）','macro',[ab('＋ 設計宏觀模式','幫我設計遊戲的 7 種宏觀模式：劇情旅途、NPC 互動、國家戰爭、派系鬥爭、商會競合、夢境、事件結算，每種模式的特色玩法是什麼')]),
+          sec('🎭','微場景（7 種）','micro',[ab('＋ 設計微場景','幫我設計遊戲的 7 種微場景：密談、三角談判、合約桌、票號窗口、遠行踩點、閉關修行、教學場，每種場景的互動規則和 NPC 行為')]),
+          sec('⚔️','規則核心','rules',[
             ab('＋ 戰鬥系統','幫我設計戰鬥系統：回合制或即時、技能樹、勝負條件、平衡設計'),
             ab('＋ 數值設計','幫我設計核心數值：HP、MP、屬性、成長公式、難度曲線')
           ],true),
-          sec('⚡','脈絡警示',[ab('⚠️ 設定一致性','檢查目前所有設定的邏輯一致性，找出矛盾或漏洞')],true)
+          sec('⚡','脈絡警示','blindspot',[ab('⚠️ 設定一致性','檢查目前所有設定的邏輯一致性，找出矛盾或漏洞')],true)
         ]
       },
       script: {
         header: '劇本 Wiki',
         sections: [
-          sec('🎬','場景列表',[
+          sec('🎬','場景列表','scenes',[
             ab('＋ 與 AI 建立場景','幫我規劃劇本場景列表：按場景號、地點、時間、在場角色、場景功能'),
             ab('＋ 分析場景功能','分析這個場景在三幕結構中的位置和功能')
           ]),
-          sec('👥','人物弧（ANIMA 人格維度）',[
+          sec('👥','人物弧（ANIMA 人格維度）','characters',[
             ab('＋ 建立主角完整人格弧','幫我設計主角的完整人格弧：\n①核心動機（最深渴望）\n②核心恐懼（如何左右每個選擇）\n③隱藏陰影（外表vs內在矛盾）\n④說話風格（語氣、口頭禪、壓力下的變化）\n⑤成長弧（開始→觸發→掙扎→轉化→結束）\n⑥關係動態（對其他角色的情感模式）'),
             ab('＋ 建立對立人物','幫我設計對立人物：動機、與主角的核心衝突，以及他如何映照主角的陰影'),
             ab('＋ 角色語氣設計','幫我為每個主要角色設計說話風格：語氣節奏、口頭禪、在壓力下語言如何變化，確保每個角色都有獨特的「聲音」')
           ]),
-          sec('🏗️','故事結構',[
+          sec('🏗️','故事結構','structure',[
             ab('＋ 三幕結構','幫我用三幕結構規劃劇本：第一幕建立世界，第二幕衝突升級，第三幕高潮解決'),
             ab('＋ 設計轉折點','幫我設計劇本的 3 個關鍵轉折點，每個轉折點的功能是什麼')
           ]),
-          sec('💬','對話風格',[ab('＋ 建立角色語氣','幫我為每個主要角色定義說話風格：語氣、口頭禪、說話節奏、與其他角色的對話差異')]),
-          sec('🎞️','視覺設定',[ab('＋ 場景氛圍','幫我描述這個場景的視覺風格：光線、色調、鏡頭語言建議')],true),
-          sec('🔍','盲點偵測',[
+          sec('💬','對話風格','dialogue',[ab('＋ 建立角色語氣','幫我為每個主要角色定義說話風格：語氣、口頭禪、說話節奏、與其他角色的對話差異')]),
+          sec('🎞️','視覺設定','visual',[ab('＋ 場景氛圍','幫我描述這個場景的視覺風格：光線、色調、鏡頭語言建議')],true),
+          sec('🔍','盲點偵測','blindspot',[
             ab('⚠️ 角色動機一致性','掃描所有場景的角色動機：每個行動是否都能從「動機＋恐懼＋陰影」推導？找出違背人性的「劇情工具性行為」'),
             ab('⚠️ 場景功能審計','審計每個場景的功能：它推進了情節？揭露了角色？還是兩者都有？找出「純展示無功能」的場景'),
             ab('⚠️ 對話真實性','分析對話：誰的聲音最弱？哪段對話只是在傳遞信息而不是角色在「說自己的話」？')
@@ -1859,6 +1895,23 @@
 - 場景是否有功能？推進情節 or 揭露角色 or 兩者都有？
 `;
 
+  const WIKI_PROTOCOL = `
+【Wiki 自動更新協議 — 必須遵守】
+每次回覆後，若分析出對 Wiki 有幫助的結構化資訊，在回覆末尾（正文之後）加入 Wiki 更新標記。
+格式：[WIKI:section_key:摘要內容（一行，精簡）]
+可用 section_key：
+  書籍：outline/readers/theme/blindspot
+  小說：outline/characters/worldview/plot/tension/blindspot
+  遊戲：g1/g2/g3/g4/g7/macro/micro/rules/blindspot
+  劇本：scenes/characters/structure/dialogue/visual/blindspot
+規則：
+  - 每條標記只放一個重點（不要堆砌）
+  - 摘要盡量精簡（30字內），讓 Wiki 側欄一目了然
+  - 若無新資訊，不要加標記
+  - 標記要放在回覆最末尾，不影響正文閱讀
+範例：[WIKI:characters:主角李明——動機：尋父；恐懼：再次失去]
+`;
+
   function getSystemPrompt() {
     const prompts = {
       book: `你是 MUSEON，一個專業的書稿創作 AI 夥伴，搭載 book-architect Skill。幫助用戶規劃架構、撰寫章節、提煉論點。繁體中文回應，詳細深入，每次至少 300 字。${C15_CORE}`,
@@ -1866,7 +1919,88 @@
       game: `你是 MUSEON，一個專業的遊戲設計 AI 夥伴，整合「結晶物語：夢迴」的 8 層世界架構（G1 世界觀、G2 人格層、G3 結構層、G4 能量層、G7 關係場）和 7 種宏觀模式（劇情旅途、NPC 互動、國家戰爭、派系鬥爭、商會競合、夢境、事件結算）以及 7 種微場景（密談、三角談判、合約桌、票號窗口、遠行踩點、閉關修行、教學場）。NPC 設計必須使用 ANIMA 六維度（動機/恐懼/陰影/說話風格/成長弧/關係動態）。繁體中文回應，系統性且細節豐富，每次至少 400 字。${C15_CORE}`,
       script: `你是 MUSEON，一個專業的劇本創作 AI 夥伴，整合 script-optimizer + C15 StoryForge Skill。幫助用戶規劃場景結構、建立人物弧（ANIMA 六維度）、優化對話真實性。熟悉三幕結構、場景功能分類、對話節奏設計。繁體中文回應，每次至少 400 字。${C15_CORE}`
     };
-    return (prompts[currentProjectType] || prompts.book) + '\n\n當前作品資訊：\n';
+    return (prompts[currentProjectType] || prompts.book) + WIKI_PROTOCOL + '\n\n當前作品資訊：\n';
+  }
+
+  function parseWikiTags(text) {
+    const updates = [];
+    const re = /\[WIKI:(\w+):([^\]]+)\]/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      updates.push({ sec: m[1], content: m[2].trim() });
+    }
+    return updates;
+  }
+
+  function stripWikiTags(text) {
+    return text.replace(/\[WIKI:\w+:[^\]]+\]/g, '').trim();
+  }
+
+  function applyWikiUpdates(updates) {
+    if (!updates.length) return;
+    let updatedSecs = [];
+    updates.forEach(u => {
+      if (!wikiData[u.sec]) wikiData[u.sec] = [];
+      if (!wikiData[u.sec].includes(u.content)) {
+        wikiData[u.sec].push(u.content);
+        updatedSecs.push(u.sec);
+      }
+    });
+    if (!updatedSecs.length) return;
+    // Update DOM for each changed section
+    updatedSecs.forEach(secKey => {
+      const secEl = document.querySelector(`.wiki-section[data-sec="${secKey}"]`);
+      if (!secEl) return;
+      const itemsDiv = secEl.querySelector('.wiki-items');
+      if (!itemsDiv) return;
+      // Remove old data items for this sec
+      itemsDiv.querySelectorAll(`.wiki-data-item[data-sec="${secKey}"]`).forEach(el => el.remove());
+      // Re-insert updated data items at top
+      const stored = wikiData[secKey] || [];
+      const frag = document.createDocumentFragment();
+      stored.forEach((t, idx) => {
+        const div = document.createElement('div');
+        div.className = 'wiki-item wiki-data-item';
+        div.dataset.sec = secKey;
+        div.dataset.idx = idx;
+        div.innerHTML = `<span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${t.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="deleteWikiItem('${secKey}',this)" title="刪除">✕</button>`;
+        frag.appendChild(div);
+      });
+      itemsDiv.insertBefore(frag, itemsDiv.firstChild);
+      // Auto-expand section and flash badge
+      const btn = secEl.querySelector('.wiki-sec-btn');
+      if (btn && btn.classList.contains('collapsed')) {
+        btn.classList.remove('collapsed');
+        itemsDiv.style.display = '';
+      }
+      const badge = document.createElement('span');
+      badge.className = 'wiki-updated-badge';
+      badge.textContent = '✦ 已更新';
+      btn.appendChild(badge);
+      setTimeout(() => badge.remove(), 3200);
+    });
+    // Save wikiData to localStorage
+    try {
+      const state = JSON.parse(localStorage.getItem('museon_state_' + currentProjectId) || '{}');
+      state.wikiData = wikiData;
+      localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
+    } catch(e) {}
+  }
+
+  function deleteWikiItem(secKey, btn) {
+    const item = btn.closest('.wiki-data-item');
+    const idx = parseInt(item.dataset.idx);
+    if (wikiData[secKey]) {
+      wikiData[secKey].splice(idx, 1);
+      item.remove();
+      // Re-index remaining items
+      document.querySelectorAll(`.wiki-data-item[data-sec="${secKey}"]`).forEach((el, i) => { el.dataset.idx = i; });
+      try {
+        const state = JSON.parse(localStorage.getItem('museon_state_' + currentProjectId) || '{}');
+        state.wikiData = wikiData;
+        localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
+      } catch(e) {}
+    }
   }
 
   async function send(preText) {
@@ -1992,11 +2126,14 @@
 
       clearInterval(elapsedTimer);
       chatHistory.push({ role: 'assistant', content: fullText });
-      ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才</div><p>${fullText.replace(/\n/g,'<br>')}</p>
+      const wikiUpdates = parseWikiTags(fullText);
+      const displayText = stripWikiTags(fullText);
+      ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才${wikiUpdates.length ? ' <span style="font-size:10px;color:var(--ember)">✦ Wiki 已更新</span>' : ''}</div><p>${displayText.replace(/\n/g,'<br>')}</p>
         <div class="msg-actions">
           <button class="mabtn insert" onclick="insertDraft(this)">插入段落</button>
           <button class="mabtn" onclick="regenerate(this,'${encodeURIComponent(msg)}')">重新生成</button>
         </div>`;
+      if (wikiUpdates.length) applyWikiUpdates(wikiUpdates);
       box.scrollTop = box.scrollHeight;
     } catch(err) {
       clearInterval(elapsedTimer);
