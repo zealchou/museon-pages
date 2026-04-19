@@ -1892,6 +1892,7 @@
     box.appendChild(thinking);
     box.scrollTop = box.scrollHeight;
 
+    _lastMsg = msg;
     chatHistory.push({ role: 'user', content: fullMsg });
 
     const endpoint = localStorage.getItem('museon_endpoint') || '';
@@ -1999,9 +2000,13 @@
       box.scrollTop = box.scrollHeight;
     } catch(err) {
       clearInterval(elapsedTimer);
-      ai.innerHTML = `<div class="msg-meta">MUSEON · 錯誤</div><p style="color:var(--ember)">連線失敗：${err.message}</p><div class="msg-actions"><button class="mabtn insert" onclick="showSettings()">前往設定</button></div>`;
+      const failUrl = localStorage.getItem('museon_endpoint') || '（未設定）';
+      ai.innerHTML = `<div class="msg-meta">MUSEON · 錯誤</div><p style="color:var(--ember)">連線失敗：${err.message}</p><p style="font-size:12px;color:var(--mist);margin-top:4px;">嘗試連線：<code style="font-size:11px;background:#f0ece4;padding:1px 4px;border-radius:3px;word-break:break-all;">${failUrl}</code></p><div class="msg-actions"><button class="mabtn insert" onclick="retryLastMsg()">重試</button><button class="mabtn" onclick="showSettings()">更換設定</button></div>`;
     }
   }
+
+  let _lastMsg = '';
+  function retryLastMsg() { if (_lastMsg) send(_lastMsg); }
 
   function regenerate(btn, encodedMsg) {
     chatHistory.pop();
@@ -2144,6 +2149,22 @@
     document.getElementById('settingsModal').style.display = 'none';
   }
 
+  async function testConnection() {
+    const ep = document.getElementById('settingEndpoint').value.trim() || localStorage.getItem('museon_endpoint') || '';
+    const result = document.getElementById('testConnResult');
+    const btn = document.getElementById('testConnBtn');
+    if (!ep) { result.textContent = '⚠️ 請先填入 URL'; result.style.color = 'var(--ember)'; return; }
+    btn.textContent = '測試中…'; result.textContent = ''; result.style.color = 'var(--mist)';
+    try {
+      const resp = await fetch(ep + '/health', { method: 'GET', signal: AbortSignal.timeout(8000) });
+      if (resp.ok) { result.textContent = '✅ 連線成功'; result.style.color = '#2e7d32'; }
+      else { result.textContent = `❌ HTTP ${resp.status}`; result.style.color = 'var(--ember)'; }
+    } catch(e) {
+      result.textContent = `❌ 無法連線（${e.message}）`; result.style.color = 'var(--ember)';
+    }
+    btn.textContent = '測試連線';
+  }
+
   function saveSettings() {
     const ep = document.getElementById('settingEndpoint').value.trim();
     const k = document.getElementById('settingKey').value.trim();
@@ -2181,6 +2202,10 @@
     <div style="margin-bottom:20px;">
       <label style="font-size:13px;font-weight:600;color:var(--slate);display:block;margin-bottom:8px;">MUSEON 後端 URL（免費路線）</label>
       <input id="settingEndpoint" type="text" placeholder="https://xxxxx.trycloudflare.com" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);outline:none;">
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <button onclick="testConnection()" id="testConnBtn" style="padding:7px 14px;background:#f0ece4;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;white-space:nowrap;">測試連線</button>
+        <span id="testConnResult" style="font-size:12px;color:var(--mist);"></span>
+      </div>
       <div style="font-size:12px;color:var(--mist);margin-top:6px;">在 Mac 終端機執行 <code style="background:#f0ece4;padding:1px 5px;border-radius:4px;">~/MUSEON/scripts/start_webchat.sh</code>，複製輸出的 URL 貼到這裡</div>
     </div>
     <div style="margin-bottom:28px;">
