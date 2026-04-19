@@ -386,6 +386,13 @@
 
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-dot 2.4s infinite; }
   @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  .typing-dots { display:inline-flex; align-items:center; gap:3px; margin-left:4px; vertical-align:middle; }
+  .typing-dot { width:5px; height:5px; border-radius:50%; background:var(--teal); animation:typing-bounce 1.2s infinite; }
+  .typing-dot:nth-child(2){animation-delay:.2s} .typing-dot:nth-child(3){animation-delay:.4s}
+  @keyframes typing-bounce { 0%,60%,100%{transform:translateY(0);opacity:.35} 30%{transform:translateY(-5px);opacity:1} }
+  .ai-elapsed { font-size:10px; color:var(--mist); margin-left:6px; transition:color .3s; }
+  .ai-elapsed.warn { color:#e67e22; }
+  .ai-elapsed.stuck { color:var(--ember); font-weight:600; }
 
   .wiki {
     background: var(--snow);
@@ -1906,11 +1913,32 @@
 
     const ai = document.createElement('div');
     ai.className = 'msg msg-ai';
-    ai.innerHTML = '<div class="msg-meta">MUSEON · 生成中</div><p class="stream-content"></p>';
+    ai.innerHTML = `<div class="msg-meta">MUSEON <span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span><span class="ai-elapsed" id="ai-elapsed-${Date.now()}"></span></div><p class="stream-content"></p>`;
     thinking.replaceWith(ai);
     box.scrollTop = box.scrollHeight;
     const streamEl = ai.querySelector('.stream-content');
+    const elapsedEl = ai.querySelector('.ai-elapsed');
     let fullText = '';
+    const startTime = Date.now();
+    let retryTimer = null;
+    const elapsedTimer = setInterval(() => {
+      const sec = Math.floor((Date.now() - startTime) / 1000);
+      if (!elapsedEl) { clearInterval(elapsedTimer); return; }
+      if (sec < 5) { elapsedEl.textContent = ''; }
+      else if (sec < 30) { elapsedEl.textContent = sec + 's'; elapsedEl.className = 'ai-elapsed'; }
+      else if (sec < 90) { elapsedEl.textContent = sec + 's · 大型素材需要時間…'; elapsedEl.className = 'ai-elapsed warn'; }
+      else {
+        elapsedEl.textContent = sec + 's · 可能卡住了';
+        elapsedEl.className = 'ai-elapsed stuck';
+        if (!ai.querySelector('.retry-hint')) {
+          const hint = document.createElement('div');
+          hint.className = 'retry-hint';
+          hint.style.cssText = 'margin-top:6px;font-size:12px;color:var(--ember);';
+          hint.innerHTML = '⚠ 超過 ' + sec + '秒無回應，<button class="mabtn" onclick="this.closest(\'.msg-ai\').remove();document.getElementById(\'aiInput\').focus()">取消</button> 後重試';
+          ai.appendChild(hint);
+        }
+      }
+    }, 1000);
 
     try {
       if (endpoint) {
@@ -1961,6 +1989,7 @@
         streamEl.textContent = fullText;
       }
 
+      clearInterval(elapsedTimer);
       chatHistory.push({ role: 'assistant', content: fullText });
       ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才</div><p>${fullText.replace(/\n/g,'<br>')}</p>
         <div class="msg-actions">
@@ -1969,6 +1998,7 @@
         </div>`;
       box.scrollTop = box.scrollHeight;
     } catch(err) {
+      clearInterval(elapsedTimer);
       ai.innerHTML = `<div class="msg-meta">MUSEON · 錯誤</div><p style="color:var(--ember)">連線失敗：${err.message}</p><div class="msg-actions"><button class="mabtn insert" onclick="showSettings()">前往設定</button></div>`;
     }
   }
