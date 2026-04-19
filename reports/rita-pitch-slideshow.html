@@ -12,18 +12,20 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             font-family: 'Outfit', 'Noto Sans TC', sans-serif;
             background: #0E0E16;
             color: #12121A;
-            overflow: hidden;
         }
 
+        /* ── 桌機：全螢幕固定 ── */
         .slideshow-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            aspect-ratio: 16/9;
+            overflow: hidden;
         }
 
         .slide {
@@ -38,239 +40,292 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            overflow-y: auto;
         }
 
         .slide.active {
             display: flex;
-            animation: fadeIn 0.6s ease-out;
+            animation: fadeIn 0.5s ease-out;
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* 投影片背景變化 */
-        .slide-light {
-            background: #F7F5F0;
-        }
-
-        .slide-dark {
-            background: #0E0E16;
-            color: #F7F5F0;
-        }
-
-        .slide-accent {
-            background: linear-gradient(135deg, #9A3A1C 0%, #C4502A 100%);
-            color: #FDFCFA;
-        }
+        /* 背景主題 */
+        .slide-light  { background: #F7F5F0; }
+        .slide-dark   { background: #0E0E16; color: #F7F5F0; }
+        .slide-accent { background: linear-gradient(135deg, #9A3A1C 0%, #C4502A 100%); color: #FDFCFA; }
 
         /* 標題 */
         .slide h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 64px;
+            font-size: clamp(36px, 5vw, 64px);
             font-weight: 600;
             line-height: 1.15;
-            margin-bottom: 32px;
-            letter-spacing: -0.02em;
+            margin-bottom: 24px;
         }
-
         .slide h2 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 48px;
+            font-size: clamp(28px, 4vw, 48px);
             font-weight: 600;
             line-height: 1.2;
-            margin-bottom: 48px;
+            margin-bottom: 32px;
         }
-
         .slide h3 {
-            font-size: 32px;
+            font-size: clamp(20px, 2.5vw, 32px);
             font-weight: 600;
-            margin-bottom: 24px;
-            line-height: 1.3;
+            margin-bottom: 20px;
         }
 
         /* 本文 */
         .slide p {
-            font-size: 24px;
+            font-size: clamp(15px, 1.8vw, 24px);
             line-height: 1.8;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             max-width: 900px;
         }
 
         .slide-subtitle {
-            font-size: 28px;
+            font-size: clamp(16px, 2vw, 28px);
             line-height: 1.6;
             color: #B8923A;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
-        /* 藥丸對比區 */
+        /* 藥丸 */
         .pill-container {
             display: flex;
             justify-content: center;
-            gap: 120px;
-            margin: 60px 0;
+            gap: clamp(40px, 8vw, 120px);
+            margin: 40px 0;
             flex-wrap: wrap;
         }
-
         .pill {
-            width: 160px;
-            height: 160px;
+            width: clamp(100px, 12vw, 160px);
+            height: clamp(100px, 12vw, 160px);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: 600;
-            font-size: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            font-size: clamp(14px, 1.8vw, 20px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
         }
+        .pill:hover { transform: scale(1.08); }
+        .pill-blue  { background: #4A90E2; color: #FFF; }
+        .pill-red   { background: #C4502A; color: #FFF; }
+        .pill-label { margin-top: 10px; font-size: clamp(13px, 1.4vw, 18px); }
 
-        .pill:hover {
-            transform: scale(1.1);
-        }
-
-        .pill-blue {
-            background: #4A90E2;
-            color: #FFF;
-        }
-
-        .pill-red {
-            background: #C4502A;
-            color: #FFF;
-        }
-
-        .pill-label {
-            margin-top: 12px;
-            font-size: 18px;
-        }
-
-        /* 內容卡片 */
+        /* 卡片 */
         .card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 12px;
-            padding: 32px;
-            margin: 16px;
+            padding: 28px;
+            margin: 12px;
             max-width: 800px;
             text-align: left;
         }
 
-        .card-title {
-            font-size: 24px;
+        /* 列表項目 */
+        .list-item {
+            font-size: clamp(14px, 1.7vw, 22px);
+            line-height: 2;
+            text-align: left;
+            margin: 12px 0;
+        }
+        .list-item::before {
+            content: "→ ";
+            color: #B8923A;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-right: 8px;
         }
 
-        .card-text {
-            font-size: 18px;
+        .highlight     { color: #B8923A; font-weight: 600; }
+        .highlight-red { color: #C4502A; font-weight: 600; }
+
+        /* 成功案例三欄 */
+        .cases-grid {
+            display: flex;
+            gap: clamp(12px, 2vw, 28px);
+            max-width: 1100px;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .case-card {
+            flex: 1;
+            background: #F0ECE4;
+            border-radius: 12px;
+            padding: clamp(16px, 2vw, 28px);
+            text-align: left;
+        }
+        .case-label {
+            font-size: clamp(11px, 1vw, 13px);
+            color: #B8923A;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+        .case-title {
+            font-size: clamp(14px, 1.4vw, 18px);
+            font-weight: 600;
+            color: #12121A;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .case-body {
+            font-size: clamp(11px, 1.1vw, 14px);
+            color: #5A5A6E;
             line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .case-action {
+            font-size: clamp(11px, 1.1vw, 14px);
+            color: #C4502A;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .case-result {
+            font-size: clamp(12px, 1.2vw, 15px);
+            font-weight: 600;
+            color: #12121A;
         }
 
         /* 控制按鈕 */
         .controls {
             position: fixed;
-            bottom: 40px;
+            bottom: clamp(16px, 3vh, 40px);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 20px;
+            gap: 16px;
             z-index: 100;
         }
-
         button {
             background: #C4502A;
             color: #FFF;
             border: none;
-            padding: 12px 32px;
+            padding: clamp(8px, 1.2vw, 12px) clamp(16px, 2.5vw, 32px);
             border-radius: 6px;
-            font-size: 16px;
+            font-size: clamp(13px, 1.2vw, 16px);
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s ease;
+            white-space: nowrap;
         }
+        button:hover     { background: #9A3A1C; }
+        button:disabled  { background: #999; cursor: not-allowed; }
 
-        button:hover {
-            background: #9A3A1C;
-        }
-
-        button:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
-
-        /* 投影片計數 */
+        /* 計數器 */
         .slide-counter {
             position: fixed;
-            top: 32px;
-            right: 40px;
-            font-size: 16px;
+            top: clamp(16px, 2.5vh, 32px);
+            right: clamp(16px, 3vw, 40px);
+            font-size: clamp(12px, 1vw, 16px);
             font-weight: 600;
             color: #999;
             font-family: 'IBM Plex Mono', monospace;
+            z-index: 100;
         }
 
-        /* 列表 */
-        .list-item {
-            font-size: 22px;
-            line-height: 2;
-            text-align: left;
-            margin: 16px 0;
-        }
-
-        .list-item::before {
-            content: "→ ";
-            color: #B8923A;
-            font-weight: 600;
-            margin-right: 12px;
-        }
-
-        /* 強調文字 */
-        .highlight {
-            color: #B8923A;
-            font-weight: 600;
-        }
-
-        .highlight-red {
-            color: #C4502A;
-            font-weight: 600;
-        }
-
-        /* 鍵盤提示 */
         .keyboard-hint {
             position: fixed;
-            bottom: 20px;
-            right: 40px;
-            font-size: 12px;
+            bottom: clamp(6px, 1.5vh, 20px);
+            right: clamp(16px, 3vw, 40px);
+            font-size: clamp(10px, 0.9vw, 12px);
             color: #666;
             font-family: 'IBM Plex Mono', monospace;
+            z-index: 100;
         }
 
-        .dark .keyboard-hint {
-            color: #999;
-        }
-
-        /* 版權 */
         .footer {
             position: fixed;
-            bottom: 40px;
-            left: 40px;
-            font-size: 13px;
+            bottom: clamp(16px, 3vh, 40px);
+            left: clamp(16px, 3vw, 40px);
+            font-size: clamp(10px, 0.9vw, 13px);
             color: #999;
             font-family: 'IBM Plex Mono', monospace;
+            z-index: 100;
         }
 
-        .dark .footer {
-            color: #666;
+        /* ── 手機端：垂直可捲動 ── */
+        @media (max-width: 768px) {
+            body { overflow-y: auto; }
+
+            .slideshow-container {
+                position: static;
+                width: 100%;
+                height: auto;
+                overflow: visible;
+            }
+
+            .slide {
+                position: static;
+                display: none;
+                height: auto;
+                min-height: 100vh;
+                padding: 72px 20px 100px;
+                overflow: visible;
+            }
+
+            .slide.active { display: flex; }
+
+            /* 案例三欄 → 單欄 */
+            .cases-grid {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .case-card { padding: 18px; }
+            .case-label  { font-size: 12px; }
+            .case-title  { font-size: 16px; }
+            .case-body   { font-size: 13px; }
+            .case-action { font-size: 13px; }
+            .case-result { font-size: 14px; }
+
+            /* 藥丸間距壓縮 */
+            .pill-container { gap: 32px; }
+
+            /* 列表字體 */
+            .slide .list-item { font-size: 15px; line-height: 1.9; }
+
+            /* 控制按鈕固定底部 */
+            .controls {
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transform: none;
+                justify-content: center;
+                background: rgba(14,14,22,0.95);
+                padding: 10px 16px;
+                gap: 12px;
+            }
+            button { padding: 10px 24px; font-size: 14px; }
+
+            .keyboard-hint { display: none; }
+
+            .footer {
+                bottom: 52px;
+                left: 16px;
+                font-size: 10px;
+            }
+
+            .slide-counter {
+                top: 16px;
+                right: 16px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide { padding: 64px 16px 96px; }
+            .slide h1 { font-size: 32px; }
+            .slide h2 { font-size: 26px; }
+            .slide p  { font-size: 15px; }
         }
     </style>
 </head>
@@ -282,30 +337,30 @@
     <div class="slide slide-accent active">
         <h1>藥丸選擇</h1>
         <p class="slide-subtitle">為你的企業決策</p>
-        <p style="font-size: 20px; opacity: 0.9; margin-top: 60px;">MUSEON 決策者簡講</p>
+        <p style="font-size: clamp(14px,1.5vw,20px); opacity: 0.9; margin-top: 40px;">MUSEON 決策者簡講</p>
     </div>
 
     <!-- Slide 2: 開場 -->
     <div class="slide slide-light">
         <h2>你有看過《駭客任務》嗎？</h2>
-        <p style="margin-top: 60px; color: #5A5A6E;">有一場經典對話你一定記得——</p>
-        <p style="font-size: 32px; margin-top: 40px; font-weight: 600; color: #12121A;">Morpheus 的手中，左邊一顆藍色藥丸，右邊一顆紅色藥丸。</p>
-        <p style="margin-top: 40px; color: #5A5A6E;">吞下去的瞬間，一切改變。</p>
+        <p style="margin-top: 40px; color: #5A5A6E;">有一場經典對話你一定記得——</p>
+        <p style="font-size: clamp(18px,2.5vw,32px); margin-top: 30px; font-weight: 600; color: #12121A;">Morpheus 的手中，左邊一顆藍色藥丸，右邊一顆紅色藥丸。</p>
+        <p style="margin-top: 30px; color: #5A5A6E;">吞下去的瞬間，一切改變。</p>
     </div>
 
     <!-- Slide 3: 藥丸對比 -->
     <div class="slide slide-dark">
-        <h2 style="margin-bottom: 80px;">你的選擇</h2>
+        <h2 style="margin-bottom: 40px;">你的選擇</h2>
         <div class="pill-container">
             <div>
                 <div class="pill pill-blue">💊</div>
-                <p style="margin-top: 24px; font-size: 22px; color: #F7F5F0;">藍色藥丸</p>
-                <p class="list-item" style="text-align: center; color: #999;">繼續睡著<br>什麼都不變</p>
+                <p style="margin-top: 16px; font-size: clamp(14px,1.6vw,22px); color: #F7F5F0;">藍色藥丸</p>
+                <p style="text-align: center; color: #999; font-size: clamp(13px,1.3vw,18px); line-height: 1.6;">繼續睡著<br>什麼都不變</p>
             </div>
             <div>
                 <div class="pill pill-red">💊</div>
-                <p style="margin-top: 24px; font-size: 22px; color: #F7F5F0;">紅色藥丸</p>
-                <p class="list-item" style="text-align: center; color: #999;">看見真實<br>開始改變</p>
+                <p style="margin-top: 16px; font-size: clamp(14px,1.6vw,22px); color: #F7F5F0;">紅色藥丸</p>
+                <p style="text-align: center; color: #999; font-size: clamp(13px,1.3vw,18px); line-height: 1.6;">看見真實<br>開始改變</p>
             </div>
         </div>
     </div>
@@ -313,7 +368,7 @@
     <!-- Slide 4: 你的現況 -->
     <div class="slide slide-light">
         <h2>企業現況</h2>
-        <div style="margin-top: 60px; text-align: left; max-width: 900px;">
+        <div style="margin-top: 32px; text-align: left; max-width: 900px; width: 100%;">
             <p class="list-item">業務還在靠「人」推——銷售周期長、成本高</p>
             <p class="list-item">決策資訊不足——對市場、客戶、競爭沒有系統化認知</p>
             <p class="list-item">成長遇到瓶頸——技術或流程無法支撐下一階段</p>
@@ -321,10 +376,10 @@
         </div>
     </div>
 
-    <!-- Slide 5: MUSEON 是什麼 -->
+    <!-- Slide 5: MUSEON 不是 -->
     <div class="slide slide-dark">
-        <h2 style="color: #F7F5F0; margin-bottom: 60px;">MUSEON 不是</h2>
-        <div style="text-align: left; max-width: 900px;">
+        <h2 style="color: #F7F5F0; margin-bottom: 32px;">MUSEON 不是</h2>
+        <div style="text-align: left; max-width: 900px; width: 100%;">
             <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 又一個 AI 工具</p>
             <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 複雜的管理軟體</p>
             <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 會盜取你的商業機密</p>
@@ -332,40 +387,36 @@
         </div>
     </div>
 
-    <!-- Slide 6: MUSEON 是什麼 - 正面 -->
+    <!-- Slide 6: MUSEON 是 -->
     <div class="slide slide-light">
         <h2>MUSEON 是</h2>
-        <div style="margin-top: 60px; text-align: left; max-width: 900px;">
+        <div style="margin-top: 32px; text-align: left; max-width: 900px; width: 100%;">
             <p class="list-item"><span class="highlight-red">✓</span> <span class="highlight">思維品質引擎</span></p>
-            <p style="font-size: 18px; color: #5A5A6E; margin-left: 40px; margin-top: -8px;">讓你的決策更清晰、更有根據、更快速</p>
-
-            <p class="list-item" style="margin-top: 40px;"><span class="highlight-red">✓</span> <span class="highlight">內部安全系統</span></p>
-            <p style="font-size: 18px; color: #5A5A6E; margin-left: 40px; margin-top: -8px;">數據加密、權限分離、無外洩風險</p>
-
-            <p class="list-item" style="margin-top: 40px;"><span class="highlight-red">✓</span> <span class="highlight">可行動的方案</span></p>
-            <p style="font-size: 18px; color: #5A5A6E; margin-left: 40px; margin-top: -8px;">不是理論，是你可以明天就執行的步驟</p>
+            <p style="font-size: clamp(13px,1.3vw,18px); color: #5A5A6E; margin-left: 32px; margin-top: -6px;">讓你的決策更清晰、更有根據、更快速</p>
+            <p class="list-item" style="margin-top: 28px;"><span class="highlight-red">✓</span> <span class="highlight">內部安全系統</span></p>
+            <p style="font-size: clamp(13px,1.3vw,18px); color: #5A5A6E; margin-left: 32px; margin-top: -6px;">數據加密、權限分離、無外洩風險</p>
+            <p class="list-item" style="margin-top: 28px;"><span class="highlight-red">✓</span> <span class="highlight">可行動的方案</span></p>
+            <p style="font-size: clamp(13px,1.3vw,18px); color: #5A5A6E; margin-left: 32px; margin-top: -6px;">不是理論，是你可以明天就執行的步驟</p>
         </div>
     </div>
 
     <!-- Slide 7: 三個產品級能力 -->
     <div class="slide slide-dark">
-        <h2 style="color: #F7F5F0; margin-bottom: 80px;">三個產品級數位商品</h2>
-        <div style="text-align: left; max-width: 1000px;">
-            <p class="list-item" style="color: #F7F5F0; font-size: 24px;"><span style="color: #B8923A;">Ⅰ 決策智囊</span> — 市場/客戶/競爭分析</p>
-            <p style="font-size: 18px; color: #999; margin-left: 60px; margin-top: -12px;">自動生成可視化報告，CEO 一張圖看懂全局</p>
-
-            <p class="list-item" style="color: #F7F5F0; font-size: 24px; margin-top: 48px;"><span style="color: #B8923A;">Ⅱ 業務加速器</span> — 銷售/行銷自動化</p>
-            <p style="font-size: 18px; color: #999; margin-left: 60px; margin-top: -12px;">客戶分析、提案自動生成、跟進提醒</p>
-
-            <p class="list-item" style="color: #F7F5F0; font-size: 24px; margin-top: 48px;"><span style="color: #B8923A;">Ⅲ 人才發展引擎</span> — 員工成長追蹤</p>
-            <p style="font-size: 18px; color: #999; margin-left: 60px; margin-top: -12px;">個性化發展計畫、技能缺口分析</p>
+        <h2 style="color: #F7F5F0; margin-bottom: 40px;">三個產品級數位商品</h2>
+        <div style="text-align: left; max-width: 1000px; width: 100%;">
+            <p class="list-item" style="color: #F7F5F0; font-size: clamp(15px,1.8vw,24px);"><span style="color: #B8923A;">Ⅰ 決策智囊</span> — 市場/客戶/競爭分析</p>
+            <p style="font-size: clamp(12px,1.2vw,18px); color: #999; margin-left: 32px; margin-top: -8px;">自動生成可視化報告，CEO 一張圖看懂全局</p>
+            <p class="list-item" style="color: #F7F5F0; font-size: clamp(15px,1.8vw,24px); margin-top: 32px;"><span style="color: #B8923A;">Ⅱ 業務加速器</span> — 銷售/行銷自動化</p>
+            <p style="font-size: clamp(12px,1.2vw,18px); color: #999; margin-left: 32px; margin-top: -8px;">客戶分析、提案自動生成、跟進提醒</p>
+            <p class="list-item" style="color: #F7F5F0; font-size: clamp(15px,1.8vw,24px); margin-top: 32px;"><span style="color: #B8923A;">Ⅲ 人才發展引擎</span> — 員工成長追蹤</p>
+            <p style="font-size: clamp(12px,1.2vw,18px); color: #999; margin-left: 32px; margin-top: -8px;">個性化發展計畫、技能缺口分析</p>
         </div>
     </div>
 
     <!-- Slide 8: 佐證 · 創始人背景 -->
     <div class="slide slide-light">
         <h2>為什麼相信 MUSEON？</h2>
-        <div style="margin-top: 60px; text-align: left; max-width: 900px;">
+        <div style="margin-top: 32px; text-align: left; max-width: 900px; width: 100%;">
             <p class="list-item"><span style="color: #B8923A;">✓</span> 創始人 30 年創業經驗——踩過的坑比你走過的路多</p>
             <p class="list-item"><span style="color: #B8923A;">✓</span> 自研方法論體系——不是搬家學外國的，是在地化驗證</p>
             <p class="list-item"><span style="color: #B8923A;">✓</span> 曾為 Fortune 500 諮詢——懂大企業思維，也懂中小企業痛點</p>
@@ -375,40 +426,36 @@
 
     <!-- Slide 9: 成功案例 -->
     <div class="slide slide-light">
-        <h2 style="margin-bottom: 40px;">真實案例，不是承諾</h2>
-        <div style="display: flex; gap: 28px; max-width: 1100px; width: 100%; margin-top: 8px;">
-
-            <div style="flex: 1; background: #F0ECE4; border-radius: 12px; padding: 28px; text-align: left;">
-                <p style="font-size: 13px; color: #B8923A; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 10px;">CASE 01 · 個人品牌顧問</p>
-                <p style="font-size: 18px; font-weight: 600; color: #12121A; margin-bottom: 10px; line-height: 1.4;">心靈教練的品牌重建</p>
-                <p style="font-size: 14px; color: #5A5A6E; line-height: 1.7; margin-bottom: 14px;">「說了很多，客戶就是記不住我在做什麼。」整合型心理教練，服務到位但品牌模糊，無法轉化。</p>
-                <p style="font-size: 14px; color: #C4502A; font-weight: 600; margin-bottom: 10px;">→ 品牌診斷 + 客群定位 + 3個月行銷藍圖</p>
-                <p style="font-size: 15px; font-weight: 600; color: #12121A;">定位一句話說清楚，內容策略系統化，轉介渠道建立</p>
+        <h2 style="margin-bottom: 24px;">真實案例，不是承諾</h2>
+        <div class="cases-grid">
+            <div class="case-card">
+                <p class="case-label">CASE 01 · 個人品牌顧問</p>
+                <p class="case-title">心靈教練的品牌重建</p>
+                <p class="case-body">「說了很多，客戶就是記不住我在做什麼。」整合型心理教練，服務到位但品牌模糊，無法轉化。</p>
+                <p class="case-action">→ 品牌診斷 + 客群定位 + 3個月行銷藍圖</p>
+                <p class="case-result">定位一句話說清楚，內容策略系統化，轉介渠道建立</p>
             </div>
-
-            <div style="flex: 1; background: #F0ECE4; border-radius: 12px; padding: 28px; text-align: left;">
-                <p style="font-size: 13px; color: #B8923A; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 10px;">CASE 02 · 創意製作人</p>
-                <p style="font-size: 18px; font-weight: 600; color: #12121A; margin-bottom: 10px; line-height: 1.4;">劇本節奏工程</p>
-                <p style="font-size: 14px; color: #5A5A6E; line-height: 1.7; margin-bottom: 14px;">演出前 48 小時：5 分鐘劇本需壓縮至 3.5 分鐘，但笑點一個都不能少。</p>
-                <p style="font-size: 14px; color: #C4502A; font-weight: 600; margin-bottom: 10px;">→ 笑點密度分析 + 節奏重構 + 場景刪補</p>
-                <p style="font-size: 15px; font-weight: 600; color: #12121A;">笑點保留率 95%+，比人工改版快 70%，演出效果如預期</p>
+            <div class="case-card">
+                <p class="case-label">CASE 02 · 創意製作人</p>
+                <p class="case-title">劇本節奏工程</p>
+                <p class="case-body">演出前 48 小時：5 分鐘劇本需壓縮至 3.5 分鐘，但笑點一個都不能少。</p>
+                <p class="case-action">→ 笑點密度分析 + 節奏重構 + 場景刪補</p>
+                <p class="case-result">笑點保留率 95%+，比人工改版快 70%，演出效果如預期</p>
             </div>
-
-            <div style="flex: 1; background: #F0ECE4; border-radius: 12px; padding: 28px; text-align: left;">
-                <p style="font-size: 13px; color: #B8923A; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 10px;">CASE 03 · 服務業 AI 診斷</p>
-                <p style="font-size: 18px; font-weight: 600; color: #12121A; margin-bottom: 10px; line-height: 1.4;">旅行社流程自動化</p>
-                <p style="font-size: 14px; color: #5A5A6E; line-height: 1.7; margin-bottom: 14px;">中型旅行社：客服重複性高、報價流程耗時，老闆知道要導入 AI 但不知從哪裡開始。</p>
-                <p style="font-size: 14px; color: #C4502A; font-weight: 600; margin-bottom: 10px;">→ AI 可行性評估 + 優先流程識別</p>
-                <p style="font-size: 15px; font-weight: 600; color: #12121A;">找出 3 條可自動化流程，預估節省 40% 重複性工作時間</p>
+            <div class="case-card">
+                <p class="case-label">CASE 03 · 服務業 AI 診斷</p>
+                <p class="case-title">旅行社流程自動化</p>
+                <p class="case-body">中型旅行社：客服重複性高、報價流程耗時，老闆知道要導入 AI 但不知從哪裡開始。</p>
+                <p class="case-action">→ AI 可行性評估 + 優先流程識別</p>
+                <p class="case-result">找出 3 條可自動化流程，預估節省 40% 重複性工作時間</p>
             </div>
-
         </div>
     </div>
 
     <!-- Slide 10: 安全性保證 -->
     <div class="slide slide-accent">
-        <h2 style="margin-bottom: 60px;">我們怎麼保護你？</h2>
-        <div style="text-align: left; max-width: 900px;">
+        <h2 style="margin-bottom: 40px;">我們怎麼保護你？</h2>
+        <div style="text-align: left; max-width: 900px; width: 100%;">
             <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 企業級加密——你的數據永遠只在你的伺服器</p>
             <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 權限分離——不同角色看不同資訊</p>
             <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 無雲端上傳——敏感數據不離開你的公司</p>
@@ -419,12 +466,12 @@
     <!-- Slide 11: 下一步 -->
     <div class="slide slide-light">
         <h2>現在，你的選擇</h2>
-        <div style="margin-top: 80px; text-align: center;">
-            <p style="font-size: 32px; color: #9A3A1C; font-weight: 600; margin-bottom: 60px;">
+        <div style="margin-top: 48px; text-align: center;">
+            <p style="font-size: clamp(20px,2.5vw,32px); color: #9A3A1C; font-weight: 600; margin-bottom: 40px;">
                 20 分鐘的免費諮詢<br>
-                <span style="font-size: 24px; color: #5A5A6E; font-weight: 400;">看我們是否適合你的企業</span>
+                <span style="font-size: clamp(14px,1.8vw,24px); color: #5A5A6E; font-weight: 400;">看我們是否適合你的企業</span>
             </p>
-            <p style="font-size: 20px; color: #5A5A6E; margin-top: 40px;">
+            <p style="font-size: clamp(14px,1.5vw,20px); color: #5A5A6E; margin-top: 32px;">
                 聯絡我們：<span style="color: #C4502A; font-weight: 600;">Rita@museon.ai</span>
             </p>
         </div>
@@ -432,11 +479,11 @@
 
     <!-- Slide 12: 結語 -->
     <div class="slide slide-dark">
-        <h2 style="color: #F7F5F0; margin-bottom: 60px;">紅色或藍色？</h2>
-        <p style="font-size: 28px; color: #B8923A; margin-bottom: 40px; font-weight: 600;">
+        <h2 style="color: #F7F5F0; margin-bottom: 40px;">紅色或藍色？</h2>
+        <p style="font-size: clamp(18px,2vw,28px); color: #B8923A; margin-bottom: 32px; font-weight: 600;">
             選擇永遠在你。
         </p>
-        <p style="font-size: 24px; color: #F7F5F0; line-height: 1.8; max-width: 900px;">
+        <p style="font-size: clamp(15px,1.8vw,24px); color: #F7F5F0; line-height: 1.8; max-width: 900px;">
             我們只是來告訴你——<br>
             <span style="color: #C4502A;">如果你選了紅色，一切都會變不一樣。</span>
         </p>
@@ -453,13 +500,9 @@
     <button id="next-btn" onclick="changeSlide(1)">下一頁 →</button>
 </div>
 
-<div class="keyboard-hint">
-    ← → 鍵盤切換 / Space 播放
-</div>
+<div class="keyboard-hint">← → 鍵盤切換</div>
 
-<div class="footer">
-    MUSEON © 2026 · 決策者簡講
-</div>
+<div class="footer">MUSEON © 2026 · 決策者簡講</div>
 
 <script>
     let currentSlide = 0;
@@ -469,31 +512,34 @@
     document.getElementById('total-slides').textContent = totalSlides;
 
     function showSlide(n) {
-        slides.forEach(slide => slide.classList.remove('active'));
+        slides.forEach(s => s.classList.remove('active'));
         slides[n].classList.add('active');
-
         document.getElementById('current-slide').textContent = n + 1;
-
-        // 更新按鈕狀態
         document.getElementById('prev-btn').disabled = n === 0;
         document.getElementById('next-btn').disabled = n === totalSlides - 1;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function changeSlide(direction) {
-        currentSlide += direction;
-        if (currentSlide < 0) currentSlide = 0;
-        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + direction));
         showSlide(currentSlide);
     }
 
     // 鍵盤控制
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') changeSlide(-1);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  changeSlide(-1);
         if (e.key === 'ArrowRight') changeSlide(1);
-        if (e.key === ' ') e.preventDefault();
+        if (e.key === ' ') { e.preventDefault(); changeSlide(1); }
     });
 
-    // 初始化
+    // 手機滑動支援
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+    }, { passive: true });
+
     showSlide(0);
 </script>
 
