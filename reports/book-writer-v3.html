@@ -2372,6 +2372,7 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
   function addPara() {
     paraIdx++;
     const scroll = document.querySelector('.editor-scroll');
+    if (!scroll) return null;
     const addBtn = scroll.querySelector('.add-para');
     const block = document.createElement('div');
     block.className = 'para-block';
@@ -2387,18 +2388,32 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
       </div>`;
     scroll.insertBefore(block, addBtn);
     block.querySelector('.para-content').focus();
+    return block;
   }
 
   function insertDraft(btn) {
-    const aiMsg = btn.closest('.msg-ai');
-    const text = aiMsg.innerText.replace(/^MUSEON · 剛才\n?/,'').replace(/\n插入段落.*$/s,'').trim();
-    addPara();
-    const lastPara = document.querySelectorAll('.para-content');
-    const target = lastPara[lastPara.length - 1];
+    const aiMsg = btn.closest('.msg-ai') || btn.closest('.msg');
+    if (!aiMsg) return;
+    // 只取第一個 <p> 的文字，避免把 wiki-suggest 卡片和按鈕文字都塞進去
+    const pEl = aiMsg.querySelector('p');
+    let text = (pEl ? pEl.innerText : '').trim();
+    if (!text) text = aiMsg.innerText.replace(/^MUSEON[^\n]*\n?/,'').replace(/\n插入段落[\s\S]*$/,'').trim();
+    const block = addPara();
+    if (!block) {
+      // editor-scroll 不存在，給用戶提示
+      const tip = document.createElement('div');
+      tip.style.cssText = 'background:var(--ember);color:#fff;padding:5px 10px;border-radius:4px;font-size:11px;margin-top:6px;';
+      tip.textContent = '請先打開一本書，再使用「插入段落」';
+      btn.parentNode.appendChild(tip);
+      setTimeout(() => tip.remove(), 3000);
+      return;
+    }
+    const target = block.querySelector('.para-content');
     if (target) {
       target.classList.add('ai-draft');
-      target.innerHTML = '<div class="ai-badge">✦ AI 草稿</div><p>' + text + '</p>';
+      target.innerHTML = '<div class="ai-badge">✦ AI 草稿</div><p>' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>';
       countWords();
+      block.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
