@@ -1272,6 +1272,7 @@
       <span id="saveIndicator" style="font-size:12px;color:var(--teal);font-weight:500;"></span>
       <button class="tbtn primary save-btn" onclick="doSave(this)">儲存</button>
       <button class="tbtn" onclick="extractWikiFromHistory()" title="從現有對話記錄補齊 Wiki">📋 補 Wiki</button>
+      <button class="tbtn" onclick="clearAllWiki()" title="清除所有錯亂的 Wiki 資料，重新開始" style="color:#c0392b">🗑 清除 Wiki</button>
       <button class="tbtn" onclick="showSettings()" title="API 設定">⚙</button>
     </div>
 
@@ -2019,6 +2020,23 @@
       state.wikiData = wikiData;
       localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
     } catch(e) {}
+  }
+
+  function clearAllWiki() {
+    if (!confirm('確定要清除所有 Wiki 資料嗎？這個動作無法復原。')) return;
+    wikiData = {};
+    renderWiki(currentProjectType);
+    try {
+      const state = JSON.parse(localStorage.getItem('museon_state_' + currentProjectId) || '{}');
+      state.wikiData = {};
+      localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
+    } catch(e) {}
+    const box = document.getElementById('aiMsgs');
+    const note = document.createElement('div');
+    note.className = 'msg msg-ai';
+    note.innerHTML = '<div class="msg-meta">MUSEON · 剛才</div>Wiki 已全部清空。重新上傳素材，這次我會先在這裡跟你討論確認，你同意後才會寫進 Wiki。';
+    box.appendChild(note);
+    box.scrollTop = box.scrollHeight;
   }
 
   function deleteWikiItem(secKey, btn) {
