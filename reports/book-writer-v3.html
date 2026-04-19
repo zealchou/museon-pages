@@ -830,6 +830,33 @@
 
   .ai-send:hover { background: var(--ember-dark); }
 
+  .ai-attach {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background var(--t), border-color var(--t);
+    color: var(--mist);
+    font-size: 17px;
+    padding: 0;
+  }
+  .ai-attach:hover { background: var(--silk); border-color: var(--ember); color: var(--ember); }
+
+  .attach-preview {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--silk); border: 1px solid var(--border);
+    border-radius: 8px; padding: 5px 10px;
+    font-size: 12px; color: var(--ink); margin-bottom: 6px;
+  }
+  .attach-preview-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .attach-remove { cursor: pointer; color: var(--mist); font-size: 15px; line-height: 1; }
+  .attach-remove:hover { color: var(--ember); }
+
   /* ========== PREVIEW OVERLAY ========== */
   .preview-overlay {
     position: fixed;
@@ -1300,7 +1327,14 @@
     </div>
 
     <div class="ai-input-area">
+      <div id="attachPreview" class="attach-preview" style="display:none">
+        <span>📄</span>
+        <span class="attach-preview-name" id="attachName"></span>
+        <span class="attach-remove" onclick="clearAttach()">✕</span>
+      </div>
       <div class="ai-input-wrap">
+        <button class="ai-attach" onclick="document.getElementById('fileInput').click()" title="上傳素材">📎</button>
+        <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx,.json,.csv,image/*" style="display:none" onchange="handleFileAttach(this)">
         <textarea class="ai-input" id="aiIn" placeholder="說說你的想法，或直接丟素材…" rows="1"
           onkeydown="handleKey(event)" oninput="autoH(this)"></textarea>
         <button class="ai-send" onclick="send()">↑</button>
@@ -1834,15 +1868,18 @@
 
   async function send(preText) {
     const inp = document.getElementById('aiIn');
-    const msg = preText || inp.value.trim();
-    if (!msg) return;
+    let msg = preText || inp.value.trim();
+    if (!msg && !attachedFileContent) return;
+    if (!msg) msg = '幫我分析這份素材：';
+    const fullMsg = attachedFileContent ? msg + '\n\n' + attachedFileContent : msg;
 
     const box = document.getElementById('aiMsgs');
     const u = document.createElement('div');
     u.className = 'msg msg-user';
-    u.textContent = msg;
+    u.textContent = attachedFileName ? msg + `\n📄 ${attachedFileName}` : msg;
     box.appendChild(u);
     if (!preText) { inp.value = ''; inp.style.height = 'auto'; }
+    clearAttach();
 
     const thinking = document.createElement('div');
     thinking.className = 'msg msg-ai';
@@ -1850,7 +1887,7 @@
     box.appendChild(thinking);
     box.scrollTop = box.scrollHeight;
 
-    chatHistory.push({ role: 'user', content: msg });
+    chatHistory.push({ role: 'user', content: fullMsg });
 
     const endpoint = localStorage.getItem('museon_endpoint') || '';
     const key = localStorage.getItem('museon_api_key') || '';
@@ -1945,6 +1982,43 @@
 
   function handleKey(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  }
+
+  let attachedFileContent = null;
+  let attachedFileName = null;
+
+  function handleFileAttach(input) {
+    const file = input.files[0];
+    if (!file) return;
+    attachedFileName = file.name;
+    document.getElementById('attachName').textContent = file.name;
+    document.getElementById('attachPreview').style.display = 'flex';
+
+    const isText = file.type.startsWith('text/') || /\.(txt|md|json|csv)$/i.test(file.name);
+    const isImage = file.type.startsWith('image/');
+
+    if (isText) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        attachedFileContent = `【附件：${file.name}】\n${e.target.result.slice(0, 8000)}`;
+      };
+      reader.readAsText(file, 'utf-8');
+    } else if (isImage) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        attachedFileContent = `【圖片附件：${file.name}】`;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      attachedFileContent = `【附件：${file.name}（格式：${file.type || '未知'}，大小：${(file.size/1024).toFixed(1)}KB）】`;
+    }
+    input.value = '';
+  }
+
+  function clearAttach() {
+    attachedFileContent = null;
+    attachedFileName = null;
+    document.getElementById('attachPreview').style.display = 'none';
   }
 
   function autoH(el) {
