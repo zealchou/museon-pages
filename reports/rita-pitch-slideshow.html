@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEON 決策者簡講 · 10 分鐘</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@400;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            background: #0E0E16;
+            color: #12121A;
+            overflow: hidden;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            aspect-ratio: 16/9;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 投影片背景變化 */
+        .slide-light {
+            background: #F7F5F0;
+        }
+
+        .slide-dark {
+            background: #0E0E16;
+            color: #F7F5F0;
+        }
+
+        .slide-accent {
+            background: linear-gradient(135deg, #9A3A1C 0%, #C4502A 100%);
+            color: #FDFCFA;
+        }
+
+        /* 標題 */
+        .slide h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 64px;
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+        }
+
+        .slide h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 48px;
+        }
+
+        .slide h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        /* 本文 */
+        .slide p {
+            font-size: 24px;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            max-width: 900px;
+        }
+
+        .slide-subtitle {
+            font-size: 28px;
+            line-height: 1.6;
+            color: #B8923A;
+            margin-bottom: 32px;
+        }
+
+        /* 藥丸對比區 */
+        .pill-container {
+            display: flex;
+            justify-content: center;
+            gap: 120px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .pill:hover {
+            transform: scale(1.1);
+        }
+
+        .pill-blue {
+            background: #4A90E2;
+            color: #FFF;
+        }
+
+        .pill-red {
+            background: #C4502A;
+            color: #FFF;
+        }
+
+        .pill-label {
+            margin-top: 12px;
+            font-size: 18px;
+        }
+
+        /* 內容卡片 */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 16px;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .card-text {
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        /* 控制按鈕 */
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        button {
+            background: #C4502A;
+            color: #FFF;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: #9A3A1C;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        /* 投影片計數 */
+        .slide-counter {
+            position: fixed;
+            top: 32px;
+            right: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #999;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* 列表 */
+        .list-item {
+            font-size: 22px;
+            line-height: 2;
+            text-align: left;
+            margin: 16px 0;
+        }
+
+        .list-item::before {
+            content: "→ ";
+            color: #B8923A;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        /* 強調文字 */
+        .highlight {
+            color: #B8923A;
+            font-weight: 600;
+        }
+
+        .highlight-red {
+            color: #C4502A;
+            font-weight: 600;
+        }
+
+        /* 鍵盤提示 */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 40px;
+            font-size: 12px;
+            color: #666;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .dark .keyboard-hint {
+            color: #999;
+        }
+
+        /* 版權 */
+        .footer {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-size: 13px;
+            color: #999;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .dark .footer {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slideshow-container">
+
+    <!-- Slide 1: 標題頁 -->
+    <div class="slide slide-accent active">
+        <h1>藥丸選擇</h1>
+        <p class="slide-subtitle">為你的企業決策</p>
+        <p style="font-size: 20px; opacity: 0.9; margin-top: 60px;">MUSEON 決策者簡講</p>
+    </div>
+
+    <!-- Slide 2: 開場 -->
+    <div class="slide slide-light">
+        <h2>你有看過《駭客任務》嗎？</h2>
+        <p style="margin-top: 60px; color: #5A5A6E;">有一場經典對話你一定記得——</p>
+        <p style="font-size: 32px; margin-top: 40px; font-weight: 600; color: #12121A;">Morpheus 的手中，左邊一顆藍色藥丸，右邊一顆紅色藥丸。</p>
+        <p style="margin-top: 40px; color: #5A5A6E;">吞下去的瞬間，一切改變。</p>
+    </div>
+
+    <!-- Slide 3: 藥丸對比 -->
+    <div class="slide slide-dark">
+        <h2 style="margin-bottom: 80px;">你的選擇</h2>
+        <div class="pill-container">
+            <div>
+                <div class="pill pill-blue">💊</div>
+                <p style="margin-top: 24px; font-size: 22px; color: #F7F5F0;">藍色藥丸</p>
+                <p class="list-item" style="text-align: center; color: #999;">繼續睡著<br>什麼都不變</p>
+            </div>
+            <div>
+                <div class="pill pill-red">💊</div>
+                <p style="margin-top: 24px; font-size: 22px; color: #F7F5F0;">紅色藥丸</p>
+                <p class="list-item" style="text-align: center; color: #999;">看見真實<br>開始改變</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: 你的現況 -->
+    <div class="slide slide-light">
+        <h2>企業現況</h2>
+        <div style="margin-top: 60px; text-align: left; max-width: 900px;">
+            <p class="list-item">業務還在靠「人」推——銷售周期長、成本高</p>
+            <p class="list-item">決策資訊不足——對市場、客戶、競爭沒有系統化認知</p>
+            <p class="list-item">成長遇到瓶頸——技術或流程無法支撐下一階段</p>
+            <p class="list-item">害怕被盜技術、數據洩露、員工背離</p>
+        </div>
+    </div>
+
+    <!-- Slide 5: MUSEON 是什麼 -->
+    <div class="slide slide-dark">
+        <h2 style="color: #F7F5F0; margin-bottom: 60px;">MUSEON 不是</h2>
+        <div style="text-align: left; max-width: 900px;">
+            <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 又一個 AI 工具</p>
+            <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 複雜的管理軟體</p>
+            <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 會盜取你的商業機密</p>
+            <p class="list-item" style="color: #F7F5F0;"><span style="color: #C4502A;">✗</span> 靠承諾「保證成功」</p>
+        </div>
+    </div>
+
+    <!-- Slide 6: MUSEON 是什麼 - 正面 -->
+    <div class="slide slide-light">
+        <h2>MUSEON 是</h2>
+        <div style="margin-top: 60px; text-align: left; max-width: 900px;">
+            <p class="list-item"><span class="highlight-red">✓</span> <span class="highlight">思維品質引擎</span></p>
+            <p style="font-size: 18px; color: #5A5A6E; margin-left: 40px; margin-top: -8px;">讓你的決策更清晰、更有根據、更快速</p>
+
+            <p class="list-item" style="margin-top: 40px;"><span class="highlight-red">✓</span> <span class="highlight">內部安全系統</span></p>
+            <p style="font-size: 18px; color: #5A5A6E; margin-left: 40px; margin-top: -8px;">數據加密、權限分離、無外洩風險</p>
+
+            <p class="list-item" style="margin-top: 40px;"><span class="highlight-red">✓</span> <span class="highlight">可行動的方案</span></p>
+            <p style="font-size: 18px; color: #5A5A6E; margin-left: 40px; margin-top: -8px;">不是理論，是你可以明天就執行的步驟</p>
+        </div>
+    </div>
+
+    <!-- Slide 7: 三個產品級能力 -->
+    <div class="slide slide-dark">
+        <h2 style="color: #F7F5F0; margin-bottom: 80px;">三個產品級數位商品</h2>
+        <div style="text-align: left; max-width: 1000px;">
+            <p class="list-item" style="color: #F7F5F0; font-size: 24px;"><span style="color: #B8923A;">Ⅰ 決策智囊</span> — 市場/客戶/競爭分析</p>
+            <p style="font-size: 18px; color: #999; margin-left: 60px; margin-top: -12px;">自動生成可視化報告，CEO 一張圖看懂全局</p>
+
+            <p class="list-item" style="color: #F7F5F0; font-size: 24px; margin-top: 48px;"><span style="color: #B8923A;">Ⅱ 業務加速器</span> — 銷售/行銷自動化</p>
+            <p style="font-size: 18px; color: #999; margin-left: 60px; margin-top: -12px;">客戶分析、提案自動生成、跟進提醒</p>
+
+            <p class="list-item" style="color: #F7F5F0; font-size: 24px; margin-top: 48px;"><span style="color: #B8923A;">Ⅲ 人才發展引擎</span> — 員工成長追蹤</p>
+            <p style="font-size: 18px; color: #999; margin-left: 60px; margin-top: -12px;">個性化發展計畫、技能缺口分析</p>
+        </div>
+    </div>
+
+    <!-- Slide 8: 佐證 · 創始人背景 -->
+    <div class="slide slide-light">
+        <h2>為什麼相信 MUSEON？</h2>
+        <div style="margin-top: 60px; text-align: left; max-width: 900px;">
+            <p class="list-item"><span style="color: #B8923A;">✓</span> 創始人 30 年創業經驗——踩過的坑比你走過的路多</p>
+            <p class="list-item"><span style="color: #B8923A;">✓</span> 自研方法論體系——不是搬家學外國的，是在地化驗證</p>
+            <p class="list-item"><span style="color: #B8923A;">✓</span> 曾為 Fortune 500 諮詢——懂大企業思維，也懂中小企業痛點</p>
+            <p class="list-item"><span style="color: #B8923A;">✓</span> 已落地客戶成功案例——不是承諾，是實際數字</p>
+        </div>
+    </div>
+
+    <!-- Slide 9: 安全性保證 -->
+    <div class="slide slide-accent">
+        <h2 style="margin-bottom: 60px;">我們怎麼保護你？</h2>
+        <div style="text-align: left; max-width: 900px;">
+            <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 企業級加密——你的數據永遠只在你的伺服器</p>
+            <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 權限分離——不同角色看不同資訊</p>
+            <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 無雲端上傳——敏感數據不離開你的公司</p>
+            <p class="list-item" style="color: #FDFCFA;"><span style="color: #B8923A;">🔒</span> 定期安全審計——我們比你還緊張</p>
+        </div>
+    </div>
+
+    <!-- Slide 10: 下一步 -->
+    <div class="slide slide-light">
+        <h2>現在，你的選擇</h2>
+        <div style="margin-top: 80px; text-align: center;">
+            <p style="font-size: 32px; color: #9A3A1C; font-weight: 600; margin-bottom: 60px;">
+                20 分鐘的免費諮詢<br>
+                <span style="font-size: 24px; color: #5A5A6E; font-weight: 400;">看我們是否適合你的企業</span>
+            </p>
+            <p style="font-size: 20px; color: #5A5A6E; margin-top: 40px;">
+                聯絡我們：<span style="color: #C4502A; font-weight: 600;">Rita@museon.ai</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Slide 11: 結語 -->
+    <div class="slide slide-dark">
+        <h2 style="color: #F7F5F0; margin-bottom: 60px;">紅色或藍色？</h2>
+        <p style="font-size: 28px; color: #B8923A; margin-bottom: 40px; font-weight: 600;">
+            選擇永遠在你。
+        </p>
+        <p style="font-size: 24px; color: #F7F5F0; line-height: 1.8; max-width: 900px;">
+            我們只是來告訴你——<br>
+            <span style="color: #C4502A;">如果你選了紅色，一切都會變不一樣。</span>
+        </p>
+    </div>
+
+</div>
+
+<div class="slide-counter">
+    <span id="current-slide">1</span> / <span id="total-slides">11</span>
+</div>
+
+<div class="controls">
+    <button id="prev-btn" onclick="changeSlide(-1)">← 上一頁</button>
+    <button id="next-btn" onclick="changeSlide(1)">下一頁 →</button>
+</div>
+
+<div class="keyboard-hint">
+    ← → 鍵盤切換 / Space 播放
+</div>
+
+<div class="footer">
+    MUSEON © 2026 · 決策者簡講
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('total-slides').textContent = totalSlides;
+
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[n].classList.add('active');
+
+        document.getElementById('current-slide').textContent = n + 1;
+
+        // 更新按鈕狀態
+        document.getElementById('prev-btn').disabled = n === 0;
+        document.getElementById('next-btn').disabled = n === totalSlides - 1;
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        showSlide(currentSlide);
+    }
+
+    // 鍵盤控制
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+        if (e.key === 'ArrowRight') changeSlide(1);
+        if (e.key === ' ') e.preventDefault();
+    });
+
+    // 初始化
+    showSlide(0);
+</script>
+
+</body>
+</html>
