@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MUSEON 書寫工作台</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --sidebar-w: 252px;
+    --ai-w: 316px;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 1px 3px rgba(18,18,26,0.06);
+    --shadow: 0 4px 16px rgba(18,18,26,0.08);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    --t: 0.18s ease;
+  }
+
+  html, body { height: 100%; font-family: var(--font); background: var(--parchment); color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  /* App Shell */
+  .app {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr var(--ai-w);
+    grid-template-rows: 52px 1fr;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* TopBar */
+  .topbar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: rgba(253,252,250,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    z-index: 100;
+  }
+
+  .topbar-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: var(--ember); text-transform: uppercase; }
+  .topbar-sep { width: 1px; height: 18px; background: var(--border); }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--ink); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-meta { font-size: 12px; color: var(--mist); display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-dot 2.4s infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+  /* Wiki Sidebar */
+  .wiki {
+    background: var(--snow);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .wiki-header {
+    padding: 16px 16px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mist);
+    position: sticky;
+    top: 0;
+    background: var(--snow);
+    z-index: 10;
+    border-bottom: 1px solid transparent;
+  }
+
+  .wiki-section { padding: 2px 0; }
+
+  .wiki-sec-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: background var(--t);
+  }
+
+  .wiki-sec-btn:hover { background: rgba(196,80,42,0.05); }
+
+  .wiki-sec-btn .chevron { transition: transform var(--t); margin-left: auto; }
+  .wiki-sec-btn.collapsed .chevron { transform: rotate(-90deg); }
+
+  .wiki-items { padding: 2px 6px 6px; }
+
+  .wiki-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--t);
+    font-size: 13px;
+    color: var(--ink);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    line-height: 1.45;
+  }
+
+  .wiki-item:hover { background: rgba(196,80,42,0.06); }
+  .wiki-item.active { background: rgba(196,80,42,0.1); color: var(--ember); }
+  .wiki-item-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .wiki-item-body { flex: 1; min-width: 0; }
+  .wiki-item-title { font-weight: 500; }
+  .wiki-item-sub { font-size: 11px; color: var(--mist); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .wiki-ai-tag {
+    font-size: 10px;
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .wiki-add {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 6px 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--ember);
+    background: none;
+    border: 1.5px dashed rgba(196,80,42,0.28);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--t);
+    width: calc(100% - 12px);
+    font-weight: 500;
+  }
+
+  .wiki-add:hover { background: rgba(196,80,42,0.05); border-color: var(--ember); }
+
+  /* Editor */
+  .editor-area { display: flex; flex-direction: column; overflow: hidden; background: var(--parchment); }
+
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px 28px;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(247,245,240,0.85);
+    backdrop-filter: blur(8px);
+    flex-shrink: 0;
+  }
+
+  .editor-breadcrumb { font-size: 13px; color: var(--slate); display: flex; align-items: center; gap: 5px; flex: 1; }
+  .editor-breadcrumb span { color: var(--mist); }
+  .editor-breadcrumb strong { color: var(--ink); font-weight: 600; }
+
+  .tbtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--snow);
+    color: var(--slate);
+    cursor: pointer;
+    transition: all var(--t);
+    white-space: nowrap;
+  }
+
+  .tbtn:hover { border-color: var(--ember); color: var(--ember); background: rgba(196,80,42,0.04); }
+  .tbtn.primary { background: var(--ember); color: #fff; border-color: var(--ember); }
+  .tbtn.primary:hover { background: var(--ember-dark); border-color: var(--ember-dark); color: #fff; }
+
+  .editor-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 44px 56px;
+    max-width: 740px;
+    margin: 0 auto;
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .chapter-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    outline: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color var(--t);
+  }
+
+  .chapter-title:focus { border-bottom-color: rgba(196,80,42,0.3); }
+
+  .chapter-meta {
+    font-size: 12px;
+    color: var(--mist);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    background: rgba(184,146,58,0.12);
+    color: var(--gold);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Paragraph Blocks */
+  .para-block { margin-bottom: 28px; }
+  .para-block:hover .para-actions { opacity: 1; }
+
+  .para-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .para-num {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+    color: var(--mist);
+  }
+
+  .para-content {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--ink);
+    min-height: 76px;
+    outline: none;
+    transition: border-color var(--t), box-shadow var(--t);
+  }
+
+  .para-content:focus { border-color: rgba(196,80,42,0.35); box-shadow: 0 0 0 3px rgba(196,80,42,0.07); }
+  .para-content:empty::before { content: attr(placeholder); color: var(--mist); pointer-events: none; display: block; }
+
+  .para-content.ai-draft {
+    border-color: rgba(42,122,110,0.3);
+    background: rgba(42,122,110,0.025);
+  }
+
+  .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .para-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+    opacity: 0;
+    transition: opacity var(--t);
+  }
+
+  .pabtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--snow);
+    color: var(--slate);
+    transition: all var(--t);
+    font-weight: 500;
+  }
+
+  .pabtn:hover { border-color: var(--ember); color: var(--ember); }
+  .pabtn.accept { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .pabtn.accept:hover { background: #236b60; border-color: #236b60; }
+
+  .add-para {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--mist);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--t);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .add-para:hover { border-color: var(--ember); color: var(--ember); background: rgba(196,80,42,0.03); }
+
+  /* AI Panel */
+  .ai-panel {
+    border-left: 1px solid var(--border);
+    background: var(--snow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .ai-header {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .ai-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ember), var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .ai-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .ai-status { font-size: 11px; color: var(--teal); display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+
+  .ai-ctx-bar {
+    padding: 8px 14px;
+    background: rgba(247,245,240,0.7);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .ai-ctx-label { font-size: 10px; font-weight: 700; color: var(--mist); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--t);
+    border: 1px solid;
+  }
+
+  .chip-skill { background: rgba(196,80,42,0.08); color: var(--ember); border-color: rgba(196,80,42,0.18); }
+  .chip-skill:hover { background: rgba(196,80,42,0.15); }
+  .chip-ctx { background: rgba(184,146,58,0.08); color: var(--gold); border-color: rgba(184,146,58,0.18); }
+
+  .ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .msg { max-width: 93%; font-size: 13px; line-height: 1.65; animation: msg-in 0.2s ease; }
+
+  @keyframes msg-in { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  .msg-user {
+    align-self: flex-end;
+    background: var(--ember);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 16px 16px 4px 16px;
+  }
+
+  .msg-ai {
+    align-self: flex-start;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 4px 16px 16px 16px;
+  }
+
+  .msg-meta { font-size: 10px; color: var(--mist); margin-bottom: 5px; font-weight: 600; letter-spacing: 0.04em; }
+
+  .msg-actions { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+
+  .mabtn {
+    padding: 3px 8px;
+    font-size: 11px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: var(--snow);
+    color: var(--slate);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all var(--t);
+  }
+
+  .mabtn:hover { border-color: var(--ember); color: var(--ember); }
+  .mabtn.insert { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .mabtn.insert:hover { background: #236b60; border-color: #236b60; }
+
+  /* Quick Commands */
+  .quick-cmds { padding: 8px 12px 6px; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .quick-label { font-size: 10px; font-weight: 700; color: var(--mist); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .quick-btns { display: flex; flex-wrap: wrap; gap: 4px; }
+
+  .qbtn {
+    padding: 4px 9px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--snow);
+    color: var(--slate);
+    cursor: pointer;
+    transition: all var(--t);
+    font-weight: 500;
+  }
+
+  .qbtn:hover { background: var(--ember); border-color: var(--ember); color: #fff; }
+
+  /* AI Input */
+  .ai-input-area { padding: 10px 12px 12px; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+  .ai-input-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 10px 8px 14px;
+    transition: border-color var(--t), box-shadow var(--t);
+  }
+
+  .ai-input-wrap:focus-within { border-color: rgba(196,80,42,0.4); box-shadow: 0 0 0 3px rgba(196,80,42,0.07); }
+
+  .ai-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: var(--ink);
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+    max-height: 120px;
+    font-family: var(--font);
+  }
+
+  .ai-input::placeholder { color: var(--mist); }
+
+  .ai-send {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--ember);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background var(--t);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .ai-send:hover { background: var(--ember-dark); }
+
+  /* Mobile RWD */
+  .mobile-tabs { display: none; }
+
+  @media (max-width: 880px) {
+    .app {
+      grid-template-columns: 1fr;
+      grid-template-rows: 52px 1fr 60px;
+    }
+
+    .wiki, .ai-panel {
+      position: fixed;
+      top: 52px;
+      bottom: 60px;
+      width: 100%;
+      z-index: 200;
+      transform: translateX(-110%);
+      transition: transform 0.26s cubic-bezier(0.4,0,0.2,1);
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .wiki.open { transform: translateX(0); }
+    .ai-panel { transform: translateX(110%); right: 0; left: 0; }
+    .ai-panel.open { transform: translateX(0); }
+
+    .editor-area { grid-column: 1; overflow-y: auto; }
+    .editor-scroll { padding: 28px 20px 32px; max-width: 100%; }
+    .chapter-title { font-size: 21px; }
+    .editor-toolbar { padding: 8px 16px; gap: 6px; overflow-x: auto; }
+    .topbar-meta { display: none; }
+    .para-actions { opacity: 1; }
+
+    .mobile-tabs {
+      display: flex;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: rgba(253,252,250,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      z-index: 300;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--mist);
+      transition: color var(--t);
+    }
+
+    .tab-btn.active { color: var(--ember); }
+    .tab-btn svg { width: 22px; height: 22px; }
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- TopBar -->
+  <header class="topbar">
+    <span class="topbar-logo">MUSEON</span>
+    <div class="topbar-sep"></div>
+    <div class="topbar-title">商業思維的重構——給 AI 時代的決策者</div>
+    <div class="topbar-meta">
+      <span class="status-dot"></span>
+      <span>直連 MUSEON</span>
+    </div>
+  </header>
+
+  <!-- Wiki Sidebar -->
+  <aside class="wiki" id="wiki">
+    <div class="wiki-header">書籍 Wiki</div>
+
+    <div class="wiki-section">
+      <button class="wiki-sec-btn" onclick="toggleSec(this)">
+        <span>📖</span><span>章節大綱</span>
+        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="wiki-items">
+        <button class="wiki-item active" onclick="loadCh(this,'序言','序言——為什麼這本書存在')">
+          <span class="wiki-item-icon">◎</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">序言</div>
+            <div class="wiki-item-sub">為什麼這本書存在</div>
+          </div>
+        </button>
+        <button class="wiki-item" onclick="loadCh(this,'第一章','第一章・框架崩塌')">
+          <span class="wiki-item-icon">1</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">第一章・框架崩塌</div>
+            <div class="wiki-item-sub">舊商業思維的終結</div>
+          </div>
+          <span class="wiki-ai-tag">AI稿</span>
+        </button>
+        <button class="wiki-item" onclick="loadCh(this,'第二章','第二章・決策品質')">
+          <span class="wiki-item-icon">2</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">第二章・決策品質</div>
+            <div class="wiki-item-sub">待規劃</div>
+          </div>
+        </button>
+        <button class="wiki-add" onclick="qReply('幫我規劃下一章的標題和摘要')">＋ 與 AI 聊出下一章</button>
+      </div>
+    </div>
+
+    <div class="wiki-section">
+      <button class="wiki-sec-btn" onclick="toggleSec(this)">
+        <span>👤</span><span>人物 / 讀者</span>
+        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="wiki-items">
+        <button class="wiki-item">
+          <span class="wiki-item-icon">🎯</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">目標讀者</div>
+            <div class="wiki-item-sub">月營收百萬以上的決策者</div>
+          </div>
+          <span class="wiki-ai-tag">AI推導</span>
+        </button>
+        <button class="wiki-add" onclick="qReply('幫我深化目標讀者的畫像，他們最痛的問題是什麼？')">＋ 與 AI 聊出讀者</button>
+      </div>
+    </div>
+
+    <div class="wiki-section">
+      <button class="wiki-sec-btn" onclick="toggleSec(this)">
+        <span>🌍</span><span>核心設定</span>
+        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="wiki-items">
+        <button class="wiki-item">
+          <span class="wiki-item-icon">💡</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">核心論點</div>
+            <div class="wiki-item-sub">AI 時代決策者的三個轉變</div>
+          </div>
+          <span class="wiki-ai-tag">AI推導</span>
+        </button>
+        <button class="wiki-item">
+          <span class="wiki-item-icon">🔑</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">主題關鍵詞</div>
+            <div class="wiki-item-sub">決策品質、AI 協作、框架重構</div>
+          </div>
+        </button>
+        <button class="wiki-add" onclick="qReply('幫我整理書的核心論點和貫穿全書的主題線')">＋ 與 AI 聊出設定</button>
+      </div>
+    </div>
+
+    <div class="wiki-section">
+      <button class="wiki-sec-btn collapsed" onclick="toggleSec(this)">
+        <span>⚡</span><span>脈絡警示</span>
+        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="wiki-items" style="display:none">
+        <button class="wiki-item" onclick="qReply('說明第一章和序言論點的潛在矛盾在哪')">
+          <span class="wiki-item-icon">⚠️</span>
+          <div class="wiki-item-body">
+            <div class="wiki-item-title">第一章 ↔ 序言需對齊</div>
+            <div class="wiki-item-sub">AI 偵測到論點落差</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Editor -->
+  <main class="editor-area">
+    <div class="editor-toolbar">
+      <div class="editor-breadcrumb">
+        <span>書稿</span><span>›</span>
+        <strong id="chLabel">序言</strong>
+      </div>
+      <button class="tbtn" onclick="qReply('根據目前段落，幫我繼續起草下一段')">✦ AI 繼續寫</button>
+      <button class="tbtn" onclick="qReply('檢查目前章節的論點一致性，找出跳躍或矛盾')">⊙ 一致性</button>
+      <button class="tbtn primary" onclick="doSave(this)">儲存</button>
+    </div>
+
+    <div class="editor-scroll">
+      <div class="chapter-title" contenteditable="true" id="chTitle">序言——為什麼這本書存在</div>
+      <div class="chapter-meta">
+        <span class="meta-tag">序言</span>
+        <span id="wordCount">約 0 字</span>
+        <span>•</span>
+        <span>AI 助寫：啟動中</span>
+      </div>
+
+      <div class="para-block" id="pb1">
+        <div class="para-label">
+          <span class="para-num">段落 01</span>
+          <span>開場白</span>
+        </div>
+        <div class="para-content ai-draft" contenteditable="true" oninput="countWords()">
+          <div class="ai-badge">✦ AI 草稿</div>
+          <p>你上一次做了一個你後來後悔的決定，是什麼時候？</p>
+          <p>不是因為資訊不夠。不是因為你不夠聰明。而是因為你用的框架，是為另一個時代設計的。</p>
+        </div>
+        <div class="para-actions">
+          <button class="pabtn accept" onclick="acceptPara(this)">✓ 採用</button>
+          <button class="pabtn" onclick="rejectPara(this)">✕ 棄用</button>
+          <button class="pabtn" onclick="qReply('調整這段語氣，讓它更有力量，像一記直拳而非說教')">↺ 調語氣</button>
+          <button class="pabtn" onclick="qReply('展開這段，加入一個真實商業情境作為例子')">↕ 展開</button>
+        </div>
+      </div>
+
+      <div class="para-block" id="pb2">
+        <div class="para-label">
+          <span class="para-num">段落 02</span>
+          <span>作者視角</span>
+        </div>
+        <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords()"></div>
+        <div class="para-actions">
+          <button class="pabtn" onclick="qReply('幫我起草「作者視角」段落，作者是一位 AI 顧問，服務台灣中小企業主 10 年')">✦ AI 起草</button>
+          <button class="pabtn" onclick="qReply('給我這段落的三個切入角度供選擇')">💡 給選項</button>
+        </div>
+      </div>
+
+      <button class="add-para" onclick="addPara()">＋ 新增段落</button>
+    </div>
+  </main>
+
+  <!-- AI Panel -->
+  <aside class="ai-panel" id="aiPanel">
+    <div class="ai-header">
+      <div class="ai-avatar">M</div>
+      <div>
+        <div class="ai-name">MUSEON</div>
+        <div class="ai-status">
+          <span class="status-dot" style="width:5px;height:5px;animation:pulse-dot 2.4s infinite"></span>
+          book-architect 模式
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-ctx-bar">
+      <div class="ai-ctx-label">當前 Skill</div>
+      <div class="chips">
+        <span class="chip chip-skill">✦ book-architect</span>
+        <span class="chip chip-ctx">📖 序言</span>
+        <span class="chip chip-ctx">🎯 商業思維</span>
+      </div>
+    </div>
+
+    <div class="ai-messages" id="aiMsgs">
+      <div class="msg msg-ai">
+        <div class="msg-meta">MUSEON · 剛才</div>
+        書寫工作台已連線，<strong>book-architect</strong> Skill 已載入。<br><br>
+        Wiki 側邊欄的內容不用你手填——我們一起聊出來。你說素材跟想法，我來整理成結構。<br><br>
+        先從最重要的問題開始：這本書，你最想讓誰讀完之後發生什麼改變？
+        <div class="msg-actions">
+          <button class="mabtn" onclick="qReply('我想讓台灣中小企業主讀完後，重新審視自己的決策品質')">這樣回答</button>
+          <button class="mabtn" onclick="qReply('先幫我規劃全書架構，六到八章')">先看架構</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-cmds">
+      <div class="quick-label">快捷指令</div>
+      <div class="quick-btns">
+        <button class="qbtn" onclick="qReply('幫我繼續寫下一段')">繼續寫</button>
+        <button class="qbtn" onclick="qReply('給我三個不同風格的開場方式')">開場靈感</button>
+        <button class="qbtn" onclick="qReply('精煉目前段落，去掉廢話，保留力量')">精煉</button>
+        <button class="qbtn" onclick="qReply('更新 Wiki 中的核心設定，根據我們的對話')">更新 Wiki</button>
+        <button class="qbtn" onclick="qReply('切換成劇本格式，幫我規劃場景')">劇本模式</button>
+        <button class="qbtn" onclick="qReply('幫我出一個讀者測試問題，確認書的論點是否清晰')">讀者測試</button>
+      </div>
+    </div>
+
+    <div class="ai-input-area">
+      <div class="ai-input-wrap">
+        <textarea class="ai-input" id="aiIn" placeholder="說說你的想法，或直接丟素材…" rows="1"
+          onkeydown="handleKey(event)" oninput="autoH(this)"></textarea>
+        <button class="ai-send" onclick="send()">↑</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile Tabs -->
+  <nav class="mobile-tabs">
+    <button class="tab-btn" id="tWiki" onclick="switchTab('wiki')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 5h18M3 10h18M3 15h10M3 20h7"/></svg>
+      Wiki
+    </button>
+    <button class="tab-btn active" id="tEditor" onclick="switchTab('editor')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      編輯
+    </button>
+    <button class="tab-btn" id="tAI" onclick="switchTab('ai')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      AI
+    </button>
+  </nav>
+
+</div>
+<script>
+  let paraIdx = 2;
+
+  function toggleSec(btn) {
+    btn.classList.toggle('collapsed');
+    const items = btn.nextElementSibling;
+    items.style.display = items.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function loadCh(btn, label, title) {
+    document.querySelectorAll('.wiki-item').forEach(i => i.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('chLabel').textContent = label;
+    document.getElementById('chTitle').textContent = title;
+    if (window.innerWidth <= 880) switchTab('editor');
+  }
+
+  function qReply(text) {
+    document.getElementById('aiIn').value = text;
+    send(text);
+    if (window.innerWidth <= 880) switchTab('ai');
+  }
+
+  function send(preText) {
+    const inp = document.getElementById('aiIn');
+    const msg = preText || inp.value.trim();
+    if (!msg) return;
+
+    const box = document.getElementById('aiMsgs');
+
+    const u = document.createElement('div');
+    u.className = 'msg msg-user';
+    u.textContent = msg;
+    box.appendChild(u);
+
+    if (!preText) { inp.value = ''; inp.style.height = 'auto'; }
+
+    const thinking = document.createElement('div');
+    thinking.className = 'msg msg-ai';
+    thinking.innerHTML = '<div class="msg-meta">MUSEON · 思考中…</div><span style="color:var(--mist)">⋯⋯</span>';
+    box.appendChild(thinking);
+    box.scrollTop = box.scrollHeight;
+
+    const replies = {
+      '幫我繼續寫下一段': '根據序言脈絡，下一段可以這樣展開：<br><br><em>「2022 年底，當 ChatGPT 第一次出現在商業會議室的投影布幕上，大多數人的反應是：『哇，它會寫文章。』幾乎沒有人注意到，真正的轉變不在能力，而在速度——決策週期從週壓縮到了分鐘。」</em>',
+      '給我三個不同風格的開場方式': '三個方向：<br><br>① <strong>衝擊式</strong>——「你的公司，可能已經在用 2010 年的框架，做 2026 年的決定。」<br><br>② <strong>故事式</strong>——一位台灣連鎖餐飲老闆，三個月內連關兩店的決策黑洞。<br><br>③ <strong>問題式</strong>——「什麼是好的決定？你上一次問自己這個問題，是什麼時候？」<br><br>你偏哪個方向？',
+      '更新 Wiki 中的核心設定，根據我們的對話': '根據目前對話，我推導並更新了 Wiki 設定：<br><br>• <strong>核心讀者</strong>：月營收百萬以上、面臨 AI 轉型壓力的決策者<br>• <strong>主要痛點</strong>：用舊框架做新決策，資訊過載但洞見不足<br>• <strong>書的承諾</strong>：讀完後能辨識並修正自己的決策盲點<br><br>Wiki 已更新。',
+      default: '收到你的方向。根據 book-architect Skill，我建議先確立「書的核心張力」——這本書在對抗什麼？讀者讀完前後，認知上最大的轉折點是什麼？先聊清楚這個，所有段落才有主心骨。'
+    };
+
+    setTimeout(() => {
+      thinking.remove();
+      const ai = document.createElement('div');
+      ai.className = 'msg msg-ai';
+      const reply = replies[msg] || replies.default;
+      ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才</div>${reply}
+        <div class="msg-actions">
+          <button class="mabtn insert" onclick="insertDraft(this)">插入段落</button>
+          <button class="mabtn" onclick="this.parentElement.previousElementSibling.textContent='重新生成中…';setTimeout(()=>{this.parentElement.previousElementSibling.textContent='MUSEON · 剛才'},600)">重新生成</button>
+        </div>`;
+      box.appendChild(ai);
+      box.scrollTop = box.scrollHeight;
+    }, 850);
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  }
+
+  function autoH(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  function acceptPara(btn) {
+    const block = btn.closest('.para-block');
+    const content = block.querySelector('.para-content');
+    content.classList.remove('ai-draft');
+    const badge = content.querySelector('.ai-badge');
+    if (badge) badge.remove();
+    block.querySelector('.para-actions').innerHTML = '<span style="font-size:12px;color:var(--teal);font-weight:600">✓ 已採用</span>';
+  }
+
+  function rejectPara(btn) {
+    const block = btn.closest('.para-block');
+    const content = block.querySelector('.para-content');
+    content.innerHTML = '';
+    content.classList.remove('ai-draft');
+    block.querySelector('.para-actions').innerHTML = `<button class="pabtn" onclick="qReply('重新起草這個段落，完全不同的角度')">✦ 重新起草</button>`;
+  }
+
+  function addPara() {
+    paraIdx++;
+    const scroll = document.querySelector('.editor-scroll');
+    const addBtn = scroll.querySelector('.add-para');
+    const block = document.createElement('div');
+    block.className = 'para-block';
+    block.innerHTML = `
+      <div class="para-label">
+        <span class="para-num">段落 0${paraIdx}</span>
+        <span>新段落</span>
+      </div>
+      <div class="para-content" contenteditable="true" placeholder="點擊輸入，或讓 AI 起草…" oninput="countWords()"></div>
+      <div class="para-actions" style="opacity:1">
+        <button class="pabtn" onclick="qReply('幫我起草第${paraIdx}段，根據前面的脈絡')">✦ AI 起草</button>
+        <button class="pabtn" onclick="qReply('給我段落${paraIdx}的三個切入角度')">💡 給選項</button>
+      </div>`;
+    scroll.insertBefore(block, addBtn);
+    block.querySelector('.para-content').focus();
+  }
+
+  function insertDraft(btn) {
+    const aiMsg = btn.closest('.msg-ai');
+    const text = aiMsg.childNodes[1]?.textContent || '';
+    addPara();
+    const lastPara = document.querySelectorAll('.para-content');
+    const target = lastPara[lastPara.length - 1];
+    if (target) {
+      target.classList.add('ai-draft');
+      target.innerHTML = '<div class="ai-badge">✦ AI 草稿</div><p>' + text.trim() + '</p>';
+    }
+  }
+
+  function doSave(btn) {
+    btn.textContent = '✓ 已儲存';
+    setTimeout(() => btn.textContent = '儲存', 1600);
+  }
+
+  function countWords() {
+    const all = document.querySelectorAll('.para-content');
+    let n = 0;
+    all.forEach(el => {
+      n += el.innerText.replace(/[\s\n]/g, '').length;
+    });
+    document.getElementById('wordCount').textContent = '約 ' + n + ' 字';
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('wiki').classList.remove('open');
+    document.getElementById('aiPanel').classList.remove('open');
+    if (tab === 'wiki') {
+      document.getElementById('wiki').classList.add('open');
+      document.getElementById('tWiki').classList.add('active');
+    } else if (tab === 'ai') {
+      document.getElementById('aiPanel').classList.add('open');
+      document.getElementById('tAI').classList.add('active');
+    } else {
+      document.getElementById('tEditor').classList.add('active');
+    }
+  }
+</script>
+</body>
+</html>
