@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>會議記錄｜蜥蜴老師顧問諮詢 2026.04.19</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --gold:         #b6853d;
+      --teal:         #2A7A6E;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+      --raised:       #1E1E2A;
+      --border-dark:  #2A2A38;
+      --navy:         #181737;
+    }
+
+    html { font-size: 15px; }
+
+    body {
+      font-family: 'Noto Sans TC', 'Outfit', sans-serif;
+      background: var(--deep-ink);
+      color: #E8E4DC;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Print: A4 light version ─── */
+    @media print {
+      body { background: var(--parchment) !important; color: var(--ink) !important; font-size: 11px; }
+      .page-wrapper { max-width: 100%; padding: 0; }
+      .main-card { background: white !important; border: 1px solid var(--border) !important; box-shadow: none !important; padding: 28px !important; }
+      .header-block { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .exec-summary { background: #f0ede8 !important; border-left-color: var(--ember) !important; }
+      .section-title { color: var(--ember-dark) !important; }
+      .topic-card { background: #faf8f5 !important; border-color: var(--border) !important; }
+      .action-table th { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .footer-note { display: none; }
+      .divider { border-color: var(--border) !important; }
+      .badge-row .badge { background: rgba(196,80,42,0.10) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .next-meeting { border-color: var(--gold) !important; background: #faf8f5 !important; }
+    }
+
+    /* ─── Layout ─── */
+    .page-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .main-card {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      animation: fadeUp 0.4s ease-out both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Header ─── */
+    .header-block {
+      background: linear-gradient(135deg, #181737 0%, #0E0E22 60%, #1a0e0a 100%);
+      padding: 36px 40px 28px;
+      border-bottom: 1px solid var(--border-dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-block::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(196,80,42,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-block::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 30%;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(182,133,61,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .doc-type-tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(196,80,42,0.2);
+      color: var(--ember-light);
+      border: 1px solid rgba(196,80,42,0.35);
+      border-radius: 100px;
+      padding: 3px 12px;
+      margin-bottom: 14px;
+    }
+
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: #F5EFE0;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px 24px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mist);
+    }
+
+    .meta-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: #D8D4CC;
+    }
+
+    /* ─── Body ─── */
+    .body-content {
+      padding: 32px 40px 40px;
+    }
+
+    /* ─── Executive Summary ─── */
+    .exec-summary {
+      background: rgba(196,80,42,0.07);
+      border: 1px solid rgba(196,80,42,0.2);
+      border-left: 3px solid var(--ember);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 36px;
+    }
+
+    .exec-summary-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      margin-bottom: 10px;
+    }
+
+    .exec-summary-text {
+      font-size: 14px;
+      line-height: 1.85;
+      color: #C8C4BC;
+    }
+
+    .exec-summary-text strong {
+      color: #E8E4DC;
+      font-weight: 600;
+    }
+
+    /* ─── Divider ─── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-dark);
+      margin: 28px 0;
+    }
+
+    /* ─── Section ─── */
+    .section-block { margin-bottom: 32px; }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .section-icon {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* ─── Topic Cards ─── */
+    .topic-card {
+      background: var(--raised);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 12px;
+    }
+
+    .topic-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .topic-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ember);
+      background: rgba(196,80,42,0.12);
+      border-radius: 4px;
+      padding: 2px 8px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      letter-spacing: 0.06em;
+    }
+
+    .topic-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #EDE9E0;
+      line-height: 1.35;
+    }
+
+    .topic-body {
+      font-size: 13.5px;
+      color: #B8B4AC;
+      line-height: 1.8;
+    }
+
+    .topic-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .topic-body ul li {
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .topic-body ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--ember);
+      font-weight: 600;
+    }
+
+    .insight-callout {
+      background: rgba(182,133,61,0.07);
+      border-left: 2px solid var(--gold);
+      border-radius: 0 6px 6px 0;
+      padding: 10px 14px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #C8C0A0;
+      font-style: italic;
+      line-height: 1.75;
+    }
+
+    .insight-callout strong {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    /* ─── Badge Row ─── */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .badge-ember {
+      background: rgba(196,80,42,0.15);
+      color: var(--ember-light);
+      border: 1px solid rgba(196,80,42,0.3);
+    }
+
+    .badge-gold {
+      background: rgba(182,133,61,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(182,133,61,0.3);
+    }
+
+    /* ─── Action Items Table ─── */
+    .action-table-wrapper {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border-dark);
+    }
+
+    .action-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .action-table thead tr {
+      background: linear-gradient(90deg, #181737 0%, #1a0e0a 100%);
+    }
+
+    .action-table th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 12px 16px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .action-table td {
+      padding: 11px 16px;
+      color: #B8B4AC;
+      border-bottom: 1px solid var(--border-dark);
+      vertical-align: top;
+      line-height: 1.65;
+    }
+
+    .action-table tbody tr:last-child td { border-bottom: none; }
+    .action-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    .action-table tbody tr:hover { background: rgba(196,80,42,0.04); }
+
+    .action-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      color: var(--ember);
+      font-size: 12px;
+    }
+
+    .action-owner {
+      font-weight: 600;
+      color: #D0CCC4;
+      white-space: nowrap;
+    }
+
+    .deadline-tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      background: rgba(42,122,110,0.15);
+      color: #4ABCAE;
+      border: 1px solid rgba(42,122,110,0.25);
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap;
+    }
+
+    /* ─── Next Meeting Block ─── */
+    .next-meeting {
+      background: linear-gradient(135deg, rgba(24,23,55,0.5) 0%, rgba(26,14,10,0.35) 100%);
+      border: 1px solid rgba(182,133,61,0.22);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .next-meeting-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    .next-meeting-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .next-meeting-body {
+      font-size: 13.5px;
+      color: #B8B4AC;
+      line-height: 1.8;
+    }
+
+    .next-meeting-body strong { color: #D8D4CC; }
+
+    /* ─── Footer ─── */
+    .footer-note {
+      text-align: center;
+      margin-top: 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: #3A3A4A;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 16px 12px 60px; }
+      .header-block { padding: 24px 20px 20px; }
+      .body-content { padding: 24px 20px 32px; }
+      .header-title { font-size: 24px; }
+      .meta-grid { grid-template-columns: 1fr 1fr; }
+      .action-table { font-size: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <div class="main-card">
+
+      <!-- ▌ HEADER ▌ -->
+      <div class="header-block">
+        <div class="doc-type-tag">Meeting Notes · Confidential</div>
+        <h1 class="header-title">蜥蜴老師顧問諮詢記錄</h1>
+        <p class="header-subtitle">好地方協會 × 很好計劃 × 給好行銷</p>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">日期</span>
+            <span class="meta-value">2026 年 4 月 19 日</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">主持顧問</span>
+            <span class="meta-value">周逸達（蜥蜴老師）</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">與會者</span>
+            <span class="meta-value">秘書長 / 琪琪老師 / 給好代表</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">性質</span>
+            <span class="meta-value">顧問諮詢・策略對齊</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ▌ BODY ▌ -->
+      <div class="body-content">
+
+        <!-- Executive Summary -->
+        <div class="exec-summary">
+          <div class="exec-summary-title">Executive Summary</div>
+          <div class="exec-summary-text">
+            本次會議聚焦三大核心問題：<strong>好地方協會與很好計劃的關係未對齊</strong>、<strong>目標受眾（TA）定義模糊導致合作方向錯亂</strong>、以及<strong>琪琪老師的領導型態亟需從「單人拖動」轉型為「倒金字塔」授權模式</strong>。顧問點出品牌最重要的是「不做什麼」；建議三方召開對齊會議確立共識後，再推進給好執行。另建議老師群體優先參加 SAC 課程，補足商業思維缺口，而非從自媒體技能切入。
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ─── Section 1: 討論事項 ─── -->
+        <div class="section-block">
+          <h2 class="section-title">
+            <span class="section-icon">◈</span>主要討論事項
+          </h2>
+
+          <!-- 01 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">01</span>
+              <span class="topic-name">BNI 五月活動（5/5 親子教育 PT）</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>琪琪老師預計出席 BNI 親子教育 PT，進行 8 分鐘簡報</li>
+                <li>在場對象為魔方、疊杯等才藝團隊，與很好計劃 TA 不完全一致</li>
+                <li>顧問結論：重新定義出席意義（曝光 ＞ 直接轉換），清晰期望後仍可出席</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 02 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">02</span>
+              <span class="topic-name">目標受眾（TA）釐清</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>很好計劃 TA：孤鳥型親子教育老師（非補習班體系）</li>
+                <li>很好生活節 TA：親子家庭（C 端一般消費者）</li>
+                <li>魔方等才藝團隊屬「不同食物鏈」，硬湊方向不對</li>
+                <li>若合作，應是品牌 × 品牌的新火花，而非直接擺攤互換客群</li>
+              </ul>
+              <div class="insight-callout">
+                <strong>顧問金句：</strong>「品牌最重要的是不做什麼，而非做什麼。」
+              </div>
+            </div>
+          </div>
+
+          <!-- 03 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">03</span>
+              <span class="topic-name">SAC 課程推薦</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>老師群體最缺「商感（商業思維）」，而非自媒體技巧</li>
+                <li>SAC 三項核心收穫：① 產品組合邏輯　② 活動硬指標意識　③ 老師 × 老師合作槓桿原理</li>
+                <li>近期梯次：5/6–8（待確認）或 7/1–3（永吉路 30 巷，市政府站 4 號出口）</li>
+              </ul>
+              <div class="badge-row">
+                <span class="badge badge-ember">行動中</span>
+                <span class="badge badge-gold">SAC 5/6-8 待確認</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 04 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">04</span>
+              <span class="topic-name">活動收費模式優化</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>現況：一個家庭收費（單價待確認）</li>
+                <li>顧問建議：入場免費，消費走 LINE，成本由攤位費 + 贊助 cover</li>
+                <li>贊助拉法：TA 明確 → 對應廠商贊助易拉寶 / 手冊廣告頁</li>
+                <li>現階段量能不足直接拉贊助 → 找「贊助小天使」（陽光型志工）代為執行</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 05 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">05</span>
+              <span class="topic-name">好地方協會 × 很好計劃 關係對齊（核心問題）</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>顧問觀察：活動當天好地方協會露出極少，三方共識（好地方、很好計劃、攤位主）不一致</li>
+                <li>秘書長坦言：不清楚中間諸多執行細節，且一直未被 involve 進後續決策</li>
+                <li>琪琪老師承認：兩者連結未有效建立，存在愧疚感</li>
+                <li>好地方協會三大關鍵指標：① 補助　② 捐款　③ 服務對象成長</li>
+              </ul>
+              <div class="insight-callout">
+                <strong>共識決議：</strong>需召開「好地方協會 × 很好計劃」對齊會議，建立共識後才讓給好進場執行。
+              </div>
+            </div>
+          </div>
+
+          <!-- 06 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">06</span>
+              <span class="topic-name">人才梯隊建立與回籠指標</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>第一場「感覺好」屬甜蜜期；關鍵在第二場、第三場的留存率</li>
+                <li>追蹤雙指標：攤位主願不願意回來 ＋ 家長願不願意再來 / 介紹朋友</li>
+                <li>收回意見後拉攤位主一起討論（參與感 > 被動配合）</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 07 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">07</span>
+              <span class="topic-name">自媒體運營計劃</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>很好計劃聲量目前過度依賴琪琪老師個人，缺乏組織化自媒體機制</li>
+                <li>每場活動素材豐富，每月不缺內容，需建立持續運營計劃</li>
+                <li>納入下次諮詢討論議程</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 08 -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <span class="topic-number">08</span>
+              <span class="topic-name">琪琪老師個人覺察（教練部分）</span>
+            </div>
+            <div class="topic-body">
+              <ul>
+                <li>成果：目標 55 人，實達 72 人（達標）</li>
+                <li>體驗：過程疲乏、缺乏興奮感——每個報名都靠自己親自拉動</li>
+                <li>自我觀察：決策匆忙 + 缺乏空白時間 + 中軸不清晰 → 無法聚焦</li>
+                <li>惡性循環：沒聚焦 → 很忙 → 忘了聚焦 → 更沒聚焦</li>
+              </ul>
+              <div class="insight-callout">
+                <strong>顧問洞見：</strong>「你是能確保事情發生的人（好消息），但你還沒相信你的團隊（壞消息）。」<br />
+                → 需練習「倒金字塔」領導：用方向 + 框架帶人，而非親力親為每一步。
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /section-block -->
+
+        <hr class="divider" />
+
+        <!-- ─── Section 2: Action Items ─── -->
+        <div class="section-block">
+          <h2 class="section-title">
+            <span class="section-icon">◈</span>行動事項
+          </h2>
+          <div class="action-table-wrapper">
+            <table class="action-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>任務</th>
+                  <th>負責人</th>
+                  <th>期限</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="action-num">01</span></td>
+                  <td>安排「好地方協會 × 很好計劃」對齊會議（三方 + 顧問）</td>
+                  <td><span class="action-owner">琪琪老師</span></td>
+                  <td><span class="deadline-tag">下週</span></td>
+                </tr>
+                <tr>
+                  <td><span class="action-num">02</span></td>
+                  <td>確認 SAC 5 月班（5/6–8）老師名單，詢問參與意願</td>
+                  <td><span class="action-owner">琪琪老師</span></td>
+                  <td><span class="deadline-tag">本週內</span></td>
+                </tr>
+                <tr>
+                  <td><span class="action-num">03</span></td>
+                  <td>列出「很好計劃不做什麼」清單（品牌宣言反面定義）</td>
+                  <td><span class="action-owner">琪琪老師</span></td>
+                  <td><span class="deadline-tag">對齊會前</span></td>
+                </tr>
+                <tr>
+                  <td><span class="action-num">04</span></td>
+                  <td>追蹤家長 LINE 加入數 ＋ 攤位主滿意度</td>
+                  <td><span class="action-owner">琪琪老師</span></td>
+                  <td><span class="deadline-tag">本週</span></td>
+                </tr>
+                <tr>
+                  <td><span class="action-num">05</span></td>
+                  <td>好地方協會捐款網頁上線 ＋ QR Code 設計</td>
+                  <td><span class="action-owner">秘書長</span></td>
+                  <td><span class="deadline-tag">四月底前</span></td>
+                </tr>
+                <tr>
+                  <td><span class="action-num">06</span></td>
+                  <td>重新定義 5/5 BNI 簡報的意義與出席期望</td>
+                  <td><span class="action-owner">琪琪老師</span></td>
+                  <td><span class="deadline-tag">5/5 前</span></td>
+                </tr>
+                <tr>
+                  <td><span class="action-num">07</span></td>
+                  <td>建立很好計劃自媒體運營計劃（下次諮詢討論細節）</td>
+                  <td><span class="action-owner">琪琪老師</span></td>
+                  <td><span class="deadline-tag">下次諮詢</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ─── Section 3: Next Meeting ─── -->
+        <div class="section-block">
+          <h2 class="section-title">
+            <span class="section-icon">◈</span>下次會議
+          </h2>
+          <div class="next-meeting">
+            <div class="next-meeting-icon">◇</div>
+            <div>
+              <div class="next-meeting-title">四方對齊會議</div>
+              <div class="next-meeting-body">
+                <strong>出席：</strong>好地方協會 × 很好計劃 × 顧問（給好 TBD）<br />
+                <strong>時間：</strong>下週（顧問週五下午或任一天晚上均可）<br />
+                <strong>目標：</strong>確立好地方協會 × 很好計劃合作框架，統一三方對活動目標的認知，再由給好接棒執行
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /body-content -->
+    </div><!-- /main-card -->
+
+    <div class="footer-note">
+      MUSEON · 企管顧問諮詢記錄 · 2026.04.19 · Confidential
+    </div>
+  </div><!-- /page-wrapper -->
+</body>
+</html>
