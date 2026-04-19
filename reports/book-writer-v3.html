@@ -1264,6 +1264,7 @@
       <button class="tbtn" onclick="showPreview()" style="font-weight:600">👁 預覽全書</button>
       <span id="saveIndicator" style="font-size:12px;color:var(--teal);font-weight:500;"></span>
       <button class="tbtn primary save-btn" onclick="doSave(this)">儲存</button>
+      <button class="tbtn" onclick="extractWikiFromHistory()" title="從現有對話記錄補齊 Wiki">📋 補 Wiki</button>
       <button class="tbtn" onclick="showSettings()" title="API 設定">⚙</button>
     </div>
 
@@ -2144,6 +2145,68 @@
 
   let _lastMsg = '';
   function retryLastMsg() { if (_lastMsg) send(_lastMsg); }
+
+  async function extractWikiFromHistory() {
+    if (!chatHistory.length) {
+      alert('目前還沒有對話記錄，請先跟 AI 聊一下書的內容再補 Wiki。');
+      return;
+    }
+    const box = document.getElementById('aiMsgs');
+    if (!box) return;
+    if (window.innerWidth <= 880) switchTab('ai');
+    const bubble = document.createElement('div');
+    bubble.className = 'msg msg-ai';
+    bubble.innerHTML = `<div class="msg-meta">MUSEON <span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div><p>📋 正在從 ${chatHistory.length} 條對話記錄萃取 Wiki 資訊…</p>`;
+    box.appendChild(bubble);
+    box.scrollTop = box.scrollHeight;
+    const extractInstruction = `請仔細閱讀以上所有對話記錄，從中萃取所有對 Wiki 有幫助的結構化資訊。\n只輸出 WIKI 標記，不需要任何其他文字。每條標記一行，格式：[WIKI:section_key:精簡摘要]\n可用 section_key 同前（outline/characters/worldview/plot/tension/blindspot 等）。\n若對話中沒有可萃取的資訊，輸出：（無）`;
+    const tempMessages = [...chatHistory, { role: 'user', content: extractInstruction }];
+    const endpoint = localStorage.getItem('museon_endpoint');
+    const key = localStorage.getItem('museon_key');
+    try {
+      let fullText = '';
+      if (endpoint) {
+        const resp = await fetch(endpoint + '/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: tempMessages, system_prompt: getSystemPrompt() + '\n' + WIKI_PROTOCOL, project_type: currentProjectType })
+        });
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          chunk.split('\n').forEach(line => {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              try { const d = JSON.parse(line.slice(6)); if (d.text) fullText += d.text; } catch(e) {}
+            }
+          });
+        }
+      } else if (key) {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-allow-browser': 'true' },
+          body: JSON.stringify({ model: 'claude-opus-4-7-20250914', max_tokens: 2048, system: getSystemPrompt() + '\n' + WIKI_PROTOCOL, messages: tempMessages })
+        });
+        const d = await resp.json();
+        fullText = d.content?.[0]?.text || '';
+      } else {
+        bubble.innerHTML = `<div class="msg-meta">MUSEON · 錯誤</div><p>請先在設定頁填入 API Key 或後端 URL。</p>`;
+        return;
+      }
+      const wikiUpdates = parseWikiTags(fullText);
+      if (wikiUpdates.length) {
+        applyWikiUpdates(wikiUpdates);
+        bubble.innerHTML = `<div class="msg-meta">MUSEON · Wiki 補全完成 ✦</div><p>從對話記錄萃取到 <strong>${wikiUpdates.length}</strong> 條 Wiki 資訊，已自動更新左側 Wiki。</p>`;
+      } else {
+        bubble.innerHTML = `<div class="msg-meta">MUSEON · Wiki 補全</div><p>對話記錄中暫時沒有可萃取的結構化資訊，試試多跟 AI 聊聊書的架構、角色設定或世界觀。</p>`;
+      }
+      box.scrollTop = box.scrollHeight;
+    } catch(err) {
+      bubble.innerHTML = `<div class="msg-meta">MUSEON · 錯誤</div><p>萃取失敗：${err.message}</p>`;
+    }
+  }
 
   function regenerate(btn, encodedMsg) {
     chatHistory.pop();
