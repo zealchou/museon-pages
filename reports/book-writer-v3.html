@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MUSEON 書寫工作台</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400&display=swap');
 
@@ -2305,7 +2306,7 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
       ai.innerHTML = `<div class="msg-meta">MUSEON · 剛才</div><p>${displayText.replace(/\n/g,'<br>')}</p>
         ${suggestHtml}
         <div class="msg-actions">
-          <button class="mabtn insert" onclick="insertDraft(this)">加入 Wiki</button>
+          <button class="mabtn insert" onclick="insertToWiki(this)">加入 Wiki</button>
           <button class="mabtn" onclick="regenerate(this,'${encodeURIComponent(msg)}')">重新生成</button>
         </div>`;
       box.scrollTop = box.scrollHeight;
@@ -2480,78 +2481,72 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
     block.querySelector('.para-content').focus();
   }
 
-  const _wikiSecLabels = {
-    book:   [['outline','📖 章節大綱'],['readers','👤 目標讀者'],['theme','💡 核心論點'],['blindspot','⚡ 脈絡警示']],
-    novel:  [['outline','📖 章節大綱'],['characters','👤 角色設定'],['worldview','🌍 世界觀'],['plot','🎭 情節線'],['tension','🎨 敘事張力'],['blindspot','🔍 盲點']],
-    game:   [['g1','🌍 世界觀'],['g2','👥 NPC 人格'],['g3','⚙️ 故事結構'],['g4','⚡ 能力系統'],['g7','🕸️ 關係場'],['macro','📋 宏觀模式'],['micro','🎭 微場景'],['rules','⚔️ 規則'],['blindspot','⚡ 警示']],
-    script: [['scenes','🎬 場景列表'],['characters','👥 人物弧'],['structure','🏗️ 故事結構'],['dialogue','💬 對話風格'],['visual','🎞️ 視覺設定'],['blindspot','🔍 盲點']]
-  };
-
   function insertDraft(btn) {
     const aiMsg = btn.closest('.msg-ai');
+    const text = aiMsg.innerText.replace(/^MUSEON · 剛才\n?/,'').replace(/\n插入段落.*$/s,'').trim();
+    addPara();
+    const lastPara = document.querySelectorAll('.para-content');
+    const target = lastPara[lastPara.length - 1];
+    if (target) {
+      target.classList.add('ai-draft');
+      target.innerHTML = '<div class="ai-badge">✦ AI 草稿</div><p>' + text + '</p>';
+      countWords();
+    }
+  }
+
+  function insertToWiki(btn) {
+    const aiMsg = btn.closest('.msg-ai');
     const pEl = aiMsg.querySelector('p');
-    const text = pEl ? pEl.innerText.trim() : aiMsg.innerText.replace(/^MUSEON · 剛才\n?/,'').replace(/\n加入 Wiki.*$/s,'').trim();
+    if (!pEl) return;
+    const text = pEl.innerText.trim();
     if (!text) return;
 
-    const existing = document.getElementById('wikiSectionPicker');
+    const existing = document.getElementById('wikiInsertPicker');
     if (existing) { existing.remove(); return; }
 
-    const secs = _wikiSecLabels[currentProjectType] || _wikiSecLabels.book;
-    const picker = document.createElement('div');
-    picker.id = 'wikiSectionPicker';
-    picker.style.cssText = 'position:fixed;background:#fff;border:1px solid rgba(18,18,26,.12);border-radius:10px;padding:6px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:170px;';
-    picker.innerHTML = '<div style="font-size:11px;color:#aaa;margin-bottom:5px;padding:0 6px;letter-spacing:.4px;">選擇 Wiki 分類</div>' +
-      secs.map(([key,label]) =>
-        `<button style="display:block;width:100%;text-align:left;padding:7px 10px;border:none;background:none;cursor:pointer;font-size:12.5px;border-radius:6px;line-height:1.2;" onmouseover="this.style.background='#f5f0e8'" onmouseout="this.style.background=''" onclick="insertToWikiSection('${key}', decodeURIComponent(document.getElementById('_insertDraftPayload').value));document.getElementById('wikiSectionPicker').remove()">${label}</button>`
-      ).join('') +
-      '<hr style="border:none;border-top:1px solid #f0ece4;margin:4px 0;">' +
-      '<button style="display:block;width:100%;text-align:left;padding:5px 10px;border:none;background:none;cursor:pointer;font-size:11px;color:#bbb;border-radius:6px;" onmouseover="this.style.background=\'#faf8f4\'" onmouseout="this.style.background=\'\'" onclick="document.getElementById(\'wikiSectionPicker\').remove()">取消</button>';
+    window._pendingWikiInsert = text;
 
-    let payload = document.getElementById('_insertDraftPayload');
-    if (!payload) { payload = document.createElement('input'); payload.id = '_insertDraftPayload'; payload.type = 'hidden'; document.body.appendChild(payload); }
-    payload.value = encodeURIComponent(text);
+    const secs = [...document.querySelectorAll('.wiki-section[data-sec]')].map(el => ({
+      key: el.dataset.sec,
+      label: WIKI_SEC_LABELS[el.dataset.sec] || el.dataset.sec
+    }));
+    if (!secs.length) { alert('請先開啟一本書，Wiki 建立後再加入。'); return; }
+
+    const picker = document.createElement('div');
+    picker.id = 'wikiInsertPicker';
+    picker.style.cssText = 'position:fixed;background:var(--snow);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:4px;z-index:9999;min-width:140px;';
+    picker.innerHTML = '<div style="font-size:9px;font-weight:700;color:var(--mist);padding:3px 6px 4px;letter-spacing:0.06em;text-transform:uppercase">加入 Wiki 區塊</div>' +
+      secs.map(s => `<div style="padding:6px 8px;font-size:12px;cursor:pointer;border-radius:4px;color:var(--ink)" onmouseover="this.style.background='var(--parchment)'" onmouseout="this.style.background=''" onclick="doInsertToWiki('${s.key}')">${s.label}</div>`).join('');
 
     const rect = btn.getBoundingClientRect();
-    picker.style.left = Math.min(rect.left, window.innerWidth - 190) + 'px';
-    picker.style.top = (rect.bottom + 6) + 'px';
+    const top = rect.bottom + 4;
+    const left = Math.max(4, Math.min(rect.left, window.innerWidth - 160));
+    picker.style.top = top + 'px';
+    picker.style.left = left + 'px';
     document.body.appendChild(picker);
 
     setTimeout(() => {
-      document.addEventListener('click', function closePicker(e) {
-        if (!picker.contains(e.target) && e.target !== btn) {
-          picker.remove();
-          document.removeEventListener('click', closePicker);
+      function closer(e) {
+        const p = document.getElementById('wikiInsertPicker');
+        if (p && !p.contains(e.target) && e.target !== btn) {
+          p.remove();
+          document.removeEventListener('click', closer);
         }
-      });
-    }, 100);
+      }
+      document.addEventListener('click', closer);
+    }, 0);
   }
 
-  function insertToWikiSection(secKey, text) {
-    if (!text) return;
-    if (!wikiData[secKey]) wikiData[secKey] = [];
-    if (wikiData[secKey].includes(text)) { return; }
-    wikiData[secKey].push(text);
-
+  function doInsertToWiki(secKey) {
+    const content = (window._pendingWikiInsert || '').replace(/\n{3,}/g, '\n\n').trim().substring(0, 500);
+    if (!content) return;
+    applyWikiUpdates([{ sec: secKey, content }]);
+    document.getElementById('wikiInsertPicker')?.remove();
+    window._pendingWikiInsert = null;
     const secEl = document.querySelector(`.wiki-section[data-sec="${secKey}"]`);
     if (secEl) {
-      const itemsDiv = secEl.querySelector('.wiki-items');
-      const secBtn = secEl.querySelector('.wiki-sec-btn');
-      if (secBtn && secBtn.classList.contains('collapsed')) {
-        secBtn.classList.remove('collapsed');
-        if (itemsDiv) itemsDiv.style.display = '';
-      }
-      if (itemsDiv) {
-        const div = document.createElement('div');
-        div.className = 'wiki-item wiki-data-item';
-        div.dataset.sec = secKey;
-        div.innerHTML = `<span class="wiki-item-icon">✦</span><div class="wiki-item-body"><div class="wiki-item-title" style="white-space:pre-wrap;font-size:12px;">${text.replace(/</g,'&lt;')}</div></div><button class="wiki-del-btn" onclick="deleteWikiItem('${secKey}',this)" title="刪除">✕</button>`;
-        const addBtn = itemsDiv.querySelector('.wiki-add');
-        if (addBtn) itemsDiv.insertBefore(div, addBtn);
-        else itemsDiv.appendChild(div);
-        div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        div.style.background = 'rgba(196,80,42,.08)';
-        setTimeout(() => div.style.background = '', 1200);
-      }
+      secEl.style.background = 'rgba(42,122,110,0.08)';
+      setTimeout(() => secEl.style.background = '', 1400);
     }
     saveState();
   }
