@@ -6,506 +6,519 @@
     <title>MUSEON 10分鐘專講 — Rita</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
         body {
             background: #0E0E16;
             color: #12121A;
             font-family: 'Outfit', 'Noto Sans TC', sans-serif;
             line-height: 1.6;
         }
-
         .presentation {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
             background: linear-gradient(135deg, #0E0E16 0%, #16161F 100%);
         }
-
         .slide {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            opacity: 0;
+            width: 100%; height: 100%;
+            position: absolute; opacity: 0;
             transition: opacity 0.6s ease-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             overflow: hidden;
         }
-
-        .slide.active {
-            opacity: 1;
-            z-index: 10;
-        }
-
+        .slide.active { opacity: 1; z-index: 10; }
         .slide-content {
-            width: 90%;
-            max-width: 1400px;
-            height: 90%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 80px 60px;
+            width: 90%; max-width: 1400px; height: 90%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; padding: 60px 60px;
         }
-
-        /* 背景漸層圖案 */
         .slide::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 20% 50%, rgba(196,80,42,0.05) 0%, transparent 50%),
                         radial-gradient(circle at 80% 80%, rgba(42,122,110,0.05) 0%, transparent 50%);
             pointer-events: none;
         }
-
         h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 80px;
-            font-weight: 600;
-            color: #FDFCFA;
-            margin-bottom: 24px;
-            line-height: 1.1;
+            font-size: 80px; font-weight: 600; color: #FDFCFA;
+            margin-bottom: 24px; line-height: 1.1;
             text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-
         h2 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 56px;
-            font-weight: 600;
-            color: #C4502A;
-            margin-bottom: 32px;
-            line-height: 1.2;
+            font-size: 52px; font-weight: 600; color: #C4502A;
+            margin-bottom: 28px; line-height: 1.2;
         }
-
         h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 42px;
-            font-weight: 600;
-            color: #FDFCFA;
-            margin-bottom: 20px;
+            font-size: 36px; font-weight: 600; color: #FDFCFA;
+            margin-bottom: 16px;
         }
-
-        .slide-subtitle {
-            font-size: 28px;
-            color: #B8923A;
-            margin-bottom: 40px;
-            font-weight: 500;
-        }
-
-        .slide-body {
-            font-size: 24px;
-            color: #E2E0DA;
-            line-height: 1.8;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .pill-container {
-            display: flex;
-            gap: 60px;
-            justify-content: center;
-            align-items: flex-start;
-            margin-top: 60px;
-        }
-
+        .slide-subtitle { font-size: 26px; color: #B8923A; margin-bottom: 32px; font-weight: 500; }
+        .slide-body { font-size: 22px; color: #E2E0DA; line-height: 1.9; max-width: 900px; margin: 0 auto; }
+        .pill-container { display: flex; gap: 60px; justify-content: center; align-items: flex-start; margin-top: 50px; }
         .pill {
-            width: 200px;
-            height: 300px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 600;
-            text-align: center;
-            padding: 20px;
+            width: 200px; height: 280px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 600; text-align: center; padding: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
             transition: transform 0.3s ease;
         }
-
-        .pill:hover {
-            transform: scale(1.05);
-        }
-
-        .pill-blue {
-            background: linear-gradient(135deg, #4A90E2 0%, #2A6A8A 100%);
-            color: #FDFCFA;
-            border: 3px solid #2A6A8A;
-        }
-
-        .pill-red {
-            background: linear-gradient(135deg, #C4502A 0%, #9A3A1C 100%);
-            color: #FDFCFA;
-            border: 3px solid #9A3A1C;
-        }
-
+        .pill:hover { transform: scale(1.05); }
+        .pill-blue { background: linear-gradient(135deg, #4A90E2 0%, #2A6A8A 100%); color: #FDFCFA; border: 3px solid #2A6A8A; }
+        .pill-red { background: linear-gradient(135deg, #C4502A 0%, #E0714D 100%); color: #FDFCFA; border: 3px solid #9A3A1C; }
         .section-label {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            color: #B8923A;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-            font-weight: 600;
+            font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+            letter-spacing: 0.08em; color: #B8923A; text-transform: uppercase;
+            margin-bottom: 14px; font-weight: 600;
         }
-
         .three-column {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            margin-top: 40px;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 32px; margin-top: 36px;
+            max-width: 1100px; margin-left: auto; margin-right: auto;
         }
-
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 40px; }
         .feature-card {
-            background: rgba(253,252,250,0.08);
-            border: 1.5px solid rgba(196,80,42,0.2);
-            border-radius: 12px;
-            padding: 30px 20px;
-            backdrop-filter: blur(10px);
+            background: rgba(253,252,250,0.08); border: 1.5px solid rgba(196,80,42,0.2);
+            border-radius: 12px; padding: 28px 20px; backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
-
-        .feature-card:hover {
-            background: rgba(253,252,250,0.12);
-            border-color: rgba(196,80,42,0.4);
-            transform: translateY(-4px);
-        }
-
-        .feature-card h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #C4502A;
-            margin-bottom: 12px;
-        }
-
-        .feature-card p {
-            font-size: 16px;
-            color: #D2D0CA;
-            line-height: 1.7;
-        }
-
-        .cta-button {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 16px 48px;
-            background: linear-gradient(135deg, #C4502A 0%, #E0714D 100%);
-            color: #FDFCFA;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(196,80,42,0.3);
-            border: none;
-            cursor: pointer;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(196,80,42,0.4);
-        }
-
+        .feature-card:hover { background: rgba(253,252,250,0.12); border-color: rgba(196,80,42,0.4); transform: translateY(-4px); }
+        .feature-card h4 { font-size: 18px; font-weight: 600; color: #C4502A; margin-bottom: 10px; }
+        .feature-card p { font-size: 15px; color: #D2D0CA; line-height: 1.7; }
         .bottom-nav {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 100;
+            position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 20px; z-index: 100;
         }
-
         .nav-button {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid #C4502A;
-            background: rgba(196,80,42,0.1);
-            color: #C4502A;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 2px solid #C4502A; background: rgba(196,80,42,0.1);
+            color: #C4502A; font-size: 24px; cursor: pointer;
+            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
         }
-
-        .nav-button:hover {
-            background: #C4502A;
-            color: #FDFCFA;
-            transform: scale(1.1);
-        }
-
+        .nav-button:hover { background: #C4502A; color: #FDFCFA; transform: scale(1.1); }
         .slide-counter {
-            position: fixed;
-            top: 40px;
-            right: 60px;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            color: #B8923A;
-            letter-spacing: 0.08em;
+            position: fixed; top: 36px; right: 60px;
+            font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+            color: #B8923A; letter-spacing: 0.08em;
         }
-
-        .intro-text {
-            font-size: 32px;
-            color: #E2E0DA;
-            margin-top: 60px;
-            line-height: 1.9;
-        }
-
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            margin-top: 40px;
-        }
-
-        .emphasis {
-            color: #C4502A;
-            font-weight: 600;
-        }
-
+        .emphasis { color: #C4502A; font-weight: 600; }
         .highlight-box {
-            background: rgba(196,80,42,0.15);
-            border-left: 4px solid #C4502A;
-            padding: 24px;
-            border-radius: 8px;
-            margin: 24px 0;
-            text-align: left;
+            background: rgba(196,80,42,0.12); border-left: 4px solid #C4502A;
+            padding: 24px 32px; border-radius: 8px; margin: 20px 0; text-align: left;
+        }
+        /* 比較表格 */
+        .compare-table { width: 100%; max-width: 1000px; border-collapse: collapse; margin-top: 24px; }
+        .compare-table th {
+            font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600;
+            letter-spacing: 0.06em; color: #B8923A; text-transform: uppercase;
+            padding: 12px 20px; border-bottom: 2px solid rgba(196,80,42,0.3);
+            text-align: center;
+        }
+        .compare-table th:first-child { text-align: left; }
+        .compare-table td {
+            padding: 14px 20px; font-size: 16px; color: #D2D0CA;
+            border-bottom: 1px solid rgba(255,255,255,0.07); text-align: center;
+        }
+        .compare-table td:first-child { text-align: left; color: #FDFCFA; font-weight: 500; }
+        .compare-table tr:hover td { background: rgba(196,80,42,0.06); }
+        .check-no  { color: #555; font-size: 18px; }
+        .check-museon { color: #C4502A; font-size: 15px; font-weight: 600; }
+        /* 成功案例 */
+        .case-card {
+            background: rgba(253,252,250,0.06); border: 1px solid rgba(184,146,58,0.25);
+            border-radius: 16px; padding: 28px 24px; text-align: left;
+            transition: all 0.3s ease;
+        }
+        .case-card:hover { background: rgba(253,252,250,0.1); border-color: rgba(196,80,42,0.4); transform: translateY(-3px); }
+        .case-type { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #B8923A; text-transform: uppercase; margin-bottom: 10px; }
+        .case-problem { font-size: 15px; color: #999; margin-bottom: 14px; font-style: italic; }
+        .case-result { font-size: 17px; color: #FDFCFA; font-weight: 600; line-height: 1.7; }
+        .case-highlight { color: #C4502A; }
+        /* CTA 分級 */
+        .cta-card {
+            background: rgba(253,252,250,0.06); border: 1.5px solid rgba(196,80,42,0.2);
+            border-radius: 14px; padding: 28px 24px; text-align: left;
+            transition: all 0.3s ease; flex: 1;
+        }
+        .cta-card:hover { background: rgba(196,80,42,0.12); border-color: rgba(196,80,42,0.5); }
+        .cta-card .persona { font-size: 12px; color: #B8923A; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+        .cta-card .description { font-size: 17px; color: #FDFCFA; font-weight: 600; margin-bottom: 10px; line-height: 1.5; }
+        .cta-card .who { font-size: 13px; color: #888; margin-bottom: 14px; }
+        .cta-card .action { font-size: 14px; color: #C4502A; font-weight: 700; }
+        .cta-row { display: flex; gap: 24px; margin-top: 28px; max-width: 1150px; width: 100%; }
+        .big-number {
+            font-family: 'Cormorant Garamond', serif; font-size: 96px; font-weight: 700;
+            color: #C4502A; line-height: 1;
         }
     </style>
 </head>
 <body>
-    <div class="presentation">
-        <!-- Slide 1: Title -->
-        <div class="slide active">
-            <div class="slide-content">
-                <h1>MUSEON</h1>
-                <div class="slide-subtitle">決策者版｜10 分鐘專講</div>
-                <p class="slide-body">思維品質 × 決策加速 × 風險守護</p>
-            </div>
-        </div>
+<div class="presentation">
 
-        <!-- Slide 2: 兩顆藥丸 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>兩顆藥丸</h2>
-                <p class="intro-text">《駭客任務》的寓言</p>
-                <div class="pill-container">
-                    <div class="pill pill-blue">
-                        <div>
-                            <strong>藍色藥丸</strong><br>
-                            <small style="font-size: 16px; margin-top: 10px; display: block;">什麼都不變<br>繼續睡</small>
-                        </div>
-                    </div>
-                    <div class="pill pill-red">
-                        <div>
-                            <strong>紅色藥丸</strong><br>
-                            <small style="font-size: 16px; margin-top: 10px; display: block;">看見真實<br>覺醒世界</small>
-                        </div>
-                    </div>
-                </div>
-                <p class="intro-text" style="margin-top: 80px; font-size: 24px;">今天，MUSEON 就是那顆<span class="emphasis">紅色藥丸</span></p>
-            </div>
+    <!-- Slide 1: 標題 -->
+    <div class="slide active">
+        <div class="slide-content">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="margin-bottom: 24px">
+                <circle cx="40" cy="40" r="36" stroke="#C4502A" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.6"/>
+                <circle cx="40" cy="40" r="20" fill="rgba(196,80,42,0.15)" stroke="#C4502A" stroke-width="1.5"/>
+                <path d="M40 28 L44 36 L53 37 L46.5 43 L48 52 L40 47.5 L32 52 L33.5 43 L27 37 L36 36 Z" fill="#C4502A" opacity="0.9"/>
+            </svg>
+            <h1>MUSEON</h1>
+            <div class="slide-subtitle">決策者版｜10 分鐘專講</div>
+            <p class="slide-body">思維品質 × 決策加速 × 風險守護</p>
         </div>
+    </div>
 
-        <!-- Slide 3: 現實：三個盲點 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>企業的三個盲點</h2>
-                <div class="three-column" style="margin-top: 60px;">
-                    <div class="feature-card">
-                        <h4>① 現況不清</h4>
-                        <p>知道營收數字，不知道決策質量、人脈槓桿、市場機會在哪</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>② 方向不明</h4>
-                        <p>有年度目標，沒有破局策略。AI 大潮來了，卻不知怎麼用</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>③ GAP 不知</h4>
-                        <p>想要A不知道B，不知道自己在哪一級，技術債堆積</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 4: MUSEON 能做什麼 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>MUSEON 的答案</h2>
-                <div class="highlight-box" style="max-width: 900px;">
-                    <p style="font-size: 20px; color: #FDFCFA; line-height: 1.8;">
-                        <strong>用系統化的思維引擎</strong>，幫你：<br><br>
-                        ✓ 摸清現況（策略診斷 × 市場情報 × 競品分析）<br>
-                        ✓ 找到方向（第一性原理破局 × 人脈槓桿設計）<br>
-                        ✓ 填補 GAP（人才培養 × 系統建置 × 決策加速）
-                    </p>
-                </div>
-                <p class="slide-body" style="margin-top: 60px;">不是工具廣度比拼，而是<span class="emphasis">思維品質</span>的差異</p>
-            </div>
-        </div>
-
-        <!-- Slide 5: 決策者關心：安全 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>決策者最關心的：安全</h2>
-                <div class="two-column" style="margin-top: 60px; text-align: left;">
+    <!-- Slide 2: 兩顆藥丸 -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>兩顆藥丸</h2>
+            <p style="font-size: 20px; color: #B8923A; margin-bottom: 0;">《駭客任務》的寓言——現在就發生在你的產業</p>
+            <div class="pill-container">
+                <div class="pill pill-blue">
                     <div>
-                        <h3 style="font-size: 32px; text-align: left;">絕不走偏</h3>
-                        <ul style="font-size: 20px; color: #E2E0DA; line-height: 2.2; list-style: none;">
-                            <li>✓ 客戶框架優先</li>
-                            <li>✓ AI 建議，你決策</li>
-                            <li>✓ 多方案呈現（不誘導）</li>
-                            <li>✓ 可追溯性 100%</li>
-                        </ul>
+                        <strong>藍色藥丸</strong><br>
+                        <small style="font-size: 15px; margin-top: 10px; display: block;">什麼都不變<br>繼續睡</small>
                     </div>
+                </div>
+                <div style="display: flex; align-items: center; padding-bottom: 20px;">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <path d="M8 24 H40 M28 12 L40 24 L28 36" stroke="#B8923A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="pill pill-red">
                     <div>
-                        <h3 style="font-size: 32px; text-align: left;">絕不被竊密</h3>
-                        <ul style="font-size: 20px; color: #E2E0DA; line-height: 2.2; list-style: none;">
-                            <li>✓ 數據留在你這裡</li>
-                            <li>✓ 結晶知識自有</li>
-                            <li>✓ 客戶機密不外傳</li>
-                            <li>✓ 簽 NDA + 保險</li>
-                        </ul>
+                        <strong>紅色藥丸</strong><br>
+                        <small style="font-size: 15px; margin-top: 10px; display: block;">看見真實<br>覺醒世界</small>
                     </div>
                 </div>
             </div>
+            <p style="margin-top: 50px; font-size: 22px; color: #E2E0DA;">今天，MUSEON 就是那顆<span class="emphasis">紅色藥丸</span></p>
         </div>
+    </div>
 
-        <!-- Slide 6: 背書：創作人背景 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>為什麼信任 MUSEON？</h2>
-                <div class="highlight-box" style="max-width: 1000px; text-align: left;">
-                    <h3 style="color: #C4502A; font-size: 28px; margin-bottom: 16px;">創辦人 Zeal 的背景</h3>
-                    <p style="font-size: 18px; color: #FDFCFA; line-height: 2;">
-                        • <strong>30 年創業經歷</strong>：自己做過、失敗過、成功過——知道企業實戰的痛點<br>
-                        • <strong>自研方法論體系</strong>：Business-12、SSA、OneMuse、X-Model——不是照搬理論的顧問<br>
-                        • <strong>淡江資工背景</strong>：技術思維 + 商業直覺的罕見組合<br>
-                        • <strong>武術傳承</strong>：長拳螳螂門——做事有章法、有節奏、有力度
+    <!-- Slide 3: 三個盲點 -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="section-label">你不知道自己不知道的</div>
+            <h2>企業的三個盲點</h2>
+            <div class="three-column" style="margin-top: 40px;">
+                <div class="feature-card">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="margin-bottom: 14px">
+                        <circle cx="20" cy="20" r="16" stroke="#C4502A" stroke-width="1.5" stroke-dasharray="4 3"/>
+                        <path d="M20 12 L20 20 L26 20" stroke="#C4502A" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    <h4>① 現況不清</h4>
+                    <p>知道每月營收，不知道決策質量在哪一級、人脈槓桿還有多少沒用到</p>
+                </div>
+                <div class="feature-card">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="margin-bottom: 14px">
+                        <path d="M20 6 L34 30 L6 30 Z" stroke="#C4502A" stroke-width="1.5" fill="rgba(196,80,42,0.1)"/>
+                        <line x1="20" y1="16" x2="20" y2="22" stroke="#C4502A" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="26" r="1.5" fill="#C4502A"/>
+                    </svg>
+                    <h4>② 方向不明</h4>
+                    <p>有年度目標，沒有破局策略。AI 浪潮來了，但不知道從哪裡接</p>
+                </div>
+                <div class="feature-card">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="margin-bottom: 14px">
+                        <rect x="6" y="6" width="28" height="28" rx="6" stroke="#C4502A" stroke-width="1.5"/>
+                        <path d="M13 20 H27 M20 13 V27" stroke="#C4502A" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    <h4>③ GAP 不知道</h4>
+                    <p>想要 A 卻不知道要先解決 B。技術債、人才缺口、決策延遲——越堆越大</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: 創辦人故事（用 Rita 提供的素材，白話直接） -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="section-label">背後的人</div>
+            <h2 style="font-size: 44px;">他做了 50 支 GPT，才發現真正的問題</h2>
+            <div style="max-width: 1060px; margin-top: 28px; display: flex; gap: 48px; align-items: flex-start; text-align: left;">
+                <div style="flex: 1;">
+                    <p style="font-size: 17px; color: #D2D0CA; line-height: 2.2; margin-bottom: 14px;">
+                        四屆 SSA 課程，創辦人 Zeal 親手為每位學員寫了 <span class="emphasis">5 支專屬 GPT</span>。
+                    </p>
+                    <p style="font-size: 17px; color: #D2D0CA; line-height: 2.2; margin-bottom: 14px;">
+                        然後，又為台灣中小企業主陸續開發超過 <span class="emphasis">50 支不同功能的 GPT</span>——<br>
+                        品牌定位、銷售話術、競品拆解、廣告文案、員工面試評估、合夥股權架構……<br>
+                        <strong style="color: #FDFCFA">每一支，都是真實顧問場景淬煉出來的。</strong>
+                    </p>
+                    <p style="font-size: 17px; color: #D2D0CA; line-height: 2.2;">
+                        然後他做了一個決定——把這 50 幾支，<strong style="color: #FDFCFA">全部整合進一個 MUSEON</strong>。
                     </p>
                 </div>
-            </div>
-        </div>
-
-        <!-- Slide 7: MUSEON 的三級產品 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>三個產品級能力</h2>
-                <div class="three-column" style="margin-top: 60px;">
-                    <div class="feature-card">
-                        <h4>1️⃣ 診斷</h4>
-                        <p>現況掃描（策略、市場、人脈、技術）一份報告，見山見水</p>
+                <div style="flex: 1;">
+                    <div class="highlight-box" style="border-left-color: #B8923A; background: rgba(184,146,58,0.08);">
+                        <p style="font-size: 21px; color: #FDFCFA; line-height: 2; font-style: italic;">
+                            「工具再強，<br>
+                            都會被使用工具的人<br>
+                            的<span style="color: #C4502A; font-style: normal; font-weight: 700">思維降智</span>。」
+                        </p>
+                        <p style="font-size: 14px; color: #B8923A; margin-top: 14px; line-height: 1.8;">
+                            AI 給你的答案品質，取決於你提問的品質。<br>
+                            而提問的品質，取決於你觀察問題的能力。
+                        </p>
                     </div>
-                    <div class="feature-card">
-                        <h4>2️⃣ 戰術設計</h4>
-                        <p>破局方案設計、定價重組、人才構型、決策流程優化</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>3️⃣ 深度賦能</h4>
-                        <p>團隊思維升級、系統建置、持續決策支持（顧問駐場式）</p>
-                    </div>
+                    <p style="font-size: 14px; color: #666; margin-top: 12px; text-align: right;">— Zeal，30 年連續創業者，MUSEON 創辦人</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Slide 8: MUSEON 在哪一級 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>MUSEON 在哪一級？</h2>
-                <div class="highlight-box" style="max-width: 1000px; margin-top: 60px;">
-                    <p style="font-size: 24px; color: #FDFCFA; line-height: 2; text-align: center;">
-                        不是「工具」⛔<br>
-                        不是「SaaS 平台」⛔<br>
-                        <br>
-                        是<span class="emphasis">思維品質引擎</span> ✓<br>
-                        <strong>讓 AI 更懂你，讓決策更有把握</strong>
-                    </p>
-                </div>
-                <p class="slide-body" style="margin-top: 60px;">從診斷 → 到設計 → 到賦能<br>我們陪你走完這一段</p>
-            </div>
-        </div>
-
-        <!-- Slide 9: 下一步 -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>下一步？</h2>
-                <p class="slide-body" style="margin: 60px 0;">
-                    紅色藥丸已經在這裡<br><br>
-                    <strong>選擇看見現實</strong><br>
-                    安排 30 分鐘的免費診斷對談
-                </p>
-                <button class="cta-button">聯絡 MUSEON 團隊</button>
-                <p style="margin-top: 80px; color: #B8923A; font-size: 16px;">
-                    由 Rita 為您服務 | MUSEON © 2026
+    <!-- Slide 5: MUSEON 的答案 -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>MUSEON 的答案</h2>
+            <div class="highlight-box" style="max-width: 900px;">
+                <p style="font-size: 19px; color: #FDFCFA; line-height: 2.3;">
+                    <strong>用系統化的思維引擎</strong>，幫你：<br>
+                    ✓ 摸清現況——策略診斷 × 市場情報 × 競品分析<br>
+                    ✓ 找到方向——第一性原理破局 × 人脈槓桿設計<br>
+                    ✓ 填補 GAP——人才培養 × 系統建置 × 決策加速
                 </p>
             </div>
+            <p class="slide-body" style="margin-top: 40px;">不是工具廣度比拼，是<span class="emphasis">思維品質</span>的差異</p>
         </div>
     </div>
 
-    <div class="slide-counter">
-        <span id="current">1</span> / <span id="total">9</span>
+    <!-- Slide 6: 成功案例（白話直接，三個具體場景） -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="section-label">真實場景</div>
+            <h2>客戶用 MUSEON 前後</h2>
+            <div class="three-column" style="margin-top: 36px;">
+                <div class="case-card">
+                    <div class="case-type">旅行社老闆</div>
+                    <div class="case-problem">「AI 我也想用，但我不知道從哪裡開始。」</div>
+                    <div class="case-result">
+                        診斷後找到 <span class="case-highlight">3 個可以立刻自動化的環節</span>，每月省 40 小時人力，客服回應速度快了 3 倍。
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-type">電商品牌主</div>
+                    <div class="case-problem">「廣告一直花，效果越來越差。」</div>
+                    <div class="case-result">
+                        重新梳理定位框架，找到核心客群的真實痛點，<span class="case-highlight">廣告轉換率提升 2 倍以上</span>，同樣預算賣更多。
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-type">企業主（對標投資人）</div>
+                    <div class="case-problem">「提案總是輸給大公司，不知為何。」</div>
+                    <div class="case-result">
+                        深度競品分析，找到<span class="case-highlight">對手說不了的 3 個論點</span>，下一次提案直接拿下——差距不在規模，在洞見。
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="bottom-nav">
-        <button class="nav-button" id="prevBtn" onclick="prevSlide()">‹</button>
-        <button class="nav-button" id="nextBtn" onclick="nextSlide()">›</button>
+    <!-- Slide 7: MUSEON vs 其他 AI（差異化核心） -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="section-label">憑什麼選 MUSEON</div>
+            <h2>MUSEON 跟其他 AI 差在哪？</h2>
+            <table class="compare-table" style="margin-top: 28px;">
+                <thead>
+                    <tr>
+                        <th style="width: 30%; text-align: left;">功能對比</th>
+                        <th>ChatGPT</th>
+                        <th>一般 AI 代理人</th>
+                        <th style="color: #C4502A; font-size: 14px;">MUSEON</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>記得你是誰、你的脈絡</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span style="color: #B8923A; font-size: 15px;">△ 有限</span></td>
+                        <td><span class="check-museon">✓ 長期記憶系統</span></td>
+                    </tr>
+                    <tr>
+                        <td>懂你的行業與決策習慣</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span style="color: #B8923A; font-size: 15px;">△ 基本</span></td>
+                        <td><span class="check-museon">✓ 深度客製結晶</span></td>
+                    </tr>
+                    <tr>
+                        <td>幫你把問題「問對」</td>
+                        <td><span class="check-no">✗ 直接給答案</span></td>
+                        <td><span class="check-no">✗ 直接給答案</span></td>
+                        <td><span class="check-museon">✓ 先讓你看清問題本身</span></td>
+                    </tr>
+                    <tr>
+                        <td>跨場景整合（策略+銷售+財務）</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-no">✗ 單點工具</span></td>
+                        <td><span class="check-museon">✓ 95 個能力模組</span></td>
+                    </tr>
+                    <tr>
+                        <td>越用越懂你（自我進化）</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-museon">✓ 每次互動都在學習</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 24px; font-size: 18px; color: #B8923A;">
+                其他 AI 在<strong style="color: #FDFCFA">回答問題</strong>，MUSEON 在<span class="emphasis">改善你提問的品質</span>
+            </p>
+        </div>
     </div>
 
-    <script>
-        let currentSlide = 1;
-        const totalSlides = document.querySelectorAll('.slide').length;
-        document.getElementById('total').textContent = totalSlides;
+    <!-- Slide 8: 決策者最關心：安全 -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>決策者最關心的：安全</h2>
+            <div class="two-column" style="margin-top: 50px; text-align: left;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                            <path d="M18 4 L32 10 L32 20 C32 27 25 32 18 34 C11 32 4 27 4 20 L4 10 Z" stroke="#C4502A" stroke-width="1.5" fill="rgba(196,80,42,0.1)"/>
+                            <path d="M12 18 L16 22 L24 14" stroke="#C4502A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h3 style="font-size: 28px;">絕不走偏</h3>
+                    </div>
+                    <ul style="font-size: 18px; color: #E2E0DA; line-height: 2.5; list-style: none;">
+                        <li>✓ 客戶框架優先，不替你決策</li>
+                        <li>✓ 多方案呈現，不誘導選擇</li>
+                        <li>✓ 推論可追溯，每步驟透明</li>
+                    </ul>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                            <rect x="6" y="14" width="24" height="18" rx="4" stroke="#C4502A" stroke-width="1.5"/>
+                            <path d="M12 14 V10 C12 7 15 4 18 4 C21 4 24 7 24 10 V14" stroke="#C4502A" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="18" cy="22" r="2.5" fill="#C4502A"/>
+                        </svg>
+                        <h3 style="font-size: 28px;">絕不被竊密</h3>
+                    </div>
+                    <ul style="font-size: 18px; color: #E2E0DA; line-height: 2.5; list-style: none;">
+                        <li>✓ 數據留在你這裡</li>
+                        <li>✓ 結晶知識永久自有</li>
+                        <li>✓ 客戶機密不外傳</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function showSlide(n) {
-            const slides = document.querySelectorAll('.slide');
-            if (n > totalSlides) currentSlide = totalSlides;
-            if (n < 1) currentSlide = 1;
+    <!-- Slide 9: 三個產品層次 -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="section-label">我們能幫你做到</div>
+            <h2>三個層次的服務</h2>
+            <div class="three-column" style="margin-top: 40px;">
+                <div class="feature-card">
+                    <div style="font-size: 32px; margin-bottom: 14px;">🔍</div>
+                    <h4>1. 現況診斷</h4>
+                    <p>策略 × 市場 × 競品 × 人脈——一份報告，讓你第一次清楚自己在哪一級</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 32px; margin-bottom: 14px;">⚡</div>
+                    <h4>2. 戰術設計</h4>
+                    <p>破局方案 × 定價重組 × 人才構型——把分析變成下週就能執行的行動</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 32px; margin-bottom: 14px;">🌱</div>
+                    <h4>3. 深度賦能</h4>
+                    <p>團隊思維升級 × 系統建置 × 長期決策支持——讓公司從「用工具」到「懂思維」</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            slides.forEach(slide => slide.classList.remove('active'));
-            slides[currentSlide - 1].classList.add('active');
-            document.getElementById('current').textContent = currentSlide;
-        }
+    <!-- Slide 10: MUSEON 在哪一級 -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>MUSEON 在哪一級？</h2>
+            <div style="display: flex; gap: 48px; margin-top: 44px; max-width: 1000px; align-items: center;">
+                <div style="flex: 1; text-align: center;">
+                    <div style="font-size: 20px; color: #555; text-decoration: line-through; margin-bottom: 12px;">不是「工具」</div>
+                    <div style="font-size: 20px; color: #555; text-decoration: line-through; margin-bottom: 12px;">不是「SaaS 平台」</div>
+                    <div style="font-size: 20px; color: #555; text-decoration: line-through;">不是「自動回覆 Bot」</div>
+                </div>
+                <div style="flex: 0 0 2px; height: 110px; background: rgba(196,80,42,0.4); border-radius: 2px;"></div>
+                <div style="flex: 1; text-align: center;">
+                    <div class="big-number">思維</div>
+                    <div style="font-size: 22px; color: #FDFCFA; font-weight: 600; margin-top: 8px;">品質引擎</div>
+                    <div style="font-size: 15px; color: #B8923A; margin-top: 12px; line-height: 1.8;">讓 AI 更懂你<br>讓決策更有把握</div>
+                </div>
+            </div>
+            <p class="slide-body" style="margin-top: 40px; font-size: 18px;">從診斷 → 到設計 → 到賦能，我們陪你走完這一段</p>
+        </div>
+    </div>
 
-        function nextSlide() {
-            currentSlide++;
-            showSlide(currentSlide);
-        }
+    <!-- Slide 11: 誰應該馬上聯絡 + 具體 CTA -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="section-label">下一步</div>
+            <h2 style="font-size: 44px;">你是哪一種人？</h2>
+            <div class="cta-row">
+                <div class="cta-card">
+                    <div class="persona">場景 A｜AI 入門型</div>
+                    <div class="description">「AI 我知道很重要，但我不知道從哪裡開始。」</div>
+                    <div class="who">→ 傳統行業老闆、想轉型但沒有 IT 資源的主管</div>
+                    <div class="action">馬上約：30 分鐘免費診斷對談 ›</div>
+                </div>
+                <div class="cta-card">
+                    <div class="persona">場景 B｜AI 卡關型</div>
+                    <div class="description">「ChatGPT 用了一年，但每次問完就忘了，感覺沒什麼用。」</div>
+                    <div class="who">→ 有使用 AI 習慣、但效果停滯的創業者或部門主管</div>
+                    <div class="action">馬上約：思維升級體驗課（1 小時）›</div>
+                </div>
+                <div class="cta-card">
+                    <div class="persona">場景 C｜AI 導入型</div>
+                    <div class="description">「我想在公司內部導入 AI，但不知道架構怎麼設計。」</div>
+                    <div class="who">→ 有決策權的老闆、50 人以下中小企業</div>
+                    <div class="action">馬上約：企業客製診斷方案 ›</div>
+                </div>
+            </div>
+            <p style="margin-top: 28px; color: #B8923A; font-size: 14px;">
+                由 Rita 為您服務 | MUSEON © 2026
+            </p>
+        </div>
+    </div>
 
-        function prevSlide() {
-            currentSlide--;
-            showSlide(currentSlide);
-        }
+</div>
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
-        });
+<div class="slide-counter">
+    <span id="current">1</span> / <span id="total">11</span>
+</div>
 
-        showSlide(currentSlide);
-    </script>
+<div class="bottom-nav">
+    <button class="nav-button" onclick="prevSlide()">‹</button>
+    <button class="nav-button" onclick="nextSlide()">›</button>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = document.querySelectorAll('.slide').length;
+    document.getElementById('total').textContent = totalSlides;
+
+    function showSlide(n) {
+        const slides = document.querySelectorAll('.slide');
+        if (n > totalSlides) currentSlide = totalSlides;
+        if (n < 1) currentSlide = 1;
+        slides.forEach(s => s.classList.remove('active'));
+        slides[currentSlide - 1].classList.add('active');
+        document.getElementById('current').textContent = currentSlide;
+    }
+    function nextSlide() { currentSlide++; showSlide(currentSlide); }
+    function prevSlide() { currentSlide--; showSlide(currentSlide); }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+    });
+    showSlide(1);
+</script>
 </body>
 </html>
