@@ -1481,8 +1481,11 @@
     if (chatId) localStorage.setItem('tg_chat_id', chatId);
     if (userId) localStorage.setItem('tg_user_id', userId);
     if (endpoint) localStorage.setItem('museon_endpoint', decodeURIComponent(endpoint));
-    if (!localStorage.getItem('museon_endpoint')) {
-      localStorage.setItem('museon_endpoint', 'https://spread-orders-shopping-jamie.trycloudflare.com');
+    const DEFAULT_EP = 'https://spread-orders-shopping-jamie.trycloudflare.com';
+    const storedEp = localStorage.getItem('museon_endpoint');
+    // 若 localStorage 沒值，或值含中文（placeholder 被誤存），重設為預設 URL
+    if (!storedEp || /[\u4e00-\u9fff]/.test(storedEp)) {
+      localStorage.setItem('museon_endpoint', DEFAULT_EP);
     }
   })();
 
