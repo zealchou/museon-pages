@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSEON 智能顧問系統 — 溝通操作指南</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #b6853d;
+
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+
+      --deep-ink:     #181737;
+      --raised:       #1E1E2A;
+      --border-dark:  #2A2A38;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Outfit', 'Noto Sans TC', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+
+      --shadow-card:   0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      --shadow-raised: 0 4px 16px rgba(18,18,26,0.10), 0 1px 4px rgba(18,18,26,0.06);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--parchment);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ════════════════════ HERO ════════════════════ */
+    .hero {
+      background: linear-gradient(160deg, #181737 0%, #231e4a 55%, #1a1534 100%);
+      padding: 88px 40px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 28% 62%, rgba(182,133,61,0.14) 0%, transparent 70%),
+        radial-gradient(ellipse 45% 30% at 76% 28%, rgba(196,80,42,0.11) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      animation: fadeUp 0.45s ease-out both;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(182,133,61,0.40);
+      border-radius: 100px;
+      padding: 4px 18px;
+      margin-bottom: 32px;
+      background: rgba(182,133,61,0.08);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 600;
+      color: #F5F0E8;
+      line-height: 1.18;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      color: rgba(245,240,232,0.60);
+      letter-spacing: 0.01em;
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 32px auto 0;
+    }
+
+    /* ════════════════════ LAYOUT ════════════════════ */
+    .page-body {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 60px 40px 88px;
+    }
+
+    .section {
+      margin-bottom: 60px;
+      animation: fadeUp 0.4s ease-out both;
+    }
+    .section:nth-child(1) { animation-delay: 0.06s; }
+    .section:nth-child(2) { animation-delay: 0.12s; }
+    .section:nth-child(3) { animation-delay: 0.18s; }
+    .section:nth-child(4) { animation-delay: 0.24s; }
+
+    /* ── Section Header ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .section-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--deep-ink);
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    /* ── Decorative HR ── */
+    .hr-deco {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 52px 0;
+    }
+
+    /* ════════════════════ SECTION 1: MODE CARDS ════════════════════ */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .mode-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow-card);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .mode-card.mode-chat::before { background: linear-gradient(90deg, var(--teal), #3d9d8f); }
+    .mode-card.mode-cmd::before  { background: linear-gradient(90deg, var(--ember), var(--ember-light)); }
+
+    .mode-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-raised);
+    }
+
+    .mode-icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .mode-type-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .mode-card.mode-chat .mode-type-label { color: var(--teal); }
+    .mode-card.mode-cmd  .mode-type-label { color: var(--ember); }
+
+    .mode-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .mode-desc {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.72;
+      margin-bottom: 18px;
+    }
+
+    .mode-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .mode-example {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--slate);
+      padding: 7px 12px;
+      border-radius: 6px;
+      border-left: 2px solid;
+    }
+
+    .mode-card.mode-chat .mode-example {
+      border-color: var(--teal);
+      background: rgba(42,122,110,0.05);
+    }
+
+    .mode-card.mode-cmd .mode-example {
+      border-color: var(--ember);
+      background: rgba(196,80,42,0.05);
+    }
+
+    .mode-example code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      font-style: normal;
+      color: var(--ember-dark);
+      background: rgba(196,80,42,0.09);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    /* ════════════════════ SECTION 2: COMMAND TABLE ════════════════════ */
+    .table-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      background: var(--snow);
+    }
+
+    .cmd-table thead {
+      background: var(--deep-ink);
+    }
+
+    .cmd-table thead th {
+      padding: 15px 22px;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.50);
+    }
+
+    .cmd-table thead th:first-child {
+      color: var(--gold);
+    }
+
+    .cmd-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 160ms ease;
+    }
+
+    .cmd-table tbody tr:last-child { border-bottom: none; }
+
+    .cmd-table tbody tr:hover {
+      background: rgba(196,80,42,0.04);
+    }
+
+    .cmd-table td {
+      padding: 15px 22px;
+      vertical-align: middle;
+    }
+
+    .cmd-code {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ember);
+      white-space: nowrap;
+    }
+
+    .cmd-desc {
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .cmd-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .tag-insight  { background: rgba(42,122,110,0.10);  color: #1f6559; }
+    .tag-analysis { background: rgba(196,80,42,0.10);   color: var(--ember-dark); }
+    .tag-tool     { background: rgba(182,133,61,0.12);  color: #6a5018; }
+
+    /* ════════════════════ SECTION 3: CHAT DEMO ════════════════════ */
+    .chat-demo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .chat-scene {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .chat-scene:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-raised);
+    }
+
+    .chat-scene-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 20px;
+      background: var(--parchment);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.65;
+    }
+
+    .chat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mist);
+    }
+
+    .chat-messages {
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .bubble-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 9px;
+    }
+
+    .bubble-wrap.user   { justify-content: flex-end; }
+    .bubble-wrap.museon { justify-content: flex-start; }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .avatar-user {
+      background: rgba(196,80,42,0.10);
+      color: var(--ember);
+      border: 1px solid rgba(196,80,42,0.18);
+    }
+
+    .avatar-museon {
+      background: var(--deep-ink);
+      color: var(--gold);
+      border: 1px solid rgba(182,133,61,0.28);
+    }
+
+    .bubble {
+      max-width: 74%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.68;
+    }
+
+    .bubble.user {
+      background: var(--deep-ink);
+      color: rgba(245,240,232,0.90);
+      border-bottom-right-radius: 4px;
+    }
+
+    .bubble.museon {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      border-bottom-left-radius: 4px;
+    }
+
+    .bubble strong {
+      font-weight: 600;
+      color: var(--ember);
+    }
+
+    .bubble .pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(182,133,61,0.13);
+      color: #6a5018;
+      padding: 1px 7px;
+      border-radius: 4px;
+    }
+
+    /* ════════════════════ SECTION 4: TIPS ════════════════════ */
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tip-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-raised);
+    }
+
+    .tip-icon {
+      width: 46px; height: 46px;
+      border-radius: 10px;
+      background: var(--deep-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      flex-shrink: 0;
+    }
+
+    .tip-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 5px;
+    }
+
+    .tip-desc {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.72;
+    }
+
+    .tip-desc code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(196,80,42,0.08);
+      color: var(--ember-dark);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    /* ════════════════════ FOOTER ════════════════════ */
+    footer {
+      background: var(--deep-ink);
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .footer-inner {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .footer-line {
+      width: 48px;
+      height: 1px;
+      background: rgba(182,133,61,0.30);
+      margin: 16px auto;
+    }
+
+    .footer-name {
+      font-size: 13px;
+      color: rgba(245,240,232,0.42);
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .footer-eng {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+      color: rgba(245,240,232,0.22);
+    }
+
+    /* ════════════════════ RESPONSIVE ════════════════════ */
+    @media (max-width: 768px) {
+      .hero { padding: 64px 24px 52px; }
+      .page-body { padding: 44px 20px 64px; }
+      .mode-grid { grid-template-columns: 1fr; }
+      .bubble { max-width: 88%; }
+      .cmd-table thead th:nth-child(3),
+      .cmd-table tbody td:nth-child(3) { display: none; }
+      footer { padding: 36px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 27px; }
+      .hero-sub { font-size: 14px; }
+      .section-title { font-size: 23px; }
+      .section-number { width: 30px; height: 30px; font-size: 11px; }
+      .tip-card { padding: 16px 18px; gap: 14px; }
+      .tip-icon { width: 40px; height: 40px; font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">操作指南 &middot; User Guide</div>
+      <h1>MUSEON 智能顧問系統<br><em>溝通操作指南</em></h1>
+      <p class="hero-sub">如何在 Telegram 上與 MUSEON 有效對話</p>
+      <div class="hero-divider"></div>
+    </div>
+  </header>
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <main class="page-body">
+
+    <!-- ── Section 1：基本使用方式 ── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">01</div>
+        <h2 class="section-title">基本使用方式</h2>
+      </div>
+
+      <div class="mode-grid">
+        <div class="mode-card mode-chat">
+          <span class="mode-icon">💬</span>
+          <div class="mode-type-label">Direct Chat</div>
+          <div class="mode-name">直接對話</div>
+          <p class="mode-desc">
+            輸入任何問題或需求，MUSEON 理解意圖後直接給出分析與建議。無需特殊格式，說人話即可。
+          </p>
+          <div class="mode-examples">
+            <div class="mode-example">「幫我分析這個客戶的背景」</div>
+            <div class="mode-example">「這筆生意值不值得做？」</div>
+            <div class="mode-example">「這份合約有哪些風險點？」</div>
+          </div>
+        </div>
+
+        <div class="mode-card mode-cmd">
+          <span class="mode-icon">⚡</span>
+          <div class="mode-type-label">Command Mode</div>
+          <div class="mode-name">指令模式</div>
+          <p class="mode-desc">
+            輸入 <code>/</code> 開頭的指令，精準觸發專業分析功能，適合需要結構化輸出的情境。
+          </p>
+          <div class="mode-examples">
+            <div class="mode-example"><code>/equity</code>　合夥股權架構分析</div>
+            <div class="mode-example"><code>/quote</code>　快速報價生成</div>
+            <div class="mode-example"><code>/shadow</code>　人際博弈辨識</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="hr-deco" />
+
+    <!-- ── Section 2：常用指令清單 ── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">02</div>
+        <h2 class="section-title">常用指令清單</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table class="cmd-table">
+          <thead>
+            <tr>
+              <th>指令</th>
+              <th>功能說明</th>
+              <th>類型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cmd-code">/daily</span></td>
+              <td><span class="cmd-desc">每日商業洞察，精選市場動態與策略思考觀點</span></td>
+              <td><span class="cmd-tag tag-insight">洞察</span></td>
+            </tr>
+            <tr>
+              <td><span class="cmd-code">/equity</span></td>
+              <td><span class="cmd-desc">合夥股權架構分析，釐清分潤、責任與退出條款</span></td>
+              <td><span class="cmd-tag tag-analysis">分析</span></td>
+            </tr>
+            <tr>
+              <td><span class="cmd-code">/quote</span></td>
+              <td><span class="cmd-desc">快速報價生成，根據服務範疇自動產出報價結構</span></td>
+              <td><span class="cmd-tag tag-tool">工具</span></td>
+            </tr>
+            <tr>
+              <td><span class="cmd-code">/shadow</span></td>
+              <td><span class="cmd-desc">人際博弈辨識，解讀對方真實意圖與潛在動機</span></td>
+              <td><span class="cmd-tag tag-analysis">分析</span></td>
+            </tr>
+            <tr>
+              <td><span class="cmd-code">/market</span></td>
+              <td><span class="cmd-desc">市場分析，評估競爭格局、機會窗口與切入策略</span></td>
+              <td><span class="cmd-tag tag-analysis">分析</span></td>
+            </tr>
+            <tr>
+              <td><span class="cmd-code">/help</span></td>
+              <td><span class="cmd-desc">顯示完整指令清單與各功能簡介</span></td>
+              <td><span class="cmd-tag tag-tool">工具</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="hr-deco" />
+
+    <!-- ── Section 3：實際對話示範 ── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">03</div>
+        <h2 class="section-title">實際對話示範</h2>
+      </div>
+
+      <div class="chat-demo-list">
+
+        <!-- 示範 1：業務諮詢 -->
+        <div class="chat-scene">
+          <div class="chat-scene-header">
+            <div class="chat-dot"></div>
+            <span class="chat-label">示範 01 &middot; 業務諮詢</span>
+          </div>
+          <div class="chat-messages">
+            <div class="bubble-wrap user">
+              <div class="bubble user">
+                有個製造業客戶月營收約 500 萬，老闆說想導入 AI 但不確定從哪裡切入，這個案子值不值得跟進？
+              </div>
+              <div class="avatar avatar-user">你</div>
+            </div>
+            <div class="bubble-wrap museon">
+              <div class="avatar avatar-museon">M</div>
+              <div class="bubble museon">
+                值得跟進，切入點也很清楚。<br><br>
+                月收 500 萬的製造業，<strong>最有感的痛點通常在三個地方</strong>：報價速度太慢、人工重複作業吃人力、客戶跟進沒系統。<br><br>
+                建議第一次見面先用 <span class="pill">15 分鐘流程盤點</span> 讓他自己說出痛點，再對應 AI 解法。你有他的公司資料嗎？我可以幫你備一份見面前的情報簡報。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 示範 2：客戶分析 -->
+        <div class="chat-scene">
+          <div class="chat-scene-header">
+            <div class="chat-dot"></div>
+            <span class="chat-label">示範 02 &middot; 客戶意圖分析</span>
+          </div>
+          <div class="chat-messages">
+            <div class="bubble-wrap user">
+              <div class="bubble user">
+                /shadow<br>
+                對方一直說「我們內部還要討論」，這是真的在討論還是在拖？
+              </div>
+              <div class="avatar avatar-user">你</div>
+            </div>
+            <div class="bubble-wrap museon">
+              <div class="avatar avatar-museon">M</div>
+              <div class="bubble museon">
+                這句話有兩種讀法，關鍵在細節。<br><br>
+                <strong>如果是真的在討論</strong>：他會給你一個明確的時間點，或主動問你還需要哪些資料。<br><br>
+                <strong>如果是在拖</strong>：通常是卡在 <span class="pill">預算沒到位</span> 或 <span class="pill">決策者沒買單</span>——說「討論」其實是在保護自己的面子。<br><br>
+                建議這樣回：「沒問題，請問大概什麼時候會有方向？我可以配合安排後續。」這句話能快速分辨真假。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 示範 3：報價生成 -->
+        <div class="chat-scene">
+          <div class="chat-scene-header">
+            <div class="chat-dot"></div>
+            <span class="chat-label">示範 03 &middot; 報價生成</span>
+          </div>
+          <div class="chat-messages">
+            <div class="bubble-wrap user">
+              <div class="bubble user">
+                /quote<br>
+                客戶要一套 AI 客服系統，含導入、訓練、三個月維運，他們有 5 個客服人員
+              </div>
+              <div class="avatar avatar-user">你</div>
+            </div>
+            <div class="bubble-wrap museon">
+              <div class="avatar avatar-museon">M</div>
+              <div class="bubble museon">
+                幫你估出三層報價架構供參考：<br><br>
+                <strong>基礎方案</strong>　NT$&thinsp;120,000<br>
+                系統建置 + 基本知識庫 + 1 個月上線輔導<br><br>
+                <strong>標準方案</strong>　NT$&thinsp;220,000<br>
+                含客製流程 + 5 人培訓 + 3 個月維運<br><br>
+                <strong>旗艦方案</strong>　NT$&thinsp;380,000<br>
+                全套整合 + 數據儀表板 + 季度優化報告<br><br>
+                <span class="pill">建議開口報標準方案</span>，保留談判空間。需要我幫你生成正式報價單格式嗎？
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="hr-deco" />
+
+    <!-- ── Section 4：使用技巧 ── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">04</div>
+        <h2 class="section-title">使用技巧</h2>
+      </div>
+
+      <div class="tips-list">
+
+        <div class="tip-card">
+          <div class="tip-icon">🎯</div>
+          <div>
+            <div class="tip-title">訊息越具體，回覆越精準</div>
+            <p class="tip-desc">
+              給數字比給感覺好。例如說「客戶月營收 300 萬、團隊 8 人、主要做 B2B 貿易」，比「中型公司想導入 AI」能讓 MUSEON 給出更有針對性的策略建議。
+            </p>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-icon">👥</div>
+          <div>
+            <div class="tip-title">群組中也可以直接呼叫</div>
+            <p class="tip-desc">
+              在任何 Telegram 群組中，輸入 <code>@MuseonClaw_bot</code> 即可觸發 MUSEON 回應。適合在與客戶或團隊的群組中即時獲取分析支援，不需要切換視窗。
+            </p>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-icon">📎</div>
+          <div>
+            <div class="tip-title">附件與圖片直接傳，MUSEON 會分析</div>
+            <p class="tip-desc">
+              合約、報價單、截圖、名片照片——直接傳給 MUSEON，無需手動輸入內容。MUSEON 會讀取圖片中的文字並進行分析，適合快速解讀文件或掃描對方的資料。
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">MUSEON</div>
+      <div class="footer-line"></div>
+      <div class="footer-name">臥龍崗智能顧問團隊 &nbsp;&middot;&nbsp; Museon AI System</div>
+      <div class="footer-line"></div>
+      <div class="footer-eng">Dragon Hill Intelligent Consultant LTC, Co.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
