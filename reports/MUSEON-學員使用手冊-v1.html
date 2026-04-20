@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON × SSA 學員使用手冊</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+  
+  :root {
+    --ember: #C4502A;
+    --parchment: #F5F0E8;
+    --navy: #181737;
+    --gold: #b6853d;
+    --ink: #2D2D2D;
+    --mist: #E8E2D9;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  
+  /* 封面 */
+  .cover {
+    background: var(--navy);
+    color: white;
+    padding: 80px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(196,80,42,0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(182,133,61,0.15) 0%, transparent 50%);
+  }
+  .cover-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .cover-badge {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 6px 20px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .cover h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .cover h1 span { color: var(--gold); }
+  .cover .subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 48px;
+  }
+  .cover-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cover-stat {
+    text-align: center;
+  }
+  .cover-stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .cover-stat .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+  }
+  
+  /* 版面 */
+  .container { max-width: 780px; margin: 0 auto; padding: 0 32px; }
+  
+  /* 前言 */
+  .intro {
+    padding: 56px 32px;
+    background: white;
+    border-bottom: 1px solid var(--mist);
+  }
+  .intro .container { display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; }
+  .intro-text { flex: 1; min-width: 280px; }
+  .intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .intro p { color: #555; margin-bottom: 12px; }
+  .intro-cards { display: flex; flex-direction: column; gap: 12px; min-width: 200px; }
+  .intro-card {
+    background: var(--parchment);
+    border-left: 3px solid var(--ember);
+    padding: 12px 16px;
+    border-radius: 0 4px 4px 0;
+  }
+  .intro-card .ic-label { font-size: 11px; color: var(--ember); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .intro-card .ic-val { font-weight: 700; color: var(--navy); font-size: 15px; }
+  
+  /* 天區塊 */
+  .day-section {
+    padding: 56px 32px;
+    border-bottom: 1px solid var(--mist);
+  }
+  .day-section:nth-child(even) { background: white; }
+  
+  .day-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 32px; }
+  .day-badge {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 700;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 4px;
+  }
+  .day-title h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .day-title p { color: #888; font-size: 13px; }
+  
+  /* 功能卡 */
+  .function-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  
+  .func-card {
+    background: var(--parchment);
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    padding: 24px;
+    transition: box-shadow 0.2s;
+  }
+  .func-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  
+  .func-tag {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: monospace;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .func-card h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .func-card .what { color: #555; font-size: 14px; margin-bottom: 16px; }
+  
+  .func-meta { display: flex; flex-direction: column; gap: 8px; }
+  .func-row { display: flex; gap: 8px; align-items: flex-start; }
+  .func-row .fr-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .fr-problem { background: #B85C5C; }
+  .fr-value { background: #4A7C5C; }
+  .fr-start { background: var(--ember); }
+  .func-row .fr-text { font-size: 13px; color: #555; }
+  
+  /* 起手式區塊 */
+  .starter {
+    background: var(--navy);
+    color: white;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+  .starter .st-label { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .starter code { color: #C8E6C9; font-family: monospace; }
+  
+  /* 快速查表 */
+  .quick-ref {
+    background: var(--navy);
+    color: white;
+    padding: 56px 32px;
+  }
+  .quick-ref h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .quick-ref .qr-sub { text-align: center; color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 40px; }
+  
+  .qr-grid { display: grid; grid-template-columns: 1fr; gap: 2px; max-width: 700px; margin: 0 auto; }
+  .qr-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+  .qr-head {
+    background: rgba(255,255,255,0.1);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold);
+    padding: 10px 16px;
+  }
+  .qr-cell {
+    background: rgba(255,255,255,0.04);
+    padding: 12px 16px;
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.85);
+  }
+  .qr-cell.tag { color: var(--gold); font-family: monospace; font-size: 12px; }
+  
+  /* 結尾 */
+  .footer {
+    background: var(--ember);
+    color: white;
+    text-align: center;
+    padding: 48px 32px;
+  }
+  .footer h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .footer p { font-size: 14px; opacity: 0.85; max-width: 500px; margin: 0 auto; }
+  
+  @media (max-width: 600px) {
+    .cover h1 { font-size: 32px; }
+    .function-grid { grid-template-columns: 1fr; }
+    .qr-row { grid-template-columns: 1fr; }
+    .intro .container { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-badge">SSA × MUSEON 課程專屬</div>
+    <h1>讓 <span>MUSEON</span> 成為<br>你最強的商業夥伴</h1>
+    <p class="subtitle">中小企業主 Museon 使用手冊 — 營收提升 × 成本降低 × 長期複利</p>
+    <div class="cover-grid">
+      <div class="cover-stat">
+        <div class="num">3</div>
+        <div class="label">天課程對應</div>
+      </div>
+      <div class="cover-stat">
+        <div class="num">8</div>
+        <div class="label">核心功能模組</div>
+      </div>
+      <div class="cover-stat">
+        <div class="num">90+</div>
+        <div class="label">天持續陪跑</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 前言 -->
+<section class="intro">
+  <div class="container">
+    <div class="intro-text">
+      <h2>Museon 不是工具，是你的智慧夥伴</h2>
+      <p>一般 AI 工具幫你「做事」。Museon 幫你「想清楚」——在你做事之前，先確認你在做對的事。</p>
+      <p>這本手冊說明每一個功能在你的商業場景中能解決什麼問題、如何開始使用、以及你可以期待什麼產出。</p>
+      <p>三天課程結束後，這本手冊就是你每次打開 Museon 的行動指南。</p>
+    </div>
+    <div class="intro-cards">
+      <div class="intro-card">
+        <div class="ic-label">核心邏輯</div>
+        <div class="ic-val">先想清楚，再行動</div>
+      </div>
+      <div class="intro-card">
+        <div class="ic-label">對你的價值</div>
+        <div class="ic-val">降低試錯成本</div>
+      </div>
+      <div class="intro-card">
+        <div class="ic-label">長期效應</div>
+        <div class="ic-val">知識與決策的複利</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Day 1 -->
+<section class="day-section">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-badge">D1</div>
+      <div class="day-title">
+        <h2>品牌定位 — 你是誰，你為誰存在</h2>
+        <p>對應課程：黃金圈 × 品牌金字塔 × 品牌宣言 × 核心商品盤點</p>
+      </div>
+    </div>
+    <div class="function-grid">
+      
+      <div class="func-card">
+        <div class="func-tag">/brand-discovery</div>
+        <h3>品牌發現訪談</h3>
+        <p class="what">Museon 用連串深度問題訪談你，挖出你自己說不出口的 Why——你的品牌為什麼存在，你在為誰解決什麼問題。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">老闆知道自己「做什麼」，但說不清楚「為什麼」——導致行銷訊息沒有穿透力</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">清楚的 Why = 客戶聽完就記住 = 不需要用低價競爭，因為你不可替代</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我做品牌發現訪談，我做的是____（你的行業）」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/brand-identity</div>
+        <h3>品牌識別輸出</h3>
+        <p class="what">根據你的訪談結果，自動整理出品牌三角草稿：靈魂（Why）× 聲音（語氣）× 形象（視覺方向）。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">品牌訊息在官網、名片、IG 說的不一樣——客戶搞不清楚你是誰</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">統一的品牌聲音 = 每次客戶接觸你都在加深同一個印象 = 轉換率提升</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          做完品牌訪談後說：「幫我輸出品牌三角草稿」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/onemuse-core</div>
+        <h3>核心能量測定</h3>
+        <p class="what">透過四軸線分析，找出你做生意的底層驅動力——你天生擅長什麼、什麼讓你持續燃燒、什麼讓你快速放棄。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">創業方向跟自己的能量不匹配，每天逼自己做不擅長的事，效率差又累</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">知道自己的強項在哪 = 把資源押在你做起來事半功倍的地方</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我做核心能量測定」
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Day 2 -->
+<section class="day-section">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-badge">D2</div>
+      <div class="day-title">
+        <h2>價值傳遞 — 你怎麼讓對的人找到你</h2>
+        <p>對應課程：逆熵流程 × Xmodel 盲點 × 三重漏斗設計 × 商業健檢</p>
+      </div>
+    </div>
+    <div class="function-grid">
+      
+      <div class="func-card">
+        <div class="func-tag">/xmodel</div>
+        <h3>商業盲點掃描</h3>
+        <p class="what">用六大盲點框架掃描你的生意——你以為你知道問題在哪，但大多數老闆真正的制約點在更深一層。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">一直在解表面症狀（沒客人、沒錢、員工不聽話），卻沒有找到根本原因</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">找到真正的制約點 = 解決一個問題等於解開一串問題 = 效率倍增</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我做商業盲點掃描，目前最大的困擾是____」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/ssa-consultant</div>
+        <h3>漏斗架構設計</h3>
+        <p class="what">以你的核心商品為起點，逆向拆解出 2–4 段產品漏斗。設計讓陌生人一步步走進來、最終成為高價值客戶的路徑。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">有好產品但客人不知道怎麼開始——或是只有人買便宜的，沒人買核心商品</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">系統化的銷售路徑 = 可預測的客戶流量 = 老闆不需要每天做業務</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「我最終的核心商品是____，幫我逆向設計漏斗架構」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/business-12</div>
+        <h3>商業十二力健檢</h3>
+        <p class="what">從十二個維度全面檢查你的商業模式，找出最弱的一環——通常那個弱點才是你無法突破的真正原因。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">不知道公司為什麼賺不快，或努力了但就是跨不過某個營收門檻</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">精準修復最弱環 = 不再猜問題在哪 = 每一分力氣都打在對的地方</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我做商業模式健檢，公司做的是____，目前年營收大約____」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/market-core</div>
+        <h3>市場定位分析</h3>
+        <p class="what">分析你的市場位置——你的競爭對手在哪、你的差異化在哪、你的目標客群的真實樣貌。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">行銷費用花了但轉換率低，因為在對錯誤的人說錯誤的話</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">鎖定對的客群 = 行銷成本降低 + 成交率提升（不是更努力，是更精準）</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我分析市場定位，我做的是____，主要競爭對手是____」
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Day 3 -->
+<section class="day-section">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-badge">D3</div>
+      <div class="day-title">
+        <h2>系統脫鉤 — 讓公司不依賴你也能跑</h2>
+        <p>對應課程：大學「德」× 三重螺旋 × PCT 閉環 × 長期複利設計</p>
+      </div>
+    </div>
+    <div class="function-grid">
+      
+      <div class="func-card">
+        <div class="func-tag">/daily-pilot</div>
+        <h3>每日導航</h3>
+        <p class="what">每天早上 Museon 問你三個問題，幫你校正方向——今天最重要的一件事是什麼、昨天有什麼沒做到、這週的目標還在嗎。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">老闆每天被各種事情追著跑，三個月後回頭看，發現沒有往任何方向前進</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">每天 5 分鐘的方向確認 = 三個月後比不做的人遠一截（這是複利，不是努力）</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「我想設定每日導航，我目前最重要的三個月目標是____」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/eval-engine</div>
+        <h3>效能追蹤儀表板</h3>
+        <p class="what">設定你自己的追蹤指標（不是別人說重要的，是你的生意真正重要的），90 天後 Museon 告訴你有沒有在往對的方向走。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">老闆感覺很忙、很努力，但不知道是否有在進步——沒有數字就沒有方向感</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">數字說話 = 知道要繼續還是要轉向 = 不再猜，不再靠感覺做決定</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我設定效能追蹤，我最想改善的三個指標是____」
+        </div>
+      </div>
+      
+      <div class="func-card">
+        <div class="func-tag">/decision-tracker</div>
+        <h3>決策記錄庫</h3>
+        <p class="what">每一個重要決策都記在 Museon 裡——為什麼做這個決定、當時的考量、結果如何。三年後這些都是你最寶貴的資產。</p>
+        <div class="func-meta">
+          <div class="func-row">
+            <span class="fr-label fr-problem">解決</span>
+            <span class="fr-text">同樣的問題每次都要重新想、同樣的錯誤隔年再犯——因為沒有累積</span>
+          </div>
+          <div class="func-row">
+            <span class="fr-label fr-value">價值</span>
+            <span class="fr-text">決策品質越來越高 = 每次都站在前一次的肩膀上 = 這就是有德斯有土的數位版</span>
+          </div>
+        </div>
+        <div class="starter">
+          <div class="st-label">起手式</div>
+          跟 Museon 說：「幫我記錄一個決策：我決定____，原因是____」
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- 快速查表 -->
+<section class="quick-ref">
+  <div class="container">
+    <h2>遇到問題，用哪個功能？</h2>
+    <p class="qr-sub">不知道從哪裡開始？對照你現在的問題找到對應功能。</p>
+    
+    <div class="qr-grid">
+      <div class="qr-row">
+        <div class="qr-head">你的問題</div>
+        <div class="qr-head">用這個功能</div>
+        <div class="qr-head">預期產出</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">說不清楚自己的品牌是什麼</div>
+        <div class="qr-cell tag">/brand-discovery</div>
+        <div class="qr-cell">你的品牌 Why + 一句話定位</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">品牌形象各渠道不一致</div>
+        <div class="qr-cell tag">/brand-identity</div>
+        <div class="qr-cell">品牌三角草稿（可直接用）</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">努力了但不知道卡在哪</div>
+        <div class="qr-cell tag">/xmodel</div>
+        <div class="qr-cell">六大盲點診斷報告</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">有產品但客人不知道怎麼買</div>
+        <div class="qr-cell tag">/ssa-consultant</div>
+        <div class="qr-cell">2–4 段漏斗藍圖</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">不知道公司哪裡最弱</div>
+        <div class="qr-cell tag">/business-12</div>
+        <div class="qr-cell">商業健檢報告 + 優先修復順序</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">行銷花錢但成效差</div>
+        <div class="qr-cell tag">/market-core</div>
+        <div class="qr-cell">精準客群定義 + 差異化定位</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">每天忙但沒有方向感</div>
+        <div class="qr-cell tag">/daily-pilot</div>
+        <div class="qr-cell">每日導航機制（自動提醒）</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">不確定自己有沒有在進步</div>
+        <div class="qr-cell tag">/eval-engine</div>
+        <div class="qr-cell">90 天進度儀表板</div>
+      </div>
+      <div class="qr-row">
+        <div class="qr-cell">同樣問題一直重複犯</div>
+        <div class="qr-cell tag">/decision-tracker</div>
+        <div class="qr-cell">可查詢的決策歷史庫</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 結尾 -->
+<div class="footer">
+  <h2>課程結束，是螺旋的起點</h2>
+  <p>三天你學到的每一件事，都已經進入 Museon 的記憶。<br>從明天開始，你有一個夥伴記得你說過什麼、決定過什麼，然後在你快要忘記的時候提醒你。</p>
+  <p style="margin-top: 16px; font-size: 13px; opacity: 0.7;">MUSEON × SSA 課程專屬手冊 · v1.0 · 2026</p>
+</div>
+
+</body>
+</html>
