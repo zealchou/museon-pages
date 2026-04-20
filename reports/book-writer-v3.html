@@ -354,10 +354,25 @@
   /* ========== WORKSPACE ========== */
   .app {
     display: grid;
-    grid-template-columns: var(--sidebar-w) 1fr var(--ai-w);
+    grid-template-columns: var(--sidebar-w) 5px 1fr 5px var(--ai-w);
     grid-template-rows: 44px 1fr;
     height: 100vh;
     overflow: hidden;
+  }
+
+  .col-resize {
+    background: transparent;
+    cursor: col-resize;
+    position: relative;
+    z-index: 50;
+    transition: background 0.2s;
+  }
+  .col-resize:hover { background: rgba(196,80,42,0.18); }
+  .col-resize::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -4px; right: -4px;
   }
 
   .topbar {
@@ -1073,6 +1088,7 @@
       grid-template-columns: 1fr;
       grid-template-rows: 44px 1fr 56px;
     }
+    .col-resize { display: none; }
 
     .wiki, .ai-panel {
       position: fixed;
@@ -1283,8 +1299,9 @@
   </header>
 
   <aside class="wiki" id="wiki"></aside>
+  <div class="col-resize" id="resizeWiki"></div>
 
-  <main class="editor-area">
+  <main class="editor-area" id="editorArea">
     <div class="editor-toolbar">
       <div class="editor-breadcrumb">
         <span>書稿</span><span>›</span>
@@ -1344,6 +1361,7 @@
     </div>
   </main>
 
+  <div class="col-resize" id="resizeAI"></div>
   <aside class="ai-panel" id="aiPanel">
     <div class="ai-header">
       <div class="ai-avatar">M</div>
@@ -2538,9 +2556,33 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
   }
 
   function doInsertToWiki(secKey) {
-    const content = (window._pendingWikiInsert || '').replace(/\n{3,}/g, '\n\n').trim().substring(0, 500);
-    if (!content) return;
-    applyWikiUpdates([{ sec: secKey, content }]);
+    const raw = (window._pendingWikiInsert || '').trim();
+    if (!raw) return;
+
+    // 智能拆分：每行獨立成一條 Wiki 條目，去掉 markdown 格式符號
+    const lines = raw.split(/\n+/).map(l =>
+      l.replace(/^#{1,4}\s+/, '')         // ## 標題
+       .replace(/^\*{1,2}(.+?)\*{1,2}$/, '$1') // **粗體**
+       .replace(/^[-•·➤→▶▸]\s+/, '')     // 清單符號
+       .replace(/^\d+\.\s+/, '')           // 數字清單
+       .trim()
+    ).filter(l => l.length > 3 && !l.match(/^-{3,}$/) && !l.match(/^={3,}$/));
+
+    // 去重 + 最多 8 條
+    const seen = new Set((wikiData[secKey] || []));
+    const items = [...new Set(lines)].filter(l => !seen.has(l)).slice(0, 8)
+                  .map(l => ({ sec: secKey, content: l.substring(0, 200) }));
+
+    if (!items.length) {
+      // 如果拆不出多行，取第一行作為單一條目
+      const fallback = lines[0] || raw.substring(0, 200);
+      if (fallback && !seen.has(fallback)) {
+        applyWikiUpdates([{ sec: secKey, content: fallback }]);
+      }
+    } else {
+      applyWikiUpdates(items);
+    }
+
     document.getElementById('wikiInsertPicker')?.remove();
     window._pendingWikiInsert = null;
     const secEl = document.querySelector(`.wiki-section[data-sec="${secKey}"]`);
@@ -2622,6 +2664,37 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
       document.getElementById('tEditor').classList.add('active');
     }
   }
+
+  /* ---- 側欄拖拉 resize ---- */
+  function initResize() {
+    function makeResizer(handleId, cssVar, minW, maxW, leftward) {
+      const handle = document.getElementById(handleId);
+      if (!handle) return;
+      handle.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        const startX = e.clientX;
+        const startW = parseInt(getComputedStyle(document.documentElement).getPropertyValue(cssVar)) || minW;
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        function onMove(e) {
+          const delta = leftward ? (startX - e.clientX) : (e.clientX - startX);
+          const w = Math.max(minW, Math.min(maxW, startW + delta));
+          document.documentElement.style.setProperty(cssVar, w + 'px');
+        }
+        function onUp() {
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    }
+    makeResizer('resizeWiki', '--sidebar-w', 140, 380, false);
+    makeResizer('resizeAI',   '--ai-w',      180, 480, true);
+  }
+  initResize();
 
   /* ---- 初始化 ---- */
   renderLibrary();
