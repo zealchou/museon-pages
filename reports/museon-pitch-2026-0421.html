@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON × AI代理人 — 10分鐘簡報</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --navy: #181737;
+    --navy-light: #1E1E2A;
+    --surface: #16161F;
+    --gold: #b6853d;
+    --gold-light: #d4a45e;
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --parchment: #F7F5F0;
+    --text-primary: #F0EDE8;
+    --text-secondary: #A8A4B8;
+    --teal: #2A7A6E;
+    --border: #2A2A38;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .deck {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+
+  .slide.prev {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember), var(--gold));
+    transition: width 0.5s ease;
+    z-index: 100;
+  }
+
+  .counter {
+    position: fixed;
+    bottom: 28px; right: 40px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    font-weight: 300;
+    z-index: 100;
+  }
+
+  .nav-hint {
+    position: fixed;
+    bottom: 28px; left: 40px;
+    font-size: 11px;
+    color: var(--border);
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  .gold-line {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin: 16px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .tag.ember { border-color: var(--ember); color: var(--ember); }
+  .tag.teal { border-color: var(--teal); color: var(--teal); }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--parchment);
+    margin-bottom: 8px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 960px;
+    margin-top: 32px;
+  }
+
+  .stat-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+  }
+
+  .stat-card.ember-top::before { background: var(--ember); }
+  .stat-card.teal-top::before { background: var(--teal); }
+
+  .stat-card .big-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-card .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .stat-card .source {
+    font-size: 10px;
+    color: var(--border);
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .point-list {
+    list-style: none;
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .point-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .point-list li:last-child { border-bottom: none; }
+
+  .point-list li .icon {
+    color: var(--gold);
+    font-size: 14px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .point-list li strong { color: var(--text-primary); font-weight: 500; }
+
+  .two-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 960px;
+  }
+
+  .col-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+  }
+
+  .col-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .col-card.gold-card { border-color: rgba(182, 133, 61, 0.3); }
+  .col-card.gold-card h4 { color: var(--gold-light); }
+  .col-card.ember-card { border-color: rgba(196, 80, 42, 0.3); }
+  .col-card.ember-card h4 { color: var(--ember-light); }
+
+  .col-card ul { list-style: none; }
+
+  .col-card ul li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  .col-card ul li:last-child { border-bottom: none; }
+  .col-card ul li strong { color: var(--text-primary); }
+
+  .sub {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 680px;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  #slide-0 {
+    background: radial-gradient(ellipse at 30% 50%, rgba(196, 80, 42, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(182, 133, 61, 0.08) 0%, transparent 50%),
+                var(--navy);
+    text-align: center;
+  }
+
+  #slide-0 .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  #slide-0 h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--parchment) 0%, var(--gold-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  #slide-0 .presenter {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-top: 40px;
+    letter-spacing: 1px;
+  }
+
+  #slide-0 .presenter strong { color: var(--gold-light); }
+
+  .slide-header {
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: 28px;
+  }
+
+  .compare-table {
+    width: 100%;
+    max-width: 800px;
+    border-collapse: collapse;
+    margin-top: 24px;
+  }
+
+  .arrow-connector {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 960px;
+    margin-top: 24px;
+  }
+
+  .arrow-step {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+
+  .arrow-step h5 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .arrow-step p { font-size: 12px; color: var(--text-secondary); }
+
+  .arrow-step.highlight {
+    background: linear-gradient(135deg, rgba(196, 80, 42, 0.2) 0%, rgba(182, 133, 61, 0.1) 100%);
+    border-color: rgba(182, 133, 61, 0.4);
+  }
+
+  .arrow { color: var(--border); font-size: 20px; padding: 0 8px; flex-shrink: 0; }
+
+  .position-diagram {
+    display: flex;
+    align-items: stretch;
+    max-width: 840px;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .pos-block { flex: 1; padding: 28px 24px; }
+  .pos-block.tools { background: var(--surface); border-right: 1px solid var(--border); }
+  .pos-block.museon {
+    background: linear-gradient(135deg, rgba(196, 80, 42, 0.15) 0%, rgba(182, 133, 61, 0.1) 100%);
+  }
+
+  .pos-block h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .pos-block.tools h4 { color: var(--text-secondary); }
+  .pos-block.museon h4 { color: var(--gold-light); }
+
+  .pos-block .label-sm {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .pos-block.tools .label-sm { color: var(--text-secondary); }
+  .pos-block.museon .label-sm { color: var(--ember-light); }
+
+  .pos-block ul { list-style: none; }
+  .pos-block ul li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    line-height: 1.5;
+  }
+  .pos-block ul li:last-child { border-bottom: none; }
+
+  #slide-9 {
+    background: radial-gradient(ellipse at center, rgba(196, 80, 42, 0.2) 0%, transparent 70%), var(--navy);
+    text-align: center;
+  }
+
+  .cta-box {
+    background: linear-gradient(135deg, rgba(196, 80, 42, 0.15) 0%, rgba(182, 133, 61, 0.1) 100%);
+    border: 1px solid rgba(182, 133, 61, 0.4);
+    border-radius: 12px;
+    padding: 36px 52px;
+    max-width: 660px;
+    margin-top: 28px;
+    text-align: left;
+  }
+
+  .cta-box p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .cta-box .steps { list-style: none; }
+
+  .cta-box .steps li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    color: var(--text-primary);
+  }
+
+  .cta-box .steps li:last-child { border-bottom: none; }
+
+  .cta-box .steps .num {
+    width: 28px; height: 28px;
+    border: 1px solid var(--ember);
+    color: var(--ember);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .ladder { width: 100%; max-width: 880px; margin-top: 20px; }
+
+  .ladder-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 13px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .ladder-row.active-row {
+    background: linear-gradient(90deg, rgba(182, 133, 61, 0.12) 0%, transparent 100%);
+    border-color: rgba(182, 133, 61, 0.35);
+  }
+
+  .ladder-row .row-num {
+    width: 30px; height: 30px;
+    background: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .ladder-row.active-row .row-num { background: var(--gold); color: var(--navy); }
+
+  .ladder-row .row-content h5 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .ladder-row .row-content p { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+  .kw { color: var(--gold-light); }
+  .kw-red { color: var(--ember-light); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="counter" id="counter">1 / 10</div>
+<div class="nav-hint">← → 換頁 &nbsp;｜&nbsp; 點擊右半/左半換頁</div>
+
+<div class="deck" id="deck">
+
+  <!-- Slide 0: Title -->
+  <section class="slide active" id="slide-0">
+    <div class="logo">MUSEON</div>
+    <h1>AI 代理人<br>真正的戰場</h1>
+    <div class="gold-line" style="margin: 24px auto;"></div>
+    <div class="sub">為什麼工具不是答案——思維品質才是</div>
+    <div class="presenter">
+      2026.04.21 &nbsp;｜&nbsp; <strong>Zeal Chou</strong> &nbsp;｜&nbsp; MUSEON 創辦人
+    </div>
+  </section>
+
+  <!-- Slide 1: AI大趨勢 -->
+  <section class="slide" id="slide-1">
+    <div class="slide-header">
+      <div class="tag">01 · DSE 趨勢研究</div>
+      <h2>AI 代理人：<span class="kw">最快速增長</span>的科技浪潮</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="stat-grid four-col">
+      <div class="stat-card">
+        <div class="big-num">$79B</div>
+        <div class="label">2025 全球 AI Agent<br>市場規模</div>
+        <div class="source">Precedence Research</div>
+      </div>
+      <div class="stat-card">
+        <div class="big-num">45%</div>
+        <div class="label">年複合成長率<br>預估至 2034 年</div>
+        <div class="source">Grand View Research</div>
+      </div>
+      <div class="stat-card ember-top">
+        <div class="big-num" style="color: var(--ember-light);">1,445%</div>
+        <div class="label">多代理人詢問量暴增<br>2024Q1 → 2025Q2</div>
+        <div class="source">Gartner</div>
+      </div>
+      <div class="stat-card">
+        <div class="big-num">60%</div>
+        <div class="label">開發者日常工作<br>已使用 AI 輔助</div>
+        <div class="source">Anthropic 2026</div>
+      </div>
+    </div>
+    <div style="margin-top: 20px; max-width: 960px; padding: 14px 24px; background: var(--surface); border-radius: 8px; border-left: 3px solid var(--gold);">
+      <span style="font-size: 14px; color: var(--text-secondary);">
+        ⚡ 亞太是下一個<strong style="color: var(--gold-light);">最快增長區域</strong>——但台灣企業的 Agentic AI 實際導入仍遠落後全球平均
+      </span>
+    </div>
+  </section>
+
+  <!-- Slide 2: 台灣中小企業現況 -->
+  <section class="slide" id="slide-2">
+    <div class="slide-header">
+      <div class="tag">02 · DSE 本地研究</div>
+      <h2>台灣中小企業：<span class="kw-red">知道重要，不知怎麼用</span></h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card ember-top">
+        <div class="big-num" style="color: var(--ember-light);">92%</div>
+        <div class="label">中小企業對 AI「不了解」<br>或「僅大致了解」</div>
+        <div class="source">TurnNews 2025 調查</div>
+      </div>
+      <div class="stat-card ember-top">
+        <div class="big-num" style="color: var(--ember-light);">40%</div>
+        <div class="label">台灣 SMB 說 AI 投資<br>真正提升了獲利<br><em style="font-size: 11px; opacity: 0.7;">亞太平均 56%</em></div>
+        <div class="source">CPA Australia 2026</div>
+      </div>
+      <div class="stat-card ember-top">
+        <div class="big-num" style="color: var(--ember-light);">70.9%</div>
+        <div class="label">企業面臨「預算迷霧」<br>不知 AI 應該花多少</div>
+        <div class="source">INSIDE 白皮書 2025</div>
+      </div>
+    </div>
+    <div class="arrow-connector" style="margin-top: 24px;">
+      <div class="arrow-step">
+        <h5>知道 AI 重要</h5>
+        <p>輿論與競爭壓力</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="arrow-step">
+        <h5>不知道怎麼花錢</h5>
+        <p>預算迷霧，無框架</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="arrow-step">
+        <h5>花了看不到獲利</h5>
+        <p>工具疊加舊流程</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="arrow-step highlight">
+        <h5 style="color: var(--gold-light);">MUSEON 切入點</h5>
+        <p style="color: var(--ember-light);">放棄 or 持續浪費</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 3: 根本原因 -->
+  <section class="slide" id="slide-3">
+    <div class="slide-header">
+      <div class="tag">03 · DSE 失敗分析</div>
+      <h2>80% AI 項目失敗：<span class="kw-red">不是工具的問題</span></h2>
+      <div class="gold-line"></div>
+    </div>
+    <ul class="point-list">
+      <li>
+        <span class="icon">▸</span>
+        <div><strong>把代理人疊加在舊流程上</strong>——用跑車拖舊犁。AI 加速了錯誤，不是改善了決策。</div>
+      </li>
+      <li>
+        <span class="icon">▸</span>
+        <div><strong>思維沒有改變</strong>——「我部署了 AI，AI 會自己找到用途。」這是最貴的誤解。</div>
+      </li>
+      <li>
+        <span class="icon">▸</span>
+        <div><strong>員工抵制 → 使用率低落 → 老闆認定沒效果</strong>——82% 的 SMB 說「AI 對我業務不適用」，這是認知錯位，不是事實。</div>
+      </li>
+      <li>
+        <span class="icon">▸</span>
+        <div><strong>數據基礎為零</strong>——台灣 SMB 的訂單、客戶、庫存散落在 LINE 群、Excel 截圖、口頭傳達。代理人沒有輸入，等於盲人開車。</div>
+      </li>
+    </ul>
+    <div style="margin-top: 20px; padding: 14px 24px; background: var(--surface); border-radius: 8px; border: 1px solid rgba(196, 80, 42, 0.3); max-width: 760px;">
+      <p style="font-size: 14px; color: var(--ember-light); font-weight: 500;">
+        BCG · McKinsey · HBR 三家一致：根本原因是人、流程、思維——不是模型太弱。
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 4: 營收 vs 成本 -->
+  <section class="slide" id="slide-4">
+    <div class="slide-header">
+      <div class="tag">04 · DSE 策略判斷</div>
+      <h2>增加<span class="kw">營收</span>還是降低<span class="kw-red">成本</span>？選錯了代價很高</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="two-col-layout">
+      <div class="col-card gold-card">
+        <h4>📈 增收路線</h4>
+        <ul>
+          <li><strong>天花板高</strong>：AI-First 企業可達 5–10x ROI</li>
+          <li><strong>見效慢</strong>：需要 9–18 個月</li>
+          <li>銷售代理人額外帶來 $2M 年收入（案例）</li>
+          <li>鼓勵 AI 實驗文化的企業，收入高出同業 22%</li>
+          <li><strong>適合</strong>：銷售密集型、有客戶數據</li>
+        </ul>
+      </div>
+      <div class="col-card ember-card">
+        <h4>📉 降本路線</h4>
+        <ul>
+          <li><strong>見效快</strong>：3–6 個月可量化</li>
+          <li>流程自動化平均節省 <strong>26–35%</strong> 成本</li>
+          <li>效率提升 55%、成本降低 35%（實測）</li>
+          <li><strong>天花板低</strong>：邊際效益遞減</li>
+          <li><strong>適合</strong>：現金流緊張、流程重複高</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 18px; padding: 14px 24px; background: var(--surface); border-radius: 8px; border-left: 3px solid var(--gold); max-width: 960px;">
+      <p style="font-size: 14px; color: var(--text-secondary);">
+        最常見錯誤：<strong style="color: var(--gold-light);">只算省了多少錢，不算創造了多少價值。</strong>
+        正確框架：成本 + 收入 + 風險降低 + 決策品質 四維度。<span style="color: var(--border);">（EY 研究）</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 5: 工具型代理人 -->
+  <section class="slide" id="slide-5">
+    <div class="slide-header">
+      <div class="tag">05 · DSE 工具解析</div>
+      <h2>OpenClaw、Hermes：<span class="kw">工具型代理人</span>的能與不能</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="two-col-layout">
+      <div class="col-card gold-card">
+        <h4>✅ 能做什麼</h4>
+        <ul>
+          <li>多代理人 Swarm 並行施工（Gartner 詢問 +1445%）</li>
+          <li>後台流程自動化：報告、排班、採購</li>
+          <li>持續運行監控（OpenClaw 心跳機制）</li>
+          <li>20+ 通道整合（Telegram、Slack）</li>
+          <li>技術型使用者的強力個人助理</li>
+        </ul>
+      </div>
+      <div class="col-card ember-card">
+        <h4>⚠️ 根本限制</h4>
+        <ul>
+          <li>多步驟任務<strong>失敗率 60–80%</strong></li>
+          <li>非技術用戶門檻極高（開發者工具）</li>
+          <li>Context 天花板：越大越退化</li>
+          <li>無法處理高創意、高人際判斷的任務</li>
+          <li>只能執行「如何做」——<strong>不能判斷「做什麼」</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 18px; padding: 16px 28px; background: var(--surface); border-radius: 8px; border: 1px solid rgba(182, 133, 61, 0.3); max-width: 960px; text-align: center;">
+      <p style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold-light);">
+        「工具型代理人是執行層——它執行得越快，就越需要有人知道往哪裡走。」
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 6: MUSEON 定位 -->
+  <section class="slide" id="slide-6">
+    <div class="slide-header">
+      <div class="tag">06 · 定位</div>
+      <h2>MUSEON 不是更好的工具：<span class="kw">思維品質引擎</span></h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="position-diagram">
+      <div class="pos-block tools">
+        <span class="label-sm">工具型代理人</span>
+        <h4>OpenClaw / Hermes</h4>
+        <ul>
+          <li>解決：<strong>怎麼做</strong>（How to execute）</li>
+          <li>自動化執行特定任務</li>
+          <li>需要明確規格才能運作</li>
+          <li>速度快——但方向不自帶</li>
+        </ul>
+      </div>
+      <div style="display: flex; align-items: center; padding: 0 20px; color: var(--gold); font-size: 28px; flex-shrink: 0;">+</div>
+      <div class="pos-block museon">
+        <span class="label-sm">MUSEON 思維引擎</span>
+        <h4>MUSEON</h4>
+        <ul>
+          <li>解決：<strong>做什麼、為什麼做</strong>（What & Why）</li>
+          <li>提升決策品質、消除認知雙盲</li>
+          <li>讓代理人執行正確的事</li>
+          <li>無 MUSEON → 工具無方向</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 24px; padding: 16px 32px; text-align: center; max-width: 760px;">
+      <p style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--parchment);">
+        沒有思維品質，代理人執行得越快——<span class="kw-red">走錯得越快。</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 7: MUSEON 六層解法 -->
+  <section class="slide" id="slide-7">
+    <div class="slide-header">
+      <div class="tag">07 · 解法架構</div>
+      <h2>MUSEON 六層技術棧：<span class="kw">每層對應一個盲點</span></h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="ladder">
+      <div class="ladder-row active-row">
+        <div class="row-num">6</div>
+        <div class="row-content">
+          <h5>分析輸出</h5>
+          <p>可視化決策、報告交付、讓客戶看到成果</p>
+        </div>
+      </div>
+      <div class="ladder-row active-row">
+        <div class="row-num">5</div>
+        <div class="row-content">
+          <h5>陽謀陰謀（策略博弈）</h5>
+          <p>競爭分析、人際動態、談判佈局</p>
+        </div>
+      </div>
+      <div class="ladder-row active-row">
+        <div class="row-num">4</div>
+        <div class="row-content">
+          <h5>逆熵 / X-Model（第一性原理）</h5>
+          <p>破框思維、跳脫路徑依賴、發現真正槓桿點</p>
+        </div>
+      </div>
+      <div class="ladder-row active-row">
+        <div class="row-num">3</div>
+        <div class="row-content">
+          <h5>主權守護</h5>
+          <p>資訊安全、判斷自主性、防止 AI 依賴上癮</p>
+        </div>
+      </div>
+      <div class="ladder-row active-row">
+        <div class="row-num">2</div>
+        <div class="row-content">
+          <h5>狀況判斷</h5>
+          <p>讀懂當下、辨識真假訊號、正確優先排序</p>
+        </div>
+      </div>
+      <div class="ladder-row active-row">
+        <div class="row-num">1</div>
+        <div class="row-content">
+          <h5>前置思考</h5>
+          <p>問對問題、設定正確目標、釐清真實需求</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 8: 雙盲解法 -->
+  <section class="slide" id="slide-8">
+    <div class="slide-header">
+      <div class="tag">08 · 核心價值</div>
+      <h2>消除<span class="kw-red">使用者雙盲</span>：讓 AI 真正有效</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="two-col-layout" style="margin-bottom: 24px;">
+      <div style="padding: 24px; background: var(--surface); border-radius: 10px; border: 1px solid rgba(196, 80, 42, 0.3);">
+        <p style="font-size: 12px; letter-spacing: 2px; color: var(--ember-light); text-transform: uppercase; margin-bottom: 12px;">盲點一</p>
+        <p style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--parchment); margin-bottom: 10px;">不知道 AI 能做什麼</p>
+        <p style="font-size: 14px; color: var(--text-secondary);">→ 工具選錯、期待錯誤、放棄</p>
+      </div>
+      <div style="padding: 24px; background: var(--surface); border-radius: 10px; border: 1px solid rgba(196, 80, 42, 0.3);">
+        <p style="font-size: 12px; letter-spacing: 2px; color: var(--ember-light); text-transform: uppercase; margin-bottom: 12px;">盲點二</p>
+        <p style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--parchment); margin-bottom: 10px;">不知道自己需要什麼</p>
+        <p style="font-size: 14px; color: var(--text-secondary);">→ 目標模糊、沒有切入點、浪費預算</p>
+      </div>
+    </div>
+    <div style="width: 100%; max-width: 960px; padding: 20px 32px; background: linear-gradient(90deg, rgba(182, 133, 61, 0.12) 0%, transparent 100%); border-radius: 10px; border: 1px solid rgba(182, 133, 61, 0.3);">
+      <p style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--parchment); margin-bottom: 8px;">
+        MUSEON 的路徑
+      </p>
+      <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">
+        先消除盲點 → 再設計部署路徑 → 再讓工具型代理人執行
+        <br>順序不能顛倒——<strong style="color: var(--gold-light);">思維引擎是 AI 代理人的地基，不是選配</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 9: CTA -->
+  <section class="slide" id="slide-9">
+    <div class="logo" style="font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 6px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px;">MUSEON</div>
+    <h2 style="text-align: center;">下一步，從<span class="kw">思維升級</span>開始</h2>
+    <div class="gold-line" style="margin: 18px auto;"></div>
+    <div class="cta-box">
+      <p>大多數企業主把 AI 當工具採購——買了、裝了、沒用到。<br>
+      MUSEON 的用戶先問：<strong style="color: var(--parchment);">「我真正的瓶頸在哪裡？」</strong></p>
+      <ol class="steps">
+        <li>
+          <div class="num">1</div>
+          <span>30 分鐘診斷——找出你最大的決策盲點</span>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <span>用 MUSEON 六層框架設計你的 AI 部署路徑</span>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <span>讓工具型代理人做執行，思維引擎做方向</span>
+        </li>
+      </ol>
+    </div>
+    <div style="margin-top: 24px; font-size: 14px; color: var(--text-secondary); letter-spacing: 1px;">
+      MUSEON &nbsp;｜&nbsp; Zeal Chou &nbsp;｜&nbsp; zeal.chou@gmail.com
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('prev');
+    setTimeout(() => slides[current].classList.remove('prev'), 500);
+    current = Math.max(0, Math.min(n, total - 1));
+    slides[current].classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      if (current < total - 1) goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (current > 0) goTo(current - 1);
+    }
+  });
+
+  let startX = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (dx < -50 && current < total - 1) goTo(current + 1);
+    if (dx > 50 && current > 0) goTo(current - 1);
+  });
+
+  document.getElementById('deck').addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    if (e.clientX > window.innerWidth / 2) {
+      if (current < total - 1) goTo(current + 1);
+    } else {
+      if (current > 0) goTo(current - 1);
+    }
+  });
+
+  document.getElementById('progressBar').style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
