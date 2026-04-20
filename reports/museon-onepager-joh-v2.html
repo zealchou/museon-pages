@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON AI 智能顧問系統 × 臥龍崗管理顧問</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep-ink: #0E0E16;
+  --surface: #16161F;
+  --raised: #1E1E2A;
+  --border-dark: #2A2A38;
+  --ember: #C4502A;
+  --ember-light: #E0714D;
+  --gold: #b6853d;
+  --gold-light: #d4a05a;
+  --parchment: #F7F5F0;
+  --snow: #FDFCFA;
+  --mist: #9898A8;
+  --slate: #5A5A6E;
+  --teal: #2A7A6E;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans TC', 'Outfit', sans-serif;
+  background: var(--deep-ink);
+  color: var(--parchment);
+  line-height: 1.75;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(196,80,42,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-dark), transparent);
+}
+
+.brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(182, 133, 61, 0.12);
+  border: 1px solid rgba(182, 133, 61, 0.3);
+  border-radius: 100px;
+  padding: 6px 18px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 40px;
+}
+
+.brand-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.hero-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 10vw, 88px);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+  color: var(--parchment);
+  margin-bottom: 16px;
+}
+
+.hero-logo span {
+  color: var(--gold);
+}
+
+.hero-subtitle {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: clamp(14px, 2.5vw, 18px);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--mist);
+  margin-bottom: 48px;
+}
+
+.hero-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--parchment);
+  max-width: 640px;
+  margin: 0 auto 24px;
+}
+
+.hero-desc {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--mist);
+  max-width: 520px;
+  margin: 0 auto 56px;
+  line-height: 1.85;
+}
+
+.cta-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cta-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--deep-ink);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 16px 36px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.cta-main:hover { opacity: 0.88; }
+
+.cta-label {
+  font-size: 13px;
+  color: var(--slate);
+  font-weight: 300;
+}
+
+.cta-label strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ─── SECTION ─── */
+section {
+  padding: 80px 32px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.section-tag {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-left: 2px solid var(--gold);
+  padding-left: 12px;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--parchment);
+  margin-bottom: 16px;
+}
+
+.section-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.85;
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-dark), transparent);
+  margin: 0 auto;
+}
+
+/* ─── SYSTEM CARDS ─── */
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.sys-card {
+  background: var(--surface);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 28px 24px;
+  transition: border-color 0.2s;
+}
+
+.sys-card:hover {
+  border-color: rgba(182, 133, 61, 0.35);
+}
+
+.sys-card-icon {
+  font-size: 24px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.sys-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--parchment);
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+
+.sys-card-body {
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.75;
+}
+
+/* ─── COURSE ─── */
+.course-box {
+  background: var(--surface);
+  border: 1px solid var(--border-dark);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 40px;
+}
+
+.course-header {
+  background: linear-gradient(135deg, rgba(182,133,61,0.18), rgba(196,80,42,0.10));
+  border-bottom: 1px solid var(--border-dark);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.course-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--deep-ink);
+  background: var(--gold);
+  padding: 5px 14px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.course-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--parchment);
+  line-height: 1.3;
+}
+
+.course-modules {
+  padding: 0;
+  list-style: none;
+}
+
+.course-module {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 22px 32px;
+  border-bottom: 1px solid var(--border-dark);
+  transition: background 0.15s;
+}
+
+.course-module:last-child { border-bottom: none; }
+.course-module:hover { background: var(--raised); }
+
+.module-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  min-width: 28px;
+  padding-top: 2px;
+}
+
+.module-content {}
+
+.module-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--parchment);
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+.module-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.65;
+}
+
+/* ─── TEAM ─── */
+.team-intro {
+  background: var(--surface);
+  border: 1px solid var(--border-dark);
+  border-radius: 8px;
+  padding: 40px;
+  margin-top: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-intro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--ember), transparent);
+}
+
+.team-name-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.team-name-zh {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--parchment);
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.team-tagline {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--mist);
+  line-height: 1.85;
+  margin-bottom: 32px;
+  max-width: 520px;
+}
+
+.team-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-dark);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--slate);
+  letter-spacing: 0.05em;
+}
+
+.capability-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.pill {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mist);
+  border: 1px solid var(--border-dark);
+  border-radius: 100px;
+  padding: 6px 16px;
+  letter-spacing: 0.04em;
+}
+
+/* ─── PROOF ─── */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.proof-card {
+  background: var(--surface);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.proof-icon {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.proof-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--parchment);
+  margin-bottom: 8px;
+}
+
+.proof-body {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.7;
+}
+
+/* ─── CTA SECTION ─── */
+.cta-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border-dark);
+  padding: 72px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(182,133,61,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-section .section-title {
+  max-width: 560px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.cta-section .section-desc {
+  text-align: center;
+  margin: 0 auto 40px;
+}
+
+.contact-box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--raised);
+  border: 1px solid rgba(182, 133, 61, 0.25);
+  border-radius: 8px;
+  padding: 28px 48px;
+}
+
+.contact-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--parchment);
+}
+
+.contact-role {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  letter-spacing: 0.05em;
+}
+
+.contact-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.line-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #06C755;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--deep-ink);
+  border-top: 1px solid var(--border-dark);
+  padding: 28px 32px;
+  text-align: center;
+}
+
+.footer-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--parchment);
+  margin-bottom: 6px;
+}
+
+.footer-sub {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--slate);
+  letter-spacing: 0.08em;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  section { padding: 60px 20px; }
+  .hero { padding: 60px 20px 48px; }
+  .course-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .course-module { padding: 18px 20px; }
+  .team-intro { padding: 28px 20px; }
+  .team-stats { gap: 24px; }
+  .cta-section { padding: 56px 20px; }
+  .contact-box { padding: 24px 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="brand-tag">Dragon Hill Intelligent Consultant</div>
+  <div class="hero-logo">MUSE<span>ON</span></div>
+  <div class="hero-subtitle">臥龍崗管理顧問 · AI 智能系統</div>
+  <h1 class="hero-headline">讓你的企業，用 AI 的速度思考</h1>
+  <p class="hero-desc">
+    MUSEON 是臥龍崗顧問團隊為中小企業量身打造的 AI 智能顧問平台——整合商業分析、市場洞察、客戶管理，讓每一個決策都更快、更準、更有底氣。
+  </p>
+  <div class="cta-group">
+    <a href="#contact" class="cta-main">立即體驗 · 聯繫顧問</a>
+    <span class="cta-label">LINE 直接諮詢 · 顧問回覆不超過 <strong>24 小時</strong></span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SYSTEM INTRO -->
+<section>
+  <div class="section-tag">系統介紹</div>
+  <h2 class="section-title">MUSEON 能幫你做什麼？</h2>
+  <p class="section-desc">不只是工具，而是隨時在線的AI顧問夥伴——懂你的業務，記得你的客戶，幫你把資源轉成收入。</p>
+
+  <div class="system-grid">
+    <div class="sys-card">
+      <span class="sys-card-icon">🧠</span>
+      <div class="sys-card-title">商業智能分析</div>
+      <div class="sys-card-body">即時解析市場機會、競品動態、客戶需求——讓你在關鍵時刻做出正確判斷，而不是靠感覺。</div>
+    </div>
+    <div class="sys-card">
+      <span class="sys-card-icon">💼</span>
+      <div class="sys-card-title">客戶資源變現</div>
+      <div class="sys-card-body">盤點你手上的老客戶資源，AI 幫你找出最快成交路徑，從報價到話術全程賦能。</div>
+    </div>
+    <div class="sys-card">
+      <span class="sys-card-icon">📊</span>
+      <div class="sys-card-title">財務決策輔助</div>
+      <div class="sys-card-body">一筆生意值不值得做？成本結構、分潤條件、風險點——在你決定前就全部算清楚。</div>
+    </div>
+    <div class="sys-card">
+      <span class="sys-card-icon">📝</span>
+      <div class="sys-card-title">提案文件生成</div>
+      <div class="sys-card-body">客戶簡報、方案說明、報價邏輯——AI 幫你生成，你直接拿去用，省去數小時的準備。</div>
+    </div>
+    <div class="sys-card">
+      <span class="sys-card-icon">🗂️</span>
+      <div class="sys-card-title">專屬客戶檔案庫</div>
+      <div class="sys-card-body">每一個客戶都有獨立的人格分析、互動記錄、槓桿策略——不再靠記憶，靠系統。</div>
+    </div>
+    <div class="sys-card">
+      <span class="sys-card-icon">⚡</span>
+      <div class="sys-card-title">24小時待命回應</div>
+      <div class="sys-card-body">不論何時有問題，MUSEON 即時回應。從市場分析到客戶策略，秒出結果。</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COURSE -->
+<section>
+  <div class="section-tag">核心課程</div>
+  <h2 class="section-title">AI 商業思維加速課</h2>
+  <p class="section-desc">臥龍崗顧問團隊萃取多年商業實戰精髓，結合 MUSEON AI 系統實際操作，讓你不只懂 AI，更懂怎麼用 AI 賺錢。</p>
+
+  <div class="course-box">
+    <div class="course-header">
+      <span class="course-badge">核心必修</span>
+      <div class="course-name">從零到變現：AI 顧問實戰工作坊</div>
+    </div>
+    <ul class="course-modules">
+      <li class="course-module">
+        <span class="module-num">01</span>
+        <div class="module-content">
+          <div class="module-title">AI 時代的商業判斷力</div>
+          <div class="module-desc">為什麼聰明人在 AI 時代反而做了更多錯誤決策？重建你的分析框架，用 AI 看穿市場雜訊。</div>
+        </div>
+      </li>
+      <li class="course-module">
+        <span class="module-num">02</span>
+        <div class="module-content">
+          <div class="module-title">客戶資源槓桿化</div>
+          <div class="module-desc">你手上的老客戶是沉睡的金礦。用 AI 系統盤點、分析、重新激活——這是最快的現金流來源。</div>
+        </div>
+      </li>
+      <li class="course-module">
+        <span class="module-num">03</span>
+        <div class="module-content">
+          <div class="module-title">MUSEON 系統實戰操作</div>
+          <div class="module-desc">親手操作 AI 顧問系統，從客戶分析、提案生成到財務試算——全程實操，當場看到成果。</div>
+        </div>
+      </li>
+      <li class="course-module">
+        <span class="module-num">04</span>
+        <div class="module-content">
+          <div class="module-title">第一個案子的成交路徑</div>
+          <div class="module-desc">課程結束不是終點。顧問團隊陪你找到第一個用 AI 賦能的真實客戶案子，從分析到成交全程跟進。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TEAM -->
+<section>
+  <div class="section-tag">顧問團隊</div>
+  <h2 class="section-title">臥龍崗智能顧問團隊</h2>
+  <p class="section-desc">我們不是顧問公司，我們是把 AI 技術真正落地到企業商業場景的實戰團隊。</p>
+
+  <div class="team-intro">
+    <div class="team-name-en">Dragon Hill Intelligent Consultant LTC, Co.</div>
+    <div class="team-name-zh">臥龍崗管理顧問</div>
+    <div class="team-tagline">
+      跨產業、跨領域的顧問專家網絡，涵蓋企業策略、業務開發、財務規劃、AI 技術整合。我們用結構性思維解決模糊問題，用 AI 工具加速執行落地——幫助中小企業主在資源有限的條件下，做出最大化報酬的決策。
+    </div>
+
+    <div class="capability-pills">
+      <span class="pill">企業策略諮詢</span>
+      <span class="pill">AI 系統整合</span>
+      <span class="pill">業務拓展規劃</span>
+      <span class="pill">客戶資源盤點</span>
+      <span class="pill">財務結構分析</span>
+      <span class="pill">合作夥伴媒合</span>
+      <span class="pill">提案文件製作</span>
+      <span class="pill">市場情報分析</span>
+    </div>
+
+    <div class="team-stats">
+      <div class="stat">
+        <span class="stat-num">12+</span>
+        <span class="stat-label">核心顧問成員</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">30+</span>
+        <span class="stat-label">年商業實戰經驗</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">6</span>
+        <span class="stat-label">跨產業領域覆蓋</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">AI</span>
+        <span class="stat-label">專屬系統賦能</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROOF -->
+<section>
+  <div class="section-tag">為什麼選擇我們</div>
+  <h2 class="section-title">不只是顧問，是你的商業夥伴</h2>
+  <p class="section-desc">我們把 AI 技術和商業智慧整合在一起，給你的不是報告，是可執行的方案。</p>
+
+  <div class="proof-grid">
+    <div class="proof-card">
+      <div class="proof-icon">🎯</div>
+      <div class="proof-title">直接可用的方案</div>
+      <div class="proof-body">不做空洞的簡報，每次分析都給你可以立刻執行的下一步——明天就能開始做的事。</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-icon">🔒</div>
+      <div class="proof-title">你的資料只屬於你</div>
+      <div class="proof-body">專屬部署的 AI 系統，客戶資料完全保密。你的業務情報，不會流向任何第三方。</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-icon">⚡</div>
+      <div class="proof-title">快速看到成果</div>
+      <div class="proof-body">我們的目標是幫你在第一個月就看到具體收益——不是三個月後的模糊承諾。</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-icon">🤝</div>
+      <div class="proof-title">顧問陪伴全程</div>
+      <div class="proof-body">從系統設置到第一筆成交，顧問團隊全程陪跑，不是給工具就結束。</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-tag" style="display:inline-block;margin-bottom:24px;">立即行動</div>
+  <h2 class="section-title">準備好讓你的業務用 AI 加速了嗎？</h2>
+  <p class="section-desc">先從一次免費諮詢開始。顧問會幫你釐清最快的變現路徑，你決定要不要繼續。</p>
+
+  <div class="contact-box">
+    <div class="contact-name">Johnson 符　顧問</div>
+    <div class="contact-role">臥龍崗管理顧問 · 業務開發顧問</div>
+    <div class="contact-line">
+      <span class="line-icon">L</span>
+      <span>LINE ID：<strong>【請填入 Line ID】</strong></span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">MUSEON × Dragon Hill</div>
+  <div class="footer-sub">臥龍崗管理顧問 · AI 智能顧問系統 · © 2026</div>
+</footer>
+
+</body>
+</html>
