@@ -1295,6 +1295,8 @@
       <span id="saveIndicator" style="font-size:12px;color:var(--teal);font-weight:500;"></span>
       <button class="tbtn primary save-btn" onclick="doSave(this)">儲存</button>
       <button class="tbtn" onclick="extractWikiFromHistory()" title="從現有對話記錄補齊 Wiki">📋 補 Wiki</button>
+      <button class="tbtn" onclick="backupBook()" title="下載書本備份 JSON（可在其他裝置匯入還原）">↑ 備份</button>
+      <button class="tbtn" onclick="restoreBook()" title="從備份 JSON 還原書本（跨裝置同步）">↓ 還原</button>
       <button class="tbtn" onclick="showSettings()" title="API 設定">⚙</button>
     </div>
 
@@ -1481,11 +1483,8 @@
     if (chatId) localStorage.setItem('tg_chat_id', chatId);
     if (userId) localStorage.setItem('tg_user_id', userId);
     if (endpoint) localStorage.setItem('museon_endpoint', decodeURIComponent(endpoint));
-    const DEFAULT_EP = 'https://spread-orders-shopping-jamie.trycloudflare.com';
-    const storedEp = localStorage.getItem('museon_endpoint');
-    // 若 localStorage 沒值，或值含中文（placeholder 被誤存），重設為預設 URL
-    if (!storedEp || /[\u4e00-\u9fff]/.test(storedEp)) {
-      localStorage.setItem('museon_endpoint', DEFAULT_EP);
+    if (!localStorage.getItem('museon_endpoint')) {
+      localStorage.setItem('museon_endpoint', 'https://spread-orders-shopping-jamie.trycloudflare.com');
     }
   })();
 
@@ -1543,9 +1542,19 @@
       content: b.querySelector('.para-content')?.innerHTML || '',
       isDraft: b.querySelector('.para-content')?.classList.contains('ai-draft') || false
     }));
+    const safeHistory = chatHistory.map(m => ({
+      role: m.role,
+      content: typeof m.content === 'string'
+        ? m.content.substring(0, 6000)
+        : (Array.isArray(m.content)
+            ? m.content.filter(c => c.type === 'text').map(c => c.text).join('').substring(0, 6000)
+            : String(m.content).substring(0, 6000))
+    }));
     const state = {
       bookTitle: document.getElementById('wsBookTitle')?.textContent || '',
       paras,
+      chatHistory: safeHistory,
+      wikiData,
       savedAt: Date.now()
     };
     localStorage.setItem('museon_state_' + currentProjectId, JSON.stringify(state));
@@ -1578,10 +1587,89 @@
       }
       if (state.wikiData) {
         wikiData = state.wikiData;
-        // Re-render wiki with stored data
         renderWiki(currentProjectType);
       }
+      if (state.chatHistory && state.chatHistory.length > 0) {
+        chatHistory = state.chatHistory;
+        restoreChatUI(state.chatHistory);
+      }
     } catch(e) {}
+  }
+
+  function restoreChatUI(history) {
+    const box = document.getElementById('aiMsgs');
+    if (!box || !history.length) return;
+    box.innerHTML = '';
+    history.forEach(msg => {
+      const div = document.createElement('div');
+      if (msg.role === 'user') {
+        div.className = 'msg msg-user';
+        div.innerHTML = `<div class="msg-meta">你</div><p>${msg.content.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</p>`;
+      } else {
+        div.className = 'msg msg-ai';
+        div.innerHTML = `<div class="msg-meta">MUSEON</div><p style="white-space:pre-wrap">${msg.content.replace(/</g,'&lt;')}</p>`;
+      }
+      box.appendChild(div);
+    });
+    const notice = document.createElement('div');
+    notice.style.cssText = 'font-size:11px;color:var(--mist);text-align:center;padding:6px 0;border-top:1px solid var(--border);margin-top:8px;';
+    notice.textContent = `↑ 已還原 ${history.length} 條對話記錄`;
+    box.appendChild(notice);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function backupBook() {
+    const title = document.getElementById('wsBookTitle')?.textContent || '未命名';
+    const paras = [...document.querySelectorAll('.para-block')].map(b => ({
+      label: b.querySelector('.para-num')?.textContent || '',
+      content: b.querySelector('.para-content')?.innerHTML || '',
+    }));
+    const safeHistory = chatHistory.map(m => ({
+      role: m.role,
+      content: typeof m.content === 'string' ? m.content : String(m.content)
+    }));
+    const backup = { bookTitle: title, projectType: currentProjectType, paras, wikiData, chatHistory: safeHistory, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = title.replace(/[\/\\:*?"<>|]/g,'') + '_backup.json';
+    a.click();
+  }
+
+  function restoreBook() {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.json';
+    inp.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const state = JSON.parse(text);
+        wikiData = state.wikiData || {};
+        chatHistory = state.chatHistory || [];
+        renderWiki(currentProjectType);
+        restoreChatUI(chatHistory);
+        if (state.paras && state.paras.length) {
+          state.paras.forEach((p, i) => {
+            const existing = document.querySelectorAll('.para-block')[i];
+            if (existing) {
+              const content = existing.querySelector('.para-content');
+              if (content) content.innerHTML = p.content;
+            }
+          });
+          countWords();
+        }
+        saveState();
+        const notice = document.createElement('div');
+        notice.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--teal);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:999;';
+        notice.textContent = '✓ 書本已從備份還原';
+        document.body.appendChild(notice);
+        setTimeout(() => notice.remove(), 3000);
+      } catch(err) {
+        alert('備份檔案格式錯誤：' + err.message);
+      }
+    };
+    inp.click();
   }
 
   function triggerAutoSave() {
@@ -2375,7 +2463,6 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
   function addPara() {
     paraIdx++;
     const scroll = document.querySelector('.editor-scroll');
-    if (!scroll) return null;
     const addBtn = scroll.querySelector('.add-para');
     const block = document.createElement('div');
     block.className = 'para-block';
@@ -2391,32 +2478,18 @@ Wiki 不是任何外部文件，不是 Notion、Obsidian、本機路徑，也不
       </div>`;
     scroll.insertBefore(block, addBtn);
     block.querySelector('.para-content').focus();
-    return block;
   }
 
   function insertDraft(btn) {
-    const aiMsg = btn.closest('.msg-ai') || btn.closest('.msg');
-    if (!aiMsg) return;
-    // 只取第一個 <p> 的文字，避免把 wiki-suggest 卡片和按鈕文字都塞進去
-    const pEl = aiMsg.querySelector('p');
-    let text = (pEl ? pEl.innerText : '').trim();
-    if (!text) text = aiMsg.innerText.replace(/^MUSEON[^\n]*\n?/,'').replace(/\n插入段落[\s\S]*$/,'').trim();
-    const block = addPara();
-    if (!block) {
-      // editor-scroll 不存在，給用戶提示
-      const tip = document.createElement('div');
-      tip.style.cssText = 'background:var(--ember);color:#fff;padding:5px 10px;border-radius:4px;font-size:11px;margin-top:6px;';
-      tip.textContent = '請先打開一本書，再使用「插入段落」';
-      btn.parentNode.appendChild(tip);
-      setTimeout(() => tip.remove(), 3000);
-      return;
-    }
-    const target = block.querySelector('.para-content');
+    const aiMsg = btn.closest('.msg-ai');
+    const text = aiMsg.innerText.replace(/^MUSEON · 剛才\n?/,'').replace(/\n插入段落.*$/s,'').trim();
+    addPara();
+    const lastPara = document.querySelectorAll('.para-content');
+    const target = lastPara[lastPara.length - 1];
     if (target) {
       target.classList.add('ai-draft');
-      target.innerHTML = '<div class="ai-badge">✦ AI 草稿</div><p>' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>';
+      target.innerHTML = '<div class="ai-badge">✦ AI 草稿</div><p>' + text + '</p>';
       countWords();
-      block.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
