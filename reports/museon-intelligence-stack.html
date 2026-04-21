@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON 智能三層架構 — MuseMEM × Persona × ANIMA → Athena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep-ink);
+    color: #E8E4DE;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    padding: 100px 40px 80px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(196,80,42,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 100%, rgba(42,122,110,0.10) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    border: 1px solid rgba(196,80,42,0.4);
+    border-radius: 20px;
+    padding: 6px 18px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 600;
+    line-height: 1.15;
+    color: #F2EDE4;
+    margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--mist);
+    max-width: 560px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+  }
+
+  /* Flow diagram */
+  .flow-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+  }
+  .flow-node {
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    position: relative;
+  }
+  .flow-node.mem { border-color: rgba(184,146,58,0.5); color: var(--gold); }
+  .flow-node.persona { border-color: rgba(42,122,110,0.5); color: #5CC9B8; }
+  .flow-node.anima { border-color: rgba(196,80,42,0.5); color: var(--ember-light); }
+  .flow-node.athena {
+    border-color: rgba(184,146,58,0.8);
+    background: linear-gradient(135deg, rgba(184,146,58,0.15), rgba(196,80,42,0.12));
+    color: #E8C97A;
+    font-weight: 600;
+  }
+  .flow-arrow {
+    color: var(--border-dark);
+    font-size: 20px;
+  }
+
+  /* Section */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+  .section + .section {
+    border-top: 1px solid var(--border-dark);
+  }
+
+  /* Layer card */
+  .layer-card {
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .layer-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+  }
+  .layer-card.card-mem::before { background: linear-gradient(90deg, var(--gold), transparent); }
+  .layer-card.card-persona::before { background: linear-gradient(90deg, #2A7A6E, transparent); }
+  .layer-card.card-anima::before { background: linear-gradient(90deg, var(--ember), transparent); }
+  .layer-card.card-athena::before { background: linear-gradient(90deg, var(--gold), var(--ember)); }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .badge-mem { background: rgba(184,146,58,0.12); color: var(--gold); border: 1px solid rgba(184,146,58,0.3); }
+  .badge-persona { background: rgba(42,122,110,0.12); color: #5CC9B8; border: 1px solid rgba(42,122,110,0.3); }
+  .badge-anima { background: rgba(196,80,42,0.12); color: var(--ember-light); border: 1px solid rgba(196,80,42,0.3); }
+  .badge-athena { background: rgba(184,146,58,0.15); color: #E8C97A; border: 1px solid rgba(184,146,58,0.5); }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #F2EDE4;
+    margin-bottom: 8px;
+  }
+  .card-tagline {
+    font-size: 14px;
+    color: var(--mist);
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+  .card-desc {
+    font-size: 15.5px;
+    color: #BDB8B0;
+    line-height: 1.85;
+    margin-bottom: 28px;
+  }
+
+  /* Feature grid */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .feat-item {
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .feat-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .feat-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 6px;
+  }
+  .feat-val {
+    font-size: 14.5px;
+    color: #D8D3CB;
+    line-height: 1.6;
+  }
+
+  /* Flow section */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .pipe-step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    align-items: stretch;
+    position: relative;
+  }
+  .pipe-step:not(:last-child) .pipe-line {
+    position: absolute;
+    left: 27px;
+    top: 52px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-dark);
+  }
+  .pipe-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  .pipe-num.n1 { background: rgba(184,146,58,0.15); color: var(--gold); border: 1px solid rgba(184,146,58,0.3); }
+  .pipe-num.n2 { background: rgba(42,122,110,0.15); color: #5CC9B8; border: 1px solid rgba(42,122,110,0.3); }
+  .pipe-num.n3 { background: rgba(196,80,42,0.15); color: var(--ember-light); border: 1px solid rgba(196,80,42,0.3); }
+  .pipe-num.n4 { background: rgba(184,146,58,0.2); color: #E8C97A; border: 1px solid rgba(184,146,58,0.5); }
+  .pipe-body {
+    padding: 4px 0 32px;
+  }
+  .pipe-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #E8E4DE;
+    margin-bottom: 6px;
+  }
+  .pipe-text {
+    font-size: 14.5px;
+    color: #9898A8;
+    line-height: 1.75;
+  }
+
+  /* Output chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .chip {
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #BDB8B0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .chip-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-gold { background: var(--gold); }
+  .dot-teal { background: #2A7A6E; }
+  .dot-ember { background: var(--ember-light); }
+
+  /* Quote */
+  .quote-block {
+    border-left: 3px solid var(--ember);
+    padding: 16px 24px;
+    background: rgba(196,80,42,0.06);
+    border-radius: 0 10px 10px 0;
+    margin: 28px 0;
+  }
+  .quote-block p {
+    font-size: 16px;
+    font-style: italic;
+    color: #D8D3CB;
+    line-height: 1.8;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 48px 20px 60px;
+    border-top: 1px solid var(--border-dark);
+  }
+  footer .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ember-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  footer p {
+    font-size: 13px;
+    color: var(--mist);
+  }
+
+  /* Athena final block */
+  .athena-output {
+    background: linear-gradient(135deg, rgba(184,146,58,0.08) 0%, rgba(196,80,42,0.06) 100%);
+    border: 1px solid rgba(184,146,58,0.25);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 28px;
+  }
+  .athena-output h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #E8C97A;
+    margin-bottom: 18px;
+  }
+  .output-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .output-row:last-child { margin-bottom: 0; }
+  .output-key {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    min-width: 90px;
+    padding-top: 2px;
+  }
+  .output-val {
+    font-size: 14.5px;
+    color: #BDB8B0;
+    line-height: 1.65;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">MUSEON Intelligence Architecture</div>
+  <h1>三層感知<br>驅動 <em>Athena</em> 戰情分析</h1>
+  <p class="hero-sub">MuseMEM 記住一切、Persona 讀懂人性、ANIMA 持續追蹤——三者匯流，才有 Athena 量級的洞察</p>
+
+  <div class="flow-wrap">
+    <div class="flow-node mem">🧠 MuseMEM</div>
+    <div class="flow-arrow">×</div>
+    <div class="flow-node persona">🎭 Persona</div>
+    <div class="flow-arrow">×</div>
+    <div class="flow-node anima">⚡ ANIMA</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node athena">🏛 Athena 戰情分析</div>
+  </div>
+</div>
+
+<!-- MuseMEM -->
+<div class="section">
+  <div class="layer-card card-mem">
+    <div class="card-badge badge-mem">🧠 Layer 1</div>
+    <div class="card-title">MuseMEM — 語意記憶引擎</div>
+    <div class="card-tagline">不只儲存，而是理解脈絡</div>
+    <p class="card-desc">
+      MuseMEM 是 MUSEON 的長期記憶基礎設施。所有對話、決策、觀察、知識結晶都被向量化後存入 Qdrant，
+      並依照六種集合分層管理。查詢時不是關鍵字比對，而是語意搜尋——你說「上次那件事」，它找到的是意圖，不是字詞。
+    </p>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <div class="feat-icon">📚</div>
+        <div class="feat-label">六種集合</div>
+        <div class="feat-val">memories / skills / crystals / documents / references / primals</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-label">搜尋方式</div>
+        <div class="feat-val">語意向量搜尋，找意圖而非關鍵字</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-label">速度</div>
+        <div class="feat-val">CPU 優先，&lt;10ms 完成，零 LLM Token</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🔮</div>
+        <div class="feat-label">知識結晶</div>
+        <div class="feat-val">Insight / Lesson / Procedure 三類型永久記憶</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona -->
+  <div class="layer-card card-persona">
+    <div class="card-badge badge-persona">🎭 Layer 2</div>
+    <div class="card-title">Persona — 人格解讀引擎</div>
+    <div class="card-tagline">讀懂對方怎麼思考，才能說出對的話</div>
+    <p class="card-desc">
+      Persona 引擎整合萬謬16型（人格框架）、One Muse 四軸線、八原語能量分析，
+      對每個人建立動態的思維模型。不只分析「他是什麼人」，而是預測「他在這個情境下會怎麼判斷」。
+    </p>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <div class="feat-icon">🧩</div>
+        <div class="feat-label">萬謬16型</div>
+        <div class="feat-val">決策偏好、衝突模式、信任建立路徑</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🌊</div>
+        <div class="feat-label">八原語能量</div>
+        <div class="feat-val">驅動力強弱分佈，預測行動優先序</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🌡️</div>
+        <div class="feat-label">關係溫度</div>
+        <div class="feat-val">new / warm / trusted / deep，即時更新</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">⚔️</div>
+        <div class="feat-label">槓桿路徑</div>
+        <div class="feat-val">對這個人最有效的切入點與禁忌地雷</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANIMA -->
+  <div class="layer-card card-anima">
+    <div class="card-badge badge-anima">⚡ Layer 3</div>
+    <div class="card-title">ANIMA — 個體追蹤引擎</div>
+    <div class="card-tagline">連續觀察，不是單次快照</div>
+    <p class="card-desc">
+      ANIMA 對每個關鍵人物建立七層結構的動態檔案（ARES 系統），
+      從每次互動中自動提取信號——話題變化、情緒波動、立場轉移。
+      它不問「他是誰」，它問「他現在在哪個狀態，下一步可能往哪走」。
+    </p>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <div class="feat-icon">📂</div>
+        <div class="feat-label">ARES 七層檔案</div>
+        <div class="feat-val">基礎資訊 → 人格 → 互動歷史 → 槓桿 → 風險 → 機會 → 預測</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">📡</div>
+        <div class="feat-label">訊號持續寫入</div>
+        <div class="feat-val">L4 Observer 每次對話後自動更新，零手動維護</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🌡️</div>
+        <div class="feat-label">溫度即時計算</div>
+        <div class="feat-val">根據互動頻率、情緒指標動態評估關係熱度</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🔔</div>
+        <div class="feat-label">異常偵測</div>
+        <div class="feat-val">行為偏離基準線自動觸發警示</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pipeline -->
+<div class="section">
+  <div style="margin-bottom: 40px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ember-light); margin-bottom: 12px;">HOW IT WORKS</div>
+    <div style="font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: #F2EDE4; margin-bottom: 12px;">三層匯流成 Athena</div>
+    <p style="font-size: 15px; color: var(--mist); max-width: 540px;">每次 Athena 被觸發，都走完這四個步驟——從記憶到人格到個體追蹤，最後整合為一份可以立即行動的情報。</p>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-line"></div>
+      <div class="pipe-num n1">01</div>
+      <div class="pipe-body">
+        <div class="pipe-title">MuseMEM 調出相關脈絡</div>
+        <div class="pipe-text">語意搜尋過去所有與此人相關的對話、決策、觀察紀錄。不只是最近一次，而是完整歷史的語意摘要——讓 Athena 不從零開始。</div>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-line"></div>
+      <div class="pipe-num n2">02</div>
+      <div class="pipe-body">
+        <div class="pipe-title">Persona 載入思維模型</div>
+        <div class="pipe-text">從萬謬16型與八原語讀取「這個人怎麼判斷事情」——他的決策優先序、壓力下的反應模式、什麼能打動他、什麼會讓他關閉。</div>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-line"></div>
+      <div class="pipe-num n3">03</div>
+      <div class="pipe-body">
+        <div class="pipe-title">ANIMA 補入即時狀態</div>
+        <div class="pipe-text">從 ARES 七層檔案抓出最新互動信號——他現在在什麼情緒狀態、上次對話後有沒有立場轉移、當前關係溫度是幾度。</div>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num n4">04</div>
+      <div class="pipe-body">
+        <div class="pipe-title">Athena 整合輸出戰情分析</div>
+        <div class="pipe-text">三層資料匯入後，Athena 才開始生成——不是泛用建議，而是針對這個人、這個時刻、這件事的具體行動方案。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Athena Output -->
+<div class="section">
+  <div class="layer-card card-athena">
+    <div class="card-badge badge-athena">🏛 Athena Output</div>
+    <div class="card-title">Athena 戰情分析輸出什麼</div>
+    <div class="card-tagline">不是報告，是戰前簡報——進去之前該知道的全部</div>
+
+    <div class="quote-block">
+      <p>「最好的戰略不是你最聰明，而是你比對方更了解這個局——他的目標、他的限制、他願意接受什麼。」</p>
+    </div>
+
+    <div class="athena-output">
+      <h4>一份標準 Athena 簡報包含</h4>
+      <div class="output-row">
+        <div class="output-key">人格摘要</div>
+        <div class="output-val">這個人的核心決策邏輯、壓力反應、信任建立路徑（來自 Persona 引擎）</div>
+      </div>
+      <div class="output-row">
+        <div class="output-key">關係溫度</div>
+        <div class="output-val">當前關係熱度評級 + 最近三次互動的情緒軌跡（來自 ANIMA）</div>
+      </div>
+      <div class="output-row">
+        <div class="output-key">歷史脈絡</div>
+        <div class="output-val">過去所有相關決策、承諾、未解決張力的語意摘要（來自 MuseMEM）</div>
+      </div>
+      <div class="output-row">
+        <div class="output-key">槓桿清單</div>
+        <div class="output-val">對這個人最有效的切入點 × 應避免的地雷（三層資料交叉得出）</div>
+      </div>
+      <div class="output-row">
+        <div class="output-key">行動建議</div>
+        <div class="output-val">下一步做什麼、說什麼、不說什麼——具體到可以直接執行</div>
+      </div>
+    </div>
+
+    <div class="chips">
+      <div class="chip"><div class="chip-dot dot-gold"></div>適用：商務會議前準備</div>
+      <div class="chip"><div class="chip-dot dot-teal"></div>適用：合作談判破冰</div>
+      <div class="chip"><div class="chip-dot dot-ember"></div>適用：衝突後關係修復</div>
+      <div class="chip"><div class="chip-dot dot-gold"></div>適用：潛在合夥人評估</div>
+      <div class="chip"><div class="chip-dot dot-teal"></div>適用：客戶提案策略</div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="logo">MUSEON</div>
+  <p>思維品質引擎 · 讓你知道怎麼思考，而不只是給答案</p>
+</footer>
+
+</body>
+</html>
