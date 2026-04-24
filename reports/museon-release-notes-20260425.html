@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON — 版本更新說明</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --fog-gold: #b6853d;
+    --navy: #181737;
+    --parchment: #F5F0E8;
+    --ink: #2C2C2C;
+    --muted: #6B6B6B;
+    --divider: #E0D8CC;
+    --green: #2D7A4F;
+    --blue: #1A5FA8;
+    --purple: #6B3FA0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  .app-header {
+    background: var(--navy);
+    padding: 36px 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .app-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #C4502A, #b6853d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .app-icon svg { width: 42px; height: 42px; }
+  .app-meta { flex: 1; }
+  .app-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+    margin-bottom: 3px;
+  }
+  .app-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.2px;
+  }
+  .app-badge {
+    background: var(--ember);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  .version-banner {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .version-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--fog-gold);
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+  }
+  .version-meta { text-align: right; }
+  .version-date {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+  }
+  .version-commits {
+    font-size: 11px;
+    color: var(--fog-gold);
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  .section {
+    margin: 0 16px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .section-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-feat   { background: var(--ember); }
+  .dot-fix    { background: var(--green); }
+  .dot-arch   { background: var(--blue); }
+  .dot-system { background: var(--purple); }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+  }
+  .date-chip {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fog-gold);
+    background: rgba(182,133,61,0.12);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+    letter-spacing: 0.3px;
+  }
+
+  .update-group { margin-bottom: 18px; }
+  .update-group:last-child { margin-bottom: 0; }
+
+  .update-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .update-label .tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .tag-new    { background: rgba(196,80,42,0.12); color: var(--ember); }
+  .tag-fix    { background: rgba(45,122,79,0.12); color: var(--green); }
+  .tag-arch   { background: rgba(26,95,168,0.12); color: var(--blue); }
+  .tag-clean  { background: rgba(107,63,160,0.12); color: var(--purple); }
+
+  .update-desc {
+    font-size: 14px;
+    color: #4A4A4A;
+    line-height: 1.55;
+  }
+  .update-detail {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  .highlight-card {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin: 16px 16px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .highlight-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(196,80,42,0.3), transparent 70%);
+  }
+  .highlight-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--fog-gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .highlight-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .highlight-body {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+  }
+  .stat-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 14px;
+  }
+  .stat-item { text-align: center; flex: 1; }
+  .stat-num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--fog-gold);
+    letter-spacing: -0.5px;
+  }
+  .stat-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px 24px 0;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .footer strong { color: var(--ember); }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-icon">
+    <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 6L8 14v14l13 8 13-8V14L21 6z" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" fill="none"/>
+      <path d="M21 6v22M8 14l13 8 13-8" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+      <circle cx="21" cy="21" r="3.5" fill="rgba(255,255,255,0.9)"/>
+    </svg>
+  </div>
+  <div class="app-meta">
+    <div class="app-name">MUSEON</div>
+    <div class="app-subtitle">智能核心 · AI 夥伴系統</div>
+  </div>
+  <div class="app-badge">更新日誌</div>
+</div>
+
+<div class="version-banner">
+  <div class="version-num">v0.9.6</div>
+  <div class="version-meta">
+    <div class="version-date">2026年4月15日 — 4月25日</div>
+    <div class="version-commits">196 commits · 10 天迭代</div>
+  </div>
+</div>
+
+<div class="highlight-card">
+  <div class="highlight-eyebrow">本週期核心里程碑</div>
+  <div class="highlight-title">代碼紀律引擎上線<br>系統健康分 83 → 98</div>
+  <div class="highlight-body">
+    從「寫完就跑」到「有人把關」——Semgrep 靜態分析、Import 合約、幽靈實作偵測同步落地，
+    搭配 Morphenix 自動進化閉環，MUSEON 第一次具備了自我審計與修復的能力。
+  </div>
+  <div class="stat-row">
+    <div class="stat-item">
+      <div class="stat-num">196</div>
+      <div class="stat-label">Commits</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">+15</div>
+      <div class="stat-label">新模組</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">98</div>
+      <div class="stat-label">健康分</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">506</div>
+      <div class="stat-label">總互動</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 1 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-arch"></div>
+    <div class="section-title">Federation 子機網路</div>
+    <div class="date-chip">4月15–19日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Ed25519 身份簽章 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">每個子機節點現在有獨立的密鑰對，訊息可驗真偽，防止偽造來源的 pack 安裝。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">5Q Ceremony 上線 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">新子機加入必須通過五問儀式（身份、意圖、能力、邊界、承諾），並接受角色範本綁定。五套預設角色模板同步到位。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Vault SQLite Tenant 隔離 <span class="tag tag-arch">ARCH</span></div>
+    <div class="update-desc">跨子機資料存取改用 TenantGuardedStore 包裝法，保守策略確保資料不串漏，install_pack / uninstall_pack 全面真實化。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">scope classifier L2 防線 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Federation 請求入口加設意圖分類層，拒絕越權操作，對應 invariants A1–A12 骨架。</div>
+  </div>
+</div>
+
+<!-- Section 2 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-fix"></div>
+    <div class="section-title">系統穩定性修復</div>
+    <div class="date-chip">4月20–21日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">結晶污染止血（31 顆隔離） <span class="tag tag-fix">FIX</span></div>
+    <div class="update-desc">偵測到逐字稿被錯誤吸入知識結晶庫，執行四階段修復：Quarantine 31 顆 → Runtime Filter → 寫入端 Sanitize → 跨群組檢索隔離。</div>
+    <div class="update-detail">根因：Gate R 未對原始語音稿做內容品質過濾，已補上。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">四系統一次修復 <span class="tag tag-fix">FIX</span></div>
+    <div class="update-desc">單次 session 解決：Proactive 配額 alert 去重持久化、夢境系統接線斷點、Rita 群組回覆異常、JOH 歷史記錄遺漏。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Gateway 當機事件應對 <span class="tag tag-fix">FIX</span></div>
+    <div class="update-desc">補齊 Gateway 崩潰後的標準處置 SOP，skill L3 時間感知擴充（知道「現在幾點」），Logo 從破圖 base64 改為內嵌 SVG。</div>
+  </div>
+</div>
+
+<!-- Section 3 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-feat"></div>
+    <div class="section-title">自主進化引擎</div>
+    <div class="date-chip">4月20日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">LLM DSE 自演化替換 CPU 規則 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Morphenix 的洞見提煉從固定規則升級為 LLM 驅動的 DSE runner，能識別真正的行為盲區而非表面統計。批次處理 11 個進化提案並自動分群。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">effect_evaluator 施工→驗收閉環 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Morphenix 現在會評估進化提案落地後的實際效果，不再「只管提、不管收」。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">crystal_rules_ranker <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">結晶規則依群體共識加權排名，高共識教訓優先影響行為決策，個人偏差教訓自然降級。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Zeal 決策模型三處共用 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">從半年互動中結晶出 Zeal 的決策邏輯，以 Python 模型固化，Session 開始時自動載入做自我挑戰 checklist。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">五道護欄 + protected_paths <span class="tag tag-arch">ARCH</span></div>
+    <div class="update-desc">自主進化的守門機制：5 個掃描器保護核心路徑，auto_execute 預設關閉（需人類確認），dead_man_switch 確保失控時可硬停。</div>
+  </div>
+</div>
+
+<!-- Section 4 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-feat"></div>
+    <div class="section-title">代碼紀律引擎（Phase 1–5）</div>
+    <div class="date-chip">4月24日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Semgrep 靜態分析規則集 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Phase 1：自訂 Semgrep 規則掃描 MUSEON 特定反模式（靜默異常、循環 import、logger 命名錯誤），觀察模式上線。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Import Linter 模組合約 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Phase 2：宣告哪個模組可以 import 哪個模組，違反合約的 import 在 CI 被擋下。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Vulture 幽靈實作偵測 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Phase 3：自動找出「寫了但從未被呼叫」的函式和類別，防止死碼累積。配合新鍛造的 wiring-ghost-audit Skill。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">D8 代碼紀律整合 + Morphenix 接線 <span class="tag tag-arch">ARCH</span></div>
+    <div class="update-desc">Phase 4：三個掃描工具輸出接入 Doctor D8 維度，發現問題後自動產生 Morphenix 進化提案，形成「發現→提案→修復」自動化鏈。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Big Red Button SOP + Meta 血脈 <span class="tag tag-arch">ARCH</span></div>
+    <div class="update-desc">Phase 5：SurgeryRecord 擴充（詳細前後對比存檔）、Big Red Button 緊急回滾 SOP、Meta 血脈讓 Vulture 偵測到的問題直接觸發 Morphenix dry_run。</div>
+  </div>
+</div>
+
+<!-- Section 5 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-feat"></div>
+    <div class="section-title">健康診斷系統擴充</div>
+    <div class="date-chip">4月24日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">D9：外部服務活性維度 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">Doctor 新增第九個健康維度，監測 Telegram Bot、Qdrant、SearXNG 等外部服務的連線狀態，Governor 啟動失敗時訊號化而非靜默。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">全系統耦合修復 83 → 98 <span class="tag tag-fix">FIX</span></div>
+    <div class="update-desc">一次性掃出並修復全系統耦合問題：Rule 14 artifact-family 目錄補齊、D2 basename 比對收緊、動態目錄消費端驗證到位。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Liveness Scanner 五虎將心跳 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">每 60 秒確認五個核心守護進程（Gateway、Breath、Doctor、Morphenix、Hermes）是否在線，異常時立即寫入 shared_board。</div>
+  </div>
+</div>
+
+<!-- Section 6 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-feat"></div>
+    <div class="section-title">決策與工作流</div>
+    <div class="date-chip">4月24日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Pseudo-RDT — Zeal 7 點軍師工作流 <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">在每天早上七點前，MUSEON 自動彙整前一天所有訊號，形成簡報等待 Zeal 的最終判斷。α 層（硬閘阻擋）+ β 層（軟引導）同時落地。</div>
+    <div class="update-detail">設計原則：降低決策噪音，但不奪走人類最終控制權。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Mirror-First L3 接線 <span class="tag tag-arch">ARCH</span></div>
+    <div class="update-desc">使用者追蹤從「直接寫入」改為「先鏡像觀察、對稱後才採信」，C3 scanner 守門員確保不收到未驗證的外部觀察。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Envoy Seven 星座 + 3D 宇宙修復 <span class="tag tag-fix">FIX</span></div>
+    <div class="update-desc">七使節星座完整接線，sync_topology_to_3d.py 修復後宇宙視圖能正確渲染全部模組節點與連接關係。</div>
+  </div>
+</div>
+
+<!-- Section 7 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot dot-system"></div>
+    <div class="section-title">Event Bus 強化 + 清理</div>
+    <div class="date-chip">4月25日</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">IN-PROCESS ONLY 護欄 <span class="tag tag-arch">ARCH</span></div>
+    <div class="update-desc">event_bus 現在主動拒絕跨進程的 publish 企圖，並對孤兒 publish（找不到已知消費者的事件）發出 WARN，不再靜默通過。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Wiring Ghost Audit Skill <span class="tag tag-new">NEW</span></div>
+    <div class="update-desc">新鍛造：系統接線幽靈審計 Skill。主動掃描「聲稱已接線但實際無消費者」的幽靈事件，防止新功能出現宣告≠實作的漂移。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">Hermes 跨進程修復 <span class="tag tag-fix">FIX</span></div>
+    <div class="update-desc">Hermes 改用 file-based notes watcher，不再依賴跨進程 event bus，解決 Hermes 在子進程環境中收不到通知的根本問題。</div>
+  </div>
+
+  <div class="update-group">
+    <div class="update-label">死旗標清除 + 語言對齊 <span class="tag tag-clean">CLEAN</span></div>
+    <div class="update-desc">移除 auto_propose 死旗標（7 次寫入、0 次讀取）、event_intent.yaml 從散落標注遷移為規範化單一事實來源、藍圖語言從「daemon 野心」對齊現實。</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div style="margin-bottom:6px;">
+    <strong>MUSEON</strong> · 臥龍崗管理顧問 AI 夥伴系統
+  </div>
+  <div>成長第 22 天 · ABSORB 階段 · 認知成熟度 5%</div>
+  <div style="margin-top:8px;font-size:11px;color:#aaa;">
+    v0.9.6 · 2026-04-25 · 本文件由 Hermes 引擎驅動生成
+  </div>
+</div>
+
+</body>
+</html>
