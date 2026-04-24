@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON — 版本更新日誌 2026.04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --gold: #b6853d;
+    --teal: #2A7A6E;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep-ink);
+    color: #E8E6E0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    padding: 64px 24px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(196,80,42,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo-lockup {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  .logo-svg { width: 60px; height: 60px; }
+
+  .logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    color: var(--mist);
+    text-transform: uppercase;
+  }
+
+  .version-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(196,80,42,0.10);
+    border: 1px solid rgba(196,80,42,0.28);
+    border-radius: 100px;
+    padding: 7px 18px;
+    margin-bottom: 28px;
+  }
+
+  .version-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--ember);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+  }
+
+  .version-badge span {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ember-light);
+    letter-spacing: 0.04em;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 7vw, 76px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: #FDFCFA;
+    margin-bottom: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+
+  .hero-subtitle {
+    font-size: 17px;
+    color: var(--mist);
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto 18px;
+    line-height: 1.75;
+  }
+
+  .hero-meta {
+    font-size: 11px;
+    color: rgba(152,152,168,0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 64px;
+  }
+
+  /* ─── STATS STRIP ─── */
+  .stats-strip {
+    display: flex;
+    justify-content: center;
+    background: rgba(255,255,255,0.025);
+    border-top: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--border-dark);
+    padding: 36px 24px;
+    margin-bottom: 80px;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 0 52px;
+    border-right: 1px solid var(--border-dark);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: #FDFCFA;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stat-number.ember { color: var(--ember-light); }
+  .stat-number.gold { color: var(--gold); }
+  .stat-number.teal { color: #4aada0; }
+  .stat-number.dim { color: #7070a0; }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ─── MAIN ─── */
+  .main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 88px; }
+
+  .section-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .tag-new     { background: rgba(196,80,42,0.14); color: var(--ember-light); border: 1px solid rgba(196,80,42,0.22); }
+  .tag-improved{ background: rgba(42,122,110,0.14); color: #4aada0;            border: 1px solid rgba(42,122,110,0.22); }
+  .tag-fixed   { background: rgba(182,133,61,0.14); color: var(--gold);        border: 1px solid rgba(182,133,61,0.22); }
+  .tag-infra   { background: rgba(90,90,110,0.18);  color: #8888a8;            border: 1px solid rgba(90,90,110,0.28); }
+
+  .section-date {
+    font-size: 12px;
+    color: rgba(152,152,168,0.45);
+    letter-spacing: 0.04em;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: #FDFCFA;
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 15px;
+    color: var(--mist);
+    line-height: 1.8;
+    margin-bottom: 36px;
+    font-weight: 300;
+    max-width: 600px;
+  }
+
+  /* ─── FEATURE CARDS ─── */
+  .feature-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .feature-item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 20px 20px 20px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .feature-item:hover {
+    background: var(--raised);
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .icon-ember { background: rgba(196,80,42,0.14); }
+  .icon-teal  { background: rgba(42,122,110,0.14); }
+  .icon-gold  { background: rgba(182,133,61,0.14); }
+  .icon-slate { background: rgba(90,90,110,0.18); }
+
+  .feature-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #E8E6E0;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: var(--mist);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .feature-desc strong { color: #c0bdb8; font-weight: 500; }
+
+  /* ─── PHASE TIMELINE ─── */
+  .phase-timeline {
+    position: relative;
+    padding-left: 36px;
+  }
+
+  .phase-timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 14px; bottom: 24px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--ember) 0%, rgba(196,80,42,0.08) 100%);
+  }
+
+  .phase-item {
+    position: relative;
+    padding: 0 0 36px 28px;
+  }
+
+  .phase-item::before {
+    content: '';
+    position: absolute;
+    left: -25px; top: 8px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--ember);
+    box-shadow: 0 0 0 3px rgba(196,80,42,0.18);
+  }
+
+  .phase-item.done::before  { background: var(--teal); box-shadow: 0 0 0 3px rgba(42,122,110,0.2); }
+  .phase-item.wip::before   { background: var(--gold); box-shadow: 0 0 0 3px rgba(182,133,61,0.2); }
+
+  .phase-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(152,152,168,0.55);
+    margin-bottom: 4px;
+  }
+
+  .phase-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #E0DDD8;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .phase-detail {
+    font-size: 13px;
+    color: rgba(152,152,168,0.65);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* ─── HIGHLIGHT BLOCK ─── */
+  .highlight-block {
+    background: linear-gradient(135deg, rgba(196,80,42,0.07) 0%, rgba(182,133,61,0.04) 100%);
+    border: 1px solid rgba(196,80,42,0.18);
+    border-radius: 18px;
+    padding: 40px 40px 36px;
+    margin: 48px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ember), var(--gold), transparent);
+  }
+
+  .h-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(224,113,77,0.7);
+    margin-bottom: 12px;
+  }
+
+  .h-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #FDFCFA;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .h-desc {
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.85;
+    font-weight: 300;
+  }
+
+  .h-desc strong { color: #c0bdb8; font-weight: 500; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-dark) 20%, var(--border-dark) 80%, transparent);
+    margin: 72px 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center;
+    padding: 64px 24px;
+    border-top: 1px solid var(--border-dark);
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    color: rgba(152,152,168,0.3);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: rgba(152,152,168,0.25);
+    letter-spacing: 0.06em;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .stats-strip { gap: 28px; }
+    .stat-item { border-right: none; padding: 0 24px; }
+    .hero-title { font-size: 36px; }
+    .highlight-block { padding: 28px 22px; }
+    .feature-item { grid-template-columns: 38px 1fr; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER -->
+<header class="site-header">
+  <div class="logo-lockup">
+    <svg class="logo-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="60" height="60" rx="15" fill="#16161F"/>
+      <path d="M30 10 L47 20 L47 40 L30 50 L13 40 L13 20 Z" stroke="#C4502A" stroke-width="1.5" fill="none" opacity="0.55"/>
+      <path d="M30 17 L42 24 L42 36 L30 43 L18 36 L18 24 Z" stroke="#b6853d" stroke-width="1" fill="none" opacity="0.4"/>
+      <circle cx="30" cy="30" r="6" fill="#C4502A" opacity="0.85"/>
+      <circle cx="30" cy="30" r="2.5" fill="#FDFCFA"/>
+    </svg>
+    <span class="logo-name">MUSEON</span>
+  </div>
+
+  <div class="version-badge">
+    <span class="dot"></span>
+    <span>2026.04 版本更新 · 196 commits in 10 days</span>
+  </div>
+
+  <h1 class="hero-title">系統從<em>感知</em><br>邁向<em>自律</em></h1>
+
+  <p class="hero-subtitle">
+    十天，196 次提交。從代碼紀律監控到自我修復血脈，MUSEON 正在建立一套不依賴人類巡邏的健康保障體系。
+  </p>
+
+  <p class="hero-meta">2026 年 4 月 15 日 — 4 月 25 日</p>
+</header>
+
+<!-- ══════════════ STATS -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <span class="stat-number ember">196</span>
+    <span class="stat-label">十天 Commits</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number gold">83 → 98</span>
+    <span class="stat-label">健康分數躍升</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number teal">D1–D9</span>
+    <span class="stat-label">九維度全覆蓋</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number dim">5</span>
+    <span class="stat-label">新鍛造 Skills</span>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN -->
+<main class="main">
+
+  <!-- §1 Phase 5 代碼紀律生態化 -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-new">重大功能</span>
+      <span class="section-date">04/24</span>
+    </div>
+    <h2 class="section-title">代碼紀律生態化<br>Phase 1–5.3 全線上線</h2>
+    <p class="section-desc">
+      MUSEON 第一次擁有一套「自己看自己、自己修自己」的代碼紀律體系——不需要 Zeal 盯著，系統自己在跑。
+    </p>
+
+    <div class="phase-timeline">
+      <div class="phase-item done">
+        <div class="phase-label">Phase 1 · 04/24</div>
+        <div class="phase-name">Semgrep 靜態規則集上線（觀察模式）</div>
+        <div class="phase-detail">12 條架構護欄，靜默掃描，不阻塞 CI。第一次讓 AST 層看見潛在違規。</div>
+      </div>
+      <div class="phase-item done">
+        <div class="phase-label">Phase 2 · 04/24</div>
+        <div class="phase-name">Import Linter 合約上線</div>
+        <div class="phase-detail">模組邊界聲明式合約。任何跨界 import 留有文字痕跡，不再靠人記。</div>
+      </div>
+      <div class="phase-item done">
+        <div class="phase-label">Phase 3 · 04/24</div>
+        <div class="phase-name">Vulture 幽靈實作偵測</div>
+        <div class="phase-detail">自動標記 501 個零呼叫函數中的真正死碼候選。47 條偵測結果進入血脈管線。</div>
+      </div>
+      <div class="phase-item done">
+        <div class="phase-label">Phase 4 · 04/24</div>
+        <div class="phase-name">D8 代碼紀律 + Morphenix 接線</div>
+        <div class="phase-detail">紀律掃描結果進 health_score。Morphenix 接收紀律訊號，提案自動化修復。</div>
+      </div>
+      <div class="phase-item done">
+        <div class="phase-label">Phase 5.1 · 04/24</div>
+        <div class="phase-name">SurgeryRecord 擴充 + Big Red Button SOP</div>
+        <div class="phase-detail">手術記錄新增 confidence_score、rollback_tag。緊急停止協議文件化，人機協作邊界清晰。</div>
+      </div>
+      <div class="phase-item done">
+        <div class="phase-label">Phase 5.2 · 04/24</div>
+        <div class="phase-name">Reactive 血脈 — discipline_bridge 基礎設施</div>
+        <div class="phase-detail">紀律違規 → failure_triplet → Morphenix 提案，全段血脈接通（dry_run 模式）。</div>
+      </div>
+      <div class="phase-item wip">
+        <div class="phase-label">Phase 5.3 · 04/24</div>
+        <div class="phase-name">Meta 血脈 — Vulture → Morphenix</div>
+        <div class="phase-detail">47 條 Vulture 偵測 → 47 個 failure_triplet → 47 個修復提案。去重機制實証通過。下一步：接進 nightly 自動執行。</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §2 D9 基礎設施監控 -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-new">新維度</span>
+      <span class="section-date">04/24</span>
+    </div>
+    <h2 class="section-title">D9：基礎設施活性<br>正式進入健康分數</h2>
+    <p class="section-desc">
+      Qdrant、SearXNG 的死活不再靠人眼盯。Governor 啟動失敗不再沉默消失。
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon icon-teal">🔍</div>
+        <div class="feature-content">
+          <div class="feature-title">外部服務健康掃描</div>
+          <div class="feature-desc">Qdrant + SearXNG 的 healthz 端點納入每日掃描，結果進 health_score D9 維度。7 個 unit tests 通過。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-ember">🚨</div>
+        <div class="feature-content">
+          <div class="feature-title">Governor 啟動失敗訊號化</div>
+          <div class="feature-desc">Gateway 啟動時 Governor 失敗不再靜默——<strong>write_signal HIGH</strong>，系統能感知到自己的啟動問題。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-gold">📊</div>
+        <div class="feature-content">
+          <div class="feature-title">九維度全覆蓋達成</div>
+          <div class="feature-desc">D1（靜態分析）→ D9（基礎設施活性），代碼、接線、服務三個層次完整覆蓋。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="highlight-block">
+    <div class="h-eyebrow">里程碑</div>
+    <div class="h-title">健康分數從 83 跳到 98</div>
+    <div class="h-desc">
+      04/24 完成全系統耦合審計後，一次性清償累積的技術債，health_score 從 <strong>83 → 98</strong>。
+      九個維度全部 LOW 或 MEDIUM，無 HIGH 或 CRITICAL 警報。這是 MUSEON 有史以來最乾淨的狀態。
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- §3 Wiring Ghost Audit -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-new">新 Skill</span>
+      <span class="section-date">04/25</span>
+    </div>
+    <h2 class="section-title">Wiring Ghost Audit<br>系統接線幽靈審計</h2>
+    <p class="section-desc">
+      當你懷疑系統有接線問題卻找不到根源，這個 Skill 從五個角度同時掃描，給你一張完整的接線地圖。
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon icon-ember">👻</div>
+        <div class="feature-content">
+          <div class="feature-title">幽靈宣告偵測</div>
+          <div class="feature-desc">找出只在 YAML 宣告但從未實際執行的 event handler——接線圖上有，代碼裡沒有。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-gold">🔗</div>
+        <div class="feature-content">
+          <div class="feature-title">孤兒 Publish 偵測</div>
+          <div class="feature-desc">找出有發布但沒有任何消費者的事件。訊號送出去了，沒有人接——不再靜默消失。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-teal">🔄</div>
+        <div class="feature-content">
+          <div class="feature-title">跨進程邊界標記</div>
+          <div class="feature-desc">事件是在同一進程內流動，還是誤以為可以跨進程？<strong>IN-PROCESS ONLY</strong> 守門員自動標記。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §4 Event Bus 加固 -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-improved">核心加固</span>
+      <span class="section-date">04/25</span>
+    </div>
+    <h2 class="section-title">Event Bus<br>IN-PROCESS ONLY 護欄</h2>
+    <p class="section-desc">
+      MUSEON 的神經中樞第一次有了明確的邊界聲明——它只在進程內工作，不是跨進程的訊息佇列。
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon icon-slate">🛡️</div>
+        <div class="feature-content">
+          <div class="feature-title">IN-PROCESS ONLY 強制標記</div>
+          <div class="feature-desc">event_bus.py 和五虎將 daemon 全部標記 IN-PROCESS ONLY，防止未來的 daemon 雄心蔓延到跨進程幻想。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-ember">⚠️</div>
+        <div class="feature-content">
+          <div class="feature-title">孤兒 Publish WARN 機制</div>
+          <div class="feature-desc">送出事件但沒有消費者時，系統自動 WARN——不是靜默失敗，是有感知的失敗。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-gold">📋</div>
+        <div class="feature-content">
+          <div class="feature-title">event_intent.yaml 正規化</div>
+          <div class="feature-desc">UNUSED 標注從代碼註解遷移到 event_intent.yaml 統一管理。單一事實來源，不靠人記。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §5 Hermes + 自律進化 -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-improved">進化引擎</span>
+      <span class="section-date">04/20–04/25</span>
+    </div>
+    <h2 class="section-title">Hermes 修復<br>自律進化完整激活</h2>
+    <p class="section-desc">
+      跨進程 event bus 斷線修復後，Hermes 的 file-based notes watcher 重新接通，自動 Skill 鍛造恢復正常。
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon icon-teal">🔧</div>
+        <div class="feature-content">
+          <div class="feature-title">File-based Notes Watcher 修復</div>
+          <div class="feature-desc">Hermes 不再依賴跨進程 event bus——改為檔案系統 watcher，徹底解決跨進程通訊的幻想設計。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-ember">🧬</div>
+        <div class="feature-content">
+          <div class="feature-title">LLM DSE Runner 上線</div>
+          <div class="feature-desc">取代 CPU rule-based 的洞見提煉。11 個盲區叢集，真實 DSE 輸出，不再靠關鍵字匹配假裝深度分析。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-gold">⚡</div>
+        <div class="feature-content">
+          <div class="feature-title">auto_propose dead flag 清除</div>
+          <div class="feature-desc">7 次寫入、0 次讀取的死旗標正式移除。系統不再假裝有一個實際不存在的功能開關。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-slate">🎯</div>
+        <div class="feature-content">
+          <div class="feature-title">Zeal 決策模型三處共用</div>
+          <div class="feature-desc">zeal_decision_model 從零散記憶整合為可被 Claude Code、MUSEON Bot、nightly 三端呼叫的共用模型。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §6 Pseudo-RDT + 人際系統 -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-new">工作流</span>
+      <span class="section-date">04/24</span>
+    </div>
+    <h2 class="section-title">Pseudo-RDT<br>Zeal 軍師工作流落地</h2>
+    <p class="section-desc">
+      Zeal 每天早上的決策流程第一次有了系統支撐——七個軍師角色各自從不同角度提供即時判斷。
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon icon-ember">🗺️</div>
+        <div class="feature-content">
+          <div class="feature-title">α+β 雙階段 MVP 施工完成</div>
+          <div class="feature-desc">α：晨間戰情盤點自動觸發。β：Zeal 決策推送到 Telegram，7 個軍師角色各自從不同角度提供判斷。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-teal">🏛️</div>
+        <div class="feature-content">
+          <div class="feature-title">Envoy Seven 星座上線</div>
+          <div class="feature-desc">七個使節角色的關係圖和雷達系統接線完成。Federation 成員間的動態追蹤有了基礎設施。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-gold">🪞</div>
+        <div class="feature-content">
+          <div class="feature-title">Mirror-First L3 接線</div>
+          <div class="feature-desc">使用者追蹤系統改為「先觀察再分析」——不再在第一次接觸時就貼標籤，C3 scanner 守門。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §7 修復 & 基礎設施 -->
+  <section class="section">
+    <div class="section-eyebrow">
+      <span class="section-tag tag-fixed">修復 & 清債</span>
+      <span class="section-date">04/15–04/25</span>
+    </div>
+    <h2 class="section-title">持續清債<br>27 個已知問題修復</h2>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon icon-teal">✅</div>
+        <div class="feature-content">
+          <div class="feature-title">validate_connections Rule 14 新增</div>
+          <div class="feature-desc">Artifact-family 目錄必須在接線圖中登記。讓「接了但沒登記」的幽靈路徑無所遁形。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-teal">🔬</div>
+        <div class="feature-content">
+          <div class="feature-title">D2/D3 診斷精準度提升</div>
+          <div class="feature-desc">D2 basename 匹配收緊 + 動態目錄消費者驗證。D3 event_intent.yaml registry 加 NOTIFICATION_SUFFIXES 優雅過期。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-gold">🧹</div>
+        <div class="feature-content">
+          <div class="feature-title">強制 auto-commit daemon</div>
+          <div class="feature-desc">5572 個 daemon 狀態檔案入庫。federation_hexagram 補齊，.gitignore 擴充，確保不漏提交。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-slate">📐</div>
+        <div class="feature-content">
+          <div class="feature-title">五張藍圖同步至 v2.42</div>
+          <div class="feature-desc">每次 Phase 迭代同步神經圖、水電圖、接頭圖、爆炸圖、郵路圖。藍圖版本從 v2.36 演進到 v2.42。</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon icon-ember">🩺</div>
+        <div class="feature-content">
+          <div class="feature-title">CrystalPollutionScanner 第三層防禦</div>
+          <div class="feature-desc">結晶污染（假陽性洞見寫入 KnowledgeLattice）有了週期 audit 守門。品質管控從人工審視變成自動掃描。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL HIGHLIGHT -->
+  <div class="highlight-block">
+    <div class="h-eyebrow">下一個十天</div>
+    <div class="h-title">Phase 5.4–5.7 與 n8n 執行層探索</div>
+    <div class="h-desc">
+      Phase 5.4 Generative 血脈（Import Linter → Guard.import_contracts）、Phase 5.3.1 接進 nightly 自動執行，
+      以及本次對話探索的 <strong>MUSEON × n8n 執行層架構</strong>——讓 MUSEON 從「思考者」延伸到「能派任務給執行引擎的指揮者」。
+      Hermes 將在真實客戶對話累積後，自動鍛造「重複勞動偵測 Skill」，完成從雙盲診斷到自動化建議的完整閉環。
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════ FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">MUSEON</div>
+  <p class="footer-note">Dragon Hill Intelligent Consultant LTC, Co. &nbsp;·&nbsp; 2026 年 4 月版本日誌</p>
+</footer>
+
+</body>
+</html>
