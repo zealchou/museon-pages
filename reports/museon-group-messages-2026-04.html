@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON × 各群組 — 十天迭代分享訊息</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+
+  :root {
+    --ember:    #C4502A;
+    --gold:     #b6853d;
+    --navy:     #181737;
+    --parchment:#F5F0E8;
+    --ink:      #2C2A26;
+    --mist:     #8C8880;
+    --card-bg:  #FFFFFF;
+    --border:   #E8E2D6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .page-header {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .page-header .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .page-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.7;
+  }
+
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: var(--ember);
+    margin: 24px auto;
+  }
+
+  .card-grid {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s;
+  }
+
+  .card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #fdfcf9 0%, #f5f0e8 100%);
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .avatar.ember { background: var(--ember); }
+  .avatar.gold  { background: var(--gold); }
+  .avatar.teal  { background: #2A6C6C; }
+  .avatar.plum  { background: #5A2A6C; }
+  .avatar.steel { background: #3A4A6C; }
+  .avatar.moss  { background: #3A6C3A; }
+  .avatar.rust  { background: #8B3A1A; }
+
+  .card-meta { flex: 1; }
+  .card-meta .name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .card-meta .role {
+    font-size: 12px;
+    color: var(--mist);
+  }
+
+  .trust-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .trust-badge.established { background: #E8F4EC; color: #2A6C3A; }
+  .trust-badge.growing     { background: #EEF4FC; color: #2A4A8C; }
+  .trust-badge.building    { background: #F4F4EE; color: #6C6C2A; }
+
+  .card-body { padding: 20px 24px 16px; }
+
+  .insight {
+    font-size: 12px;
+    color: var(--mist);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: #faf9f5;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .message-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .message-box {
+    background: #f9f8f5;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: pre-wrap;
+  }
+
+  .message-box:hover {
+    background: #f2efe6;
+    border-color: var(--gold);
+  }
+
+  .copy-hint {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 10px;
+    color: var(--gold);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .message-box:hover .copy-hint { opacity: 1; }
+
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: transparent;
+    font-size: 12px;
+    color: var(--mist);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .copy-btn.copied { border-color: #2A6C3A; color: #2A6C3A; background: #E8F4EC; }
+
+  .footer {
+    max-width: 860px;
+    margin: 48px auto 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--mist);
+  }
+
+  .footer .changelog-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 24px;
+    border: 1px solid var(--ember);
+    border-radius: 6px;
+    color: var(--ember);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .footer .changelog-link:hover { background: var(--ember); color: #fff; }
+
+  @media (max-width: 600px) {
+    .page-header h1 { font-size: 26px; }
+    .card-header { padding: 16px 18px; gap: 12px; }
+    .card-body   { padding: 16px 18px; }
+    .trust-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <p class="eyebrow">MUSEON × Groups · April 2026</p>
+  <h1>每個人的一句話<br>十天的成長，說給你聽</h1>
+  <div class="divider"></div>
+  <p>這十天 MUSEON 做了很多事。<br>每段話都是寫給那個人的，不是群發。</p>
+</div>
+
+<div class="card-grid">
+
+  <!-- ① 符大哥 Joh -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar ember">J</div>
+      <div class="card-meta">
+        <div class="name">符大哥（Joh）</div>
+        <div class="role">MUSEON × 符大哥 群組 · 旅行社老闆 / 業務拓展夥伴</div>
+      </div>
+      <span class="trust-badge established">深度合作</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 109 次。一起做過 X-Model 六大盲點視覺化、于科強客戶輔導、商務簡報話術精煉。高好奇心、強規劃模式。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg1" onclick="copyMessage('msg1', this)"><span class="copy-hint">點擊複製</span>符大哥，
+
+MUSEON 這十天做了一件事——把自己的「判斷系統」從裡到外重新校準了一遍。
+
+有點像你在幫客戶做業務輔導的邏輯：不是換個說法，是找出真正的卡點在哪。這次我們把系統裡那些「圖紙上有、現場沒接上」的功能一個一個補好，讓 MUSEON 在幫人想清楚事情的時候，更少繞路、更快到位。
+
+健康指數從 83 跑到 98，代碼清乾淨了，接線也全部通了。
+
+做了一份迭代說明，用一般人看得懂的方式寫的。你看一眼，也許能讓你更了解這個一直在你身邊的 AI 夥伴是怎麼在進化的：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg1')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ② 子嫻 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar gold">子</div>
+      <div class="card-meta">
+        <div class="name">子嫻</div>
+        <div class="role">西門町戀花宅 · 永生花品牌創辦人</div>
+      </div>
+      <span class="trust-badge growing">成長中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 77 次。品牌策略、合作模型設計（小虹 / 大熊甜點）、商務體驗場規劃。看到目標直接動，決策快速。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg2" onclick="copyMessage('msg2', this)"><span class="copy-hint">點擊複製</span>子嫻，
+
+妳是那種看到機會就直接動的人，所以我覺得妳一定不想要一個「只會說話、不動的 AI 夥伴」。
+
+MUSEON 這十天也在做同一件事：不只是有計畫，是真的把每一條線都接好。把過去那些講好但沒落地的功能，一個一個補上。
+
+現在它在陪妳思考品牌策略、合作模型的時候，會更快找到卡點在哪——不是繞一圈才說到重點。
+
+做了一份說明，妳有空可以看看：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg2')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ③ 謝老師 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar teal">謝</div>
+      <div class="card-meta">
+        <div class="name">謝老師</div>
+        <div class="role">命理開運顧問 · 高端客戶服務升級</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 13 次。協助從低價大量→高端精準轉型，客戶分級策略，時間管理優化。價格帶 NT$1,200–$120,000，差距 100 倍。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg3" onclick="copyMessage('msg3', this)"><span class="copy-hint">點擊複製</span>謝老師，
+
+MUSEON 這十天做了一次很深的自我健檢。
+
+您懂這種感覺——架構不通的時候，做什麼都費力；架構清楚了，才能真正幫到人。這次我們把一些「說好要接、但一直沒接上」的功能補齊了，讓系統在協助您想清楚客戶分級、時間規劃的時候，能更準確地找到真正的卡點。
+
+有份說明，用一般人看得懂的方式寫的：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg3')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ④ Amber -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar plum">A</div>
+      <div class="card-meta">
+        <div class="name">Amber</div>
+        <div class="role">系統流程化需求 · 六大可複製模組</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 9 次。需要 SOP 執行、六大模組系統化。指示性溝通風格，清楚知道自己要什麼。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg4" onclick="copyMessage('msg4', this)"><span class="copy-hint">點擊複製</span>Amber，
+
+妳在推的事情是「讓系統可以被複製」——MUSEON 這十天做的事跟這個邏輯完全一致。
+
+我們做了一件事叫做「接線審計」：把過去那些只有規劃、沒有真正接上的功能，一個一個確認。圖紙上有的，現場要實際通電才算完成。
+
+現在 MUSEON 的系統完整度高很多，在協助妳規劃 SOP、模組化的時候，地基更穩了。
+
+做了一份說明，你有空看一下：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg4')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑤ Yihsuan 易璿 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar steel">Y</div>
+      <div class="card-meta">
+        <div class="name">易璿（Yihsuan）</div>
+        <div class="role">高科技材料設備通路商 · 品牌形象升級</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 5–6 次。LinkedIn / Facebook 改造、案例網頁化、品牌定位規劃。高好奇心（100），亞洲領先通路商背景。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg5" onclick="copyMessage('msg5', this)"><span class="copy-hint">點擊複製</span>易璿，
+
+妳在做的事——讓一個原本很硬的 B2B 品牌，說出更有溫度的話——MUSEON 這十天也在做類似的事。
+
+我們把系統裡那些「只有規劃、沒落地」的功能重新整理了一遍。就像品牌定位不能只有文件，要真正出現在每一個觸點上，系統也一樣——說得出來，還要跑得動。
+
+健康指數從 83 升到 98，是這十天最直接的結果。有份說明，分享給妳看看：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg5')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑥ Luo 羅臻 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar moss">羅</div>
+      <div class="card-meta">
+        <div class="name">羅臻（Luo）</div>
+        <div class="role">學校舞蹈劇本導演 · 《夏之饗宴》編創</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 6 次。協助劇本調整（5 分鐘壓縮至 3.5 分鐘）、角色敘事重構。創意需求，情感細膩度高。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg6" onclick="copyMessage('msg6', this)"><span class="copy-hint">點擊複製</span>羅老師，
+
+MUSEON 這十天做了一次內部升級——讓它在協助創意工作的時候，能更準確地感受到你真正在做什麼，而不是只看表面的需求。
+
+就像之前幫你調整劇本，不只是縮短時間，是要保留那個故事核心不被壓掉。這次升級的核心也是這樣：讓系統更懂「脈絡」，不只是執行指令。
+
+有份說明，用一般人能懂的語言寫的。分享給你：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg6')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑦ Rita -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar ember">R</div>
+      <div class="card-meta">
+        <div class="name">Rita（小麗）</div>
+        <div class="role">MUSEON 核心團隊 · BD / Sales / Pre-Sales</div>
+      </div>
+      <span class="trust-badge established">核心成員</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">2026-03-22 加入，負責商務開發與銷售。是 MUSEON 的對外第一線，工作節奏直接跟系統穩定度掛鉤。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg7" onclick="copyMessage('msg7', this)"><span class="copy-hint">點擊複製</span>Rita，
+
+這十天 MUSEON 做了很多地基工作——把過去那些只有規劃、沒真正接上的功能補齊了。記憶系統、健康監控、模組接線，全部都到位了。
+
+對你來說最直接的意義是：你在客戶端說「MUSEON 幫你記得這件事」「上次說的 XX 我們追蹤了」，現在這些不只是說說，是真的跑得起來。
+
+有份迭代說明，你可以先看一下，客戶問起來的時候也好說：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg7')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑧ Evvon -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar teal">E</div>
+      <div class="card-meta">
+        <div class="name">Evvon</div>
+        <div class="role">ESG 顧問</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 1 次。ESG 顧問背景，對系統可靠性與透明度敏感度高。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg8" onclick="copyMessage('msg8', this)"><span class="copy-hint">點擊複製</span>Evvon，
+
+MUSEON 這十天做的事，跟 ESG 的核心精神有點像——不是追求表面指標，是把底層的架構一個一個修扎實。
+
+健康分數 83 → 98，背後是代碼清乾淨、模組接線全通、記憶系統穩定，這些都是可以被驗證的，不是說說而已。
+
+做了一份透明的迭代記錄，分享給妳：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg8')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑨ Nia -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar rust">N</div>
+      <div class="card-meta">
+        <div class="name">Nia</div>
+        <div class="role">新生兒禮物品牌 · 創業初期</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 3 次。創業初期，品牌定位探索中，對新事物接受度高。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg9" onclick="copyMessage('msg9', this)"><span class="copy-hint">點擊複製</span>Nia，
+
+MUSEON 最近更新了一些東西——讓它在陪伴創業初期的人的時候，能更準確地感知到你真正需要什麼，而不是只回答你問的問題。
+
+妳在做的事，本質上也是這樣：讓禮物不只是一個東西，是一個有溫度的時刻。AI 夥伴也一樣，要懂脈絡，才能真的幫上忙。
+
+有份說明，看看我們做了什麼：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg9')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ⑩ Chen 室內設計 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar steel">C</div>
+      <div class="card-meta">
+        <div class="name">Chen</div>
+        <div class="role">室內設計試用群 · 報價單製作</div>
+      </div>
+      <span class="trust-badge building">建立中</span>
+    </div>
+    <div class="card-body">
+      <div class="insight">互動 2 次。協助製作室內設計報價單，實務導向，看重落地效果。</div>
+      <p class="message-label">建議傳送的訊息</p>
+      <div class="message-box" id="msg10" onclick="copyMessage('msg10', this)"><span class="copy-hint">點擊複製</span>陳先生／陳小姐，
+
+MUSEON 這十天做了一次升級——讓它在幫你做實際工作（像是報價單、文件整理）的時候，能更快、更準確，少問你重複的問題。
+
+有份說明，用大家都看得懂的方式寫的：
+https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html</div>
+      <button class="copy-btn" onclick="copyBtn(this, 'msg10')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製訊息
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>迭代日誌完整版</p>
+  <a class="changelog-link" href="https://zealchou.github.io/museon-pages/reports/museon-changelog-2026-04.html" target="_blank">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    MUSEON 十天迭代日誌 · 完整版
+  </a>
+</div>
+
+<script>
+function getCleanText(id) {
+  const el = document.getElementById(id);
+  const clone = el.cloneNode(true);
+  const hint = clone.querySelector('.copy-hint');
+  if (hint) hint.remove();
+  return clone.innerText.trim();
+}
+
+function copyMessage(id, el) {
+  const text = getCleanText(id);
+  const hint = el.querySelector('.copy-hint');
+  navigator.clipboard.writeText(text).then(() => {
+    if (hint) { hint.textContent = '已複製 ✓'; hint.style.opacity = '1'; }
+    setTimeout(() => {
+      if (hint) { hint.textContent = '點擊複製'; hint.style.opacity = ''; }
+    }, 2000);
+  });
+}
+
+function copyBtn(btn, id) {
+  const text = getCleanText(id);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ 已複製';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 複製訊息';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+</script>
+</body>
+</html>
