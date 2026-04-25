@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>馮士維・人生策略報告 · MUSEON</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:          #C4502A;
+      --ember-light:    #E0714D;
+      --ember-dark:     #9A3A1C;
+      --teal:           #2A7A6E;
+      --teal-light:     #3A9A8C;
+      --gold:           #B8923A;
+      --gold-light:     #D4AA52;
+      --deep-ink:       #0E0E16;
+      --surface:        #16161F;
+      --raised:         #1E1E2A;
+      --border-dark:    #2A2A38;
+      --border-mid:     #38384A;
+      --text-primary:   #F7F5F0;
+      --text-secondary: #C8C8D8;
+      --text-muted:     #9898A8;
+      --text-faint:     #5A5A70;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--deep-ink);
+      color: var(--text-primary);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    @media (max-width: 768px) { .page-wrap { padding: 0 24px; } }
+    @media (max-width: 480px) { .page-wrap { padding: 0 16px; } }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 40px;
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -180px; right: -180px;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(196,80,42,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(42,122,110,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ember);
+      background: rgba(196,80,42,0.1);
+      border: 1px solid rgba(196,80,42,0.22);
+      border-radius: 100px;
+      padding: 5px 14px;
+      display: inline-block;
+      margin-bottom: 40px;
+      animation: fadeUp 500ms ease-out both;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 80px);
+      font-weight: 600;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      animation: fadeUp 500ms ease-out 80ms both;
+    }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 32px;
+      letter-spacing: 0.02em;
+      animation: fadeUp 500ms ease-out 160ms both;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.85;
+      animation: fadeUp 500ms ease-out 240ms both;
+    }
+
+    .hero-meta {
+      margin-top: 48px;
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      animation: fadeUp 500ms ease-out 320ms both;
+    }
+
+    .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+
+    .hero-meta-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .hero-meta-value { font-size: 14px; color: var(--text-secondary); }
+
+    .hero-bar {
+      width: 56px; height: 2px;
+      background: linear-gradient(90deg, var(--ember), transparent);
+      margin-top: 48px;
+      animation: fadeUp 500ms ease-out 320ms both;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border-dark);
+    }
+
+    .sec-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 14px;
+    }
+
+    .sec-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .sec-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    /* ── ENERGY GRID ── */
+    .energy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .ecard {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 200ms ease, border-color 200ms ease;
+    }
+
+    .ecard:hover { transform: translateY(-2px); border-color: var(--border-mid); }
+
+    .ecard::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .ec-ember::before  { background: linear-gradient(90deg, var(--ember), var(--ember-light)); }
+    .ec-gold::before   { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .ec-teal::before   { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+    .ec-violet::before { background: linear-gradient(90deg, #7A5A9A, #9A7ABB); }
+    .ec-silver::before { background: linear-gradient(90deg, #5A6A7A, #8AAABB); }
+
+    .ecard-sys {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .ec-ember  .ecard-sys { color: var(--ember); }
+    .ec-gold   .ecard-sys { color: var(--gold); }
+    .ec-teal   .ecard-sys { color: var(--teal-light); }
+    .ec-violet .ecard-sys { color: #9A7ABB; }
+    .ec-silver .ecard-sys { color: #8AAABB; }
+
+    .ecard-core {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .ecard-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+    .ecard-tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+
+    .t-ember  { background: rgba(196,80,42,0.15);   color: #E0714D; }
+    .t-gold   { background: rgba(184,146,58,0.15);  color: var(--gold-light); }
+    .t-teal   { background: rgba(42,122,110,0.15);  color: var(--teal-light); }
+    .t-violet { background: rgba(122,90,154,0.15);  color: #B898D8; }
+    .t-silver { background: rgba(90,106,122,0.15);  color: #AABBC8; }
+    .t-dim    { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+    /* ── SIGNAL BOXES ── */
+    .signal-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .signal-item {
+      padding: 18px 16px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .signal-key {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .signal-val { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── INSIGHT ── */
+    .insight-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .iitem {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 20px;
+      align-items: start;
+      transition: transform 200ms ease;
+    }
+
+    .iitem:hover { transform: translateY(-2px); }
+
+    .iicon {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .ii-ember  { background: rgba(196,80,42,0.12); }
+    .ii-gold   { background: rgba(184,146,58,0.12); }
+    .ii-teal   { background: rgba(42,122,110,0.12); }
+
+    .i-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 6px;
+    }
+
+    .i-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .i-body { font-size: 14px; color: var(--text-secondary); line-height: 1.85; }
+
+    .i-proof {
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border-left: 2px solid var(--border-mid);
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 32px; }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--ember) 0%, var(--gold) 50%, var(--teal) 100%);
+      opacity: 0.35;
+    }
+
+    .tl-item { position: relative; margin-bottom: 40px; }
+    .tl-item:last-child { margin-bottom: 0; }
+
+    .tl-dot {
+      position: absolute;
+      left: -29px; top: 6px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border-dark);
+      background: var(--deep-ink);
+    }
+
+    .tl-dot.past   { background: var(--surface); border-color: var(--border-mid); }
+    .tl-dot.now    { background: var(--ember); border-color: var(--ember); box-shadow: 0 0 14px rgba(196,80,42,0.55); }
+    .tl-dot.future { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 12px rgba(42,122,110,0.4); }
+
+    .tl-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-faint);
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .tl-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .tl-title.now { color: var(--ember); }
+    .tl-title.future { color: var(--teal-light); }
+
+    .tl-body { font-size: 14px; color: var(--text-secondary); line-height: 1.85; }
+
+    .tl-callout {
+      margin-top: 14px;
+      padding: 14px 18px;
+      background: rgba(196,80,42,0.06);
+      border: 1px solid rgba(196,80,42,0.2);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--ember-light);
+      line-height: 1.7;
+    }
+
+    /* ── STRATEGY ── */
+    .sblock {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: transform 200ms ease;
+    }
+
+    .sblock:hover { transform: translateY(-2px); }
+
+    .sblock-head {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .s-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1;
+      width: 52px;
+      flex-shrink: 0;
+    }
+
+    .n1 { color: var(--ember); }
+    .n2 { color: var(--gold); }
+    .n3 { color: var(--teal-light); }
+
+    .s-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .sblock-body { padding: 22px 28px; }
+
+    .spoint {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .spoint:last-child { margin-bottom: 0; }
+
+    .spoint::before {
+      content: '—';
+      color: var(--text-faint);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .s-note {
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.75;
+      border-left: 3px solid var(--border-mid);
+    }
+
+    /* ── GATES ── */
+    .gate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .gcard {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 26px;
+      transition: transform 200ms ease, border-color 200ms ease;
+    }
+
+    .gcard:hover { transform: translateY(-2px); border-color: var(--border-mid); }
+
+    .g-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 14px;
+    }
+
+    .g-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .g-icon { font-size: 24px; line-height: 1; }
+
+    .g-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .g-body { font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 14px; }
+
+    .g-tactic { font-size: 13px; color: var(--text-muted); line-height: 1.75; }
+    .g-tactic strong { color: var(--text-secondary); }
+
+    /* ── ACTION ── */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+    }
+
+    .acard {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 22px;
+      transition: transform 200ms ease;
+    }
+
+    .acard:hover { transform: translateY(-2px); }
+
+    .a-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .al-audit  { color: var(--ember); }
+    .al-deepen { color: var(--gold); }
+    .al-output { color: var(--teal-light); }
+    .al-wait   { color: #9A7ABB; }
+
+    .a-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .a-body { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── CLOSING ── */
+    .closing {
+      padding: 96px 0 80px;
+      text-align: center;
+    }
+
+    .c-orn {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+
+    .c-line {
+      width: 80px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-mid));
+    }
+
+    .c-line:last-child {
+      background: linear-gradient(90deg, var(--border-mid), transparent);
+    }
+
+    .c-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ember); }
+
+    .c-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+
+    .c-quote em { color: var(--gold); font-style: normal; }
+
+    .c-src {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border-dark);
+      padding: 32px 40px;
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .f-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .f-brand span { color: var(--ember); }
+
+    .f-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+      text-align: right;
+    }
+
+    /* ── UTILITIES ── */
+    .hl-e { color: var(--ember-light); }
+    .hl-g { color: var(--gold-light); }
+    .hl-t { color: var(--teal-light); }
+    .hl-v { color: #B898D8; }
+
+    .kw {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border-radius: 100px;
+      padding: 2px 9px;
+    }
+
+    .kw-e { background: rgba(196,80,42,0.15); color: #E0714D; }
+    .kw-g { background: rgba(184,146,58,0.15); color: var(--gold-light); }
+    .kw-t { background: rgba(42,122,110,0.15); color: var(--teal-light); }
+
+    .note-box {
+      padding: 22px 26px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    .note-box.ember-tint {
+      background: rgba(196,80,42,0.04);
+      border-color: rgba(196,80,42,0.18);
+    }
+
+    .note-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 10px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 520px) {
+      .iitem { grid-template-columns: 1fr; }
+      .iicon { display: none; }
+      .footer { flex-direction: column; text-align: center; }
+      .f-note { text-align: center; }
+      .hero { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════  HERO  ═══════════════════════ -->
+<div class="hero">
+  <div class="hero-badge">MUSEON · 五維整合分析 · 2026</div>
+  <h1 class="hero-name">馮士維</h1>
+  <p class="hero-subtitle">人生策略報告</p>
+  <p class="hero-desc">
+    五個古老系統，同時凝視同一個人。<br />
+    它們說的，是同一件事。
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">生成日期</span>
+      <span class="hero-meta-value">2026 · 04 · 25</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">分析維度</span>
+      <span class="hero-meta-value">八字 · 人類圖 · 馬雅曆 · MBTI · 血型</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">關鍵年份</span>
+      <span class="hero-meta-value">2026（38歲 · 4/6 第三階段元年）</span>
+    </div>
+  </div>
+  <div class="hero-bar"></div>
+</div>
+
+<!-- ═══════════════════════  CONTENT  ═══════════════════════ -->
+<div class="page-wrap">
+
+<!-- ─── SECTION 01：能量底圖 ─── -->
+<section class="section">
+  <p class="sec-num">Section 01</p>
+  <h2 class="sec-title">你的能量底圖</h2>
+  <p class="sec-sub">五個系統，一眼看懂你的核心密碼。</p>
+
+  <div class="energy-grid">
+
+    <div class="ecard ec-ember">
+      <p class="ecard-sys">八字命盤</p>
+      <p class="ecard-core">戊辰 · 乙卯 · 午時</p>
+      <p class="ecard-desc">
+        辰宮藏癸水——外穩內藏豐厚資源，蓄勢型。乙木韌性十足，不硬碰，找角度滲透。午時高能見度，表達欲強，天生想被看見。牡羊座開創力加上乙木韌性，更懂出手時機。
+      </p>
+      <div class="ecard-tags">
+        <span class="tag t-ember">蓄勢型土</span>
+        <span class="tag t-ember">韌性滲透</span>
+        <span class="tag t-ember">高能見度</span>
+        <span class="tag t-dim">開創</span>
+      </div>
+    </div>
+
+    <div class="ecard ec-gold">
+      <p class="ecard-sys">人類圖</p>
+      <p class="ecard-core">投射者 · 4/6 · 直覺型</p>
+      <p class="ecard-desc">
+        天生看見系統與他人天賦，非能量型。4線機會全從人脈與關係來；6線三階段，38歲正站在從屋頂走下來的轉折元年。等待被邀請，是你的策略——不是被動，是等待正確的邀請。
+      </p>
+      <div class="ecard-tags">
+        <span class="tag t-gold">看見系統</span>
+        <span class="tag t-gold">等待邀請</span>
+        <span class="tag t-gold">4/6 榜樣</span>
+        <span class="tag t-dim">二分人</span>
+      </div>
+    </div>
+
+    <div class="ecard ec-teal">
+      <p class="ecard-sys">馬雅曆</p>
+      <p class="ecard-core">KIN.18 · 超頻白鏡</p>
+      <p class="ecard-desc">
+        白鏡辨別真相、反映秩序，無限意識。超頻調性5讓你天生賦能他人，讓周圍人更好地發揮。白世界橋是你的引導——你是連接不同世界的翻譯者、橋樑。
+      </p>
+      <div class="ecard-tags">
+        <span class="tag t-teal">反映真相</span>
+        <span class="tag t-teal">賦能他人</span>
+        <span class="tag t-teal">橋接者</span>
+        <span class="tag t-dim">銀河白巫師</span>
+      </div>
+    </div>
+
+    <div class="ecard ec-violet">
+      <p class="ecard-sys">MBTI</p>
+      <p class="ecard-core">ENFJ · 催化型領袖</p>
+      <p class="ecard-desc">
+        天生領袖與老師，有使命感，善於激勵他人。你的力量在讓他人看見自己的潛力。你是協調者，不是衝鋒者——你的遠見洞察讓整個系統更好地運轉。
+      </p>
+      <div class="ecard-tags">
+        <span class="tag t-violet">使命感</span>
+        <span class="tag t-violet">激勵他人</span>
+        <span class="tag t-violet">遠見洞察</span>
+        <span class="tag t-dim">協調者</span>
+      </div>
+    </div>
+
+    <div class="ecard ec-silver">
+      <p class="ecard-sys">血型 A</p>
+      <p class="ecard-core">謹慎 · 計劃 · 執行嚴謹</p>
+      <p class="ecard-desc">
+        血型A的謹慎與責任感，搭配戊土的建基能力，讓你的執行嚴謹可靠。你不是鋒芒畢露型，而是讓別人安心在你建立的基礎上奔跑的那個人。
+      </p>
+      <div class="ecard-tags">
+        <span class="tag t-silver">嚴謹執行</span>
+        <span class="tag t-silver">責任感強</span>
+        <span class="tag t-silver">建立基礎</span>
+        <span class="tag t-dim">牡羊座</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="signal-row">
+    <div class="signal-item">
+      <p class="signal-key" style="color: var(--ember-light);">看見</p>
+      <p class="signal-val">你最核心的天賦<br/>不是執行，是洞見</p>
+    </div>
+    <div class="signal-item">
+      <p class="signal-key" style="color: var(--gold-light);">催化</p>
+      <p class="signal-val">你的能量是讓<br/>他人更好地發揮</p>
+    </div>
+    <div class="signal-item">
+      <p class="signal-key" style="color: var(--teal-light);">橋接</p>
+      <p class="signal-val">你是連結不同世界<br/>的翻譯者</p>
+    </div>
+    <div class="signal-item">
+      <p class="signal-key" style="color: #B898D8;">榜樣</p>
+      <p class="signal-val">2026年是你<br/>走出屋頂的元年</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 02：跨系統一致性 ─── -->
+<section class="section">
+  <p class="sec-num">Section 02</p>
+  <h2 class="sec-title">跨系統的一致性</h2>
+  <p class="sec-sub">所有系統都在說同一件事，只是語言不同。這是最重要的洞見。</p>
+
+  <div class="insight-list">
+
+    <div class="iitem">
+      <div class="iicon ii-ember">👁</div>
+      <div>
+        <p class="i-label">核心洞見 01</p>
+        <h3 class="i-heading">你的天賦是「看見」，不是「做」</h3>
+        <p class="i-body">
+          五個系統，沒有一個告訴你「衝就對了」。<span class="hl-g">投射者</span>天生看見系統；<span class="hl-t">白鏡</span>反映真相與秩序；<span class="hl-v">ENFJ</span>的遠見洞察讓他人看清自己；<span class="hl-e">乙木</span>的智慧是找角度而非硬碰。你最有價值的時刻，不是你在「做」的時候——是你在「看見」並說出來的時候。
+        </p>
+        <div class="i-proof">
+          <strong style="color: var(--text-secondary);">跨系統印證：</strong>
+          投射者（人類圖）· 白鏡 KIN.18（馬雅曆）· ENFJ 遠見（MBTI）· 乙木找角度（八字）
+        </div>
+      </div>
+    </div>
+
+    <div class="iitem">
+      <div class="iicon ii-gold">🌊</div>
+      <div>
+        <p class="i-label">核心洞見 02</p>
+        <h3 class="i-heading">你的力量從正確位置出現，不從主動推開始</h3>
+        <p class="i-body">
+          <span class="hl-g">等待被邀請</span>是投射者的策略，不是被動——是保存能量給正確的機會。辰宮的癸水是流向你的資源，不是你追出去的。4線的機會全來自關係，不是冷接觸。你不需要更努力推，你需要讓對的人找到你。
+        </p>
+        <div class="i-proof">
+          <strong style="color: var(--text-secondary);">跨系統印證：</strong>
+          等待邀請（人類圖）· 辰宮藏癸流向你（八字）· 4線機會來自關係（人類圖）· 超頻賦能他人（馬雅曆）
+        </div>
+      </div>
+    </div>
+
+    <div class="iitem">
+      <div class="iicon ii-teal">⚡</div>
+      <div>
+        <p class="i-label">核心洞見 03</p>
+        <h3 class="i-heading">你的能量是催化型，不是衝鋒型</h3>
+        <p class="i-body">
+          <span class="hl-t">超頻調性5</span>讓你天生擅長讓周圍的人更好發揮。ENFJ不是自己衝鋒，是讓整個團隊開竅。戊土的角色是建基地，讓別人在上面跑。你是乘法器，不是加法器——你的存在讓別人的能力放大，這才是你最貴的地方。
+        </p>
+        <div class="i-proof">
+          <strong style="color: var(--text-secondary);">跨系統印證：</strong>
+          超頻調性5（馬雅曆）· ENFJ 讓他人發揮（MBTI）· 戊土建基地（八字）· 投射者非能量型（人類圖）
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── SECTION 03：38歲轉型 ─── -->
+<section class="section">
+  <p class="sec-num">Section 03</p>
+  <h2 class="sec-title">關鍵時間節點：38歲轉型</h2>
+  <p class="sec-sub">人類圖 4/6 的三個人生階段，你正站在最重要的分水嶺。</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot past"></div>
+      <p class="tl-meta">第一階段 · 0 — 28 歲</p>
+      <h3 class="tl-title">試錯期</h3>
+      <p class="tl-body">
+        活出 6 線的「試錯」本質。這段時間是積累原料——所有的跌倒、嘗試、失敗，不是浪費，是在搜集材料。它們是你後來智慧的源頭，每一次試錯都在雕刻你後來的洞見。
+      </p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot past"></div>
+      <p class="tl-meta">第二階段 · 28 — 38 歲</p>
+      <h3 class="tl-title">上屋頂觀察期</h3>
+      <p class="tl-body">
+        撤離人群，從高處看全局。沉澱、整合、看清自己的模式。這不是「沒有進展」的十年，是在等待清晰。你在屋頂上看清楚了什麼是重要的、什麼不重要——這十年的觀察，是第三階段的燃料。
+      </p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot now"></div>
+      <p class="tl-meta">第三階段 · 38 歲後 · 2026 起</p>
+      <h3 class="tl-title now">從屋頂走下來，成為活生生的榜樣</h3>
+      <p class="tl-body">
+        不是變成不同的人——是把你過去所有的積累，用真實生命示範出來。你不是在「教理論」，你是用你走過的路本身，讓別人看見可能性。6 線的榜樣，不是完美，而是真實。
+      </p>
+      <div class="tl-callout">
+        ✦ 2026 年是馮士維的轉型元年。這不是「終點」，是你開始展示自己道路的起點。屋頂上積累了十年的觀察，現在可以走下來了。
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot future"></div>
+      <p class="tl-meta">展望 · 38 歲後</p>
+      <h3 class="tl-title future">人生使命：服務（17/18 | 58/52）</h3>
+      <p class="tl-body">
+        透過組織與修正帶來活力與服務。你的使命不是成就個人，而是透過你的看見能力，幫助更大的系統運轉得更好。6 線榜樣的最終狀態：真實活出的道路，比任何理論都更有說服力。
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── SECTION 04：人生策略三條主線 ─── -->
+<section class="section">
+  <p class="sec-num">Section 04</p>
+  <h2 class="sec-title">人生策略三條主線</h2>
+  <p class="sec-sub">從你的能量底圖直接推導出來的行動架構。</p>
+
+  <div class="sblock">
+    <div class="sblock-head">
+      <span class="s-num n1">I</span>
+      <h3 class="s-title">從「執行型」轉向「系統設計師＋催化者」</h3>
+    </div>
+    <div class="sblock-body">
+      <div class="spoint">你最貴的資產不是時間，是你的「<span class="hl-e">看見能力</span>」。你能在別人還看不清之前，看見系統的問題和可能性——這是投射者和白鏡給你的禮物，它的定價遠高於你目前的計費方式。</div>
+      <div class="spoint">建立讓別人在你的系統上跑的架構。戊土的角色從來不是自己衝鋒，而是建造地基，讓其他人能在上面跑得更快——這才是你真正的槓桿點。</div>
+      <div class="spoint">收費邏輯需要重新定位：<span class="hl-g">顧問費 &gt; 執行費</span>，設計費 &gt; 工時費。你的「規劃能力」還沒被定價到位，這是你目前最大的財務漏洞。</div>
+      <div class="spoint">預估規劃費爭議的本質：不是你開價太高，而是對方還沒意識到「規劃本身」的價值。讓這個價值可見，不是降價。</div>
+      <div class="s-note">問自己：今天做的事，有多少是「我做」？有多少是「我設計讓別人做」？後者的比例越高，你越靠近自己真正的天賦位置。</div>
+    </div>
+  </div>
+
+  <div class="sblock">
+    <div class="sblock-head">
+      <span class="s-num n2">II</span>
+      <h3 class="s-title">深度關係戰略，不廣撒</h3>
+    </div>
+    <div class="sblock-body">
+      <div class="spoint"><span class="hl-g">4 線的人脈是你主要的機會來源</span>——這不是建議，這是你天生設定的能量路徑。違背它，你會花費大量能量在低回報的地方，然後感到苦澀。</div>
+      <div class="spoint">機會不是靠主動推廣得來，是靠「在正確的人面前展示你的看見能力」。你的曝光方式不是廣告，是深度互動與真實輸出。</div>
+      <div class="spoint">精準耕耘 <span class="hl-e">3–5 個關鍵關係</span>的回報，遠超廣撒 100 張名片。能量有限，投注要精準——這是投射者的效率路徑。</div>
+      <div class="spoint">正確邀請的標誌：<span class="hl-t">對方主動找你</span>，而不是你去追。當你感到需要用力推才能前進，那通常不是正確的邀請，是苦澀的信號。</div>
+      <div class="s-note">問自己：現在讓我感覺最輕鬆、最流動的 3 個關係是誰？這些人就是值得深度投資的人。</div>
+    </div>
+  </div>
+
+  <div class="sblock">
+    <div class="sblock-head">
+      <span class="s-num n3">III</span>
+      <h3 class="s-title">榜樣建立，輸出你的系統觀</h3>
+    </div>
+    <div class="sblock-body">
+      <div class="spoint">38 歲後的使命是把過去的試錯沉澱成「<span class="hl-t">可傳授的智慧</span>」。你不是在做更多，是讓更多人看見你的方式——從量的積累轉向質的示範。</div>
+      <div class="spoint">白鏡的使命：把真相反映給別人看，讓他們看清自己的現實。你不是在教課，你是一面鏡子——你的洞見幫助他人看清自己看不清的地方。</div>
+      <div class="spoint">可能的形式：課程、顧問品牌、系統設計方法論。形式可以討論，但核心不變：<span class="hl-g">把你看見的東西，用可傳遞的方式輸出出去</span>。</div>
+      <div class="spoint">不需要等到「準備好了」才開始輸出。你現在就已經夠了——你缺的不是更多知識，而是開始說出你所看見的勇氣。</div>
+      <div class="s-note">問自己：如果要把我過去 10 年看見的系統觀，整理成一套可以傳授的東西，它的核心洞見是什麼？</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 05：四個突破入口 ─── -->
+<section class="section">
+  <p class="sec-num">Section 05</p>
+  <h2 class="sec-title">突破框架的四個入口</h2>
+  <p class="sec-sub">當你卡住的時候，這四個入口是你的出路。</p>
+
+  <div class="gate-grid">
+
+    <div class="gcard">
+      <p class="g-num">入口一</p>
+      <div class="g-head">
+        <span class="g-icon">🧭</span>
+        <h3 class="g-title">識別「苦澀感」，它是你的導航儀</h3>
+      </div>
+      <p class="g-body">
+        投射者的非自己主題是「苦澀」——當沒有被邀請、或在錯誤的地方消耗能量時出現。苦澀不是你失敗了，苦澀是你的身體在說「這裡不是你的地方」。
+      </p>
+      <div class="g-tactic">
+        <strong>正確應對：</strong>不是「更努力」，是撤退、停止消耗，等待正確的邀請出現。<br /><br />
+        <strong>錯誤應對：</strong>苦澀出現時繼續硬撐，消耗更多能量，進入惡性循環。
+      </div>
+    </div>
+
+    <div class="gcard">
+      <p class="g-num">入口二</p>
+      <div class="g-head">
+        <span class="g-icon">💎</span>
+        <h3 class="g-title">讓自己被看見，而非推銷自己</h3>
+      </div>
+      <p class="g-body">
+        投射者正確的曝光方式是展示你的 expertise，讓對的人看見你的看見能力，然後他們自然被吸引過來，主動邀請你。
+      </p>
+      <div class="g-tactic">
+        <strong>正確做法：</strong>深度輸出（洞見/分析/系統設計），讓對的人被你吸引。<br /><br />
+        <strong>錯誤做法：</strong>主動行銷、冷接觸、強推——這是生成器的策略，不是投射者的。
+      </div>
+    </div>
+
+    <div class="gcard">
+      <p class="g-num">入口三</p>
+      <div class="g-head">
+        <span class="g-icon">🌉</span>
+        <h3 class="g-title">找到你的「橋接者」</h3>
+      </div>
+      <p class="g-body">
+        二分人的特性：你有兩個分離的能量中心，需要外部的第三者或環境來橋接它們。單打獨鬥對你特別困難，不是因為能力不夠，而是你的設計本來就不是為了獨自運作。
+      </p>
+      <div class="g-tactic">
+        <strong>行動：</strong>找到一個能幫你連接不同場域的關鍵合作夥伴。這個人就是你的「白世界橋」——把你連接到你無法獨自到達的地方。
+      </div>
+    </div>
+
+    <div class="gcard">
+      <p class="g-num">入口四</p>
+      <div class="g-head">
+        <span class="g-icon">🌌</span>
+        <h3 class="g-title">把藍夜的夢想說出口</h3>
+      </div>
+      <p class="g-body">
+        你的隱藏推動是「藍夜」——深層夢想、豐盛、直覺的知曉。它是你最深的驅力，卻最少被表達。你習慣用理性外殼包住它，但它一直在那裡推動你。
+      </p>
+      <div class="g-tactic">
+        <strong>問自己：</strong>那個你從來沒敢說出口的最大夢想是什麼？如果條件全部成熟，你真正想創造的是什麼？把它說出來，是啟動它的第一步。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── SECTION 06：90天行動 ─── -->
+<section class="section">
+  <p class="sec-num">Section 06</p>
+  <h2 class="sec-title">你的行動指南</h2>
+  <p class="sec-sub">接下來 90 天，四個維度的具體行動。</p>
+
+  <div class="action-grid">
+
+    <div class="acard">
+      <p class="a-label al-audit">審計</p>
+      <h3 class="a-title">哪裡讓你苦澀？</h3>
+      <p class="a-body">
+        列出現在讓你感到苦澀、消耗、疲憊的事。這些是需要開始縮減或退出的地方。苦澀是信號，不是要你忍耐的東西。
+      </p>
+    </div>
+
+    <div class="acard">
+      <p class="a-label al-deepen">深化</p>
+      <h3 class="a-title">哪 3 個關係最重要？</h3>
+      <p class="a-body">
+        找出讓你感覺最流動、最自然的 3 個關係，在接下來 90 天內刻意投資它們。深度優先，不是廣度。
+      </p>
+    </div>
+
+    <div class="acard">
+      <p class="a-label al-output">輸出</p>
+      <h3 class="a-title">開始輸出你的系統觀</h3>
+      <p class="a-body">
+        用任何形式——文章、對話、分析報告——把你看見的東西開始對外輸出。不需要完美，需要開始。讓對的人看見你。
+      </p>
+    </div>
+
+    <div class="acard">
+      <p class="a-label al-wait">等待</p>
+      <h3 class="a-title">等待正確邀請</h3>
+      <p class="a-body">
+        下一個重要機會，不要追——等待正確的邀請。當你感到需要用力推，停下來。當機會從關係自然流過來，那才是你的能量路徑。
+      </p>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 24px;">
+    <div class="note-box ember-tint">
+      <p class="note-label">90 天後問自己</p>
+      <p>
+        苦澀感有沒有減少？是否至少有一個關鍵關係比 90 天前更深？是否至少有一份輸出讓對的人看見了你？是否有一個真正的邀請，是從關係自然流過來的？<br /><br />
+        <span style="font-size: 13px; color: var(--text-muted);">這四個問題的答案，比任何指標都更能告訴你，你是否走在自己真正的路上。</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CLOSING ─── -->
+<div class="closing">
+  <div class="c-orn">
+    <div class="c-line"></div>
+    <div class="c-dot"></div>
+    <div class="c-line"></div>
+  </div>
+  <p class="c-quote">
+    你不是一個需要更努力燃燒的人，<br />
+    你是一面<em>鏡子</em>——<br />
+    當你站在正確的位置，<br />
+    周圍的一切自然被你照亮。
+  </p>
+  <p class="c-src">馮士維 · 2026 · 五維整合分析</p>
+</div>
+
+</div><!-- /.page-wrap -->
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <div class="f-brand">MU<span>S</span>EON</div>
+  <div class="f-note">
+    五維整合分析 · 2026 · 04 · 25<br />
+    八字 · 人類圖 · 馬雅曆 · MBTI · 血型
+  </div>
+</footer>
+
+</body>
+</html>
