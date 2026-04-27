@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSA-BDD 商業模式健檢 × M-12 品牌定位報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+    --error: #C4402A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--deep-ink);
+    color: #fff;
+    padding: 80px 40px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 60% 40%, rgba(196,80,42,0.18) 0%, transparent 65%),
+                radial-gradient(ellipse at 20% 80%, rgba(42,122,110,0.1) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ember-light);
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.3);
+    border-radius: 100px; padding: 4px 14px;
+    display: inline-block; margin-bottom: 24px; position: relative;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5vw, 52px);
+    font-weight: 600; line-height: 1.15;
+    color: #fff; position: relative; margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--ember-light); font-style: italic; }
+  .hero-sub {
+    font-size: 15px; color: rgba(255,255,255,0.6);
+    max-width: 560px; margin: 0 auto 32px; position: relative;
+  }
+  .hero-meta {
+    display: flex; gap: 24px; justify-content: center;
+    flex-wrap: wrap; position: relative;
+  }
+  .hero-meta-item { text-align: center; }
+  .hero-meta-item .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); display: block; margin-bottom: 4px;
+  }
+  .hero-meta-item input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px; padding: 5px 12px;
+    font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.9);
+    outline: none; min-width: 110px;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    transition: border-color 0.2s;
+    text-align: center;
+  }
+  .hero-meta-item input:focus { border-color: var(--ember-light); }
+
+  /* LAYOUT */
+  .wrapper { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  .nav-tabs {
+    background: var(--snow);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(18,18,26,0.06);
+  }
+  .nav-tabs-inner {
+    max-width: 900px; margin: 0 auto;
+    display: flex; overflow-x: auto; gap: 0;
+    scrollbar-width: none;
+  }
+  .nav-tabs-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--slate); background: none; border: none;
+    padding: 16px 18px; cursor: pointer; white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: var(--ember); }
+  .tab-btn.active { color: var(--ember); border-bottom-color: var(--ember); }
+
+  /* SECTIONS */
+  .report-section { display: none; padding: 48px 0; animation: fadeUp 0.35s ease-out; }
+  .report-section.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEADER */
+  .section-header { margin-bottom: 36px; }
+  .section-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ember-dark);
+    background: rgba(196,80,42,0.08);
+    border-radius: 100px; padding: 3px 12px;
+    display: inline-block; margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px; font-weight: 600;
+    color: var(--ink); line-height: 1.2;
+  }
+  .section-desc { color: var(--slate); margin-top: 6px; font-size: 14px; }
+
+  /* CARD */
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(18,18,26,0.10); }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600;
+    color: var(--ink); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tag-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    color: var(--ember); background: rgba(196,80,42,0.08);
+    border-radius: 4px; padding: 2px 8px;
+  }
+
+  /* FIELDS */
+  .field-group { margin-bottom: 16px; }
+  .field-label {
+    font-size: 12px; font-weight: 600; color: var(--slate);
+    margin-bottom: 5px; display: block; letter-spacing: 0.02em;
+  }
+  .field-input {
+    width: 100%;
+    background: var(--parchment);
+    border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 10px 14px;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-size: 15px; color: var(--ink);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+  .field-input:focus {
+    border-color: var(--ember);
+    box-shadow: 0 0 0 3px rgba(196,80,42,0.1);
+  }
+  .field-input::placeholder { color: var(--mist); }
+  textarea.field-input { min-height: 76px; }
+
+  /* TRANSFORMATION */
+  .transform-grid {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 12px; align-items: start; margin: 14px 0;
+  }
+  .transform-card {
+    background: var(--parchment); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 14px;
+  }
+  .transform-card.before { border-left: 3px solid var(--warning); }
+  .transform-card.after { border-left: 3px solid var(--success); }
+  .tc-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .transform-card.before .tc-label { color: var(--warning); }
+  .transform-card.after .tc-label { color: var(--success); }
+  .transform-arrow {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: var(--ember); padding-top: 38px;
+  }
+
+  /* FORCES TABLE */
+  .forces-table { width: 100%; border-collapse: collapse; }
+  .forces-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--slate); text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border);
+    background: var(--parchment);
+  }
+  .forces-table td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    vertical-align: middle; font-size: 14px;
+  }
+  .forces-table tr:hover td { background: rgba(196,80,42,0.02); }
+  .force-name { font-weight: 600; font-size: 14px; white-space: nowrap; }
+  .score-input {
+    width: 60px; text-align: center;
+    background: var(--parchment); border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 6px;
+    font-size: 15px; font-weight: 600; color: var(--ink); outline: none;
+  }
+  .score-input:focus { border-color: var(--ember); }
+  .progress-bar-wrap { width: 120px; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 4px; background: var(--mist); transition: width 0.35s ease, background 0.35s ease; }
+  .traffic-light { width: 11px; height: 11px; border-radius: 50%; background: var(--mist); display: inline-block; transition: background 0.3s; }
+  .insight-input {
+    width: 100%; background: var(--parchment); border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 5px 9px; font-size: 13px; color: var(--ink); outline: none;
+  }
+  .insight-input:focus { border-color: var(--ember); }
+
+  /* SCORE OVERVIEW */
+  .score-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .score-card { background: var(--snow); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .sc-label { font-size: 12px; color: var(--slate); margin-bottom: 6px; }
+  .sc-number { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--ember); line-height: 1; }
+  .sc-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--mist); margin-top: 3px; }
+
+  /* SENSE-4 */
+  .sense4-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 16px; }
+  .sense4-card {
+    background: var(--parchment); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 20px; text-align: center;
+    transition: transform 0.2s;
+  }
+  .sense4-card:hover { transform: translateY(-3px); }
+  .sense4-icon { font-size: 28px; margin-bottom: 6px; }
+  .sense4-name { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
+  .sense4-score-display { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 600; color: var(--ember); line-height: 1; margin-bottom: 8px; }
+  .sense4-bar-wrap { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+  .sense4-bar-fill { height: 100%; border-radius: 3px; background: var(--mist); transition: width 0.35s ease, background 0.35s ease; }
+  .sense4-input {
+    width: 68px; text-align: center;
+    background: var(--snow); border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 5px; font-size: 14px; outline: none; margin-bottom: 8px;
+  }
+
+  /* NEURAL */
+  .neural-node {
+    background: var(--snow); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 16px; margin-bottom: 12px;
+    border-left: 3px solid var(--ember);
+  }
+  .neural-node-title { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
+  .neural-flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .flow-item label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mist); display: block; margin-bottom: 4px;
+  }
+
+  /* SITA TABLE */
+  .sita-table { width: 100%; border-collapse: collapse; }
+  .sita-table th {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--slate); text-align: left;
+    padding: 10px 12px; border-bottom: 2px solid var(--border); background: var(--parchment);
+  }
+  .sita-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sita-table td input {
+    width: 100%; background: var(--parchment);
+    border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 6px 10px; font-size: 13px; outline: none;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+  }
+  .day-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    background: rgba(184,146,58,0.12); color: var(--gold);
+    border-radius: 100px; padding: 3px 10px; white-space: nowrap;
+  }
+
+  /* CTA */
+  .cta-block {
+    background: var(--deep-ink); border-radius: 12px; padding: 40px;
+    text-align: center; margin: 28px 0; position: relative; overflow: hidden;
+  }
+  .cta-block::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(196,80,42,0.14) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: #fff; position: relative; margin-bottom: 8px; }
+  .cta-sub { color: rgba(255,255,255,0.55); font-size: 14px; position: relative; margin-bottom: 24px; }
+  .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+  .btn-primary {
+    background: var(--ember); color: #fff; border: none; border-radius: 6px;
+    padding: 12px 26px; font-size: 15px; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: var(--ember-dark); transform: translateY(-1px); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.88);
+    border: 1.5px solid rgba(255,255,255,0.18); border-radius: 6px;
+    padding: 12px 26px; font-size: 15px; font-weight: 500; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: background 0.15s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.14); }
+  .cta-value { color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 12px; position: relative; font-family: 'IBM Plex Mono', monospace; }
+
+  /* BRAND CANON */
+  .canon-block {
+    background: var(--deep-ink); border-radius: 8px; padding: 20px;
+    color: rgba(255,255,255,0.75); font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; line-height: 1.9; white-space: pre-wrap; overflow-x: auto;
+  }
+  .canon-key { color: var(--ember-light); }
+  .canon-val { color: #90C9BC; }
+  .canon-lock {
+    background: rgba(196,80,42,0.14); border: 1px solid rgba(196,80,42,0.3);
+    border-radius: 6px; padding: 7px 14px; color: var(--ember-light);
+    font-size: 12px; margin-bottom: 14px;
+    display: inline-flex; gap: 6px; align-items: center;
+  }
+
+  /* QUOTE */
+  .quote-box {
+    background: rgba(196,80,42,0.05); border-left: 3px solid var(--ember);
+    border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0;
+    font-style: italic; color: var(--slate); font-size: 14px;
+  }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--deep-ink); color: rgba(255,255,255,0.45);
+    padding: 40px; text-align: center; font-size: 13px; margin-top: 64px;
+  }
+  .footer a { color: var(--ember-light); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .transform-grid { grid-template-columns: 1fr; }
+    .transform-arrow { display: none; }
+    .neural-flow-grid { grid-template-columns: 1fr; }
+    .cta-block { padding: 28px 18px; }
+    .hero { padding: 56px 20px 48px; }
+  }
+  @media print {
+    .nav-tabs { display: none; }
+    .report-section { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">SSA-BDD × M-12 整合診斷報告</div>
+  <h1>商業模式健檢<br><span>× 品牌定位分析</span></h1>
+  <p class="hero-sub">Neural-Flow × SITA × SSA-I Activation 全方位企業診斷系統</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">學員姓名</span>
+      <input id="student-name" type="text" placeholder="請輸入姓名" />
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">企業 / 品牌</span>
+      <input id="brand-name" type="text" placeholder="企業名稱" />
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">報告日期</span>
+      <input id="report-date" type="date" />
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">診斷顧問</span>
+      <input id="consultant" type="text" placeholder="顧問姓名" />
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-tabs">
+  <div class="nav-tabs-inner">
+    <button class="tab-btn active" onclick="showTab('tab-brand',this)">M-12 品牌定位</button>
+    <button class="tab-btn" onclick="showTab('tab-overview',this)">十二力總覽</button>
+    <button class="tab-btn" onclick="showTab('tab-neural',this)">Neural-Flow</button>
+    <button class="tab-btn" onclick="showTab('tab-sense4',this)">Sense-4</button>
+    <button class="tab-btn" onclick="showTab('tab-sita',this)">SITA 行動橋</button>
+    <button class="tab-btn" onclick="showTab('tab-course',this)">課程導引</button>
+    <button class="tab-btn" onclick="showTab('tab-summary',this)">整體評語</button>
+  </div>
+</div>
+
+<!-- ══ TAB 1：M-12 品牌定位 ══ -->
+<div id="tab-brand" class="report-section active">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">M-12 v2.0 · Human View + Brand Canon</span>
+    <h2 class="section-title">品牌定位規劃書</h2>
+    <p class="section-desc">品牌在這裡被定義，後面所有商業設計只能服務它。</p>
+  </div>
+
+  <!-- A1 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A1</span> 品牌一句話定位</div>
+    <div style="display:grid; grid-template-columns: auto 1fr; gap: 10px 14px; align-items: center;">
+      <span style="color:var(--slate); font-weight:600; white-space:nowrap; font-size:14px;">我們是</span>
+      <input class="field-input" id="a1-who" type="text" placeholder="品牌名稱或類型描述" oninput="updateA1Preview()" style="margin:0;" />
+      <span style="color:var(--slate); font-weight:600; white-space:nowrap; font-size:14px;">為了</span>
+      <input class="field-input" id="a1-for" type="text" placeholder="目標族群描述" oninput="updateA1Preview()" style="margin:0;" />
+      <span style="color:var(--slate); font-weight:600; white-space:nowrap; font-size:14px;">解決</span>
+      <input class="field-input" id="a1-solve" type="text" placeholder="這個關鍵問題" oninput="updateA1Preview()" style="margin:0;" />
+    </div>
+    <div class="divider" style="margin:18px 0 10px;"></div>
+    <div id="a1-preview" style="font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--ember); font-style:italic; min-height:24px; line-height:1.5;"></div>
+  </div>
+
+  <!-- A2 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A2</span> 品牌存在的核心理由</div>
+    <div class="field-group">
+      <label class="field-label">市場上目前最大的斷裂是</label>
+      <textarea class="field-input" rows="2" placeholder="描述市場痛點或空白地帶"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">為什麼這個問題一直沒被好好解決</label>
+      <textarea class="field-input" rows="2" placeholder="分析既有解法的根本缺陷"></textarea>
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">我們選擇站出來的原因</label>
+      <textarea class="field-input" rows="2" placeholder="品牌使命與創立初心"></textarea>
+    </div>
+  </div>
+
+  <!-- A3 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A3</span> 目標受眾與核心張力</div>
+    <div class="field-group">
+      <label class="field-label">主要受眾輪廓</label>
+      <input class="field-input" type="text" placeholder="年齡、身份、行業、收入、生活狀態" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">他們最常遇到的卡點</label>
+      <textarea class="field-input" rows="2" placeholder="日常挫折、未滿足需求"></textarea>
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">他們內心最大的矛盾／拉扯</label>
+      <textarea class="field-input" rows="2" placeholder="想要 X 但擔心 Y；渴望 A 但習慣 B"></textarea>
+    </div>
+  </div>
+
+  <!-- A4 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A4</span> Transformation — 品牌承諾的改變</div>
+    <p style="font-size:13px; color:var(--slate); margin-bottom:14px;">這個 Transformation 是品牌所有產品、內容與體驗的唯一核心。</p>
+    <div class="transform-grid">
+      <div class="transform-card before">
+        <div class="tc-label">Before 來之前</div>
+        <textarea class="field-input" rows="3" placeholder="客戶來找你之前的狀態、感受、處境" style="background:var(--snow);"></textarea>
+      </div>
+      <div class="transform-arrow">→</div>
+      <div class="transform-card after">
+        <div class="tc-label">After 用完之後</div>
+        <textarea class="field-input" rows="3" placeholder="客戶與品牌互動後的新狀態、成就" style="background:var(--snow);"></textarea>
+      </div>
+    </div>
+    <div class="field-group" style="margin-top:14px; margin-bottom:0;">
+      <label class="field-label">Key Shift — 真正發生改變的關鍵</label>
+      <input class="field-input" type="text" placeholder="讓改變發生的核心轉折點或機制" />
+    </div>
+  </div>
+
+  <!-- A5 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A5</span> 價值主張與差異化</div>
+    <div class="field-group">
+      <label class="field-label">核心承諾（Promise）</label>
+      <input class="field-input" type="text" placeholder="你向客戶保證的那一件最重要的事" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">我們與其他選項最大的不同</label>
+      <textarea class="field-input" rows="2" placeholder="競爭差異點、替代方案做不到的關鍵"></textarea>
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">為什麼客戶可以相信我們</label>
+      <textarea class="field-input" rows="2" placeholder="信任憑據：案例、數據、資格、故事證據"></textarea>
+    </div>
+  </div>
+
+  <!-- A6 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A6</span> 敘事主軸與象徵</div>
+    <div class="field-group">
+      <label class="field-label">代表性的真實故事或案例</label>
+      <textarea class="field-input" rows="3" placeholder="能完美說明你是誰的客戶故事或創辦人故事"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">品牌最常出現的情緒與畫面</label>
+      <input class="field-input" type="text" placeholder="例：溫暖燈光下的深夜對話 / 突破後的第一道曙光" />
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">我們避免使用的敘事框架</label>
+      <input class="field-input" type="text" placeholder="例：不用勵志焦慮框架 / 不用數字比較框架" />
+    </div>
+  </div>
+
+  <!-- A7 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A7</span> 品牌語氣與表達原則</div>
+    <div class="field-group">
+      <label class="field-label">一定要有的感覺（Must）</label>
+      <input class="field-input" type="text" placeholder="例：溫暖有力、精準可信、像好友也像導師" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">絕對不能出現的語氣（Must Not）</label>
+      <input class="field-input" type="text" placeholder="例：說教、焦慮販賣、過度誇張、冷漠疏離" />
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">關鍵品牌詞彙（Lexicon）</label>
+      <input class="field-input" type="text" placeholder="品牌常用語庫，以逗號分隔" />
+    </div>
+  </div>
+
+  <!-- A8 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A8</span> 接觸點與整體體驗概念</div>
+    <div class="field-group">
+      <label class="field-label">主要接觸點（官網、社群、銷售、客服等）</label>
+      <input class="field-input" type="text" placeholder="依重要性列出主要觸及管道" />
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">希望客戶在每個接觸點感受到的共通體驗</label>
+      <textarea class="field-input" rows="2" placeholder="貫穿所有接觸點的一致感受"></textarea>
+    </div>
+  </div>
+
+  <!-- A9 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A9</span> 品牌治理與內部共識</div>
+    <div class="field-group">
+      <label class="field-label">品牌定調決策者</label>
+      <input class="field-input" type="text" placeholder="最終品牌聲音由誰負責" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">誰可以調整、誰不能動</label>
+      <input class="field-input" type="text" placeholder="品牌決策邊界與授權範圍" />
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">品牌被誤用時的修正原則</label>
+      <textarea class="field-input" rows="2" placeholder="當品牌表達偏移時的標準修正流程"></textarea>
+    </div>
+  </div>
+
+  <!-- A10 -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">A10</span> 品牌風險與守門原則</div>
+    <div class="field-group">
+      <label class="field-label">最容易走偏的地方</label>
+      <input class="field-input" type="text" placeholder="品牌最常見的自我偏移模式" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">絕對不能跨越的紅線</label>
+      <input class="field-input" type="text" placeholder="不可協商的品牌邊界" />
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">一句話品牌守門句（Guardrail）</label>
+      <input class="field-input" id="a10-guardrail" type="text" placeholder="品牌在這裡被定義，後面所有商業設計只能服務它。" />
+    </div>
+  </div>
+
+  <!-- Brand Canon -->
+  <div class="card">
+    <div class="card-title"><span class="tag-id">Part B</span> Brand Canon — GPT 唯一事實來源</div>
+    <div class="canon-lock">⚠ 不可重寫 · 不可重新詮釋 · 僅能引用與診斷</div>
+    <div class="canon-block"><span class="canon-key">brand_canon:</span>
+  <span class="canon-key">meta:</span>
+    generated_by: GPT-A
+    version: v2.0
+    locked: <span class="canon-val">true</span>
+
+  <span class="canon-key">identity:</span>
+    who_we_are: <span class="canon-val" id="bc-who">""</span>
+    who_we_are_not: <span class="canon-val">""</span>
+
+  <span class="canon-key">audience:</span>
+    primary: <span class="canon-val">""</span>
+    core_tension: <span class="canon-val">""</span>
+
+  <span class="canon-key">transformation:</span>
+    before: <span class="canon-val">""</span>
+    after: <span class="canon-val">""</span>
+    key_shift: <span class="canon-val">""</span>
+
+  <span class="canon-key">positioning:</span>
+    promise: <span class="canon-val">""</span>
+    differentiation: <span class="canon-val">[]</span>
+    reasons_to_believe: <span class="canon-val">[]</span>
+
+  <span class="canon-key">tone:</span>
+    must: <span class="canon-val">[]</span>
+    must_not: <span class="canon-val">[]</span>
+    lexicon: <span class="canon-val">[]</span>
+
+  <span class="canon-key">guardrail:</span>
+    one_line_guardrail: <span class="canon-val" id="bc-guardrail">""</span></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB 2：十二力總覽 ══ -->
+<div id="tab-overview" class="report-section">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">§1 · SSA-BDD</span>
+    <h2 class="section-title">十二力總覽</h2>
+    <p class="section-desc">企業十二項關鍵力的健康度評分與洞見（每項 1–10 分）</p>
+  </div>
+
+  <div class="score-overview">
+    <div class="score-card">
+      <div class="sc-label">十二力平均</div>
+      <div class="sc-number" id="avg-score">—</div>
+      <div class="sc-sub">/ 10</div>
+    </div>
+    <div class="score-card">
+      <div class="sc-label">最強力項</div>
+      <div id="best-force" style="font-weight:600; color:var(--success); font-size:14px; margin-top:10px; line-height:1.3;">—</div>
+    </div>
+    <div class="score-card">
+      <div class="sc-label">最弱力項</div>
+      <div id="weak-force" style="font-weight:600; color:var(--error); font-size:14px; margin-top:10px; line-height:1.3;">—</div>
+    </div>
+    <div class="score-card">
+      <div class="sc-label">健康狀態</div>
+      <div id="health-status" style="font-weight:600; font-size:14px; margin-top:10px;">—</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">十二力雷達圖</div>
+    <div style="display:flex; justify-content:center; margin:12px 0;">
+      <canvas id="radarChart" width="460" height="460"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">力項評分與洞見</div>
+    <div class="quote-box">企業的十二力就像人體的十二個系統，不能只強化一塊。太偏的結果，是「力量有了，協調沒了」。這份表格像體檢報告，但看的是意圖與能量是否對齊。</div>
+    <div style="overflow-x:auto; margin-top:16px;">
+      <table class="forces-table">
+        <thead>
+          <tr>
+            <th>力項</th><th>分數</th><th>進度</th><th>狀態</th><th>關鍵洞見</th>
+          </tr>
+        </thead>
+        <tbody id="forces-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB 3：Neural-Flow ══ -->
+<div id="tab-neural" class="report-section">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">§2 · Neural-Flow 動態層</span>
+    <h2 class="section-title">商業力動態關聯分析</h2>
+    <p class="section-desc">解析商業力之間的動態關聯，標示上層因、下層果與對映模組</p>
+  </div>
+  <div class="quote-box">像餐廳菜很好吃，但門口沒燈。顧客看不到，也聞不到香氣。你的問題不在產品，而在「光」。光線不足，價值就被遮住。</div>
+  <div id="neural-nodes-container" style="margin-top:24px;"></div>
+</div>
+</div>
+
+<!-- ══ TAB 4：Sense-4 ══ -->
+<div id="tab-sense4" class="report-section">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">§3 · Sense-4 Mapping</span>
+    <h2 class="section-title">感知層</h2>
+    <p class="section-desc">呈現團隊內在動能的四感狀態：使命感、幸福感、成就感、滿足感</p>
+  </div>
+  <div class="quote-box">團隊就像一支樂團。使命感是旋律、幸福感是節奏、成就感是和弦、滿足感是餘韻。當四者共鳴時，工作不只是任務，而是一場能量的演奏。</div>
+  <div class="sense4-grid">
+    <div class="sense4-card">
+      <div class="sense4-icon">🎯</div>
+      <div class="sense4-name">使命感</div>
+      <div class="sense4-score-display" id="s4-mission-d">—</div>
+      <div class="sense4-bar-wrap"><div class="sense4-bar-fill" id="s4-mission-b" style="width:0"></div></div>
+      <input class="sense4-input" type="number" min="0" max="10" step="0.5" placeholder="0–10" oninput="updateS4('mission',this.value)" />
+      <input class="insight-input" type="text" placeholder="建議修復方向" style="font-size:12px;" />
+    </div>
+    <div class="sense4-card">
+      <div class="sense4-icon">😊</div>
+      <div class="sense4-name">幸福感</div>
+      <div class="sense4-score-display" id="s4-happy-d">—</div>
+      <div class="sense4-bar-wrap"><div class="sense4-bar-fill" id="s4-happy-b" style="width:0"></div></div>
+      <input class="sense4-input" type="number" min="0" max="10" step="0.5" placeholder="0–10" oninput="updateS4('happy',this.value)" />
+      <input class="insight-input" type="text" placeholder="建議修復方向" style="font-size:12px;" />
+    </div>
+    <div class="sense4-card">
+      <div class="sense4-icon">🏆</div>
+      <div class="sense4-name">成就感</div>
+      <div class="sense4-score-display" id="s4-achieve-d">—</div>
+      <div class="sense4-bar-wrap"><div class="sense4-bar-fill" id="s4-achieve-b" style="width:0"></div></div>
+      <input class="sense4-input" type="number" min="0" max="10" step="0.5" placeholder="0–10" oninput="updateS4('achieve',this.value)" />
+      <input class="insight-input" type="text" placeholder="建議修復方向" style="font-size:12px;" />
+    </div>
+    <div class="sense4-card">
+      <div class="sense4-icon">✨</div>
+      <div class="sense4-name">滿足感</div>
+      <div class="sense4-score-display" id="s4-satisfy-d">—</div>
+      <div class="sense4-bar-wrap"><div class="sense4-bar-fill" id="s4-satisfy-b" style="width:0"></div></div>
+      <input class="sense4-input" type="number" min="0" max="10" step="0.5" placeholder="0–10" oninput="updateS4('satisfy',this.value)" />
+      <input class="insight-input" type="text" placeholder="建議修復方向" style="font-size:12px;" />
+    </div>
+  </div>
+  <div class="card" style="margin-top:24px;">
+    <div class="card-title">Sense-4 整體評語</div>
+    <textarea class="field-input" rows="4" placeholder="對應 OneMuse 能量層與 SITA 教練覺察模組，說明四感整體狀態與相互影響..."></textarea>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB 5：SITA ══ -->
+<div id="tab-sita" class="report-section">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">§4 · SITA Learning Bridge</span>
+    <h2 class="section-title">行動層</h2>
+    <p class="section-desc">將健檢洞見轉化為課程修復與行動節奏，建立學習閉環</p>
+  </div>
+  <div class="quote-box">企業的問題不是要被解決，而是要被看見。像開車偏右，不是方向盤壞，而是輪胎氣壓不同。SITA 幫你找出那個失壓點，不需要換車，只要重新打氣。</div>
+
+  <div class="card" style="margin-top:20px;">
+    <div class="card-title">健檢 → 行動轉換表</div>
+    <div style="overflow-x:auto;">
+      <table class="sita-table">
+        <thead>
+          <tr><th>健檢觀察</th><th>對映課程模組</th><th>修復方向</th><th>學習後預期變化</th></tr>
+        </thead>
+        <tbody id="sita-tbody">
+          <tr><td><input type="text" placeholder="觀察到的問題項目" /></td><td><input type="text" placeholder="章節 / 模組" /></td><td><input type="text" placeholder="策略方向" /></td><td><input type="text" placeholder="預期變化" /></td></tr>
+          <tr><td><input type="text" placeholder="觀察到的問題項目" /></td><td><input type="text" placeholder="章節 / 模組" /></td><td><input type="text" placeholder="策略方向" /></td><td><input type="text" placeholder="預期變化" /></td></tr>
+          <tr><td><input type="text" placeholder="觀察到的問題項目" /></td><td><input type="text" placeholder="章節 / 模組" /></td><td><input type="text" placeholder="策略方向" /></td><td><input type="text" placeholder="預期變化" /></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button onclick="addSitaRow()" style="margin-top:10px; background:none; border:1.5px dashed var(--border); border-radius:6px; padding:7px 16px; cursor:pointer; color:var(--slate); font-size:13px; font-family:inherit;">＋ 新增行</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">依健檢結果關注三個環節</div>
+    <table class="sita-table">
+      <thead><tr><th>日程</th><th>關鍵章節</th><th>專注核心</th></tr></thead>
+      <tbody>
+        <tr><td><span class="day-badge">Day 1</span>&nbsp; 價值創造與對齊</td><td>品牌與價值主張</td><td>找回「為何存在」與品牌語氣</td></tr>
+        <tr><td><span class="day-badge">Day 2</span>&nbsp; 價值傳遞與放大</td><td>結構與節奏</td><td>看見「哪裡失速」，重建節拍</td></tr>
+        <tr><td><span class="day-badge">Day 3</span>&nbsp; 價值分配與共創</td><td>團隊與能量</td><td>感受「誰在推動你」</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB 6：課程導引 ══ -->
+<div id="tab-course" class="report-section">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">§5 · SSA-I × 健檢動態關聯</span>
+    <h2 class="section-title">課程導引</h2>
+    <p class="section-desc">讓學員了解健檢與課程的銜接，知道如何使用報告進入 SSA-I 學習</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">一、進入前的心態準備</div>
+    <div class="quote-box">像運動員受傷後重學走路。肌肉記得舊節奏，會抗拒新步伐。課程會讓你看見這個抗拒。當你跨過那瞬間，企業的神經系統就重新連上了。</div>
+    <p style="font-size:13px; color:var(--slate); margin:14px 0 10px;">學習是「內在重組」，非技巧吸收。三要點提醒：</p>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span style="color:var(--ember); font-weight:700; font-size:14px; flex-shrink:0; width:20px;">01</span>
+        <input class="field-input" type="text" placeholder="觀察自己的反應" style="margin:0;" />
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span style="color:var(--ember); font-weight:700; font-size:14px; flex-shrink:0; width:20px;">02</span>
+        <input class="field-input" type="text" placeholder="感受課程節奏" style="margin:0;" />
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span style="color:var(--ember); font-weight:700; font-size:14px; flex-shrink:0; width:20px;">03</span>
+        <input class="field-input" type="text" placeholder="讓理念變成感覺" style="margin:0;" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">三、如何使用這份報告進入課程</div>
+    <div class="quote-box">這份報告像一面鏡子與一場旅程。鏡子讓你看見現在的你，旅程讓你看到下一個自己。當你能同時看見「當下」與「未來」，學習就不再是輸入，而是一種內在更新。</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-top:16px;">
+      <div style="background:var(--parchment); border-radius:8px; padding:16px; border-left:3px solid var(--ember);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--ember); margin-bottom:6px;">課前</div>
+        <div style="font-weight:600; margin-bottom:5px; font-size:14px;">圈出重點</div>
+        <p style="font-size:13px; color:var(--slate);">閱讀報告，在共鳴或質疑的地方打圈。這些是你的起點。</p>
+      </div>
+      <div style="background:var(--parchment); border-radius:8px; padding:16px; border-left:3px solid var(--teal);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--teal); margin-bottom:6px;">課中</div>
+        <div style="font-weight:600; margin-bottom:5px; font-size:14px;">覺察反應</div>
+        <p style="font-size:13px; color:var(--slate);">遇到共鳴或抗拒時，標記下來。抗拒往往是突破口。</p>
+      </div>
+      <div style="background:var(--parchment); border-radius:8px; padding:16px; border-left:3px solid var(--gold);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); margin-bottom:6px;">課後</div>
+        <div style="font-weight:600; margin-bottom:5px; font-size:14px;">重讀報告</div>
+        <p style="font-size:13px; color:var(--slate);">課後再讀一次，你會發現理解已經改變了。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BLOCK -->
+  <div class="cta-block">
+    <div class="cta-title">立即啟動你的系統創業旅程</div>
+    <div class="cta-sub">拿著這份商業模式健檢報告，預約免費顧問 1vs1 說明</div>
+    <div class="cta-buttons">
+      <a href="https://lin.ee/bZGpEjU" target="_blank" rel="noopener" class="btn-primary">
+        📱 Line@ 預約免費顧問
+      </a>
+      <a href="https://ssa-i-accelerator-3gv6dp8.gamma.site/" target="_blank" rel="noopener" class="btn-secondary">
+        🚀 SSA-I 課程介紹頁面
+      </a>
+    </div>
+    <div class="cta-value">顧問 1vs1 · 約 45 分鐘 · 市值 $8,000 · 限時免費</div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB 7：整體評語 ══ -->
+<div id="tab-summary" class="report-section">
+<div class="wrapper">
+  <div class="section-header">
+    <span class="section-tag">§6 · 整體評語</span>
+    <h2 class="section-title">系統觀總結</h2>
+    <p class="section-desc">收束全報告邏輯，強調節奏、覺察與持續性</p>
+  </div>
+
+  <div class="quote-box">創業者常想靠更努力解決問題，但努力只是加速現有的錯誤節奏。真正的穩定來自「看清自己怎麼動」。當你看到節奏，你就能重新選擇拍子。</div>
+
+  <div class="card" style="margin-top:20px;">
+    <div class="card-title">整體診斷評語</div>
+    <div class="field-group">
+      <label class="field-label">企業目前最核心的節奏問題</label>
+      <textarea class="field-input" rows="3" placeholder="描述企業節奏上的主要失速點或能量漏洞..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">最具潛力的突破方向</label>
+      <textarea class="field-input" rows="3" placeholder="基於十二力與 Sense-4 分析，指出最有槓桿效益的改善方向..."></textarea>
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">給學員的一句話總結</label>
+      <input class="field-input" type="text" placeholder="顧問給學員最重要的一句話叮嚀..." />
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">下一步行動清單</div>
+    <div id="action-list" style="display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; gap:10px; align-items:center;"><input type="checkbox" style="accent-color:var(--ember); flex-shrink:0;" /><input class="field-input" type="text" placeholder="最優先行動項目" style="margin:0;" /></div>
+      <div style="display:flex; gap:10px; align-items:center;"><input type="checkbox" style="accent-color:var(--ember); flex-shrink:0;" /><input class="field-input" type="text" placeholder="次優先行動項目" style="margin:0;" /></div>
+      <div style="display:flex; gap:10px; align-items:center;"><input type="checkbox" style="accent-color:var(--ember); flex-shrink:0;" /><input class="field-input" type="text" placeholder="第三優先行動項目" style="margin:0;" /></div>
+    </div>
+  </div>
+
+  <div class="cta-block">
+    <div class="cta-title">你已完成整份健檢診斷</div>
+    <div class="cta-sub">下一步：預約 1vs1 顧問說明，深化報告洞見</div>
+    <div class="cta-buttons">
+      <a href="https://lin.ee/bZGpEjU" target="_blank" rel="noopener" class="btn-primary">
+        📱 立即預約 Line@
+      </a>
+      <a href="https://ssa-i-accelerator-3gv6dp8.gamma.site/" target="_blank" rel="noopener" class="btn-secondary">
+        了解 SSA-I 完整課程
+      </a>
+    </div>
+    <div class="cta-value">SSA-I 系統創業加速器 · 三天改變你的商業節奏</div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:rgba(255,255,255,0.7); margin-bottom:12px;">SSA-BDD 商業模式健檢 × M-12 品牌定位</p>
+  <p>
+    <a href="https://lin.ee/bZGpEjU" target="_blank" rel="noopener">📱 Line@ 預約免費顧問 1vs1</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="https://ssa-i-accelerator-3gv6dp8.gamma.site/" target="_blank" rel="noopener">🚀 SSA-I 課程介紹頁面</a>
+  </p>
+  <p style="margin-top:10px; font-size:11px; opacity:0.4;">Neural-Flow × SITA × SSA-I Activation · v3.3</p>
+</div>
+
+<script>
+// ── DATA ──
+const FORCES = [
+  {id:'product', name:'產品力'},
+  {id:'value', name:'價值主張力'},
+  {id:'audience', name:'客群聚焦力'},
+  {id:'channel', name:'通路力'},
+  {id:'pricing', name:'定價力'},
+  {id:'delivery', name:'交付力'},
+  {id:'conversion', name:'轉換力'},
+  {id:'retention', name:'留存力'},
+  {id:'brand', name:'品牌力'},
+  {id:'rhythm', name:'節奏力'},
+  {id:'data', name:'數據力'},
+  {id:'compound', name:'複利力'},
+];
+const scores = {};
+FORCES.forEach(f => scores[f.id] = null);
+
+// ── TABS ──
+function showTab(id, btn) {
+  document.querySelectorAll('.report-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── A1 PREVIEW ──
+function updateA1Preview() {
+  const who = document.getElementById('a1-who').value.trim();
+  const forW = document.getElementById('a1-for').value.trim();
+  const solve = document.getElementById('a1-solve').value.trim();
+  const prev = document.getElementById('a1-preview');
+  if (who || forW || solve) {
+    prev.textContent = `我們是「${who || '＿＿＿＿'}」，為「${forW || '＿＿＿＿'}」，解決「${solve || '＿＿＿＿'}」這個關鍵問題。`;
+  } else { prev.textContent = ''; }
+}
+
+// ── SCORE COLOR ──
+function scoreColor(s) {
+  if (s === null) return 'var(--mist)';
+  if (s >= 8) return '#2D8A6E';
+  if (s >= 5) return '#C9943A';
+  return '#C4402A';
+}
+
+// ── FORCES TABLE ──
+function buildForcesTable() {
+  const tbody = document.getElementById('forces-tbody');
+  FORCES.forEach(f => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="force-name">${f.name}</span></td>
+      <td><input class="score-input" id="s-${f.id}" type="number" min="0" max="10" step="0.5" placeholder="—" oninput="updateForce('${f.id}',this.value)" /></td>
+      <td><div class="progress-bar-wrap"><div class="progress-bar-fill" id="b-${f.id}"></div></div></td>
+      <td><span class="traffic-light" id="l-${f.id}"></span></td>
+      <td><input class="insight-input" type="text" placeholder="填入關鍵洞見..." /></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateForce(id, val) {
+  const v = val === '' ? null : parseFloat(val);
+  scores[id] = (v !== null && !isNaN(v)) ? Math.min(10, Math.max(0, v)) : null;
+  const s = scores[id];
+  const el_b = document.getElementById('b-' + id);
+  const el_l = document.getElementById('l-' + id);
+  if (el_b) { el_b.style.width = (s !== null ? s / 10 * 100 : 0) + '%'; el_b.style.background = scoreColor(s); }
+  if (el_l) el_l.style.background = scoreColor(s);
+  updateOverview();
+  drawRadar();
+}
+
+function updateOverview() {
+  const valid = Object.entries(scores).filter(([,v]) => v !== null);
+  if (!valid.length) {
+    ['avg-score','best-force','weak-force','health-status'].forEach(id => document.getElementById(id).textContent = '—');
+    return;
+  }
+  const avg = valid.reduce((a,[,v]) => a + v, 0) / valid.length;
+  document.getElementById('avg-score').textContent = avg.toFixed(1);
+
+  const sorted = [...valid].sort((a,b) => b[1] - a[1]);
+  const bestId = sorted[0][0], weakId = sorted[sorted.length-1][0];
+  const bestName = FORCES.find(f => f.id === bestId).name;
+  const weakName = FORCES.find(f => f.id === weakId).name;
+  document.getElementById('best-force').textContent = bestName + '  ' + sorted[0][1];
+  document.getElementById('weak-force').textContent = weakName + '  ' + sorted[sorted.length-1][1];
+
+  let st;
+  if (avg >= 8) st = '🟢 健康';
+  else if (avg >= 6) st = '🟡 良好';
+  else if (avg >= 4) st = '🟠 需關注';
+  else st = '🔴 危急';
+  document.getElementById('health-status').textContent = st;
+}
+
+// ── RADAR ──
+function drawRadar() {
+  const canvas = document.getElementById('radarChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, R = Math.min(W,H)/2 - 64;
+  const n = FORCES.length;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid rings
+  [2,4,6,8,10].forEach(v => {
+    const r = v/10*R;
+    ctx.beginPath();
+    FORCES.forEach((_, i) => {
+      const a = i/n*Math.PI*2 - Math.PI/2;
+      i===0 ? ctx.moveTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r) : ctx.lineTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r);
+    });
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(226,224,218,0.7)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='#9898A8'; ctx.font='9px IBM Plex Mono';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(v, cx+3, cy-r-6);
+  });
+
+  // Axes + labels
+  FORCES.forEach((f, i) => {
+    const a = i/n*Math.PI*2 - Math.PI/2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(a)*R, cy+Math.sin(a)*R);
+    ctx.strokeStyle='rgba(226,224,218,0.5)'; ctx.lineWidth=1; ctx.stroke();
+    const lx = cx+Math.cos(a)*(R+30), ly = cy+Math.sin(a)*(R+22);
+    ctx.fillStyle='#5A5A6E'; ctx.font='12px "Noto Sans TC",sans-serif';
+    ctx.textAlign = Math.abs(Math.cos(a))<0.15 ? 'center' : (Math.cos(a)>0 ? 'left' : 'right');
+    ctx.textBaseline = Math.abs(Math.sin(a))<0.15 ? 'middle' : (Math.sin(a)>0 ? 'top' : 'bottom');
+    ctx.fillText(f.name, lx, ly);
+  });
+
+  // Data polygon
+  ctx.beginPath();
+  FORCES.forEach((f, i) => {
+    const s = scores[f.id] !== null ? scores[f.id] : 0;
+    const a = i/n*Math.PI*2 - Math.PI/2;
+    const r = s/10*R;
+    i===0 ? ctx.moveTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r) : ctx.lineTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r);
+  });
+  ctx.closePath();
+  ctx.fillStyle='rgba(196,80,42,0.14)'; ctx.fill();
+  ctx.strokeStyle='#C4502A'; ctx.lineWidth=2; ctx.stroke();
+
+  // Dots
+  FORCES.forEach((f, i) => {
+    if (scores[f.id] === null) return;
+    const a = i/n*Math.PI*2 - Math.PI/2;
+    const r = scores[f.id]/10*R;
+    ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r, cy+Math.sin(a)*r, 4,0,Math.PI*2);
+    ctx.fillStyle='#C4502A'; ctx.fill();
+  });
+}
+
+// ── SENSE-4 ──
+function updateS4(key, val) {
+  const v = parseFloat(val);
+  const s = isNaN(v) ? 0 : Math.min(10, Math.max(0,v));
+  document.getElementById('s4-'+key+'-d').textContent = val==='' ? '—' : s.toFixed(1);
+  const bar = document.getElementById('s4-'+key+'-b');
+  bar.style.width = s/10*100+'%'; bar.style.background = scoreColor(s);
+}
+
+// ── NEURAL NODES ──
+function buildNeuralNodes() {
+  const c = document.getElementById('neural-nodes-container');
+  FORCES.forEach(f => {
+    const div = document.createElement('div');
+    div.className='neural-node';
+    div.innerHTML=`
+      <div class="neural-node-title">⬡ ${f.name}</div>
+      <div class="neural-flow-grid">
+        <div class="flow-item"><label>上層因</label><input class="insight-input" type="text" placeholder="是什麼驅動了這個力？" /></div>
+        <div class="flow-item"><label>下層果</label><input class="insight-input" type="text" placeholder="這個力影響了哪些結果？" /></div>
+        <div class="flow-item"><label>Flow Path</label><input class="insight-input" type="text" placeholder="能量如何在系統中流動？" /></div>
+        <div class="flow-item"><label>對映模組</label><input class="insight-input" type="text" placeholder="對應 SSA-I 課程模組" /></div>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+
+// ── SITA ADD ROW ──
+function addSitaRow() {
+  const tbody = document.getElementById('sita-tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML='<td><input type="text" placeholder="觀察到的問題項目"/></td><td><input type="text" placeholder="章節/模組"/></td><td><input type="text" placeholder="策略方向"/></td><td><input type="text" placeholder="預期變化"/></td>';
+  tbody.appendChild(tr);
+}
+
+// ── INIT ──
+document.getElementById('report-date').value = new Date().toISOString().slice(0,10);
+buildForcesTable();
+buildNeuralNodes();
+drawRadar();
+</script>
+</body>
+</html>
