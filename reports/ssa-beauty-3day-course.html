@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>美業翻倍計畫——從手藝人到系統商的三日蛻變</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── CSS Variables ─── */
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --gold:         #b6853d;
+      --gold-light:   #d4a85c;
+      --teal:         #2A7A6E;
+      --navy:         #181737;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #FAF7F2;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+      --raised:       #1E1E2A;
+      --border-dark:  #2A2A38;
+
+      --d1-color:     #C4502A;
+      --d1-bg:        rgba(196,80,42,0.07);
+      --d2-color:     #2A7A6E;
+      --d2-bg:        rgba(42,122,110,0.07);
+      --d3-color:     #b6853d;
+      --d3-bg:        rgba(182,133,61,0.08);
+
+      --radius-sm:    6px;
+      --radius-md:    10px;
+      --radius-lg:    16px;
+      --shadow-card:  0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      --shadow-lift:  0 4px 16px rgba(18,18,26,0.10), 0 12px 32px rgba(18,18,26,0.06);
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', 'Noto Sans TC', system-ui, sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.75;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Typography ─── */
+    h1, h2, h3, .display {
+      font-family: 'Cormorant Garamond', 'Noto Sans TC', serif;
+    }
+    h4, h5, h6 { font-family: 'Outfit', 'Noto Sans TC', sans-serif; }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .container--narrow {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .container, .container--narrow { padding: 0 24px; }
+    }
+    @media (max-width: 640px) {
+      .container, .container--narrow { padding: 0 16px; }
+    }
+
+    /* ─── Section spacing ─── */
+    section { padding: 64px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ─── Hero ─── */
+    .hero {
+      background: var(--deep-ink);
+      padding: 96px 0 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 10% 20%, rgba(196,80,42,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 90% 80%, rgba(182,133,61,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 70% 20%, rgba(42,122,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(196,80,42,0.15);
+      border: 1px solid rgba(196,80,42,0.30);
+      border-radius: 100px;
+      padding: 5px 14px;
+      margin-bottom: 24px;
+    }
+    .hero-badge span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+    }
+    .hero-title {
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 600;
+      color: #FDFCFA;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--ember-light);
+    }
+    .hero-subtitle {
+      font-size: 20px;
+      color: rgba(253,252,250,0.65);
+      font-weight: 300;
+      margin-bottom: 40px;
+      max-width: 640px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(253,252,250,0.70);
+      font-size: 14px;
+    }
+    .meta-chip .icon {
+      width: 18px;
+      height: 18px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .hero-authors {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .author-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .author-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .author-avatar--wen { background: rgba(196,80,42,0.25); color: var(--ember-light); border: 1.5px solid rgba(196,80,42,0.35); }
+    .author-avatar--zeal { background: rgba(182,133,61,0.20); color: var(--gold-light); border: 1.5px solid rgba(182,133,61,0.30); }
+    .author-info { display: flex; flex-direction: column; }
+    .author-name { font-size: 15px; font-weight: 600; color: #FDFCFA; }
+    .author-role { font-size: 12px; color: rgba(253,252,250,0.55); }
+    .author-sep { width: 1px; height: 36px; background: var(--border-dark); }
+
+    /* ─── Design Philosophy ─── */
+    .philosophy {
+      background: var(--navy);
+      padding: 72px 0;
+    }
+    .philosophy-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .philosophy-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+    .philosophy-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      margin-bottom: 16px;
+    }
+    .philosophy-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: #FDFCFA;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .philosophy-body {
+      font-size: 16px;
+      color: rgba(253,252,250,0.65);
+      line-height: 1.8;
+    }
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--raised);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      transition: border-color 200ms ease;
+    }
+    .flow-step:hover { border-color: rgba(196,80,42,0.40); }
+    .flow-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--ember);
+      background: rgba(196,80,42,0.12);
+      padding: 4px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .flow-content { flex: 1; }
+    .flow-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #FDFCFA;
+      margin-bottom: 4px;
+    }
+    .flow-desc { font-size: 13px; color: rgba(253,252,250,0.55); line-height: 1.6; }
+    .flow-arrow {
+      text-align: center;
+      color: var(--ember);
+      font-size: 18px;
+      padding: 2px 0;
+    }
+
+    /* ─── Seven Core Elements ─── */
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--slate);
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+    .seven-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .seven-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .seven-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lift);
+    }
+    .seven-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .seven-card:nth-child(1) .seven-num { background: rgba(196,80,42,0.10); color: var(--ember); }
+    .seven-card:nth-child(2) .seven-num { background: rgba(42,122,110,0.10); color: var(--teal); }
+    .seven-card:nth-child(3) .seven-num { background: rgba(182,133,61,0.10); color: var(--gold); }
+    .seven-card:nth-child(4) .seven-num { background: rgba(196,80,42,0.10); color: var(--ember); }
+    .seven-card:nth-child(5) .seven-num { background: rgba(42,122,110,0.10); color: var(--teal); }
+    .seven-card:nth-child(6) .seven-num { background: rgba(182,133,61,0.10); color: var(--gold); }
+    .seven-card:nth-child(7) .seven-num { background: rgba(196,80,42,0.10); color: var(--ember); }
+    .seven-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .seven-desc { font-size: 14px; color: var(--slate); line-height: 1.65; }
+
+    /* ─── Day Headers ─── */
+    .day-header {
+      padding: 56px 0 0;
+    }
+    .day-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 100px;
+      padding: 5px 14px;
+      margin-bottom: 16px;
+    }
+    .day-badge--d1 { background: rgba(196,80,42,0.10); border: 1px solid rgba(196,80,42,0.20); }
+    .day-badge--d2 { background: rgba(42,122,110,0.10); border: 1px solid rgba(42,122,110,0.20); }
+    .day-badge--d3 { background: rgba(182,133,61,0.10); border: 1px solid rgba(182,133,61,0.20); }
+    .day-badge span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .day-badge--d1 span { color: var(--ember); }
+    .day-badge--d2 span { color: var(--teal); }
+    .day-badge--d3 span { color: var(--gold); }
+    .day-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .day-title--d1 { color: var(--ember-dark); }
+    .day-title--d2 { color: var(--teal); }
+    .day-title--d3 { color: #8a6520; }
+    .day-tagline {
+      font-size: 18px;
+      color: var(--slate);
+      font-style: italic;
+      margin-bottom: 24px;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* ─── Energy Curve ─── */
+    .energy-curve {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .curve-block {
+      flex: 1;
+      padding: 20px 20px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .curve-block:last-child { border-right: none; }
+    .curve-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .curve-block--am .curve-label { color: var(--ember); }
+    .curve-block--mid .curve-label { color: var(--gold); }
+    .curve-block--pm .curve-label { color: var(--teal); }
+    .curve-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .curve-desc { font-size: 12px; color: var(--slate); line-height: 1.6; }
+    .curve-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .curve-block--am .curve-bar { background: linear-gradient(90deg, var(--ember-light), var(--ember)); }
+    .curve-block--mid .curve-bar { background: linear-gradient(90deg, var(--ember), var(--gold)); }
+    .curve-block--pm .curve-bar { background: linear-gradient(90deg, var(--gold), var(--teal)); }
+    @media (max-width: 640px) {
+      .energy-curve { flex-direction: column; }
+      .curve-block { border-right: none; border-bottom: 1px solid var(--border); }
+      .curve-block:last-child { border-bottom: none; }
+    }
+
+    /* ─── Timeline Module Cards ─── */
+    .modules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-bottom: 56px;
+    }
+    .timeline-wrap {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .timeline-spine {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 64px;
+      flex-shrink: 0;
+      padding-top: 24px;
+    }
+    .spine-time {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--mist);
+      white-space: nowrap;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .spine-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .spine-dot--d1 { background: var(--ember); }
+    .spine-dot--d2 { background: var(--teal); }
+    .spine-dot--d3 { background: var(--gold); }
+    .spine-dot--break { background: var(--mist); }
+    .spine-line {
+      flex: 1;
+      width: 1px;
+      background: var(--border);
+      min-height: 24px;
+      margin-top: 4px;
+    }
+    .timeline-card-wrap {
+      flex: 1;
+      padding-bottom: 20px;
+    }
+    .module-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .module-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lift);
+    }
+    .module-card--break {
+      background: var(--parchment);
+      border-style: dashed;
+      box-shadow: none;
+    }
+    .module-card--break:hover { transform: none; box-shadow: none; }
+    .module-card--lunch {
+      background: linear-gradient(135deg, rgba(182,133,61,0.06), rgba(196,80,42,0.04));
+      border-color: rgba(182,133,61,0.25);
+    }
+    .module-card--homework {
+      background: var(--deep-ink);
+      border-color: var(--border-dark);
+    }
+
+    /* Day accent left borders */
+    .card--d1 { border-left: 3px solid var(--ember); }
+    .card--d2 { border-left: 3px solid var(--teal); }
+    .card--d3 { border-left: 3px solid var(--gold); }
+
+    .module-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+    .module-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 100px;
+      flex-shrink: 0;
+    }
+    .tag--d1 { background: rgba(196,80,42,0.10); color: var(--ember-dark); }
+    .tag--d2 { background: rgba(42,122,110,0.10); color: var(--teal); }
+    .tag--d3 { background: rgba(182,133,61,0.10); color: #7a5c1a; }
+    .tag--break { background: rgba(152,152,168,0.12); color: var(--mist); }
+    .tag--lunch { background: rgba(182,133,61,0.10); color: var(--gold); }
+    .tag--homework { background: rgba(196,80,42,0.15); color: var(--ember-light); }
+
+    .module-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .module-card--homework .module-name { color: #FDFCFA; }
+    .module-card--break .module-name { color: var(--slate); font-weight: 500; }
+
+    /* Three-step design */
+    .three-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media (max-width: 640px) {
+      .three-steps { grid-template-columns: 1fr; }
+    }
+    .step-block {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .step-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .step--practice .step-label { color: var(--ember); }
+    .step--reflect .step-label { color: var(--gold); }
+    .step--explain .step-label { color: var(--teal); }
+    .step-content { font-size: 13px; color: var(--slate); line-height: 1.65; }
+
+    /* Homework card */
+    .hw-title { font-size: 16px; font-weight: 600; color: #FDFCFA; margin-bottom: 8px; }
+    .hw-body { font-size: 14px; color: rgba(253,252,250,0.65); line-height: 1.7; }
+    .hw-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      background: rgba(196,80,42,0.20);
+      border: 1px solid rgba(196,80,42,0.35);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+    }
+
+    /* Lunch card */
+    .lunch-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+    .lunch-sub { font-size: 13px; color: var(--slate); margin-top: 4px; }
+
+    /* Tag row */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .pill {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .pill--ember { background: rgba(196,80,42,0.10); color: var(--ember-dark); }
+    .pill--teal  { background: rgba(42,122,110,0.10); color: var(--teal); }
+    .pill--gold  { background: rgba(182,133,61,0.10); color: #7a5c1a; }
+
+    /* ─── Pricing Section ─── */
+    .pricing-section {
+      background: var(--deep-ink);
+      padding: 72px 0;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 40px;
+    }
+    @media (max-width: 768px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+    .price-card {
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 200ms ease, transform 200ms ease;
+    }
+    .price-card:hover { transform: translateY(-2px); border-color: rgba(196,80,42,0.40); }
+    .price-card--featured {
+      background: linear-gradient(135deg, rgba(196,80,42,0.12), rgba(182,133,61,0.08));
+      border-color: rgba(196,80,42,0.35);
+    }
+    .price-card--coach {
+      background: linear-gradient(135deg, rgba(182,133,61,0.10), rgba(42,122,110,0.06));
+      border-color: rgba(182,133,61,0.30);
+    }
+    .price-tier {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .price-card--featured .price-tier { color: var(--ember-light); }
+    .price-card--coach .price-tier { color: var(--gold-light); }
+    .price-name { font-size: 22px; font-weight: 600; color: #FDFCFA; margin-bottom: 8px; }
+    .price-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .price-card--featured .price-amount { color: var(--ember-light); }
+    .price-card--coach .price-amount { color: var(--gold-light); }
+    .price-unit { font-size: 13px; color: rgba(253,252,250,0.50); margin-bottom: 20px; }
+    .price-divider { border: none; border-top: 1px solid var(--border-dark); margin: 20px 0; }
+    .price-features { list-style: none; }
+    .price-features li {
+      font-size: 14px;
+      color: rgba(253,252,250,0.70);
+      padding: 6px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .price-features li::before {
+      content: '—';
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .price-card--featured .price-features li::before { color: var(--ember-light); }
+    .price-card--coach .price-features li::before { color: var(--gold-light); }
+    .price-note {
+      margin-top: 20px;
+      background: rgba(196,80,42,0.10);
+      border: 1px solid rgba(196,80,42,0.20);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: rgba(253,252,250,0.65);
+      line-height: 1.6;
+    }
+    .price-note strong { color: var(--ember-light); }
+
+    /* ─── Nav ─── */
+    .day-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,247,242,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+    .day-nav-inner {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .day-nav-inner::-webkit-scrollbar { display: none; }
+    .day-tab {
+      flex-shrink: 0;
+      text-decoration: none;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate);
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .day-tab:hover { background: var(--parchment); color: var(--ink); }
+    .day-tab--d1:hover, .day-tab--d1.active { background: rgba(196,80,42,0.10); color: var(--ember); }
+    .day-tab--d2:hover, .day-tab--d2.active { background: rgba(42,122,110,0.10); color: var(--teal); }
+    .day-tab--d3:hover, .day-tab--d3.active { background: rgba(182,133,61,0.10); color: var(--gold); }
+
+    /* ─── Footer ─── */
+    .footer {
+      background: var(--deep-ink);
+      border-top: 1px solid var(--border-dark);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #FDFCFA; font-weight: 600; }
+    .footer-brand span { color: var(--ember-light); font-style: italic; }
+    .footer-meta { font-size: 13px; color: rgba(253,252,250,0.40); }
+
+    /* ─── Fade-in ─── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 400ms ease-out forwards; }
+
+    @media (max-width: 640px) {
+      .module-top { flex-direction: column; gap: 8px; }
+      .timeline-spine { width: 48px; }
+      .spine-time { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero fade-in">
+  <div class="container">
+    <div class="hero-badge">
+      <span>SSA Framework · Course Design Document · 2026-04-27</span>
+    </div>
+    <h1 class="hero-title">
+      美業翻倍計畫<br>
+      <em>從手藝人到系統商的三日蛻變</em>
+    </h1>
+    <p class="hero-subtitle">為美業店主量身設計的系統創業加速器——不靠廣告、不靠運氣，靠系統、靠天賦、靠槓桿。</p>
+    <div class="hero-meta">
+      <div class="meta-chip">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        三日課程 × 每日 9:00 – 18:00
+      </div>
+      <div class="meta-chip">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        美業店主 / 老闆（美容 · 美髮 · 身心靈）
+      </div>
+      <div class="meta-chip">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        27 小時沉浸式學習 · 上限 20 人
+      </div>
+    </div>
+    <div class="hero-authors">
+      <div class="author-card">
+        <div class="author-avatar author-avatar--wen">W</div>
+        <div class="author-info">
+          <span class="author-name">WEN</span>
+          <span class="author-role">美業 30 年 · 自製產品 25 倍毛利 · 能量艙設備主辦人</span>
+        </div>
+      </div>
+      <div class="author-sep"></div>
+      <div class="author-card">
+        <div class="author-avatar author-avatar--zeal">Z</div>
+        <div class="author-info">
+          <span class="author-name">Zeal</span>
+          <span class="author-role">SSA 框架創始人 · 課程架構設計者</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ NAV ═══ -->
+<nav class="day-nav">
+  <div class="container">
+    <div class="day-nav-inner">
+      <a href="#design-philosophy" class="day-tab">設計哲學</a>
+      <a href="#seven-elements" class="day-tab">七大核心要素</a>
+      <a href="#day1" class="day-tab day-tab--d1">Day 1 · 察覺日</a>
+      <a href="#day2" class="day-tab day-tab--d2">Day 2 · 翻轉日</a>
+      <a href="#day3" class="day-tab day-tab--d3">Day 3 · 落地日</a>
+      <a href="#pricing" class="day-tab">定價方案</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ DESIGN PHILOSOPHY ═══ -->
+<section class="philosophy" id="design-philosophy">
+  <div class="container">
+    <div class="philosophy-inner">
+      <div>
+        <p class="philosophy-label">Course Design Philosophy</p>
+        <h2 class="philosophy-title">為什麼每個模組都是<br>「練習 → 反思 → 說明」？</h2>
+        <p class="philosophy-body">
+          大多數課程的邏輯是先講知識，再讓學員練習。
+          但成人學習的真相是：<strong style="color:#FDFCFA;">沒有體驗，理論等於空話。</strong>
+        </p>
+        <br>
+        <p class="philosophy-body">
+          SSA 顛倒這個順序——<em style="color:rgba(253,252,250,0.80);">先讓學員撞牆、發現問題，再給框架</em>。
+          學員帶著「啊，這就是我剛才卡住的地方」的感受吸收概念，記憶留存率是傳統順序的 3–5 倍。
+        </p>
+        <br>
+        <p class="philosophy-body" style="color:rgba(253,252,250,0.50);font-size:14px;">
+          每個練習不是示範——是讓學員的舊模式先跑一遍。
+          反思讓個人/小組沉澱感受，不急著給答案。
+          說明是概念框架的後置安裝，嵌入剛才親身驗證的縫隙。
+          每個模組是一個完整學習迴圈，單元間有明確銜接邏輯，層層堆疊。
+        </p>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <span class="flow-num">01</span>
+          <div class="flow-content">
+            <p class="flow-title">練習 Practice</p>
+            <p class="flow-desc">體驗先行。沒有前置知識，直接下場做。讓舊有習慣自然呈現，問題才有真實感。</p>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <span class="flow-num">02</span>
+          <div class="flow-content">
+            <p class="flow-title">反思 Reflect</p>
+            <p class="flow-desc">個人或小組沉澱。不急著給答案——讓每個人在自己的框架裡先找到問題所在。</p>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <span class="flow-num">03</span>
+          <div class="flow-content">
+            <p class="flow-title">說明 Explain</p>
+            <p class="flow-desc">概念框架後置安裝。學員帶著剛才的親身體驗來聽理論，理解深度完全不同。</p>
+          </div>
+        </div>
+        <div style="background:rgba(196,80,42,0.12);border:1px solid rgba(196,80,42,0.25);border-radius:8px;padding:14px 20px;margin-top:4px;">
+          <p style="font-size:13px;color:rgba(253,252,250,0.65);">每個最小單元都必須遵守此順序。違反即打破學習迴圈，框架失效。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SEVEN ELEMENTS ═══ -->
+<section id="seven-elements">
+  <div class="container">
+    <p class="section-label">Seven Core Elements</p>
+    <h2 class="section-title">七大核心要素</h2>
+    <p class="section-subtitle">三天所有模組、練習、說明，都圍繞這七個主軸設計——缺任何一個，系統就不完整。</p>
+    <div class="seven-grid">
+      <div class="seven-card">
+        <div class="seven-num">1</div>
+        <p class="seven-title">合作勝於單打獨鬥</p>
+        <p class="seven-desc">美業老闆最大天花板通常不是技術，而是孤立。課程每個分組練習都在刻意建立「靠別人的力量」的新神經迴路。</p>
+        <div class="tag-row"><span class="pill pill--ember">D1 M4</span><span class="pill pill--teal">D2 M2</span></div>
+      </div>
+      <div class="seven-card">
+        <div class="seven-num">2</div>
+        <p class="seven-title">系統性規劃降低成本拉高效率</p>
+        <p class="seven-desc">從「靠記憶靠自律」到「靠流程靠系統」。天花板數字讓學員親眼看見時間的成本結構，不再依賴感覺決策。</p>
+        <div class="tag-row"><span class="pill pill--ember">D1 M3</span><span class="pill pill--gold">D3 M2</span></div>
+      </div>
+      <div class="seven-card">
+        <div class="seven-num">3</div>
+        <p class="seven-title">空軍 × 陸軍 × 海軍三軍佈陣</p>
+        <p class="seven-desc">行銷（空軍）、轉介紹（陸軍）、商務聯盟合作（海軍）——三軍不需全強，但每軍都要有。依天賦找主力，依補位找隊友。</p>
+        <div class="tag-row"><span class="pill pill--teal">Day 2 核心主軸</span></div>
+      </div>
+      <div class="seven-card">
+        <div class="seven-num">4</div>
+        <p class="seven-title">看懂天賦，組合最適策略</p>
+        <p class="seven-desc">四型美業老闆（關係型/技術型/系統型/品牌型），用 Museon 測評找主軸，再看合作夥伴天賦——組合才是競爭力。</p>
+        <div class="tag-row"><span class="pill pill--teal">D2 M1</span><span class="pill pill--teal">D2 M4</span></div>
+      </div>
+      <div class="seven-card">
+        <div class="seven-num">5</div>
+        <p class="seven-title">品牌 = 口碑的長期一致性</p>
+        <p class="seven-desc">品牌不是 Logo——是每一次服務中「你希望客人怎麼描述你」的持續兌現，以及設計過「教育消費者」的流程。</p>
+        <div class="tag-row"><span class="pill pill--gold">Day 3 M1</span></div>
+      </div>
+      <div class="seven-card">
+        <div class="seven-num">6</div>
+        <p class="seven-title">逆熵設計 × Xmodel 破框</p>
+        <p class="seven-desc">逆熵讓生意趨向秩序，Xmodel 讓你看見框架本身。「台灣沒有人做美業翻倍教練」就是因為大家都活在框裡。</p>
+        <div class="tag-row"><span class="pill pill--gold">D3 M2</span><span class="pill pill--gold">D3 M3</span></div>
+      </div>
+      <div class="seven-card">
+        <div class="seven-num">7</div>
+        <p class="seven-title">課程中用 Museon 完成作業</p>
+        <p class="seven-desc">Museon 不是課後工具——是課中槓桿。天賦測評、90 天生意地圖、個人化行動計劃，學員離開時已有第一份藍圖。</p>
+        <div class="tag-row"><span class="pill pill--ember">D2 M1</span><span class="pill pill--gold">D3 M4</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     DAY 1
+════════════════════════════════════ -->
+<section id="day1">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-badge day-badge--d1"><span>Day 01 · 察覺日</span></div>
+      <h2 class="day-title day-title--d1">看見你真正的遊戲</h2>
+      <p class="day-tagline">你不知道的才是天花板</p>
+      <p class="section-subtitle">在任何行動之前，先看清楚自己現在站在哪裡——生意地圖、客人結構、數字真相、合作可能。</p>
+    </div>
+
+    <div class="energy-curve">
+      <div class="curve-block curve-block--am">
+        <p class="curve-label">上午 AM</p>
+        <p class="curve-title">破防 + 覺察</p>
+        <p class="curve-desc">破冰→看見問題→建立安全感，讓學員願意誠實面對現況。</p>
+        <div class="curve-bar"></div>
+      </div>
+      <div class="curve-block curve-block--mid">
+        <p class="curve-label">午後前段</p>
+        <p class="curve-title">數字衝擊 + 策略</p>
+        <p class="curve-desc">天花板數字計算帶來真實衝擊，合作框架打開新的視角。</p>
+        <div class="curve-bar"></div>
+      </div>
+      <div class="curve-block curve-block--pm">
+        <p class="curve-label">午後後段</p>
+        <p class="curve-title">整合 + 帶走</p>
+        <p class="curve-desc">畫出生意地圖，看見全局，帶著一個具體問題回去實地驗證。</p>
+        <div class="curve-bar"></div>
+      </div>
+    </div>
+
+    <div class="modules-list">
+
+      <!-- 09:00 開場破冰 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">09:00</span>
+          <div class="spine-dot spine-dot--d1"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d1">
+            <div class="module-top">
+              <p class="module-name">開場破冰</p>
+              <span class="module-tag tag--d1">09:00 – 09:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">兩分鐘用三個詞描述「我的生意現在在哪裡」——不思考，直覺反應。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">為什麼是這三個詞？你選的詞裡，有幾個是正向的？有幾個是困住的訊號？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">今天要做的事：看見你的遊戲盤。不是給答案——是讓你看見你現在在玩什麼遊戲。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09:30 M1 你在賣什麼 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">09:30</span>
+          <div class="spine-dot spine-dot--d1"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d1">
+            <div class="module-top">
+              <p class="module-name">模組一：你在賣什麼？</p>
+              <span class="module-tag tag--d1">09:30 – 11:00</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">分組，每組設計 30 秒「向陌生人介紹你的服務」並輪流呈現。不能用技術術語，對方要能聽懂。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你說的、客人聽到的，是同一件事嗎？哪個組的說法讓你最想當客人？為什麼？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">美業六大盲區——90% 老闆賣的是技術，但客人買的是感覺 / 結果 / 身份認同。你真正在賣的是什麼？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11:00 休息 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">11:00</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--break">
+            <div class="module-top">
+              <p class="module-name">中場休息</p>
+              <span class="module-tag tag--break">11:00 – 11:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11:15 M2 客人地圖 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">11:15</span>
+          <div class="spine-dot spine-dot--d1"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d1">
+            <div class="module-top">
+              <p class="module-name">模組二：客人地圖</p>
+              <span class="module-tag tag--d1">11:15 – 12:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">寫出 Top 10 客人：姓名 / 來多久了 / 每月消費金額 / 是否有介紹人。不能查系統，憑記憶寫。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">哪一格是空的？你最清楚哪個維度？最模糊哪個？記不清消費金額的客人，你跟他的關係是什麼？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">美業三層金礦——普通客 / VIP / VVIP 的比例與終身價值（LTV）計算。你現在的 VVIP 佔幾 %？帶來多少 % 的收入？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12:30 午餐 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">12:30</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--lunch">
+            <div class="module-top">
+              <div>
+                <p class="lunch-title">午餐時間</p>
+                <p class="lunch-sub">建議：學員自由組合用餐，交流各自的「客人地圖」發現，非正式學習效果高。</p>
+              </div>
+              <span class="module-tag tag--lunch">12:30 – 13:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13:30 M3 數字說什麼 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">13:30</span>
+          <div class="spine-dot spine-dot--d1"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d1">
+            <div class="module-top">
+              <p class="module-name">模組三：數字說什麼？</p>
+              <span class="module-tag tag--d1">13:30 – 15:00</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">現場計算「天花板數字」：月收入 ÷ 工作時數 = 每小時多少？再算理想月收入需要幾個小時——數字說話。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">這個數字讓你有什麼感覺？你願意繼續這個交換嗎？要翻倍，是加倍時間、加倍單價，還是加倍人力？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">系統性規劃的力量——為什麼一個人做永遠有天花板。成本結構圖解：時間成本 / 人力成本 / 機會成本三層分析。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15:00 休息 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">15:00</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--break">
+            <div class="module-top">
+              <p class="module-name">中場休息</p>
+              <span class="module-tag tag--break">15:00 – 15:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15:15 M4 合作 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">15:15</span>
+          <div class="spine-dot spine-dot--d1"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d1">
+            <div class="module-top">
+              <p class="module-name">模組四：合作 vs 單打獨鬥</p>
+              <span class="module-tag tag--d1">15:15 – 16:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">分組挑戰：30 分鐘設計「不靠廣告帶 10 個新客」方案。規則：不能用 IG、不能打廣告、不能降價。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你的方案裡有幾個靠別人的力量？你自己一個人做得到幾個？哪個最快？哪個最有複利效果？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">合作槓桿四形式：同行聯盟 / 異業合作 / 廠商合作 / 學員轉介。哪個最適合你現在的狀態？進入點在哪裡？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16:30 M5 生意地圖 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">16:30</span>
+          <div class="spine-dot spine-dot--d1"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d1">
+            <div class="module-top">
+              <p class="module-name">模組五：生意地圖全景</p>
+              <span class="module-tag tag--d1">16:30 – 17:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">畫出你的生意地圖：技術 / 產品 / 客人 / 系統 / 合作夥伴，這五個維度現在各有幾個？打分數 1-10。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">哪塊最薄弱？哪塊最有潛力？你花最多精力在哪塊？那塊真的是你最需要加強的嗎？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">從「做了 30 年卻原地踏步」到「系統商」的關鍵缺口——WEN 的故事：她的轉折點在哪裡？你的在哪裡？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17:30 作業 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">17:30</span>
+          <div class="spine-dot spine-dot--d1"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--homework">
+            <div class="module-top">
+              <p class="module-name">收尾 + 今日作業</p>
+              <span class="module-tag tag--homework">17:30 – 18:00</span>
+            </div>
+            <p class="hw-title">今日最大衝擊一句話</p>
+            <p class="hw-body">每位學員說出今天最讓自己震動的一句話——不是「我學到了……」，是「我沒想到……」或「我終於理解……」。</p>
+            <div style="margin-top:16px;">
+              <p class="hw-title">今夜作業</p>
+              <p class="hw-body">問你最信任的客人一個問題：「你介紹朋友來找我的原因是什麼？」——不要預設答案，只是聽，記下原話。明天帶回來。</p>
+            </div>
+            <span class="hw-action">作業帶回 Day 2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     DAY 2
+════════════════════════════════════ -->
+<section id="day2" style="background:rgba(42,122,110,0.03);">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-badge day-badge--d2"><span>Day 02 · 翻轉日</span></div>
+      <h2 class="day-title day-title--d2">空軍 × 陸軍 × 海軍——找到你的槓桿</h2>
+      <p class="day-tagline">天賦組合 + 三軍佈陣 + 顧問式銷售</p>
+      <p class="section-subtitle">從「靠自己的能力」走向「靠天賦的組合力量」。找到主力，找到補位，設計 VIP 機制。</p>
+    </div>
+
+    <div class="energy-curve">
+      <div class="curve-block curve-block--am">
+        <p class="curve-label">上午 AM</p>
+        <p class="curve-title">天賦揭曉 + 三軍盤點</p>
+        <p class="curve-desc">用 Museon 完成天賦測評，盤點三軍現況比例，找到主力方向與補位需求。</p>
+        <div class="curve-bar"></div>
+      </div>
+      <div class="curve-block curve-block--mid">
+        <p class="curve-label">午後前段</p>
+        <p class="curve-title">顧問式銷售演練</p>
+        <p class="curve-desc">角色扮演讓真實銷售情境重演，SSA 三步讓學員感受「讓客人自己說我需要」的差異。</p>
+        <div class="curve-bar"></div>
+      </div>
+      <div class="curve-block curve-block--pm">
+        <p class="curve-label">午後後段</p>
+        <p class="curve-title">組合策略 + VIP 設計</p>
+        <p class="curve-desc">看懂自己和夥伴的天賦組合，設計第一版 VIP 機制——從「賣次數」走向「賣關係」。</p>
+        <div class="curve-bar"></div>
+      </div>
+    </div>
+
+    <div class="modules-list">
+
+      <!-- 09:00 昨日收穫 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">09:00</span>
+          <div class="spine-dot spine-dot--d2"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d2">
+            <div class="module-top">
+              <p class="module-name">昨日收穫 + 作業分享</p>
+              <span class="module-tag tag--d2">09:00 – 09:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">每人 30 秒說昨天最大看見，再分享客人回答「介紹原因」的原話——不要詮釋，只念原文。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">有沒有人的答案讓你共鳴？客人說的「原因」跟你自己以為的一樣嗎？哪裡有落差？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">今天從「看見」走向「槓桿」——昨天的察覺是地基，今天開始蓋結構。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09:30 M1 天賦 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">09:30</span>
+          <div class="spine-dot spine-dot--d2"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d2">
+            <div class="module-top">
+              <p class="module-name">模組一：認識天賦戰場（Museon 測評）</p>
+              <span class="module-tag tag--d2">09:30 – 11:00</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">用 Museon 完成天賦測評（約 15-20 分鐘），看強項在哪個維度——關係 / 技術 / 系統 / 品牌。拿到結果後先沉默看 5 分鐘。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你花最多力氣的地方，跟天賦最強的地方，是同一個嗎？你有沒有在用最貴的能量做最不值得的事？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">四型美業老闆的槓桿地圖：關係型主攻陸軍（轉介紹）、技術型主攻品牌溢價、系統型主攻海軍（合作）、品牌型主攻空軍（內容行銷）。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11:00 休息 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">11:00</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--break">
+            <div class="module-top">
+              <p class="module-name">中場休息</p>
+              <span class="module-tag tag--break">11:00 – 11:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11:15 M2 三軍 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">11:15</span>
+          <div class="spine-dot spine-dot--d2"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d2">
+            <div class="module-top">
+              <p class="module-name">模組二：三軍佈陣現況盤點</p>
+              <span class="module-tag tag--d2">11:15 – 12:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">畫出「我的三軍現在各有幾個兵」：空軍（幾個行銷渠道在跑？）/ 陸軍（每月轉介紹幾人？）/ 海軍（幾個聯盟合作夥伴？）。用數字，不用感覺。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你的三軍比例是什麼？哪個幾乎是零？零的那個，是你不擅長、沒時間，還是根本沒想過？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">三軍不是每個都要強，但每個都要有至少一個基礎——依天賦找主力，依補位找隊友。零的那個可以外包給誰？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12:30 午餐 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">12:30</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--lunch">
+            <div class="module-top">
+              <div>
+                <p class="lunch-title">午餐時間</p>
+                <p class="lunch-sub">建議：引導學員看彼此的天賦報告，開始探索「你補我的弱」的組合可能性。</p>
+              </div>
+              <span class="module-tag tag--lunch">12:30 – 13:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13:30 M3 顧問式銷售 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">13:30</span>
+          <div class="spine-dot spine-dot--d2"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d2">
+            <div class="module-top">
+              <p class="module-name">模組三：顧問式銷售實戰演練</p>
+              <span class="module-tag tag--d2">13:30 – 15:00</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">角色扮演：A 演客人，B 演老闆。「客人說只要剪頭髮，老闆你怎麼回應？」輪流演，讓自然反應先跑一遍。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你聽到客人說話背後的需求了嗎？你有幾個問題是在挖掘，幾個是在推銷？客人感覺你在幫他還是在賣他？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">SSA 顧問式銷售三步：① 挖掘真實需求（問到他說出自己的問題）→ ② 放大 GAP 感知（讓他看清現狀和想要的距離）→ ③ 提出解決方案（不是推銷，是讓客人自己說「我需要更好的」）。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15:00 休息 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">15:00</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--break">
+            <div class="module-top">
+              <p class="module-name">中場休息</p>
+              <span class="module-tag tag--break">15:00 – 15:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15:15 M4 看懂人 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">15:15</span>
+          <div class="spine-dot spine-dot--d2"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d2">
+            <div class="module-top">
+              <p class="module-name">模組四：看懂人，組合最適策略</p>
+              <span class="module-tag tag--d2">15:15 – 16:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">用 Museon 天賦圖——先看自己，再看旁邊學員的天賦圖，找出「你補我的弱、我補你的弱」的組合，嘗試設計合作方案雛形。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你的團隊裡，誰補了你的弱點？誰跟你重疊太多？你有沒有在花時間加強自己的弱點，而不是找人補位？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">組合天賦的邏輯——不是找跟你像的人，是找你不擅長的人。真正的協作：1+1 等於 5，因為補位讓雙方都不再分心。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16:30 M5 VIP -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">16:30</span>
+          <div class="spine-dot spine-dot--d2"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d2">
+            <div class="module-top">
+              <p class="module-name">模組五：VIP 機制工作坊（草稿設計）</p>
+              <span class="module-tag tag--d2">16:30 – 17:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">設計 VIP 機制草稿：門檻條件 / 費用區間 / 包含什麼服務 / 不包含什麼。在 A4 紙畫出來，不需要完美，需要具體。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">這個設計，你有信心賣嗎？哪裡卡住了——是定價、包含內容、如何說服客人，還是自己的承諾能力？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">從「賣次數」到「賣關係」——VIP 機制四個防火牆：① 篩選機制（不是誰都能進）② 稀缺感（名額限制）③ 服務邊界（提供什麼/不提供什麼）④ 升級路徑（VIP→教練關係）。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17:30 作業 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">17:30</span>
+          <div class="spine-dot spine-dot--d2"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--homework">
+            <div class="module-top">
+              <p class="module-name">收尾 + 今日作業</p>
+              <span class="module-tag tag--homework">17:30 – 18:00</span>
+            </div>
+            <p class="hw-title">今日最大衝擊一句話</p>
+            <p class="hw-body">分享今天最讓你重新思考的一句話——關於天賦、三軍，或 VIP 設計。</p>
+            <div style="margin-top:16px;">
+              <p class="hw-title">今夜作業</p>
+              <p class="hw-body">找一個你想合作的人（教室裡或教室外都行），想清楚：「他能給我什麼，我能給他什麼」——明天帶進來分享。</p>
+            </div>
+            <span class="hw-action">作業帶回 Day 3</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     DAY 3
+════════════════════════════════════ -->
+<section id="day3" style="background:rgba(182,133,61,0.03);">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-badge day-badge--d3"><span>Day 03 · 落地日</span></div>
+      <h2 class="day-title day-title--d3">品牌 × 逆熵 × Xmodel——建立系統</h2>
+      <p class="day-tagline">從個人能力走向可複製的系統商</p>
+      <p class="section-subtitle">前兩天的察覺和槓桿，今天化成 90 天行動藍圖帶走。不是計畫書，是真實可執行的起點。</p>
+    </div>
+
+    <div class="energy-curve">
+      <div class="curve-block curve-block--am">
+        <p class="curve-label">上午 AM</p>
+        <p class="curve-title">品牌 + 逆熵</p>
+        <p class="curve-desc">口碑一致性的真相 + 生意裡最混亂的三件事如何系統化——從感性到工程。</p>
+        <div class="curve-bar"></div>
+      </div>
+      <div class="curve-block curve-block--mid">
+        <p class="curve-label">午後前段</p>
+        <p class="curve-title">Xmodel 破框</p>
+        <p class="curve-desc">看見框架本身——哪些「美業本來就這樣」其實是別人設的框，不是你必須接受的現實。</p>
+        <div class="curve-bar"></div>
+      </div>
+      <div class="curve-block curve-block--pm">
+        <p class="curve-label">午後後段</p>
+        <p class="curve-title">Museon 落地 + 結尾儀式</p>
+        <p class="curve-desc">90 天生意地圖生成，每人說出第一個具體行動，帶著藍圖離開。</p>
+        <div class="curve-bar"></div>
+      </div>
+    </div>
+
+    <div class="modules-list">
+
+      <!-- 09:00 昨日收穫 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">09:00</span>
+          <div class="spine-dot spine-dot--d3"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d3">
+            <div class="module-top">
+              <p class="module-name">昨日收穫 + 合作作業分享</p>
+              <span class="module-tag tag--d3">09:00 – 09:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">分享「我想合作的那個人」：他是誰？他補了我什麼？我補了他什麼？我們的組合可以做什麼？三十秒說清楚。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你有沒有發現自己的盲點？你說的合作方案，那個人知道嗎？你還是在自己規劃，還是真的有跟他討論過？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">今天把前兩天的看見變成系統——不是計劃書，是真實可執行的 90 天行動藍圖。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09:30 M1 品牌 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">09:30</span>
+          <div class="spine-dot spine-dot--d3"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d3">
+            <div class="module-top">
+              <p class="module-name">模組一：品牌 = 口碑的長期一致性</p>
+              <span class="module-tag tag--d3">09:30 – 11:00</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">寫下「你希望客人在朋友面前怎麼描述你/你的店？」——口碑三個關鍵詞。不是你現在有什麼，是你想要有什麼。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">這三個詞，在昨天的服務裡有嗎？在你最疲憊的那一天還有嗎？你有沒有設計過讓這三個詞持續出現的流程？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">品牌三問：① 你要的口碑是什麼（三個詞）？② 每次客人接觸點都貫穿了嗎（預約/接待/服務中/服務後/轉介紹）？③ 你有沒有設計過「教育消費者」的流程——讓客人知道你的價值而不是靠你自己說？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11:00 休息 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">11:00</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--break">
+            <div class="module-top">
+              <p class="module-name">中場休息</p>
+              <span class="module-tag tag--break">11:00 – 11:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11:15 M2 逆熵 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">11:15</span>
+          <div class="spine-dot spine-dot--d3"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d3">
+            <div class="module-top">
+              <p class="module-name">模組二：逆熵流程設計</p>
+              <span class="module-tag tag--d3">11:15 – 12:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">列出生意裡「最混亂、最靠記憶、最容易出錯」的三件事——不是你覺得重要的，是最讓你焦慮的、最怕出差錯的。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">如果這三件事有 SOP，你每個月能省多少時間？你現在靠自律維持的事，如果你病了三天會怎樣？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">逆熵原則：好的系統讓事情趨向秩序，不靠人的自律。美業逆熵三層：客戶管理流程化 → 服務交付標準化 → 轉介紹機制系統化。三層各找一件事，本週開始寫第一版 SOP。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12:30 午餐 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">12:30</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--lunch">
+            <div class="module-top">
+              <div>
+                <p class="lunch-title">午餐時間</p>
+                <p class="lunch-sub">最後一天午餐——鼓勵學員互留聯絡，確認昨天找到的合作夥伴今天有沒有更深入交流。</p>
+              </div>
+              <span class="module-tag tag--lunch">12:30 – 13:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13:30 M3 Xmodel -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">13:30</span>
+          <div class="spine-dot spine-dot--d3"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d3">
+            <div class="module-top">
+              <p class="module-name">模組三：Xmodel——突破框架的遊戲</p>
+              <span class="module-tag tag--d3">13:30 – 15:00</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">用 Xmodel 視角看自己的生意：「我現在在哪個框裡？這個框是誰設的？」每人列出三個「美業本來就這樣」的信念。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">你列的三個「本來就這樣」，哪一個你現在覺得不一定是真的？如果它不是真的，你的生意可以怎麼做？誰已經在打破它了？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">Xmodel 六大荒謬對應美業版——「台灣沒有人做美業店家翻倍教練」就是因為大家都在框裡。WEN 是第一個跳出來的人。你可以在你的市場做第一個做什麼的人？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15:00 休息 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">15:00</span>
+          <div class="spine-dot spine-dot--break"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--break">
+            <div class="module-top">
+              <p class="module-name">中場休息</p>
+              <span class="module-tag tag--break">15:00 – 15:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15:15 M4 Museon落地 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">15:15</span>
+          <div class="spine-dot spine-dot--d3"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d3">
+            <div class="module-top">
+              <p class="module-name">模組四：Museon 90 天生意地圖落地</p>
+              <span class="module-tag tag--d3">15:15 – 16:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">用 Museon 完成「90 天生意地圖」：輸入當前狀況 + 三軍現況（Day 2 盤點）+ 天賦圖（Day 2 測評）→ Museon 輸出個人化 90 天行動計劃草稿。</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">看著 Museon 給你的計劃，哪裡跟你自己想的不一樣？哪裡讓你驚喜？哪裡你覺得不對——Museon 沒看到你什麼？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">工具是槓桿，不是依賴——Museon 幫你看到你看不見的，但計劃最終是你的。今天拿走的不是答案，是一個你說「我願意為此負責」的藍圖起點。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16:30 M5 收尾 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">16:30</span>
+          <div class="spine-dot spine-dot--d3"></div>
+          <div class="spine-line"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card card--d3">
+            <div class="module-top">
+              <p class="module-name">模組五：商模收尾 + 教練系統說明</p>
+              <span class="module-tag tag--d3">16:30 – 17:30</span>
+            </div>
+            <div class="three-steps">
+              <div class="step-block step--practice">
+                <p class="step-label">練習</p>
+                <p class="step-content">每個人分享「我的 90 天第一個行動是什麼？」——具體到：哪一天做？跟誰做？完成的標誌是什麼？</p>
+              </div>
+              <div class="step-block step--reflect">
+                <p class="step-label">反思</p>
+                <p class="step-content">說出來的比想的更清晰——你說完有什麼不同？你說的時候有沒有一個聲音說「我真的做得到嗎」？這個聲音說的是什麼？</p>
+              </div>
+              <div class="step-block step--explain">
+                <p class="step-label">說明</p>
+                <p class="step-content">教練陪跑三層次：① 察覺（看見自己的盲點）→ ② 行動（設計可執行步驟）→ ③ 迭代（每月回顧 + 調整）。三日課費用可抵扣教練學費——這三天是第一層察覺，教練陪跑是你的系統化迭代。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17:30 結尾儀式 -->
+      <div class="timeline-wrap">
+        <div class="timeline-spine">
+          <span class="spine-time">17:30</span>
+          <div class="spine-dot spine-dot--d3"></div>
+        </div>
+        <div class="timeline-card-wrap">
+          <div class="module-card module-card--homework" style="background:linear-gradient(135deg,rgba(182,133,61,0.18),rgba(196,80,42,0.12));border-color:rgba(182,133,61,0.30);">
+            <div class="module-top">
+              <p class="module-name">結尾儀式</p>
+              <span class="module-tag tag--d3">17:30 – 18:00</span>
+            </div>
+            <p class="hw-title">每個人說完這一句話才離開</p>
+            <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:rgba(253,252,250,0.88);margin:12px 0 20px;">
+              「我離開這裡之後，第一件事是＿＿＿＿＿。」
+            </p>
+            <div style="padding-top:16px;border-top:1px solid rgba(253,252,250,0.12);">
+              <p class="hw-body">WEN 分享她的翻轉故事——從「我只是個美業老手」到「我是系統商」的那個轉折點是什麼。</p>
+              <p class="hw-body" style="margin-top:8px;">Zeal 結語（如果在場）：SSA 的下一步，以及你們接下來三個月如何繼續進化。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <p class="section-label" style="color:var(--ember-light);">Investment</p>
+    <h2 class="section-title" style="color:#FDFCFA;">定價方案</h2>
+    <p class="section-subtitle" style="color:rgba(253,252,250,0.55);">三日課是入口，教練陪跑是複利。三日課費用全額可抵扣教練學費——你的投入會繼續工作。</p>
+
+    <div class="pricing-grid">
+      <div class="price-card price-card--featured">
+        <p class="price-tier">Three-Day Intensive</p>
+        <p class="price-name">美業翻倍計畫 · 三日課</p>
+        <p class="price-amount">19,800 – 29,800</p>
+        <p class="price-unit">TWD / 人 · 含三日餐食與課程材料</p>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li>三天全沉浸課程（每日 9:00-18:00，共 27 小時）</li>
+          <li>Museon 天賦測評報告（個人化，課中完成）</li>
+          <li>90 天生意地圖 Museon 生成版（課中完成）</li>
+          <li>VIP 機制草稿設計工作坊</li>
+          <li>三軍佈陣個人行動計劃</li>
+          <li>學員社群（30 天課後跟進群組）</li>
+          <li>WEN 親授美業翻倍案例完整拆解</li>
+        </ul>
+        <div class="price-note">
+          <strong>早鳥定價 19,800</strong>（開課前 30 天報名）<br>
+          正式定價 <strong>29,800</strong>，名額上限 20 人，保持高互動密度
+        </div>
+      </div>
+
+      <div class="price-card price-card--coach">
+        <p class="price-tier">Coaching Program</p>
+        <p class="price-name">美業系統商 · 三個月教練陪跑</p>
+        <p class="price-amount">120,000</p>
+        <p class="price-unit">TWD / 三個月 · 課費全額可抵扣</p>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li>每月 4 次 60 分鐘一對一教練會議</li>
+          <li>Museon 每週智慧追蹤 + 行動提醒</li>
+          <li>90 天生意地圖滾動更新（每月調整）</li>
+          <li>三軍佈陣進度追蹤與策略迭代</li>
+          <li>VIP 機制落地陪跑（從草稿到銷出第一位）</li>
+          <li>緊急諮詢頻道（Telegram 48h 內回覆）</li>
+          <li>結束後三個月成果回顧報告</li>
+        </ul>
+        <div class="price-note" style="background:rgba(182,133,61,0.10);border-color:rgba(182,133,61,0.25);">
+          <strong style="color:var(--gold-light);">三日課費用全額抵扣</strong>——報名三日課後升級教練方案，課費直接折抵，<strong style="color:var(--gold-light);">實付差額 90,200 起</strong>（早鳥）
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:16px;">
+      <div style="flex:1;min-width:280px;background:var(--raised);border:1px solid var(--border-dark);border-radius:var(--radius-md);padding:24px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ember);margin-bottom:10px;">課程架構設計 · Zeal</p>
+        <p style="font-size:14px;color:rgba(253,252,250,0.60);line-height:1.7;">SSA（系統創業加速器）框架創始人，專注協助中小企業從「個人能力型」轉型為「系統型」商業模式。本課程框架與 Museon 工具整合由 Zeal 設計。</p>
+      </div>
+      <div style="flex:1;min-width:280px;background:var(--raised);border:1px solid var(--border-dark);border-radius:var(--radius-md);padding:24px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">主辦人 · WEN</p>
+        <p style="font-size:14px;color:rgba(253,252,250,0.60);line-height:1.7;">美業 30 年老手，自製產品達 25 倍毛利，引進能量艙設備開創新服務線。從純技術型老闆走向系統商的親身實踐者——她的故事是這門課最有力的說明。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand">MUSEON × <span>SSA</span></p>
+        <p class="footer-meta" style="margin-top:4px;">美業翻倍計畫 · 課程設計文件 v1.0 · 2026-04-27</p>
+      </div>
+      <div style="text-align:right;">
+        <p class="footer-meta">設計者：Zeal（SSA 框架）× WEN（美業實戰）</p>
+        <p class="footer-meta" style="margin-top:4px;">本文件為內部課程設計提案，請勿對外流通</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Day tab active state via IntersectionObserver
+  const sectionIds = ['design-philosophy','seven-elements','day1','day2','day3','pricing'];
+  const tabs = document.querySelectorAll('.day-tab');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        tabs.forEach(tab => {
+          tab.classList.remove('active');
+          if (tab.getAttribute('href') === '#' + id) tab.classList.add('active');
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Scroll-triggered fade-in for cards
+  const fadeEls = document.querySelectorAll('.module-card, .seven-card, .price-card');
+  const fadeObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '0';
+        entry.target.style.transform = 'translateY(10px)';
+        entry.target.style.transition = `opacity 350ms ease ${(i % 4) * 60}ms, transform 350ms ease ${(i % 4) * 60}ms`;
+        requestAnimationFrame(() => {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        });
+        fadeObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  fadeEls.forEach(el => fadeObs.observe(el));
+</script>
+</body>
+</html>
