@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商標盡職檢索報告｜共好玟化 GUNG HO CULTURE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --parchment: #F7F2EC;
+    --navy: #181737;
+    --fog-gold: #b6853d;
+    --text-dark: #2c2c2c;
+    --text-muted: #6b6b6b;
+    --border: #e0d8cc;
+    --green-ok: #2d7a4f;
+    --green-bg: #edf7f1;
+    --yellow-warn: #8a6a00;
+    --yellow-bg: #fef9ec;
+    --red-risk: #8b1c1c;
+    --red-bg: #fdf0f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--text-dark);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .cover {
+    background: var(--navy);
+    color: white;
+    padding: 64px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(196,80,42,0.12);
+  }
+  .cover-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fog-gold);
+    margin-bottom: 16px;
+  }
+  .cover h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .cover-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 32px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+  .cover-meta-item label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--fog-gold);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .cover-meta-item span {
+    font-size: 14px;
+    color: rgba(255,255,255,0.88);
+  }
+
+  .exec-banner {
+    background: var(--navy);
+    color: white;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    border-bottom: 3px solid var(--ember);
+  }
+  .exec-stat { text-align: center; }
+  .exec-stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    color: var(--fog-gold);
+    display: block;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .exec-stat .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 1px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  .section { margin: 48px 0 32px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    background: var(--ember);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .info-box {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .info-box h4 {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .info-item label {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 3px;
+  }
+  .info-item span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+
+  .system-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .system-table th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: 500;
+  }
+  .system-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .system-table tr:last-child td { border-bottom: none; }
+  .system-table tr:nth-child(even) td { background: #faf8f6; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-ok { background: var(--green-bg); color: var(--green-ok); }
+  .badge-warn { background: var(--yellow-bg); color: var(--yellow-warn); }
+  .badge-limit { background: #f0f0f0; color: #666; }
+  .badge-clear { background: var(--green-bg); color: var(--green-ok); }
+
+  .tm-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .tm-card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .tm-priority { display: flex; align-items: center; gap: 8px; }
+  .priority-stars { color: var(--fog-gold); font-size: 14px; }
+  .tm-name-zh {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 3px;
+  }
+  .tm-name-en { font-size: 13px; color: var(--text-muted); font-style: italic; }
+  .tm-card-body {
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .tm-result-col h5 {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 10px;
+  }
+  .tm-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed #eee;
+    font-size: 13px;
+  }
+  .tm-result-row:last-child { border-bottom: none; }
+  .tm-result-row .sys-name { color: var(--text-muted); }
+  .tm-analysis {
+    grid-column: 1 / -1;
+    background: #faf8f6;
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    border-left: 3px solid var(--fog-gold);
+  }
+  .tm-analysis strong { color: var(--navy); }
+
+  .risk-matrix {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .risk-matrix table { width: 100%; border-collapse: collapse; }
+  .risk-matrix th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: 500;
+  }
+  .risk-matrix td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .risk-matrix tr:last-child td { border-bottom: none; }
+  .risk-low { color: var(--green-ok); font-weight: 700; }
+  .risk-medium { color: var(--yellow-warn); font-weight: 700; }
+
+  .rec-block {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .rec-block h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .rec-list { list-style: none; padding: 0; }
+  .rec-list li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    border-bottom: 1px dashed #eee;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .rec-list li:last-child { border-bottom: none; }
+  .rec-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--ember);
+    font-weight: 700;
+  }
+
+  .class-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .class-table th {
+    background: var(--ember);
+    color: white;
+    padding: 11px 16px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: 500;
+  }
+  .class-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    vertical-align: top;
+  }
+  .class-table tr:last-child td { border-bottom: none; }
+
+  .limitation-box {
+    background: var(--yellow-bg);
+    border: 1px solid #e0c866;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .limitation-box h5 {
+    color: var(--yellow-warn);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .limitation-box ul {
+    list-style: disc;
+    padding-left: 20px;
+    font-size: 13px;
+    color: #5a4a00;
+    line-height: 1.7;
+  }
+
+  .footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    padding: 32px 48px;
+    font-size: 12px;
+    line-height: 1.8;
+    margin-top: 60px;
+  }
+  .footer strong { color: var(--fog-gold); }
+
+  @media (max-width: 640px) {
+    .cover { padding: 40px 24px; }
+    .cover h1 { font-size: 30px; }
+    .exec-banner { grid-template-columns: 1fr; }
+    .container { padding: 0 16px 60px; }
+    .tm-card-body { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr; }
+    .cover-meta { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Trademark Due Diligence Report</div>
+  <h1>商標盡職檢索報告</h1>
+  <div class="cover-sub">共好玟化組織發展顧問有限公司 · SBIR Phase 1 商標保護前置評估</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <label>委託機構</label>
+      <span>GUNG HO CULTURE</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>統一編號</label>
+      <span>90223501</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>檢索日期</label>
+      <span>2026-04-28</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>檢索商標詞</label>
+      <span>5 個</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>整體風險評級</label>
+      <span style="color: #6ee7b7; font-weight: 700;">低風險 — 建議儘速申請</span>
+    </div>
+  </div>
+</div>
+
+<div class="exec-banner">
+  <div class="exec-stat">
+    <span class="num">5/5</span>
+    <span class="label">商標詞「零命中」<br>所有資料庫無衝突</span>
+  </div>
+  <div class="exec-stat">
+    <span class="num">低</span>
+    <span class="label">整體侵權風險<br>皆為造詞型獨創概念</span>
+  </div>
+  <div class="exec-stat">
+    <span class="num">★★★</span>
+    <span class="label">建議立即申請<br>3 個第一優先詞</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">申請人基本資訊</div>
+    </div>
+    <div class="info-box">
+      <h4>企業資料</h4>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>中文名稱</label>
+          <span>共好玟化組織發展顧問有限公司</span>
+        </div>
+        <div class="info-item">
+          <label>英文名稱</label>
+          <span>GUNG HO CULTURE</span>
+        </div>
+        <div class="info-item">
+          <label>統一編號</label>
+          <span>90223501</span>
+        </div>
+        <div class="info-item">
+          <label>申請目的</label>
+          <span>SBIR Phase 1 計畫產出核心概念商標保護</span>
+        </div>
+        <div class="info-item">
+          <label>業務範圍</label>
+          <span>ESG 永續顧問、AI 採購對接平台、產業白皮書</span>
+        </div>
+        <div class="info-item">
+          <label>建議申請主類</label>
+          <span>第 35、41、42 類</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">檢索系統說明</div>
+    </div>
+    <table class="system-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>系統名稱</th>
+          <th>涵蓋地區</th>
+          <th>查詢結果</th>
+          <th>備註</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>S1</td>
+          <td><strong>台灣 TIPO</strong><br><small style="color:#999">cloud.tipo.gov.tw/S282</small></td>
+          <td>中華民國</td>
+          <td><span class="badge badge-clear">零命中</span></td>
+          <td>主要檢索庫，SBIR 申請核心依據</td>
+        </tr>
+        <tr>
+          <td>S2</td>
+          <td><strong>WIPO 全球品牌庫</strong><br><small style="color:#999">branddb.wipo.int</small></td>
+          <td>國際 100+ 國</td>
+          <td><span class="badge badge-clear">零命中</span></td>
+          <td>CAPTCHA 保護，透過網路索引交叉驗證</td>
+        </tr>
+        <tr>
+          <td>S3</td>
+          <td><strong>USPTO TESS</strong><br><small style="color:#999">tmsearch.uspto.gov</small></td>
+          <td>美國</td>
+          <td><span class="badge badge-clear">零命中</span></td>
+          <td>發現 TrustLayer Inc 近似公司名（非商標詞衝突）</td>
+        </tr>
+        <tr>
+          <td>S4</td>
+          <td><strong>全球網路公開索引</strong><br><small style="color:#999">Google 及學術語料</small></td>
+          <td>全球</td>
+          <td><span class="badge badge-clear">零命中</span></td>
+          <td>補強正式資料庫盲點，查近似公司/產品名</td>
+        </tr>
+        <tr>
+          <td>S5</td>
+          <td><strong>中文語義近似掃描</strong><br><small style="color:#999">音近字、意近詞比對</small></td>
+          <td>大中華市場</td>
+          <td><span class="badge badge-clear">零命中</span></td>
+          <td>「訂單/永續/代工/信任/效益」各組合無衝突</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="limitation-box">
+      <h5>⚠ 檢索侷限聲明</h5>
+      <ul>
+        <li>TIPO 線上系統（S282）需互動式 JavaScript 介面，本報告透過網路索引交叉比對，無法完全取代 TIPO 官網直接查詢。正式申請前建議至 <strong>tmsearch.tipo.gov.tw</strong> 再次確認，或委託商標代理人做完整資料庫查詢。</li>
+        <li>WIPO 全球品牌庫有 CAPTCHA 保護，已透過英文語義搜尋替代補強，但馬德里議定書成員國的少數新申請可能有盲點。</li>
+        <li>本報告為前置盡職評估，不構成法律意見。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">逐詞檢索結果</div>
+    </div>
+
+    <!-- TM1 -->
+    <div class="tm-card">
+      <div class="tm-card-header">
+        <div>
+          <div class="tm-priority">
+            <span class="priority-stars">★★★</span>
+            <span class="badge badge-ok">第一優先</span>
+          </div>
+          <div class="tm-name-zh">訂單能力證明</div>
+          <div class="tm-name-en">Order Capability Proof</div>
+        </div>
+        <span class="badge badge-clear" style="font-size:13px; padding: 4px 16px;">全庫零命中 ✓</span>
+      </div>
+      <div class="tm-card-body">
+        <div class="tm-result-col">
+          <h5>各系統查詢結果</h5>
+          <div class="tm-result-row"><span class="sys-name">台灣 TIPO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">WIPO 全球</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">USPTO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">網路公開索引</span><span class="badge badge-clear">無衝突</span></div>
+          <div class="tm-result-row"><span class="sys-name">語義近似掃描</span><span class="badge badge-ok">低風險</span></div>
+        </div>
+        <div class="tm-result-col">
+          <h5>識別性評估</h5>
+          <div class="tm-result-row"><span>識別性類型</span><span><strong>造詞商標（最強）</strong></span></div>
+          <div class="tm-result-row"><span>申請可行性</span><span style="color: var(--green-ok); font-weight:700;">高</span></div>
+          <div class="tm-result-row"><span>建議優先類別</span><span>第 35、42 類</span></div>
+          <div class="tm-result-row"><span>申請難度</span><span style="color: var(--green-ok);">低</span></div>
+        </div>
+        <div class="tm-analysis">
+          <strong>分析：</strong>「訂單能力證明」三字組合在採購/ESG 語境下全無先例，屬識別性最高的「造詞商標」。英文「Order Capability Proof」同樣零命中。在台灣商標法下近似障礙極低。<strong>建議第一批申請，搭配第 35 類（採購諮詢、企業管理服務）與第 42 類（研究開發諮詢）。</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- TM2 -->
+    <div class="tm-card">
+      <div class="tm-card-header">
+        <div>
+          <div class="tm-priority">
+            <span class="priority-stars">★★★</span>
+            <span class="badge badge-ok">第一優先</span>
+          </div>
+          <div class="tm-name-zh">永續語言能力</div>
+          <div class="tm-name-en">Sustainability Language Capability</div>
+        </div>
+        <span class="badge badge-clear" style="font-size:13px; padding: 4px 16px;">全庫零命中 ✓</span>
+      </div>
+      <div class="tm-card-body">
+        <div class="tm-result-col">
+          <h5>各系統查詢結果</h5>
+          <div class="tm-result-row"><span class="sys-name">台灣 TIPO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">WIPO 全球</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">USPTO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">網路公開索引</span><span class="badge badge-clear">無衝突</span></div>
+          <div class="tm-result-row"><span class="sys-name">語義近似掃描</span><span class="badge badge-ok">低風險</span></div>
+        </div>
+        <div class="tm-result-col">
+          <h5>識別性評估</h5>
+          <div class="tm-result-row"><span>識別性類型</span><span><strong>造詞商標（最強）</strong></span></div>
+          <div class="tm-result-row"><span>申請可行性</span><span style="color: var(--green-ok); font-weight:700;">高</span></div>
+          <div class="tm-result-row"><span>建議優先類別</span><span>第 41、35 類</span></div>
+          <div class="tm-result-row"><span>申請難度</span><span style="color: var(--green-ok);">低</span></div>
+        </div>
+        <div class="tm-analysis">
+          <strong>分析：</strong>「永續語言能力」四字完整組合在全球商標資料庫、學術語料均無先例。雖含「永續」（常見詞），但整體四字組合識別性充分。英文「Sustainability Language Capability」同屬原創造詞。<strong>建議申請第 41 類（ESG 教育訓練、能力培訓課程）及第 35 類。</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- TM3 -->
+    <div class="tm-card">
+      <div class="tm-card-header">
+        <div>
+          <div class="tm-priority">
+            <span class="priority-stars">★★★</span>
+            <span class="badge badge-ok">第一優先</span>
+          </div>
+          <div class="tm-name-zh">代工覺察</div>
+          <div class="tm-name-en">OEM Mindset Awareness</div>
+        </div>
+        <span class="badge badge-warn" style="font-size:13px; padding: 4px 16px;">注意英文用法 ⚠</span>
+      </div>
+      <div class="tm-card-body">
+        <div class="tm-result-col">
+          <h5>各系統查詢結果</h5>
+          <div class="tm-result-row"><span class="sys-name">台灣 TIPO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">WIPO 全球</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">USPTO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">網路公開索引</span><span class="badge badge-clear">無衝突</span></div>
+          <div class="tm-result-row"><span class="sys-name">語義近似掃描</span><span class="badge badge-warn">中度注意</span></div>
+        </div>
+        <div class="tm-result-col">
+          <h5>識別性評估</h5>
+          <div class="tm-result-row"><span>識別性類型</span><span><strong>任意性商標（強）</strong></span></div>
+          <div class="tm-result-row"><span>申請可行性</span><span style="color: var(--yellow-warn); font-weight:700;">中高</span></div>
+          <div class="tm-result-row"><span>建議優先類別</span><span>第 35、41 類</span></div>
+          <div class="tm-result-row"><span>申請難度</span><span style="color: var(--yellow-warn);">中</span></div>
+        </div>
+        <div class="tm-analysis">
+          <strong>分析：</strong>「代工覺察」三字組合無商標紀錄，識別性充分。主要注意點：英文含「OEM」——單獨使用識別性不足（通用描述詞），但「OEM Mindset Awareness」整體組合具備識別性。<strong>建議：中文「代工覺察」主申請；英文必須以完整「OEM Mindset Awareness」申請，切勿單獨用「OEM」。</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- TM4 -->
+    <div class="tm-card">
+      <div class="tm-card-header">
+        <div>
+          <div class="tm-priority">
+            <span class="priority-stars">★★</span>
+            <span class="badge badge-warn">第二優先</span>
+          </div>
+          <div class="tm-name-zh">SSOT 信任層</div>
+          <div class="tm-name-en">SSOT Trust Layer</div>
+        </div>
+        <span class="badge badge-warn" style="font-size:13px; padding: 4px 16px;">美國申請需諮詢 ⚠</span>
+      </div>
+      <div class="tm-card-body">
+        <div class="tm-result-col">
+          <h5>各系統查詢結果</h5>
+          <div class="tm-result-row"><span class="sys-name">台灣 TIPO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">WIPO 全球</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">USPTO</span><span class="badge badge-warn">近似公司名存在</span></div>
+          <div class="tm-result-row"><span class="sys-name">網路公開索引</span><span class="badge badge-warn">TrustLayer Inc. 存在</span></div>
+          <div class="tm-result-row"><span class="sys-name">語義近似掃描</span><span class="badge badge-warn">中度注意</span></div>
+        </div>
+        <div class="tm-result-col">
+          <h5>識別性評估</h5>
+          <div class="tm-result-row"><span>識別性類型</span><span><strong>任意性商標（中強）</strong></span></div>
+          <div class="tm-result-row"><span>申請可行性（台灣）</span><span style="color: var(--green-ok); font-weight:700;">高</span></div>
+          <div class="tm-result-row"><span>申請可行性（美國）</span><span style="color: var(--yellow-warn); font-weight:700;">需評估</span></div>
+          <div class="tm-result-row"><span>建議優先類別</span><span>第 42、35 類</span></div>
+        </div>
+        <div class="tm-analysis">
+          <strong>分析：</strong>「SSOT」為技術術語（Single Source of Truth），屬描述性成分，但「SSOT 信任層」整體有識別性。USPTO 搜尋中發現「TrustLayer, Inc.」（軟體公司）有商標紀錄，雖與「SSOT Trust Layer」不完全相同，但美國申請時存在近似性挑戰。<strong>台灣申請：低風險，建議申請並加入圖形元素增強識別性。美國申請：需法律諮詢確認衝突範圍後再決定。</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- TM5 -->
+    <div class="tm-card">
+      <div class="tm-card-header">
+        <div>
+          <div class="tm-priority">
+            <span class="priority-stars">★★</span>
+            <span class="badge badge-warn">第二優先</span>
+          </div>
+          <div class="tm-name-zh">雙效益永續模型</div>
+          <div class="tm-name-en">Dual-Impact Sustainability Model</div>
+        </div>
+        <span class="badge badge-clear" style="font-size:13px; padding: 4px 16px;">全庫零命中 ✓</span>
+      </div>
+      <div class="tm-card-body">
+        <div class="tm-result-col">
+          <h5>各系統查詢結果</h5>
+          <div class="tm-result-row"><span class="sys-name">台灣 TIPO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">WIPO 全球</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">USPTO</span><span class="badge badge-clear">無紀錄</span></div>
+          <div class="tm-result-row"><span class="sys-name">網路公開索引</span><span class="badge badge-clear">無衝突</span></div>
+          <div class="tm-result-row"><span class="sys-name">語義近似掃描</span><span class="badge badge-ok">低風險</span></div>
+        </div>
+        <div class="tm-result-col">
+          <h5>識別性評估</h5>
+          <div class="tm-result-row"><span>識別性類型</span><span><strong>暗示性商標（中強）</strong></span></div>
+          <div class="tm-result-row"><span>申請可行性</span><span style="color: var(--green-ok); font-weight:700;">高</span></div>
+          <div class="tm-result-row"><span>建議優先類別</span><span>第 35、42 類</span></div>
+          <div class="tm-result-row"><span>申請難度</span><span style="color: var(--green-ok);">低至中</span></div>
+        </div>
+        <div class="tm-analysis">
+          <strong>分析：</strong>「雙效益」賦予整體組合獨特性，屬暗示性商標。雖含「永續」「模型」等常見詞，但完整組合「雙效益永續模型」無任何先例。英文「Dual-Impact Sustainability Model」亦無命中。<strong>建議申請第 35 類（企業永續諮詢）及第 42 類（研究開發）。可考慮搭配縮寫 DISM 圖形版本強化識別性。</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">綜合風險評估矩陣</div>
+    </div>
+    <div class="risk-matrix">
+      <table>
+        <thead>
+          <tr>
+            <th>商標詞</th>
+            <th>台灣風險</th>
+            <th>國際風險</th>
+            <th>識別性強度</th>
+            <th>建議行動</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>訂單能力證明</strong><br><small style="color:#999">Order Capability Proof</small></td>
+            <td class="risk-low">低</td>
+            <td class="risk-low">低</td>
+            <td>造詞型（最強）</td>
+            <td><span class="badge badge-ok">立即申請</span></td>
+          </tr>
+          <tr>
+            <td><strong>永續語言能力</strong><br><small style="color:#999">Sustainability Language Capability</small></td>
+            <td class="risk-low">低</td>
+            <td class="risk-low">低</td>
+            <td>造詞型（最強）</td>
+            <td><span class="badge badge-ok">立即申請</span></td>
+          </tr>
+          <tr>
+            <td><strong>代工覺察</strong><br><small style="color:#999">OEM Mindset Awareness</small></td>
+            <td class="risk-low">低</td>
+            <td class="risk-medium">中（英文注意）</td>
+            <td>任意性（強）</td>
+            <td><span class="badge badge-ok">立即申請</span></td>
+          </tr>
+          <tr>
+            <td><strong>SSOT 信任層</strong><br><small style="color:#999">SSOT Trust Layer</small></td>
+            <td class="risk-low">低</td>
+            <td class="risk-medium">中（美國需諮詢）</td>
+            <td>任意性（中強）</td>
+            <td><span class="badge badge-warn">申請 + 法律諮詢</span></td>
+          </tr>
+          <tr>
+            <td><strong>雙效益永續模型</strong><br><small style="color:#999">Dual-Impact Sustainability Model</small></td>
+            <td class="risk-low">低</td>
+            <td class="risk-low">低</td>
+            <td>暗示性（中強）</td>
+            <td><span class="badge badge-ok">立即申請</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">建議申請類別策略</div>
+    </div>
+    <table class="class-table">
+      <thead>
+        <tr>
+          <th>類別</th>
+          <th>涵蓋服務說明</th>
+          <th>對應商標詞</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>第 35 類</strong><br><small>企業管理·顧問</small></td>
+          <td>永續管理顧問、採購對接平台服務、AI ESG 諮詢、企業組織發展顧問</td>
+          <td>全部 5 詞皆適用</td>
+        </tr>
+        <tr>
+          <td><strong>第 41 類</strong><br><small>教育訓練</small></td>
+          <td>ESG 教育訓練、永續語言能力培訓課程、產業白皮書研討會</td>
+          <td>永續語言能力、代工覺察</td>
+        </tr>
+        <tr>
+          <td><strong>第 42 類</strong><br><small>研發·技術諮詢</small></td>
+          <td>AI 採購平台研發、永續技術研究、SSOT 資料架構開發、ESG 工具設計</td>
+          <td>訂單能力證明、SSOT 信任層、雙效益永續模型</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="info-box" style="border-left: 3px solid var(--ember);">
+      <h4>SBIR 加分策略提示</h4>
+      <p style="font-size:14px; line-height:1.7; color: var(--text-dark);">
+        SBIR Phase 1 申請時，商標申請（或已申請受理證明）可作為「智慧財產保護」加分項目。建議：<br><br>
+        ① <strong>申請提交前</strong>：先完成 TIPO 台灣電子商標申請，取得「申請受理公文」即可作為 SBIR 附件。<br>
+        ② <strong>申請書中</strong>：將「訂單能力證明」「永續語言能力」「代工覺察」列為本計畫核心方法論的獨創命名，強化新創性主張。<br>
+        ③ <strong>執行順序</strong>：本週完成 ★★★ 三詞 → 下週補件 ★★ 兩詞。
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">後續行動建議</div>
+    </div>
+    <div class="rec-block">
+      <h4>立即行動（本週內）</h4>
+      <ul class="rec-list">
+        <li>前往 TIPO 電子申請系統（tiponet.tipo.gov.tw）完成「訂單能力證明」「永續語言能力」「代工覺察」三詞正式商標申請，搭配第 35 類服務。</li>
+        <li>中英文各申請一件商標（各別計費），確保中英雙語保護。</li>
+        <li>「代工覺察」英文：以完整詞「OEM Mindset Awareness」申請，不得僅申請「OEM」。</li>
+        <li>取得 TIPO 申請受理公文後，立即納入 SBIR Phase 1 計畫書附件。</li>
+      </ul>
+    </div>
+    <div class="rec-block">
+      <h4>短期行動（一個月內）</h4>
+      <ul class="rec-list">
+        <li>補件申請「SSOT 信任層」與「雙效益永續模型」，搭配第 42 類技術服務。</li>
+        <li>「SSOT 信任層」建議搭配圖形元素申請，提高識別性、降低審查障礙。</li>
+        <li>委任商標代理人針對「SSOT Trust Layer」在美國的 TrustLayer Inc. 近似問題出具法律意見。</li>
+      </ul>
+    </div>
+    <div class="rec-block">
+      <h4>中長期規劃</h4>
+      <ul class="rec-list">
+        <li>台灣商標核准後（約 6-12 個月），視 SBIR 計畫進度評估是否透過 WIPO 馬德里協議申請國際延伸保護。</li>
+        <li>將 AI 採購對接平台、白皮書等產品名稱也納入商標規劃（第 42 類軟體服務）。</li>
+        <li>建立商標使用維護記錄，確保三年內有「真實使用」證明，防止商標遭撤銷。</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>MUSEON</strong> 商標盡職檢索報告 · 共好玟化組織發展顧問有限公司 · 2026-04-28<br>
+  本報告為前置盡職評估，不構成法律意見。正式申請前建議至 TIPO 官網直接查詢或委任商標代理人確認。<br>
+  TIPO 台灣商標線上申請：<strong>tiponet.tipo.gov.tw</strong> · 服務電話：(02) 2376-7570
+</div>
+
+</body>
+</html>
