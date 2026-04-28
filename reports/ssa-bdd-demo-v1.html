@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSA-BDD 商業模式健檢報告｜陳美玲美學工作室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+    --error: #C4402A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans TC','Outfit',sans-serif; background: var(--parchment); color: var(--ink); line-height: 1.75; }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(160deg, #12121A 0%, #1E1825 60%, #2A1A0E 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 60px 40px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px;
+    background: radial-gradient(circle, rgba(196,80,42,0.15) 0%, transparent 70%);
+  }
+  .brand-tag { font-family:'Outfit',sans-serif; font-size:11px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--ember-light); margin-bottom:48px; }
+  .cover h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,52px); font-weight:600; line-height:1.2; color:#FDFCFA; margin-bottom:12px; }
+  .cover-subtitle { font-size:16px; color:rgba(255,255,255,0.5); margin-bottom:56px; font-family:'Outfit',sans-serif; font-weight:300; }
+  .health-ring { position:relative; width:180px; height:180px; margin:0 auto 48px; }
+  .health-ring svg { transform:rotate(-90deg); }
+  .health-score { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; }
+  .health-score .number { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:600; color:var(--ember-light); line-height:1; }
+  .health-score .label { font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:2px; margin-top:4px; }
+  .cover-meta { display:flex; gap:40px; justify-content:center; flex-wrap:wrap; }
+  .meta-item { text-align:center; }
+  .meta-item .meta-label { font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; margin-bottom:4px; }
+  .meta-item .meta-value { font-size:15px; color:rgba(255,255,255,0.85); font-family:'Outfit',sans-serif; }
+  .version-badge { position:absolute; bottom:28px; right:36px; font-size:11px; color:rgba(255,255,255,0.2); letter-spacing:1px; }
+
+  /* BODY */
+  .report-body { max-width:900px; margin:0 auto; padding:60px 32px; }
+  .section { margin-bottom:72px; }
+  .section-header { display:flex; align-items:flex-start; gap:20px; margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+  .section-num { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:600; color:var(--ember); opacity:0.22; line-height:1; flex-shrink:0; margin-top:-8px; }
+  .section-title-wrap .tag { font-size:11px; letter-spacing:2.5px; color:var(--ember); text-transform:uppercase; font-weight:500; margin-bottom:6px; font-family:'Outfit',sans-serif; }
+  .section-title-wrap h2 { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; color:var(--ink); line-height:1.25; }
+
+  /* PROSE */
+  .prose p { font-size:15.5px; line-height:1.9; color:var(--slate); margin-bottom:18px; }
+  .prose p:last-child { margin-bottom:0; }
+  .quote-box { background:var(--snow); border-left:3px solid var(--ember); padding:18px 22px; margin:24px 0; border-radius:0 8px 8px 0; }
+  .quote-box .quote-label { font-size:10px; letter-spacing:2px; color:var(--ember); text-transform:uppercase; margin-bottom:6px; }
+  .quote-box p { font-style:italic; color:var(--slate); font-size:14.5px; line-height:1.8; margin:0; }
+
+  /* RADAR */
+  .radar-wrap { background:var(--snow); border-radius:16px; padding:28px; margin-bottom:28px; border:1px solid var(--border); display:flex; align-items:center; gap:36px; flex-wrap:wrap; }
+  .radar-chart-container { flex:0 0 300px; max-width:300px; }
+  .radar-summary { flex:1; min-width:200px; }
+  .radar-summary h4 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:10px; }
+  .radar-summary p { font-size:13.5px; color:var(--slate); line-height:1.7; margin-bottom:14px; }
+  .summary-badges { display:flex; gap:6px; flex-wrap:wrap; }
+  .badge { padding:3px 11px; border-radius:20px; font-size:12px; font-weight:500; }
+  .badge-danger { background:rgba(196,64,42,0.1); color:var(--error); }
+  .badge-warn { background:rgba(201,148,58,0.1); color:var(--warning); }
+  .badge-ok { background:rgba(45,138,110,0.12); color:var(--success); }
+
+  /* POWER TABLE */
+  .power-table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  .power-table th { text-align:left; padding:10px 14px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--mist); background:var(--snow); border-bottom:1px solid var(--border); font-weight:500; }
+  .power-table td { padding:13px 14px; border-bottom:1px solid rgba(226,224,218,0.5); vertical-align:top; }
+  .power-table tr:last-child td { border-bottom:none; }
+  .power-table tr:hover td { background:rgba(247,245,240,0.7); }
+  .power-name { font-weight:600; color:var(--ink); white-space:nowrap; }
+  .score-bar-wrap { display:flex; align-items:center; gap:8px; }
+  .score-bar { width:72px; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .score-bar-fill { height:100%; border-radius:3px; }
+  .score-num { font-family:'Outfit',sans-serif; font-weight:600; font-size:14px; min-width:28px; }
+  .status-label { font-size:11.5px; font-weight:500; }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .insight-text { font-size:12.5px; color:var(--slate); line-height:1.6; }
+
+  /* FLOW CARDS */
+  .flow-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-bottom:24px; }
+  .flow-card { background:var(--snow); border:1px solid var(--border); border-radius:12px; padding:22px; position:relative; overflow:hidden; }
+  .flow-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .flow-card.danger::before { background:var(--error); }
+  .flow-card.warn::before { background:var(--warning); }
+  .flow-card h4 { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:var(--ink); margin-bottom:14px; }
+  .flow-row { display:flex; gap:6px; margin-bottom:8px; font-size:12.5px; line-height:1.6; }
+  .flow-key { font-weight:600; color:var(--ember); white-space:nowrap; min-width:56px; }
+  .flow-val { color:var(--slate); }
+  .flow-path { margin-top:12px; padding:9px 11px; background:rgba(196,80,42,0.05); border-radius:6px; font-size:11.5px; color:var(--slate); font-family:'Outfit',sans-serif; }
+
+  /* SENSE-4 */
+  .sense-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:24px; }
+  .sense-card { background:var(--snow); border:1px solid var(--border); border-radius:12px; padding:22px; }
+  .sense-card h4 { font-size:14.5px; font-weight:700; color:var(--ink); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+  .sense-score { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; }
+  .sense-bar { height:7px; background:var(--border); border-radius:4px; margin:10px 0; overflow:hidden; }
+  .sense-bar-fill { height:100%; border-radius:4px; }
+  .sense-note { font-size:12.5px; color:var(--slate); line-height:1.65; }
+
+  /* BRIDGE TABLE */
+  .bridge-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .bridge-table th { text-align:left; padding:11px 14px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--mist); background:var(--snow); border-bottom:2px solid var(--border); }
+  .bridge-table td { padding:13px 14px; border-bottom:1px solid rgba(226,224,218,0.5); vertical-align:top; line-height:1.65; color:var(--slate); }
+  .bridge-table td strong { color:var(--ink); }
+  .bridge-table tr:last-child td { border-bottom:none; }
+  .module-tag { display:inline-block; padding:2px 9px; background:rgba(42,122,110,0.1); color:var(--teal); border-radius:4px; font-size:11.5px; font-weight:500; white-space:nowrap; }
+
+  /* DAY CARDS */
+  .day-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+  .day-card { background:linear-gradient(160deg,#16161F 0%,#1E1825 100%); border-radius:12px; padding:22px; }
+  .day-tag { font-size:10px; letter-spacing:2px; color:var(--ember-light); text-transform:uppercase; margin-bottom:10px; font-family:'Outfit',sans-serif; }
+  .day-card h4 { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:600; color:white; margin-bottom:8px; line-height:1.3; }
+  .day-card p { font-size:12.5px; color:rgba(255,255,255,0.5); line-height:1.6; }
+
+  /* CTA */
+  .cta-block { background:var(--snow); border:1px solid var(--border); border-radius:12px; padding:26px 30px; }
+  .cta-block h4 { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:600; color:var(--ink); margin-bottom:14px; }
+  .cta-links { display:flex; flex-direction:column; gap:12px; }
+  .cta-link-item { display:flex; align-items:flex-start; gap:11px; }
+  .cta-num { flex-shrink:0; width:22px; height:22px; border-radius:50%; background:var(--ember); color:white; font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+  .cta-text { font-size:13.5px; color:var(--slate); line-height:1.65; }
+  .cta-text a { color:var(--teal); text-decoration:none; font-weight:500; }
+  .cta-text a:hover { text-decoration:underline; }
+
+  /* CONCLUSION */
+  .conclusion-block { background:linear-gradient(160deg,#12121A 0%,#1E1A2A 100%); border-radius:16px; padding:44px; color:white; position:relative; overflow:hidden; }
+  .conclusion-block::before { content:''; position:absolute; top:-100px; right:-100px; width:280px; height:280px; background:radial-gradient(circle,rgba(196,80,42,0.11) 0%,transparent 70%); }
+  .conclusion-block .section-tag { font-size:10px; letter-spacing:3px; color:var(--ember-light); text-transform:uppercase; margin-bottom:14px; font-family:'Outfit',sans-serif; }
+  .conclusion-block h2 { font-family:'Cormorant Garamond',serif; font-size:29px; font-weight:600; color:#FDFCFA; margin-bottom:22px; line-height:1.25; }
+  .conclusion-block p { font-size:15px; color:rgba(255,255,255,0.62); line-height:1.85; margin-bottom:18px; }
+  .conclusion-block p:last-child { margin-bottom:0; }
+  .conclusion-block strong { color:rgba(255,255,255,0.88); }
+  .conclusion-qb { background:rgba(255,255,255,0.05); border-left:3px solid var(--ember-light); padding:16px 20px; margin-top:24px; border-radius:0 8px 8px 0; }
+  .conclusion-qb p { font-size:14px; font-style:italic; color:rgba(255,255,255,0.6); margin:0; }
+
+  /* FOOTER */
+  .footer { text-align:center; padding:36px 32px; border-top:1px solid var(--border); margin-top:36px; }
+  .footer .brand { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--ember); font-weight:600; margin-bottom:6px; }
+  .footer p { font-size:11.5px; color:var(--mist); line-height:1.8; }
+
+  @media(max-width:640px){
+    .radar-wrap{flex-direction:column;} .radar-chart-container{max-width:100%;}
+    .sense-grid{grid-template-columns:1fr;} .day-cards{grid-template-columns:1fr;}
+    .flow-grid{grid-template-columns:1fr;} .report-body{padding:40px 18px;}
+    .conclusion-block{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="brand-tag">MUSEON × SSA-BDD v3.3 ｜ Neural-Flow × SITA × SSA-I Activation</div>
+  <h1>商業模式健檢報告</h1>
+  <p class="cover-subtitle">陳美玲美學工作室｜Sense-4 × 十二力全方位診斷</p>
+
+  <div class="health-ring">
+    <svg width="180" height="180" viewBox="0 0 180 180">
+      <circle cx="90" cy="90" r="76" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="14"/>
+      <circle cx="90" cy="90" r="76" fill="none" stroke="url(#rg)" stroke-width="14"
+              stroke-dasharray="477.52" stroke-dashoffset="248.31" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#E0714D"/>
+          <stop offset="100%" stop-color="#C9943A"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="health-score">
+      <div class="number">48</div>
+      <div class="label">整體分</div>
+    </div>
+  </div>
+
+  <div class="cover-meta">
+    <div class="meta-item"><div class="meta-label">受診企業</div><div class="meta-value">陳美玲美學工作室</div></div>
+    <div class="meta-item"><div class="meta-label">產業類別</div><div class="meta-value">美甲美睫</div></div>
+    <div class="meta-item"><div class="meta-label">診斷日期</div><div class="meta-value">2026.04.28</div></div>
+    <div class="meta-item"><div class="meta-label">系統姿態</div><div class="meta-value">卡脖子型</div></div>
+  </div>
+
+  <div class="version-badge">SSA-BDD v3.3 · MUSEON Powered</div>
+</div>
+
+<!-- BODY -->
+<div class="report-body">
+
+  <!-- §0 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">§0</div>
+      <div class="section-title-wrap">
+        <div class="tag">Intro · 導引說明</div>
+        <h2>你拿到的，不只是一份報告</h2>
+      </div>
+    </div>
+    <div class="prose">
+      <p>這份報告不是成績單，也不是改作業的紅筆。它比較像一份高解析度的體檢影像——每個數字背後，都有一個「為什麼」等著你自己去感受。</p>
+      <p>我們用的框架叫做 SSA-BDD（Business Diagnosis Dashboard），結合了三套系統：<strong>十二力</strong>掃描企業的結構能量，<strong>Neural-Flow</strong> 看清各力之間的因果鏈，<strong>Sense-4</strong> 捕捉你和你的團隊真實的內在動能。三層加在一起，才是一家企業完整的樣子。</p>
+      <p>報告裡有些分數看起來低，不代表你做錯了什麼。通常代表的是：<strong>有一個地方悄悄地在消耗你其他地方的力氣，只是你還不知道在哪裡。</strong>找到那個地方，才是這份報告最重要的任務。</p>
+      <div class="quote-box">
+        <div class="quote-label">閱讀建議</div>
+        <p>「先看整體分和系統姿態，感受一下直覺反應——你會有點點頭，或者想辯解。那個反應本身，就是診斷的一部分。」</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 十二力 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">§1</div>
+      <div class="section-title-wrap">
+        <div class="tag">Current State · 現狀層</div>
+        <h2>十二力總覽｜SSA-BDD</h2>
+      </div>
+    </div>
+
+    <div class="radar-wrap">
+      <div class="radar-chart-container">
+        <canvas id="radarChart" width="300" height="300"></canvas>
+      </div>
+      <div class="radar-summary">
+        <h4>診斷摘要</h4>
+        <p>企業整體呈現「<strong>前端強、後端弱</strong>」的結構失衡。產品交付能力出色，客戶滿意度高——但獲客通路幾乎只靠口碑，缺乏可複製的品牌機制和數據驅動節奏。</p>
+        <p style="font-size:12px;color:var(--mist);margin-bottom:10px;">核心卡脖子點</p>
+        <div class="summary-badges">
+          <span class="badge badge-danger">品牌力 30</span>
+          <span class="badge badge-danger">數據力 20</span>
+          <span class="badge badge-danger">通路力 35</span>
+          <span class="badge badge-danger">複利力 35</span>
+          <span class="badge badge-warn">客群聚焦 40</span>
+          <span class="badge badge-warn">節奏力 40</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-box">
+      <div class="quote-label">白話例子</div>
+      <p>「企業的十二力就像人體的十二個系統，不能只強化一塊。太偏的結果，是『力量有了，協調沒了』。你現在的狀況有點像：肺活量超好，但心臟節奏不穩——需要的不是更努力跑，而是找到讓身體協調的頻率。」</p>
+    </div>
+
+    <table class="power-table">
+      <thead>
+        <tr>
+          <th style="width:90px">力項</th>
+          <th style="width:130px">分數</th>
+          <th style="width:100px">狀態</th>
+          <th>關鍵洞見</th>
+        </tr>
+      </thead>
+      <tbody id="powerTbody"></tbody>
+    </table>
+  </div>
+
+  <!-- §2 Neural-Flow -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">§2</div>
+      <div class="section-title-wrap">
+        <div class="tag">Dynamic Layer · 動態層</div>
+        <h2>Neural-Flow｜力量之間的因果鏈</h2>
+      </div>
+    </div>
+    <div class="prose" style="margin-bottom:24px;">
+      <p>十二力不是各自獨立的格子——它們像神經系統一樣彼此串連。一個力弱下去，它的下游往往會跟著震動。以下是你目前最需要關注的三條主要因果鏈：</p>
+    </div>
+    <div class="flow-grid">
+      <div class="flow-card danger">
+        <h4>📡 通路力</h4>
+        <div class="flow-row"><span class="flow-key">上層因：</span><span class="flow-val">品牌力弱（30）→ 缺乏主動被看見的機制</span></div>
+        <div class="flow-row"><span class="flow-key">下層果：</span><span class="flow-val">轉換力受限（50）、複利力無法啟動（35）</span></div>
+        <div class="flow-row"><span class="flow-key">對映模組：</span><span class="flow-val">SSA Day 2 · 結構與節奏</span></div>
+        <div class="flow-path">品牌力↓ → 通路力↓ → 轉換力停滯 → 複利飛輪無法轉動</div>
+      </div>
+      <div class="flow-card danger">
+        <h4>📊 數據力</h4>
+        <div class="flow-row"><span class="flow-key">上層因：</span><span class="flow-val">完全依賴記憶與感覺做決策</span></div>
+        <div class="flow-row"><span class="flow-key">下層果：</span><span class="flow-val">節奏力失衡（40）、定價無法精準調整</span></div>
+        <div class="flow-row"><span class="flow-key">對映模組：</span><span class="flow-val">SSA Day 2 · 結構與節奏</span></div>
+        <div class="flow-path">數據力缺席 → 節奏混亂 → 高毛利時間被低效事務稀釋</div>
+      </div>
+      <div class="flow-card warn">
+        <h4>🎯 客群聚焦力</h4>
+        <div class="flow-row"><span class="flow-key">上層因：</span><span class="flow-val">什麼客都接，沒有主動選擇</span></div>
+        <div class="flow-row"><span class="flow-key">下層果：</span><span class="flow-val">定價難提升、留存力參差（65）</span></div>
+        <div class="flow-row"><span class="flow-key">對映模組：</span><span class="flow-val">SSA Day 1 · 品牌與價值主張</span></div>
+        <div class="flow-path">客群模糊 → 價值主張說不清楚 → 定價承壓、口碑品質不穩</div>
+      </div>
+    </div>
+    <div class="quote-box">
+      <div class="quote-label">白話例子</div>
+      <p>「像餐廳菜很好吃，但門口沒燈。顧客看不到，也聞不到香氣。你的問題不在產品，而在『光』。光線不足，價值就被遮住——而且越遮越久，複利就越晚啟動。」</p>
+    </div>
+  </div>
+
+  <!-- §3 Sense-4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">§3</div>
+      <div class="section-title-wrap">
+        <div class="tag">Inner State · 感知層</div>
+        <h2>Sense-4 Mapping｜內在動能四感</h2>
+      </div>
+    </div>
+    <div class="prose" style="margin-bottom:24px;">
+      <p>商業結構之外，還有一層更深的能量場——你和你的生意，之間的關係。Sense-4 掃描的是這四個維度：使命感、幸福感、成就感、滿足感。它們決定了你能撐多久、能走多遠。</p>
+    </div>
+    <div class="sense-grid">
+      <div class="sense-card">
+        <h4>使命感 <span class="sense-score" style="color:var(--success)">72</span></h4>
+        <div class="sense-bar"><div class="sense-bar-fill" style="width:72%;background:var(--success)"></div></div>
+        <p class="sense-note"><strong>狀態：中等穩定。</strong>你清楚自己為什麼做這行，但「每天都在忙雜事」的感覺讓使命感顯得遙遠。建議：每月定一次「只接自己喜歡的客戶」的日子，讓使命感有地方落地。</p>
+      </div>
+      <div class="sense-card">
+        <h4>幸福感 <span class="sense-score" style="color:var(--warning)">45</span></h4>
+        <div class="sense-bar"><div class="sense-bar-fill" style="width:45%;background:var(--warning)"></div></div>
+        <p class="sense-note"><strong>狀態：偏低，需要關注。</strong>工作量重但收入沒有等比增長，形成「越努力越疲倦」的循環。核心問題不是不夠努力，而是沒有建立讓力氣「有利息」的系統。</p>
+      </div>
+      <div class="sense-card">
+        <h4>成就感 <span class="sense-score" style="color:#6DB88A">68</span></h4>
+        <div class="sense-bar"><div class="sense-bar-fill" style="width:68%;background:#6DB88A"></div></div>
+        <p class="sense-note"><strong>狀態：良好。</strong>每次看到客人滿意離開，你有真實的成就感——這是最珍貴的燃料。目前風險是：這種成就感依靠「個案驚喜」，還沒有變成可以預期的系統。</p>
+      </div>
+      <div class="sense-card">
+        <h4>滿足感 <span class="sense-score" style="color:var(--error)">38</span></h4>
+        <div class="sense-bar"><div class="sense-bar-fill" style="width:38%;background:var(--error)"></div></div>
+        <p class="sense-note"><strong>狀態：偏低，優先處理。</strong>不是對結果不滿，是對「這樣下去能走多久」不確定。這是系統性焦慮，不是意志力問題。</p>
+      </div>
+    </div>
+    <div class="quote-box">
+      <div class="quote-label">白話例子</div>
+      <p>「團隊就像一支樂團。使命感是旋律、幸福感是節奏、成就感是和弦、滿足感是餘韻。當四者共鳴時，工作不只是任務，而是一場能量的演奏。現在的狀況，旋律和和弦都在，但節奏和餘韻還需要找到新的頻率。」</p>
+    </div>
+  </div>
+
+  <!-- §4 SITA -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">§4</div>
+      <div class="section-title-wrap">
+        <div class="tag">Action Layer · 行動層</div>
+        <h2>SITA Learning Bridge｜健檢→行動轉換</h2>
+      </div>
+    </div>
+    <div class="prose" style="margin-bottom:22px;">
+      <p>健檢的洞見如果只是看看，就是浪費。SITA Learning Bridge 的任務是把每一個「看見」，變成課程中的一個焦點——讓你知道進課程的時候，哪些地方值得停下來多看一眼。</p>
+    </div>
+    <table class="bridge-table">
+      <thead>
+        <tr>
+          <th style="width:150px">健檢觀察</th>
+          <th style="width:130px">對映課程模組</th>
+          <th>修復方向</th>
+          <th style="width:150px">學習後預期變化</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>品牌力偏低（30）</strong><br>缺乏被動被看見的機制</td>
+          <td><span class="module-tag">Day 1 · 品牌與價值主張</span></td>
+          <td>從「為什麼你存在」重新定義一句話主張，不是宣傳語，是自我定錨</td>
+          <td>能說清楚「我服務誰、為什麼選我」，客戶推薦時有話可說</td>
+        </tr>
+        <tr>
+          <td><strong>客群聚焦力弱（40）</strong><br>什麼客都接，無主動篩選</td>
+          <td><span class="module-tag">Day 1 · 品牌與價值主張</span></td>
+          <td>定義理想客群的三個特徵，學會說「這類客戶我不接」</td>
+          <td>服務滿意度提升、重複回購率增加、口碑品質更一致</td>
+        </tr>
+        <tr>
+          <td><strong>通路力低（35）</strong><br>全靠口碑，沒有主動獲客</td>
+          <td><span class="module-tag">Day 2 · 結構與節奏</span></td>
+          <td>建立一條可重複的獲客流程（即使只是 IG 貼文節奏）</td>
+          <td>新客來源從「被動等待」變成「主動觸及」，月新客穩定</td>
+        </tr>
+        <tr>
+          <td><strong>幸福感低（45）</strong><br>努力沒有等比回報感</td>
+          <td><span class="module-tag">Day 3 · 團隊與能量</span></td>
+          <td>識別哪些工作在消耗能量但沒有產值，開始做「捨」的練習</td>
+          <td>每週工時降低，收入持平甚至提升——靠質量不靠時數</td>
+        </tr>
+        <tr>
+          <td><strong>數據力極低（20）</strong><br>完全靠直覺做決策</td>
+          <td><span class="module-tag">Day 2 · 結構與節奏</span></td>
+          <td>先從三個數字開始：月收入、月接案數、平均客單</td>
+          <td>三個月後能看出趨勢，定價決策有憑有據</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="quote-box" style="margin-top:24px;">
+      <div class="quote-label">白話例子</div>
+      <p>「企業的問題不是要被解決，而是要被看見。像開車偏右，不是方向盤壞，而是輪胎氣壓不同。SITA 幫你找出那個失壓點，不需要換車，只要重新打氣——但首先你要知道，是哪個輪胎。」</p>
+    </div>
+  </div>
+
+  <!-- §5 課程導引 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">§5</div>
+      <div class="section-title-wrap">
+        <div class="tag">SSA-I Activation · 課程導引</div>
+        <h2>SSA-I × 健檢報告動態關聯</h2>
+      </div>
+    </div>
+    <div class="prose" style="margin-bottom:24px;">
+      <p><strong>一、進入前的心態準備</strong></p>
+      <p>SSA-I 的學習不是吸收技巧，是一種內在重組。很多學員進來之前，腦子裡已經有一套「我應該怎麼做」的答案——課程要做的，是讓你先鬆動那個答案，才有空間接收新的東西。</p>
+      <p>建議帶著三個姿態進來：<strong>觀察自己的反應</strong>（聽到什麼讓你點頭、讓你皺眉）；<strong>感受節奏</strong>（哪個時刻你突然覺得「這說的是我」）；<strong>讓理念變成感覺</strong>（不要急著做筆記，先讓它在你身體裡停一下）。</p>
+      <div class="quote-box">
+        <div class="quote-label">白話例子</div>
+        <p>「像運動員受傷後重學走路。肌肉記得舊節奏，會抗拒新步伐。課程會讓你看見這個抗拒。當你跨過那瞬間，企業的神經系統就重新連上了。」</p>
+      </div>
+      <p style="margin-top:22px;"><strong>二、依健檢結果，關注這三個環節</strong></p>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-tag">Day 1 · 你的重點</div>
+        <h4>價值創造與對齊</h4>
+        <p>品牌與價值主張——你的使命感還在，但沒有語言化。Day 1 幫你找回「為何存在」並說得出口。</p>
+      </div>
+      <div class="day-card" style="background:linear-gradient(160deg,#1A1220 0%,#201828 100%)">
+        <div class="day-tag">Day 2 · 你的重點</div>
+        <h4>價值傳遞與放大</h4>
+        <p>結構與節奏——通路力和數據力都在這天解決。看見「哪裡失速」，重建你的工作節拍。</p>
+      </div>
+      <div class="day-card" style="background:linear-gradient(160deg,#0E1A1A 0%,#14201E 100%)">
+        <div class="day-tag">Day 3 · 你的重點</div>
+        <h4>價值分配與共創</h4>
+        <p>團隊與能量——幸福感和滿足感偏低，在這天你會感受到「誰在推動你」，以及你有沒有照顧好自己。</p>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-bottom:22px;">
+      <p><strong>三、如何使用這份報告進入課程</strong></p>
+      <p><strong>課前：</strong>把這份報告裡讓你最有感的一句話圈起來。<strong>課中：</strong>每個模組結束時，問自己「這個跟我的什麼數字有關？」<strong>課後：</strong>三個月後重讀這份報告，看看哪些洞見從「知道」變成了「做到」。</p>
+      <div class="quote-box">
+        <div class="quote-label">白話例子</div>
+        <p>「這份報告像一面鏡子與一場旅程。鏡子讓你看見現在的你，旅程讓你看到下一個自己。當你能同時看見『當下』與『未來』，學習就不再是輸入，而是一種內在更新。」</p>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <h4>四、下一步行動</h4>
+      <div class="cta-links">
+        <div class="cta-link-item">
+          <div class="cta-num">1</div>
+          <div class="cta-text">
+            <strong>預約免費顧問說明（45 分鐘，價值 $8,000）</strong><br>
+            拿著這份報告，加入 Line@ 預約一對一說明：<a href="https://lin.ee/bZGpEjU" target="_blank">https://lin.ee/bZGpEjU</a>
+          </div>
+        </div>
+        <div class="cta-link-item">
+          <div class="cta-num">2</div>
+          <div class="cta-text">
+            <strong>了解 SSA-I 系統創業加速器完整課程</strong><br>
+            課程介紹頁面：<a href="https://ssa-i-accelerator-3gv6dp8.gamma.site/" target="_blank">https://ssa-i-accelerator-3gv6dp8.gamma.site/</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §6 -->
+  <div class="section">
+    <div class="conclusion-block">
+      <div class="section-tag">§6 · Closing Insight · 總結</div>
+      <h2>你的系統還沒壞，只是在等你看見它</h2>
+      <p>整體整理下來，陳美玲美學工作室是一家「<strong>前端產品力強、後端系統力弱</strong>」的企業。你有真實的手藝，有回頭的客人，有口耳相傳的好感——這些都是很多企業花大錢也買不到的。</p>
+      <p>但目前的卡脖子，不是能力問題，是<strong>節奏問題</strong>。你的時間和精力沒有找到最省力的流動方式——所以你越努力，卻沒有越輕鬆。這個差距，是可以修的。</p>
+      <p>最需要優先動的三件事：<strong>定義你最喜歡服務的客戶類型</strong>（這個決定會讓之後所有事情省力 30%）；<strong>記三個數字</strong>（月收入、月接案數、平均客單）；<strong>讓你的作品在你不在的地方被看見</strong>（IG 或任何一個平台，哪個你最不排斥就先從那個開始）。</p>
+      <div class="conclusion-qb">
+        <p>「創業者常想靠更努力解決問題，但努力只是加速現有的錯誤節奏。真正的穩定來自『看清自己怎麼動』。當你看到節奏，你就能重新選擇拍子。」</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="brand">MUSEON</div>
+  <p>本報告由 MUSEON × SSA-BDD v3.3 系統生成｜Neural-Flow × SITA × SSA-I Activation<br>
+  診斷日期：2026.04.28｜建議三個月後重新健檢</p>
+</div>
+
+<script>
+const powers = [
+  {name:'產品力',    score:75, s:'good',   insight:'手藝扎實，客戶回饋一致正面。技術已達市場競爭水準，問題不在產品本身。'},
+  {name:'價值主張力',score:45, s:'warn',   insight:'說不清楚「為什麼選你」——你知道，但客戶不知道怎麼幫你轉介紹。'},
+  {name:'客群聚焦力',score:40, s:'warn',   insight:'什麼客都接，導致服務品質離散，高單價客戶和低單價客戶混在一起。'},
+  {name:'通路力',    score:35, s:'danger', insight:'幾乎全靠口碑，缺乏主動觸達機制。新客源完全依賴熟客轉介，增長天花板低。'},
+  {name:'定價力',    score:60, s:'ok',     insight:'定價尚可但缺乏策略性——沒有明確的高低套餐設計，客單提升有限。'},
+  {name:'交付力',    score:80, s:'good',   insight:'最強的一塊。準時、細心、客戶滿意度高——這是你的核心競爭力。'},
+  {name:'轉換力',    score:50, s:'warn',   insight:'新客接觸到預約的轉換率約五成，有改善空間。主要障礙：不知如何簡潔說清楚服務內容。'},
+  {name:'留存力',    score:65, s:'ok',     insight:'回客率不錯，但缺乏主動的客戶維繫機制，留存靠的是服務品質，不是系統。'},
+  {name:'品牌力',    score:30, s:'danger', insight:'品牌識別幾乎不存在——沒有獨特視覺、沒有清晰語氣、沒有讓人記住的元素。'},
+  {name:'節奏力',    score:40, s:'warn',   insight:'工作節奏完全被客戶需求主導，沒有自主排程邏輯，容易過勞。'},
+  {name:'數據力',    score:20, s:'danger', insight:'幾乎不追蹤任何數字——不知道哪個服務最賺錢，哪天最高效，哪類客戶最忠誠。'},
+  {name:'複利力',    score:35, s:'danger', insight:'目前的努力沒有複利效應——每個月都要從零開始，沒有積累性資產。'},
+];
+
+const cfg = {
+  danger:{color:'#C4402A',label:'需立即強化'},
+  warn:  {color:'#C9943A',label:'待強化'},
+  ok:    {color:'#6DB88A',label:'中等'},
+  good:  {color:'#2D8A6E',label:'良好'},
+};
+
+// Radar
+new Chart(document.getElementById('radarChart').getContext('2d'),{
+  type:'radar',
+  data:{
+    labels: powers.map(p=>p.name),
+    datasets:[{
+      label:'健檢分數',
+      data: powers.map(p=>p.score),
+      borderColor:'#C4502A',
+      backgroundColor:'rgba(196,80,42,0.1)',
+      pointBackgroundColor: powers.map(p=>cfg[p.s].color),
+      pointRadius:4, pointHoverRadius:6, borderWidth:2,
+    }]
+  },
+  options:{
+    responsive:true,
+    scales:{r:{
+      min:0,max:100,
+      ticks:{stepSize:25,color:'#9898A8',font:{size:9},backdropColor:'transparent'},
+      grid:{color:'rgba(226,224,218,0.5)'},
+      pointLabels:{color:'#5A5A6E',font:{size:10,family:"'Noto Sans TC',sans-serif"}},
+      angleLines:{color:'rgba(226,224,218,0.45)'},
+    }},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.r} 分`}}}
+  }
+});
+
+// Table
+const tb = document.getElementById('powerTbody');
+powers.forEach(p=>{
+  const c = cfg[p.s];
+  const tr = document.createElement('tr');
+  tr.innerHTML=`
+    <td class="power-name">${p.name}</td>
+    <td><div class="score-bar-wrap">
+      <div class="score-bar"><div class="score-bar-fill" style="width:${p.score}%;background:${c.color}"></div></div>
+      <span class="score-num" style="color:${c.color}">${p.score}</span>
+    </div></td>
+    <td><span class="dot" style="background:${c.color}"></span><span class="status-label" style="color:${c.color}">${c.label}</span></td>
+    <td class="insight-text">${p.insight}</td>`;
+  tb.appendChild(tr);
+});
+</script>
+</body>
+</html>
