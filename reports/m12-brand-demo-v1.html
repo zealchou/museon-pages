@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M-12 品牌定位規劃書 — 木心工坊</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    /* ===== CSS RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Brand Colors */
+      --ember: #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark: #9A3A1C;
+      --teal: #2A7A6E;
+      --gold: #B8923A;
+
+      /* Neutrals */
+      --ink: #12121A;
+      --slate: #5A5A6E;
+      --mist: #9898A8;
+      --border: #E2E0DA;
+      --parchment: #F7F5F0;
+      --snow: #FDFCFA;
+
+      /* Dark */
+      --deep-ink: #0E0E16;
+      --surface: #16161F;
+      --raised: #1E1E2A;
+      --border-dark: #2A2A38;
+
+      /* Semantic */
+      --success: #2D8A6E;
+      --warning: #C9943A;
+      --error: #C4402A;
+      --info: #2A6A8A;
+
+      /* Typography */
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Outfit', 'Noto Sans TC', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--parchment);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      line-height: 1.2;
+    }
+
+    /* ===== UTILITY ===== */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 0 16px; }
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(196, 80, 42, 0.1);
+      color: var(--ember-dark);
+      border-radius: 100px;
+      padding: 3px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .badge-teal {
+      background: rgba(42, 122, 110, 0.1);
+      color: #1a6055;
+    }
+
+    .badge-gold {
+      background: rgba(184, 146, 58, 0.12);
+      color: #8a6820;
+    }
+
+    .card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    }
+
+    section {
+      padding: 64px 0;
+    }
+
+    section + section {
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== COVER ===== */
+    .cover {
+      background: var(--deep-ink);
+      position: relative;
+      overflow: hidden;
+      padding: 96px 0 80px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .cover-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .cover-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+      top: -100px;
+      right: -150px;
+      pointer-events: none;
+    }
+
+    .cover-glow-2 {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(42,122,110,0.12) 0%, transparent 70%);
+      bottom: -80px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    .cover-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .cover-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      margin-bottom: 20px;
+    }
+
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 7vw, 80px);
+      font-weight: 600;
+      color: #FDFCFA;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .cover-subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(253,252,250,0.65);
+      margin-bottom: 48px;
+    }
+
+    .cover-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 56px;
+    }
+
+    .cover-meta-item label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(253,252,250,0.4);
+      margin-bottom: 4px;
+    }
+
+    .cover-meta-item span {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(253,252,250,0.85);
+    }
+
+    .score-hero {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 32px;
+      background: rgba(253,252,250,0.06);
+      border: 1px solid rgba(253,252,250,0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      max-width: 480px;
+    }
+
+    .score-number {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 600;
+      color: var(--ember-light);
+      line-height: 1;
+    }
+
+    .score-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(253,252,250,0.5);
+      margin-bottom: 6px;
+    }
+
+    .score-desc {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(253,252,250,0.8);
+      line-height: 1.5;
+    }
+
+    .museon-watermark {
+      position: absolute;
+      bottom: 32px;
+      right: 40px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(253,252,250,0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .museon-watermark::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(196,80,42,0.5);
+    }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-header {
+      margin-bottom: 40px;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: var(--slate);
+      max-width: 56ch;
+      line-height: 1.7;
+    }
+
+    /* ===== RADAR CHART ===== */
+    .radar-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .radar-wrap { grid-template-columns: 1fr; }
+    }
+
+    .radar-canvas-wrap {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radar-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radar-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .radar-score-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .radar-score-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--ember-dark), var(--ember-light));
+      transition: width 1s ease;
+    }
+
+    .radar-legend-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate);
+      min-width: 80px;
+    }
+
+    .radar-legend-val {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ember);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* ===== FIELD CARDS (A1-A9) ===== */
+    .field-number {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ember);
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .field-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .field-grid { grid-template-columns: 1fr; }
+    }
+
+    .field-cell {
+      padding: 20px 22px;
+      background: var(--snow);
+      border-right: 1px solid var(--border);
+    }
+
+    .field-cell:last-child {
+      border-right: none;
+    }
+
+    @media (max-width: 768px) {
+      .field-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .field-cell:last-child { border-bottom: none; }
+    }
+
+    .field-cell-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .field-cell-label.status { color: var(--slate); }
+    .field-cell-label.diagnosis { color: var(--warning); }
+    .field-cell-label.action { color: var(--teal); }
+
+    .field-cell-content {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    .field-cell-content ul {
+      padding-left: 16px;
+    }
+
+    .field-cell-content li {
+      margin-bottom: 4px;
+    }
+
+    .field-cell.diagnosis-bg {
+      background: rgba(201, 148, 58, 0.04);
+    }
+
+    .field-cell.action-bg {
+      background: rgba(42, 122, 110, 0.04);
+    }
+
+    .field-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .field-score-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .field-score-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .field-score-dot.active {
+      background: var(--ember);
+    }
+
+    .field-score-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--mist);
+    }
+
+    /* ===== POSITIONING MATRIX ===== */
+    .matrix-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .matrix-axis-h {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--border);
+      transform: translateY(-50%);
+    }
+
+    .matrix-axis-v {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+      transform: translateX(-50%);
+    }
+
+    .matrix-label {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mist);
+    }
+
+    .matrix-label.top { top: 12px; left: 50%; transform: translateX(-50%); }
+    .matrix-label.bottom { bottom: 12px; left: 50%; transform: translateX(-50%); }
+    .matrix-label.left { left: 12px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+    .matrix-label.right { right: 12px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+    .matrix-dot {
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+
+    .matrix-dot-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: default;
+      transition: transform 0.2s ease;
+    }
+
+    .matrix-dot-circle:hover {
+      transform: scale(1.15);
+    }
+
+    .matrix-dot-name {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate);
+      top: 46px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .dot-muxin {
+      background: var(--ember);
+      color: white;
+      border: 2.5px solid var(--ember-dark);
+      box-shadow: 0 4px 12px rgba(196,80,42,0.35);
+    }
+
+    .dot-ikea {
+      background: #005696;
+      color: white;
+    }
+
+    .dot-jiafangke {
+      background: #8D6A3F;
+      color: white;
+    }
+
+    .dot-general {
+      background: var(--surface);
+      color: rgba(253,252,250,0.7);
+      border: 1px solid var(--border-dark);
+    }
+
+    .matrix-quadrant-label {
+      position: absolute;
+      font-size: 11px;
+      color: rgba(90,90,110,0.4);
+      font-style: italic;
+    }
+
+    /* ===== 90 DAY ROADMAP ===== */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .roadmap-grid { grid-template-columns: 1fr; }
+    }
+
+    .roadmap-phase {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .roadmap-phase-header {
+      padding: 16px 20px;
+      color: white;
+    }
+
+    .roadmap-phase-header.phase1 { background: var(--ember-dark); }
+    .roadmap-phase-header.phase2 { background: var(--ember); }
+    .roadmap-phase-header.phase3 { background: var(--ember-light); }
+
+    .roadmap-phase-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+
+    .roadmap-phase-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .roadmap-phase-body {
+      padding: 20px;
+      background: var(--snow);
+    }
+
+    .roadmap-task {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .roadmap-task:last-child { margin-bottom: 0; }
+
+    .roadmap-task-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+    }
+
+    .roadmap-task-icon.icon1 { background: rgba(154,58,28,0.15); color: var(--ember-dark); }
+    .roadmap-task-icon.icon2 { background: rgba(196,80,42,0.15); color: var(--ember); }
+    .roadmap-task-icon.icon3 { background: rgba(224,113,77,0.15); color: var(--ember-light); }
+
+    /* ===== YAML BLOCK ===== */
+    .yaml-wrap {
+      background: var(--deep-ink);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-dark);
+    }
+
+    .yaml-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .yaml-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .yaml-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .yaml-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: rgba(253,252,250,0.4);
+      letter-spacing: 0.05em;
+    }
+
+    .yaml-code {
+      padding: 24px 28px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.9;
+      color: rgba(253,252,250,0.85);
+      overflow-x: auto;
+    }
+
+    .yaml-key { color: #E0714D; }
+    .yaml-str { color: #88D0A8; }
+    .yaml-comment { color: rgba(253,252,250,0.3); font-style: italic; }
+    .yaml-num { color: #7FBDE0; }
+    .yaml-list-marker { color: rgba(253,252,250,0.4); }
+
+    /* ===== CLOSING ===== */
+    .closing {
+      background: var(--deep-ink);
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(196,80,42,0.12) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    .closing-content {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+    }
+
+    .closing-title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      color: #FDFCFA;
+      margin-bottom: 24px;
+      line-height: 1.25;
+    }
+
+    .closing-body {
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(253,252,250,0.65);
+      margin-bottom: 32px;
+    }
+
+    .closing-sig {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 24px;
+      background: rgba(253,252,250,0.05);
+      border: 1px solid rgba(253,252,250,0.1);
+      border-radius: 8px;
+      font-size: 14px;
+      color: rgba(253,252,250,0.55);
+    }
+
+    .closing-sig-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ember) 0%, var(--ember-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* ===== DIVIDER ===== */
+    .divider-ember {
+      width: 48px;
+      height: 3px;
+      background: var(--ember);
+      border-radius: 100px;
+      margin: 16px 0 28px;
+    }
+
+    /* ===== HIGHLIGHT BLOCK ===== */
+    .highlight-block {
+      padding: 20px 24px;
+      background: rgba(196,80,42,0.06);
+      border-left: 3px solid var(--ember);
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .highlight-block p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+
+    /* ===== FIELD SECTIONS SPACING ===== */
+    .field-section {
+      margin-bottom: 48px;
+    }
+
+    .field-section:last-child { margin-bottom: 0; }
+
+    /* ===== ANIMATION ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 400ms ease-out forwards;
+    }
+
+    /* ===== TAGLINE DISPLAY ===== */
+    .tagline-display {
+      text-align: center;
+      padding: 40px 32px;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 24px 0;
+    }
+
+    .tagline-display blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 4vw, 32px);
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ember);
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .tagline-display cite {
+      display: block;
+      font-style: normal;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-top: 12px;
+    }
+
+    /* ===== PRODUCT MATRIX TABLE ===== */
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .product-table th {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mist);
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: var(--parchment);
+    }
+
+    .product-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .product-table tr:last-child td { border-bottom: none; }
+
+    .product-table tr:hover td { background: rgba(196,80,42,0.03); }
+
+    .profit-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profit-fill {
+      height: 6px;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--ember-dark), var(--ember-light));
+    }
+
+    .profit-pct {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ember);
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media print {
+      body { background: white; }
+      .cover { min-height: auto; page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<div class="cover">
+  <div class="cover-noise"></div>
+  <div class="cover-glow"></div>
+  <div class="cover-glow-2"></div>
+  <div class="container cover-content fade-up">
+    <div class="cover-eyebrow">M-12 品牌定位規劃書 · MUSEON 顧問出品</div>
+    <h1 class="cover-title">木心工坊</h1>
+    <p class="cover-subtitle">MuXin Workshop Brand Positioning Report</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <label>委託人</label>
+        <span>林志明 創辦人</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>診斷日期</label>
+        <span>2026年4月28日</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>版本</label>
+        <span>v1.0 初診報告</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>類別</label>
+        <span>傳統工藝 / 手工家具</span>
+      </div>
+    </div>
+    <div class="score-hero">
+      <div class="score-number">62</div>
+      <div>
+        <div class="score-label">品牌健康總分</div>
+        <div class="score-desc">品牌根基紮實，故事與工藝俱佳，<br>定位表述與市場佈局需要強化。</div>
+      </div>
+    </div>
+  </div>
+  <div class="museon-watermark">MUSEON · AI 顧問</div>
+</div>
+
+<!-- ===== RADAR CHART ===== -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Brand DNA Overview</div>
+      <h2 class="section-title">品牌 DNA 雷達圖</h2>
+      <p class="section-desc">以 A1–A9 九個維度評估品牌現況完整度，滿分 10 分。</p>
+    </div>
+    <div class="radar-wrap">
+      <div class="radar-canvas-wrap">
+        <canvas id="radarChart" width="340" height="340"></canvas>
+      </div>
+      <div class="radar-legend">
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A1 基本描述</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:85%"></div></div>
+          <span class="radar-legend-val">8.5</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A2 目標客群</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:55%"></div></div>
+          <span class="radar-legend-val">5.5</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A3 核心差異</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:70%"></div></div>
+          <span class="radar-legend-val">7.0</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A4 品牌個性</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:60%"></div></div>
+          <span class="radar-legend-val">6.0</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A5 視覺識別</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:35%"></div></div>
+          <span class="radar-legend-val">3.5</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A6 品牌故事</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:80%"></div></div>
+          <span class="radar-legend-val">8.0</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A7 品牌承諾</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:50%"></div></div>
+          <span class="radar-legend-val">5.0</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A8 產品矩陣</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:65%"></div></div>
+          <span class="radar-legend-val">6.5</span>
+        </div>
+        <div class="radar-legend-item">
+          <span class="radar-legend-name">A9 執行路徑</span>
+          <div class="radar-score-bar"><div class="radar-score-fill" style="width:40%"></div></div>
+          <span class="radar-legend-val">4.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== A1 – A9 FIELDS ===== -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Brand Anatomy</div>
+      <h2 class="section-title">A1–A9 逐欄分析</h2>
+      <p class="section-desc">每個欄位以三格呈現：現況描述 · 顧問診斷 · 建議行動。</p>
+    </div>
+
+    <!-- A1 -->
+    <div class="field-section">
+      <div class="field-number">A1</div>
+      <div class="field-title">品牌基本描述</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">8.5 / 10</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>企業名稱：木心工坊</li>
+              <li>創辦：2014年（創業第12年）</li>
+              <li>核心業務：手工訂製木作家具</li>
+              <li>年營收：約 280 萬新台幣</li>
+              <li>團隊：5人（師傅3名、設計1名、行政1名）</li>
+              <li>客源：80% 老客戶口碑推薦</li>
+            </ul>
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            企業根基穩健，12年深耕印證了工藝可信度。然而 280 萬營收的「天花板感」明顯——口碑傳播效率低，無法主動擴大客源。IKEA、宜得利等量產家具的衝擊並非品質競爭，而是「定價心理戰」，林老闆需要更清晰的定位語言來拉開戰場。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>建立「品牌年齡故事線」，12年=12個工藝里程碑，轉化為可傳播素材</li>
+              <li>確立一句完整的品牌定義句（見 A7）</li>
+              <li>5人團隊各自擁有獨立故事版本，統一官方說詞</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A2 -->
+    <div class="field-section">
+      <div class="field-number">A2</div>
+      <div class="field-title">目標客群定義</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">5.5 / 10</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            主力客群模糊：「有消費能力的客人」。大致分佈在 35–60 歲、有屋族（購買新屋或二次裝修）、重視家居品質。無明確人口統計，靠直覺篩選。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            「有消費能力的客人」是最危險的客群定義——所有人都想要，但沒有人特別有感。觀察現有老客戶，核心輪廓應是「40–55歲、台北/新北屋主、偏愛低調台灣工藝文化、嫌棄量產但沒時間去尋找匠人」。這個族群有強烈的情感需求，卻缺乏被觸達的語言。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>訪談前 10 位老客戶，提取「為什麼選木心」的共同情感動詞</li>
+              <li>建立 2 個精確 Persona（例：「過去30年買量產、現在想要唯一」的換屋族）</li>
+              <li>停止對「所有有錢人」說話，只對「懂匠心的人」說話</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A3 -->
+    <div class="field-section">
+      <div class="field-number">A3</div>
+      <div class="field-title">核心差異化</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">7.0 / 10</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            真實差異化能力：
+            <ul>
+              <li>全榫接工法（不用釘子）</li>
+              <li>台灣原木（在地材料主義）</li>
+              <li>創辦人親自丈量設計</li>
+              <li>終生維修保固</li>
+            </ul>
+            但目前這些優勢散佈在口頭說明，未系統化表述。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            「全榫接工法」與「終生保固」是極強的差異化武器，卻被當作「補充說明」而非「核心賣點」。IKEA 賣的是便利感，傢偕家具賣設計感，木心的市場空白是「傳承感」——一件家具可以傳給下一代的故事。目前沒有競品佔據這個空白。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>建立「傳承三保證」：榫接不解體 / 台灣木耐百年 / 修繕終生服務</li>
+              <li>製作「一件桌子的30年」時間軸故事視覺</li>
+              <li>用「下一代的家具」作為核心敘事框架</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A4 -->
+    <div class="field-section">
+      <div class="field-number">A4</div>
+      <div class="field-title">品牌個性與聲音</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">6.0 / 10</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            品牌個性形容詞（目前直覺版）：<br>
+            <span class="badge" style="margin:4px 2px">誠實</span>
+            <span class="badge" style="margin:4px 2px">樸實</span>
+            <span class="badge" style="margin:4px 2px">細緻</span>
+            <br><br>
+            語調：偏說明性，像師傅介紹工法，缺乏情感連結語言。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            「誠實樸實細緻」是工匠的美德，但不是品牌的個性——它缺少張力與記憶點。品牌需要一個「如果木心工坊是一個人，他說話的方式是？」的清晰答案。建議：沉穩而有溫度的長者聲音，說木頭的故事如說家族歷史。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>重新定義三個品牌形容詞：「厚重、溫存、傳世」</li>
+              <li>設定「不是什麼」：不是設計感炫耀 / 不是北歐簡約 / 不是奢侈品牌</li>
+              <li>所有文案過「品牌聲音濾鏡」後才發出</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A5 -->
+    <div class="field-section">
+      <div class="field-number">A5</div>
+      <div class="field-title">視覺識別現況</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">3.5 / 10</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>LOGO：15年前找朋友設計，Word 檔版本，無向量原始檔</li>
+              <li>顏色：無定義，名片、招牌、網頁各自為政</li>
+              <li>字型：招牌用細明體，名片用新細明體</li>
+              <li>網站：2018年建置，手機版破版</li>
+              <li>Instagram：不定期發施工現場照片</li>
+            </ul>
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            視覺識別是評分最低的維度，也是品牌最大的「隱形漏斗」。工藝價值明明是高端的，視覺語言卻傳遞的是「普通小店」訊號。潛在客戶在第一眼接觸時已形成低估，需要三倍的說服成本。這不是改LOGO的問題，是整個視覺系統的缺失。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li><strong>P0（第1個月）</strong>：重建 LOGO 向量檔 + 定義品牌三色（木質棕/深墨/米白）</li>
+              <li><strong>P1（第2個月）</strong>：Instagram 視覺風格統一，每月8篇工藝故事</li>
+              <li><strong>P2（第3個月）</strong>：一頁式新官網（手機優先）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A6 -->
+    <div class="field-section">
+      <div class="field-number">A6</div>
+      <div class="field-title">品牌故事與起源</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">8.0 / 10</span>
+      </div>
+      <div class="highlight-block">
+        <p>林志明53歲，入行30年。18歲跟著父親學木工，父親那一代只做廟宇神器，林志明決定把榫接技藝帶入現代家居。2014年創辦木心工坊，「木心」二字取自父親的名字（林木心），是一份對傳承的致敬，也是對木材本質的尊重——每塊木頭都有它的心，工匠的責任是找到它。</p>
+      </div>
+      <div class="field-grid" style="margin-top:0">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            故事原料極為豐富：父子傳承、廟宇工藝轉型、品牌名稱的雙重意涵。但目前只存在於林老闆的口頭介紹中，從未系統書寫或視覺化。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            木心工坊擁有市面上罕見的「真實故事資產」。父子傳承 + 廟宇工藝延伸 + 品牌名字的詩意——這三個元素組合，在台灣家具品牌中是唯一的。問題是這份資產「沒有被貨幣化」。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>製作「創辦故事」3分鐘影片（老照片+林老闆旁白）</li>
+              <li>設計「一份給女兒的桌子」系列——家具傳代故事</li>
+              <li>Instagram 連載「父親的榫接筆記」12集</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A7 -->
+    <div class="field-section">
+      <div class="field-number">A7</div>
+      <div class="field-title">品牌承諾</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">5.0 / 10</span>
+      </div>
+      <div class="tagline-display">
+        <blockquote>「為下一代做的家具」</blockquote>
+        <cite>品牌承諾 Tagline 建議版 · 木心工坊 MuXin Workshop</cite>
+      </div>
+      <div class="field-grid" style="margin-top:0">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            目前無正式 Tagline。對外自我介紹多為「我們做手工木作」或「專業訂製家具」——功能描述型，無情感承諾。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            「專業訂製家具」是商品說明，不是品牌承諾。承諾應該回答客戶心底的問題：「為什麼這件事對我的人生重要？」木心的答案是：買一件可以傳給下一代的家具，就是在做一個關於家的決定。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>確立主 Tagline：「為下一代做的家具」</li>
+              <li>副承諾：全榫接工法 · 台灣原木 · 終生修繕</li>
+              <li>所有對外素材統一使用，建立記憶錨點</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A8 -->
+    <div class="field-section">
+      <div class="field-number">A8</div>
+      <div class="field-title">產品 / 服務矩陣</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">6.5 / 10</span>
+      </div>
+      <div class="card" style="margin-top:16px; padding:0; overflow:hidden;">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>產品/服務線</th>
+              <th>定價區間</th>
+              <th>年出件數</th>
+              <th>利潤貢獻</th>
+              <th>品牌地位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>訂製餐桌（主力）</strong></td>
+              <td>NT$45,000–120,000</td>
+              <td>約 18 件</td>
+              <td>
+                <div class="profit-bar">
+                  <div class="profit-fill" style="width:90px"></div>
+                  <span class="profit-pct">55%</span>
+                </div>
+              </td>
+              <td><span class="badge">旗艦品</span></td>
+            </tr>
+            <tr>
+              <td><strong>訂製書桌/工作桌</strong></td>
+              <td>NT$28,000–65,000</td>
+              <td>約 12 件</td>
+              <td>
+                <div class="profit-bar">
+                  <div class="profit-fill" style="width:60px"></div>
+                  <span class="profit-pct">22%</span>
+                </div>
+              </td>
+              <td><span class="badge-teal badge">成長品</span></td>
+            </tr>
+            <tr>
+              <td><strong>小件訂製（椅/層架）</strong></td>
+              <td>NT$8,000–25,000</td>
+              <td>約 30 件</td>
+              <td>
+                <div class="profit-bar">
+                  <div class="profit-fill" style="width:40px"></div>
+                  <span class="profit-pct">15%</span>
+                </div>
+              </td>
+              <td><span class="badge-gold badge">引流品</span></td>
+            </tr>
+            <tr>
+              <td><strong>修繕保養服務</strong></td>
+              <td>NT$2,000–8,000/次</td>
+              <td>約 40 次</td>
+              <td>
+                <div class="profit-bar">
+                  <div class="profit-fill" style="width:20px"></div>
+                  <span class="profit-pct">8%</span>
+                </div>
+              </td>
+              <td><span class="badge">信任品</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="field-grid" style="margin-top:16px;">
+        <div class="field-cell">
+          <div class="field-cell-label status">診斷摘要</div>
+          <div class="field-cell-content">
+            產品線結構基本合理，但「引流品」與「旗艦品」的用戶旅程不清晰——客人買了小件，沒有足夠誘因升級到大件。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">機會缺口</div>
+          <div class="field-cell-content">
+            「修繕服務」是最被低估的資產——每次上門維修都是一次重新銷售機會，但目前無追蹤也無跟進機制。每年 40 次修繕，理論上可轉化 5–8 件新訂單。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>建立「修繕客戶追蹤表」，3個月後主動詢問升級需求</li>
+              <li>設計「第一件木心」引流產品（木質餐墊或小凳），降低嘗試門檻</li>
+              <li>旗艦餐桌增加「20年保值估算書」輔助成交</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A9 -->
+    <div class="field-section">
+      <div class="field-number">A9</div>
+      <div class="field-title">品牌執行路徑</div>
+      <div class="field-score">
+        <div class="field-score-dots">
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot active"></div><div class="field-score-dot active"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+          <div class="field-score-dot"></div><div class="field-score-dot"></div>
+        </div>
+        <span class="field-score-text">4.0 / 10</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-cell">
+          <div class="field-cell-label status">現況描述</div>
+          <div class="field-cell-content">
+            目前無正式行銷計畫。新客幾乎全靠老客戶介紹，Instagram 無規律發文，無官方網站流量數據。每年有 2–3 件是設計師帶進來的案子。
+          </div>
+        </div>
+        <div class="field-cell diagnosis-bg">
+          <div class="field-cell-label diagnosis">顧問診斷</div>
+          <div class="field-cell-content">
+            「靠口碑」是美德，但也是脆弱性。若 3 位核心介紹人停止推薦，業務即刻萎縮 40%。品牌需要建立「不依賴任何一個人的推薦機制」——讓每一件家具本身就會說話。
+          </div>
+        </div>
+        <div class="field-cell action-bg">
+          <div class="field-cell-label action">建議行動</div>
+          <div class="field-cell-content">
+            <ul>
+              <li>建立「木心大使計畫」：每位老客戶贈送一張推薦名片（有獨特編號）</li>
+              <li>每月 Instagram 工藝故事 8 篇（固定週一木材日 / 週五作品揭曉）</li>
+              <li>設計師夥伴計畫：5% 介紹費 + 優先接案資格</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BRAND CANON YAML (A10) ===== -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">A10 · Brand Canon</div>
+      <h2 class="section-title">品牌憲法 YAML</h2>
+      <p class="section-desc">結構化品牌憲法，作為所有對外溝通的唯一事實來源。</p>
+    </div>
+    <div class="yaml-wrap">
+      <div class="yaml-header">
+        <div class="yaml-dots">
+          <div class="yaml-dot" style="background:#ff5f57"></div>
+          <div class="yaml-dot" style="background:#febc2e"></div>
+          <div class="yaml-dot" style="background:#28c840"></div>
+        </div>
+        <span class="yaml-title">brand_canon.yaml · 木心工坊 MuXin Workshop</span>
+        <span></span>
+      </div>
+      <div class="yaml-code"><pre><span class="yaml-comment"># ============================================================</span>
+<span class="yaml-comment"># Brand Canon · 木心工坊 MuXin Workshop</span>
+<span class="yaml-comment"># Generated by MUSEON M-12 Engine · 2026-04-28</span>
+<span class="yaml-comment"># ============================================================</span>
+
+<span class="yaml-key">brand_identity</span>:
+  <span class="yaml-key">name_zh</span>: <span class="yaml-str">"木心工坊"</span>
+  <span class="yaml-key">name_en</span>: <span class="yaml-str">"MuXin Workshop"</span>
+  <span class="yaml-key">founded</span>: <span class="yaml-num">2014</span>
+  <span class="yaml-key">founder</span>: <span class="yaml-str">"林志明"</span>
+  <span class="yaml-key">category</span>: <span class="yaml-str">"傳統木作 · 手工訂製家具"</span>
+  <span class="yaml-key">heritage</span>: <span class="yaml-str">"榫接工藝傳承自廟宇木匠，第二代延伸至現代家居"</span>
+
+<span class="yaml-key">brand_promise</span>:
+  <span class="yaml-key">tagline</span>: <span class="yaml-str">"為下一代做的家具"</span>
+  <span class="yaml-key">sub_promise</span>:
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"全榫接工法，不用一根釘子"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"台灣在地原木，百年耐用"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"終生修繕服務，陪伴每個家的成長"</span>
+  <span class="yaml-key">emotional_core</span>: <span class="yaml-str">"傳承感——一件家具，跨越世代"</span>
+
+<span class="yaml-key">brand_personality</span>:
+  <span class="yaml-key">adjectives</span>:
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"厚重"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"溫存"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"傳世"</span>
+  <span class="yaml-key">voice_tone</span>: <span class="yaml-str">"沉穩長者，說木頭的故事如說家族歷史"</span>
+  <span class="yaml-key">not_this</span>:
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"不是設計感炫耀"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"不是北歐極簡風格"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"不是奢侈品牌邏輯"</span>
+
+<span class="yaml-key">target_audience</span>:
+  <span class="yaml-key">primary</span>:
+    <span class="yaml-key">age_range</span>: <span class="yaml-str">"40–55歲"</span>
+    <span class="yaml-key">location</span>: <span class="yaml-str">"台北/新北 有屋族"</span>
+    <span class="yaml-key">psychographic</span>: <span class="yaml-str">"偏愛台灣工藝文化，嫌棄量產但沒時間尋找匠人"</span>
+    <span class="yaml-key">buying_trigger</span>: <span class="yaml-str">"新屋裝修或二次裝修，想做一件留傳的決定"</span>
+  <span class="yaml-key">secondary</span>:
+    <span class="yaml-key">profile</span>: <span class="yaml-str">"室內設計師，尋找可信賴的手作合作夥伴"</span>
+
+<span class="yaml-key">differentiation</span>:
+  <span class="yaml-key">market_white_space</span>: <span class="yaml-str">"傳承感家具——可傳代的台灣手工木作"</span>
+  <span class="yaml-key">proof_points</span>:
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"全榫接工法（零釘子，手工組嵌）"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"台灣在地原木採購"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"創辦人親自丈量設計每一件作品"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"12年零退貨記錄"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"終生維修保固"</span>
+
+<span class="yaml-key">visual_direction</span>:
+  <span class="yaml-key">primary_color</span>: <span class="yaml-str">"木質棕 #8B5E3C"</span>
+  <span class="yaml-key">secondary_colors</span>:
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"深墨 #1A1A14"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"米白 #F5F0E8"</span>
+  <span class="yaml-key">photography_style</span>: <span class="yaml-str">"自然光 · 木紋特寫 · 居家情境"</span>
+  <span class="yaml-key">forbidden</span>:
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"科技感濾鏡"</span>
+    <span class="yaml-list-marker">-</span> <span class="yaml-str">"大量純白背景"</span>
+
+<span class="yaml-key">brand_health_score</span>: <span class="yaml-num">62</span>
+<span class="yaml-key">report_generated_by</span>: <span class="yaml-str">"MUSEON M-12 Engine v1.0"</span>
+<span class="yaml-key">report_date</span>: <span class="yaml-str">"2026-04-28"</span></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== POSITIONING MATRIX ===== -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Market Positioning</div>
+      <h2 class="section-title">品牌定位矩陣</h2>
+      <p class="section-desc">以「定價高低」vs「情感連結深淺」定義競品版圖，找出木心工坊的戰略空白。</p>
+    </div>
+    <div class="matrix-wrap">
+      <div class="matrix-axis-h"></div>
+      <div class="matrix-axis-v"></div>
+      <div class="matrix-label top">高情感連結</div>
+      <div class="matrix-label bottom">低情感連結</div>
+      <div class="matrix-label left">低價</div>
+      <div class="matrix-label right">高價</div>
+
+      <!-- Quadrant labels -->
+      <div class="matrix-quadrant-label" style="top:15%;left:8%;max-width:80px;text-align:center;">手作情感<br>平價市場</div>
+      <div class="matrix-quadrant-label" style="top:15%;right:6%;max-width:80px;text-align:center;">傳承<br>精品區</div>
+      <div class="matrix-quadrant-label" style="bottom:15%;left:8%;max-width:80px;text-align:center;">量產<br>低端市場</div>
+      <div class="matrix-quadrant-label" style="bottom:15%;right:6%;max-width:80px;text-align:center;">設計品牌<br>理性高端</div>
+
+      <!-- IKEA: 低價 低情感 偏左下 -->
+      <div class="matrix-dot" style="left:25%;top:70%;">
+        <div class="matrix-dot-circle dot-general" title="IKEA">IK</div>
+        <div class="matrix-dot-name">IKEA</div>
+      </div>
+
+      <!-- 宜得利: 低價 低情感 偏右 -->
+      <div class="matrix-dot" style="left:38%;top:62%;">
+        <div class="matrix-dot-circle dot-general" style="background:#5a3e2b; color:rgba(253,252,250,0.8)" title="宜得利">NN</div>
+        <div class="matrix-dot-name">宜得利</div>
+      </div>
+
+      <!-- 傢俬家具: 高價 低情感 右下 -->
+      <div class="matrix-dot" style="left:70%;top:60%;">
+        <div class="matrix-dot-circle dot-jiafangke" title="高端設計品牌">HT</div>
+        <div class="matrix-dot-name">高端設計品牌</div>
+      </div>
+
+      <!-- 文創小店: 低價 高情感 左上 -->
+      <div class="matrix-dot" style="left:22%;top:28%;">
+        <div class="matrix-dot-circle dot-general" style="background:#6a8a5a; color:white" title="文創工藝小店">WC</div>
+        <div class="matrix-dot-name">文創工藝小店</div>
+      </div>
+
+      <!-- 木心工坊: 高價 高情感 右上 — 空白區 -->
+      <div class="matrix-dot" style="left:72%;top:22%;">
+        <div class="matrix-dot-circle dot-muxin" title="木心工坊（目標位置）">木心</div>
+        <div class="matrix-dot-name" style="color: var(--ember); font-weight:600;">木心工坊 ★</div>
+      </div>
+
+      <!-- 木心現況: 中間偏左上 -->
+      <div class="matrix-dot" style="left:48%;top:38%;">
+        <div class="matrix-dot-circle" style="background:rgba(196,80,42,0.2); color:var(--ember); border:2px dashed var(--ember); font-size:9px;">現況</div>
+        <div class="matrix-dot-name" style="color:var(--mist); font-size:10px;">木心現況位置</div>
+      </div>
+    </div>
+    <p style="text-align:center; font-size:13px; color:var(--mist); margin-top:16px;">
+      ★ 目標定位 · 「高情感連結 + 高單價」象限幾乎空白——這是木心工坊的戰略藍海
+    </p>
+  </div>
+</section>
+
+<!-- ===== 90 DAY ROADMAP ===== -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">90-Day Action Plan</div>
+      <h2 class="section-title">品牌落地 90 天路線圖</h2>
+      <p class="section-desc">三個階段，每階段 30 天，優先建立視覺底座，再進行故事擴散，最後系統化引流。</p>
+    </div>
+    <div class="roadmap-grid">
+      <!-- Phase 1 -->
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-header phase1">
+          <div class="roadmap-phase-label">Day 1 – 30 · Phase 1</div>
+          <div class="roadmap-phase-title">品牌根基</div>
+        </div>
+        <div class="roadmap-phase-body">
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon1">01</div>
+            <span>重建 LOGO 向量檔，定義品牌三色（木質棕/深墨/米白）</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon1">02</div>
+            <span>確立 Tagline「為下一代做的家具」，統一所有對外說詞</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon1">03</div>
+            <span>Instagram 改版，設定固定發文日（週一木材日 / 週五作品日）</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon1">04</div>
+            <span>採訪 5 位老客戶，錄製見證故事（3 分鐘以內）</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon1">05</div>
+            <span>Brand Canon YAML 完成並印出貼在工坊牆上</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-header phase2">
+          <div class="roadmap-phase-label">Day 31 – 60 · Phase 2</div>
+          <div class="roadmap-phase-title">故事擴散</div>
+        </div>
+        <div class="roadmap-phase-body">
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon2">06</div>
+            <span>製作「創辦故事」短影片，老照片 + 林老闆旁白，發布 Instagram / YouTube</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon2">07</div>
+            <span>推出「木心大使計畫」，每位老客戶獲專屬推薦名片（含獨立編號）</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon2">08</div>
+            <span>啟動 Instagram 連載「父親的榫接筆記」，每週一集，共12集</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon2">09</div>
+            <span>建立修繕客戶追蹤表，過去 2 年修繕記錄全部補建入系統</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon2">10</div>
+            <span>設計師夥伴計畫上線，接觸 10 家目標設計師事務所</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-header phase3">
+          <div class="roadmap-phase-label">Day 61 – 90 · Phase 3</div>
+          <div class="roadmap-phase-title">引流系統</div>
+        </div>
+        <div class="roadmap-phase-body">
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon3">11</div>
+            <span>手機優先官網上線（一頁式）：品牌故事 + 作品集 + 聯繫表單</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon3">12</div>
+            <span>推出「第一件木心」引流小品（木質餐墊/小凳），定價 NT$3,800</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon3">13</div>
+            <span>旗艦餐桌成交資料加入「20年保值估算書」輔助文件</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon3">14</div>
+            <span>量化追蹤：每月新詢問數 / 成交率 / 介紹來源比例</span>
+          </div>
+          <div class="roadmap-task">
+            <div class="roadmap-task-icon icon3">15</div>
+            <span>90天品牌健康複診（重測雷達圖，目標總分提升至 75+）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CLOSING ===== -->
+<div class="closing">
+  <div class="closing-glow"></div>
+  <div class="container">
+    <div class="closing-content">
+      <div class="section-eyebrow" style="color: var(--ember-light); margin-bottom:16px;">MUSEON 顧問結語</div>
+      <h2 class="closing-title">林老闆，<br>木心工坊已具備百年品牌的原料。</h2>
+      <div class="divider-ember"></div>
+      <p class="closing-body">
+        在這份診斷中，我們看到一個被低估的品牌。<br><br>
+        您的工藝技術、父子傳承的故事、品牌名稱的詩意、12年零退貨的記錄——這些不是普通小工坊能積累的資產。真正缺的，只是一套「讓對的人找到您，並立刻理解您價值」的語言系統。<br><br>
+        品牌健康分數 62 分，代表基礎穩固，但表述工具尚未就位。90 天的路線圖不需要大預算，只需要系統性的執行意志。當「為下一代做的家具」這句話開始在社群上流傳，當第一批老客戶帶著下一代重新來敲門——那時候，木心工坊的故事才剛剛開始真正被世人看見。<br><br>
+        我們在每個階段陪伴您。
+      </p>
+      <div class="closing-sig">
+        <div class="closing-sig-icon">M</div>
+        <div>
+          <div style="color:rgba(253,252,250,0.8); font-weight:500; font-size:14px;">MUSEON AI 顧問</div>
+          <div style="font-size:12px;">M-12 品牌定位引擎 · 報告日期 2026-04-28</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHART.JS INIT ===== -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Radar Chart
+    const ctx = document.getElementById('radarChart').getContext('2d');
+
+    const radarData = {
+      labels: ['A1 基本描述', 'A2 目標客群', 'A3 核心差異', 'A4 品牌個性', 'A5 視覺識別', 'A6 品牌故事', 'A7 品牌承諾', 'A8 產品矩陣', 'A9 執行路徑'],
+      datasets: [{
+        label: '品牌DNA評分',
+        data: [8.5, 5.5, 7.0, 6.0, 3.5, 8.0, 5.0, 6.5, 4.0],
+        backgroundColor: 'rgba(196, 80, 42, 0.12)',
+        borderColor: '#C4502A',
+        borderWidth: 2,
+        pointBackgroundColor: '#C4502A',
+        pointBorderColor: '#FDFCFA',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    };
+
+    new Chart(ctx, {
+      type: 'radar',
+      data: radarData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 10,
+            min: 0,
+            ticks: {
+              stepSize: 2,
+              color: '#9898A8',
+              font: { family: "'IBM Plex Mono', monospace", size: 10 },
+              backdropColor: 'transparent'
+            },
+            grid: {
+              color: 'rgba(226, 224, 218, 0.6)'
+            },
+            angleLines: {
+              color: 'rgba(226, 224, 218, 0.5)'
+            },
+            pointLabels: {
+              color: '#5A5A6E',
+              font: { family: "'Outfit', 'Noto Sans TC', sans-serif", size: 11, weight: '500' }
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#16161F',
+            titleColor: 'rgba(253,252,250,0.8)',
+            bodyColor: '#C4502A',
+            borderColor: '#2A2A38',
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: function(ctx) {
+                return ` 評分：${ctx.raw} / 10`;
+              }
+            }
+          }
+        },
+        animation: {
+          duration: 800,
+          easing: 'easeInOutQuart'
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
