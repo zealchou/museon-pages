@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>潛水課程與場地媒合平台｜開發建置服務報價單 QT-2026-0429</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #1A3A5C;
+      --ocean:   #0077B6;
+      --teal:    #00B4D8;
+      --light:   #90E0EF;
+      --bg:      #F8FAFB;
+      --white:   #FFFFFF;
+      --gray-50: #F3F6F9;
+      --gray-100:#E8EFF5;
+      --gray-300:#B0C4D8;
+      --gray-600:#4A6580;
+      --gray-800:#1F3347;
+      --text:    #1E2D3D;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    /* ── Page wrapper (A4) ── */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: 0 4px 32px rgba(0,0,0,.10);
+    }
+
+    /* ── TOP HEADER BAR ── */
+    .header-bar {
+      background: linear-gradient(135deg, #0D2B4A 0%, var(--navy) 55%, #0A2240 100%);
+      color: var(--white);
+      padding: 36px 48px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-bar::before {
+      content: "";
+      position: absolute;
+      right: -60px; top: -60px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: rgba(0,119,182,.22);
+      pointer-events: none;
+    }
+    .header-bar::after {
+      content: "";
+      position: absolute;
+      right: 60px; bottom: -80px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(0,180,216,.14);
+      pointer-events: none;
+    }
+    .header-tag {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-weight: 600;
+      margin-bottom: 8px;
+      position: relative; z-index: 1;
+    }
+    .header-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      position: relative; z-index: 1;
+      line-height: 1.3;
+    }
+    .header-subtitle {
+      font-size: 15px;
+      color: var(--light);
+      margin-top: 4px;
+      position: relative; z-index: 1;
+    }
+    .header-meta {
+      margin-top: 22px;
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .header-meta-item {
+      font-size: 12px;
+      color: rgba(255,255,255,.68);
+    }
+    .header-meta-item strong {
+      display: block;
+      font-size: 13px;
+      color: var(--white);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    /* ── Main content padding ── */
+    .content {
+      padding: 0 48px 64px;
+    }
+
+    /* ── Party Info Grid ── */
+    .party-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1.5px solid var(--gray-100);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 28px 0;
+    }
+    .party-block {
+      padding: 20px 24px;
+    }
+    .party-block:first-child {
+      border-right: 1.5px solid var(--gray-100);
+      background: var(--gray-50);
+    }
+    .party-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ocean);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .party-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .party-row .fn {
+      color: var(--gray-600);
+      min-width: 60px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .field-blank {
+      flex: 1;
+      border-bottom: 1px solid var(--gray-300);
+      min-height: 18px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-top: 38px;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .section-bar {
+      width: 4px;
+      height: 22px;
+      background: var(--ocean);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .section-num {
+      font-size: 11px;
+      background: var(--ocean);
+      color: var(--white);
+      border-radius: 4px;
+      padding: 2px 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .section-title h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: .3px;
+    }
+
+    /* ── Prose block ── */
+    .prose {
+      color: var(--gray-600);
+      line-height: 1.85;
+      font-size: 13.5px;
+      background: var(--gray-50);
+      border-left: 3px solid var(--teal);
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* ── Sub-section label ── */
+    .sub-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: .5px;
+      margin: 18px 0 8px;
+    }
+
+    /* ── Table wrapper ── */
+    .table-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--gray-100);
+    }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead tr {
+      background: var(--navy);
+      color: var(--white);
+    }
+    thead th {
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+    .th-r { text-align: right !important; }
+    .th-c { text-align: center !important; }
+
+    tbody tr:nth-child(even) { background: var(--gray-50); }
+    tbody tr:hover { background: #EAF3FA; }
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: top;
+    }
+    .td-r { text-align: right !important; white-space: nowrap; }
+    .td-c { text-align: center !important; }
+    .td-mute { color: var(--gray-600); }
+
+    /* Total row */
+    .row-total td {
+      background: var(--navy) !important;
+      color: var(--white) !important;
+      font-weight: 700;
+      font-size: 14px;
+      border-bottom: none !important;
+    }
+    /* Sub-total row */
+    .row-sub td {
+      background: var(--ocean) !important;
+      color: var(--white) !important;
+      font-weight: 600;
+      border-bottom: none !important;
+    }
+
+    /* Zebra for timeline — last row = navy */
+    .tbl-zebra tbody tr:nth-child(odd)  { background: var(--white); }
+    .tbl-zebra tbody tr:nth-child(even) { background: #EAF3FA; }
+    .tbl-zebra tbody tr:last-child td {
+      background: var(--navy) !important;
+      color: var(--white) !important;
+      font-weight: 700;
+    }
+
+    /* ── Cost cards ── */
+    .cost-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 4px;
+    }
+    .cost-card {
+      border: 1.5px solid var(--gray-100);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .cost-card.hl { border-color: var(--ocean); }
+
+    .cost-card-head {
+      background: var(--gray-50);
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cost-card.hl .cost-card-head {
+      background: var(--ocean);
+      color: var(--white);
+    }
+    .badge-rec {
+      font-size: 10px;
+      background: #FFD166;
+      color: #7A4000;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+    .cost-card-body { padding: 14px 18px; }
+    .cost-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--gray-100);
+      color: var(--gray-600);
+    }
+    .cost-line:last-of-type { border-bottom: none; }
+    .cost-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: var(--navy);
+      border-radius: 6px;
+      color: var(--white);
+    }
+    .cost-total .lbl { font-size: 12px; font-weight: 600; }
+    .cost-total .amt { font-size: 17px; font-weight: 800; letter-spacing: .5px; }
+    .cost-note {
+      font-size: 11.5px;
+      color: var(--gray-600);
+      margin-top: 10px;
+      line-height: 1.7;
+    }
+
+    /* ── Payment highlight card ── */
+    .pay-card {
+      background: linear-gradient(135deg, #EAF3FA 0%, #F0F8FF 100%);
+      border: 1.5px solid var(--ocean);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 4px;
+    }
+    .pay-notes {
+      margin-top: 14px;
+      padding: 0;
+    }
+    .pay-notes li {
+      list-style: none;
+      padding-left: 14px;
+      position: relative;
+      font-size: 12.5px;
+      color: var(--gray-600);
+      line-height: 1.8;
+    }
+    .pay-notes li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--ocean);
+    }
+
+    /* ── Warranty grid ── */
+    .warranty-grid {
+      background: var(--gray-50);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 24px;
+    }
+    .wi .wi-lbl {
+      font-size: 11px;
+      color: var(--ocean);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .wi .wi-val {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wi .wi-val strong { color: var(--navy); }
+
+    /* ── Scope two-col ── */
+    .scope-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .scope-box {
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .scope-box.inc {
+      background: #EAF8EF;
+      border: 1px solid #A8D5B5;
+    }
+    .scope-box.exc {
+      background: #FEF0ED;
+      border: 1px solid #F5BFB3;
+    }
+    .scope-head {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .scope-box.inc .scope-head { color: #1A6B3A; }
+    .scope-box.exc .scope-head { color: #922B0E; }
+    .scope-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      font-size: 13px;
+      padding: 3px 0;
+      line-height: 1.5;
+    }
+    .scope-icon { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Remarks list ── */
+    .remark-list {
+      counter-reset: rm;
+      padding: 0;
+    }
+    .remark-list li {
+      counter-increment: rm;
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.75;
+      padding: 7px 0;
+      border-bottom: 1px dashed var(--gray-100);
+    }
+    .remark-list li:last-child { border-bottom: none; }
+    .remark-list li::before {
+      content: counter(rm);
+      min-width: 22px;
+      height: 22px;
+      background: var(--ocean);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── Signature ── */
+    .sign-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 4px;
+    }
+    .sign-block {
+      border: 1.5px solid var(--gray-300);
+      border-radius: 8px;
+      padding: 20px 22px;
+    }
+    .sign-head {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ocean);
+      margin-bottom: 16px;
+    }
+    .sign-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .sign-lbl {
+      font-size: 12px;
+      color: var(--gray-600);
+      white-space: nowrap;
+      min-width: 52px;
+    }
+    .sign-line {
+      flex: 1;
+      border-bottom: 1px solid var(--gray-300);
+      min-height: 22px;
+    }
+
+    /* ── Footer ── */
+    .doc-footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      padding: 14px 48px;
+      font-size: 11px;
+      letter-spacing: .5px;
+    }
+
+    /* ══ PRINT ══ */
+    @media print {
+      body { background: white; font-size: 12px; }
+      .page { max-width: none; box-shadow: none; margin: 0; }
+      .content { padding: 0 36px 54px; }
+      .header-bar { padding: 28px 36px 22px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .party-grid, .cost-cards, .scope-cols, .sign-grid,
+      .pay-card, .warranty-grid { break-inside: avoid; }
+      .section { break-inside: avoid; }
+      table { break-inside: auto; }
+      tr { break-inside: avoid; }
+      thead { display: table-header-group; }
+      @page {
+        size: A4 portrait;
+        margin: 14mm 12mm 18mm;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ HEADER BAR ══ -->
+  <div class="header-bar">
+    <div class="header-tag">IT Development Quotation</div>
+    <div class="header-title">潛水課程與場地媒合平台</div>
+    <div class="header-subtitle">開發建置服務報價單</div>
+    <div class="header-meta">
+      <div class="header-meta-item">
+        <strong>QT-2026-0429</strong>
+        報價編號
+      </div>
+      <div class="header-meta-item">
+        <strong>2026 年 4 月 29 日</strong>
+        報價日期
+      </div>
+      <div class="header-meta-item">
+        <strong>2026 年 5 月 29 日</strong>
+        有效期限（30 日內）
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content">
+
+    <!-- 雙方資訊 -->
+    <div class="party-grid">
+      <div class="party-block">
+        <div class="party-label">報價方（供應商）</div>
+        <div class="party-row"><span class="fn">公司名稱</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">統一編號</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">聯絡人</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">聯絡電話</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">Email</span><div class="field-blank"></div></div>
+      </div>
+      <div class="party-block">
+        <div class="party-label">委託方（業主）</div>
+        <div class="party-row"><span class="fn">公司名稱</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">統一編號</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">聯絡人</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">聯絡電話</span><div class="field-blank"></div></div>
+        <div class="party-row"><span class="fn">Email</span><div class="field-blank"></div></div>
+      </div>
+    </div>
+
+    <!-- 一、專案摘要 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">一</span>
+        <h2>專案摘要</h2>
+      </div>
+      <p class="prose">
+        本專案為潛水產業平台第一階段 MVP，核心目標是先完成「可開課、可找課、可報名、可付款、可成班、可協作、可做 AI 場地輔助」的最小可營運版本。本階段重點不是一次做成最完整平台，而是先把最核心的商業流程跑通，讓平台能上線驗證市場、服務教練與學員、並建立後續擴充基礎。
+      </p>
+    </div>
+
+    <!-- 二、開發費用總計 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">二</span>
+        <h2>開發費用總計</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="th-c" style="width:42px">#</th>
+              <th style="width:186px">功能模組</th>
+              <th>說明</th>
+              <th class="th-r" style="width:115px">金額（NTD）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-c">1</td>
+              <td><strong>帳號 / 角色 / 權限系統</strong></td>
+              <td class="td-mute">建立學員、自由教練、潛店、平台管理員等角色，處理登入、權限、基本帳號流程</td>
+              <td class="td-r">80,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">2</td>
+              <td><strong>教練 / 潛店開課後台</strong></td>
+              <td class="td-mute">教練與潛店可建立課程、設定日期、名額、價格、條件、課型與上下架</td>
+              <td class="td-r">120,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">3</td>
+              <td><strong>課程前台搜尋與列表</strong></td>
+              <td class="td-mute">學員可瀏覽課程、查看課程資訊、依條件搜尋課程</td>
+              <td class="td-r">90,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">4</td>
+              <td><strong>報名 / 候補 / 成班邏輯</strong></td>
+              <td class="td-mute">報名流程、名額控管、候補、成班判定、課程狀態流轉</td>
+              <td class="td-r">130,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">5</td>
+              <td><strong>金流 / 訂單 / 退款基礎流程</strong></td>
+              <td class="td-mute">線上付款、訂單成立、付款回寫、退款基本流程、交易狀態管理</td>
+              <td class="td-r">120,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">6</td>
+              <td><strong>課程協作頁</strong></td>
+              <td class="td-mute">成班後自動建立課程協作空間，可公告集合資訊、裝備與注意事項，並可貼 LINE 群連結</td>
+              <td class="td-r">70,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">7</td>
+              <td><strong>AI 場地可聯絡名單功能</strong></td>
+              <td class="td-mute">教練輸入需求後，AI 協助整理公開資訊並產出可聯絡場地名單</td>
+              <td class="td-r">90,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">8</td>
+              <td><strong>平台管理後台 / 基本營運工具</strong></td>
+              <td class="td-mute">平台管理員可查看課程、報名、訂單、帳號與基本稽核資訊</td>
+              <td class="td-r">55,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">9</td>
+              <td><strong>通知 / Email / 基本訊息流程</strong></td>
+              <td class="td-mute">註冊、報名、付款、成班、公告等基本通知串接與發送流程</td>
+              <td class="td-r">25,000</td>
+            </tr>
+            <tr>
+              <td class="td-c">10</td>
+              <td><strong>測試 / 上線 / 專案整合</strong></td>
+              <td class="td-mute">基本測試、Bug 修正、環境設定、上線整合與版本整理</td>
+              <td class="td-r">20,000</td>
+            </tr>
+            <tr class="row-total">
+              <td colspan="3" style="text-align:right;letter-spacing:.5px">開發總計</td>
+              <td class="td-r" style="font-size:15px">NTD&nbsp;800,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 三、額外年度支出 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">三</span>
+        <h2>額外年度支出（業主自行採購）</h2>
+      </div>
+
+      <div class="sub-label">硬體支出</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th class="th-r">費用（NTD）</th>
+              <th>週期</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>網址</td>
+              <td class="td-r">1,200</td>
+              <td>年</td>
+              <td class="td-mute">網域費用</td>
+            </tr>
+            <tr>
+              <td>伺服器</td>
+              <td class="td-r">21,564</td>
+              <td>年</td>
+              <td class="td-mute">主機／雲端伺服器費用</td>
+            </tr>
+            <tr>
+              <td>SSL</td>
+              <td class="td-r">3,348</td>
+              <td>年</td>
+              <td class="td-mute">若主機方案已含 AutoSSL 則可免列</td>
+            </tr>
+            <tr class="row-sub">
+              <td><strong>小計</strong></td>
+              <td class="td-r"><strong>26,112</strong></td>
+              <td>年</td>
+              <td>SSL 已含主機方案可調整為 22,764</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-label" style="margin-top:20px">第三方服務費</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>供應商</th>
+              <th class="th-r">費用（NTD）</th>
+              <th>週期</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>第三方支付</td>
+              <td>綠界科技</td>
+              <td class="td-r">5,000</td>
+              <td>首年</td>
+              <td class="td-mute">設定費；信用卡交易另收 2.75%～3.5% 手續費</td>
+            </tr>
+            <tr>
+              <td>簡訊通知</td>
+              <td>綠界通知</td>
+              <td class="td-r">0.8～1.5／則</td>
+              <td>依用量</td>
+              <td class="td-mute">OTP、報名通知、付款通知</td>
+            </tr>
+            <tr>
+              <td>Email 寄送</td>
+              <td>Email 服務商</td>
+              <td class="td-r">600</td>
+              <td>年</td>
+              <td class="td-mute">系統通知信、交易通知信</td>
+            </tr>
+            <tr>
+              <td>電子發票</td>
+              <td>綠界科技</td>
+              <td class="td-r">6,000</td>
+              <td>年</td>
+              <td class="td-mute">年費；有開立發票需求時適用</td>
+            </tr>
+            <tr class="row-sub">
+              <td colspan="2"><strong>首年固定小計</strong></td>
+              <td class="td-r"><strong>11,600</strong></td>
+              <td>首年</td>
+              <td></td>
+            </tr>
+            <tr class="row-sub">
+              <td colspan="2"><strong>次年起固定小計</strong></td>
+              <td class="td-r"><strong>6,600</strong></td>
+              <td>年</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 四、首年總費用試算 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">四</span>
+        <h2>首年總費用試算</h2>
+      </div>
+      <div class="cost-cards">
+        <!-- 方案 A -->
+        <div class="cost-card">
+          <div class="cost-card-head">方案 A — SSL 另購</div>
+          <div class="cost-card-body">
+            <div class="cost-line"><span>開發費</span><span>NTD 800,000</span></div>
+            <div class="cost-line"><span>硬體支出</span><span>NTD 26,112</span></div>
+            <div class="cost-line"><span>第三方固定費（首年）</span><span>NTD 11,600</span></div>
+            <div class="cost-total">
+              <span class="lbl">首年總費用</span>
+              <span class="amt">NTD 837,712</span>
+            </div>
+          </div>
+        </div>
+        <!-- 方案 B（建議） -->
+        <div class="cost-card hl">
+          <div class="cost-card-head">
+            方案 B — SSL 已含主機
+            <span class="badge-rec">建議</span>
+          </div>
+          <div class="cost-card-body">
+            <div class="cost-line"><span>開發費</span><span>NTD 800,000</span></div>
+            <div class="cost-line"><span>硬體支出</span><span>NTD 22,764</span></div>
+            <div class="cost-line"><span>第三方固定費（首年）</span><span>NTD 11,600</span></div>
+            <div class="cost-total">
+              <span class="lbl">首年總費用</span>
+              <span class="amt">NTD 834,364</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="cost-note">
+        ※ 以上總費用<strong>不含</strong>：金流交易手續費、簡訊用量費、電子發票流量費、後續維運與功能擴充費用。
+      </p>
+    </div>
+
+    <!-- 五、付款條件 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">五</span>
+        <h2>付款條件</h2>
+      </div>
+      <div class="pay-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>期別</th>
+                <th>付款時機</th>
+                <th class="th-c" style="width:68px">比例</th>
+                <th class="th-r" style="width:115px">金額（NTD）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>第一期（啟動款）</strong></td>
+                <td class="td-mute">合約簽訂後 7 個工作日內</td>
+                <td class="td-c">30%</td>
+                <td class="td-r">240,000</td>
+              </tr>
+              <tr>
+                <td><strong>第二期（中期驗收款）</strong></td>
+                <td class="td-mute">帳號系統、課程後台、前台搜尋完成驗收後</td>
+                <td class="td-c">40%</td>
+                <td class="td-r">320,000</td>
+              </tr>
+              <tr>
+                <td><strong>第三期（完工驗收款）</strong></td>
+                <td class="td-mute">全功能驗收完成、系統正式上線後</td>
+                <td class="td-c">30%</td>
+                <td class="td-r">240,000</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>合計</strong></td>
+                <td></td>
+                <td class="td-c"><strong>100%</strong></td>
+                <td class="td-r"><strong>NTD&nbsp;800,000</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="pay-notes">
+          <li>付款方式：銀行轉帳，匯款後請提供轉帳憑證</li>
+          <li>如需開立統一發票，請於付款前告知</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 六、預計開發時程 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">六</span>
+        <h2>預計開發時程</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl-zebra">
+          <thead>
+            <tr>
+              <th style="width:100px">階段</th>
+              <th style="width:110px">時間</th>
+              <th>里程碑內容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>第一階段</strong></td>
+              <td>第 1～4 週</td>
+              <td class="td-mute">系統架構確認、帳號系統、教練／潛店開課後台</td>
+            </tr>
+            <tr>
+              <td><strong>第二階段</strong></td>
+              <td>第 5～8 週</td>
+              <td class="td-mute">課程前台搜尋、學員報名／候補／成班邏輯</td>
+            </tr>
+            <tr>
+              <td><strong>第三階段</strong></td>
+              <td>第 9～12 週</td>
+              <td class="td-mute">金流／訂單／退款、課程協作頁、通知系統</td>
+            </tr>
+            <tr>
+              <td><strong>第四階段</strong></td>
+              <td>第 13～14 週</td>
+              <td class="td-mute">AI 場地名單功能、平台管理後台</td>
+            </tr>
+            <tr>
+              <td><strong>第五階段</strong></td>
+              <td>第 15～16 週</td>
+              <td class="td-mute">整合測試、Bug 修正、正式上線</td>
+            </tr>
+            <tr>
+              <td><strong>預計總工期</strong></td>
+              <td><strong>約 4 個月</strong></td>
+              <td><strong>實際時程依需求訪談結果調整</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 七、上線保固說明 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">七</span>
+        <h2>上線保固說明</h2>
+      </div>
+      <div class="warranty-grid">
+        <div class="wi">
+          <div class="wi-lbl">保固期</div>
+          <div class="wi-val">系統正式上線後 <strong>90 天</strong></div>
+        </div>
+        <div class="wi">
+          <div class="wi-lbl">保固範圍</div>
+          <div class="wi-val">因系統本身技術問題造成的 Bug，免費修正</div>
+        </div>
+        <div class="wi">
+          <div class="wi-lbl">不含範圍</div>
+          <div class="wi-val">新功能開發、設計變更、需求異動、第三方服務問題</div>
+        </div>
+        <div class="wi">
+          <div class="wi-lbl">保固期滿後</div>
+          <div class="wi-val">可簽訂<strong>月維運合約</strong>（建議 NTD 15,000～25,000／月，費用另議）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 八、本次開發範圍確認 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">八</span>
+        <h2>本次開發範圍確認</h2>
+      </div>
+      <div class="scope-cols">
+        <div class="scope-box inc">
+          <div class="scope-head">&#10003;&nbsp;包含項目</div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>平台前台網站</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>教練／潛店後台</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>平台管理後台</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>課程建立與管理</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>課程搜尋與列表</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>學員報名、候補與成班邏輯</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>基本金流與訂單流程</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>課程協作頁</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>AI 場地名單功能（精簡版）</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>基本通知流程</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#1A6B3A">&#10003;</span><span>上線整合</span></div>
+        </div>
+        <div class="scope-box exc">
+          <div class="scope-head">&#10007;&nbsp;不含項目</div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>App 開發（iOS／Android）</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>自動撥款／複雜分帳</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>場地方上架與場地交易系統</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>完整即時聊天系統</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>自動建立 LINE 群組</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>跨國多語多幣</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>複雜會員制度、點數、推薦機制</span></div>
+          <div class="scope-item"><span class="scope-icon" style="color:#922B0E">&#10007;</span><span>長期維運與客服代營運</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 九、報價備註 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">九</span>
+        <h2>報價備註</h2>
+      </div>
+      <ol class="remark-list">
+        <li>本報價單為 MVP 第一階段估算版本，目的在於確認預算與功能範圍。</li>
+        <li>若需求增加，例如 App、複雜分帳、自動撥款、跨國版本或更完整 AI 能力，需另行估價。</li>
+        <li>第三方服務費與雲端費用屬外部供應商收費，實際仍以供應商最新方案為準。</li>
+        <li>若進入正式開發前需做 UI/UX 深化、畫面設計稿、工程拆單，可另列規劃費用。</li>
+        <li>本報價有效期至 <strong>2026 年 5 月 29 日</strong>，逾期請重新確認報價。</li>
+      </ol>
+    </div>
+
+    <!-- 十、確認簽署 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-bar"></div>
+        <span class="section-num">十</span>
+        <h2>確認簽署</h2>
+      </div>
+      <div class="sign-grid">
+        <div class="sign-block">
+          <div class="sign-head">委託方確認</div>
+          <div class="sign-row">
+            <span class="sign-lbl">公司名稱</span>
+            <div class="sign-line"></div>
+          </div>
+          <div class="sign-row">
+            <span class="sign-lbl">代表人</span>
+            <div class="sign-line"></div>
+          </div>
+          <div class="sign-row">
+            <span class="sign-lbl">簽章</span>
+            <div class="sign-line" style="min-height:46px"></div>
+          </div>
+          <div class="sign-row">
+            <span class="sign-lbl">日期</span>
+            <div class="sign-line"></div>
+          </div>
+        </div>
+        <div class="sign-block">
+          <div class="sign-head">供應方確認</div>
+          <div class="sign-row">
+            <span class="sign-lbl">公司名稱</span>
+            <div class="sign-line"></div>
+          </div>
+          <div class="sign-row">
+            <span class="sign-lbl">代表人</span>
+            <div class="sign-line"></div>
+          </div>
+          <div class="sign-row">
+            <span class="sign-lbl">簽章</span>
+            <div class="sign-line" style="min-height:46px"></div>
+          </div>
+          <div class="sign-row">
+            <span class="sign-lbl">日期</span>
+            <div class="sign-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    QT-2026-0429&nbsp;&nbsp;|&nbsp;&nbsp;潛水課程與場地媒合平台開發建置服務報價單&nbsp;&nbsp;|&nbsp;&nbsp;有效期至 2026 年 5 月 29 日
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
