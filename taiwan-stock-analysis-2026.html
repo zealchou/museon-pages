@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣股市投資分析報告 2026 — MUSEON</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .hero {
+    background: var(--deep-ink);
+    color: white;
+    padding: 64px 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(196,80,42,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: #FDFCFA;
+  }
+
+  .hero-sub {
+    color: var(--mist);
+    font-size: 16px;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-meta-label {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .hero-meta-value {
+    font-size: 14px;
+    color: #FDFCFA;
+    font-weight: 500;
+  }
+
+  .verdict-bar {
+    background: var(--surface);
+    border-bottom: 3px solid var(--ember);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .verdict-label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .verdict-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ember-light);
+    flex: 1;
+  }
+
+  .rating-badge {
+    background: rgba(42,122,110,0.15);
+    border: 1px solid rgba(42,122,110,0.4);
+    color: #4EBCAD;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .main-content {
+    padding: 48px 48px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    width: 32px;
+    height: 32px;
+    background: var(--ember);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    color: var(--slate);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .kpi-note {
+    font-size: 12px;
+    color: var(--mist);
+  }
+
+  .kpi-value.up { color: var(--teal); }
+  .kpi-value.down { color: var(--ember); }
+
+  .insight-box {
+    background: linear-gradient(135deg, #FEF6F2, var(--snow));
+    border-left: 4px solid var(--ember);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+
+  .insight-box p {
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .insight-box strong {
+    color: var(--ember);
+  }
+
+  .industry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .industry-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .industry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .industry-name {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+  }
+
+  .industry-rating {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+
+  .rating-high {
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+    border: 1px solid rgba(42,122,110,0.3);
+  }
+
+  .rating-mid {
+    background: rgba(184,146,58,0.1);
+    color: var(--gold);
+    border: 1px solid rgba(184,146,58,0.3);
+  }
+
+  .rating-watch {
+    background: rgba(196,80,42,0.1);
+    color: var(--ember);
+    border: 1px solid rgba(196,80,42,0.3);
+  }
+
+  .industry-desc {
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .industry-stocks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .stock-tag {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    color: var(--slate);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .risk-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--snow);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .risk-table th {
+    background: var(--ink);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+
+  .risk-table td {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--slate);
+    vertical-align: top;
+  }
+
+  .risk-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .risk-table td:first-child {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .risk-level {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .risk-h { background: rgba(196,80,42,0.1); color: var(--ember); }
+  .risk-m { background: rgba(184,146,58,0.1); color: var(--gold); }
+  .risk-l { background: rgba(42,122,110,0.1); color: var(--teal); }
+
+  .allocation-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .alloc-card {
+    border-radius: 10px;
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .alloc-core {
+    background: var(--deep-ink);
+    color: white;
+  }
+
+  .alloc-sat {
+    background: linear-gradient(135deg, #1A2835, #162430);
+    color: white;
+    border: 1px solid rgba(42,122,110,0.3);
+  }
+
+  .alloc-def {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
+
+  .alloc-pct {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .alloc-core .alloc-pct { color: var(--ember-light); }
+  .alloc-sat .alloc-pct { color: #4EBCAD; }
+  .alloc-def .alloc-pct { color: var(--gold); }
+
+  .alloc-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+
+  .alloc-items {
+    font-size: 12px;
+    opacity: 0.7;
+    line-height: 1.8;
+    text-align: left;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  .timeline-dot.active { background: var(--ember); box-shadow: 0 0 0 3px rgba(196,80,42,0.2); }
+  .timeline-dot.watch { background: var(--gold); }
+  .timeline-dot.future { background: var(--teal); }
+
+  .timeline-period {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .timeline-action {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .timeline-detail {
+    font-size: 13px;
+    color: var(--slate);
+  }
+
+  .conclusion-box {
+    background: var(--deep-ink);
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: white;
+  }
+
+  .conclusion-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ember-light);
+    margin-bottom: 16px;
+  }
+
+  .conclusion-box p {
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .conclusion-box p:last-child {
+    margin-bottom: 0;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+  }
+
+  .footer {
+    background: var(--surface);
+    color: var(--mist);
+    text-align: center;
+    padding: 28px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .footer strong {
+    color: var(--ember-light);
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 24px 32px; }
+    .hero h1 { font-size: 34px; }
+    .main-content { padding: 32px 24px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .industry-grid { grid-template-columns: 1fr; }
+    .allocation-wrapper { grid-template-columns: 1fr; }
+    .verdict-bar { padding: 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">MUSEON · 投資分析報告</div>
+  <h1>台灣股市<br>投資分析 2026</h1>
+  <p class="hero-sub">給 Coco 姐的專屬研判報告——不是進不進台股，是在哪個位置進、用什麼邏輯配置。</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">報告日期</span>
+      <span class="hero-meta-value">2026 年 4 月 30 日</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">分析週期</span>
+      <span class="hero-meta-value">中期（6–18 個月）</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">研判立場</span>
+      <span class="hero-meta-value">條件性看多 ▲</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">產出單位</span>
+      <span class="hero-meta-value">MUSEON 戰略研析</span>
+    </div>
+  </div>
+</div>
+
+<div class="verdict-bar">
+  <span class="verdict-label">核心研判</span>
+  <span class="verdict-text">台灣 AI 供應鏈具結構性支撐，但進場節奏與選股邏輯比「進不進」更關鍵</span>
+  <span class="rating-badge">條件性多頭 ▲</span>
+</div>
+
+<div class="main-content">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">當前市場環境</div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">加權指數 P/E</div>
+        <div class="kpi-value">17.8x</div>
+        <div class="kpi-note">接近十年均值 16.5x，溢價可接受</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">外資持股比例</div>
+        <div class="kpi-value up">43%</div>
+        <div class="kpi-note">Q1 淨流入回升，止跌訊號</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">AI 伺服器出口 YoY</div>
+        <div class="kpi-value up">+68%</div>
+        <div class="kpi-note">2026 Q1 台灣 ICT 出口數據</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">新台幣兌美元</div>
+        <div class="kpi-value">31.2</div>
+        <div class="kpi-note">升值壓力存在，出口商需注意匯損</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">10 年期公債殖利率</div>
+        <div class="kpi-value">1.65%</div>
+        <div class="kpi-note">低利環境支撐股市估值</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">台灣 GDP 成長預測</div>
+        <div class="kpi-value up">+3.8%</div>
+        <div class="kpi-note">主計總處 2026 年預估</div>
+      </div>
+    </div>
+    <div class="insight-box">
+      <p><strong>關鍵判斷：</strong>台灣股市估值不貴，外資止跌回流是短期催化劑，AI 供應鏈訂單能見度延伸至 2027 是中期底氣。但新台幣升值、中美科技管制衝擊是雙向風險，不能視而不見。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">六大產業主題分析</div>
+    </div>
+    <div class="industry-grid">
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">AI 伺服器 / CoWoS 封裝</div>
+          <div class="industry-rating rating-high">強力推薦</div>
+        </div>
+        <div class="industry-desc">NVIDIA GB200、AMD MI400 需求持續擴張，台灣供應鏈佔 AI 伺服器零組件 60%+。CoWoS 先進封裝瓶頸在台積電，訂單能見度延伸至 2027 Q1。</div>
+        <div class="industry-stocks">
+          <span class="stock-tag">台積電 2330</span>
+          <span class="stock-tag">廣達 2382</span>
+          <span class="stock-tag">鴻海 2317</span>
+          <span class="stock-tag">緯創 3231</span>
+          <span class="stock-tag">日月光 3711</span>
+        </div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">電力基礎設施 / 儲能</div>
+          <div class="industry-rating rating-high">強力推薦</div>
+        </div>
+        <div class="industry-desc">AI 資料中心用電需求暴增，台電缺電問題推動民間儲能、太陽能、智慧電網投資。政策補貼 + 企業 RE100 承諾，雙重驅動。</div>
+        <div class="industry-stocks">
+          <span class="stock-tag">中興電 1513</span>
+          <span class="stock-tag">士電 1503</span>
+          <span class="stock-tag">台達電 2308</span>
+          <span class="stock-tag">華城 1519</span>
+        </div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">散熱 / 液冷系統</div>
+          <div class="industry-rating rating-high">積極布局</div>
+        </div>
+        <div class="industry-desc">GB200 功耗 1.2kW/顆，強迫液冷幾乎是標配。台灣散熱廠從鰭片轉型液冷，產品單價提升 3–5 倍，毛利率改善明顯。</div>
+        <div class="industry-stocks">
+          <span class="stock-tag">雙鴻 3324</span>
+          <span class="stock-tag">建準 2421</span>
+          <span class="stock-tag">奇鋐 3017</span>
+          <span class="stock-tag">超眾 6230</span>
+        </div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">金融 / 壽險</div>
+          <div class="industry-rating rating-mid">中性觀察</div>
+        </div>
+        <div class="industry-desc">利率走低對壽險淨值壓力下降，但台股高檔波動影響壽險投資收益。金融股適合作為配息穩定器，不適合追求高成長。</div>
+        <div class="industry-stocks">
+          <span class="stock-tag">富邦金 2881</span>
+          <span class="stock-tag">國泰金 2882</span>
+          <span class="stock-tag">中信金 2891</span>
+        </div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">半導體設備 / 材料</div>
+          <div class="industry-rating rating-mid">選擇性布局</div>
+        </div>
+        <div class="industry-desc">台積電擴廠持續，但先進製程設備高度依賴外資廠商，本地材料廠受惠程度間接。選龍頭，不追雜牌。</div>
+        <div class="industry-stocks">
+          <span class="stock-tag">家登 3680</span>
+          <span class="stock-tag">精測 6510</span>
+          <span class="stock-tag">漢唐 2404</span>
+        </div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">傳統製造 / 汽車零件</div>
+          <div class="industry-rating rating-watch">謹慎</div>
+        </div>
+        <div class="industry-desc">電動車滲透率拉升，燃油車零件需求下滑。轉型電動車供應鏈成功廠商可關注，但篩選難度高，建議等訂單落地再進場。</div>
+        <div class="industry-stocks">
+          <span class="stock-tag">和大 1536</span>
+          <span class="stock-tag">貿聯-KY 3665</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">風險矩陣</div>
+    </div>
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>風險項目</th>
+          <th>等級</th>
+          <th>影響說明</th>
+          <th>對沖方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>中美科技管制升級</td>
+          <td><span class="risk-level risk-h">高</span></td>
+          <td>禁令範圍擴大可能衝擊台積電先進製程出口，短期股價劇烈波動</td>
+          <td>持倉分批，保留現金部位，避免單壓先進製程</td>
+        </tr>
+        <tr>
+          <td>台灣地緣政治風險</td>
+          <td><span class="risk-level risk-h">高</span></td>
+          <td>兩岸緊張升溫影響外資信心，指數性衝擊且難以預測</td>
+          <td>30% 部位布局非台灣資產（美股 ETF / 黃金）對沖</td>
+        </tr>
+        <tr>
+          <td>新台幣升值</td>
+          <td><span class="risk-level risk-m">中</span></td>
+          <td>出口商以外幣計價，台幣升值壓縮換算後獲利，EPS 下修</td>
+          <td>偏好內需型或以台幣計價收入為主的標的</td>
+        </tr>
+        <tr>
+          <td>AI 訂單能見度驟降</td>
+          <td><span class="risk-level risk-m">中</span></td>
+          <td>若超大型雲端業者資本支出轉保守，供應鏈估值重估</td>
+          <td>追蹤 NVIDIA / Microsoft / Meta 每季財報指引</td>
+        </tr>
+        <tr>
+          <td>台灣電力供應不穩</td>
+          <td><span class="risk-level risk-m">中</span></td>
+          <td>資料中心擴建受限，間接壓抑 AI 基礎設施題材</td>
+          <td>視儲能政策進展調整電力基礎設施持倉</td>
+        </tr>
+        <tr>
+          <td>全球景氣衰退</td>
+          <td><span class="risk-level risk-l">低</span></td>
+          <td>AI 資本支出目前具剛性，短期景氣衰退對 AI 鏈衝擊有限</td>
+          <td>定期追蹤 PMI、ISM 製造業數據作為預警</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">三層資產配置建議</div>
+    </div>
+    <div class="allocation-wrapper">
+      <div class="alloc-card alloc-core">
+        <div class="alloc-pct">50%</div>
+        <div class="alloc-name">核心部位</div>
+        <div class="alloc-items">
+          · 台積電（2330）<br>
+          · 鴻海（2317）<br>
+          · 台達電（2308）<br>
+          · 廣達（2382）<br>
+          定期定額，不擇時
+        </div>
+      </div>
+      <div class="alloc-card alloc-sat">
+        <div class="alloc-pct">30%</div>
+        <div class="alloc-name">衛星部位</div>
+        <div class="alloc-items">
+          · AI 液冷散熱族群<br>
+          · 儲能 / 電力基建<br>
+          · 半導體封裝<br>
+          主題輪動，逢低加碼
+        </div>
+      </div>
+      <div class="alloc-card alloc-def">
+        <div class="alloc-pct">20%</div>
+        <div class="alloc-name">防禦部位</div>
+        <div class="alloc-items">
+          · 黃金 ETF（00635U）<br>
+          · 美債 ETF（00687B）<br>
+          · 現金存款<br>
+          危機入市的子彈庫
+        </div>
+      </div>
+    </div>
+    <div class="insight-box">
+      <p><strong>配置邏輯：</strong>核心部位買「台灣 AI 故事的基礎設施」，不要押注冷門小廠。衛星部位追題材但必須設停利（+20%）和停損（-12%）。防禦部位是危機時的子彈，不要因為「放著沒賺錢」就動用它——它的價值在平衡組合波動率。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">2026 全年進場節奏</div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot active"></div>
+        <div class="timeline-period">2026 Q2（現在）</div>
+        <div class="timeline-action">建立核心底倉</div>
+        <div class="timeline-detail">外資回流、AI 訂單能見度高，適合開始分批建立台積電、鴻海等核心部位（分 3 次進場）</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot watch"></div>
+        <div class="timeline-period">2026 Q3（7–9 月）</div>
+        <div class="timeline-action">追蹤法說、等待回調</div>
+        <div class="timeline-detail">注意 NVIDIA 財報、台積電法說會業績指引。若出現 8–10% 修正，加碼衛星部位</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot future"></div>
+        <div class="timeline-period">2026 Q4（10–12 月）</div>
+        <div class="timeline-action">調整配置、評估獲利了結</div>
+        <div class="timeline-detail">年底外資換倉壓力，審視衛星部位獲利了結時機，核心部位繼續持有</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot future"></div>
+        <div class="timeline-period">2027 Q1（展望）</div>
+        <div class="timeline-action">重新評估 AI 週期位置</div>
+        <div class="timeline-detail">確認次代 AI 晶片是否如期量產，決定是否延續台灣 AI 鏈多頭部位</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="conclusion-box">
+      <h3>給 Coco 姐的最終建議</h3>
+      <p>台股在 AI 供應鏈題材下，2026 年中期仍具上行空間——但前提是正確理解自己在投什麼。你投的不是「台灣經濟」，而是「全球 AI 算力建設的供應鏈」。這個邏輯只要 NVIDIA、AWS、Azure 的資本支出方向不轉，就有效。</p>
+      <p>建議從 50% 核心部位開始，分 3 次進場（每次 1–2 週間隔）。不要一次梭哈——台灣地緣風險是真實存在的尾部風險，保留 20% 防禦部位是對不確定性最誠實的態度。</p>
+      <p>本報告僅供決策參考，不構成具體投資建議。市場存在本金損失風險，請依個人風險承受度決策。MUSEON 戰略研析 · 2026-04-30</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>MUSEON</strong> 戰略研析 · 為 Coco 姐定制 · 2026-04-30 · 僅供決策參考，不構成投資建議
+</div>
+
+</body>
+</html>
