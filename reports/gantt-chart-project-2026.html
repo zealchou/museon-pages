@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>專案甘特圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ember:        #C4502A;
+    --ember-light:  #E0714D;
+    --ember-dark:   #9A3A1C;
+    --teal:         #2A7A6E;
+    --teal-light:   #4AA99B;
+    --gold:         #B8923A;
+    --gold-light:   #D4AF60;
+    --ink:          #12121A;
+    --slate:        #5A5A6E;
+    --mist:         #9898A8;
+    --border:       #E2E0DA;
+    --parchment:    #F7F5F0;
+    --snow:         #FDFCFA;
+
+    /* Phase colours */
+    --phase1-dev:   #C4502A;
+    --phase1-ac:    #E8A88E;
+    --phase2-dev:   #2A7A6E;
+    --phase2-ac:    #8ACAC3;
+    --phase3-dev:   #B8923A;
+    --phase3-ac:    #DFC28A;
+  }
+
+  body {
+    background: var(--parchment);
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 1100px;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 8px rgba(18,18,26,0.06), 0 8px 32px rgba(18,18,26,0.04);
+    animation: fadeUp 400ms ease-out both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .header-left .subtitle {
+    font-size: 14px;
+    color: var(--slate);
+    font-weight: 400;
+  }
+  .header-right {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .stat-box {
+    text-align: center;
+  }
+  .stat-box .label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 4px;
+  }
+  .stat-box .value {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ember);
+  }
+  .stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  /* ── Overview badges ── */
+  .overview-strip {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(196,80,42,0.08);
+    color: var(--ember-dark);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.teal  { background: rgba(42,122,110,0.10); color: #1D5E55; }
+  .badge.gold  { background: rgba(184,146,58,0.12); color: #7A5E1A; }
+
+  /* ── Chart container ── */
+  .chart-wrap {
+    overflow-x: auto;
+    margin-bottom: 36px;
+  }
+
+  .chart {
+    min-width: 700px;
+    width: 100%;
+  }
+
+  /* Month ruler */
+  .month-ruler {
+    display: flex;
+    margin-left: 200px;
+    margin-bottom: 6px;
+  }
+  .month-cell {
+    flex: none;
+    text-align: center;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slate);
+    border-left: 1px solid var(--border);
+    padding: 4px 0;
+  }
+
+  /* Rows */
+  .gantt-rows {
+    position: relative;
+  }
+  .phase-group {
+    margin-bottom: 8px;
+  }
+  .phase-label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-left: 200px;
+    margin-bottom: 4px;
+    padding-top: 12px;
+  }
+  .phase-group:first-child .phase-label { padding-top: 0; }
+
+  .gantt-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .row-label {
+    width: 200px;
+    flex-shrink: 0;
+    padding-right: 16px;
+  }
+  .row-label .row-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .row-label .row-phase {
+    font-size: 11px;
+    color: var(--slate);
+    margin-top: 2px;
+  }
+  .row-label .row-weeks {
+    display: inline-block;
+    background: rgba(18,18,26,0.06);
+    color: var(--slate);
+    border-radius: 100px;
+    padding: 1px 8px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .bar-area {
+    flex: 1;
+    position: relative;
+    height: 52px;
+    background: rgba(226,224,218,0.35);
+    border-radius: 6px;
+    overflow: visible;
+  }
+
+  /* Grid lines on bar area */
+  .bar-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent calc(var(--col-w) - 1px),
+        rgba(226,224,218,0.7) calc(var(--col-w) - 1px),
+        rgba(226,224,218,0.7) var(--col-w)
+      );
+    border-radius: 6px;
+    pointer-events: none;
+  }
+
+  .bar {
+    position: absolute;
+    top: 8px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    transition: filter 200ms ease;
+    cursor: default;
+  }
+  .bar:hover { filter: brightness(1.08); }
+
+  .bar-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    pointer-events: none;
+  }
+  .bar.light .bar-text {
+    color: var(--ink);
+    text-shadow: none;
+  }
+
+  /* Divider line between phases */
+  .phase-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0 12px 200px;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--slate);
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ── Stats table ── */
+  .stats-section {
+    border-top: 1.5px solid var(--border);
+    padding-top: 28px;
+  }
+  .stats-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .stat-card {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .stat-card .sc-label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .stat-card .sc-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-card .sc-sub {
+    font-size: 12px;
+    color: var(--slate);
+  }
+  .stat-card.accent-ember { border-left: 4px solid var(--ember); }
+  .stat-card.accent-teal  { border-left: 4px solid var(--teal); }
+  .stat-card.accent-gold  { border-left: 4px solid var(--gold); }
+
+  /* Footer */
+  .footer {
+    margin-top: 28px;
+    text-align: right;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--mist);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>專案甘特圖</h1>
+      <div class="subtitle">三階段推進計畫 · 2026</div>
+    </div>
+    <div class="header-right">
+      <div class="stat-box">
+        <div class="label">開始</div>
+        <div class="value">5/6</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-box">
+        <div class="label">結束</div>
+        <div class="value">8/18</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-box">
+        <div class="label">總計</div>
+        <div class="value">15 週</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overview badges -->
+  <div class="overview-strip">
+    <div class="badge">控制權建立期 &nbsp;·&nbsp; 5週</div>
+    <div class="badge teal">營運穩定期 &nbsp;·&nbsp; 4週</div>
+    <div class="badge gold">體系擴張期 &nbsp;·&nbsp; 6週</div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--phase1-dev)"></div>控制權建立期 — 開發</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--phase1-ac)"></div>控制權建立期 — 驗收</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--phase2-dev)"></div>營運穩定期 — 開發</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--phase2-ac)"></div>營運穩定期 — 驗收</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--phase3-dev)"></div>體系擴張期 — 開發</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--phase3-ac)"></div>體系擴張期 — 驗收</div>
+  </div>
+
+  <!-- Gantt Chart -->
+  <div class="chart-wrap">
+    <!--
+      Timeline: 2026/5/6 ~ 2026/8/18
+      Total = 104 days (15 weeks)
+      We'll use percentage positions.
+      Total span: May 6 → Aug 18
+
+      Day offsets from May 6 (day 0):
+        May 6  = 0
+        Jun 1  = 26   (May has 31 days, 31-6+1=26 days of May remaining incl. May6, so Jun1 is at day 26)
+        Jun 2  = 27
+        Jun 3  = 28
+        Jun 10 = 35
+        Jun 30 = 55
+        Jul 1  = 56
+        Jul 7  = 62
+        Jul 8  = 63
+        Aug 11 = 97
+        Aug 12 = 98
+        Aug 18 = 104
+
+        Let's recalculate carefully:
+        May 6 = day 0 (start of day, i.e. left edge of bar)
+        May 31 = day 25 (25 days after May 6)
+        Jun 1  = day 26
+        Jun 2  = day 27  (end of 5/6~6/2 dev = 28 days including both endpoints)
+        Jun 3  = day 28
+        Jun 9  = day 34
+        Jun 10 = day 35
+        Jun 30 = day 55
+        Jul 1  = day 56
+        Jul 7  = day 62
+        Jul 8  = day 63
+        Aug 11 = day 97
+        Aug 12 = day 98
+        Aug 18 = day 104  (end of last bar right edge)
+
+      Total days = 104 (Aug 18 - May 6 = 104 days)
+
+      Bar left = start_day / 104 * 100%
+      Bar width = (end_day - start_day + 1) / 104 * 100%
+
+      Phase 1 Dev:  5/6~6/2  → day 0 to 27  → left=0%  width=28/104*100
+      Phase 1 Acc:  6/3~6/9  → day 28 to 34 → left=28/104*100 width=7/104*100
+      Phase 2 Dev:  6/10~6/30 → day 35~55 → left=35/104*100 width=21/104*100
+      Phase 2 Acc:  7/1~7/7  → day 56~62 → left=56/104*100 width=7/104*100
+      Phase 3 Dev:  7/8~8/11 → day 63~97 → left=63/104*100 width=35/104*100
+      Phase 3 Acc:  8/12~8/18 → day 98~104 → left=98/104*100 width=7/104*100
+
+      Month column widths:
+        May  6~31 = 26 days remaining → 26/104
+        Jun  1~30 = 30 days → 30/104
+        Jul  1~31 = 31 days → 31/104
+        Aug  1~18 = 18 days → 18/104  (we only go to Aug 18, so 18 days but we show full Aug col for clarity; let's just use actual coverage)
+
+      Actually let's just make 4 cols of equal weight proportional to their days in our window.
+      Total = 26 (May 6-31) + 30 (Jun) + 31 (Jul) + 18 (Aug 1-18) = 105 days
+      Hmm slightly off. Let me use 104 total days.
+        May 6-31 = 26 days (but bar area starts at May 6)
+        May portion: 26 days  → 26/104 = 25%
+        Jun: 30 days → 30/104 ≈ 28.85%
+        Jul: 31 days → 31/104 ≈ 29.81%
+        Aug 1-18: 18 days (last bar ends on day 104 which is Aug 18 end edge; but Aug 1 = day 87)
+        Wait: May 6 + 87 = Aug 1? May: 31-6=25 more days (May 7~31) + Jun 30 + Jul 31 = 25+30+31 = 86 → Aug 1 = day 86
+        Aug 18 = day 86+17 = day 103. Hmm let me be exact.
+
+        May 6 = day 0
+        May 7 = day 1 … May 31 = day 25
+        Jun 1 = day 26 … Jun 30 = day 55
+        Jul 1 = day 56 … Jul 31 = day 86
+        Aug 1 = day 87 … Aug 18 = day 104
+
+        So Aug 18 = day 104. Total range = 105 (days 0 to 104 inclusive).
+
+        Phase 1 Dev:  5/6~6/2  → day 0~26 (Jun 2 = day 26+1=... wait)
+        Jun 1 = day 26, Jun 2 = day 27. Let me redo:
+        May 6=0, May 7=1, ..., May 31=25, Jun1=26, Jun2=27, Jun3=28, ..., Jun9=34, Jun10=35, ..., Jun30=55, Jul1=56, ..., Jul7=62, Jul8=63, ..., Aug11=97, Aug12=98, ..., Aug18=104.
+        Total days in range = 105 (day0 to day104).
+
+        Bar positions (left% and width% of 105-day total):
+          P1 Dev:  day 0 to 27 (Jun2 is day27, bar right edge = end of day27 = day28 = 28/105) → left=0%  width=28/105*100=26.67%
+          P1 Acc:  day 28 to 34 (Jun3~Jun9) → left=28/105*100=26.67% width=7/105*100=6.67%
+          P2 Dev:  day 35 to 55 (Jun10~Jun30) → left=35/105*100=33.33% width=21/105*100=20%
+          P2 Acc:  day 56 to 62 (Jul1~Jul7) → left=56/105*100=53.33% width=7/105*100=6.67%
+          P3 Dev:  day 63 to 97 (Jul8~Aug11) → left=63/105*100=60% width=35/105*100=33.33%
+          P3 Acc:  day 98 to 104 (Aug12~Aug18) → left=98/105*100=93.33% width=7/105*100=6.67%
+
+        Month cols (left edge and width):
+          May (6-31): day 0 to 25 → width=26/105=24.76%
+          Jun (1-30): day 26 to 55 → width=30/105=28.57%
+          Jul (1-31): day 56 to 86 → width=31/105=29.52%
+          Aug (1-18): day 87 to 104 → width=18/105=17.14%
+    -->
+
+    <div class="chart">
+      <!-- Month ruler -->
+      <div class="month-ruler" id="month-ruler">
+        <div class="month-cell" style="width:24.76%">5月</div>
+        <div class="month-cell" style="width:28.57%">6月</div>
+        <div class="month-cell" style="width:29.52%">7月</div>
+        <div class="month-cell" style="width:17.14%">8月</div>
+      </div>
+
+      <!-- Gantt rows -->
+      <div class="gantt-rows">
+
+        <!-- Phase 1 -->
+        <div class="phase-group">
+          <div class="phase-label">Phase 01 &mdash; 控制權建立期</div>
+
+          <!-- P1 Dev -->
+          <div class="gantt-row">
+            <div class="row-label">
+              <div class="row-name">控制權建立期</div>
+              <div class="row-phase">開發階段</div>
+              <span class="row-weeks">4 週</span>
+            </div>
+            <div class="bar-area" style="--col-w:24.76%">
+              <div class="bar" style="left:0%;width:26.67%;background:var(--phase1-dev)">
+                <span class="bar-text">5/6 &ndash; 6/2</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- P1 Acc -->
+          <div class="gantt-row">
+            <div class="row-label">
+              <div class="row-name">控制權建立期</div>
+              <div class="row-phase">驗收階段</div>
+              <span class="row-weeks">1 週</span>
+            </div>
+            <div class="bar-area" style="--col-w:24.76%">
+              <div class="bar light" style="left:26.67%;width:6.67%;background:var(--phase1-ac)">
+                <span class="bar-text" style="color:var(--ember-dark)">6/3&ndash;6/9</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-divider"></div>
+
+        <!-- Phase 2 -->
+        <div class="phase-group">
+          <div class="phase-label">Phase 02 &mdash; 營運穩定期</div>
+
+          <!-- P2 Dev -->
+          <div class="gantt-row">
+            <div class="row-label">
+              <div class="row-name">營運穩定期</div>
+              <div class="row-phase">開發階段</div>
+              <span class="row-weeks">3 週</span>
+            </div>
+            <div class="bar-area" style="--col-w:24.76%">
+              <div class="bar" style="left:33.33%;width:20%;background:var(--phase2-dev)">
+                <span class="bar-text">6/10 &ndash; 6/30</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- P2 Acc -->
+          <div class="gantt-row">
+            <div class="row-label">
+              <div class="row-name">營運穩定期</div>
+              <div class="row-phase">驗收階段</div>
+              <span class="row-weeks">1 週</span>
+            </div>
+            <div class="bar-area" style="--col-w:24.76%">
+              <div class="bar light" style="left:53.33%;width:6.67%;background:var(--phase2-ac)">
+                <span class="bar-text" style="color:#1D5E55">7/1&ndash;7/7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-divider"></div>
+
+        <!-- Phase 3 -->
+        <div class="phase-group">
+          <div class="phase-label">Phase 03 &mdash; 體系擴張期</div>
+
+          <!-- P3 Dev -->
+          <div class="gantt-row">
+            <div class="row-label">
+              <div class="row-name">體系擴張期</div>
+              <div class="row-phase">開發階段</div>
+              <span class="row-weeks">5 週</span>
+            </div>
+            <div class="bar-area" style="--col-w:24.76%">
+              <div class="bar" style="left:60%;width:33.33%;background:var(--phase3-dev)">
+                <span class="bar-text">7/8 &ndash; 8/11</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- P3 Acc -->
+          <div class="gantt-row">
+            <div class="row-label">
+              <div class="row-name">體系擴張期</div>
+              <div class="row-phase">驗收階段</div>
+              <span class="row-weeks">1 週</span>
+            </div>
+            <div class="bar-area" style="--col-w:24.76%">
+              <div class="bar light" style="left:93.33%;width:6.67%;background:var(--phase3-ac)">
+                <span class="bar-text" style="color:#7A5E1A">8/12&ndash;8/18</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /gantt-rows -->
+    </div><!-- /chart -->
+  </div><!-- /chart-wrap -->
+
+  <!-- Stats -->
+  <div class="stats-section">
+    <h3>階段統計總覽</h3>
+    <div class="stats-grid">
+      <div class="stat-card accent-ember">
+        <div class="sc-label">控制權建立期</div>
+        <div class="sc-value">5 <span style="font-size:16px;font-weight:500;color:var(--slate)">週</span></div>
+        <div class="sc-sub">開發 4週 + 驗收 1週<br>5/6 &ndash; 6/9</div>
+      </div>
+      <div class="stat-card accent-teal">
+        <div class="sc-label">營運穩定期</div>
+        <div class="sc-value">4 <span style="font-size:16px;font-weight:500;color:var(--slate)">週</span></div>
+        <div class="sc-sub">開發 3週 + 驗收 1週<br>6/10 &ndash; 7/7</div>
+      </div>
+      <div class="stat-card accent-gold">
+        <div class="sc-label">體系擴張期</div>
+        <div class="sc-value">6 <span style="font-size:16px;font-weight:500;color:var(--slate)">週</span></div>
+        <div class="sc-sub">開發 5週 + 驗收 1週<br>7/8 &ndash; 8/18</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">MUSEON &nbsp;·&nbsp; Generated 2026-05-03</div>
+
+</div>
+</body>
+</html>
