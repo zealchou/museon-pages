@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Intelligence — Evvon 永續顧問 策略討論</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --warning: #C9943A;
+    --success: #2D8A6E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 15px;
+  }
+
+  .report-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .report-header {
+    border-bottom: 2px solid var(--ember);
+    padding-bottom: 24px;
+    margin-bottom: 36px;
+  }
+
+  .report-meta {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mist);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .report-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .report-subtitle {
+    color: var(--slate);
+    font-size: 14px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.1);
+    color: var(--ember-dark);
+    border-radius: 100px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-right: 8px;
+    margin-top: 12px;
+  }
+
+  .badge.teal { background: rgba(42,122,110,0.1); color: #1a5a50; }
+  .badge.gold { background: rgba(184,146,58,0.1); color: #7a5a10; }
+  .badge.warn { background: rgba(201,148,58,0.1); color: #8a5800; }
+
+  /* Sections */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ember);
+    margin-bottom: 4px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06);
+  }
+
+  .card-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .card-body {
+    color: var(--slate);
+    font-size: 14px;
+  }
+
+  /* Highlight box */
+  .highlight {
+    background: linear-gradient(135deg, rgba(196,80,42,0.06), rgba(196,80,42,0.02));
+    border-left: 3px solid var(--ember);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+
+  .highlight.teal {
+    background: linear-gradient(135deg, rgba(42,122,110,0.06), rgba(42,122,110,0.02));
+    border-left-color: var(--teal);
+  }
+
+  .highlight.gold {
+    background: linear-gradient(135deg, rgba(184,146,58,0.08), rgba(184,146,58,0.02));
+    border-left-color: var(--gold);
+  }
+
+  .highlight.warn {
+    background: linear-gradient(135deg, rgba(201,148,58,0.08), rgba(201,148,58,0.02));
+    border-left-color: var(--warning);
+  }
+
+  .highlight-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--ember);
+  }
+
+  .highlight.teal .highlight-label { color: var(--teal); }
+  .highlight.gold .highlight-label { color: var(--gold); }
+  .highlight.warn .highlight-label { color: var(--warning); }
+
+  .highlight p {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* Action items */
+  .action-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .action-item:last-child { border-bottom: none; }
+
+  .action-num {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border-radius: 50%;
+    background: var(--ember);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .action-text {
+    flex: 1;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .action-owner {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mist);
+    margin-top: 4px;
+  }
+
+  /* Status indicators */
+  .status-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .status-box {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .status-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ember);
+    line-height: 1;
+  }
+
+  .status-label {
+    font-size: 11px;
+    color: var(--mist);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Tension diagram */
+  .tension-grid {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 0;
+    align-items: center;
+    margin: 16px 0;
+  }
+
+  .tension-box {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+
+  .tension-box strong {
+    display: block;
+    font-size: 12px;
+    color: var(--ember);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .tension-vs {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+  }
+
+  /* Table */
+  .insight-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .insight-table th {
+    background: rgba(196,80,42,0.08);
+    color: var(--ember-dark);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border: 1px solid rgba(196,80,42,0.15);
+  }
+
+  .insight-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    color: var(--slate);
+    vertical-align: top;
+  }
+
+  .insight-table tr:nth-child(even) td {
+    background: rgba(247,245,240,0.5);
+  }
+
+  /* Quote */
+  .quote {
+    border-left: 2px solid var(--border);
+    padding: 8px 16px;
+    color: var(--slate);
+    font-style: italic;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  .quote em {
+    color: var(--mist);
+    font-size: 12px;
+    font-style: normal;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* Recommendation */
+  .reco-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .reco-item:last-child { border-bottom: none; }
+
+  .reco-icon {
+    font-size: 20px;
+    min-width: 32px;
+    text-align: center;
+  }
+
+  .reco-content { flex: 1; }
+
+  .reco-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+
+  .reco-desc {
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .report-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--mist);
+    font-size: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .report-wrap { padding: 24px 16px 60px; }
+    .report-title { font-size: 28px; }
+    .status-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .tension-grid { grid-template-columns: 1fr; gap: 8px; }
+    .tension-vs { padding: 4px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="report-wrap">
+
+  <!-- Header -->
+  <div class="report-header">
+    <div class="report-meta">Meeting Intelligence Report · 2026-05-04</div>
+    <h1 class="report-title">Evvon 永續農業顧問<br>策略對焦討論</h1>
+    <p class="report-subtitle">群組對話逐字稿分析 · 09:08 – 09:53 · 參與者：Vivi、MUSEON</p>
+    <div>
+      <span class="badge">內部策略</span>
+      <span class="badge warn">決策待定</span>
+      <span class="badge teal">2人核心組</span>
+    </div>
+  </div>
+
+  <!-- Status row -->
+  <div class="status-row">
+    <div class="status-box">
+      <div class="status-num">0</div>
+      <div class="status-label">已定決策</div>
+    </div>
+    <div class="status-box">
+      <div class="status-num">1</div>
+      <div class="status-label">待定行動</div>
+    </div>
+    <div class="status-box">
+      <div class="status-num">2</div>
+      <div class="status-label">待追蹤議題</div>
+    </div>
+  </div>
+
+  <!-- Layer 1: Structured Summary -->
+  <div class="section">
+    <div class="section-label">Layer 1 · 結構化摘要</div>
+    <div class="section-title">這場討論在講什麼</div>
+
+    <div class="highlight">
+      <div class="highlight-label">核心情境（SCQA）</div>
+      <p><strong>Situation</strong>：Evvon 永續農業顧問公司，核心 2 人（Evvon 顧問主收入 ＋ Vivi 執行整合），外部按需合作。</p>
+      <br>
+      <p><strong>Complication</strong>：確立了「白皮書＋農場業主工作坊」雙主力、補助諮詢輔線的三線策略，但兩條主力節奏完全不同，且同時推進。</p>
+      <br>
+      <p><strong>Question</strong>：2 人帶寬是否足以支撐雙主力？哪條線應優先集中火力？</p>
+      <br>
+      <p><strong>Answer</strong>：本次討論未達成決策。決策者（Evvon）不在場，需要對焦。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">行動項目（Action Items）</div>
+      <div class="action-item">
+        <div class="action-num">1</div>
+        <div class="action-text">
+          Vivi 與 Evvon 對焦：哪條線「有外部客戶在等」或「有 deadline」，依此決定優先順序
+          <div class="action-owner">負責人：Vivi → Evvon 決策</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">待追蹤議題（Parking Lot）</div>
+      <div class="action-item">
+        <div class="action-num" style="background: var(--mist);">P</div>
+        <div class="action-text">
+          補助諮詢「輔線」的具體邊界：何時接、何時推遲、資源佔比上限
+          <div class="action-owner">尚未討論</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num" style="background: var(--mist);">P</div>
+        <div class="action-text">
+          Evvon 的 Ares 人物檔案尚未建立完整（目前僅基礎骨架，缺人格評估）
+          <div class="action-owner">可執行 /ares 完整 Evvon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 2: Multi-perspective -->
+  <div class="section">
+    <div class="section-label">Layer 2 · 多視角圓桌</div>
+    <div class="section-title">三個視角怎麼看</div>
+
+    <div class="highlight teal">
+      <div class="highlight-label">執行視角（Vivi）</div>
+      <p>Vivi 在對話中自行得出了「品質會被稀釋」的結論——這不是被動接受建議，是主動的自我診斷。她說「我可以先集中火力做出結果」，這是行動意願的表態，不只是問問題。</p>
+      <p style="margin-top:8px; color: var(--teal); font-weight: 600;">信號：Vivi 已有傾向，她需要的是對焦平台，不是說服。</p>
+    </div>
+
+    <div class="highlight gold">
+      <div class="highlight-label">業務視角</div>
+      <p>白皮書 = 品牌信任資產（長期積累，一次性深度產出）；工作坊 = 直接接觸目標客群（週期性執行，即時市場回饋）。兩者產出物的性質根本不同，不適合用同一節奏管理。</p>
+      <p style="margin-top:8px; color: #7a5a10; font-weight: 600;">洞見：工作坊的市場回饋可以反哺白皮書的內容深度——先後順序比並行更有複利效應。</p>
+    </div>
+
+    <div class="highlight warn">
+      <div class="highlight-label">結構視角</div>
+      <p>2 人核心同時跑 3 條線（白皮書＋工作坊＋補助諮詢），且 Vivi 的職責橫跨了整個 value chain（講師、執行、文案、商城、媒合、訪談）。這是結構性超載，不是時間管理問題。</p>
+      <p style="margin-top:8px; color: var(--warning); font-weight: 600;">風險：超載不會立刻崩潰，但會以「每條線都差一點點」的方式損耗品質。</p>
+    </div>
+  </div>
+
+  <!-- Layer 3: Tension Analysis -->
+  <div class="section">
+    <div class="section-label">Layer 3 · 核心張力分析</div>
+    <div class="section-title">真正的衝突在哪裡</div>
+
+    <div class="tension-grid">
+      <div class="tension-box">
+        <strong>白皮書</strong>
+        深度時間、批次產出<br>
+        一次性，不重複<br>
+        結果：信任資產
+      </div>
+      <div class="tension-vs">VS</div>
+      <div class="tension-box">
+        <strong>工作坊</strong>
+        週期節奏、持續執行<br>
+        每週需要穩定帶寬<br>
+        結果：直接客群接觸
+      </div>
+    </div>
+
+    <div class="quote">
+      「目前白皮書跟工作坊都是需要不同節奏的投入，如果同時推進，品質會被稀釋。」
+      <em>— Vivi，09:53，這是她自己的診斷，不是被引導出來的</em>
+    </div>
+
+    <div class="highlight">
+      <div class="highlight-label">隱藏動態（值得注意）</div>
+      <p>Vivi 列出詳細成員結構（09:37）→ 說「同時推進」（09:42）→ 最後自己說出「品質被稀釋」（09:53）。這個序列顯示她在測試外部反應，確認自己的判斷是否有人佐證。她可能已有答案，需要的是對齊場合，而非分析。</p>
+    </div>
+  </div>
+
+  <!-- Layer 4: Strategic Recommendation -->
+  <div class="section">
+    <div class="section-label">Layer 4 · 戰略建議</div>
+    <div class="section-title">建議路徑</div>
+
+    <p style="color: var(--slate); font-size: 14px; margin-bottom: 20px;">
+      不是「二選一」問題，是「主副輪轉」設計問題。以下三段式節奏可以讓兩條線互相強化，而非互相消耗。
+    </p>
+
+    <div class="card">
+      <div class="reco-item">
+        <div class="reco-icon">①</div>
+        <div class="reco-content">
+          <div class="reco-title">工作坊先行（0–4 週）</div>
+          <div class="reco-desc">先確認農場業主工作坊有受眾在等。工作坊是「應需型」——有人報名才有資格說有市場。先跑一場，收集真實反應。這個投入的深度 Vivi 已熟悉，不需要從零學習。</div>
+        </div>
+      </div>
+      <div class="reco-item">
+        <div class="reco-icon">②</div>
+        <div class="reco-content">
+          <div class="reco-title">白皮書用工作坊內容反哺（4–8 週）</div>
+          <div class="reco-desc">工作坊跑完後，真實問答、學員困惑、案例就是白皮書最好的原料。這樣白皮書不是憑空寫，是「提煉實戰經驗」——更有說服力，也更省工。</div>
+        </div>
+      </div>
+      <div class="reco-item">
+        <div class="reco-icon">③</div>
+        <div class="reco-content">
+          <div class="reco-title">補助諮詢設觸發條件，不主動推</div>
+          <div class="reco-desc">補助諮詢是「被動應需型」，不設定主動推進計劃。只有在接到詢問、且不影響主線帶寬時才承接。否則會變成三線都在跑、沒有一條做好。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight teal">
+      <div class="highlight-label">最小對齊動作</div>
+      <p>Evvon 和 Vivi 需要用一個問題對焦：<br>
+      <strong>「農場業主工作坊，目前有沒有已確認意願的業主？有幾人？」</strong><br>
+      有人 → 工作坊先行，有真實需求支撐。<br>
+      沒人 → 白皮書先行，先建立信任資產才能招募受眾。</p>
+    </div>
+  </div>
+
+  <!-- Layer 5: Cross-session memory -->
+  <div class="section">
+    <div class="section-label">Layer 5 · 跨期記憶整合</div>
+    <div class="section-title">歷史脈絡</div>
+
+    <table class="insight-table">
+      <thead>
+        <tr>
+          <th>時間</th>
+          <th>事件</th>
+          <th>與今日關聯</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2026-03-27</td>
+          <td>Evvon 永續農業 campaign 啟動</td>
+          <td>今日討論是 campaign 第 9 天的策略對焦</td>
+        </tr>
+        <tr>
+          <td>2026-04-28</td>
+          <td>Campaign Day 8 最後發送</td>
+          <td>距今 6 天，campaign 節奏有放緩跡象</td>
+        </tr>
+        <tr>
+          <td>今日討論</td>
+          <td>雙主力＋注意力分裂診斷</td>
+          <td>帶寬問題可能是 campaign 放緩的根因</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight warn" style="margin-top: 16px;">
+      <div class="highlight-label">注意：Campaign 節奏斷裂</div>
+      <p>Evvon campaign 從 Day 5（4/2）到 Day 8（4/28）中間斷了 26 天。今日討論的「注意力分裂」問題，可能就是 campaign 無法維持節奏的根因。這不是意願問題，是帶寬設計問題。</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="report-footer">
+    <p>MUSEON Meeting Intelligence · 分析時間 2026-05-04 10:11</p>
+    <p style="margin-top: 4px;">本報告基於群組對話自動分析生成 · 所有推斷標注了信心等級</p>
+  </div>
+
+</div>
+</body>
+</html>
