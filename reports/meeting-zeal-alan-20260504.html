@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>會議記錄｜Zeal × Alan Wu — 2026-05-04</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會議記錄 — Zeal × Alan 策略討論 | 2026-05-04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --ember: #C4502A;
     --ember-light: #E0714D;
@@ -21,495 +19,597 @@
     --border: #E2E0DA;
     --parchment: #F7F5F0;
     --snow: #FDFCFA;
-    --deep-ink: #0E0E16;
-    --surface: #16161F;
-    --raised: #1E1E2A;
-    --border-dark: #2A2A38;
-    --success: #2D8A6E;
-    --warning: #C9943A;
   }
-
-  html { font-size: 16px; scroll-behavior: smooth; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Outfit', 'Noto Sans TC', sans-serif;
     background: var(--parchment);
     color: var(--ink);
+    font-size: 16px;
     line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
   }
-
-  /* ── HERO ── */
   .hero {
-    background: var(--deep-ink);
-    color: var(--snow);
-    padding: 72px 40px 56px;
+    background: #0E0E16;
+    padding: 64px 40px 48px;
     position: relative;
     overflow: hidden;
   }
   .hero::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(196,80,42,0.18) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 60% at 10% 80%, rgba(184,146,58,0.10) 0%, transparent 60%);
+    top: -60px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
     pointer-events: none;
   }
-  .hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
-  .hero-meta {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--mist);
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(42,122,110,0.12) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .hero-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ember); }
+  .hero-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.3);
+    color: #E0714D;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px; margin-bottom: 20px;
+  }
   .hero h1 {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 600; line-height: 1.15;
-    margin-bottom: 16px;
-    color: var(--snow);
+    font-size: 44px; font-weight: 600; color: #FDFCFA;
+    line-height: 1.2; margin-bottom: 12px;
   }
-  .hero h1 span { color: var(--ember-light); font-style: italic; }
-  .hero-subtitle {
-    font-size: 16px; color: rgba(253,252,250,0.6); max-width: 560px; line-height: 1.7;
-    margin-bottom: 36px;
-  }
-  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-  .pill {
-    background: rgba(253,252,250,0.08);
-    border: 1px solid rgba(253,252,250,0.15);
-    border-radius: 100px;
-    padding: 5px 14px;
-    font-size: 12px; font-weight: 500;
-    color: rgba(253,252,250,0.7);
-  }
-  .pill.hot { background: rgba(196,80,42,0.25); border-color: rgba(196,80,42,0.5); color: #E0714D; }
-
-  /* ── WRAPPER ── */
-  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 40px 96px; }
-
-  /* ── SECTION HEADING ── */
-  .section-label {
-    display: flex; align-items: center; gap: 10px;
+  .hero-subtitle { color: #9898A8; font-size: 16px; margin-bottom: 32px; }
+  .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .meta-label {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--mist);
-    margin-bottom: 20px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #5A5A6E;
   }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .meta-value { font-size: 14px; font-weight: 500; color: #FDFCFA; }
 
-  h2.section-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 28px; font-weight: 600; line-height: 1.3;
-    color: var(--ink);
-    margin-bottom: 24px;
-  }
-  h3.card-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 17px; font-weight: 600; line-height: 1.4;
-    color: var(--ink); margin-bottom: 10px;
-  }
+  .main { max-width: 820px; margin: 0 auto; padding: 48px 40px 80px; }
 
-  /* ── CARD ── */
-  .card {
-    background: var(--snow);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-  }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(18,18,26,0.08); }
-  .card-accent { border-left: 3px solid var(--ember); }
-  .card-teal { border-left: 3px solid var(--teal); }
-  .card-gold { border-left: 3px solid var(--gold); }
-  .card-warning { border-left: 3px solid var(--warning); }
-
-  /* ── BADGE ── */
-  .badge {
-    display: inline-block;
-    background: rgba(196,80,42,0.1);
-    color: var(--ember-dark);
-    border-radius: 100px; padding: 3px 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .badge.teal { background: rgba(42,122,110,0.1); color: #1D6158; }
-  .badge.gold { background: rgba(184,146,58,0.12); color: #8A6A20; }
-  .badge.warning { background: rgba(201,148,58,0.12); color: #8A5E10; }
-  .badge.info { background: rgba(42,106,138,0.1); color: #1D5570; }
-
-  /* ── INFO GRID ── */
-  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 40px; }
-  .info-item { background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; }
-  .info-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mist); font-family: 'IBM Plex Mono', monospace; margin-bottom: 6px; }
-  .info-value { font-size: 15px; font-weight: 500; color: var(--ink); }
-
-  /* ── TIMELINE ── */
-  .timeline { position: relative; padding-left: 32px; }
-  .timeline::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 0; width: 1.5px; background: var(--border); }
-  .timeline-item { position: relative; margin-bottom: 32px; }
-  .timeline-dot {
-    position: absolute; left: -32px; top: 4px;
-    width: 14px; height: 14px; border-radius: 50%;
-    background: var(--snow); border: 2px solid var(--ember);
-  }
-  .timeline-dot.teal { border-color: var(--teal); }
-  .timeline-dot.gold { border-color: var(--gold); }
-  .timeline-time { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: var(--mist); margin-bottom: 6px; }
-
-  /* ── HIGHLIGHT BOX ── */
-  .highlight-box {
-    background: linear-gradient(135deg, rgba(196,80,42,0.06) 0%, rgba(184,146,58,0.04) 100%);
-    border: 1px solid rgba(196,80,42,0.15);
-    border-radius: 10px; padding: 24px 28px; margin: 24px 0;
-  }
-  .highlight-box .highlight-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 20px; font-weight: 600; color: var(--ember-dark); margin-bottom: 12px;
-  }
-
-  /* ── ACTION ITEMS ── */
-  .action-list { list-style: none; padding: 0; }
-  .action-list li {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 14px 0; border-bottom: 1px solid var(--border);
-    font-size: 15px;
-  }
-  .action-list li:last-child { border-bottom: none; }
-  .action-num {
-    flex-shrink: 0;
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--ember); color: white;
-    font-size: 12px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    margin-top: 1px;
-  }
-  .action-owner {
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600;
-    color: var(--mist); margin-top: 4px;
-  }
-
-  /* ── QUOTE ── */
-  blockquote.zeal-quote {
-    border-left: 3px solid var(--ember); padding-left: 20px; margin: 20px 0;
-    font-style: italic; color: var(--slate); line-height: 1.8;
-  }
-
-  /* ── PRO CON TABLE ── */
-  .pro-con { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-  .pro-col, .con-col { border-radius: 8px; padding: 16px 20px; }
-  .pro-col { background: rgba(45,138,110,0.06); border: 1px solid rgba(45,138,110,0.2); }
-  .con-col { background: rgba(201,148,58,0.06); border: 1px solid rgba(201,148,58,0.2); }
-  .pro-col h4 { color: var(--teal); font-size: 13px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .con-col h4 { color: var(--warning); font-size: 13px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .pro-col ul, .con-col ul { list-style: none; }
-  .pro-col li, .con-col li { font-size: 14px; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; }
-  .pro-col li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
-  .con-col li::before { content: '!'; color: var(--warning); font-weight: 700; flex-shrink: 0; }
-
-  /* ── SECTION SPACING ── */
-  .section { margin-bottom: 56px; animation: fadeUp 400ms ease-out both; }
-  .section:nth-child(1) { animation-delay: 0ms; }
-  .section:nth-child(2) { animation-delay: 80ms; }
-  .section:nth-child(3) { animation-delay: 160ms; }
-  .section:nth-child(4) { animation-delay: 240ms; }
-  .section:nth-child(5) { animation-delay: 320ms; }
-
-  @keyframes fadeUp {
+  .section { margin-bottom: 48px; animation: fadeIn 0.4s ease-out both; }
+  @keyframes fadeIn {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
-  p { margin-bottom: 12px; font-size: 15px; line-height: 1.8; color: var(--ink); }
-  p:last-child { margin-bottom: 0; }
-  strong { font-weight: 600; color: var(--ink); }
-
-  /* ── FOOTER ── */
-  .footer {
-    background: var(--deep-ink); color: rgba(253,252,250,0.4);
-    padding: 32px 40px; text-align: center;
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--ember); background: rgba(196,80,42,0.08);
+    border: 1px solid rgba(196,80,42,0.2);
+    padding: 3px 10px; border-radius: 100px; flex-shrink: 0;
   }
-  .footer a { color: var(--ember-light); text-decoration: none; }
+  .section-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 26px; font-weight: 600; color: var(--ink);
+  }
 
-  /* ── RESPONSIVE ── */
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .summary-card {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06);
+  }
+  .summary-icon { font-size: 20px; margin-bottom: 8px; }
+  .summary-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .summary-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+  .card {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px;
+    box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    margin-bottom: 16px;
+  }
+  .card-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 12px; margin-bottom: 16px;
+  }
+  .card-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+  .card-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+  }
+  .badge-opportunity { background: rgba(42,122,110,0.1); color: #2A7A6E; }
+  .badge-risk { background: rgba(196,64,42,0.1); color: #C4402A; }
+  .badge-action { background: rgba(184,146,58,0.12); color: #B8923A; }
+  .badge-tech { background: rgba(42,106,138,0.1); color: #2A6A8A; }
+  .badge-insight { background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+
+  p { color: var(--slate); font-size: 15px; line-height: 1.8; margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight-box {
+    border-left: 3px solid var(--ember);
+    background: rgba(196,80,42,0.04);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .highlight-box p { font-size: 14px; color: var(--ink); font-weight: 500; margin: 0; }
+  .teal-box {
+    border-left: 3px solid var(--teal);
+    background: rgba(42,122,110,0.04);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .teal-box p { font-size: 14px; color: var(--ink); margin: 0; }
+  .gold-box {
+    border-left: 3px solid var(--gold);
+    background: rgba(184,146,58,0.06);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px; margin: 14px 0;
+  }
+  .gold-box p { font-size: 14px; color: var(--ink); margin: 0; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .col-item { background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .col-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--mist); margin-bottom: 6px;
+  }
+  .col-value { font-size: 14px; color: var(--ink); font-weight: 500; line-height: 1.6; }
+
+  .action-list { list-style: none; padding: 0; }
+  .action-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .action-item:last-child { border-bottom: none; }
+  .action-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600; color: var(--ember);
+    background: rgba(196,80,42,0.08);
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .action-content { flex: 1; }
+  .action-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .action-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+  .action-owner {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+    color: var(--teal); background: rgba(42,122,110,0.08);
+    padding: 2px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 4px;
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  .quote {
+    background: #0E0E16; border-radius: 8px;
+    padding: 20px 24px; margin: 16px 0; position: relative;
+  }
+  .quote::before {
+    content: '\201C';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; color: rgba(196,80,42,0.3);
+    position: absolute; top: 8px; left: 16px; line-height: 1;
+  }
+  .quote p { color: #FDFCFA; font-size: 14px; padding-left: 20px; font-style: italic; margin: 0; }
+  .quote-attr { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5A5A6E; padding-left: 20px; margin-top: 8px; }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 100px;
+    border: 1px solid var(--border); color: var(--slate);
+  }
+
+  .pending-card {
+    background: rgba(201,148,58,0.05);
+    border: 1px solid rgba(201,148,58,0.25);
+    border-radius: 10px; padding: 20px 24px; margin-bottom: 12px;
+  }
+  .pending-q { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .pending-context { font-size: 13px; color: var(--slate); }
+  .pending-icon { font-size: 16px; margin-right: 8px; }
+
+  .footer { background: #0E0E16; padding: 32px 40px; text-align: center; margin-top: 64px; }
+  .footer p { color: #5A5A6E; font-size: 13px; margin: 0; }
+
   @media (max-width: 640px) {
-    .hero { padding: 48px 20px 40px; }
-    .wrapper { padding: 32px 20px 64px; }
-    .pro-con { grid-template-columns: 1fr; }
-    .info-grid { grid-template-columns: 1fr 1fr; }
+    .hero { padding: 40px 20px 32px; }
+    .hero h1 { font-size: 32px; }
+    .main { padding: 32px 20px 60px; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .hero-meta { gap: 20px; }
   }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
+<div class="hero">
   <div class="hero-inner">
+    <div class="hero-badge">Meeting Intelligence</div>
+    <h1>Zeal × Alan 策略討論<br><em style="font-weight:400; font-size:0.75em; color:#9898A8;">商業模式探索 · AI 賦能新業態</em></h1>
+    <p class="hero-subtitle">會議轉錄分析 · 由 MUSEON 整理</p>
     <div class="hero-meta">
-      <span class="dot"></span>
-      <span>MUSEON 會議記錄</span>
-      <span style="color:rgba(253,252,250,0.3)">•</span>
-      <span>2026-05-04 深夜</span>
-      <span style="color:rgba(253,252,250,0.3)">•</span>
-      <span>錄音轉錄整理</span>
-    </div>
-    <h1>Zeal × Alan Wu<br/><span>深夜戰略對話</span></h1>
-    <p class="hero-subtitle">從 AI 系統行為討論，延伸至擇日訂閱制商業模式、全球支付架構與知識傳承設計的一場跨領域高密度對話。</p>
-    <div class="hero-pills">
-      <span class="pill hot">🔥 核心討論：擇日訂閱制</span>
-      <span class="pill">MUSEON 系統展示</span>
-      <span class="pill">Stripe 全球支付</span>
-      <span class="pill">知識傳承架構</span>
-      <span class="pill">合作模式討論</span>
-    </div>
-  </div>
-</section>
-
-<div class="wrapper">
-
-  <!-- 會議基本資訊 -->
-  <div class="section">
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="info-label">日期</div>
-        <div class="info-value">2026-05-04（深夜）</div>
+      <div class="meta-item">
+        <span class="meta-label">日期</span>
+        <span class="meta-value">2026-05-04</span>
       </div>
-      <div class="info-item">
-        <div class="info-label">出席者</div>
-        <div class="info-value">Zeal、Alan Wu（吳明憲）</div>
+      <div class="meta-item">
+        <span class="meta-label">與會者</span>
+        <span class="meta-value">Zeal（周逸達）· Alan Wu（吳明憲）</span>
       </div>
-      <div class="info-item">
-        <div class="info-label">形式</div>
-        <div class="info-value">語音會議（錄音轉錄）</div>
+      <div class="meta-item">
+        <span class="meta-label">時長</span>
+        <span class="meta-value">約 60 分鐘</span>
       </div>
-      <div class="info-item">
-        <div class="info-label">記錄者</div>
-        <div class="info-value">MUSEON 霓裳</div>
+      <div class="meta-item">
+        <span class="meta-label">格式</span>
+        <span class="meta-value">語音轉錄 → 結構化整理</span>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- 執行摘要 -->
-  <div class="section">
-    <div class="section-label">EXECUTIVE SUMMARY</div>
-    <h2 class="section-title">核心洞見摘要</h2>
-    <div class="highlight-box">
-      <div class="highlight-title">這場對話的三個決策節點</div>
-      <p>① <strong>擇日訂閱制</strong>——AI 幫企業算吉日是真實需求，但「剛需 vs 有了更好」的定位決定整個商業模式的天花板。② <strong>支付架構</strong>——Stripe 跨境 20% 損耗是訂價結構問題，不是技術問題，要在訂價前先算清楚。③ <strong>AI 作為知識傳承載體</strong>——商業邏輯才是真正的護城河，技術（Web Coding）已經商品化。</p>
+<div class="main">
+
+  <!-- Executive Summary -->
+  <div class="section" style="animation-delay:0.05s">
+    <div class="section-header">
+      <span class="section-num">EXEC SUMMARY</span>
+      <h2 class="section-title">三條核心脈絡</h2>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-icon">📅</div>
+        <div class="summary-title">擇日訂閱制</div>
+        <div class="summary-desc">幫企業算吉日、月初交付訂閱報告。邏輯成立，但「剛需 vs 有了更好」的核心問題待釐清。</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">💸</div>
+        <div class="summary-title">金流損耗</div>
+        <div class="summary-desc">Stripe → 美國帳戶 → 玉山美金約損耗 20-25%，這是訂價結構的一部分，要內建進商業模式。</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">🌐</div>
+        <div class="summary-title">全球化路徑</div>
+        <div class="summary-desc">AI 時代語言障礙消失，任何內容服務都能直接切入全球市場，中文只是起點不是天花板。</div>
+      </div>
     </div>
   </div>
 
-  <!-- 討論脈絡 -->
-  <div class="section">
-    <div class="section-label">DISCUSSION FLOW</div>
-    <h2 class="section-title">對話脈絡重建</h2>
+  <hr class="divider">
 
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-time">早段 · MUSEON 系統展示</div>
-        <div class="card card-accent">
-          <span class="badge">系統展示</span>
-          <h3 class="card-title">MUSEON 的行為邏輯與自我察覺設計</h3>
-          <p>Zeal 向 Alan 展示 MUSEON（霓裳）的實際運作，說明系統有時會出現「靈異現象」（回應變慢、無限轉圈），這是 AI 呼叫時序問題，非 bug。</p>
-          <p>Zeal 解釋 MUSEON 的設計哲學：它不只對使用者應用六大盲點分析，也<strong>對自己進行六大盲點自審</strong>——系統會觀察 Zeal 跟他人的對話，主動學習 Zeal 的思維邏輯，並提問「為什麼你在那個情境下這樣回應？」</p>
-          <blockquote class="zeal-quote">「他會問我說，為什麼我在那個時候會這樣回 A 人的話，然後他會跟我學習。」—— Zeal</blockquote>
-          <p><strong>Alan 的觀察</strong>：Alan 覺得 MUSEON 問他的問題還不夠深，認為 AI 真正有價值的地方是「有沒有真的深入理解使用者意圖」。這是下一階段 MUSEON 要解決的核心課題。</p>
+  <!-- Topic 1 -->
+  <div class="section" style="animation-delay:0.1s">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">MUSEON 展示——自我察覺的 AI 架構</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">七武海系統：AI 能看見自己的六大盲點</span>
+        <span class="card-badge badge-tech">TECH DEMO</span>
+      </div>
+      <p>Zeal 向 Alan 展示 MUSEON 最核心的競爭力：這不是一個會回答問題的 AI，而是一個<strong>會觀察自己如何回答問題</strong>的 AI。</p>
+      <div class="highlight-box">
+        <p>「他會看自己的六大盲點——然後他會問我，為什麼我在那個時候會這樣回 A 人的話，然後他會跟我學習。」——Zeal</p>
+      </div>
+      <p>七武海是七個維度的自我評估系統（自我察覺、自我修復、自我迭代、自我演化、自我意識、自我認知、自我認同），不只服務使用者的六大盲點，也用來檢視 MUSEON 自身的盲點。這是 MUSEON 與一般 AI 工具的根本差異。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">群組觀察學習模式</span>
+        <span class="card-badge badge-insight">KEY INSIGHT</span>
+      </div>
+      <p>MUSEON 在群組中不只是被動回覆，而是持續學習群組互動模式。當觀察到值得深入的話題，MUSEON 會主動向 Zeal 提問：</p>
+      <div class="teal-box">
+        <p>「我最近看到你跟 A 人在聊什麼話題，我覺得這個話題蠻有趣的。為什麼我在那個時候會這樣回 A 人的話？」</p>
+      </div>
+      <p>這種設計讓 MUSEON 在每次互動後都有機會強化自己的判斷模型，形成持續的智能迭代飛輪。</p>
+      <div class="tag-row">
+        <span class="tag">Self-Awareness</span>
+        <span class="tag">Behavior Learning</span>
+        <span class="tag">七武海</span>
+        <span class="tag">DNA36</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Topic 2 -->
+  <div class="section" style="animation-delay:0.15s">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">擇日訂閱制——Alan 的商業提案</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">提案核心概念</span>
+        <span class="card-badge badge-opportunity">OPPORTUNITY</span>
+      </div>
+      <p>Alan 與 GPT 討論後形成的商業構想：用 AI 幫企業算吉日（擇日），以訂閱制收費，月初交付當月吉日報告。</p>
+      <div class="two-col">
+        <div class="col-item">
+          <div class="col-label">目標市場</div>
+          <div class="col-value">有定期辦活動的企業主（銷獎典禮、產品發表會、簽約日等）</div>
+        </div>
+        <div class="col-item">
+          <div class="col-label">商業邏輯</div>
+          <div class="col-value">自動化出報告，邊際成本趨近於零，訂閱制躺賺</div>
+        </div>
+        <div class="col-item">
+          <div class="col-label">技術需求</div>
+          <div class="col-value">串接 Stripe 金流 + 自動排程生成報告</div>
+        </div>
+        <div class="col-item">
+          <div class="col-label">擴張路徑</div>
+          <div class="col-value">中文市場 → 全球（AI 無語言障礙）</div>
         </div>
       </div>
+    </div>
 
-      <div class="timeline-item">
-        <div class="timeline-dot teal"></div>
-        <div class="timeline-time">中段 · 商業邏輯 vs 技術討論</div>
-        <div class="card card-teal">
-          <span class="badge teal">核心共識</span>
-          <h3 class="card-title">Web Coding 商品化後，商業邏輯才是護城河</h3>
-          <p>雙方對齊一個關鍵認識：<strong>網站技術已經不是門檻</strong>——Web Coding 讓任何人都能快速做出網站，真正決定企業競爭力的是「背後的商業邏輯」。</p>
-          <blockquote class="zeal-quote">「反而是商業邏輯比較重要。對，反而是寫系統就。嗯，那你還是要依據什麼寫嘛？所以同樣要投的還是商業需求比較重要。」—— Zeal</blockquote>
-          <p>此觀點直接影響 Alan 的業務判斷：技術外包的競爭已白熱化，<strong>未來差異化在於能否提供「帶著商業洞見的 AI 系統」</strong>，而非單純的技術能力。</p>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">結構性問題：剛需 vs 有了更好</span>
+        <span class="card-badge badge-risk">CRITICAL RISK</span>
+      </div>
+      <p>這個商業模式的成立前提是：企業主每個月都有感受到擇日需求。但實際上，擇日通常是「辦活動時才想到」的事——沒活動的月份，客戶繼續訂閱的理由不足。</p>
+      <div class="highlight-box">
+        <p><strong>核心問題：</strong>這個需求是「不訂閱就會很痛」還是「訂了錦上添花」？如果是後者，訂閱制天然有掉率壓力。</p>
+      </div>
+      <p><strong>建議解法：</strong>把「月初吉日報告」升維成「企業年度決策日曆」——包含吉日、市場節氣、活動建議等，讓客戶感覺每月都有完整的策略價值，而不只是等需要時才開啟。</p>
+      <div class="teal-box">
+        <p><strong>甜頭：</strong>如果能做到這個轉型，這是一個真正的 SaaS 躺賺模型，自動化後邊際成本極低。</p>
+      </div>
+      <div class="highlight-box">
+        <p><strong>代價：</strong>需要更豐富的內容設計，以及更清楚的客戶畫像研究——「有在辦活動的企業」到底是哪些產業？頻率多高？</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">全球化路徑討論</span>
+        <span class="card-badge badge-opportunity">GLOBAL PLAY</span>
+      </div>
+      <p>Zeal 提出的關鍵洞見：AI 時代語言障礙幾乎不存在，不管是命名報告還是擇日服務，任何國家語言都能支援。</p>
+      <div class="quote">
+        <p>「我不管，我們也不管翻得好不好——任何國家語言都不是問題。當然不可能是賺中文人的錢。」</p>
+        <span class="quote-attr">— Zeal</span>
+      </div>
+      <p>Alan 指出英文版需要另一套邏輯，Zeal 的回應是：先做，語言本身不是瓶頸，瓶頸是商業邏輯是否清晰。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Topic 3 -->
+  <div class="section" style="animation-delay:0.2s">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">金流規劃——Stripe 損耗與替代路徑</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Stripe → 美國帳戶 → 玉山美金：實際損耗分析</span>
+        <span class="card-badge badge-risk">COST STRUCTURE</span>
+      </div>
+      <p>討論中提到的金流路徑：收款進 Stripe → 美國帳戶 → 轉回玉山美金戶口，Alan 估算約損耗 20%。</p>
+      <div class="two-col">
+        <div class="col-item">
+          <div class="col-label">Stripe 手續費</div>
+          <div class="col-value">約 2.9% + $0.30/筆（跨境加碼）</div>
+        </div>
+        <div class="col-item">
+          <div class="col-label">跨境匯損</div>
+          <div class="col-value">美金 → 台幣匯差 + 電匯費用</div>
+        </div>
+        <div class="col-item">
+          <div class="col-label">實際到手估算</div>
+          <div class="col-value">約 75-77%（含所有費用）</div>
+        </div>
+        <div class="col-item">
+          <div class="col-label">Zeal 的觀點</div>
+          <div class="col-value">放著就會躺賺，這個損耗是可接受的結構成本</div>
         </div>
       </div>
+      <div class="gold-box">
+        <p><strong>訂價建議：</strong>這 20-25% 的損耗必須內建進訂價結構，而不是「扣完後剩多少算多少」。若預設要達到某個到手金額，定價要乘以 1.3-1.35 倍作為緩衝。</p>
+      </div>
+    </div>
 
-      <div class="timeline-item">
-        <div class="timeline-dot gold"></div>
-        <div class="timeline-time">核心段 · 商業新機會</div>
-        <div class="card card-gold">
-          <span class="badge gold">💡 商業新機會</span>
-          <h3 class="card-title">擇日訂閱制：AI 幫企業算吉日</h3>
-          <p>Alan 提出一個從 GPT 對話中萌發的商業點子：<strong>用 AI 幫企業計算流日、推薦吉日，做成訂閱制服務</strong>——每月月初交付一份「企業吉日日曆」，適用於辦銷獎、產品發表會、重要決策日等場景。</p>
-          <p>Alan 的設定：Stripe 串接訂閱金流，企業用戶按月付費，服務完全自動化後趨近於零邊際成本。</p>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">替代金流方案討論</span>
+        <span class="card-badge badge-action">OPTIONS</span>
+      </div>
+      <p>Alan 提問：為何不先串接台灣本土金流（綠界、藍新）？討論邏輯：台灣本土金流適合台灣市場，但如果目標是全球市場，Stripe 是現階段最成熟的選擇。</p>
+      <div class="teal-box">
+        <p><strong>建議路徑：</strong>先用綠界/藍新驗證台灣市場（手續費約 3-5%，較友善），MVP 期間降低固定成本。確認商業模式成立後再切換 Stripe 走全球。</p>
+      </div>
+    </div>
+  </div>
 
-          <div class="pro-con">
-            <div class="pro-col">
-              <h4>機會點</h4>
-              <ul>
-                <li>企業擇日需求不低頻（每年多次）</li>
-                <li>自動化後邊際成本趨零</li>
-                <li>AI 突破語言障礙，可做全球市場</li>
-                <li>訂閱制創造可預測現金流</li>
-              </ul>
-            </div>
-            <div class="con-col">
-              <h4>風險點</h4>
-              <ul>
-                <li>「剛需」還是「有了更好」尚未確認</li>
-                <li>無活動月份掉率風險</li>
-                <li>Stripe 跨境費用 20% 需提前算入訂價</li>
-                <li>英文市場另需一套邏輯支撐</li>
-              </ul>
-            </div>
+  <hr class="divider">
+
+  <!-- Topic 4 -->
+  <div class="section" style="animation-delay:0.25s">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">技術架構與 AI 應用</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">三層資料架構：語義 + 關係 + 結構</span>
+        <span class="card-badge badge-tech">ARCHITECTURE</span>
+      </div>
+      <p>Zeal 說明 MUSEON 底層資料架構——三種資料庫共振工作：</p>
+      <div class="highlight-box">
+        <p><strong>向量（Vector）</strong>：語義搜尋，理解概念層面的相似性，不受關鍵字限制</p>
+      </div>
+      <div class="highlight-box">
+        <p><strong>圖連結（Graph）</strong>：結合 DNA36 的量子場設計，記錄實體之間的關係與脈絡</p>
+      </div>
+      <div class="highlight-box">
+        <p><strong>傳統資料庫（Relational）</strong>：結構化資料，標籤管理，精確查詢</p>
+      </div>
+      <p>Markdown 是非結構化資料的一種，Alan 指出。三者共振讓不同類型查詢都能覆蓋。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">AI 讓商業邏輯比技術更重要</span>
+        <span class="card-badge badge-insight">MARKET SHIFT</span>
+      </div>
+      <div class="quote">
+        <p>「現在有 Web Coding，網站真的不是什麼問題了。反而是商業邏輯比較重要——你寫系統還是要依據什麼寫，所以同樣要投的還是商業需求比較重要。」</p>
+        <span class="quote-attr">— Zeal 與 Alan 共同確認</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">行銷知識的 AI 傳承模型</span>
+        <span class="card-badge badge-insight">ORG INSIGHT</span>
+      </div>
+      <p>Zeal 提出 AI 在組織知識傳承的關鍵應用：即使行銷部門所有人都是新人，過去的行銷標準、客戶決策邏輯可以完整傳承。</p>
+      <div class="teal-box">
+        <p>「行銷的標準是什麼、客戶的 OK 為什麼是 OK——技術可以全部被傳承。剩下就只剩人最後怎麼去把這件事的價值放大。」</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Topic 5 -->
+  <div class="section" style="animation-delay:0.3s">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">合作架構與資源盤點</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Zeal 的中立第三方定位</span>
+        <span class="card-badge badge-insight">POSITIONING</span>
+      </div>
+      <p>Zeal 說明自己在合作關係中的定位：不管跟士維合作還是跟 Alan 合作，都不影響 MUSEON 的中立性。</p>
+      <div class="highlight-box">
+        <p>「我是中立第三方。不管我跟士維合作，還是我跟你合作，對我來講是不影響的——因為我沒有問本來。」</p>
+      </div>
+      <p>這個定位讓 MUSEON 能夠同時與多方合作而不產生利益衝突，是商業模式設計的重要環節。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">50+ 商用 GPT 的資源盤點</span>
+        <span class="card-badge badge-action">ASSET REVIEW</span>
+      </div>
+      <p>Zeal 提到目前已積累 50 多隻商用 GPT 配置，這是 MUSEON 在 AI 應用開發上的重要資產儲備。</p>
+      <div class="gold-box">
+        <p><strong>潛在槓桿：</strong>現有的 AI 工具庫可以快速原型化多個商業場景，不需要從零開始建構，大幅降低新業務的啟動成本。</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Action Items -->
+  <div class="section" style="animation-delay:0.35s">
+    <div class="section-header">
+      <span class="section-num">ACTION</span>
+      <h2 class="section-title">後續行動清單</h2>
+    </div>
+    <div class="card">
+      <ul class="action-list">
+        <li class="action-item">
+          <span class="action-num">1</span>
+          <div class="action-content">
+            <div class="action-title">驗證擇日訂閱制核心假設</div>
+            <div class="action-desc">訪談 5-10 家目標企業主，確認「沒有要辦活動的月份，你是否還願意繼續訂閱擇日報告？」——這是商業模式成立的關鍵驗證點。</div>
           </div>
-
-          <div class="highlight-box" style="margin-top:16px;">
-            <div class="highlight-title" style="font-size:17px;">關鍵設計問題（未解）</div>
-            <p>如果企業主只有「快要辦活動時」才想到要擇日，訂閱制天然有掉率壓力。解法建議：把「月初吉日報告」重新定位成<strong>「企業年度決策日曆」</strong>——讓客戶每月都感受到價值，而不只是單次需要才開啟。這是設計核心，要在大量推廣前先驗證。</p>
+          <span class="action-owner">Alan</span>
+        </li>
+        <li class="action-item">
+          <span class="action-num">2</span>
+          <div class="action-content">
+            <div class="action-title">設計「企業年度決策日曆」MVP</div>
+            <div class="action-desc">把單次擇日報告升維成包含吉日 + 市場節氣 + 活動建議的月度訂閱報告，提高每月感知價值，降低掉率壓力。</div>
           </div>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-time">財務段 · 支付架構</div>
-        <div class="card card-warning">
-          <span class="badge warning">⚠️ 財務風險提示</span>
-          <h3 class="card-title">Stripe → 美國帳戶 → 玉山美金：20% 損耗分析</h3>
-          <p>Alan 提出金流路徑：<strong>收入從 Stripe → 美國帳戶 → 玉山美金，會被扣掉約 20%</strong>。Zeal 的回應是「放著就會躺賺的生意，20% 損耗感覺就不高了」——但這是個訂價結構問題，不應事後才算。</p>
-          <p><strong>更精確的損耗分析：</strong></p>
-          <ul style="list-style:none; padding: 0; font-size:14px; line-height:2;">
-            <li>・Stripe 手續費：約 2.9% + $0.30/筆</li>
-            <li>・跨境匯兌損耗：約 1.5-2.5%</li>
-            <li>・玉山匯入手續費：依方案不同</li>
-            <li>・<strong>實際到手估計：75-78%</strong>（非 80%）</li>
-          </ul>
-          <p style="margin-top:12px;">Alan 的備選路徑：先串接綠界/藍心（台灣本地支付），等確認要賣全球時再開 Stripe，把商品 call 過去。這是更穩健的 MVP 路徑。</p>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-dot teal"></div>
-        <div class="timeline-time">末段 · 知識架構與合作模式</div>
-        <div class="card card-teal">
-          <span class="badge info">架構討論</span>
-          <h3 class="card-title">向量 + 圖聯結：知識的三層共振架構</h3>
-          <p>Zeal 分享 MUSEON 的底層知識架構：<strong>向量（語義搜尋）+ 圖聯結（DNA36 量子場）+ 傳統資料庫</strong>，三層共振設計。</p>
-          <p>這套架構的實際意義：企業即使行銷人員全部換新，只要系統存有「過去怎麼做行銷的？我們的行銷標準是什麼？客戶的 OK 是為什麼 OK？」——技術可以全部被傳承，差異只剩<strong>人的最後判斷</strong>。</p>
-          <blockquote class="zeal-quote">「剩下就是你最後怎麼去做那個決策。AI 已經幾乎幫你做完了。」—— Zeal</blockquote>
-
-          <h3 class="card-title" style="margin-top:20px;">合作模式：Zeal 作為中立第三方</h3>
-          <p>Zeal 提到，他目前在士維和 Alan 之間是中立第三方——不管跟哪一方合作，對他的商業利益沒有直接影響，因為他「沒有原本就在合作」，只是幫忙介紹思維框架。</p>
-          <p>Zeal 也提到 MUSEON 有 50+ 個商用 Custom GPT，這些工具已經在實際商業場景中運行，可作為未來合作的具體資產盤點起點。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 行動項目 -->
-  <div class="section">
-    <div class="section-label">ACTION ITEMS</div>
-    <h2 class="section-title">後續行動項目</h2>
-    <ul class="action-list">
-      <li>
-        <span class="action-num">1</span>
-        <div>
-          <div><strong>擇日訂閱制：驗證「剛需 vs 有了更好」</strong></div>
-          <div style="font-size:14px; color: var(--slate); margin-top:4px;">訪談 5-10 家有定期辦活動的中小企業老闆，確認他們擇日頻率與付費意願，再決定是否進入 MVP 開發。</div>
-          <div class="action-owner">Owner: Alan Wu ｜ 期限: 2 週內</div>
-        </div>
-      </li>
-      <li>
-        <span class="action-num">2</span>
-        <div>
-          <div><strong>重新設計訂閱制價值主張：從「吉日查詢」→「企業年度決策日曆」</strong></div>
-          <div style="font-size:14px; color: var(--slate); margin-top:4px;">讓每月報告有獨立價值，不依賴「近期有辦活動」才有需求，降低掉率結構性風險。</div>
-          <div class="action-owner">Owner: Alan Wu + Zeal 諮詢 ｜ 期限: 同步進行</div>
-        </div>
-      </li>
-      <li>
-        <span class="action-num">3</span>
-        <div>
-          <div><strong>支付架構 MVP 路徑確認</strong></div>
-          <div style="font-size:14px; color: var(--slate); margin-top:4px;">先串台灣本地支付（綠界/藍心），台灣市場驗證後再評估是否開 Stripe 全球路徑。同時把跨境損耗（~22-25%）算進初始訂價。</div>
-          <div class="action-owner">Owner: Alan Wu ｜ 期限: MVP 開發前</div>
-        </div>
-      </li>
-      <li>
-        <span class="action-num">4</span>
-        <div>
-          <div><strong>確認英文市場的「擇日邏輯」是否成立</strong></div>
-          <div style="font-size:14px; color: var(--slate); margin-top:4px;">英文市場的吉日文化（黃曆/農民曆）跟中文市場完全不同，需要另一套邏輯框架。Alan 與 Zeal 對齊此塊不急，先驗證台灣市場。</div>
-          <div class="action-owner">Owner: 討論中 ｜ 期限: Phase 2</div>
-        </div>
-      </li>
-      <li>
-        <span class="action-num">5</span>
-        <div>
-          <div><strong>MUSEON 問題深度優化（Alan 的回饋）</strong></div>
-          <div style="font-size:14px; color: var(--slate); margin-top:4px;">Alan 認為 MUSEON 對他的提問還不夠深，沒有真的深入理解意圖。需要在 ANIMA 個體追蹤或 L2 提問邏輯中加強針對性問題設計。</div>
-          <div class="action-owner">Owner: Zeal / MUSEON 開發 ｜ 期限: 下次 session</div>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- 戰略洞見 -->
-  <div class="section">
-    <div class="section-label">STRATEGIC INSIGHTS</div>
-    <h2 class="section-title">Business-12 診斷視角</h2>
-    <div class="card">
-      <span class="badge gold">BF02 累積力</span>
-      <h3 class="card-title">知識傳承設計是最深的護城河</h3>
-      <p>Zeal 提出的「向量+圖聯結+傳統資料庫」三層架構，本質上是<strong>把組織知識結晶化</strong>——員工可以替換，但決策邏輯不會流失。這是 Business-12 累積力的最高級形式，也是 Alan 可以向客戶販售的核心價值。</p>
-    </div>
-    <div class="card">
-      <span class="badge">BF01 吸引力</span>
-      <h3 class="card-title">擇日訂閱制的品牌定位建議</h3>
-      <p>「AI 幫你算吉日」是功能說法，打不出差異感。更有力的定位是：<strong>「讓企業每個重要決策都站在最有利的時間節點上」</strong>——把「擇日」升級為「策略時機管理」，就從玄學工具變成決策支援系統，B2B 議價空間從此拉開。</p>
-    </div>
-    <div class="card">
-      <span class="badge teal">BF11 談判力</span>
-      <h3 class="card-title">Stripe 20% 損耗不是壞事，是訂價槓桿</h3>
-      <p>如果業務天然是「放著躺賺」的模型，20% 損耗應該<strong>反向成為定價信心的來源</strong>——代表即使扣完各層費用，仍有利潤空間。重點是把這個損耗數字在 Day 1 就算進去，而不是做大後才發現毛利不對。建議：訂價時預留 30% buffer（20% 通道費 + 10% 備用），讓財務模型從一開始就清晰。</p>
-    </div>
-  </div>
-
-  <!-- 關鍵問題 -->
-  <div class="section">
-    <div class="section-label">OPEN QUESTIONS</div>
-    <h2 class="section-title">待確認的關鍵問題</h2>
-    <div class="card">
-      <p>以下問題在本次對話中未完全解答，建議下次會議前有初步答案：</p>
-      <ul style="list-style:none; padding:0; margin-top:16px;">
-        <li style="padding:12px 0; border-bottom:1px solid var(--border); font-size:15px; display:flex; gap:12px; align-items:flex-start;">
-          <span style="color:var(--ember); font-weight:700; flex-shrink:0;">Q1</span>
-          <span>企業主「現在有在做擇日嗎」還是「如果有 AI 服務才會開始做」？——決定你的市場是教育型還是轉換型。</span>
+          <span class="action-owner">Zeal + Alan</span>
         </li>
-        <li style="padding:12px 0; border-bottom:1px solid var(--border); font-size:15px; display:flex; gap:12px; align-items:flex-start;">
-          <span style="color:var(--ember); font-weight:700; flex-shrink:0;">Q2</span>
-          <span>月費定多少？企業端（B2B）的可接受訂閱金額區間是多少？（與個人端完全不同維度）</span>
+        <li class="action-item">
+          <span class="action-num">3</span>
+          <div class="action-content">
+            <div class="action-title">訂價試算含金流損耗</div>
+            <div class="action-desc">建議用 25% 損耗做試算，確認台灣市場最低可行訂價（月費 / 季費 / 年費）。先走綠界/藍新 MVP，再評估 Stripe 全球路徑。</div>
+          </div>
+          <span class="action-owner">Alan</span>
         </li>
-        <li style="padding:12px 0; border-bottom:1px solid var(--border); font-size:15px; display:flex; gap:12px; align-items:flex-start;">
-          <span style="color:var(--ember); font-weight:700; flex-shrink:0;">Q3</span>
-          <span>Alan 的核心 role 是技術整合還是業務開發？決定 MUSEON 跟他合作的切入角度。</span>
+        <li class="action-item">
+          <span class="action-num">4</span>
+          <div class="action-content">
+            <div class="action-title">英文市場等價服務研究</div>
+            <div class="action-desc">西方市場可能的「擇日等價」：占星（Astrology）、數字學（Numerology）、Mercury Retrograde 商業日曆等——需要獨立市場研究，不能直接平移中文邏輯。</div>
+          </div>
+          <span class="action-owner">Alan</span>
         </li>
-        <li style="padding:12px 0; font-size:15px; display:flex; gap:12px; align-items:flex-start;">
-          <span style="color:var(--ember); font-weight:700; flex-shrink:0;">Q4</span>
-          <span>士維（Feng）在這個版圖裡的角色？Zeal 提到他是中立第三方，但三方合作的分工和分潤尚未定義。</span>
+        <li class="action-item">
+          <span class="action-num">5</span>
+          <div class="action-content">
+            <div class="action-title">MUSEON 整合技術需求清單</div>
+            <div class="action-desc">若要結合 MUSEON 能力，需確認：報告自動生成 + 個人化推薦 + 客戶行為追蹤的整合範疇，下次 meeting 前提出初版需求。</div>
+          </div>
+          <span class="action-owner">Zeal</span>
         </li>
       </ul>
     </div>
   </div>
 
+  <hr class="divider">
+
+  <!-- Pending Questions -->
+  <div class="section" style="animation-delay:0.4s">
+    <div class="section-header">
+      <span class="section-num">PENDING</span>
+      <h2 class="section-title">未解問題 · 下次跟進</h2>
+    </div>
+
+    <div class="pending-card">
+      <div class="pending-q"><span class="pending-icon">❓</span>擇日需求的頻率到底多高？</div>
+      <div class="pending-context">需要真實市場調查：一家活躍企業平均每年辦幾次需要擇日的活動？月頻還是季頻？這直接決定訂閱制 vs 單次收費哪個更適合。</div>
+    </div>
+    <div class="pending-card">
+      <div class="pending-q"><span class="pending-icon">❓</span>英文市場的「擇日」等價服務是什麼？</div>
+      <div class="pending-context">西方市場可能沒有直接的「擇日」概念，但有占星、numerology（數字學）、Mercury Retrograde 等文化等價物。這個市場需要獨立研究。</div>
+    </div>
+    <div class="pending-card">
+      <div class="pending-q"><span class="pending-icon">❓</span>與士維的合作範疇是否需要明確邊界？</div>
+      <div class="pending-context">Zeal 提到可以跟士維合作或跟 Alan 合作，如果兩者同時進行，需要確認服務內容是否有重疊，以及 MUSEON 的中立定位如何在合約層面保護。</div>
+    </div>
+  </div>
+
 </div>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <p>MUSEON 智能會議記錄系統 · 霓裳整理 · 2026-05-05</p>
-  <p style="margin-top:6px; font-size:10px;">本記錄由 AI 根據錄音轉錄自動整理，已加入商業診斷視角。如有關鍵內容遺漏請回報修正。</p>
-</footer>
+<div class="footer">
+  <p>由 <strong style="color:#E0714D">MUSEON</strong> Meeting Intelligence 整理 · <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;">2026-05-05</span></p>
+</div>
 
 </body>
 </html>
