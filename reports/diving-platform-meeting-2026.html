@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潛水課程與場地媒合平台 — 需求訪談整合報告</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --navy: #181737;
+    --parchment: #F9F5EF;
+    --gold: #b6853d;
+    --text: #2C2C2C;
+    --muted: #6B6B6B;
+    --border: #E2D9CE;
+    --green: #2D7D46;
+    --blue: #1D5FA8;
+    --orange: #E07B39;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'PingFang TC', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .header {
+    background: var(--navy);
+    color: white;
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(196, 80, 42, 0.18);
+  }
+
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+
+  .header-meta {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .header-meta span::before {
+    content: '• ';
+    color: var(--gold);
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember);
+    border-bottom: 2px solid var(--ember);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-green { background: #E8F5ED; color: var(--green); }
+  .badge-blue { background: #E8F0FA; color: var(--blue); }
+  .badge-orange { background: #FEF0E8; color: var(--orange); }
+  .badge-ember { background: #FAEAE4; color: var(--ember); }
+
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .list li {
+    padding: 8px 0 8px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: #3C3C3C;
+  }
+
+  .list li:last-child { border-bottom: none; }
+
+  .list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 17px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, #FEF6F0, #FFF9F5);
+    border-left: 4px solid var(--ember);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .highlight-box strong {
+    display: block;
+    color: var(--ember);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .action-item:last-child { border-bottom: none; }
+
+  .action-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ember);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .action-content { flex: 1; }
+  .action-who {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .phase-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-row:last-child { border-bottom: none; }
+
+  .phase-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .phase-now { background: var(--ember); color: white; }
+  .phase-3m { background: var(--navy); color: white; }
+  .phase-1y { background: #888; color: white; }
+
+  .quote-block {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    position: relative;
+  }
+
+  .quote-block::before {
+    content: '"';
+    font-size: 48px;
+    color: var(--border);
+    position: absolute;
+    top: -8px; left: 12px;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+
+  .quote-text {
+    font-size: 14px;
+    color: #444;
+    padding-left: 20px;
+    line-height: 1.6;
+  }
+
+  .quote-speaker {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    padding-left: 20px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">需求訪談整合報告</div>
+  <h1>潛水課程與場地媒合平台<br>商模對齊會議紀錄</h1>
+  <div class="header-meta">
+    <span>日期：2026-05-01</span>
+    <span>參與者：姚姚（創辦人）、J（技術顧問）</span>
+    <span>兩段會議整合版</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 核心定位 -->
+  <div class="section">
+    <div class="section-title">一、平台核心定位（最終對齊）</div>
+
+    <div class="highlight-box">
+      <strong>一句話定位</strong>
+      針對自由潛水教練，提供行政減法服務——媒合學員、協助排課、辦理活動，讓教練專注教學而非雜務。
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">服務對象 <span class="badge badge-blue">B2C→B</span></div>
+        <ul class="list">
+          <li>核心：自由教練（無店行政人員輔助）</li>
+          <li>次要：學員（透過教練導入）</li>
+          <li>暫排除：實體店家（另開分支）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">核心痛點 <span class="badge badge-orange">深受其害</span></div>
+        <ul class="list">
+          <li>排課溝通耗盡時間（學員來回確認）</li>
+          <li>場地媒合無系統、靠人工查詢</li>
+          <li>教練之間搶排課引發糾紛</li>
+          <li>分潤標準不透明、人情困擾多</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">商業邏輯（護城河設計）</div>
+      <ul class="list">
+        <li><strong>獵人獵物模型：</strong>學員池夠大 → 教練才願意留在平台；教練夠多 → 學員才來</li>
+        <li><strong>場地護城河：</strong>場地資料庫由官方業務團隊談下，不開放教練自行聯絡，製造平台不可取代性</li>
+        <li><strong>抽傭 or 底薪：</strong>目前傾向制定定價 range，讓教練在 range 內自定，平台從課程抽傭（具體比例待議）</li>
+        <li><strong>Uber 模式：</strong>教練等同 Uber 司機，平台提供法律後盾＋流量＋系統，教練貢獻技術＋時間</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MVP 範疇 -->
+  <div class="section">
+    <div class="section-title">二、MVP 開發範疇（J 建議版）</div>
+
+    <div class="highlight-box">
+      <strong>核心共識</strong>
+      先人工跑起來 → 3-4 個月確認模式 → 再疊系統。不要一次到位，降低初始成本與風險。
+    </div>
+
+    <div class="card">
+      <div class="card-title">MVP Phase 1 功能（最小可行）</div>
+      <ul class="list">
+        <li>會員報名系統（收集學員基礎資料）</li>
+        <li>自由教練名單建立與管理（含良民證驗證機制）</li>
+        <li>課程開課 / 報名功能（基礎版）</li>
+        <li>排序邏輯：依教練地區＋可用時間自動排序（解決教練搶排課糾紛）</li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Phase 1 不做 <span class="badge badge-orange">刻意排除</span></div>
+        <ul class="list">
+          <li>金流整合（先人工收費）</li>
+          <li>場地搜尋自動化</li>
+          <li>教練評分 / 評價系統</li>
+          <li>多語系 / 國際化</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">後期加入 <span class="badge badge-blue">確認想要</span></div>
+        <ul class="list">
+          <li>Google 式教練評價系統</li>
+          <li>金流＋自動分傭</li>
+          <li>場地 API 媒合</li>
+          <li>官方活動報名（姚姚辦活動強項）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">教練良民證機制（安全重點）</div>
+      <ul class="list">
+        <li>教練申請入駐須提供良民證（向警察局申請，費用低、流程簡單）</li>
+        <li>不提供者不予審核上架</li>
+        <li>原因：未來進入學校合作，安全責任不可出錯</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 市場策略 -->
+  <div class="section">
+    <div class="section-title">三、市場策略（嘉義優先）</div>
+
+    <div class="phase-row">
+      <span class="phase-tag phase-now">現在 0-6M</span>
+      <div>
+        <strong>嘉義小壟斷測試</strong><br>
+        <span style="font-size:13px;color:#555;">已談好嘉義民雄＋多個重點泳池（中正大學學弟關係）；嘉義泳池多由同一家公司標下 → 只需談通一個決策人，效率高。目標：中正大學暑假營隊作為首批會員資料收集點。</span>
+      </div>
+    </div>
+
+    <div class="phase-row">
+      <span class="phase-tag phase-3m">3-6M</span>
+      <div>
+        <strong>學員招募策略（姚姚有 7 成把握）</strong><br>
+        <span style="font-size:13px;color:#555;">政府合作（有人頭、有預算）、基金會合作、中正大學學員自然轉化。簡單 Google 表單先收資料，不依賴系統上線。</span>
+      </div>
+    </div>
+
+    <div class="phase-row">
+      <span class="phase-tag phase-1y">1 年後</span>
+      <div>
+        <strong>高端市場＋活動線</strong><br>
+        <span style="font-size:13px;color:#555;">貴婦名單（學妹的醫生娘資源）、高端潛水營隊（嘉義高爾夫場地合作）、官方大師課（讓教練之間互相學習，提升圈內水準）。活動線可能是第二家公司。</span>
+      </div>
+    </div>
+
+    <div class="phase-row">
+      <span class="phase-tag phase-1y">未來</span>
+      <div>
+        <strong>東南亞拓展（先不推進）</strong><br>
+        <span style="font-size:13px;color:#555;">移工學潛水 → 回鄉創業思路（菲律賓、印尼）。J 有新加坡資源。需先完成台灣驗證，且需防抽傭繞台問題。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 重要決策 -->
+  <div class="section">
+    <div class="section-title">四、本次會議重要決策</div>
+
+    <div class="card">
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <div class="action-item">
+          <div class="action-num">1</div>
+          <div class="action-content">
+            <strong>先人工、後系統</strong><br>
+            前 3-4 個月以人工方式跑商模，驗證跑得起來後再投入系統開發
+            <div class="action-who">共識 — 姚姚 ＋ J</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">2</div>
+          <div class="action-content">
+            <strong>J 出 MVP 版本規格</strong><br>
+            J 重新整理「最小版本」給姚姚看，包含功能清單＋報價＋時程
+            <div class="action-who">負責人：J</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">3</div>
+          <div class="action-content">
+            <strong>介紹營運顧問</strong><br>
+            J 介紹其 partner（前 104 出身、服務台積電/裕隆，現專注中小企業）給姚姚認識
+            <div class="action-who">負責人：J；目的：協助制度建立與財務釐清</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">4</div>
+          <div class="action-content">
+            <strong>網站風格確認</strong><br>
+            J 提供 3 個極簡風格參考，姚姚選擇後與龍龍（品牌設計師）對齊 logo 與識別
+            <div class="action-who">負責人：J（提案）、姚姚（決策）</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">5</div>
+          <div class="action-content">
+            <strong>公司設立＋顧問開戶</strong><br>
+            公司申請中（木意涵 Sandy 協助）；建議同時申請顧問類項目，方便接受顧問費發票
+            <div class="action-who">負責人：姚姚</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 關鍵洞察 -->
+  <div class="section">
+    <div class="section-title">五、顧問洞察（J 觀察）</div>
+
+    <div class="quote-block">
+      <div class="quote-text">你真正在做的，不只是一個排課平台。你在把這些自由教練變成你的人——你的資源、你的生態系。系統是工具，真正的護城河是你的場地關係和你辦活動的能力。</div>
+      <div class="quote-speaker">— J，技術顧問</div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-text">你對找痛點的敏感度很高。這不是學來的，是你深受其害之後養出來的。前期平台會正常往前走，後期你真正的利潤是在活動這塊——可能是第二家公司。</div>
+      <div class="quote-speaker">— J，技術顧問</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">姚姚核心優勢清單</div>
+      <ul class="list">
+        <li>辦活動能力強（大學辦 2-3 千人寵物路跑，全程自力完成）</li>
+        <li>嘉義人脈到位（多個泳池已達成協議）</li>
+        <li>學員招募有 7 成把握（政府合作管道熟悉）</li>
+        <li>痛點感知精準（自身創業經歷＋教練管理經驗）</li>
+        <li>迷之自信＋行動力（識別為創業型人格）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 待確認事項 -->
+  <div class="section">
+    <div class="section-title">六、待確認事項</div>
+
+    <div class="card">
+      <ul class="list">
+        <li>分潤比例怎麼定（底薪 vs 純分潤 vs 混合）——需要跑完第一批活動後有數字再議</li>
+        <li>MVP 報價確認（J 回去計算後告知）</li>
+        <li>系統風格最終決定（J 出 3 個方案給姚姚選）</li>
+        <li>提姆（嘉義泳池統包廠商）是否正式提案合作，時機待評估</li>
+        <li>法律顧問：1 年後視規模決定是否正式聘用</li>
+        <li>營運顧問 partner 認識後，是否進一步合作</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    MUSEON 會議情報系統 · 2026-05-01 整合 · 本報告為兩段訪談記錄的整合摘要<br>
+    如需原始逐字稿請洽 Feng / 士維
+  </div>
+
+</div>
+</body>
+</html>
