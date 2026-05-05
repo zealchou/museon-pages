@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>永續農業顧問市場分析｜MUSEON Market-Core</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --ember: #C4502A;
+      --ember-light: #E0714D;
+      --teal: #2A7A6E;
+      --gold: #B8923A;
+      --ink: #12121A;
+      --slate: #5A5A6E;
+      --mist: #9898A8;
+      --border: #E2E0DA;
+      --parchment: #F7F5F0;
+      --snow: #FDFCFA;
+      --bull: #D64D3A;
+      --bear: #2A5F8A;
+      --neutral: #B8923A;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Noto Sans TC', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    .alert-bar {
+      background: linear-gradient(135deg, #1A3A2A, #2A5A3E);
+      color: white;
+      padding: 12px 24px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .alert-bar strong { color: #7EC8A4; }
+
+    .hero {
+      background: linear-gradient(135deg, #0E1F15 0%, #1A3A28 40%, #0A2A1A 100%);
+      color: white;
+      padding: 56px 32px 48px;
+      text-align: center;
+    }
+    .hero-label {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #7EC8A4;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 5vw, 40px);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero-sub { font-size: 16px; color: #A8D4BC; margin-bottom: 24px; }
+    .hero-meta { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+    .hero-stat-num { font-size: 28px; font-weight: 700; color: #7EC8A4; }
+    .hero-stat-label { font-size: 12px; color: #7A9E8A; margin-top: 4px; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 40px 0; }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .summary-box {
+      background: var(--snow);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .summary-box p { font-size: 15px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+    }
+    .stat-card-num { font-size: 28px; font-weight: 700; color: var(--teal); }
+    .stat-card-label { font-size: 12px; color: var(--slate); margin-top: 6px; line-height: 1.4; }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+    @media(max-width: 640px) { .case-grid { grid-template-columns: 1fr; } }
+
+    .case-column h3 {
+      font-size: 16px;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .case-column.bull h3 { background: #FFF0ED; color: var(--bull); }
+    .case-column.bear h3 { background: #EDF3FF; color: var(--bear); }
+
+    .argument-card {
+      background: var(--snow);
+      border-radius: 0 0 8px 8px;
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+    .argument-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .argument-item:last-child { border-bottom: none; }
+    .argument-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    .bull .argument-title { color: var(--bull); }
+    .bear .argument-title { color: var(--bear); }
+    .argument-body { font-size: 13px; color: var(--slate); margin-bottom: 8px; }
+    .plain-lang {
+      font-size: 12px;
+      background: #F5F5F0;
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .plain-lang strong { color: var(--gold); }
+
+    .risk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--snow);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .risk-table th {
+      background: #1A3A28;
+      color: white;
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 12px;
+    }
+    .risk-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .risk-table tr:last-child td { border-bottom: none; }
+    .risk-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag-high { background: #FFE5E0; color: #C0392B; }
+    .tag-mid { background: #FFF3CD; color: #856404; }
+    .tag-low { background: #E8F5E9; color: #2E7D32; }
+    .tag-rhino { background: #E3F2FD; color: #1565C0; }
+    .tag-swan { background: #F3E5F5; color: #6A1B9A; }
+
+    .signal-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .signal-block {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+    }
+    .signal-block h4 {
+      font-size: 13px;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .signal-item {
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .signal-item:last-child { border-bottom: none; }
+    .signal-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .dot-bull { background: var(--bull); }
+    .dot-bear { background: var(--bear); }
+    .dot-neutral { background: var(--neutral); }
+
+    .verdict-box {
+      background: linear-gradient(135deg, #0E1F15, #1A3A28);
+      color: white;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 16px;
+    }
+    .verdict-title { font-size: 12px; color: #7EC8A4; letter-spacing: 2px; margin-bottom: 12px; }
+    .verdict-main { font-size: 22px; font-weight: 700; margin-bottom: 16px; line-height: 1.4; }
+    .verdict-body { font-size: 15px; color: #C0D9CB; line-height: 1.8; }
+    .verdict-confidence {
+      display: inline-block;
+      background: rgba(126,200,164,0.15);
+      border: 1px solid rgba(126,200,164,0.3);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #7EC8A4;
+      margin-top: 14px;
+    }
+
+    .practical-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media(max-width: 640px) { .practical-grid { grid-template-columns: 1fr; } }
+    .practical-card {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+    .practical-card h4 { font-size: 13px; color: var(--slate); margin-bottom: 8px; }
+    .practical-card p { font-size: 14px; font-weight: 600; }
+
+    footer {
+      background: var(--ink);
+      color: var(--mist);
+      padding: 32px;
+      text-align: center;
+      font-size: 12px;
+      margin-top: 40px;
+    }
+    footer strong { color: var(--ember-light); }
+    footer p { margin-top: 8px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<div class="alert-bar">
+  <strong>政策驅動警示：</strong>2025年起台灣所有上市櫃公司須強制揭露永續報告書，農業ESG顧問需求進入結構性成長階段
+</div>
+
+<div class="hero">
+  <div class="hero-label">MUSEON Market-Core · 產業市場分析</div>
+  <h1>台灣永續農業顧問市場</h1>
+  <div class="hero-sub">ESG白皮書 × 農業工作坊 × 補助諮詢 — 三角驅動力研判</div>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <div class="hero-stat-num">17,356 公頃</div>
+      <div class="hero-stat-label">台灣有機驗證面積（2023）</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">72 家</div>
+      <div class="hero-stat-label">ESG STORE合作企業</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">2040</div>
+      <div class="hero-stat-label">農業淨零排放目標年</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">+34%</div>
+      <div class="hero-stat-label">有機面積年增率（2023）</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-title">當前市場定位</div>
+    <div class="summary-box">
+      <p>台灣永續農業顧問市場處於<strong>政策驅動的早期成長期</strong>。農業部「2040淨零排放目標」＋金管會2025年ESG報告書強制揭露，形成雙頭夾擊式政策推力。市場目前由政府主導平台（ESG STORE、農民學院）為主，<strong>民間顧問介入稀少，是高品質私人顧問的藍海</strong>。競爭格局上，大型會計師事務所（KPMG、四大）服務大型企業，缺乏能深入農村、有溫度、具持續性的中小規模專業顧問。</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-num">3.06%</div>
+        <div class="stat-card-label">有機＋友善耕作<br>佔總耕地比（成長中）</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num">3,929</div>
+        <div class="stat-card-label">農民學院年訓練<br>人次（2024）</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num">9 類</div>
+        <div class="stat-card-label">農業部ESG<br>專案分類數</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num">11.8 倍</div>
+        <div class="stat-card-label">友善耕作面積<br>年增率（2023）</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">市場機會 vs 挑戰</div>
+    <div class="case-grid">
+      <div class="case-column bull">
+        <h3>▲ 機會面（做多）</h3>
+        <div class="argument-card">
+          <div class="argument-item">
+            <div class="argument-title">政策強制需求爆發</div>
+            <div class="argument-body">2025年起ESG報告書強制，農業相關供應商若要進入大廠供應鏈，勢必需要ESG文件能力。農業白皮書顧問成為剛性需求。</div>
+            <div class="plain-lang"><strong>白話：</strong>法規逼著農業業者必須備文件，不備就失去大客戶訂單，這是沒得商量的剛需。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">競爭格局稀疏・藍海明確</div>
+            <div class="argument-body">四大會計師服務大型企業，農村接地氣的溫度型顧問幾乎空白。「共好共創、顧問有溫度」正好填補中小農企業缺口。</div>
+            <div class="plain-lang"><strong>白話：</strong>強敵都去打大魚，中小農場這塊幾乎沒人，先進去的人定規則。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">農業碳匯新商機</div>
+            <div class="argument-body">台灣碳交易所2024年啟動農業碳匯，農民若能取得碳權認證，可直接出售給企業。顧問端可協助農民建立碳匯文件與交易路徑。</div>
+            <div class="plain-lang"><strong>白話：</strong>農民種樹固碳可以換成錢賣給需要抵碳的公司——顧問幫農民走這條變現路徑。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">有機驗證面積高速成長</div>
+            <div class="argument-body">有機農業面積2017-2023年成長1.3倍，友善耕作2023年年增11.8倍，農民轉型永續意願強，工作坊市場客群真實存在。</div>
+            <div class="plain-lang"><strong>白話：</strong>越來越多農民往永續轉，他們需要人教、需要陪伴——市場已有人在走了。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">企業農業ESG採購意願已驗證</div>
+            <div class="argument-body">ESG STORE已有72家企業主動加入，代表企業端有意願採購農業ESG服務，下游需求已被驗證，不是假設。</div>
+            <div class="plain-lang"><strong>white話：</strong>72家大公司已在平台上等著買農業ESG服務——需求是真實存在的。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-column bear">
+        <h3>▼ 挑戰面（做空）</h3>
+        <div class="argument-card">
+          <div class="argument-item">
+            <div class="argument-title">農民支付能力天花板</div>
+            <div class="argument-body">台灣小農年收入有限，高單價顧問費難以支付。白皮書20-50萬/案，農民端幾乎不可能是買方，只能從企業端收費。</div>
+            <div class="plain-lang"><strong>白話：</strong>農民有意願學習，但不太可能掏大錢買顧問——真正出錢的是企業，農民是服務對象但不是付款方。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">政府補助依賴風險</div>
+            <div class="argument-body">農業ESG目前大量依賴政府補助，補助政策若調整，市場動能可能受影響，補助諮詢這條輔線受衝擊最大。</div>
+            <div class="plain-lang"><strong>白話：</strong>政府的錢說來就來說縮就縮，靠補助驅動的市場鏈碰到政策轉向就危險。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">農業ESG標準尚未統一</div>
+            <div class="argument-body">台灣農業碳匯方法學、ESG農業認定標準仍在建立中，現在輔導農民做的文件未來可能需要重做。</div>
+            <div class="plain-lang"><strong>白話：</strong>遊戲規則還沒定，現在幫農民寫的文件，未來可能規格不符需重來——既是顧問風險也是客戶風險。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">2人核心團隊執行上限</div>
+            <div class="argument-body">Evvon+Vivi兩人同時推白皮書＋工作坊，人力瓶頸是真實限制。快速擴張需要引入合作顧問，但外部合作成本不可控。</div>
+            <div class="plain-lang"><strong>白話：</strong>市場機會是真的，但2個人能接多少案子有物理上限，擴大要靠外部顧問，品質不保證。</div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-title">大型顧問下沉競爭潛在威脅</div>
+            <div class="argument-body">若農業ESG市場規模擴大足夠吸引大型顧問，四大可能推出標準化農業ESG套裝服務，以品牌和資源優勢壓低單價競爭。</div>
+            <div class="plain-lang"><strong>白話：</strong>現在大公司覺得農村太麻煩，但市場一旦夠甜，它們可能下場用規模戰打你。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">關鍵訊號追蹤</div>
+    <div class="signal-section">
+      <div class="signal-block">
+        <h4>近期（0-3 個月）</h4>
+        <div class="signal-item">
+          <div class="signal-dot dot-bull"></div>
+          <div>ESG STORE平台企業持續加入，白皮書需求驗證中 — <span style="color:var(--bull)">機會訊號</span></div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-dot dot-bull"></div>
+          <div>2025年強制揭露倒數，企業詢問農業供應鏈ESG顧問增加 — <span style="color:var(--bull)">機會訊號</span></div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-dot dot-neutral"></div>
+          <div>農業部碳匯方法學版本更新中，需追蹤最新標準 — <span style="color:var(--neutral)">中性觀察</span></div>
+        </div>
+      </div>
+      <div class="signal-block">
+        <h4>中期（3-12 個月）</h4>
+        <div class="signal-item">
+          <div class="signal-dot dot-bull"></div>
+          <div>台灣碳交所農業碳匯交易活化，轉介農民碳權顧問機會 — <span style="color:var(--bull)">機會訊號</span></div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-dot dot-neutral"></div>
+          <div>農業學會/產業公會年度工作坊採購季（Q3/Q4），訂單機會窗口 — <span style="color:var(--neutral)">中性觀察</span></div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-dot dot-bear"></div>
+          <div>若政府削減有機補助預算，農民轉型動能可能放緩 — <span style="color:var(--bear)">風險觀察</span></div>
+        </div>
+      </div>
+      <div class="signal-block">
+        <h4>長期（1-3 年）</h4>
+        <div class="signal-item">
+          <div class="signal-dot dot-bull"></div>
+          <div>農業供應鏈ESG文件需求系統化，白皮書成為年度剛性採購 — <span style="color:var(--bull)">機會訊號</span></div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-dot dot-bear"></div>
+          <div>若KPMG等大型顧問推出農業ESG套裝，差異化壓力加大 — <span style="color:var(--bear)">風險訊號</span></div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-dot dot-bull"></div>
+          <div>「共好共創」品牌資產深根，講師池50人成為異業合作槓桿 — <span style="color:var(--bull)">機會訊號</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">風險矩陣</div>
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>風險事件</th>
+          <th>類型</th>
+          <th>機率</th>
+          <th>衝擊</th>
+          <th>對應策略</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>農業ESG補助政策轉向</strong><br><span style="font-size:12px;color:var(--slate)">政府削減相關補助，市場動能降低</span></td>
+          <td><span class="risk-tag tag-rhino">灰犀牛</span></td>
+          <td><span class="risk-tag tag-mid">中（30%）</span></td>
+          <td><span class="risk-tag tag-mid">中高</span></td>
+          <td>減少補助諮詢依賴，以白皮書和工作坊為主收入</td>
+        </tr>
+        <tr>
+          <td><strong>人力瓶頸觸頂</strong><br><span style="font-size:12px;color:var(--slate)">2人無法同時服務多案，錯失市場窗口</span></td>
+          <td><span class="risk-tag tag-rhino">灰犀牛</span></td>
+          <td><span class="risk-tag tag-high">高（65%）</span></td>
+          <td><span class="risk-tag tag-mid">中高</span></td>
+          <td>先聚焦一條線做出口碑，再用成功案例吸引外部顧問合作</td>
+        </tr>
+        <tr>
+          <td><strong>ESG標準重訂白皮書作廢</strong><br><span style="font-size:12px;color:var(--slate)">認定標準調整導致既有文件失效</span></td>
+          <td><span class="risk-tag tag-rhino">灰犀牛</span></td>
+          <td><span class="risk-tag tag-mid">中（35%）</span></td>
+          <td><span class="risk-tag tag-mid">中</span></td>
+          <td>合約中明確標準版本，標準更新視為服務升級機會</td>
+        </tr>
+        <tr>
+          <td><strong>大型顧問下沉農業市場</strong><br><span style="font-size:12px;color:var(--slate)">KPMG/四大推出農業ESG標準化套件</span></td>
+          <td><span class="risk-tag tag-rhino">灰犀牛</span></td>
+          <td><span class="risk-tag tag-low">低（20%/3年內）</span></td>
+          <td><span class="risk-tag tag-high">高</span></td>
+          <td>深耕品牌溫度差異，讓「共好共創」成為中小農企業首選</td>
+        </tr>
+        <tr>
+          <td><strong>農業ESG需求泡沫化</strong><br><span style="font-size:12px;color:var(--slate)">企業ESG需求因監管鬆動大幅回落</span></td>
+          <td><span class="risk-tag tag-swan">黑天鵝</span></td>
+          <td><span class="risk-tag tag-low">低（10%）</span></td>
+          <td><span class="risk-tag tag-high">極高</span></td>
+          <td>維持工作坊等較不依賴ESG法規的收入線作為防禦</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-title">綜合研判</div>
+    <div class="verdict-box">
+      <div class="verdict-title">MARKET-CORE 研判結論</div>
+      <div class="verdict-main">天平向機會側傾斜：政策驅動的結構性成長已啟動，但「2人瓶頸」是唯一的核心執行風險</div>
+      <div class="verdict-body">
+        台灣永續農業顧問市場不是「有沒有」的問題，而是「誰先進去」的問題。政策驅動（2025強制揭露＋2040淨零目標）已創造結構性需求，競爭格局目前對小型高溫度顧問有利。
+        <br><br>
+        「共好共創、顧問有溫度、售出後持續陪伴、50人跨領域講師池」——這四個差異化在四大會計師佈局的大企業市場之外找到了清晰的空間。農業學會網絡是最短路徑到工作坊客群，ESG白皮書則是最高單價的企業採購標的。
+        <br><br>
+        唯一真實的執行風險：<strong>2人無法同時全力做兩條線</strong>。建議優先選擇「有人在等」的那條線，集中資源做出第一個標竿案例，再用案例吸引合作資源。
+      </div>
+      <div class="verdict-confidence">信心度：中高 · 資料截止 2026-05-05</div>
+    </div>
+
+    <div class="practical-grid">
+      <div class="practical-card">
+        <h4>最短收入路徑</h4>
+        <p>工作坊（已有農業學會網絡，農民學習意願已驗證）</p>
+      </div>
+      <div class="practical-card">
+        <h4>最高單價機會</h4>
+        <p>ESG白皮書（企業端採購，20-50萬/案，法規驅動剛需）</p>
+      </div>
+      <div class="practical-card">
+        <h4>長期護城河</h4>
+        <p>品牌溫度＋講師池資源＋持續共好共創（轉介紹資產）</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <strong>MUSEON Market-Core</strong> · 永續農業顧問產業市場分析
+  <p>本報告為研究性質，呈現多方論據供決策參考，不構成具體商業建議。</p>
+  <p>資料蒐集截止：2026-05-05 ｜ 資料來源：農業部ESG STORE、農民學院、KPMG Taiwan、農業淨零資訊網、農傳媒</p>
+  <p style="margin-top:8px;color:#4A4A5A">Powered by MUSEON · 分析對象：Evvon（共好玫化）</p>
+</footer>
+
+</body>
+</html>
