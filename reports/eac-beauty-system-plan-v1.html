@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>玩媺女人 × EAC Beauty Group — 集團營運管理平台 開發規劃書</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap');
+
+    :root {
+      --bg:        #f7f5f0;
+      --bg-card:   #ffffff;
+      --ink:       #1c1c1c;
+      --ink-soft:  #555;
+      --rose:      #c97b84;
+      --rose-lt:   #f2dde0;
+      --rose-deep: #a0535e;
+      --gold:      #b8923a;
+      --slate:     #2c2c3e;
+      --border:    #e0dbd4;
+      --green:     #4a8c72;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.85;
+      font-size: 15px;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--slate);
+      color: #f0ede8;
+      text-align: center;
+      padding: 60px 40px;
+    }
+    .cover-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--rose);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .cover h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .cover h1 span { color: var(--rose); font-weight: 600; }
+    .cover-sub {
+      font-size: 15px;
+      color: #aaa;
+      margin-top: 16px;
+      letter-spacing: 0.15em;
+    }
+    .cover-desc {
+      max-width: 520px;
+      margin: 48px auto 0;
+      font-size: 14px;
+      color: #ccc;
+      line-height: 2;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 32px;
+    }
+    .cover-year {
+      margin-top: 60px;
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 0.3em;
+    }
+
+    /* ── LAYOUT ── */
+    .section {
+      padding: 80px 40px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .section-wide {
+      padding: 80px 40px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 40px;
+    }
+
+    /* ── SECTION HEADER ── */
+    .sec-label {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: var(--rose);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .sec-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 300;
+      line-height: 1.3;
+      margin-bottom: 32px;
+    }
+    .sec-title em {
+      color: var(--rose);
+      font-style: normal;
+      font-weight: 600;
+    }
+    .sec-lead {
+      font-size: 15px;
+      color: var(--ink-soft);
+      max-width: 640px;
+      margin-bottom: 24px;
+    }
+
+    /* ── VALUE BLOCKS ── */
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .value-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 24px;
+    }
+    .value-card .vc-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--rose);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .value-card h3 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .value-card p { font-size: 14px; color: var(--ink-soft); }
+
+    /* ── PRINCIPLE ROW ── */
+    .principle-row { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+    .principle-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+    .pi-num {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 28px;
+      color: var(--rose-lt);
+      font-weight: 700;
+      min-width: 36px;
+      line-height: 1;
+      margin-top: 4px;
+    }
+    .principle-item h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .principle-item p  { font-size: 13px; color: var(--ink-soft); }
+
+    /* ── ORG HIERARCHY ── */
+    .org-stack {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 32px;
+    }
+    .org-layer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .org-layer:last-child { border-bottom: none; }
+    .org-layer.hq   { background: var(--slate); color: #f0ede8; }
+    .org-layer.ena  { background: #3a3a50; color: #ddd; }
+    .org-layer.dist { background: #4a4a5e; color: #ccc; }
+    .tag {
+      font-size: 10px;
+      background: var(--rose-lt);
+      color: var(--rose-deep);
+      padding: 2px 8px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+    }
+    .org-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--ink-soft);
+      padding: 14px 18px;
+      background: var(--rose-lt);
+      border-radius: 6px;
+      border-left: 3px solid var(--rose);
+    }
+
+    /* ── 3 CLIENTS ── */
+    .client-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .client-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 22px;
+    }
+    .client-card .cc-icon { font-size: 28px; margin-bottom: 14px; }
+    .client-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .client-card .cc-sub { font-size: 11px; color: var(--rose); letter-spacing: 0.1em; margin-bottom: 12px; }
+    .client-card ul { padding-left: 16px; font-size: 13px; color: var(--ink-soft); }
+    .client-card ul li { margin-bottom: 4px; }
+
+    /* ── SCOPE ── */
+    .scope-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .scope-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+    }
+    .scope-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .scope-box.in h4  { color: var(--green); }
+    .scope-box.out h4 { color: #999; }
+    .scope-box ul { padding-left: 16px; font-size: 13px; color: var(--ink-soft); }
+    .scope-box ul li { margin-bottom: 6px; }
+
+    /* ── PHASES ── */
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .phase-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .phase-header {
+      padding: 22px 24px;
+      background: var(--slate);
+      color: #f0ede8;
+    }
+    .ph-num { font-size: 11px; letter-spacing: 0.3em; color: var(--rose); text-transform: uppercase; margin-bottom: 6px; }
+    .phase-header h3 { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 400; }
+    .ph-weeks { font-size: 12px; color: #aaa; margin-top: 6px; font-style: italic; }
+    .phase-body { padding: 22px 24px; }
+    .phase-body .goal {
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .phase-body ul { padding-left: 0; list-style: none; }
+    .phase-body ul li {
+      font-size: 13px;
+      padding: 5px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .phase-body ul li::before { content: '○'; color: var(--rose); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+    .phase-checkpoint {
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--rose-deep);
+      background: var(--rose-lt);
+      padding: 8px 14px;
+      border-radius: 6px;
+    }
+
+    /* ── MODULE TABLE ── */
+    .module-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      font-size: 13px;
+    }
+    .module-table th {
+      background: var(--slate);
+      color: #f0ede8;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+    }
+    .module-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .module-table tr:hover td { background: #faf8f5; }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .badge-p1 { background: #fce8ea; color: #c0404e; }
+    .badge-p2 { background: #fef3e2; color: #b8750a; }
+    .badge-p3 { background: #e6f4ee; color: #2d7a50; }
+    .badge-must { background: #e8e8f4; color: #444488; }
+    .badge-core { background: #f4e8ff; color: #7040a0; }
+    .badge-ext  { background: #e8f4f8; color: #2060a0; }
+
+    /* ── TIMELINE ── */
+    .timeline { display: flex; flex-direction: column; margin-top: 32px; position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--rose), var(--gold), var(--green));
+    }
+    .tl-item { display: flex; gap: 28px; }
+    .tl-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--rose);
+      border: 3px solid var(--bg);
+      flex-shrink: 0;
+      margin-top: 22px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 0 2px var(--rose);
+    }
+    .tl-dot.p2 { background: var(--gold);  box-shadow: 0 0 0 2px var(--gold); }
+    .tl-dot.p3 { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+    .tl-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      flex: 1;
+      margin-bottom: 16px;
+    }
+    .tl-weeks { font-size: 11px; letter-spacing: 0.2em; color: var(--rose); text-transform: uppercase; margin-bottom: 6px; }
+    .tl-weeks.w2 { color: var(--gold); }
+    .tl-weeks.w3 { color: var(--green); }
+    .tl-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .tl-content p  { font-size: 13px; color: var(--ink-soft); }
+    .tl-ms {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--rose-deep);
+    }
+    .tl-ms.m2 { color: #a07000; }
+    .tl-ms.m3 { color: var(--green); }
+
+    /* ── INVEST TABLE ── */
+    .invest-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .invest-table th {
+      background: var(--slate);
+      color: #f0ede8;
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 13px;
+    }
+    .invest-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .invest-table td:last-child { text-align: right; font-weight: 700; color: var(--rose-deep); }
+    .invest-table tr:last-child td { border-bottom: none; }
+    .invest-note {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: var(--rose-lt);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    /* ── TERMS ── */
+    .terms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .term-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .tc-num {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 36px;
+      color: var(--rose-lt);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .term-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .term-card p  { font-size: 13px; color: var(--ink-soft); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--slate);
+      color: #777;
+      text-align: center;
+      padding: 40px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+    }
+    footer strong { color: var(--rose); }
+
+    @media (max-width: 640px) {
+      .section, .section-wide { padding: 48px 20px; }
+      .cover { padding: 40px 20px; }
+      .scope-grid { grid-template-columns: 1fr; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .timeline::before { left: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-label">EAC Beauty Group · 集團營運管理平台</div>
+  <h1>玩媺女人<span>．</span><br>集團控制型平台</h1>
+  <div class="cover-sub">系統開發製作規劃書</div>
+  <div class="cover-desc">
+    這份文件說明 EAC 美業集團為何需要建立自己的數位平台，<br>
+    以及整個系統如何分三個階段落地，<br>
+    讓集團真正掌握客戶、金流與加盟體系。
+  </div>
+  <div class="cover-year">CONFIDENTIAL · 2026</div>
+</div>
+
+<!-- ══ VISION ══ -->
+<div class="section">
+  <div class="sec-label">Vision</div>
+  <h2 class="sec-title">為什麼我們需要<em>自己的系統</em></h2>
+  <p class="sec-lead">
+    EAC 美業集團的商業模式，不是一間美容店——而是一個跨層級的賦能生態系。
+    從控股公司、賦能平台、經銷商、到店家與 VIP，每一層都有獨立的角色、分潤邏輯與數據需求。
+  </p>
+  <p class="sec-lead" style="margin-bottom:0;">
+    這套系統的目的不只是管理預約。<strong>它是集團的數位護城河</strong>——讓客戶數據、金流紀錄、
+    分潤計算、人員管理全部跑在自己的平台上。不管哪個經銷商或合作夥伴離開，核心資產永遠留在集團手上。
+  </p>
+
+  <div class="value-grid">
+    <div class="value-card">
+      <div class="vc-label">數據主權</div>
+      <h3>資料我的</h3>
+      <p>所有客戶資料、交易紀錄、服務歷程 100% 自己掌握，不依賴第三方平台。</p>
+    </div>
+    <div class="value-card">
+      <div class="vc-label">分潤透明</div>
+      <h3>帳目清楚</h3>
+      <p>多層級的收入拆帳自動計算，每一分錢都有紀錄，技術老師、VIP 介紹鏈一目瞭然。</p>
+    </div>
+    <div class="value-card">
+      <div class="vc-label">規模化基礎</div>
+      <h3>擴張不重建</h3>
+      <p>管理 5 個人和管理 50 個人的營運成本幾乎一樣，加盟擴張不需要重做底層架構。</p>
+    </div>
+  </div>
+
+  <div style="margin-top:48px;">
+    <div class="sec-label" style="margin-bottom:16px;">設計原則</div>
+    <div class="principle-row">
+      <div class="principle-item">
+        <div class="pi-num">01</div>
+        <div>
+          <h4>先小後大</h4>
+          <p>配合旗艦店開業節奏，先上線最小可用版本，再逐步擴展。不必等全部做完才開始用。</p>
+        </div>
+      </div>
+      <div class="principle-item">
+        <div class="pi-num">02</div>
+        <div>
+          <h4>貼合商模</h4>
+          <p>每一個功能模組都對應 EAC 集團實際的營運需求。不做用不到的功能，也不漏掉真正需要的功能。</p>
+        </div>
+      </div>
+      <div class="principle-item">
+        <div class="pi-num">03</div>
+        <div>
+          <h4>資產歸我</h4>
+          <p>系統原始碼歸委託方所有。防火牆的地基必須在自己腳下，不受任何開發商或平台制約。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ ARCHITECTURE ══ -->
+<div class="section">
+  <div class="sec-label">Architecture</div>
+  <h2 class="sec-title">系統<em>層級架構</em></h2>
+  <p class="sec-lead">系統對應集團六層組織。每一層有各自的權限範圍、數據隔離與分潤規則：</p>
+
+  <div class="org-stack">
+    <div class="org-layer hq">新安控股 — 總部 <span class="tag" style="background:rgba(255,255,255,0.1);color:#ccc;">全局數據 · 跨層管理</span></div>
+    <div class="org-layer ena">怡心賦能 / ECA — 賦能平台 <span class="tag" style="background:rgba(255,255,255,0.08);color:#bbb;">課程 · 培訓 · 認證</span></div>
+    <div class="org-layer dist">經銷商（產品供應端）<span class="tag" style="background:rgba(255,255,255,0.06);color:#aaa;">進貨 · 庫存 · 差價</span></div>
+    <div class="org-layer" style="font-weight:700;">加盟店家（旗艦店 / 連鎖 / 單店）<span class="tag">預約 · 排班 · 服務</span></div>
+    <div class="org-layer">服務人員（技術老師 / 教練）<span class="tag">接單 · 回報 · 業績</span></div>
+    <div class="org-layer" style="background:#f5f3ee;">顧客 / VIP 會員 <span class="tag">預約 · 付款 · 權益</span></div>
+  </div>
+
+  <div class="org-note">
+    <strong>關鍵設計</strong>：加盟商之間的客戶資料、營收數據<strong>嚴格隔離</strong>，不能互相看到。但總部可以彙整所有數據。「隔離但可彙總」是本系統最核心的技術要求。
+  </div>
+
+  <h3 style="margin-top:48px;margin-bottom:4px;font-size:18px;font-weight:700;">三大使用端</h3>
+  <p class="sec-lead" style="margin-top:8px;">三個介面，三種角色，手機開網頁即用，無需下載 App。</p>
+  <div class="client-grid">
+    <div class="client-card">
+      <div class="cc-icon">🖥️</div>
+      <h3>管理後台</h3>
+      <div class="cc-sub">Web 瀏覽器使用</div>
+      <ul>
+        <li>總部與加盟商使用</li>
+        <li>權限管理、CRM、預約排班</li>
+        <li>金流報表、加盟管理</li>
+        <li>桌機、平板皆可操作</li>
+      </ul>
+    </div>
+    <div class="client-card">
+      <div class="cc-icon">📱</div>
+      <h3>顧客端 PWA</h3>
+      <div class="cc-sub">手機開網頁即可安裝</div>
+      <ul>
+        <li>顧客使用</li>
+        <li>瀏覽服務、線上預約付款</li>
+        <li>紀錄查詢、一鍵再約</li>
+        <li>無需上架 App Store</li>
+      </ul>
+    </div>
+    <div class="client-card">
+      <div class="cc-icon">👩‍💼</div>
+      <h3>服務人員端 PWA</h3>
+      <div class="cc-sub">手機開網頁即可安裝</div>
+      <ul>
+        <li>技術老師與教練使用</li>
+        <li>接單、排班、客戶資訊</li>
+        <li>服務完成回報、業績查詢</li>
+        <li>無需下載 App</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ SCOPE ══ -->
+<div class="section">
+  <div class="sec-label">Scope</div>
+  <h2 class="sec-title">這次<em>做什麼 · 不做什麼</em></h2>
+  <p class="sec-lead">明確範圍讓預算聚焦在真正有價值的地方，次要功能留到後期再做。</p>
+  <div class="scope-grid">
+    <div class="scope-box in">
+      <h4>✅ 本次開發範圍</h4>
+      <ul>
+        <li>多角色帳號與權限管理</li>
+        <li>CRM 客戶資料管理（含來源追蹤）</li>
+        <li>預約、排班、服務紀錄流程</li>
+        <li>線上付款（藍新金流）</li>
+        <li>多層分潤自動計算</li>
+        <li>VIP 方案與跨店服務</li>
+        <li>產品進銷存管理</li>
+        <li>合約與加盟商管理</li>
+        <li>基本報表與業績統計</li>
+        <li>顧客端 PWA + 服務人員端 PWA</li>
+      </ul>
+    </div>
+    <div class="scope-box out">
+      <h4>⬜ 本次刻意不做</h4>
+      <ul>
+        <li>原生 iOS / Android App</li>
+        <li>即時通訊聊天系統</li>
+        <li>複雜 AI 推薦與自動排班</li>
+        <li>POS 硬體 / IoT 裝置整合</li>
+        <li>會計總帳系統完整取代</li>
+        <li>對外開放的 SaaS 商品化</li>
+        <li>自動派工演算法（Phase 3 再做）</li>
+        <li>優惠券 / 推播通知（Phase 3）</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ PHASES ══ -->
+<div class="section-wide">
+  <div class="sec-label">Development Plan</div>
+  <h2 class="sec-title">三階段<em>開發計畫</em></h2>
+  <p class="sec-lead">依集團實際開業時序分三期上線，每期完成驗核點後再啟動下一期，保護投資風險。</p>
+
+  <div class="phase-grid">
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="ph-num">Phase 1</div>
+        <h3>核心防火牆</h3>
+        <div class="ph-weeks">旗艦店開業 × 最小可用系統 · 預計 8–10 週</div>
+      </div>
+      <div class="phase-body">
+        <div class="goal">目標：讓旗艦店一開張就跑在自己的系統上。鎖住客戶數據，線上金流開通，基本排班可用。</div>
+        <ul>
+          <li>多角色帳號權限（總部 / 店家 / 技術老師）</li>
+          <li>服務項目管理（分類、價格、時長）</li>
+          <li>CRM 客戶資料管理（含來源追蹤）</li>
+          <li>服務紀錄與備註（膚質、偏好等）</li>
+          <li>預約管理（手動指派）</li>
+          <li>基本排班（可接單時段設定）</li>
+          <li>藍新金流串接（信用卡付款）</li>
+          <li>基本營收報表</li>
+          <li>顧客端 PWA（瀏覽 / 預約 / 付款）</li>
+          <li>服務人員端 PWA（接單 / 回報）</li>
+        </ul>
+        <div class="phase-checkpoint">✦ 驗核：預約→付款→指派→服務→回報→入帳，全流程跑通。旗艦店正式使用系統營運。</div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="ph-num">Phase 2</div>
+        <h3>商模引擎</h3>
+        <div class="ph-weeks">旗艦店穩定運轉後啟動 · 預計 10–12 週</div>
+      </div>
+      <div class="phase-body">
+        <div class="goal">目標：把集團的商模核心邏輯數位化。跟經銷商談合作時，可以展示完整的系統 Demo。</div>
+        <ul>
+          <li>分潤引擎（技術老師五成/六成、VIP 介紹 10%）</li>
+          <li>產品進銷存（多品牌、進貨/庫存/出貨追蹤）</li>
+          <li>VIP 方案管理（投資追蹤、介紹人鏈、跨店服務）</li>
+          <li>VIP 等級與權益管理</li>
+          <li>經銷商管理模組</li>
+          <li>合約管理（加盟 / 經銷 / VIP，到期提醒）</li>
+          <li>多層分潤報表（逐層彙總）</li>
+          <li>多維度儀表板</li>
+        </ul>
+        <div class="phase-checkpoint">✦ 驗核：分潤計算跑通。進銷存可用。VIP 方案可追蹤。可對外展示完整系統 Demo。</div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="ph-num">Phase 3</div>
+        <h3>規模化擴展</h3>
+        <div class="ph-weeks">至少 2 間加盟店穩定後啟動 · 預計 8–10 週</div>
+      </div>
+      <div class="phase-body">
+        <div class="goal">目標：支援加盟擴張與跨區複製。管理效率不因規模增長而下降。</div>
+        <ul>
+          <li>加盟商獨立後台（數據嚴格隔離）</li>
+          <li>跨據點營收比較分析</li>
+          <li>服務區域設定與管理</li>
+          <li>課程報名與學員管理</li>
+          <li>教練排程與陪跑紀錄</li>
+          <li>優惠券建立 / 發放 / 核銷</li>
+          <li>推播通知（預約提醒、行銷）</li>
+          <li>顧客評價系統</li>
+          <li>自動排班派工演算法</li>
+          <li>退款機制與取消改期規則</li>
+        </ul>
+        <div class="phase-checkpoint">✦ 驗核：多據點獨立運作。課程上線。行銷工具可用。全功能完成，專案驗收。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ MODULES ══ -->
+<div class="section-wide">
+  <div class="sec-label">Modules</div>
+  <h2 class="sec-title">功能模組<em>完整明細</em></h2>
+
+  <table class="module-table">
+    <thead>
+      <tr>
+        <th style="width:60px;">編號</th>
+        <th style="width:150px;">模組</th>
+        <th>說明</th>
+        <th style="width:90px;">階段</th>
+        <th style="width:80px;">優先級</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="5" style="background:#f5f3ee;font-weight:700;font-size:12px;letter-spacing:0.1em;padding:10px 16px;color:var(--ink-soft);">管理後台</td></tr>
+      <tr><td>M01</td><td>帳號權限管理</td><td>總部 / 賦能層 / 經銷商 / 加盟店 / 技術老師，五層權限分控</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M02</td><td>服務項目管理</td><td>美容、美髮、美甲、能量艙分類管理，含價格與時長</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M03</td><td>CRM 客戶管理</td><td>基本資料、服務紀錄、偏好備註、來源追蹤、標籤分群</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M04</td><td>預約管理</td><td>預約清單、狀態管理、手動指派</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M05</td><td>基本排班</td><td>服務人員可接單時段、休假管理</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M06</td><td>金流管理</td><td>藍新金流串接、交易紀錄、基本對帳</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M07</td><td>基本營收報表</td><td>總部營收總覽、服務人員業績統計</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>M08</td><td>分潤引擎</td><td>技術老師分潤、VIP 介紹分潤、產品差價，多規則自動計算</td><td><span class="badge badge-p2">Phase 2</span></td><td><span class="badge badge-core">核心</span></td></tr>
+      <tr><td>M09</td><td>產品進銷存</td><td>多品牌多品項、進貨 / 庫存 / 出貨、經銷商售價管理</td><td><span class="badge badge-p2">Phase 2</span></td><td><span class="badge badge-core">核心</span></td></tr>
+      <tr><td>M10</td><td>VIP 方案管理</td><td>投資方案追蹤、專屬價格、介紹人鏈、等級與權益</td><td><span class="badge badge-p2">Phase 2</span></td><td><span class="badge badge-core">核心</span></td></tr>
+      <tr><td>M11</td><td>經銷商管理</td><td>經銷商資料、合作狀態、旗下店家查看</td><td><span class="badge badge-p2">Phase 2</span></td><td><span class="badge badge-core">核心</span></td></tr>
+      <tr><td>M12</td><td>合約管理</td><td>多合約類型（加盟/經銷/VIP）、到期提醒、續約追蹤</td><td><span class="badge badge-p2">Phase 2</span></td><td><span class="badge badge-core">核心</span></td></tr>
+      <tr><td>M13</td><td>加盟商獨立後台</td><td>各加盟商獨立管理介面，數據嚴格隔離</td><td><span class="badge badge-p3">Phase 3</span></td><td><span class="badge badge-ext">擴展</span></td></tr>
+      <tr><td>M14</td><td>課程與教練管理</td><td>課程報名、學員追蹤、教練排程、陪跑紀錄</td><td><span class="badge badge-p3">Phase 3</span></td><td><span class="badge badge-ext">擴展</span></td></tr>
+      <tr><td>M15</td><td>行銷工具</td><td>優惠券管理、推播通知（預約提醒、行銷訊息）</td><td><span class="badge badge-p3">Phase 3</span></td><td><span class="badge badge-ext">擴展</span></td></tr>
+      <tr><td>M16</td><td>評價系統</td><td>顧客評價、服務人員評分</td><td><span class="badge badge-p3">Phase 3</span></td><td><span class="badge badge-ext">擴展</span></td></tr>
+      <tr><td>M17</td><td>進階報表</td><td>多維度儀表板、跨據點比較、趨勢分析</td><td><span class="badge badge-p3">Phase 3</span></td><td><span class="badge badge-ext">擴展</span></td></tr>
+      <tr><td colspan="5" style="background:#f5f3ee;font-weight:700;font-size:12px;letter-spacing:0.1em;padding:10px 16px;color:var(--ink-soft);">顧客端 PWA</td></tr>
+      <tr><td>C01</td><td>會員系統</td><td>手機號碼 / Email 註冊，個人資料與地址管理</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>C02</td><td>預約與付款</td><td>瀏覽服務、選時段、線上付款、付款紀錄</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>C03</td><td>預約追蹤</td><td>狀態即時追蹤、歷史服務查詢、一鍵再約</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td colspan="5" style="background:#f5f3ee;font-weight:700;font-size:12px;letter-spacing:0.1em;padding:10px 16px;color:var(--ink-soft);">服務人員端 PWA</td></tr>
+      <tr><td>S01</td><td>接單管理</td><td>待接訂單、確認接單、訂單詳情</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>S02</td><td>排班與回報</td><td>個人班表管理、服務完成回報</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+      <tr><td>S03</td><td>客戶與業績</td><td>服務對象歷史紀錄、個人業績總覽</td><td><span class="badge badge-p1">Phase 1</span></td><td><span class="badge badge-must">必要</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ TIMELINE ══ -->
+<div class="section">
+  <div class="sec-label">Timeline</div>
+  <h2 class="sec-title">開發<em>時程</em></h2>
+  <p class="sec-lead">整體開發預計 21–30 週，依集團開業節奏彈性調整。每個里程碑都是一個可驗收的交付點。</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-weeks">第 1 — 2 週</div>
+        <h4>環境建置與架構設計</h4>
+        <p>伺服器架設、資料庫設計（含六層權限與數據隔離架構）、API 規格定義、UI/UX 設計稿確認。</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-weeks">第 3 — 5 週</div>
+        <h4>Phase 1 核心開發</h4>
+        <p>帳號權限、服務管理、CRM、預約流程、排班基礎。後台管理系統可登入操作。</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-weeks">第 6 — 8 週</div>
+        <h4>Phase 1 前端與金流</h4>
+        <p>顧客端 PWA、服務人員端 PWA、藍新金流串接。預約 + 付款 + 接單全流程跑通。</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-weeks">第 9 — 10 週</div>
+        <h4>Phase 1 測試與上線</h4>
+        <p>整合測試、Bug 修復、正式環境部署、操作教育訓練。</p>
+        <div class="tl-ms">✦ 旗艦店正式使用系統營運</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot p2"></div>
+      <div class="tl-content">
+        <div class="tl-weeks w2">第 11 — 16 週</div>
+        <h4>Phase 2 商模引擎</h4>
+        <p>分潤引擎、產品進銷存、VIP 方案管理、經銷商模組、合約管理。</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot p2"></div>
+      <div class="tl-content">
+        <div class="tl-weeks w2">第 17 — 20 週</div>
+        <h4>Phase 2 測試與交付</h4>
+        <p>整合測試、分潤計算驗證、系統 Demo 準備。</p>
+        <div class="tl-ms m2">✦ 可對外展示完整系統</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot p3"></div>
+      <div class="tl-content">
+        <div class="tl-weeks w3">第 21 — 30 週</div>
+        <h4>Phase 3 規模化擴展</h4>
+        <p>多據點管理、課程教練系統、行銷工具、進階報表。依營運需求與預算彈性啟動。</p>
+        <div class="tl-ms m3">✦ 全功能完成，專案驗收</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ INVESTMENT ══ -->
+<div class="section">
+  <div class="sec-label">Investment</div>
+  <h2 class="sec-title">費用<em>說明</em></h2>
+  <p class="sec-lead">本專案採<strong>階段開發、逐期付款</strong>，每階段完成驗核點後支付該期款項，保護投資風險。</p>
+
+  <table class="invest-table">
+    <thead>
+      <tr>
+        <th style="width:120px;">開發階段</th>
+        <th>工作範圍</th>
+        <th style="width:130px;">預估費用（TWD）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Phase 1</strong><br><small style="color:#999;font-size:11px;">核心防火牆</small></td>
+        <td>帳號權限、CRM、預約、排班、金流串接、顧客端 PWA、服務人員端 PWA、基本報表、測試部署與教育訓練</td>
+        <td>開發商報價</td>
+      </tr>
+      <tr>
+        <td><strong>Phase 2</strong><br><small style="color:#999;font-size:11px;">商模引擎</small></td>
+        <td>分潤引擎、產品進銷存、VIP 方案管理、經銷商模組、合約管理</td>
+        <td>開發商報價</td>
+      </tr>
+      <tr>
+        <td><strong>Phase 3</strong><br><small style="color:#999;font-size:11px;">規模化擴展</small></td>
+        <td>多據點管理、課程教練系統、行銷工具、進階報表、自動派工</td>
+        <td>開發商報價</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:40px;margin-bottom:16px;font-size:18px;font-weight:700;">上線後維運費用</h3>
+  <table class="invest-table">
+    <thead><tr><th>項目</th><th>說明</th><th>費用</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>系統維運</td>
+        <td>伺服器維護、SSL 憑證、資料庫備份、系統監控、基本問題排除</td>
+        <td>月費制（與開發商議定）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="invest-note">
+    <strong>費用原則：</strong>費用結構以<strong>一次性開發費</strong>為主，避免交易分潤制（長期成本不可控）。具體金額需依本規劃書的功能範圍向開發商重新詢價。
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ══ TERMS ══ -->
+<div class="section">
+  <div class="sec-label">Terms</div>
+  <h2 class="sec-title">合作<em>條件</em></h2>
+  <p class="sec-lead">以下為建議納入合約的核心條款，確保集團的長期利益：</p>
+
+  <div class="terms-grid">
+    <div class="term-card">
+      <div class="tc-num">一</div>
+      <h4>智慧財產權</h4>
+      <p>系統原始碼歸委託方所有。開發完成後，完整原始碼、技術文件、資料庫結構文件一併交付。委託方擁有修改、維護、委託第三方接手的完整權利。</p>
+    </div>
+    <div class="term-card">
+      <div class="tc-num">二</div>
+      <h4>數據所有權</h4>
+      <p>系統中所有客戶資料、交易紀錄、營運數據，<strong>100% 歸委託方所有</strong>。開發方不得留存、使用或移作他用。合約終止時，需提供完整數據匯出。</p>
+    </div>
+    <div class="term-card">
+      <div class="tc-num">三</div>
+      <h4>開發品質保障</h4>
+      <p>每階段完成後提供<strong>一個月免費保固期</strong>，修復非人為操作造成的系統 Bug。保固期結束後進入維運合約。</p>
+    </div>
+    <div class="term-card">
+      <div class="tc-num">四</div>
+      <h4>擴展彈性</h4>
+      <p>系統架構須預留擴充彈性。Phase 2、Phase 3 的啟動時間由委託方依營運需求決定，不設強制時限。後續新增功能或模組，依實際工作量另行評估報價。</p>
+    </div>
+    <div class="term-card">
+      <div class="tc-num">五</div>
+      <h4>退出機制</h4>
+      <p>任一階段驗核點未通過，委託方有權暫停後續開發。已完成並通過驗核的階段照常付款，未啟動的階段不產生費用。</p>
+    </div>
+  </div>
+
+  <div class="invest-note" style="margin-top:32px;">
+    <strong>備註：</strong>本規劃書為系統功能需求與開發節奏的定義文件，用於與開發商議價的基礎。具體報價、付款條件與合約細節，需與開發商進一步協商確認。報價有效期以開發商回覆為準。
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <strong>玩媺女人 · EAC Beauty Group</strong> — 集團營運管理平台開發規劃書<br>
+  CONFIDENTIAL · 2026 · 本文件僅供業主與開發商議價使用
+</footer>
+
+</body>
+</html>
