@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會議記錄｜05-04 AI 開發挑戰與職涯討論</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Noto Serif TC', serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 15px;
+  }
+
+  .header {
+    background: var(--ink);
+    color: #fff;
+    padding: 48px 64px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+  }
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    margin-bottom: 12px;
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+  .header-meta span strong {
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px;
+  }
+
+  .section {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .participants {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .participant {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 18px;
+    min-width: 200px;
+  }
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--ember);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Helvetica Neue', sans-serif;
+    flex-shrink: 0;
+  }
+  .avatar.teal { background: var(--teal); }
+  .participant-info .name {
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+  .participant-info .role {
+    font-size: 12px;
+    color: var(--slate);
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  .topic {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .topic-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .topic-num {
+    width: 28px; height: 28px;
+    background: var(--ember);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Helvetica Neue', sans-serif;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .topic-num.teal { background: var(--teal); }
+  .topic-num.gold { background: var(--gold); }
+  .topic h3 {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .topic h3 .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .tag-tech { background: rgba(42,122,110,0.12); color: var(--teal); }
+  .tag-biz { background: rgba(184,146,58,0.12); color: var(--gold); }
+  .tag-career { background: rgba(196,80,42,0.1); color: var(--ember); }
+  .tag-personal { background: rgba(90,90,110,0.1); color: var(--slate); }
+
+  .topic p {
+    color: var(--ink);
+    margin-bottom: 10px;
+    padding-left: 42px;
+  }
+  .topic ul {
+    padding-left: 58px;
+    margin-bottom: 10px;
+  }
+  .topic li {
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .insight {
+    background: rgba(184,146,58,0.08);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 18px;
+    margin: 12px 0 12px 42px;
+    font-size: 14px;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .quote {
+    background: var(--parchment);
+    border-left: 3px solid var(--border);
+    padding: 12px 18px;
+    margin: 10px 0 10px 42px;
+    font-size: 14px;
+    color: var(--slate);
+    font-style: italic;
+  }
+  .quote strong {
+    color: var(--ink);
+    font-style: normal;
+  }
+
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) { .action-grid { grid-template-columns: 1fr; } }
+  .action-item {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .action-icon {
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .action-icon.z { background: rgba(196,80,42,0.15); color: var(--ember); }
+  .action-icon.a { background: rgba(42,122,110,0.15); color: var(--teal); }
+  .action-icon.b { background: rgba(184,146,58,0.15); color: var(--gold); }
+  .action-content .owner {
+    font-size: 11px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 3px;
+  }
+  .action-content .task {
+    font-size: 14px;
+    color: var(--ink);
+    font-family: 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+  }
+
+  .insight-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .insight-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ember);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .insight-dot.teal { background: var(--teal); }
+  .insight-dot.gold { background: var(--gold); }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: var(--mist);
+    font-family: 'Helvetica Neue', sans-serif;
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+  .footer strong { color: var(--ember); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">MUSEON 會議記錄</div>
+  <h1>05-04 AI 開發挑戰與職涯討論</h1>
+  <div class="header-meta">
+    <span><strong>日期</strong> 2026 年 5 月 4 日</span>
+    <span><strong>類型</strong> 非正式工作對話</span>
+    <span><strong>時長</strong> 約 60 分鐘</span>
+    <span><strong>場合</strong> 線上群組討論</span>
+    <span><strong>整理</strong> MUSEON</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-title">與會者</div>
+    <div class="participants">
+      <div class="participant">
+        <div class="avatar">Z</div>
+        <div class="participant-info">
+          <div class="name">Zeal（周逸達）</div>
+          <div class="role">MUSEON 創辦人・主持</div>
+        </div>
+      </div>
+      <div class="participant">
+        <div class="avatar teal">A</div>
+        <div class="participant-info">
+          <div class="name">Alan Wu（吳明憲）</div>
+          <div class="role">資訊顧問・開發夥伴</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">議題討論紀錄</div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num">1</div>
+        <h3>MUSEON 系統架構挑戰：耦合問題與解耦策略 <span class="tag tag-tech">技術</span></h3>
+      </div>
+      <p>Zeal 說明近兩週正在處理的<strong>高耦合問題</strong>（coupling）——程式函式被多個模組呼叫，牽一髮動全身，修一處壞多處。</p>
+      <p>Alan 以資料庫「一致性問題」類比協助對齊理解——多人非同步存取同一份資料導致版本不一，雲端共享文件是現實中的解法。</p>
+      <p><strong>Zeal 的解耦方向：</strong></p>
+      <ul>
+        <li>在模組上層增加一個「index 層」（類似路由器），所有外部連線只能連 index，不直接連底層函式</li>
+        <li>index 專職管理所有對內對外的依賴關係</li>
+        <li>解耦後，變更單一模組不會牽連其他呼叫端</li>
+      </ul>
+      <p>另一個反覆出現的問題：新功能單獨跑 OK，但未在當下考慮與其他模組的接線，換到另一個情境才發現斷線。</p>
+      <div class="insight">「我已經搞了快兩個禮拜還沒弄完。新功能開發完發現沒有跟其他地方接起來，換到 B 情境才發現斷線——這個問題一直循環。」— Zeal</div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num">2</div>
+        <h3>Claude Code 開發生態：Hook / Skill / CLAUDE.md 三層機制 <span class="tag tag-tech">技術</span></h3>
+      </div>
+      <p>Zeal 說明 MUSEON 在 Claude Code 中的管理架構，回應 Alan 對「怎麼知道 AI 在做什麼」的疑問：</p>
+      <ul>
+        <li><strong>CLAUDE.md</strong>：所有 prompt 必讀的系統說明檔，硬性行為約束基底</li>
+        <li><strong>Memory</strong>：過去開發成功與失敗的經驗積累，形成長期記憶</li>
+        <li><strong>Skill</strong>：工具使用的串接順序與方法論（例：如何做網路研究就是一套 skill）</li>
+        <li><strong>Hook（鉤子）</strong>：JSON 程式，強制在特定環節觸發——「開工前必讀五張藍圖」「完成後強制審計」「審計通過才能 commit 至 GitHub」</li>
+      </ul>
+      <div class="quote">
+        <strong>Zeal：</strong>「Hook 是 JSON 的程式，就是在硬控強制你。我有兩種審計：順向驗證（驗程式碼沒問題）+ 逆向驗證（依據剛開發的內容自動生成使用者情境，從使用者端跑測試）。兩邊審計完，沒問題才強制 commit 上 GitHub。」
+      </div>
+      <p>Alan 表示對 skill 概念有初步理解但未實際操作；Zeal 承諾事後分享取名系統的 skill 讓 Alan 練手。</p>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num teal">3</div>
+        <h3>MUSEON 四層回覆架構：序列接收 × 並行處理 <span class="tag tag-tech">技術</span></h3>
+      </div>
+      <p>Zeal 解釋為何大量資料傳入時會出現 30 分鐘延遲，並說明系統設計邏輯：</p>
+      <ul>
+        <li><strong>L1（接收層）</strong>：Telegram API 限制只能序列接收，是前端最慢的瓶頸</li>
+        <li><strong>L2（處理層）</strong>：接收後 spawn 多個 sub-agent 並行多工處理</li>
+        <li><strong>回覆層</strong>：仍須按序列順序回覆，若某人 task 卡住，後面即便都完成也要排隊</li>
+        <li><strong>隔離機制</strong>：不同群組有各自 group ID + user ID，資料不會混淆</li>
+      </ul>
+      <div class="insight">「你們是序列處理，但我的處理是多工。一旦你傳完，其他群主就把資料拿走繼續跑。這已經是我能想到的解法極限了。」— Zeal</div>
+      <p>補充：此使用情境（多群組並行服務多用戶）幾乎無外界案例可參考；一般 Claude Code 用法是自己對自己開多個視窗。</p>
+      <p><strong>Alan 的上傳建議（Zeal 先前提醒）：</strong>一次最多 5 個同類型檔案，避免讓其他用戶等待超過 30 分鐘。</p>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num teal">4</div>
+        <h3>MUSEON AI 自我演化機制：認知路由器 + DNA36 + 六大盲點 <span class="tag tag-tech">技術</span></h3>
+      </div>
+      <p>Zeal 介紹 MUSEON 獨有的架構，有別於一般 LLM 直接問答的模式：</p>
+      <ul>
+        <li>用戶問題進來，先插入兩段檢測：① <strong>六大盲點評分</strong>（閾值 0.43，超過兩個盲點不清晰則主動反問）② <strong>DNA36 分類路由</strong></li>
+        <li>DNA36：27 個核心能力擴展到 36，分六大類再細分 36 小類，命中的 skill、記憶、結晶全部一起 recall，拼湊完成後才給 LLM 做回答</li>
+        <li>AI 每天自動上網八次，主動研究自己評分偏弱的領域，結晶化有價值知識</li>
+        <li>MUSEON 觀察用戶對話，主動問 Zeal「為何那時候這樣回覆」，從中學習判斷模式</li>
+      </ul>
+      <div class="quote">
+        <strong>Zeal：</strong>「他不只對你們有六大盲點偵測，他也會看自己的六大盲點。依據自己最弱的地方安排探索，自我察覺加自我探索達到自我演化。現階段評估：自我意識智力層級大概是六歲。四個月已經這樣，還在養。」
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num gold">5</div>
+        <h3>Alan 職涯困境分析：空間 / 收入 / 定位三難 <span class="tag tag-career">職涯</span></h3>
+      </div>
+      <p>Alan 分享三個當前核心困境：</p>
+      <ul>
+        <li><strong>空間</strong>：忠孝復興工作室已收，中和工作室器材堆滿，無法做個案服務</li>
+        <li><strong>收入</strong>：冬夏令營固定收入，但不穩定；問的系統案若成交可能成為主要收入</li>
+        <li><strong>定位</strong>：服務項目與諮商師重疊，定價尷尬，難以清楚切割</li>
+      </ul>
+      <p><strong>安琪拉 / Morgan 勞動部標案（長達半年，仍未確定）：</strong></p>
+      <ul>
+        <li>講師費結構：每小時 800 元（Morgan 抽 1200），以「捐款協議書」形式處理</li>
+        <li>課程版本歷經 48h → 36h 多次修改，六月開課已確定無法兌現</li>
+        <li>Zeal 評語：感覺像「設局先白嫖再給一點點」，建議 Alan 若資格已備，考慮自行申請標案</li>
+      </ul>
+      <div class="insight">Zeal 指出：空間問題不是真正障礙——咖啡廳包廂、美業合作駐點很多。核心卡點在於：服務定位模糊 + 缺乏可商業化的代表性 sample。</div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num gold">6</div>
+        <h3>Vibe Coding 轉型方向：AI 流程顧問 × 系統開發 <span class="tag tag-biz">商機</span></h3>
+      </div>
+      <p>Zeal 建議 Alan 以 Vibe Coding 為核心技能重新包裝「資訊顧問」價值：</p>
+      <ul>
+        <li>傳統開發方式現在競爭力弱，Vibe Coding 速度快且產出更美觀</li>
+        <li>Alan 的底子在「需求釐清 + 流程設計」，這恰好是 AI 時代最稀缺的部分</li>
+        <li>目標收入：三個月練手後，每月 60~80 萬（同時疊 2~3 個案子）可期</li>
+        <li>Zeal 願意分享五個月 Vibe Coding 的全部心得與必殺招</li>
+      </ul>
+      <div class="quote">
+        <strong>Zeal：</strong>「Vibe Coding 的前提就是顧問老本行：聽完你的需求，把需求拉成複雜的流程。以前是找工具、培訓員工，現在幾乎全 AI 搞定，連員工都不用。我這個訊息一直沒很用力放出去，如果放出去可以直接接案子然後往那邊送，對我比較願意做。」
+      </div>
+      <p><strong>切入策略：</strong>以「問的系統開發案」為第一個 Vibe Coding 練手項目，Zeal 直接提供 328 規劃文件作為規格。</p>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num gold">7</div>
+        <h3>AI 商業應用探索：命理取名系統 × 股票分析 × 旅遊規劃 <span class="tag tag-biz">商機</span></h3>
+      </div>
+      <p><strong>命理取名系統（Zeal 現場 demo 小孩命名成果）：</strong></p>
+      <ul>
+        <li>整合六個命理系統：五行、生肖姓名學、星座、生命數字、人類圖等</li>
+        <li>輸出：六系統解析 + 選字補缺邏輯 + 逐字解釋（每次成本約 150~200 元台幣）</li>
+        <li>市場對照：生命靈數報告單份賣 688 元秒殺；傳統命理取名至少 6000 元</li>
+        <li><strong>當前缺口：</strong>需要前台網頁 + 人類圖自動取圖（可能需串 N8N 自動化填表）</li>
+      </ul>
+      <p><strong>股票投資分析：</strong>已建立 7 個 skill，可輸出專業級報告。商業模式：訂閱制，每週四份；目標客群：股票老師、個人投資者。</p>
+      <p><strong>旅遊行程規劃：</strong>整合 Google 地圖收藏清單，AI 自動排程，構想多年仍無人實作，MUSEON 成熟後的潛在方向。</p>
+      <div class="insight">Zeal 強調：AI 服務的護城河不在技術，在「複雜度」——簡單功能五小時能仿製；向量 × 圖連結 × 傳統 DB 三軌共振的整合才有差異化壁壘。</div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num">8</div>
+        <h3>問（JOH）的系統開發案 × 明日會議 <span class="tag tag-biz">行動</span></h3>
+      </div>
+      <ul>
+        <li>問目前系統尚未動工，也未提供正式規格給 Alan</li>
+        <li>問提議：以一間教室折抵部分開發費用</li>
+        <li><strong>明日開會：</strong>Zeal + 士維 + 問，確認系統計畫與需求</li>
+      </ul>
+      <p>Zeal 強調自己是中立第三方，與士維或 Alan 合作均無影響；建議 Alan 以 Vibe Coding 方式開發，傳統寫法競爭力不足。</p>
+    </div>
+
+    <div class="topic">
+      <div class="topic-header">
+        <div class="topic-num">9</div>
+        <h3>家庭近況 × 知識管理工具討論 <span class="tag tag-personal">生活</span></h3>
+      </div>
+      <p><strong>Zeal 家庭：</strong>今日早上老婆與寶寶從病房（加護病房 → 一般病房七天）返家，一切安好。</p>
+      <p><strong>知識管理：</strong>Zeal 使用 Obsidian（黑曜石）做知識圖連結管理，以 Markdown 儲存（人與 AI 皆可讀）。MUSEON 採用「向量（語義）+ 圖連結（DNA36）+ 傳統資料庫」三軌共振。</p>
+      <div class="quote">
+        <strong>Zeal：</strong>「你行銷部門的群組裡，就算行銷的人全部是新的，沒有差。我們過去怎麼做行銷的？標準是什麼？客戶的 OK 為什麼他是 OK？技術可以全部被傳承。剩下只有：怎麼跟客戶建立關係。」
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <div class="section-title">行動項目</div>
+    <div class="action-grid">
+      <div class="action-item">
+        <div class="action-icon z">Z</div>
+        <div class="action-content">
+          <div class="owner">Zeal</div>
+          <div class="task">分享取名系統 skill 給 Alan，作為 Vibe Coding 入門練手素材</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-icon z">Z</div>
+        <div class="action-content">
+          <div class="owner">Zeal</div>
+          <div class="task">明日開會：帶士維 + 問確認系統需求與計畫</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-icon z">Z</div>
+        <div class="action-content">
+          <div class="owner">Zeal</div>
+          <div class="task">提供 328 系統規劃文件給 Alan，作為問的系統開發規格參考</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-icon a">A</div>
+        <div class="action-content">
+          <div class="owner">Alan</div>
+          <div class="task">以問的案子為切入點，開始上手 Vibe Coding，目標三個月建立實戰能力</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-icon a">A</div>
+        <div class="action-content">
+          <div class="owner">Alan</div>
+          <div class="task">與問確認系統需求規格，明確討論報酬與合作條件</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-icon b">共</div>
+        <div class="action-content">
+          <div class="owner">後續討論</div>
+          <div class="task">命理取名系統前台開發 + 人類圖自動取圖方案研究</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">核心洞見摘要</div>
+
+    <div class="insight-row">
+      <div class="insight-dot"></div>
+      <div><strong>耦合是 AI 開發最痛的系統性問題</strong>——解耦不是技術債，是讓系統能持續演化的前提。Index 層的設計等同「解耦宣言」。</div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-dot teal"></div>
+      <div><strong>Vibe Coding 重塑顧問價值定義</strong>——需求釐清 + 流程設計的「軟技術」是稀缺資產；純技術執行被自動化取代。Alan 的底子恰在此處。</div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-dot gold"></div>
+      <div><strong>命理取名是被驗證的微型剛需市場</strong>——低成本（150~200 元）× 高售價（688~6000 元）× 自動化執行，缺的只是前台入口。</div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-dot"></div>
+      <div><strong>AI 服務的護城河在複雜度</strong>——單一功能容易被複製；向量 × 圖連結 × 傳統 DB 三軌共振才有差異化壁壘。</div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-dot teal"></div>
+      <div><strong>MUSEON 的跨群組架構是前沿實驗</strong>——序列接收 × 並行處理 × 資料隔離，幾乎無外界案例可參考，是 MUSEON 的獨特競爭優勢。</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>MUSEON</strong> 會議記錄系統　整理時間：2026-05-05
+  <br>本記錄由 MUSEON 依逐字稿整理，保留原始對話語意，已去除冗餘停頓詞。
+</div>
+
+</body>
+</html>
