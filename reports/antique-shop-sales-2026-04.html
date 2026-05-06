@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古董的店｜2026年4月銷售報告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ember: #C4502A;
+    --ember-dark: #8B3520;
+    --parchment: #FAF6F0;
+    --warm-gray: #6B5B4E;
+    --gold: #b6853d;
+    --navy: #181737;
+    --border: #E8DDD5;
+  }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--navy);
+    padding: 48px 40px 40px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+  header p {
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px 24px;
+    border-top: 4px solid var(--ember);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .kpi-card .num {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ember);
+    margin-bottom: 6px;
+  }
+  .kpi-card .label {
+    font-size: 12px;
+    color: var(--warm-gray);
+    letter-spacing: 1px;
+  }
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    color: var(--ember-dark);
+    border-left: 4px solid var(--ember);
+    padding-left: 14px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+  }
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .chart-box {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .chart-box h3 {
+    font-size: 13px;
+    color: var(--warm-gray);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .chart-box canvas {
+    max-height: 280px;
+  }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+  }
+  .product-card:hover { transform: translateY(-2px); }
+  .rank-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    background: var(--ember);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .product-img-wrap {
+    position: relative;
+    height: 140px;
+    background: var(--parchment);
+    overflow: hidden;
+  }
+  .product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .product-img-wrap .no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: var(--border);
+  }
+  .product-info {
+    padding: 12px 14px 16px;
+  }
+  .product-info .name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.4;
+    min-height: 36px;
+  }
+  .product-info .metrics {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .metric-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #FFF0EB;
+    color: var(--ember);
+  }
+  .metric-tag.revenue { background: #FFF8EC; color: var(--gold); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    font-size: 13px;
+  }
+  thead { background: var(--navy); }
+  thead th { color: rgba(255,255,255,0.85); padding: 14px 16px; text-align: left; font-weight: 500; letter-spacing: 1px; font-size: 12px; }
+  tbody tr:nth-child(even) { background: #FAFAF8; }
+  tbody tr:hover { background: #FFF5F0; }
+  tbody td { padding: 12px 16px; color: var(--navy); border-bottom: 1px solid var(--border); }
+  .rank-num { font-weight: 700; color: var(--ember); }
+  footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--warm-gray);
+    font-size: 11px;
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  @media (max-width: 600px) {
+    .kpi-row { grid-template-columns: 1fr; }
+    .charts-row { grid-template-columns: 1fr; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>古董的店</h1>
+  <p>2026年4月銷售分析報告 ｜ 2026-04-01 ~ 2026-04-30</p>
+</header>
+<div class="container">
+
+  <h2 class="section-title">總覽</h2>
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="num">NT$1,182,207</div>
+      <div class="label">本月總營收</div>
+    </div>
+    <div class="kpi-card">
+      <div class="num">8,588</div>
+      <div class="label">總出售件數</div>
+    </div>
+    <div class="kpi-card">
+      <div class="num">329</div>
+      <div class="label">有售出品項數</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">分類業績分布</h2>
+  <div class="charts-row">
+    <div class="chart-box">
+      <h3>各類別營收佔比</h3>
+      <canvas id="pieChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>各類別銷售件數</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <h2 class="section-title">Top 20 暢銷品（以數量排行）</h2>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#1</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756343220456.jpg" alt="J44 150耐熱梳（大灣）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">J44 150耐熱梳（大灣）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 303 件</span>
+          <span class="metric-tag revenue">NT$23,937</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#2</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344948531.jpg" alt="C23 150料理剪" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C23 150料理剪</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 235 件</span>
+          <span class="metric-tag revenue">NT$12,455</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#3</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1770792653758.jpg" alt="Z48 390奈米磨手皮器" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">Z48 390奈米磨手皮器</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 192 件</span>
+          <span class="metric-tag revenue">NT$30,336</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#4</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756343222947.jpg" alt="Ｉ33 小章魚" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">Ｉ33 小章魚</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 168 件</span>
+          <span class="metric-tag revenue">NT$17,640</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#5</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1760141176615.jpg" alt="C08 290花梨木煎匙（短）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C08 290花梨木煎匙（短）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 139 件</span>
+          <span class="metric-tag revenue">NT$18,209</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#6</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344942411.jpg" alt="F39 790輕薄刀" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">F39 790輕薄刀</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 134 件</span>
+          <span class="metric-tag revenue">NT$49,312</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#7</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756343220178.jpg" alt="J46 100耐熱梳（寬）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">J46 100耐熱梳（寬）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 131 件</span>
+          <span class="metric-tag revenue">NT$6,943</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#8</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756351138243.jpg" alt="Ｅ22 竹炭筷" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">Ｅ22 竹炭筷</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 129 件</span>
+          <span class="metric-tag revenue">NT$23,736</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#9</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344852807.jpg" alt="H01 350切刀" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">H01 350切刀</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 127 件</span>
+          <span class="metric-tag revenue">NT$20,066</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#10</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344786851.jpg" alt="F16 挽臉（紅）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">F16 挽臉（紅）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 127 件</span>
+          <span class="metric-tag revenue">NT$6,731</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#11</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344787596.jpg" alt="H38 大剪（止滑）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">H38 大剪（止滑）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 119 件</span>
+          <span class="metric-tag revenue">NT$18,802</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#12</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344846974.jpg" alt="C19-1 60小剪刀" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C19-1 60小剪刀</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 116 件</span>
+          <span class="metric-tag revenue">NT$3,016</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#13</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1770706560795.jpg" alt="C11 390花梨木薄煎匙 （長）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C11 390花梨木薄煎匙 （長）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 115 件</span>
+          <span class="metric-tag revenue">NT$21,160</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#14</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344950498.jpg" alt="C17 450相思木煎匙" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C17 450相思木煎匙</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 101 件</span>
+          <span class="metric-tag revenue">NT$21,210</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#15</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344944704.jpg" alt="C32 150藍刨刀" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C32 150藍刨刀</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 94 件</span>
+          <span class="metric-tag revenue">NT$7,426</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#16</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344944704.jpg" alt="C33 150紅刨刀" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">C33 150紅刨刀</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 94 件</span>
+          <span class="metric-tag revenue">NT$7,426</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#17</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344847924.jpg" alt="F25 350小剪（灣）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">F25 350小剪（灣）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 93 件</span>
+          <span class="metric-tag revenue">NT$14,694</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#18</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756343220355.jpg" alt="J45 100耐熱梳（細）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">J45 100耐熱梳（細）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 92 件</span>
+          <span class="metric-tag revenue">NT$4,876</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#19</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344844127.jpg" alt="H20 590斜指甲剪（小）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">H20 590斜指甲剪（小）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 92 件</span>
+          <span class="metric-tag revenue">NT$24,196</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="rank-badge">#20</span>
+        <img src="https://storage.quickclick.cc/library/26999/phone-1756344844698.jpg" alt="H21 590斜指甲剪（大）" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="no-img" style="display:none">🏺</div>
+      </div>
+      <div class="product-info">
+        <div class="name">H21 590斜指甲剪（大）</div>
+        <div class="metrics">
+          <span class="metric-tag">售出 92 件</span>
+          <span class="metric-tag revenue">NT$24,196</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Top 20 高業績品（以金額排行）</h2>
+  <table>
+    <thead>
+      <tr><th>排名</th><th>商品名稱</th><th>單價</th><th>售出件數</th><th>總金額</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rank-num">#1</td>
+        <td>F39 790輕薄刀</td>
+        <td>NT$ 368</td>
+        <td>134 件</td>
+        <td><strong>NT$ 49,312</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#2</td>
+        <td>Z48 390奈米磨手皮器</td>
+        <td>NT$ 158</td>
+        <td>192 件</td>
+        <td><strong>NT$ 30,336</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#3</td>
+        <td>Ｅ09 980磨刀器</td>
+        <td>NT$ 420</td>
+        <td>58 件</td>
+        <td><strong>NT$ 24,360</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#4</td>
+        <td>H20 590斜指甲剪（小）</td>
+        <td>NT$ 263</td>
+        <td>92 件</td>
+        <td><strong>NT$ 24,196</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#5</td>
+        <td>H21 590斜指甲剪（大）</td>
+        <td>NT$ 263</td>
+        <td>92 件</td>
+        <td><strong>NT$ 24,196</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#6</td>
+        <td>J44 150耐熱梳（大灣）</td>
+        <td>NT$ 79</td>
+        <td>303 件</td>
+        <td><strong>NT$ 23,937</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#7</td>
+        <td>Ｅ22 竹炭筷</td>
+        <td>NT$ 184</td>
+        <td>129 件</td>
+        <td><strong>NT$ 23,736</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#8</td>
+        <td>C17 450相思木煎匙</td>
+        <td>NT$ 210</td>
+        <td>101 件</td>
+        <td><strong>NT$ 21,210</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#9</td>
+        <td>C11 390花梨木薄煎匙 （長）</td>
+        <td>NT$ 184</td>
+        <td>115 件</td>
+        <td><strong>NT$ 21,160</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#10</td>
+        <td>H01 350切刀</td>
+        <td>NT$ 158</td>
+        <td>127 件</td>
+        <td><strong>NT$ 20,066</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#11</td>
+        <td>H38 大剪（止滑）</td>
+        <td>NT$ 158</td>
+        <td>119 件</td>
+        <td><strong>NT$ 18,802</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#12</td>
+        <td>C08 290花梨木煎匙（短）</td>
+        <td>NT$ 131</td>
+        <td>139 件</td>
+        <td><strong>NT$ 18,209</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#13</td>
+        <td>Ｉ33 小章魚</td>
+        <td>NT$ 105</td>
+        <td>168 件</td>
+        <td><strong>NT$ 17,640</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#14</td>
+        <td>J41 踩腳滾輪小</td>
+        <td>NT$ 368</td>
+        <td>41 件</td>
+        <td><strong>NT$ 15,088</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#15</td>
+        <td>F25 350小剪（灣）</td>
+        <td>NT$ 158</td>
+        <td>93 件</td>
+        <td><strong>NT$ 14,694</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#16</td>
+        <td>F40 490主廚刀</td>
+        <td>NT$ 236</td>
+        <td>61 件</td>
+        <td><strong>NT$ 14,396</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#17</td>
+        <td>F37 1200文武刀（粗柄）</td>
+        <td>NT$ 525</td>
+        <td>27 件</td>
+        <td><strong>NT$ 14,175</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#18</td>
+        <td>H02 1200日本文武刀</td>
+        <td>NT$ 525</td>
+        <td>26 件</td>
+        <td><strong>NT$ 13,650</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#19</td>
+        <td>C23 150料理剪</td>
+        <td>NT$ 53</td>
+        <td>235 件</td>
+        <td><strong>NT$ 12,455</strong></td>
+      </tr>
+      <tr>
+        <td class="rank-num">#20</td>
+        <td>J41-1 踩腳滾輪大</td>
+        <td>NT$ 683</td>
+        <td>16 件</td>
+        <td><strong>NT$ 10,928</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-title">各類別詳細統計</h2>
+  <table>
+    <thead>
+      <tr><th>商品類別</th><th>品項數</th><th>總銷售件數</th><th>總營收</th><th>佔比</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>剪刀類</strong></td>
+        <td>61</td>
+        <td>1662 件</td>
+        <td>NT$ 248,410</td>
+        <td>21.0%</td>
+      </tr>
+      <tr>
+        <td><strong>刀具類</strong></td>
+        <td>38</td>
+        <td>1156 件</td>
+        <td>NT$ 226,322</td>
+        <td>19.1%</td>
+      </tr>
+      <tr>
+        <td><strong>其他</strong></td>
+        <td>84</td>
+        <td>1374 件</td>
+        <td>NT$ 178,490</td>
+        <td>15.1%</td>
+      </tr>
+      <tr>
+        <td><strong>廚房餐具</strong></td>
+        <td>44</td>
+        <td>1426 件</td>
+        <td>NT$ 142,852</td>
+        <td>12.1%</td>
+      </tr>
+      <tr>
+        <td><strong>梳子類</strong></td>
+        <td>40</td>
+        <td>936 件</td>
+        <td>NT$ 97,673</td>
+        <td>8.3%</td>
+      </tr>
+      <tr>
+        <td><strong>按摩器具</strong></td>
+        <td>20</td>
+        <td>536 件</td>
+        <td>NT$ 90,482</td>
+        <td>7.7%</td>
+      </tr>
+      <tr>
+        <td><strong>筷子類</strong></td>
+        <td>10</td>
+        <td>414 件</td>
+        <td>NT$ 59,162</td>
+        <td>5.0%</td>
+      </tr>
+      <tr>
+        <td><strong>美體磨具</strong></td>
+        <td>10</td>
+        <td>292 件</td>
+        <td>NT$ 58,299</td>
+        <td>4.9%</td>
+      </tr>
+      <tr>
+        <td><strong>廚房雜件</strong></td>
+        <td>10</td>
+        <td>291 件</td>
+        <td>NT$ 36,269</td>
+        <td>3.1%</td>
+      </tr>
+      <tr>
+        <td><strong>指甲護理</strong></td>
+        <td>8</td>
+        <td>317 件</td>
+        <td>NT$ 34,106</td>
+        <td>2.9%</td>
+      </tr>
+      <tr>
+        <td><strong>耳部護理</strong></td>
+        <td>4</td>
+        <td>184 件</td>
+        <td>NT$ 10,142</td>
+        <td>0.9%</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<footer>古董的店 銷售分析報告｜統計期間 2026/04/01 – 2026/04/30｜由 MUSEON 自動產生</footer>
+
+<script>
+const catLabels = ["剪刀類", "刀具類", "其他", "廚房餐具", "梳子類", "按摩器具", "筷子類", "美體磨具", "廚房雜件", "指甲護理", "耳部護理"];
+const catRevenues = [248410, 226322, 178490, 142852, 97673, 90482, 59162, 58299, 36269, 34106, 10142];
+const catQtys = [1662, 1156, 1374, 1426, 936, 536, 414, 292, 291, 317, 184];
+const colors = ["#C4502A", "#8B3520", "#D4752A", "#A05535", "#E09050", "#6B4226", "#B06040", "#7A3018", "#D46030", "#954028", "#C07040"];
+
+new Chart(document.getElementById('pieChart'), {
+  type: 'doughnut',
+  data: {
+    labels: catLabels,
+    datasets: [{ data: catRevenues, backgroundColor: colors, borderWidth: 2, borderColor: '#FAF6F0' }]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } }
+    },
+    cutout: '60%'
+  }
+});
+
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: catLabels,
+    datasets: [{ label: '銷售件數', data: catQtys, backgroundColor: colors, borderRadius: 6 }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { color: '#EEE' } }, y: { ticks: { font: { size: 11 } } } }
+  }
+});
+</script>
+</body>
+</html>
