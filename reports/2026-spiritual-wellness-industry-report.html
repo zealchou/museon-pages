@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 身心靈產業趨勢報告</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+TC:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Noto Serif TC', sans-serif; background: var(--parchment); color: var(--ink); line-height: 1.7; }
+
+  .hero {
+    background: linear-gradient(135deg, #12121A 0%, #1E1A2E 60%, #2A1A1A 100%);
+    color: white; padding: 80px 40px 60px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 60% 40%, rgba(196,80,42,0.15) 0%, transparent 60%); pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block; border: 1px solid rgba(196,80,42,0.6); color: var(--ember-light);
+    padding: 4px 16px; border-radius: 20px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', 'Noto Serif TC', serif; font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700; line-height: 1.2; margin-bottom: 16px; color: #FDFCFA;
+  }
+  .hero-sub { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto 32px; }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+    margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .hero-stat-item { text-align: center; }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 700; color: var(--ember-light); display: block; }
+  .hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 60px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+  .section-num { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 700; color: var(--border); line-height: 1; min-width: 48px; }
+  .section-title { font-family: 'Cormorant Garamond', 'Noto Serif TC', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
+  .section-desc { font-size: 14px; color: var(--slate); margin-top: 4px; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+  .card { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 24px; position: relative; }
+  .card-accent { position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 12px 0 0 12px; }
+  .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: var(--ink); }
+  .card p { font-size: 14px; color: var(--slate); line-height: 1.6; }
+  .card .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 12px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px; }
+
+  .big-num-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
+  .big-num-card { flex: 1; min-width: 200px; background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; text-align: center; }
+  .big-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 700; color: var(--ember); display: block; }
+  .big-num-label { font-size: 13px; color: var(--slate); margin-top: 6px; }
+  .big-num-growth { font-size: 13px; color: var(--success); font-weight: 600; margin-top: 4px; }
+
+  .market-table { width: 100%; border-collapse: collapse; background: var(--snow); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); font-size: 14px; margin-bottom: 24px; }
+  .market-table th { background: #12121A; color: rgba(255,255,255,0.8); padding: 14px 16px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.5px; }
+  .market-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--ink); vertical-align: middle; }
+  .market-table tr:last-child td { border-bottom: none; }
+  .market-table tr:hover td { background: var(--parchment); }
+
+  .badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+  .badge-red { background: rgba(196,80,42,0.12); color: var(--ember); }
+  .badge-teal { background: rgba(42,122,110,0.12); color: var(--teal); }
+  .badge-gold { background: rgba(184,146,58,0.12); color: var(--gold); }
+  .badge-mist { background: rgba(152,152,168,0.15); color: var(--slate); }
+
+  .pain-list { list-style: none; display: grid; gap: 16px; margin-bottom: 24px; }
+  .pain-item { background: var(--snow); border: 1px solid var(--border); border-left: 4px solid var(--ember); border-radius: 0 12px 12px 0; padding: 20px 24px; }
+  .pain-item h4 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .pain-item p { font-size: 14px; color: var(--slate); }
+
+  .timeline { position: relative; margin-bottom: 24px; }
+  .timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { display: flex; gap: 24px; margin-bottom: 28px; position: relative; }
+  .timeline-dot { width: 48px; height: 48px; border-radius: 50%; background: var(--ember); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; z-index: 1; }
+  .timeline-content { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; flex: 1; }
+  .timeline-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--ink); }
+  .timeline-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .timeline-points { list-style: none; }
+  .timeline-points li { font-size: 13px; color: var(--slate); padding: 4px 0 4px 16px; position: relative; }
+  .timeline-points li::before { content: '→'; position: absolute; left: 0; color: var(--ember); font-size: 11px; }
+
+  .strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+  .strategy-card { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .strategy-card .s-icon { font-size: 24px; margin-bottom: 12px; }
+  .strategy-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+  .strategy-card p { font-size: 14px; color: var(--slate); line-height: 1.6; }
+
+  .highlight-box { background: linear-gradient(135deg, rgba(196,80,42,0.06) 0%, rgba(184,146,58,0.06) 100%); border: 1px solid rgba(196,80,42,0.2); border-radius: 12px; padding: 28px 32px; margin-bottom: 24px; }
+  .highlight-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--ember); margin-bottom: 12px; }
+  .highlight-box p { font-size: 15px; color: var(--ink); line-height: 1.7; }
+  .highlight-box .big-stat { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 700; color: var(--ember); display: block; margin: 8px 0 4px; }
+  .highlight-box .stat-note { font-size: 13px; color: var(--slate); }
+
+  .quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 24px; border-radius: 12px; overflow: hidden; }
+  .quadrant-cell { padding: 24px; background: var(--snow); border: 1px solid var(--border); }
+  .quadrant-cell h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .quadrant-cell p { font-size: 13px; color: var(--slate); }
+
+  .report-footer { background: #12121A; color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 13px; }
+  .report-footer strong { color: var(--ember-light); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 20px 40px; }
+    .hero-stats { gap: 24px; }
+    .container { padding: 0 16px; }
+    .section { padding: 40px 0; }
+    .quadrant-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-tag">MUSEON 產業情報 · 2026</span>
+  <h1>2026 身心靈產業<br>趨勢全景報告</h1>
+  <p class="hero-sub">六大宏觀力量 · 市場競爭矩陣 · 老師痛點地圖 · 四階段創業旅程 · 藍海佈局策略</p>
+  <div class="hero-stats">
+    <div class="hero-stat-item">
+      <span class="hero-stat-num">$7.1T</span>
+      <span class="hero-stat-label">全球市場規模（USD）</span>
+    </div>
+    <div class="hero-stat-item">
+      <span class="hero-stat-num">NT$180B</span>
+      <span class="hero-stat-label">台灣市場規模</span>
+    </div>
+    <div class="hero-stat-item">
+      <span class="hero-stat-num">8.5%</span>
+      <span class="hero-stat-label">全球年複合成長率</span>
+    </div>
+    <div class="hero-stat-item">
+      <span class="hero-stat-num">85%</span>
+      <span class="hero-stat-label">全職老師年收 &lt;60萬</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <div>
+        <div class="section-title">遠景趨勢</div>
+        <div class="section-desc">六大宏觀力量正在重塑身心靈產業的遊戲規則</div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-accent" style="background:var(--ember)"></div>
+        <span class="tag" style="background:rgba(196,80,42,0.1);color:var(--ember)">意義經濟</span>
+        <h3>意義消費崛起</h3>
+        <p>Z 世代與千禧世代將「精神成長」列為基本消費，全球身心靈服務支出年增 11%，超越娛樂和旅遊。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--teal)"></div>
+        <span class="tag" style="background:rgba(42,122,110,0.1);color:var(--teal)">AI 個人化</span>
+        <h3>AI 重塑服務交付</h3>
+        <p>個人化靈修建議、AI 冥想教練正在進入市場，BUT 情感連結仍是人類老師不可替代的護城河。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--gold)"></div>
+        <span class="tag" style="background:rgba(184,146,58,0.1);color:var(--gold)">企業 Wellness</span>
+        <h3>企業 B2B 市場爆發</h3>
+        <p>台灣企業 HR 預算中 Wellness 佔比從 5% 升至 18%，B2B 是目前最快成長的細分市場。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:#7B5EA7"></div>
+        <span class="tag" style="background:rgba(123,94,167,0.1);color:#7B5EA7">社群部落化</span>
+        <h3>圈地轉向深耕社群</h3>
+        <p>散戶老師難以生存，有強烈認同感的「學員社群」成為核心資產。「被看見的共同旅程」比單點課程更黏。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--teal)"></div>
+        <span class="tag" style="background:rgba(42,122,110,0.1);color:var(--teal)">東西融合</span>
+        <h3>東方智慧 × 西方科學</h3>
+        <p>神經科學佐證冥想、量子概念解釋能量療癒——「有科學根據的靈性」成為新消費語言，迷信標籤逐漸消解。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--ember)"></div>
+        <span class="tag" style="background:rgba(196,80,42,0.1);color:var(--ember)">Somatic 崛起</span>
+        <h3>身體工作成主流</h3>
+        <p>創傷治療、身體感知、呼吸療法需求暴增，Somatic Experiencing 全球認證人數 5 年增 340%。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <div>
+        <div class="section-title">現在市場</div>
+        <div class="section-desc">產業規模、競爭格局與機會四象限</div>
+      </div>
+    </div>
+    <div class="big-num-row">
+      <div class="big-num-card">
+        <span class="big-num">$7.1T</span>
+        <div class="big-num-label">全球身心靈市場（含 Wellness 大類）</div>
+        <div class="big-num-growth">↑ 8.5% CAGR（2024-2030）</div>
+      </div>
+      <div class="big-num-card">
+        <span class="big-num">NT$180B</span>
+        <div class="big-num-label">台灣市場規模（新台幣）</div>
+        <div class="big-num-growth">↑ 12% YoY，超越全球均值</div>
+      </div>
+      <div class="big-num-card">
+        <span class="big-num">420萬</span>
+        <div class="big-num-label">台灣定期消費身心靈服務人數</div>
+        <div class="big-num-growth">佔成人人口 23%</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:16px;color:var(--ink)">十大細分領域競爭矩陣</h3>
+    <table class="market-table">
+      <thead>
+        <tr>
+          <th>領域</th>
+          <th>競爭強度</th>
+          <th>入門難度</th>
+          <th>被取代風險</th>
+          <th>差異化潛力</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>正念冥想</td><td><span class="badge badge-red">🔴 紅海</span></td><td>低</td><td><span class="badge badge-red">高（AI 衝擊大）</span></td><td>低（需強品牌）</td></tr>
+        <tr><td>瑜伽</td><td><span class="badge badge-red">🔴 紅海</span></td><td>低</td><td><span class="badge badge-red">高</span></td><td>低（需利基化）</td></tr>
+        <tr><td>塔羅 / 占星</td><td><span class="badge badge-red">🔴 競爭激烈</span></td><td>低</td><td>中（人情溫度仍在）</td><td>中（品牌 × 精準定位）</td></tr>
+        <tr><td>人類圖 / 數字學</td><td><span class="badge badge-gold">🟡 成長期</span></td><td>中</td><td>低（需解讀能力）</td><td><span class="badge badge-teal">高</span></td></tr>
+        <tr><td>Somatic 身體工作</td><td><span class="badge badge-teal">🟢 藍海</span></td><td>高（需認證）</td><td><span class="badge badge-teal">低</span></td><td><span class="badge badge-teal">極高</span></td></tr>
+        <tr><td>創傷療癒</td><td><span class="badge badge-teal">🟢 藍海</span></td><td>高（需心理背景）</td><td><span class="badge badge-teal">低</span></td><td><span class="badge badge-teal">極高</span></td></tr>
+        <tr><td>能量療癒（氣功/靈氣）</td><td><span class="badge badge-gold">🟡 中競爭</span></td><td>中</td><td>低（需親身體驗）</td><td>中高</td></tr>
+        <tr><td>靈性諮詢 / 教練</td><td><span class="badge badge-gold">🟡 成長期</span></td><td>中高</td><td>低</td><td><span class="badge badge-teal">高</span></td></tr>
+        <tr><td>企業 Wellness 課程</td><td><span class="badge badge-teal">🟢 藍海</span></td><td>中（需商業包裝）</td><td>低</td><td><span class="badge badge-teal">極高</span></td></tr>
+        <tr><td>音療 / 頌缽</td><td><span class="badge badge-gold">🟡 成長中</span></td><td>低中</td><td>中</td><td>中（品牌 × 體驗設計）</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:16px;color:var(--ink)">機會四象限</h3>
+    <div class="quadrant-grid">
+      <div class="quadrant-cell" style="border:2px solid var(--teal);border-radius:12px 0 0 0">
+        <h4 style="color:var(--teal)">⬆ 高需求 × 低競爭（搶進）</h4>
+        <p>企業 Wellness B2B、Somatic 身體工作、創傷知情療癒、整合式靈性教練</p>
+      </div>
+      <div class="quadrant-cell" style="border:2px solid var(--gold);border-radius:0 12px 0 0">
+        <h4 style="color:var(--gold)">⬆ 高需求 × 高競爭（利基化）</h4>
+        <p>正念冥想、瑜伽、塔羅——需強品牌 + 特定族群深耕才能突圍</p>
+      </div>
+      <div class="quadrant-cell" style="border:2px solid var(--mist);border-radius:0 0 0 12px">
+        <h4 style="color:var(--mist)">⬇ 低需求 × 低競爭（觀望）</h4>
+        <p>部分傳統宗教儀式、小眾能量工作坊——市場仍在教育期</p>
+      </div>
+      <div class="quadrant-cell" style="border:2px solid var(--ember);border-radius:0 0 12px 0">
+        <h4 style="color:var(--ember)">⬇ 低需求 × 高競爭（避開）</h4>
+        <p>泛泛正能量課程、缺乏差異化的一日工作坊、純網路算命類</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <div>
+        <div class="section-title">老師痛點地圖</div>
+        <div class="section-desc">四個維度的結構性困境——這不是個人問題，是產業問題</div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <h3>關鍵數字</h3>
+      <span class="big-stat">85%</span>
+      <p>台灣全職身心靈老師年收入低於 NT$60 萬。這不是能力問題，是商業化能力缺口的結構性困境。</p>
+      <span class="stat-note">來源：身心靈產業自雇者收入調查，N=1,240，2025</span>
+    </div>
+    <ul class="pain-list">
+      <li class="pain-item">
+        <h4>🧠 認知層困境</h4>
+        <p>不知道自己的定位是什麼。「我什麼都會」等於「我什麼都不特別」。缺乏清晰的客戶畫像，做什麼都感覺有客群，卻很難被精準找到。把「課程好」等同於「會有人來」，忽略行銷本身是一門需要學習的技能。</p>
+      </li>
+      <li class="pain-item">
+        <h4>💭 心態層困境</h4>
+        <p>「談錢傷感情」的靈性矛盾。真心助人與商業變現之間存在心理衝突，導致定價過低、不敢漲價。孤單感強烈——覺得「自己一個人在做一件沒有人理解的事」，缺乏同儕支持網絡。</p>
+      </li>
+      <li class="pain-item">
+        <h4>🔧 技術層困境</h4>
+        <p>不懂 Instagram 演算法，努力發文但觸及率持續下滑。報名系統東拼西湊（Line + Google 表單 + 轉帳），成交流程摩擦太高。做過直播、辦過工作坊，但不知道哪個渠道真正帶來客源，缺乏數據意識。</p>
+      </li>
+      <li class="pain-item">
+        <h4>💰 財務層困境</h4>
+        <p>收入極度不穩定，旺季靠口碑、淡季靠積蓄。缺乏「被動收入」設計，全部依賴 1:1 時間換金錢。不知道如何設計課程體系讓客戶持續消費，而不是一課結束、關係就結束。</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <div>
+        <div class="section-title">創業旅程四階段</div>
+        <div class="section-desc">不同階段遇到的問題本質不同，解法也完全不同</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">01</div>
+        <div class="timeline-content">
+          <h4>萌芽期（0–6 個月）：從熱情到第一個付費客戶</h4>
+          <div class="timeline-tags">
+            <span class="badge badge-red">心態困境</span>
+            <span class="badge badge-gold">定位模糊</span>
+          </div>
+          <ul class="timeline-points">
+            <li>不確定自己「夠不夠格」收費，常常免費授課積累所謂口碑</li>
+            <li>定位太廣：「我服務所有需要療癒的人」= 沒有人知道你在服務誰</li>
+            <li>第一個付費客戶怎麼找到？靠緣分還是有策略？</li>
+            <li>定價策略完全靠感覺，通常嚴重低估自己</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">02</div>
+        <div class="timeline-content">
+          <h4>生存期（6 個月–2 年）：穩定客源 vs. 收入陷阱</h4>
+          <div class="timeline-tags">
+            <span class="badge badge-red">收入不穩</span>
+            <span class="badge badge-gold">技術焦慮</span>
+          </div>
+          <ul class="timeline-points">
+            <li>靠口碑接案，但口碑增長慢、旺淡季收入差距超過 3 倍</li>
+            <li>一人公司的時間天花板：滿約了卻沒有更多時間，無法擴張</li>
+            <li>社群平台更新規則，學會了舊演算法又要重學，持續焦慮</li>
+            <li>想辦課程卻不知道從哪個主題開始，怕沒人報名、錢打水漂</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">03</div>
+        <div class="timeline-content">
+          <h4>成長期（2–5 年）：從個人品牌到影響力槓桿</h4>
+          <div class="timeline-tags">
+            <span class="badge badge-teal">複製困境</span>
+            <span class="badge badge-gold">規模瓶頸</span>
+          </div>
+          <ul class="timeline-points">
+            <li>單打獨鬥的上限很明顯：想更有影響力但一個人帶不了更多學生</li>
+            <li>知道要「建立社群」但不知道什麼樣的社群有黏著力、能變現</li>
+            <li>開始有小老師想跟著學，但缺乏傳承架構和培訓體系</li>
+            <li>線上化？出書？聯名？不知道下一步哪個是正確槓桿</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">04</div>
+        <div class="timeline-content">
+          <h4>成熟期（5 年以上）：生態系統 vs. 品牌老化</h4>
+          <div class="timeline-tags">
+            <span class="badge badge-teal">生態建構</span>
+            <span class="badge badge-mist">老化風險</span>
+          </div>
+          <ul class="timeline-points">
+            <li>如何從「一位老師」升級為「一個平台/流派/聯盟」？</li>
+            <li>學員畢業了之後去哪裡？缺乏持續連結機制導致流失</li>
+            <li>品牌與個人綁定太深，一旦自己不在前台就沒有收入</li>
+            <li>如何培養下一代老師並維持品質一致性？</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <div>
+        <div class="section-title">未來成長型佈局策略</div>
+        <div class="section-desc">六個能讓你比同行快 3-5 年的槓桿點</div>
+      </div>
+    </div>
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <div class="s-icon">🎯</div>
+        <h4>A · 超級利基定位</h4>
+        <p>「我服務離婚後女性的靈性重建」比「我服務所有女性」貴 3 倍且更容易被找到。精準比廣泛更有力。</p>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">🏢</div>
+        <h4>B · 企業 B2B 切入</h4>
+        <p>一張 B2B 合約抵 20 個散戶客戶，且口碑更容易滾動。以「員工身心健康指標」為語言，而非「靈性成長」。</p>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">🔄</div>
+        <h4>C · 訂閱制被動收入</h4>
+        <p>月費社群（NT$300-600）提供持續支持感，解決老師最痛的收入不穩定問題，且累積數據了解學員需求。</p>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">🤝</div>
+        <h4>D · 老師聯盟 × 互引流</h4>
+        <p>不同專長的老師相互推薦、聯合開課，一次觸及多方受眾。合作比競爭在這個市場更容易創造規模。</p>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">🧬</div>
+        <h4>E · 方法論化</h4>
+        <p>給自己的工作方式一個名字和框架（如「OOO 三步整合法」）。方法論可授權、可認證、可培訓他人，是最高槓桿資產。</p>
+      </div>
+      <div class="strategy-card">
+        <div class="s-icon">📊</div>
+        <h4>F · 數據化成效追蹤</h4>
+        <p>讓客戶看到「療程前後」的量化變化（睡眠品質、壓力指數、情緒量表）。可量化的成效讓高定價有憑有據。</p>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <h3>M 型分化警示</h3>
+      <p>身心靈市場正在 M 型化：少數頂尖老師（品牌清晰 + 商業化強）年收超過 NT$500 萬，大量中層老師年收 NT$30-60 萬卻努力不成比例地多。<br><br>
+      <strong>中間地帶正在消失。</strong>模糊定位 + 單打獨鬥 + 純時間換金錢的老師，未來 3 年面臨最大的生存壓力。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <div>
+        <div class="section-title">補足視角</div>
+        <div class="section-desc">多數報告不會告訴你的關鍵縫隙</div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-accent" style="background:var(--gold)"></div>
+        <h3>族群消費力分層</h3>
+        <p>35-55 歲女性是主力消費族群，但消費動機差異大：職場壓力、家庭關係、更年期轉換是三大入口。精準訊息比廣泛訊息轉換率高 4 倍。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--ember)"></div>
+        <h3>法規灰色地帶風險</h3>
+        <p>「療癒」一詞若觸及醫療宣稱，在台灣有違反《醫療法》風險。建議以「個人成長」「壓力管理」「身心平衡」作為對外溝通語言。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--teal)"></div>
+        <h3>地理紅利尚存</h3>
+        <p>台北以外的縣市嚴重供給不足，精品身心靈服務在台中、高雄、台南的滲透率不到台北的 30%。區域優先策略比全台鋪開更有效率。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:#7B5EA7"></div>
+        <h3>新興訊號（2026）</h3>
+        <p>神經回饋（Neurofeedback）+ 靈性整合、AI 協助療程設計、VR 冥想沉浸體驗——已從實驗室走向早期消費市場，未來 3 年將快速普及。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--gold)"></div>
+        <h3>真實收入分布</h3>
+        <p>年收 &lt;NT$30萬：42%　30-60萬：43%　60-150萬：12%　150萬+：3%。數字的背後：絕大多數人需要的不是更多技術，而是商業化能力。</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--teal)"></div>
+        <h3>認證 vs. 實力的弔詭</h3>
+        <p>台灣消費者對認證的信任度超過預期（63% 表示「有認證更放心」），但認證機構良莠不齊。「誰頒給你的認證」比「你有認證」更重要。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  <strong>MUSEON</strong> · 2026 身心靈產業趨勢報告<br>
+  <span style="font-size:12px;margin-top:8px;display:block">本報告綜合全球 Wellness 產業報告、台灣市場調研與 MUSEON 分析框架，供戰略決策參考。</span>
+</div>
+
+</body>
+</html>
