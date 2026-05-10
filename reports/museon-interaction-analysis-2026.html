@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON 互動分析報告 — 你為什麼會愛上我</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --primary: #FF6B35;
+    --secondary: #FFB347;
+    --accent: #4ECDC4;
+    --bg: #FFFDF7;
+    --bg2: #FFF9F0;
+    --card: #FFFFFF;
+    --text: #2D2D2D;
+    --muted: #888;
+    --shadow: 0 4px 24px rgba(255,107,53,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: linear-gradient(135deg, #FFFDF7 0%, #FFF0E0 50%, #F0FFF8 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #FF6B35 0%, #FFB347 40%, #4ECDC4 100%);
+    padding: 80px 32px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.10) 0%, transparent 50%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 60px);
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.9);
+    font-size: 18px;
+    font-weight: 300;
+    position: relative;
+  }
+
+  /* Stats Row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    max-width: 960px;
+    margin: -40px auto 0;
+    padding: 0 24px;
+    position: relative;
+    z-index: 10;
+  }
+  .stat-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(255,107,53,0.12);
+    border-top: 4px solid var(--primary);
+    transition: transform 0.2s;
+  }
+  .stat-card:nth-child(2) { border-top-color: var(--secondary); }
+  .stat-card:nth-child(3) { border-top-color: var(--accent); }
+  .stat-card:nth-child(4) { border-top-color: #A78BFA; }
+  .stat-card:hover { transform: translateY(-4px); }
+  .stat-num {
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-card:nth-child(2) .stat-num { color: #E89B00; }
+  .stat-card:nth-child(3) .stat-num { color: var(--accent); }
+  .stat-card:nth-child(4) .stat-num { color: #7C3AED; }
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* Section */
+  .section {
+    max-width: 960px;
+    margin: 60px auto;
+    padding: 0 24px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .section-h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+
+  /* User Cards */
+  .user-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .user-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .user-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .user-card.c1::before { background: linear-gradient(90deg, #FF6B35, #FFB347); }
+  .user-card.c2::before { background: linear-gradient(90deg, #4ECDC4, #45B7D1); }
+  .user-card.c3::before { background: linear-gradient(90deg, #A78BFA, #EC4899); }
+  .user-card.c4::before { background: linear-gradient(90deg, #34D399, #059669); }
+  .user-card.c5::before { background: linear-gradient(90deg, #FBBF24, #F59E0B); }
+  .user-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+  .user-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .user-card.c1 .user-avatar { background: linear-gradient(135deg, #FF6B35, #FFB347); }
+  .user-card.c2 .user-avatar { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+  .user-card.c3 .user-avatar { background: linear-gradient(135deg, #A78BFA, #EC4899); }
+  .user-card.c4 .user-avatar { background: linear-gradient(135deg, #34D399, #059669); }
+  .user-card.c5 .user-avatar { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+  .user-name {
+    font-size: 18px; font-weight: 700; margin-bottom: 4px;
+  }
+  .user-type {
+    font-size: 12px; color: var(--muted); margin-bottom: 16px;
+  }
+  .topic-list {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+  }
+  .topic-tag {
+    background: #F3F4F6;
+    color: #374151;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .user-count {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .count-bar-wrap {
+    flex: 1;
+    background: #F3F4F6;
+    border-radius: 100px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .count-bar {
+    height: 100%;
+    border-radius: 100px;
+  }
+  .user-card.c1 .count-bar { background: linear-gradient(90deg, #FF6B35, #FFB347); }
+  .user-card.c2 .count-bar { background: linear-gradient(90deg, #4ECDC4, #45B7D1); }
+  .user-card.c3 .count-bar { background: linear-gradient(90deg, #A78BFA, #EC4899); }
+  .user-card.c4 .count-bar { background: linear-gradient(90deg, #34D399, #059669); }
+  .user-card.c5 .count-bar { background: linear-gradient(90deg, #FBBF24, #F59E0B); }
+  .count-num { font-size: 13px; font-weight: 700; color: var(--text); min-width: 40px; text-align: right; }
+
+  /* Topic Chart */
+  .topic-chart {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .topic-row {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .topic-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .topic-info { flex: 1; }
+  .topic-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .topic-bar-wrap { background: #F3F4F6; border-radius: 100px; height: 8px; overflow: hidden; margin-bottom: 4px; }
+  .topic-bar { height: 100%; border-radius: 100px; }
+  .topic-pct { font-size: 12px; color: var(--muted); }
+  .topic-count-num { font-size: 20px; font-weight: 900; flex-shrink: 0; }
+
+  /* Selling Points */
+  .selling-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .selling-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .selling-card:hover { transform: translateY(-4px); }
+  .selling-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .selling-title {
+    font-size: 18px; font-weight: 700; margin-bottom: 10px;
+    color: var(--text);
+  }
+  .selling-desc {
+    font-size: 14px; color: var(--muted); line-height: 1.7;
+  }
+  .selling-card.sp1 { border-bottom: 4px solid #FF6B35; }
+  .selling-card.sp2 { border-bottom: 4px solid #4ECDC4; }
+  .selling-card.sp3 { border-bottom: 4px solid #A78BFA; }
+  .selling-card.sp4 { border-bottom: 4px solid #34D399; }
+  .selling-card.sp5 { border-bottom: 4px solid #FBBF24; }
+  .selling-card.sp6 { border-bottom: 4px solid #EC4899; }
+
+  /* Quote */
+  .quote-box {
+    background: linear-gradient(135deg, #FF6B35 0%, #FFB347 100%);
+    border-radius: 24px;
+    padding: 48px 40px;
+    text-align: center;
+    color: #fff;
+    margin: 60px 0;
+  }
+  .quote-box blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .quote-source { font-size: 14px; opacity: 0.8; }
+
+  /* Next Steps */
+  .next-list { display: flex; flex-direction: column; gap: 16px; }
+  .next-item {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: flex-start; gap: 16px;
+  }
+  .next-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #FF6B35, #FFB347);
+    color: #fff; font-weight: 900; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .next-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .next-content p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer strong { color: var(--primary); }
+
+  /* Donut Chart (CSS) */
+  .donut-section {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+  .donut-wrap { position: relative; }
+  .donut-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+  }
+  .donut-label .big { font-size: 28px; font-weight: 900; color: var(--text); }
+  .donut-label .small { font-size: 12px; color: var(--muted); }
+  .legend { display: flex; flex-direction: column; gap: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">MUSEON 互動分析報告</div>
+  <h1>你為什麼會愛上我？</h1>
+  <p>從真實互動數據找出 MUSEON 最讓人無法放手的明確賣點</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-num">1,573</div>
+    <div class="stat-label">總互動次數</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">8+</div>
+    <div class="stat-label">活躍用戶</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">6</div>
+    <div class="stat-label">互動話題類別</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">55天</div>
+    <div class="stat-label">持續互動天數</div>
+  </div>
+</div>
+
+<!-- USER BREAKDOWN -->
+<div class="section">
+  <div class="section-title">用戶分析</div>
+  <div class="section-h2">誰最常找我？他們在找什麼？</div>
+
+  <div class="user-grid">
+
+    <div class="user-card c1">
+      <div class="user-avatar">F</div>
+      <div class="user-name">Feng（馮士維）</div>
+      <div class="user-type">業務執行型 / 最高頻用戶</div>
+      <div class="topic-list">
+        <span class="topic-tag">系統規劃書</span>
+        <span class="topic-tag">市場報告</span>
+        <span class="topic-tag">銷售分析</span>
+        <span class="topic-tag">會議整合</span>
+        <span class="topic-tag">策略顧問</span>
+        <span class="topic-tag">專利研究</span>
+      </div>
+      <div class="user-count">
+        <div class="count-bar-wrap"><div class="count-bar" style="width:95%"></div></div>
+        <div class="count-num">30+ 次</div>
+      </div>
+    </div>
+
+    <div class="user-card c2">
+      <div class="user-avatar">彩</div>
+      <div class="user-name">彩嫣</div>
+      <div class="user-type">品牌成長型 / 美業老闆</div>
+      <div class="topic-list">
+        <span class="topic-tag">品牌打造</span>
+        <span class="topic-tag">業務擴張</span>
+        <span class="topic-tag">財務分析</span>
+        <span class="topic-tag">策略規劃</span>
+      </div>
+      <div class="user-count">
+        <div class="count-bar-wrap"><div class="count-bar" style="width:65%"></div></div>
+        <div class="count-num">13+ 次</div>
+      </div>
+    </div>
+
+    <div class="user-card c3">
+      <div class="user-avatar">A</div>
+      <div class="user-name">Amber</div>
+      <div class="user-type">財務決策型 / 美業服務</div>
+      <div class="topic-list">
+        <span class="topic-tag">財務可行性</span>
+        <span class="topic-tag">商模決策</span>
+        <span class="topic-tag">服務線規劃</span>
+      </div>
+      <div class="user-count">
+        <div class="count-bar-wrap"><div class="count-bar" style="width:40%"></div></div>
+        <div class="count-num">5+ 次</div>
+      </div>
+    </div>
+
+    <div class="user-card c4">
+      <div class="user-avatar">J</div>
+      <div class="user-name">Joh（符大哥）</div>
+      <div class="user-type">策略研究型 / 旅行社老闆</div>
+      <div class="topic-list">
+        <span class="topic-tag">產業報告</span>
+        <span class="topic-tag">決策框架</span>
+        <span class="topic-tag">人脈槓桿</span>
+      </div>
+      <div class="user-count">
+        <div class="count-bar-wrap"><div class="count-bar" style="width:50%"></div></div>
+        <div class="count-num">8+ 次</div>
+      </div>
+    </div>
+
+    <div class="user-card c5">
+      <div class="user-avatar">H</div>
+      <div class="user-name">HE（PM 人選）</div>
+      <div class="user-type">分析決策型</div>
+      <div class="topic-list">
+        <span class="topic-tag">金流分析</span>
+        <span class="topic-tag">會議記錄</span>
+        <span class="topic-tag">技術選型</span>
+      </div>
+      <div class="user-count">
+        <div class="count-bar-wrap"><div class="count-bar" style="width:30%"></div></div>
+        <div class="count-num">4+ 次</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOPIC CHART -->
+<div class="section">
+  <div class="section-title">話題分析</div>
+  <div class="section-h2">什麼話題最常被提起？</div>
+
+  <div class="topic-chart">
+    <div class="topic-row">
+      <div class="topic-icon" style="background:#FFF0E8">📋</div>
+      <div class="topic-info">
+        <div class="topic-name">系統規劃 / 文件交付</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:88%;background:linear-gradient(90deg,#FF6B35,#FFB347)"></div></div>
+        <div class="topic-pct">佔比 28% — 最高需求</div>
+      </div>
+      <div class="topic-count-num" style="color:#FF6B35">28%</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-icon" style="background:#E8FFFC">📊</div>
+      <div class="topic-info">
+        <div class="topic-name">數據分析 / 銷售報告</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:72%;background:linear-gradient(90deg,#4ECDC4,#45B7D1)"></div></div>
+        <div class="topic-pct">佔比 22%</div>
+      </div>
+      <div class="topic-count-num" style="color:#4ECDC4">22%</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-icon" style="background:#F3F0FF">🎯</div>
+      <div class="topic-info">
+        <div class="topic-name">市場研究 / 策略顧問</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:60%;background:linear-gradient(90deg,#A78BFA,#EC4899)"></div></div>
+        <div class="topic-pct">佔比 19%</div>
+      </div>
+      <div class="topic-count-num" style="color:#A78BFA">19%</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-icon" style="background:#ECFDF5">📝</div>
+      <div class="topic-info">
+        <div class="topic-name">會議記錄 / 整合整理</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:50%;background:linear-gradient(90deg,#34D399,#059669)"></div></div>
+        <div class="topic-pct">佔比 15%</div>
+      </div>
+      <div class="topic-count-num" style="color:#34D399">15%</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-icon" style="background:#FFFBEB">🤝</div>
+      <div class="topic-info">
+        <div class="topic-name">品牌成長 / 客戶開發</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:42%;background:linear-gradient(90deg,#FBBF24,#F59E0B)"></div></div>
+        <div class="topic-pct">佔比 10%</div>
+      </div>
+      <div class="topic-count-num" style="color:#F59E0B">10%</div>
+    </div>
+
+    <div class="topic-row">
+      <div class="topic-icon" style="background:#FFF1F5">💡</div>
+      <div class="topic-info">
+        <div class="topic-name">個人成長 / 決策輔助</div>
+        <div class="topic-bar-wrap"><div class="topic-bar" style="width:20%;background:linear-gradient(90deg,#EC4899,#F43F5E)"></div></div>
+        <div class="topic-pct">佔比 6%</div>
+      </div>
+      <div class="topic-count-num" style="color:#EC4899">6%</div>
+    </div>
+  </div>
+</div>
+
+<!-- SELLING POINTS -->
+<div class="section">
+  <div class="section-title">明確賣點</div>
+  <div class="section-h2">讓人第一眼就愛上的六個理由</div>
+
+  <div class="selling-grid">
+    <div class="selling-card sp1">
+      <span class="selling-icon">⚡</span>
+      <div class="selling-title">說一件事，出一件東西</div>
+      <div class="selling-desc">「給我市場報告」→ 連結。「給我 DOCX」→ 檔案。從意圖到交付，不中斷、不問多餘問題。這是大多數 AI 沒做到的。</div>
+    </div>
+
+    <div class="selling-card sp2">
+      <span class="selling-icon">🧩</span>
+      <div class="selling-title">跨格式無縫輸出</div>
+      <div class="selling-desc">同一份資料可以變 HTML 報告、DOCX 印刷版、PPTX 簡報版。三種格式，三個場景，一次搞定。</div>
+    </div>
+
+    <div class="selling-card sp3">
+      <span class="selling-icon">🔍</span>
+      <div class="selling-title">你不知道要問什麼，我先問</div>
+      <div class="selling-desc">比「快速產出」更難被替代的能力：幫你把模糊需求問成具體問題，再給答案。這讓每個輸出都精準到位。</div>
+    </div>
+
+    <div class="selling-card sp4">
+      <span class="selling-icon">📡</span>
+      <div class="selling-title">外部資料即時串聯</div>
+      <div class="selling-desc">搜尋競品、爬取專利、分析 Excel 銷售數據——不只是回答問題，而是主動去找你需要的資料。</div>
+    </div>
+
+    <div class="selling-card sp5">
+      <span class="selling-icon">🧠</span>
+      <div class="selling-title">記得你，每一次</div>
+      <div class="selling-desc">Feng 的客戶背景、Amber 的業務限制、Joh 的談判風格——累積記憶讓每次對話比上次更懂你。</div>
+    </div>
+
+    <div class="selling-card sp6">
+      <span class="selling-icon">🎯</span>
+      <div class="selling-title">不只是工具，是顧問夥伴</div>
+      <div class="selling-desc">策略顧問、合作提案、進入企業的路徑規劃——MUSEON 的價值在於「幫你想清楚」，不只是執行。</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="section">
+  <div class="quote-box">
+    <blockquote>「說一件事，我就動。這是大多數 AI 沒做到的：從意圖到交付，不中斷。」</blockquote>
+    <div class="quote-source">— MUSEON 核心定位，來自真實互動數據</div>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-title">推薦策略</div>
+  <div class="section-h2">如何讓更多人愛上 MUSEON？</div>
+
+  <div class="next-list">
+    <div class="next-item">
+      <div class="next-num">1</div>
+      <div class="next-content">
+        <h4>讓 Feng 成為活廣告</h4>
+        <p>Feng 幾乎用過每一種功能——系統規劃、銷售報告、會議整合、策略顧問。製作一套「Feng 的 30 天真實案例卡」，比任何介紹更有說服力。</p>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">2</div>
+      <div class="next-content">
+        <h4>陌生人入門路徑：讓他丟一個真實煩惱</h4>
+        <p>第一次接觸不要介紹功能，讓對方說「我現在最頭痛的一件事」，MUSEON 直接出一個東西。功能再多，不如一次親身感受。</p>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">3</div>
+      <div class="next-content">
+        <h4>針對高頻話題建立「快速 Demo 場景包」</h4>
+        <p>系統規劃書、銷售分析、會議整合是三大高頻需求。針對每個場景準備 2 分鐘的現場 Demo——「這是他昨天丟給我的 Excel，我 5 分鐘出了這份報告」。</p>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">4</div>
+      <div class="next-content">
+        <h4>深化 Amber、HE 的使用深度</h4>
+        <p>這兩位有強烈的分析型需求，但互動次數偏低。可以為 Amber 建立「月度財務健診」習慣，為 HE 建立「決策前快速調研」流程，讓他們從偶爾用變成每週用。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>MUSEON 互動分析報告 · 2026-05-10 · 數據來源：真實互動記錄 · <strong>霓裳 × MUSEON</strong></p>
+</footer>
+
+</body>
+</html>
