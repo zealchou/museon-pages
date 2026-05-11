@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amber — 人格分析報告</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --gold: #b6853d;
+    --navy: #181737;
+    --parchment: #FAF6F0;
+    --smoke: #F2EDE6;
+    --text: #2C2A26;
+    --muted: #8A8070;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background: var(--parchment);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  /* HEADER */
+  .hero {
+    background: var(--navy);
+    color: #E8E0D4;
+    padding: 56px 40px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: var(--ember);
+    opacity: 0.08;
+  }
+  .hero-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .hero-subtitle {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #A89E8E;
+    letter-spacing: 1px;
+  }
+  .hero-tag {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 6px 16px;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid var(--ember);
+    border-radius: 2px;
+    font-size: 12px;
+    color: #D4906A;
+    letter-spacing: 2px;
+  }
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  /* SECTION */
+  .section {
+    margin-bottom: 44px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #DDD4C4;
+  }
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--ember);
+    opacity: 0.4;
+    line-height: 1;
+    font-weight: 400;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 1px;
+  }
+  /* CARDS */
+  .card {
+    background: white;
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--ember);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  }
+  .card-gold {
+    border-left-color: var(--gold);
+  }
+  .card-navy {
+    border-left-color: var(--navy);
+  }
+  .card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .card p {
+    color: #4A4438;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  /* QUOTE */
+  .quote-block {
+    background: var(--smoke);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .quote-block::before {
+    content: '\201C';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    color: var(--ember);
+    opacity: 0.2;
+    position: absolute;
+    top: -8px;
+    left: 16px;
+    line-height: 1;
+  }
+  .quote-block p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--navy);
+    padding-left: 32px;
+    line-height: 1.6;
+  }
+  .quote-block .quote-attr {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px;
+    color: var(--muted);
+    padding-left: 32px;
+    margin-top: 8px;
+    font-style: normal;
+  }
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+  /* TENSION */
+  .tension-block {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 12px;
+    align-items: center;
+    margin: 20px 0;
+  }
+  .tension-side {
+    background: white;
+    border-radius: 4px;
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .tension-side.left { border-left: 3px solid var(--gold); }
+  .tension-side.right { border-left: 3px solid var(--ember); }
+  .tension-side h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--navy);
+  }
+  .tension-vs {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  /* STATS BAR */
+  .stats-row {
+    display: flex;
+    gap: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .stat-item {
+    flex: 1;
+    background: white;
+    padding: 20px 16px;
+    text-align: center;
+    border-right: 1px solid var(--smoke);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ember);
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  /* DO/DON'T */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media(max-width: 600px) { .do-dont { grid-template-columns: 1fr; } }
+  .do-box, .dont-box {
+    border-radius: 4px;
+    padding: 20px;
+  }
+  .do-box {
+    background: #F0F7F0;
+    border-top: 3px solid #4A7C4E;
+  }
+  .dont-box {
+    background: #FDF2EE;
+    border-top: 3px solid var(--ember);
+  }
+  .do-box h4 { color: #2E5C33; font-family: 'Cormorant Garamond', serif; font-size: 16px; margin-bottom: 10px; }
+  .dont-box h4 { color: var(--ember); font-family: 'Cormorant Garamond', serif; font-size: 16px; margin-bottom: 10px; }
+  .do-box ul, .dont-box ul { list-style: none; padding: 0; }
+  .do-box li, .dont-box li {
+    font-size: 13px;
+    padding: 5px 0;
+    padding-left: 18px;
+    position: relative;
+    color: #3A3830;
+    line-height: 1.6;
+  }
+  .do-box li::before { content: '✓'; position: absolute; left: 0; color: #4A7C4E; }
+  .dont-box li::before { content: '×'; position: absolute; left: 0; color: var(--ember); }
+  /* FOOTER */
+  .report-footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid #DDD4C4;
+    margin-top: 48px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .museon-sig {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  /* INSIGHT PILL */
+  .insight-pill {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">MUSEON · 人格分析報告</div>
+  <div class="hero-name">Amber</div>
+  <div class="hero-subtitle">心祺美業 創辦人 · 2026.05.11</div>
+  <div class="hero-tag">使命型創造者 — 有溫度的策略人</div>
+</div>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value">11</div>
+      <div class="stat-label">年資歷</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">620萬</div>
+      <div class="stat-label">2025年營業額</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">6人</div>
+      <div class="stat-label">正職+兼職團隊</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">×2</div>
+      <div class="stat-label">半年目標倍數</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 核心人格 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title">核心人格結構</div>
+    </div>
+
+    <div class="quote-block">
+      <p>我不做什麼，比做什麼重要。</p>
+      <div class="quote-attr">— Amber，2026年5月，對 MUSEON 說的第一句策略性語言</div>
+    </div>
+
+    <div class="card">
+      <h3>「有溫度的策略人」</h3>
+      <p>
+        Amber 不是典型的生意人——她更像一個<strong>把品質當信仰的工藝創辦人</strong>，只是剛好在商業場域裡。<br><br>
+        11 年來，她沒有靠硬推銷長大，靠的是口碑、溫度、和技術本身說話。這種路徑讓她在業界建立了真實的差異化，但也在「想衝業績」的那一刻，遭遇了一個真實的內在矛盾。<br><br>
+        她看見了這個矛盾——而且說出來了。這是很少創業者能做到的事。<strong>能說出自己矛盾的人，通常已經在解決它了。</strong>
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card card-gold">
+        <h3>驅力核心</h3>
+        <p>關係品質 × 使命感 × 工藝自尊<br>
+        ——三種力量共同構成她的「不做假」底線。即便面對業績壓力，她不容易說出違背這三條的話。</p>
+      </div>
+      <div class="card card-navy">
+        <h3>能量特徵</h3>
+        <p>好奇 × 行動 × 有邊界的慷慨<br>
+        ——她問問題很快，執行也快，但不是盲動型。她的行動有一條隱性的倫理篩選線。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: 行為模式 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title">四個行為模式</div>
+    </div>
+
+    <div class="card">
+      <div class="insight-pill">模式 A</div>
+      <h3>數據先丟，問題再跟上</h3>
+      <p>Amber 的溝通節奏是：<strong>先給資料，再問問題</strong>。她在一個早上丟了兩份財務報表（商模檢測、年度營業總覽），之後才跟進發問。這代表她有一定程度的系統思維——她知道「沒有數據的問題是漫談」，但她不擅長自己解讀數據，需要一個轉譯者。</p>
+    </div>
+
+    <div class="card">
+      <div class="insight-pill">模式 B</div>
+      <h3>發現矛盾，直接說出來</h3>
+      <p>「差異化是不推、不硬、有溫度——但這和我目標營業額翻倍有衝突。」<br><br>
+      這句話不是抱怨，是她主動觀察到的<strong>系統性矛盾</strong>。她沒有迴避，直接端出來。這是高自我覺察型創辦人的標誌——很多人寧可假裝矛盾不存在，繼續推業績。她沒有。</p>
+    </div>
+
+    <div class="card">
+      <div class="insight-pill">模式 C</div>
+      <h3>具體化比抽象化快</h3>
+      <p>她問的問題都很具體：「觸發點設計」「加項獎金怎麼設計」「底薪多少 + 抽成結構」——這類問題本質上都是「告訴我下一步要做什麼」。她的學習模式是<strong>實作帶動理解</strong>，不是先讀書再做。給她框架，她先問：「那我明天要做什麼？」</p>
+    </div>
+
+    <div class="card">
+      <div class="insight-pill">模式 D</div>
+      <h3>減法比加法讓她更安心</h3>
+      <p>「我不做什麼比做什麼重要」——她在主動幫自己找邊界，而不是無限擴張。半永久和美睫沒有技師可服務，她沒有硬撐，而是正視這個缺口。這種<strong>知道自己能量在哪裡、不貪的自律</strong>，反而是她長期競爭力的來源。</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: 核心張力 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title">你現在活著的核心矛盾</div>
+    </div>
+
+    <p style="color:var(--muted); font-size:13px; margin-bottom:16px;">這不是問題，是你正在穿越的地帶。</p>
+
+    <div class="tension-block">
+      <div class="tension-side left">
+        <h4>品牌 DNA（你是誰）</h4>
+        不推、不硬、有溫度、售後到位。<br>11年建立的信任感，是真實的資產，不是口號。
+      </div>
+      <div class="tension-vs">vs</div>
+      <div class="tension-side right">
+        <h4>成長目標（你要去哪）</h4>
+        半年營業額翻倍。<br>這需要系統性的流量設計、加項觸發、人員結構調整。
+      </div>
+    </div>
+
+    <div class="card" style="background:#FDF8F2; border-left-color: var(--gold);">
+      <h3>矛盾的解法不是選邊</h3>
+      <p>
+        很多人面對這個矛盾，會選一邊：要麼「堅守品牌、放棄倍增」，要麼「為了業績、放棄溫度」。但這兩條都是錯的。<br><br>
+        <strong>真正的解法是：用「有溫度的系統」來達成業績倍增。</strong><br><br>
+        意思是——不是「推」，而是「設計讓客人自然升單的動線」；不是「硬賣美甲加項」，而是「在對的時間點放一句對的話」。你說的「觸發點設計」方向是正確的——不改變你的溫度，改變的是觸發的結構。<br><br>
+        這條路比選邊更難，但你已經找到它了。
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 決策風格 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title">決策風格與溝通密碼</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>決策路徑</h3>
+        <p>
+          <strong>感受確認 → 數據驗證 → 行動</strong><br><br>
+          她不是純感性決策，但感受是第一關。如果一個方案讓她感覺違背「心祺美業的溫度」，她會在數據還沒看之前就拒絕。<br><br>
+          所以跟她說新方案的順序：先說「這符合你不推不硬的精神」，再說數字。
+        </p>
+      </div>
+      <div class="card">
+        <h3>溝通密碼</h3>
+        <p>
+          她的訊息短、直接、帶著行動預期。<br><br>
+          她問「有什麼可以提高營業額」，不是在問理論，是在問「我明天可以做什麼」。<br><br>
+          最讓她有能量的回應方式：<strong>先給一個具體動作，再給原因</strong>。不是先講原理再給行動。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: DO / DON'T -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title">與 Amber 協作的 Do / Don't</div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-box">
+        <h4>✓ 有效的做法</h4>
+        <ul>
+          <li>先給一個具體的下一步，再給框架解釋</li>
+          <li>數字配上行動意義（「這代表你每月多 3 萬」）</li>
+          <li>幫她確認「這符合你的品牌精神」</li>
+          <li>讓她先試一小步，看見效果，再往深走</li>
+          <li>尊重她的「我不做什麼」清單</li>
+          <li>給方案時說清楚「這對技師的負擔是什麼」</li>
+        </ul>
+      </div>
+      <div class="dont-box">
+        <h4>× 容易踩雷的做法</h4>
+        <ul>
+          <li>先給大框架理論，沒有具體動作</li>
+          <li>建議她做「推銷」或硬銷售動作</li>
+          <li>忽略她的品牌 DNA，只談業績數字</li>
+          <li>一次給太多選項，讓她無從下手</li>
+          <li>建議她加服務項目（她現在要做減法）</li>
+          <li>低估技師的情緒成本（她很在乎人的感受）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: 洞見 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title">給你自己的一句話</div>
+    </div>
+
+    <div class="quote-block">
+      <p>你最大的競爭優勢，就是你最大的自我懷疑來源——那個「有溫度」的堅持，在 AI 和效率化的時代，反而是最難被取代的護城河。</p>
+      <div class="quote-attr">— MUSEON 分析，2026.05.11</div>
+    </div>
+
+    <div class="card card-navy">
+      <h3>你現在站在哪裡</h3>
+      <p>
+        你正在從「工藝職人」跨越到「品牌創辦人」的身份轉換期。這個跨越最難的地方不是技術，是<strong>接受「讓系統幫你做溫度」</strong>——不是你少了溫度，是你把溫度設計進每一個客人接觸點裡，讓它不再依賴你或技師的每一個當下判斷。<br><br>
+        你在 5/5 那天問的問題，已經告訴我你找到方向了：<strong>觸發點設計、薪獎結構、減法策略</strong>——這三個加在一起，就是你要的「有溫度的倍增路徑」。
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  <div class="museon-sig">MUSEON</div>
+  <div>人格分析系統 · 2026年5月11日 · 心祺美業 Amber</div>
+  <div style="margin-top:8px; opacity:0.5;">本報告基於真實互動記錄分析生成，置信度 82%</div>
+</div>
+
+</body>
+</html>
