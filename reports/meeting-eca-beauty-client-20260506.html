@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WEN 美業集團 — 系統需求對焦會議記錄 | 2026-05-06</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:       #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark:  #9A3A1C;
+      --teal:        #2A7A6E;
+      --gold:        #B8923A;
+      --fog-gold:    #b6853d;
+      --ink:         #12121A;
+      --slate:       #5A5A6E;
+      --mist:        #9898A8;
+      --border:      #E2E0DA;
+      --parchment:   #F7F5F0;
+      --snow:        #FDFCFA;
+      --deep-ink:    #0E0E16;
+      --navy:        #181737;
+      --success:     #2D8A6E;
+      --warning:     #C9943A;
+      --info:        #2A6A8A;
+      --font-display:'Cormorant Garamond', Georgia, serif;
+      --font-body:   'Outfit', 'Noto Sans TC', sans-serif;
+      --font-tc:     'Noto Sans TC', sans-serif;
+      --font-mono:   'IBM Plex Mono', monospace;
+      --shadow-card: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      --shadow-lift: 0 4px 20px rgba(18,18,26,0.10), 0 1px 4px rgba(18,18,26,0.06);
+      --radius:      10px;
+      --radius-sm:   6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 40px 100px;
+    }
+    @media(max-width:768px){ .page{ padding:24px 16px 72px; } }
+
+    .hero {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 52px 52px 44px;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content:'';
+      position:absolute; top:-80px; right:-60px;
+      width:320px; height:320px; border-radius:50%;
+      background:radial-gradient(circle,rgba(196,80,42,.18) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .hero::after {
+      content:'';
+      position:absolute; bottom:-50px; left:40px;
+      width:220px; height:220px; border-radius:50%;
+      background:radial-gradient(circle,rgba(182,133,61,.13) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .hero-badge {
+      display:inline-block;
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.12em; text-transform:uppercase;
+      color:var(--fog-gold);
+      background:rgba(182,133,61,.15); border:1px solid rgba(182,133,61,.3);
+      border-radius:100px; padding:3px 14px; margin-bottom:18px;
+    }
+    .hero h1 {
+      font-family:var(--font-display); font-size:40px; font-weight:600;
+      color:#FDFCFA; line-height:1.2; margin-bottom:12px;
+    }
+    .hero h1 em { font-style:italic; color:var(--fog-gold); }
+    .hero-sub {
+      font-family:var(--font-tc); font-size:14px;
+      color:rgba(253,252,250,.55); margin-bottom:28px;
+    }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:10px; }
+    .chip {
+      display:flex; align-items:center; gap:6px;
+      background:rgba(253,252,250,.08); border:1px solid rgba(253,252,250,.13);
+      border-radius:100px; padding:5px 14px;
+      font-size:13px; color:rgba(253,252,250,.72);
+      font-family:var(--font-tc);
+    }
+    @media(max-width:640px){ .hero{ padding:32px 24px 30px; } .hero h1{ font-size:28px; } }
+
+    .qnav {
+      background:var(--snow); border:1px solid var(--border);
+      border-radius:var(--radius); padding:18px 22px;
+      margin-bottom:32px; box-shadow:var(--shadow-card);
+    }
+    .qnav-label {
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase;
+      color:var(--mist); margin-bottom:10px;
+    }
+    .qnav-links { display:flex; flex-wrap:wrap; gap:8px; }
+    .qnav-links a {
+      font-size:13px; color:var(--ember); text-decoration:none;
+      background:rgba(196,80,42,.07); border-radius:100px;
+      padding:3px 12px; font-family:var(--font-tc);
+      transition:background 120ms;
+    }
+    .qnav-links a:hover { background:rgba(196,80,42,.16); }
+
+    .sec { margin-bottom:40px; animation:fadeUp 400ms ease-out forwards; opacity:0; transform:translateY(12px); }
+    .sec:nth-child(1){ animation-delay:0ms; }
+    .sec:nth-child(2){ animation-delay:60ms; }
+    .sec:nth-child(3){ animation-delay:120ms; }
+    .sec:nth-child(4){ animation-delay:180ms; }
+    .sec:nth-child(5){ animation-delay:240ms; }
+    .sec:nth-child(6){ animation-delay:300ms; }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+    .sec-hd {
+      display:flex; align-items:center; gap:12px; margin-bottom:20px;
+    }
+    .sec-icon {
+      width:38px; height:38px; border-radius:9px;
+      background:var(--ember);
+      display:flex; align-items:center; justify-content:center;
+      font-size:17px; flex-shrink:0;
+    }
+    .sec-icon.gold   { background:var(--fog-gold); }
+    .sec-icon.teal   { background:var(--teal); }
+    .sec-icon.navy   { background:var(--navy); }
+    .sec-icon.green  { background:var(--success); }
+    .sec h2 {
+      font-family:var(--font-display); font-size:27px; font-weight:600;
+      color:var(--ink); line-height:1.25;
+    }
+
+    .card {
+      background:var(--snow); border:1px solid var(--border);
+      border-radius:var(--radius); padding:24px;
+      box-shadow:var(--shadow-card);
+      transition:transform 200ms ease, box-shadow 200ms ease;
+    }
+    .card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lift); }
+    .card+.card { margin-top:12px; }
+    .card-ttl {
+      font-family:var(--font-display); font-size:18px; font-weight:600;
+      color:var(--ember-dark); margin-bottom:10px;
+    }
+    .card p, .card li {
+      font-family:var(--font-tc); font-size:14.5px;
+      color:var(--slate); line-height:1.8;
+    }
+    .card ul, .card ol { padding-left:18px; }
+    .card li+li { margin-top:4px; }
+
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media(max-width:640px){ .g2{ grid-template-columns:1fr; } }
+
+    .hstrip {
+      background:linear-gradient(135deg,rgba(196,80,42,.06),rgba(182,133,61,.04));
+      border:1.5px solid rgba(196,80,42,.2);
+      border-left:4px solid var(--ember);
+      border-radius:var(--radius-sm); padding:16px 20px; margin-bottom:12px;
+    }
+    .hstrip .lbl {
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase;
+      color:var(--ember); margin-bottom:6px;
+    }
+    .hstrip p {
+      font-family:var(--font-tc); font-size:14.5px;
+      color:var(--ink); line-height:1.8;
+    }
+    .hstrip p strong { color:var(--ember-dark); }
+
+    .badge {
+      display:inline-block;
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.08em; text-transform:uppercase;
+      border-radius:100px; padding:2px 10px;
+    }
+    .b-ember  { background:rgba(196,80,42,.1);  color:var(--ember-dark); }
+    .b-gold   { background:rgba(182,133,61,.12); color:#7a5c20; }
+    .b-teal   { background:rgba(42,122,110,.1);  color:#1d5a52; }
+    .b-navy   { background:rgba(24,23,55,.1);    color:var(--navy); }
+    .b-green  { background:rgba(45,138,110,.1);  color:#1d6646; }
+    .b-warn   { background:rgba(201,148,58,.12); color:#7a5510; }
+    .b-red    { background:rgba(196,64,42,.1);   color:#8a2010; }
+
+    .pillars { display:flex; gap:12px; }
+    .pillar {
+      flex:1; background:var(--navy); border-radius:var(--radius);
+      padding:22px; text-align:center;
+    }
+    .pillar-ico { font-size:30px; margin-bottom:10px; }
+    .pillar-nm {
+      font-family:var(--font-display); font-size:19px; font-weight:600;
+      color:var(--fog-gold); margin-bottom:6px;
+    }
+    .pillar-dc {
+      font-family:var(--font-tc); font-size:12px;
+      color:rgba(253,252,250,.5); line-height:1.65;
+    }
+    @media(max-width:480px){ .pillars{ flex-direction:column; } }
+
+    .layers { display:flex; flex-direction:column; gap:7px; }
+    .layer {
+      border-radius:var(--radius-sm); padding:15px 20px;
+      transition:transform 150ms ease; cursor:default;
+    }
+    .layer:hover { transform:translateX(5px); }
+    .layer-no {
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.08em; text-transform:uppercase; opacity:.65; margin-bottom:3px;
+    }
+    .layer-nm {
+      font-family:var(--font-tc); font-size:14px; font-weight:600;
+      color:var(--ink); margin-bottom:4px;
+    }
+    .layer-dc {
+      font-family:var(--font-tc); font-size:12.5px;
+      color:var(--slate); line-height:1.65;
+    }
+    .l1{ background:rgba(24,23,55,.08);   border-left:4px solid var(--navy); }
+    .l2{ background:rgba(182,133,61,.10); border-left:4px solid var(--fog-gold); }
+    .l3{ background:rgba(196,80,42,.08);  border-left:4px solid var(--ember); }
+    .l4{ background:rgba(42,122,110,.08); border-left:4px solid var(--teal); }
+    .l5{ background:rgba(42,106,138,.08); border-left:4px solid var(--info); }
+
+    .phases { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+    .phase {
+      background:var(--snow); border:1px solid var(--border);
+      border-radius:var(--radius); padding:20px;
+      position:relative; overflow:hidden; box-shadow:var(--shadow-card);
+    }
+    .phase::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:4px;
+    }
+    .ph1::before { background:var(--ember); }
+    .ph2::before { background:var(--fog-gold); }
+    .ph3::before { background:var(--teal); }
+    .phase-lbl {
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px;
+    }
+    .ph1 .phase-lbl { color:var(--ember); }
+    .ph2 .phase-lbl { color:var(--fog-gold); }
+    .ph3 .phase-lbl { color:var(--teal); }
+    .phase-ttl {
+      font-family:var(--font-tc); font-size:14px; font-weight:600;
+      color:var(--ink); margin-bottom:10px;
+    }
+    .phase ul { list-style:none; padding:0; }
+    .phase li {
+      font-family:var(--font-tc); font-size:13px; color:var(--slate);
+      padding:3px 0 3px 14px; position:relative; line-height:1.6;
+    }
+    .phase li::before {
+      content:'→'; position:absolute; left:0; font-size:10px; opacity:.45; top:5px;
+    }
+    @media(max-width:640px){ .phases{ grid-template-columns:1fr; } }
+
+    .tbl-wrap {
+      background:var(--snow); border:1px solid var(--border);
+      border-radius:var(--radius); overflow:hidden;
+      box-shadow:var(--shadow-card); overflow-x:auto;
+    }
+    .tbl { width:100%; border-collapse:collapse; font-family:var(--font-tc); font-size:14px; }
+    .tbl th {
+      background:var(--navy); color:rgba(253,252,250,.85);
+      font-weight:500; padding:10px 16px; text-align:left;
+      font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    }
+    .tbl th:first-child{ border-radius:8px 0 0 0; }
+    .tbl th:last-child { border-radius:0 8px 0 0; }
+    .tbl td {
+      padding:12px 16px; border-bottom:1px solid var(--border);
+      color:var(--slate); vertical-align:top; line-height:1.7;
+    }
+    .tbl tr:last-child td{ border-bottom:none; }
+    .tbl tr:nth-child(even) td{ background:rgba(247,245,240,.5); }
+    .tbl td:first-child{ font-weight:600; color:var(--ink); white-space:nowrap; }
+
+    .strat {
+      background:var(--snow); border:1px solid var(--border);
+      border-radius:var(--radius); padding:22px 24px;
+      box-shadow:var(--shadow-card); margin-bottom:12px;
+    }
+    .strat-hd { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .strat-num {
+      width:28px; height:28px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-mono); font-size:12px; font-weight:600; flex-shrink:0;
+    }
+    .biz .strat-num { background:var(--ember); color:#fff; }
+    .strat-ttl { font-family:var(--font-tc); font-size:15px; font-weight:600; color:var(--ink); }
+    .strat-body { font-family:var(--font-tc); font-size:14px; color:var(--slate); line-height:1.82; }
+    .strat-body strong { color:var(--ink); font-weight:600; }
+
+    .quote-co {
+      background:var(--navy); border-radius:var(--radius);
+      padding:26px 30px; margin-bottom:12px;
+      position:relative; overflow:hidden;
+    }
+    .quote-co::before {
+      content:'"'; position:absolute; top:-14px; left:18px;
+      font-family:var(--font-display); font-size:110px;
+      color:rgba(182,133,61,.15); line-height:1; pointer-events:none;
+    }
+    .quote-co p {
+      font-family:var(--font-display); font-size:17px; font-style:italic;
+      color:rgba(253,252,250,.9); line-height:1.7; position:relative;
+    }
+    .quote-co .attr {
+      margin-top:10px; font-family:var(--font-mono); font-size:11px;
+      letter-spacing:.08em; text-transform:uppercase; color:var(--fog-gold);
+      font-style:normal; position:relative;
+    }
+
+    .notice {
+      display:flex; gap:12px; border-radius:var(--radius-sm);
+      padding:14px 18px; margin-top:14px;
+      font-family:var(--font-tc); font-size:13.5px; line-height:1.75;
+    }
+    .n-insight { background:rgba(42,122,110,.07); border:1px solid rgba(42,122,110,.2);  color:#1d4d46; }
+    .n-ico { font-size:19px; flex-shrink:0; margin-top:-1px; }
+
+    .todos { display:flex; flex-direction:column; gap:9px; }
+    .todo {
+      display:flex; align-items:flex-start; gap:12px;
+      background:var(--snow); border:1px solid var(--border);
+      border-radius:var(--radius-sm); padding:14px 18px;
+      transition:border-color 150ms;
+    }
+    .todo:hover { border-color:var(--ember-light); }
+    .todo-box {
+      width:20px; height:20px; border:1.5px solid var(--border);
+      border-radius:4px; flex-shrink:0; margin-top:2px;
+    }
+    .todo-main { flex:1; }
+    .todo-main strong {
+      font-family:var(--font-tc); font-size:14px; font-weight:600;
+      color:var(--ink); display:block; margin-bottom:3px;
+    }
+    .todo-main span {
+      font-family:var(--font-tc); font-size:13px; color:var(--slate);
+    }
+    .todo-meta { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+
+    .sep {
+      text-align:center; margin:24px 0 18px;
+      font-family:var(--font-mono); font-size:10px; font-weight:600;
+      letter-spacing:.15em; text-transform:uppercase; color:var(--mist);
+    }
+    .sep::before,.sep::after { content:'— '; }
+
+    hr.div { border:none; border-top:1px solid var(--border); margin:36px 0; }
+
+    .footer {
+      margin-top:64px; padding-top:24px;
+      border-top:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .footer-brand {
+      font-family:var(--font-display); font-size:19px; font-weight:600;
+      color:var(--ember);
+    }
+    .footer-meta {
+      font-family:var(--font-mono); font-size:11px;
+      color:var(--mist); text-align:right;
+    }
+
+    .mt8 { margin-top:8px; }
+    .mt12{ margin-top:12px; }
+    .mt16{ margin-top:16px; }
+    .mt24{ margin-top:24px; }
+    strong { font-weight:600; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="hero-badge">MEETING RECORD · 2026-05-06</div>
+    <h1>WEN 美業集團<br /><em>系統需求對焦會議</em></h1>
+    <div class="hero-sub">會議記錄 · 2026-05-06</div>
+    <div class="hero-meta">
+      <div class="chip">📅 2026-05-06（週二）</div>
+      <div class="chip">📍 松江路132巷5-1號2樓</div>
+      <div class="chip">⏱ 約 2 小時</div>
+      <div class="chip">👥 WEN · Zeal · 士維 · HE · 其他</div>
+      <div class="chip">🏷 系統開發 · 金流架構 · 商業規則</div>
+    </div>
+  </header>
+
+  <!-- QUICK NAV -->
+  <nav class="qnav">
+    <div class="qnav-label">快速跳轉</div>
+    <div class="qnav-links">
+      <a href="#summary">核心決策</a>
+      <a href="#arch">系統架構</a>
+      <a href="#biz">商業設計理念</a>
+      <a href="#nego">商務重點</a>
+      <a href="#actions">待辦行動</a>
+    </div>
+  </nav>
+
+  <!-- 1. 核心決策摘要 -->
+  <section class="sec" id="summary">
+    <div class="sec-hd">
+      <div class="sec-icon">⚡</div>
+      <h2>核心決策摘要</h2>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-ico">👤</div>
+        <div class="pillar-nm">客戶控制</div>
+        <div class="pillar-dc">總部掌握全客戶名單<br />各店僅見自己顧客</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-ico">💳</div>
+        <div class="pillar-nm">金流控制</div>
+        <div class="pillar-dc">加盟店只記帳不動錢<br />直營店金流可進總部</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-ico">🏛️</div>
+        <div class="pillar-nm">體系控制</div>
+        <div class="pillar-dc">點數總部統一管理<br />合約約束資料上傳義務</div>
+      </div>
+    </div>
+
+    <div class="mt16">
+      <div class="hstrip">
+        <div class="lbl">最關鍵決策</div>
+        <p>加盟店金流<strong>完全不進總部</strong>——只記帳、不動錢。加盟店客戶資料透過<strong>合約規範強制上傳系統</strong>，總部可看全部客戶名單，各店互相看不見。此設計同時解決法律合規與商業護城河建立兩個目標。</p>
+      </div>
+      <div class="hstrip">
+        <div class="lbl">上線排序</div>
+        <p><strong>總部先用 → 直營店 → 加盟店</strong>。三個開發階段依序推進：第一階段主架構 + 同步申請金流（評估合庫或藍新/綠界）；第二階段商戶合約系統 + 商業規則引擎；第三階段加盟商獨立後台 + 跨店分析報表。</p>
+      </div>
+      <div class="hstrip">
+        <div class="lbl">報價方向</div>
+        <p>系統基礎報價約 <strong>100 萬</strong>，本次討論後因加入 LINE 系統串接、加盟店後台完整功能等項目，<strong>報價將稍作調整</strong>。正式報價單將於 5/8 前提供，含各項目明細與優惠整包方案。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 系統架構 -->
+  <section class="sec" id="arch">
+    <div class="sec-hd">
+      <div class="sec-icon navy">🏗️</div>
+      <h2>系統架構確認事項</h2>
+    </div>
+
+    <div class="sep">五層結構</div>
+    <div class="layers">
+      <div class="layer l1">
+        <div class="layer-no">Layer 1 — Foundation</div>
+        <div class="layer-nm">基礎層</div>
+        <div class="layer-dc">帳號管理、許可權控制、金流串接、通知系統、自動扣款</div>
+      </div>
+      <div class="layer l2">
+        <div class="layer-no">Layer 2 — Business Rules Engine</div>
+        <div class="layer-nm">商業規則引擎層</div>
+        <div class="layer-dc">達哥顧問配合設計，多層分潤規則引擎，支援分潤邏輯、點數計算、老師績效拆分</div>
+      </div>
+      <div class="layer l3">
+        <div class="layer-no">Layer 3 — HQ Management</div>
+        <div class="layer-nm">集團端管理</div>
+        <div class="layer-dc">客戶總名單（跨店可見）、分潤對帳、加盟管理、VIP 活動統一協調</div>
+      </div>
+      <div class="layer l4">
+        <div class="layer-no">Layer 4 — Store Ops</div>
+        <div class="layer-nm">店家端</div>
+        <div class="layer-dc">預約管理、服務紀錄、報表中心、VIP 管理、老師績效追蹤</div>
+      </div>
+      <div class="layer l5">
+        <div class="layer-no">Layer 5 — Consumer</div>
+        <div class="layer-nm">顧客端</div>
+        <div class="layer-dc">線上預約、服務購買、點數查詢、跨店使用點數</div>
+      </div>
+    </div>
+
+    <div class="sep mt24">三階段開發計畫</div>
+    <div class="phases">
+      <div class="phase ph1">
+        <div class="phase-lbl">Phase 1</div>
+        <div class="phase-ttl">主架構 + 金流申請</div>
+        <ul>
+          <li>系統主架構搭建</li>
+          <li>同步申請藍新或綠界</li>
+          <li>評估合庫串接可行性</li>
+          <li>基礎帳號許可權設定</li>
+          <li>先確認畫面原型再開發</li>
+        </ul>
+      </div>
+      <div class="phase ph2">
+        <div class="phase-lbl">Phase 2</div>
+        <div class="phase-ttl">合約 + 規則完整化</div>
+        <ul>
+          <li>商戶加盟合約系統</li>
+          <li>完整商業規則引擎</li>
+          <li>分潤計算自動化</li>
+          <li>LINE 系統串接</li>
+          <li>點數跨店體系建立</li>
+        </ul>
+      </div>
+      <div class="phase ph3">
+        <div class="phase-lbl">Phase 3</div>
+        <div class="phase-ttl">加盟商後台 + 跨店分析</div>
+        <ul>
+          <li>各加盟商獨立後台</li>
+          <li>跨店客戶分析報表</li>
+          <li>老師績效可視化</li>
+          <li>全局 VIP 管理</li>
+          <li>活動推播系統</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt16">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>架構決策點</th>
+              <th>確認結論</th>
+              <th>補充說明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>加盟店金流</td>
+              <td>不進總部，只記帳</td>
+              <td>法律合規與商業模式雙重考量</td>
+            </tr>
+            <tr>
+              <td>直營店金流</td>
+              <td>可進總部</td>
+              <td>直營與加盟差異化處理</td>
+            </tr>
+            <tr>
+              <td>客戶資料歸屬</td>
+              <td>合約規範強制上傳系統</td>
+              <td>加盟店享服務需上交資料</td>
+            </tr>
+            <tr>
+              <td>點數管理</td>
+              <td>總部統一管理，可跨店使用</td>
+              <td>避免各店自管造成碎片化</td>
+            </tr>
+            <tr>
+              <td>轉介紹回饋</td>
+              <td>給點數不給現金</td>
+              <td>符合相關法規規範</td>
+            </tr>
+            <tr>
+              <td>各店互見資料</td>
+              <td>互相看不到彼此名單</td>
+              <td>只有總部端可見全體</td>
+            </tr>
+            <tr>
+              <td>免費 vs 付費版</td>
+              <td>免費版資料進總部；付費版各店自管</td>
+              <td>雙軌商業模式設計</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 商業設計理念 -->
+  <section class="sec" id="biz">
+    <div class="sec-hd">
+      <div class="sec-icon">☀️</div>
+      <h2>系統商業設計理念</h2>
+    </div>
+
+    <div class="mt16">
+      <div class="strat biz">
+        <div class="strat-hd">
+          <div class="strat-num">01</div>
+          <div class="strat-ttl">三大控制權的架構性護城河</div>
+        </div>
+        <div class="strat-body">透過系統設計，總部掌握<strong>客戶（名單可見性）、金流（記帳主導）、體系（點數統一管理）</strong>三大控制權，讓每一家加盟店在業務上依托總部系統運作，形成穩固的集團體系。</div>
+      </div>
+
+      <div class="strat biz">
+        <div class="strat-hd">
+          <div class="strat-num">02</div>
+          <div class="strat-ttl">免費版 vs 付費版 — 靈活的服務層級設計</div>
+        </div>
+        <div class="strat-body">免費版（客戶資料進總部）與付費版（各店自管）並行，讓加盟店根據自身需求選擇最適合的方案。<strong>雙軌設計</strong>同時確保總部資料整合能力與加盟店的彈性空間。</div>
+      </div>
+
+      <div class="strat biz">
+        <div class="strat-hd">
+          <div class="strat-num">03</div>
+          <div class="strat-ttl">持續性授權收入模型</div>
+        </div>
+        <div class="strat-body">店家端採月費授權制。隨加盟店擴張，<strong>授權收入以乘法增長</strong>——每新增一家加盟店，系統服務收入同步增長，形成穩定的持續性收入基礎。</div>
+      </div>
+
+      <div class="strat biz">
+        <div class="strat-hd">
+          <div class="strat-num">04</div>
+          <div class="strat-ttl">數據報表提升加盟店管理效能</div>
+        </div>
+        <div class="strat-body">「老師績效可視化、VIP 易管理、報表自動產出」直接解決美業老闆的管理痛點，<strong>讓店家感受到系統帶來的具體管理升級</strong>，提升加盟店對系統的採用意願與留存率。</div>
+      </div>
+
+      <div class="strat biz">
+        <div class="strat-hd">
+          <div class="strat-num">05</div>
+          <div class="strat-ttl">VIP 活動 + 合約強化體系整體性</div>
+        </div>
+        <div class="strat-body">總部辦 VIP 活動，透過<strong>合約條款確保加盟店一致參與</strong>，使整個品牌體系對外形成合力。加盟店在體系中獲得更大品牌背書，形成雙向正向循環。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 商務重點 -->
+  <section class="sec" id="nego">
+    <div class="sec-hd">
+      <div class="sec-icon green">💼</div>
+      <h2>商務重點</h2>
+    </div>
+
+    <div class="g2 mt12">
+      <div class="card">
+        <div class="card-ttl">報價方向</div>
+        <ul>
+          <li>系統基礎報價約 <strong>100 萬</strong>，本次討論後因增加功能項目稍作調整</li>
+          <li>新增項目：LINE 系統串接、加盟店後台完整功能</li>
+          <li>5/8 前提供正式報價單，含各項目明細 + 優惠整包方案</li>
+          <li>過往案例補充附件同步準備</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-ttl">金流現況 + 申請計畫</div>
+        <ul>
+          <li>目前使用<strong>合作金庫</strong>作為主要金流</li>
+          <li>評估合庫是否可直接串接，或另行申請藍新/綠界</li>
+          <li>建議第一階段<strong>同步啟動金流申請</strong>，讓系統上線後立即可處理付款</li>
+          <li>金流審核需時，應盡早啟動申請流程</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-ttl">開幕時間配合</div>
+        <ul>
+          <li><strong>5/12（下週一）試營運</strong>，5/23 正式開幕</li>
+          <li>系統開發時程無法配合開幕，建議先以 <strong>One Shop 臨時過渡方案</strong>讓行銷先跑起來</li>
+          <li>系統開發完成後再切換為正式平台</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-ttl">後續推進節奏</div>
+        <ul>
+          <li><strong>5/8 前</strong>：士維提供更新架構 + 功能確認問卷</li>
+          <li>WEN 確認功能優先順序後正式開發啟動</li>
+          <li>啟動後建立<strong>每週固定會議</strong>（30–60 分鐘）確保進度同步</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt16">
+      <div class="quote-co">
+        <p>「還沒跟 Zeal 談錢——我知道他不會讓我虧的。」</p>
+        <div class="attr">WEN — 本場最後段</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 待辦行動 -->
+  <section class="sec" id="actions">
+    <div class="sec-hd">
+      <div class="sec-icon">✅</div>
+      <h2>待辦行動 / 下一步</h2>
+    </div>
+
+    <div class="sep">緊急（5/8 前）</div>
+    <div class="todos">
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【士維】更新系統架構文件 + 功能確認問卷</strong>
+          <span>根據本次討論結果更新架構圖（含金流分流設計），整理功能確認問卷，確定優先順序與第一階段範疇</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-red">緊急</span>
+          <span class="badge b-navy">5/8 前</span>
+        </div>
+      </div>
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【士維 / HE】準備正式報價單</strong>
+          <span>提供各項目明細 + 優惠整包方案 + 過往案例，讓雙方有充分的決策依據。基礎底價約 100 萬，本次增加功能後調整</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-red">緊急</span>
+          <span class="badge b-navy">5/8 前</span>
+        </div>
+      </div>
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【Zeal】One Shop 網紅行銷臨時方案規劃</strong>
+          <span>開幕期（5/12 試營運、5/23 正式）系統尚未完成，One Shop 作為行銷工具的臨時過渡方案需具體規劃執行路徑</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-red">緊急</span>
+          <span class="badge b-ember">5/12 前</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep mt24">本週內（5/12 前）</div>
+    <div class="todos">
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【士維】確認合庫串接可行性</strong>
+          <span>評估是否可直接與合庫串接，或需另行申請藍新/綠界。金流申請需提前啟動，不可等系統開發中途才辦</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-warn">重要</span>
+          <span class="badge b-navy">本週</span>
+        </div>
+      </div>
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【士維 / WEN】確認第一階段精確範疇</strong>
+          <span>填完功能確認問卷後，雙方確認第一階段（主架構 + 金流）的精確交付清單，避免範疇蔓延</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-warn">重要</span>
+          <span class="badge b-navy">本週</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep mt24">持續執行 / 開發期間</div>
+    <div class="todos">
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【全體】啟動每週固定會議</strong>
+          <span>正式合約簽署後建立每週 30–60 分鐘固定 standup，確保開發進度與期待持續同步</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-teal">持續</span>
+        </div>
+      </div>
+      <div class="todo">
+        <div class="todo-box"></div>
+        <div class="todo-main">
+          <strong>【士維 + 達哥顧問】商業規則引擎設計</strong>
+          <span>分潤邏輯、多層分潤規則、點數計算需與達哥顧問持續溝通，此為本系統最核心的複雜模組</span>
+        </div>
+        <div class="todo-meta">
+          <span class="badge b-teal">持續</span>
+          <span class="badge b-navy">Phase 2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice n-insight mt16">
+      <span class="n-ico">🔑</span>
+      <span><strong>下一個關鍵節點：</strong>5/8 前的報價單確認。建議報價單呈現方式：清晰的各項目明細 + 整包優惠方案 + 過往案例，讓決策有充分依據。</span>
+    </div>
+  </section>
+
+  <hr class="div" />
+
+  <footer class="footer">
+    <div class="footer-brand">MUSEON</div>
+    <div class="footer-meta">
+      Meeting Record · WEN 美業集團<br />
+      2026-05-06
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
