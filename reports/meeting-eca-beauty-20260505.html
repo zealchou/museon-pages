@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECA 美業集團 × MUSEON｜系統開發方向確認會 — 2026.05.05</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Token System ── */
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --navy:         #181737;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Outfit', 'Noto Sans TC', sans-serif;
+
+      --r-sm:  6px;
+      --r-md:  12px;
+      --r-lg:  20px;
+      --r-xl:  28px;
+
+      --shadow-card: 0 2px 12px rgba(24,23,55,.07), 0 1px 3px rgba(24,23,55,.04);
+      --shadow-lift: 0 8px 32px rgba(24,23,55,.10), 0 2px 8px rgba(24,23,55,.05);
+    }
+
+    /* ── Base ── */
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Hero Header ── */
+    .hero {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      padding: 56px 0 48px;
+      margin-bottom: 40px;
+      border-radius: 0 0 var(--r-xl) var(--r-xl);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(196,80,42,.25) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 30%;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(184,146,58,.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; padding: 0 48px; }
+    .hero-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 600;
+      color: #FDFCFA;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(253,252,250,.60);
+      margin-bottom: 36px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hero-meta-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(253,252,250,.40);
+    }
+    .hero-meta-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(253,252,250,.85);
+    }
+    .hero-divider {
+      width: 1px;
+      background: rgba(253,252,250,.12);
+      align-self: stretch;
+    }
+
+    /* ── Attendees Strip ── */
+    .attendees-strip {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-card);
+    }
+    .attendees-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 16px;
+    }
+    .attendees-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .attendee-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .attendee-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .avatar-ember { background: rgba(196,80,42,.12); color: var(--ember); }
+    .avatar-navy  { background: rgba(24,23,55,.10);  color: var(--navy); }
+    .avatar-teal  { background: rgba(42,122,110,.12); color: var(--teal); }
+    .avatar-gold  { background: rgba(184,146,58,.12); color: var(--gold); }
+    .avatar-slate { background: rgba(90,90,110,.10);  color: var(--slate); }
+    .attendee-info { display: flex; flex-direction: column; gap: 1px; }
+    .attendee-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .attendee-role { font-size: 12px; color: var(--slate); }
+
+    /* ── Section ── */
+    .section { margin-bottom: 36px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-icon {
+      width: 36px; height: 36px;
+      background: var(--ember);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .section-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--ember);
+      margin-left: auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+    }
+    .card:last-child { margin-bottom: 0; }
+
+    /* ── Executive Summary ── */
+    .exec-summary {
+      background: linear-gradient(135deg, var(--navy) 0%, #252454 100%);
+      border-radius: var(--r-lg);
+      padding: 32px 36px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-lift);
+    }
+    .exec-summary p {
+      color: rgba(253,252,250,.82);
+      font-size: 15.5px;
+      line-height: 1.85;
+    }
+    .exec-summary strong { color: #FDFCFA; font-weight: 600; }
+    .exec-summary .highlight { color: var(--ember-light); font-weight: 600; }
+
+    /* ── Decision Table ── */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 680px) { .decision-grid { grid-template-columns: 1fr; } }
+
+    .decision-col {
+      border-radius: var(--r-md);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-card);
+    }
+    .decision-col.confirmed {
+      background: rgba(45,138,110,.06);
+      border: 1px solid rgba(45,138,110,.22);
+    }
+    .decision-col.pending {
+      background: rgba(201,148,58,.06);
+      border: 1px solid rgba(201,148,58,.22);
+    }
+    .decision-col-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .decision-col.confirmed .decision-col-title { color: var(--teal); }
+    .decision-col.pending   .decision-col-title { color: var(--gold); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green { background: var(--teal); }
+    .dot-amber { background: var(--gold); }
+
+    .decision-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .decision-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+      color: var(--ink);
+    }
+    .decision-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+    }
+    .confirmed .decision-list li::before { background: var(--teal); }
+    .pending   .decision-list li::before { background: var(--gold); }
+
+    /* ── Topic Cards ── */
+    .topic-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+    }
+    .topic-card:last-child { margin-bottom: 0; }
+    .topic-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(247,245,240,.5);
+      flex-wrap: wrap;
+    }
+    .topic-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .topic-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy);
+      flex: 1;
+    }
+    .topic-body { padding: 20px 24px; }
+    .topic-body p { font-size: 14.5px; color: var(--ink); line-height: 1.75; margin-bottom: 12px; }
+    .topic-body p:last-child { margin-bottom: 0; }
+
+    .sub-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+    .sub-list li {
+      font-size: 14px;
+      color: var(--ink);
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.65;
+    }
+    .sub-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--ember);
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+    .tag-confirmed { background: rgba(45,138,110,.12); color: var(--teal); }
+    .tag-pending   { background: rgba(201,148,58,.12); color: #A07020; }
+    .tag-risk      { background: rgba(196,64,42,.10); color: var(--ember-dark); }
+
+    /* ── Architecture Diagram ── */
+    .arch-diagram {
+      background: var(--navy);
+      border-radius: var(--r-md);
+      padding: 24px 28px;
+      margin: 16px 0;
+    }
+    .arch-layers { display: flex; flex-direction: column; gap: 8px; }
+    .arch-layer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--r-sm);
+      padding: 10px 16px;
+    }
+    .arch-layer-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ember-light);
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .arch-layer-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(253,252,250,.9);
+      min-width: 120px;
+    }
+    .arch-layer-desc {
+      font-size: 12px;
+      color: rgba(253,252,250,.45);
+    }
+
+    /* ── Persona Cards ── */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .persona-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-card);
+    }
+    .persona-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .persona-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .persona-name { font-size: 15px; font-weight: 600; color: var(--navy); }
+    .persona-type { font-size: 11px; color: var(--ember); font-weight: 600; letter-spacing: .05em; margin-top: 1px; }
+    .persona-desc { font-size: 13px; color: var(--slate); line-height: 1.7; }
+    .persona-trait {
+      display: inline-block;
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 11px;
+      color: var(--slate);
+      margin: 4px 3px 0 0;
+    }
+
+    /* ── Strategy Cards ── */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 680px) { .strategy-grid { grid-template-columns: 1fr; } }
+
+    .strategy-col {
+      border-radius: var(--r-md);
+      padding: 22px 26px;
+      box-shadow: var(--shadow-card);
+    }
+    .strategy-col.light {
+      background: linear-gradient(135deg, rgba(42,122,110,.07) 0%, rgba(42,122,110,.03) 100%);
+      border: 1px solid rgba(42,122,110,.20);
+    }
+    .strategy-col.shadow {
+      background: linear-gradient(135deg, rgba(196,80,42,.08) 0%, rgba(196,80,42,.03) 100%);
+      border: 1px solid rgba(196,80,42,.20);
+    }
+    .strategy-col-title {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .strategy-col.light  .strategy-col-title { color: var(--teal); }
+    .strategy-col.shadow .strategy-col-title { color: var(--ember-dark); }
+    .strategy-col-sub {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .strategy-col.light  .strategy-col-sub { color: rgba(42,122,110,.6); }
+    .strategy-col.shadow .strategy-col-sub { color: rgba(196,80,42,.6); }
+    .strategy-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .strategy-item:last-child { margin-bottom: 0; }
+    .strategy-num {
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .strategy-col.light  .strategy-num { color: var(--teal); }
+    .strategy-col.shadow .strategy-num { color: var(--ember); }
+
+    /* ── Emotion Timeline ── */
+    .emotion-timeline { display: flex; flex-direction: column; gap: 0; }
+    .emotion-item {
+      display: flex;
+      gap: 16px;
+      position: relative;
+    }
+    .emotion-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px; top: 40px;
+      width: 2px;
+      height: calc(100% - 28px);
+      background: var(--border);
+    }
+    .emotion-dot {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      background: var(--snow);
+      border: 2px solid var(--border);
+      position: relative; z-index: 1;
+    }
+    .emotion-content {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-card);
+      flex: 1;
+    }
+    .emotion-who {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 4px;
+    }
+    .emotion-text { font-size: 14px; color: var(--ink); line-height: 1.65; }
+
+    /* ── Negotiation ── */
+    .negot-item {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--ember);
+      border-radius: var(--r-sm);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-card);
+    }
+    .negot-item:last-child { margin-bottom: 0; }
+    .negot-num { font-size: 11px; font-weight: 700; color: var(--ember); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+    .negot-text { font-size: 14.5px; color: var(--ink); line-height: 1.7; }
+    .negot-text strong { color: var(--navy); }
+
+    /* ── Action Items Table ── */
+    .action-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .action-table th {
+      background: var(--navy);
+      color: rgba(253,252,250,.7);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      text-align: left;
+    }
+    .action-table th:first-child { border-radius: var(--r-sm) 0 0 0; }
+    .action-table th:last-child  { border-radius: 0 var(--r-sm) 0 0; }
+    .action-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .action-table tr:last-child td { border-bottom: none; }
+    .action-table tr:nth-child(odd)  td { background: var(--snow); }
+    .action-table tr:nth-child(even) td { background: rgba(247,245,240,.5); }
+    .action-table tr:last-child td:first-child { border-radius: 0 0 0 var(--r-sm); }
+    .action-table tr:last-child td:last-child  { border-radius: 0 0 var(--r-sm) 0; }
+
+    .owner-tag {
+      display: inline-block;
+      background: rgba(24,23,55,.08);
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .priority-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .p-urgent { background: rgba(196,64,42,.12); color: var(--ember-dark); }
+    .p-high   { background: rgba(196,80,42,.10); color: var(--ember); }
+    .p-medium { background: rgba(201,148,58,.12); color: #A07020; }
+
+    /* ── Phase Timeline ── */
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 600px) { .phase-grid { grid-template-columns: 1fr; } }
+    .phase-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+    .phase-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .phase-card.p1::before { background: var(--ember); }
+    .phase-card.p2::before { background: var(--gold); }
+    .phase-card.p3::before { background: var(--teal); }
+    .phase-label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
+    .p1 .phase-label { color: var(--ember); }
+    .p2 .phase-label { color: #A07020; }
+    .p3 .phase-label { color: var(--teal); }
+    .phase-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    .phase-duration { font-size: 12px; color: var(--mist); margin-bottom: 14px; }
+    .phase-items { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .phase-items li {
+      font-size: 13px;
+      color: var(--slate);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.55;
+    }
+    .phase-items li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--ember);
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    /* ── Utility ── */
+    .mt-8  { margin-top:  8px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .callout {
+      background: rgba(196,80,42,.06);
+      border-left: 3px solid var(--ember);
+      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.65;
+      margin: 12px 0;
+    }
+    .callout strong { color: var(--ember-dark); }
+
+    .footnote {
+      text-align: center;
+      font-size: 12px;
+      color: var(--mist);
+      padding-top: 48px;
+      letter-spacing: .04em;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 680px) {
+      .hero-inner { padding: 0 24px; }
+      .hero { padding: 36px 0 32px; }
+      .hero-title { font-size: 28px; }
+      .hero-meta { gap: 16px; }
+      .page-wrap { padding: 0 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <div class="page-wrap" style="padding-bottom:0;">
+    <div class="hero-inner">
+      <p class="hero-label">機密會議記錄 · MUSEON Strategy Layer</p>
+      <h1 class="hero-title">ECA 美業集團 × MUSEON</h1>
+      <p class="hero-subtitle">系統開發方向確認會</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">日期</span>
+          <span class="hero-meta-value">2026 年 5 月 5 日</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">類型</span>
+          <span class="hero-meta-value">系統規劃確認會</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">出席人數</span>
+          <span class="hero-meta-value">5 人</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">記錄生成</span>
+          <span class="hero-meta-value">MUSEON Intelligence · 2026.05.11</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ══════════ 出席人員 ══════════ -->
+  <div class="attendees-strip">
+    <p class="attendees-title">出席人員</p>
+    <div class="attendees-grid">
+      <div class="attendee-card">
+        <div class="attendee-avatar avatar-ember">達</div>
+        <div class="attendee-info">
+          <span class="attendee-name">達哥（Zeal）</span>
+          <span class="attendee-role">策略顧問 · MUSEON 創辦人</span>
+        </div>
+      </div>
+      <div class="attendee-card">
+        <div class="attendee-avatar avatar-teal">竹</div>
+        <div class="attendee-info">
+          <span class="attendee-name">雅竹</span>
+          <span class="attendee-role">ECA 系統開發 PM</span>
+        </div>
+      </div>
+      <div class="attendee-card">
+        <div class="attendee-avatar avatar-navy">J</div>
+        <div class="attendee-info">
+          <span class="attendee-name">J（Jay）</span>
+          <span class="attendee-role">開發工程師</span>
+        </div>
+      </div>
+      <div class="attendee-card">
+        <div class="attendee-avatar avatar-gold">文</div>
+        <div class="attendee-info">
+          <span class="attendee-name">Wen（WEN 姊）</span>
+          <span class="attendee-role">美業集團業主</span>
+        </div>
+      </div>
+      <div class="attendee-card">
+        <div class="attendee-avatar avatar-slate">友</div>
+        <div class="attendee-info">
+          <span class="attendee-name">友人</span>
+          <span class="attendee-role">旁聽者（補習班需求）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ § 01 執行摘要 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <h2 class="section-title">執行摘要</h2>
+      <span class="section-num">§ 01</span>
+    </div>
+    <div class="exec-summary">
+      <p>
+        本次會議確認了 ECA 美業集團營運平台的<strong>核心架構方向與金流邊界</strong>——這是整個系統設計的基礎前提。
+        最關鍵的決議為：<span class="highlight">加盟店金流不進總部</span>，系統僅負責記帳，各店金流獨立；
+        直營店則全進總部統一撥款，兩種模式清楚切分。
+      </p>
+      <p style="margin-top:14px;">
+        客戶資料主權由總部掌握，加盟店簽約時已載明資料授權條款；
+        <strong>導客機制作為資料誘因設計</strong>——願意開放資料流通的加盟店才能被總部導客。
+        點數機制框架初步確認（總部統一管、轉介紹導向、終身制），但換算公式尚待定案。
+        三階段開發路線確認，首階段約一個月，以主架構與金流接通為首要目標。
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════ § 02 核心決議 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="section-title">核心決議</h2>
+      <span class="section-num">§ 02</span>
+    </div>
+    <div class="decision-grid">
+      <div class="decision-col confirmed">
+        <div class="decision-col-title"><span class="dot dot-green"></span>已確認</div>
+        <ul class="decision-list">
+          <li>加盟店金流不進總部，系統僅記帳，各店獨立</li>
+          <li>直營店金流全進總部，統一撥款</li>
+          <li>客戶資料主權屬總部，加盟簽約即含授權條款</li>
+          <li>導客機制：願意開放資料才能被總部導客</li>
+          <li>點數由總部統一管，非店家管理</li>
+          <li>轉介紹獎勵用點數，不用現金，終身制</li>
+          <li>五層系統架構方向確認</li>
+          <li>三階段開發路線確認（各約一個月）</li>
+          <li>開發前先出 UI / AI 模擬稿，WEN 確認後才動工</li>
+          <li>每週固定例會，每階段設驗收週</li>
+          <li>預收款信託先不碰，只做記帳</li>
+        </ul>
+      </div>
+      <div class="decision-col pending">
+        <div class="decision-col-title"><span class="dot dot-amber"></span>待確認</div>
+        <ul class="decision-list">
+          <li>點數換算公式（幾點 = 多少元）</li>
+          <li>每週例會固定時間</li>
+          <li>功能優先順序（雅竹問卷後 WEN 回填）</li>
+          <li>月租費最終定價（參考範圍：3,000–5,000）</li>
+          <li>分潤規則細節（第二階段前須定案）</li>
+          <li>LINE 串接完整範圍</li>
+          <li>加盟店付費版 vs 免費版的資料權限差異</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ § 03 各議題 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <h2 class="section-title">各議題詳細討論</h2>
+      <span class="section-num">§ 03</span>
+    </div>
+
+    <!-- T1 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">1</div>
+        <span class="topic-title">系統架構：三大控制權 + 五層架構</span>
+        <span class="tag tag-confirmed">已確認</span>
+      </div>
+      <div class="topic-body">
+        <p>達哥釐清 ECA 三大核心控制權，作為整個系統設計的護城河：</p>
+        <ul class="sub-list">
+          <li><strong>客戶資料主權</strong>：所有客戶資料最終歸屬總部，加盟店合約已載明願意提供數據。</li>
+          <li><strong>金流管理</strong>：直營店全進總部；加盟店獨立，系統只做帳務記錄。</li>
+          <li><strong>體系數據</strong>：跨店分析、VIP 識別、AI 報告均由總部主導。</li>
+        </ul>
+        <div class="arch-diagram">
+          <div class="arch-layers">
+            <div class="arch-layer">
+              <span class="arch-layer-num">L5</span>
+              <span class="arch-layer-name">顧客端</span>
+              <span class="arch-layer-desc">預約、消費記錄、點數查詢、轉介紹</span>
+            </div>
+            <div class="arch-layer">
+              <span class="arch-layer-num">L4</span>
+              <span class="arch-layer-name">店家端</span>
+              <span class="arch-layer-desc">員工 KPI、每日報表、VIP 管理、預約系統</span>
+            </div>
+            <div class="arch-layer">
+              <span class="arch-layer-num">L3</span>
+              <span class="arch-layer-name">集團管理層</span>
+              <span class="arch-layer-desc">跨店分析、加盟商管控、總部導客、AI 報告</span>
+            </div>
+            <div class="arch-layer">
+              <span class="arch-layer-num">L2</span>
+              <span class="arch-layer-name">商業規則層</span>
+              <span class="arch-layer-desc">金流分潤規則、點數換算、VIP 升級門檻</span>
+            </div>
+            <div class="arch-layer">
+              <span class="arch-layer-num">L1</span>
+              <span class="arch-layer-name">基礎層</span>
+              <span class="arch-layer-desc">資料庫、金流接口（合庫）、身份驗證、API</span>
+            </div>
+          </div>
+        </div>
+        <p>八大功能模組：<strong>會員權限、預約服務、客戶資料管理、金流分潤、VIP 經營、營運報表、加盟管理、AI 分析</strong>。</p>
+      </div>
+    </div>
+
+    <!-- T2 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">2</div>
+        <span class="topic-title">金流架構：加盟店 vs 直營店清楚切分</span>
+        <span class="tag tag-confirmed">已確認</span>
+      </div>
+      <div class="topic-body">
+        <p>WEN 姊多次確認「加盟店的錢不進總部」——這是她的核心底線。達哥明確回應：這完全符合設計方向，系統的角色是<strong>記帳方</strong>，不是金流中介。</p>
+        <ul class="sub-list">
+          <li><strong>加盟店</strong>：各自獨立金流，消費不過總部，系統僅記錄帳務數據。</li>
+          <li><strong>直營店</strong>：金流全進總部，系統負責統一撥款邏輯。</li>
+          <li>現有合作金庫（刷卡機 + QR Code + 線上刷卡）建議同步申請金流接口，預估申請週期約 <strong>1 個月</strong>，需盡快啟動。</li>
+        </ul>
+        <div class="callout">
+          <strong>預收款信託灰色地帶：</strong>業界普遍未依規完整執行信託機制。達哥建議本期系統先跳過信託功能，<strong>只做帳務記錄</strong>，待規模擴大後視合規需求再評估。此為審慎風控決策，非功能缺漏。
+        </div>
+      </div>
+    </div>
+
+    <!-- T3 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">3</div>
+        <span class="topic-title">加盟店 vs 直營店差異化設計</span>
+        <span class="tag tag-confirmed">已確認</span>
+      </div>
+      <div class="topic-body">
+        <p>J 主動澄清兩種模式在系統層面的功能邊界：</p>
+        <ul class="sub-list">
+          <li><strong>加盟店</strong>：進貨可進總部倉；客戶資料可自管（合約授權前提下）；金流獨立；後台功能依方案版本有別。</li>
+          <li><strong>直營店</strong>：完整系統功能；金流全進總部；報表資料即時同步總部。</li>
+        </ul>
+        <p><strong>導客機制設計：</strong>加盟店若願意開放客戶流通資料，才能被總部系統媒合導客。不願意的店家可關閉導客功能，但同時失去被導流的機會——這是透過功能設計構建的資料誘因，而非強迫。</p>
+        <div class="callout">
+          <strong>達哥關鍵洞察：</strong>加盟店最大的風險不是「不同意」，而是「同意了卻懶得 key 資料」。系統再好，店員不用就等於零。這是比技術架構更難解的人心問題，需在推廣策略中配套解決。
+        </div>
+      </div>
+    </div>
+
+    <!-- T4 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">4</div>
+        <span class="topic-title">點數機制框架</span>
+        <span class="tag tag-pending">部分待定</span>
+      </div>
+      <div class="topic-body">
+        <p>點數機制框架初步確認，但關鍵公式尚未定案：</p>
+        <ul class="sub-list">
+          <li><strong>管理方</strong>：點數由總部統一管理，非各店自行發放。</li>
+          <li><strong>發放時機</strong>：每次消費皆計入，終身累積不過期。</li>
+          <li><strong>轉介紹獎勵</strong>：一律用點數發放，不用現金，降低現金流出風險。</li>
+          <li><strong>點數用途</strong>：可兌換總部商城任何商品或服務。</li>
+        </ul>
+        <div class="callout" style="border-left-color: var(--gold); background: rgba(201,148,58,.06);">
+          <strong style="color: #8A6010;">待定項目：</strong>點數換算公式（幾點 = 多少元）尚未定案，需在第一階段開發完成前確認，否則商業規則層（L2）無法正確建置。<strong style="color: #8A6010;">這是 Phase 1 動工的前置條件之一。</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- T5 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">5</div>
+        <span class="topic-title">店家系統的核心價值主張：從痛點到解法</span>
+        <span class="tag tag-confirmed">策略確認</span>
+      </div>
+      <div class="topic-body">
+        <p>達哥將議題拉回根本：「店家為什麼要用這套系統？」——答案必須是<strong>增加店家自身營收</strong>，不是方便總部管理。所有對加盟主的溝通都要以此為軸。</p>
+        <ul class="sub-list">
+          <li><strong>現況痛點</strong>：美業店家仍用 Excel 記帳、員工效能無法量化、VIP 識別靠老闆記憶、轉介紹追蹤全靠人工。</li>
+          <li><strong>員工 KPI 自動分析</strong>：每位設計師 / 美容師的服務次數、客單價、回購率即時報表。</li>
+          <li><strong>VIP 升級機制</strong>：依消費頻率 × 消費金額自動升階，哪個客戶是真 VIP 系統說了算，不靠老闆直覺。</li>
+          <li><strong>預約率 / 回購率 / 轉介紹追蹤</strong>：三大指標即時可視，老闆每天看數字不看感覺。</li>
+          <li><strong>即時報表</strong>：取代月底對帳，數字即時、可追溯、可跨店比較。</li>
+        </ul>
+        <div class="callout">
+          <strong>WEN 姊金句：</strong>「哪個客戶是真 VIP，店家自己都不知道。」這句話正是系統最核心的銷售話術——用 WEN 姊自己的語言，對其他加盟主說。
+        </div>
+      </div>
+    </div>
+
+    <!-- T6 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">6</div>
+        <span class="topic-title">三階段開發路線</span>
+        <span class="tag tag-confirmed">已確認</span>
+      </div>
+      <div class="topic-body">
+        <div class="phase-grid">
+          <div class="phase-card p1">
+            <p class="phase-label">Phase 1 · 約 1 個月</p>
+            <p class="phase-name">主架構上線</p>
+            <p class="phase-duration">基礎功能 + 金流接通</p>
+            <ul class="phase-items">
+              <li>五層架構主體建置</li>
+              <li>合庫金流接口申請並接通</li>
+              <li>會員基礎資料管理</li>
+              <li>預約系統基礎版</li>
+              <li>直營店後台基本報表</li>
+            </ul>
+          </div>
+          <div class="phase-card p2">
+            <p class="phase-label">Phase 2 · 約 1 個月</p>
+            <p class="phase-name">制度深化</p>
+            <p class="phase-duration">VIP + 合約 + 分潤</p>
+            <ul class="phase-items">
+              <li>VIP 升級機制上線</li>
+              <li>點數機制（公式須 P1 前定案）</li>
+              <li>合約系統 + 電子簽署</li>
+              <li>分潤規則細化</li>
+              <li>員工 KPI 自動分析</li>
+            </ul>
+          </div>
+          <div class="phase-card p3">
+            <p class="phase-label">Phase 3 · 約 1 個月</p>
+            <p class="phase-name">加盟體系</p>
+            <p class="phase-duration">跨店分析 + AI 報告</p>
+            <ul class="phase-items">
+              <li>加盟商獨立後台</li>
+              <li>跨店客流分析</li>
+              <li>總部導客機制</li>
+              <li>AI 智能報告模組</li>
+              <li>轉介紹追蹤全覆蓋</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T7 -->
+    <div class="topic-card">
+      <div class="topic-header">
+        <div class="topic-num">7</div>
+        <span class="topic-title">協作機制與開發 SOP</span>
+        <span class="tag tag-confirmed">已確認</span>
+      </div>
+      <div class="topic-body">
+        <ul class="sub-list">
+          <li><strong>功能問卷</strong>：雅竹整理功能清單 → 發問卷讓 WEN 勾選優先順序 → 回收後確認第一階段 scope。</li>
+          <li><strong>每週例會</strong>：固定一次，時間待確認，上限 1 小時。</li>
+          <li><strong>UI / UX 先行確認</strong>：每個功能先出 UI 畫面或 AI 模擬稿，WEN 確認視覺方向後工程才動工——避免開發後才改需求。</li>
+          <li><strong>每階段驗收週</strong>：約 1 週密集修改 / 收尾期，雙方集中 review。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ § 04 人格側寫 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h2 class="section-title">人格側寫</h2>
+      <span class="section-num">§ 04</span>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="persona-avatar avatar-gold">文</div>
+          <div>
+            <div class="persona-name">WEN 姊</div>
+            <div class="persona-type">直覺型業主</div>
+          </div>
+        </div>
+        <p class="persona-desc">思路清晰但跳躍，對客戶關係有深度洞察。對數字敏感，對合規風險有自覺（主動點出預收款信託問題）。容易被真實場景說服，而不是功能清單。多次確認「加盟店金流不進總部」——焦慮來源是不確定性，不是反對。</p>
+        <div class="mt-8">
+          <span class="persona-trait">場景驅動</span>
+          <span class="persona-trait">數字敏感</span>
+          <span class="persona-trait">合規自覺</span>
+          <span class="persona-trait">直覺決策</span>
+        </div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="persona-avatar avatar-ember">達</div>
+          <div>
+            <div class="persona-name">達哥（Zeal）</div>
+            <div class="persona-type">系統思維型戰略顧問</div>
+          </div>
+        </div>
+        <p class="persona-desc">擅長拆解商業邏輯，識別隱藏問題（預收款信託風險、加盟店使用意願）。主導議題但不強推，幾次主動幫 WEN 姊「翻譯」她自己在擔心什麼，引導討論回到「為什麼要系統」的根本問題。</p>
+        <div class="mt-8">
+          <span class="persona-trait">框架拆解</span>
+          <span class="persona-trait">商業識別</span>
+          <span class="persona-trait">引導式主導</span>
+        </div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="persona-avatar avatar-teal">竹</div>
+          <div>
+            <div class="persona-name">雅竹</div>
+            <div class="persona-type">執行導向 PM</div>
+          </div>
+        </div>
+        <p class="persona-desc">思路清晰，對客戶業務邏輯理解深。問卷化決策方式成熟，能把模糊的業主需求轉化成可操作的功能清單與優先級。是會議與開發之間的橋樑。</p>
+        <div class="mt-8">
+          <span class="persona-trait">執行力強</span>
+          <span class="persona-trait">業務理解深</span>
+          <span class="persona-trait">流程化</span>
+        </div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="persona-avatar avatar-navy">J</div>
+          <div>
+            <div class="persona-name">J（Jay）</div>
+            <div class="persona-type">細節型工程師</div>
+          </div>
+        </div>
+        <p class="persona-desc">主動澄清功能邊界（加盟店 vs 直營店的系統權限差異、LINE 串接範圍）。在業主與 PM 的策略討論中適時插針，確保技術可行性不被忽視。</p>
+        <div class="mt-8">
+          <span class="persona-trait">邊界釐清</span>
+          <span class="persona-trait">技術嚴謹</span>
+          <span class="persona-trait">主動澄清</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ § 05 陽謀 / 陰謀 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <h2 class="section-title">陽謀 / 陰謀分析</h2>
+      <span class="section-num">§ 05</span>
+    </div>
+    <div class="strategy-grid">
+      <div class="strategy-col light">
+        <p class="strategy-col-title">陽謀</p>
+        <p class="strategy-col-sub">明確佈局 · 公開設計</p>
+        <div class="strategy-item">
+          <span class="strategy-num">01</span>
+          <span><strong>客戶資料護城河：</strong>加盟店「願意提供資料」換取「被總部導客」。資料流向總部是設計前提，而非選項。加盟店越依賴導客，總部資料壁壘越深。</span>
+        </div>
+        <div class="strategy-item">
+          <span class="strategy-num">02</span>
+          <span><strong>工具依賴設計：</strong>提供免費或低月租版本（但資料進總部），付費版才能保留資料獨立性。相當於「資料換工具」——店家在享受系統紅利的同時，也在築起總部的數據資產。</span>
+        </div>
+        <div class="strategy-item">
+          <span class="strategy-num">03</span>
+          <span><strong>長期訂閱收入：</strong>每月 3,000–5,000 的店家月租費是總部穩定的經常性收入來源，不依賴一次性開發費，形成 SaaS 飛輪。</span>
+        </div>
+      </div>
+      <div class="strategy-col shadow">
+        <p class="strategy-col-title">陰謀</p>
+        <p class="strategy-col-sub">需要提防的隱性風險</p>
+        <div class="strategy-item">
+          <span class="strategy-num">01</span>
+          <span><strong>加盟店同意卻不使用：</strong>達哥自己點名這是最大風險。加盟店員工懶得 key 資料，再精妙的系統都是空殼。推廣策略必須配套「使用誘因」，不能只靠合約約束。</span>
+        </div>
+        <div class="strategy-item">
+          <span class="strategy-num">02</span>
+          <span><strong>預收款信託合規炸彈：</strong>業界灰色地帶本期先繞過，但若未來規模擴大，主管機關關注這塊，可能引發補稅或被要求改制。建議在 P2/P3 後持續追蹤法規動向。</span>
+        </div>
+        <div class="strategy-item">
+          <span class="strategy-num">03</span>
+          <span><strong>點數架構先預留後大改風險：</strong>點數換算公式尚未定案，但系統架構已預留空間。若公式邏輯與資料結構不相容，P2 時可能觸發架構重寫。<strong>公式定案是 P1 動工的必要前置條件。</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ § 06 情緒線 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      </div>
+      <h2 class="section-title">情緒線</h2>
+      <span class="section-num">§ 06</span>
+    </div>
+    <div class="emotion-timeline">
+      <div class="emotion-item">
+        <div class="emotion-dot">🌡️</div>
+        <div class="emotion-content">
+          <p class="emotion-who">整體氣氛</p>
+          <p class="emotion-text">會議整體輕鬆，非正式氛圍。中間穿插裝潢討論（WEN 姊同步處理工作事務）、吃蛋糕時間、討論貓語言 AI 等離題插曲，但核心議題推進節奏穩定，未失焦。</p>
+        </div>
+      </div>
+      <div class="emotion-item">
+        <div class="emotion-dot">💛</div>
+        <div class="emotion-content">
+          <p class="emotion-who">WEN 姊</p>
+          <p class="emotion-text">開放但有保留。對「錢進總部」這件事多次確認邊界，顯示這是她真實的核心疑慮——不是不信任，而是清楚自己的底線在哪裡。每次達哥澄清後她的反應都是「那這樣就好」，情緒立刻鬆動，顯示焦慮的來源是<strong>不確定性，不是反對</strong>。</p>
+        </div>
+      </div>
+      <div class="emotion-item">
+        <div class="emotion-dot">🧭</div>
+        <div class="emotion-content">
+          <p class="emotion-who">達哥</p>
+          <p class="emotion-text">主導但不強推。多次主動「翻譯」WEN 姊的潛台詞，幫她把模糊的焦慮轉化成清晰的問題，再一起解決。這種引導式策略讓 WEN 姊感受到被理解，而非被推銷。</p>
+        </div>
+      </div>
+      <div class="emotion-item">
+        <div class="emotion-dot">👁️</div>
+        <div class="emotion-content">
+          <p class="emotion-who">友人（旁聽者）</p>
+          <p class="emotion-text">全程靜默觀察，末段開始主動發問——詢問補習班案例能否套用類似系統邏輯。顯示他對這套架構有初步興趣，是一個<strong>潛在新客線索</strong>，值得後續跟進。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ § 07 商務談判重點 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h2 class="section-title">商務談判重點</h2>
+      <span class="section-num">§ 07</span>
+    </div>
+    <div class="negot-item">
+      <p class="negot-num">底線 · 不可翻盤</p>
+      <p class="negot-text">
+        <strong>WEN 姊的核心底線：加盟店金流不進總部。</strong>
+        這是本次會議唯一的不可談判項。任何後續功能調整、定價協商、方案設計，都不得觸碰這條紅線。若因技術或商業需求需要調整，必須提前單獨溝通，不能在會議中臨時翻盤。
+      </p>
+    </div>
+    <div class="negot-item">
+      <p class="negot-num">最大槓桿點 · 說服邏輯</p>
+      <p class="negot-text">
+        <strong>「店家為什麼要用這套系統」——答案是「增加店家自身營收」。</strong>
+        不是「方便總部管理」，不是「總部需要你的資料」，不是「合約規定你要用」。
+        對加盟主的所有溝通都要圍繞：員工更有效率、VIP 客戶被精準識別、轉介紹業績被追蹤、老闆每天看到數字。<strong>WEN 姊的語言就是最好的說服工具。</strong>
+      </p>
+    </div>
+    <div class="negot-item">
+      <p class="negot-num">時間敏感 · 三件觸發條件</p>
+      <p class="negot-text">
+        以下三件事必須在第一階段開發啟動前確認，否則工程無法正確建置：
+        <strong>① 功能優先順序問卷回收</strong>（雅竹發出後，WEN 姊需在一週內回填）。
+        <strong>② 分潤規則架構確認</strong>（影響金流模組設計）。
+        <strong>③ 點數換算公式定案</strong>（影響 L2 商業規則層建置）。
+        三件事未完成，開發時鐘不應啟動。
+      </p>
+    </div>
+    <div class="negot-item">
+      <p class="negot-num">潛在延伸線索 · 旁聽友人</p>
+      <p class="negot-text">
+        末段友人主動詢問補習班是否適用類似系統。值得安排一次獨立的需求訪談——補習班與美業在會員制度、轉介紹獎勵、VIP 機制上有高度相似性，若架構設計足夠通用，<strong>可能是第二個垂直市場的入口</strong>。
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════ § 08 後續行動清單 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 2 2h11"/></svg>
+      </div>
+      <h2 class="section-title">後續行動清單</h2>
+      <span class="section-num">§ 08</span>
+    </div>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="action-table">
+        <thead>
+          <tr>
+            <th style="width:36px;">#</th>
+            <th>行動項目</th>
+            <th style="width:120px;">負責人</th>
+            <th style="width:110px;">截止</th>
+            <th style="width:80px;">優先級</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>申請合庫金流接口（刷卡機、QR Code、線上刷卡三通道）</td>
+            <td><span class="owner-tag">WEN 姊</span></td>
+            <td>立即啟動</td>
+            <td><span class="priority-tag p-urgent">緊急</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>整理功能清單並發送優先順序問卷給 WEN 姊</td>
+            <td><span class="owner-tag">雅竹</span></td>
+            <td>本週內</td>
+            <td><span class="priority-tag p-urgent">緊急</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>回填功能優先順序問卷</td>
+            <td><span class="owner-tag">WEN 姊</span></td>
+            <td>收到後一週</td>
+            <td><span class="priority-tag p-urgent">緊急</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>確認點數換算公式（幾點 = 多少元）</td>
+            <td><span class="owner-tag">WEN 姊</span> <span class="owner-tag">達哥</span></td>
+            <td>Phase 1 動工前</td>
+            <td><span class="priority-tag p-urgent">緊急</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>確認分潤規則架構（直營 vs 加盟分潤邏輯）</td>
+            <td><span class="owner-tag">WEN 姊</span> <span class="owner-tag">達哥</span></td>
+            <td>Phase 1 動工前</td>
+            <td><span class="priority-tag p-high">高</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>排定每週例會固定時間</td>
+            <td><span class="owner-tag">雅竹</span></td>
+            <td>本週確認</td>
+            <td><span class="priority-tag p-high">高</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>產出 Phase 1 功能的 UI 設計稿 / AI 模擬畫面</td>
+            <td><span class="owner-tag">J</span> <span class="owner-tag">雅竹</span></td>
+            <td>問卷回收後兩週</td>
+            <td><span class="priority-tag p-high">高</span></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>WEN 確認 UI 稿後，Phase 1 正式開發啟動</td>
+            <td><span class="owner-tag">WEN 姊</span></td>
+            <td>UI 稿出後</td>
+            <td><span class="priority-tag p-high">高</span></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>設計加盟店付費版 vs 免費版的資料權限邊界</td>
+            <td><span class="owner-tag">達哥</span> <span class="owner-tag">雅竹</span></td>
+            <td>Phase 2 前</td>
+            <td><span class="priority-tag p-medium">中</span></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>安排友人補習班需求獨立訪談（延伸商機評估）</td>
+            <td><span class="owner-tag">達哥</span></td>
+            <td>兩週內</td>
+            <td><span class="priority-tag p-medium">中</span></td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>研究預收款信託法規動向，評估 P3 後是否需要合規模組</td>
+            <td><span class="owner-tag">達哥</span></td>
+            <td>Phase 2 結束前</td>
+            <td><span class="priority-tag p-medium">中</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footnote -->
+  <p class="footnote">
+    MUSEON Intelligence · 機密文件 · 僅限會議參與者內部流通<br/>
+    ECA 美業集團 × MUSEON 系統開發確認會 · 2026.05.05<br/>
+    Generated 2026.05.11
+  </p>
+
+</div>
+</body>
+</html>
