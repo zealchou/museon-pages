@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON — 你的第一位 AI 策略夥伴</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+    --success: #2D8A6E;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--deep-ink);
+    color: #fff;
+    padding: 100px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(196,80,42,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 600;
+    line-height: 1.15;
+    max-width: 780px;
+    margin: 0 auto 20px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    margin: 0 auto 48px;
+    line-height: 1.8;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item { text-align: center; }
+  .hero-meta-item .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--ember-light);
+    display: block;
+  }
+  .hero-meta-item .label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 80px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .section-sub {
+    font-size: 17px;
+    color: var(--slate);
+    max-width: 600px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+
+  /* ── JOURNEY ── */
+  .journey {
+    background: var(--snow);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .journey-grid {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    align-items: stretch;
+    min-height: 480px;
+  }
+  .journey-col { padding: 40px 36px; }
+  .journey-col.point-a { background: #fff; }
+  .journey-col.point-b { background: linear-gradient(160deg, #0E2A27 0%, #0E1E2A 100%); color: #fff; }
+  .journey-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--parchment);
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 0;
+  }
+  .arrow-line { width: 2px; flex: 1; background: var(--border); }
+  .arrow-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--ember);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: #fff; flex-shrink: 0;
+  }
+  .journey-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .tag-a { background: rgba(196,80,42,0.1); color: var(--ember); }
+  .tag-b { background: rgba(45,138,110,0.2); color: #4ecba8; }
+  .journey-col h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600;
+    margin-bottom: 24px; line-height: 1.3;
+  }
+  .journey-col.point-b h3 { color: #fff; }
+  .pain-list, .gain-list {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .pain-list li, .gain-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 15px; line-height: 1.6;
+  }
+  .pain-list li .icon { color: #C4402A; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .gain-list li .icon { color: #4ecba8; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .gain-list li { color: rgba(255,255,255,0.85); }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    display: flex; flex-direction: column; gap: 0;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 27px; top: 28px; bottom: 28px;
+    width: 2px; background: var(--border); z-index: 0;
+  }
+  .tl-item {
+    display: flex; gap: 24px;
+    padding: 24px 0; position: relative; z-index: 1;
+  }
+  .tl-dot {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--snow);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 13px; color: var(--slate);
+  }
+  .tl-dot.active {
+    border-color: var(--ember);
+    background: rgba(196,80,42,0.08);
+    color: var(--ember);
+  }
+  .tl-content { padding-top: 10px; }
+  .tl-period { font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--mist); text-transform: uppercase; margin-bottom: 4px; }
+  .tl-title { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .tl-desc { font-size: 15px; color: var(--slate); line-height: 1.65; }
+  .tl-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .tl-tag {
+    font-size: 12px; padding: 3px 10px; border-radius: 100px;
+    background: var(--parchment); border: 1px solid var(--border); color: var(--slate);
+  }
+
+  /* ── INVEST TABLE ── */
+  .invest-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+  }
+  .invest-header {
+    background: var(--deep-ink);
+    padding: 28px 36px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .invest-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600; color: #fff;
+  }
+  .invest-header .badge {
+    background: rgba(196,80,42,0.25);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    padding: 4px 12px; border-radius: 100px;
+  }
+  .invest-body { padding: 36px; }
+  .invest-row {
+    display: flex; align-items: baseline;
+    justify-content: space-between;
+    padding: 16px 0; border-bottom: 1px solid var(--border); gap: 16px;
+  }
+  .invest-row:last-child { border-bottom: none; }
+  .invest-row .name { font-size: 15px; color: var(--slate); flex: 1; }
+  .invest-row .name strong { display: block; font-size: 16px; color: var(--ink); margin-bottom: 2px; }
+  .invest-row .price { font-size: 20px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .invest-row.total .price { font-size: 28px; color: var(--ember); }
+  .invest-row.included {
+    background: rgba(45,138,110,0.04);
+    border-radius: 10px; padding: 16px; margin: 8px -4px;
+    border: 1px solid rgba(45,138,110,0.15);
+  }
+  .invest-row.included .price { color: var(--teal); }
+  .invest-note {
+    margin-top: 20px; padding: 16px 20px;
+    background: rgba(196,80,42,0.06);
+    border: 1px solid rgba(196,80,42,0.15);
+    border-radius: 12px;
+    font-size: 14px; color: var(--slate); line-height: 1.7;
+  }
+  .invest-note strong { color: var(--ember); }
+
+  /* ── CP VALUE ── */
+  .cp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cp-card {
+    border-radius: 16px; padding: 28px;
+    border: 1px solid var(--border);
+  }
+  .cp-card.dark { background: var(--deep-ink); border-color: var(--border-dark); }
+  .cp-card.light { background: var(--snow); }
+  .cp-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mist); margin-bottom: 12px; }
+  .cp-card.dark .cp-label { color: rgba(255,255,255,0.4); }
+  .cp-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 600; color: var(--ember);
+    line-height: 1; margin-bottom: 10px;
+  }
+  .cp-card.dark .cp-num { color: var(--ember-light); }
+  .cp-desc { font-size: 14px; color: var(--slate); line-height: 1.7; }
+  .cp-card.dark .cp-desc { color: rgba(255,255,255,0.55); }
+  .cp-breakdown { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .cp-card.dark .cp-breakdown { border-color: var(--border-dark); }
+  .cp-breakdown-item {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 5px 0; color: var(--slate);
+  }
+  .cp-card.dark .cp-breakdown-item { color: rgba(255,255,255,0.5); }
+  .cp-breakdown-item .val { font-weight: 600; color: var(--ink); }
+  .cp-card.dark .cp-breakdown-item .val { color: rgba(255,255,255,0.85); }
+
+  /* ── ROI BANNER ── */
+  .roi-banner {
+    background: linear-gradient(135deg, var(--deep-ink) 0%, #1A1228 100%);
+    border-radius: 20px; padding: 56px 40px;
+    text-align: center; margin-top: 40px;
+    position: relative; overflow: hidden;
+  }
+  .roi-banner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 120%, rgba(196,80,42,0.15) 0%, transparent 70%);
+  }
+  .roi-banner h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; color: rgba(255,255,255,0.5);
+    font-weight: 400; margin-bottom: 12px; position: relative;
+  }
+  .roi-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(72px, 14vw, 112px);
+    font-weight: 600; color: var(--ember-light);
+    line-height: 1; position: relative; margin-bottom: 16px;
+  }
+  .roi-sub {
+    font-size: 15px; color: rgba(255,255,255,0.45);
+    line-height: 1.9; max-width: 500px;
+    margin: 0 auto; position: relative;
+  }
+  .roi-sub strong { color: rgba(255,255,255,0.75); }
+
+  /* ── PACKAGE GRID ── */
+  .package-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pkg-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pkg-card:hover { border-color: rgba(196,80,42,0.3); transform: translateY(-2px); }
+  .pkg-icon { font-size: 28px; margin-bottom: 14px; }
+  .pkg-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .pkg-desc { font-size: 14px; color: var(--slate); line-height: 1.65; }
+  .pkg-value {
+    margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--teal);
+    display: inline-block;
+    background: rgba(42,122,110,0.08);
+    padding: 3px 10px; border-radius: 100px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--deep-ink); color: #fff;
+    padding: 80px 24px; text-align: center;
+  }
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5vw, 48px);
+    font-weight: 600; margin-bottom: 16px; line-height: 1.25;
+  }
+  .cta-section h2 em { font-style: italic; color: var(--ember-light); }
+  .cta-section p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--ember); color: #fff;
+    font-size: 16px; font-weight: 600;
+    padding: 16px 40px; border-radius: 100px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .cta-btn:hover { background: var(--ember-light); transform: translateY(-2px); }
+  .cta-note { margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.3); }
+
+  footer {
+    background: #09090F; color: rgba(255,255,255,0.3);
+    text-align: center; padding: 32px 24px; font-size: 13px;
+  }
+  footer span { color: var(--ember); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .journey-grid { grid-template-columns: 1fr; }
+    .journey-arrow { display: none; }
+    .cp-grid { grid-template-columns: 1fr; }
+    .package-grid { grid-template-columns: 1fr; }
+    .invest-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .invest-body { padding: 24px; }
+    .roi-banner { padding: 40px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">MUSEON · 產品價值地圖</div>
+    <h1>你的公司，第一位<br><em>不會離職的</em> AI 策略夥伴</h1>
+    <p class="hero-sub">月營收百萬的老闆，花多少錢、多少時間，從哪裡出發、可以去到哪裡</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="num">NT$162,000</span>
+        <span class="label">第一年總投資上限</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="num">14 個月</span>
+        <span class="label">完整服務期（含贈送）</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="num">60–80 小時</span>
+        <span class="label">你需要投入的老闆時間</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="num">9.9×</span>
+        <span class="label">潛在 ROI（保守估算）</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- A → B JOURNEY -->
+<section>
+  <div class="container">
+    <div class="section-label">核心轉化</div>
+    <h2 class="section-title">從 A 點出發，去到你真正想要的 B 點</h2>
+    <p class="section-sub">這不是「買一套 AI 工具」，而是一段有人陪跑的系統性轉化</p>
+    <div class="journey">
+      <div class="journey-grid">
+        <div class="journey-col point-a">
+          <span class="journey-tag tag-a">A 點 · 現在的你</span>
+          <h3>每天在救火，<br>時間都被吃掉了</h3>
+          <ul class="pain-list">
+            <li><span class="icon">✗</span><span>員工重複做低價值工作，你找不到解法</span></li>
+            <li><span class="icon">✗</span><span>AI 工具試了幾個，不知道怎麼用在生意上</span></li>
+            <li><span class="icon">✗</span><span>月營收卡住，加人加班都不是根本解決</span></li>
+            <li><span class="icon">✗</span><span>競爭對手開始導入 AI，你還在觀望</span></li>
+            <li><span class="icon">✗</span><span>業務流程靠口耳相傳，換人就要重來</span></li>
+            <li><span class="icon">✗</span><span>每週 80% 老闆時間在執行，沒空做策略</span></li>
+          </ul>
+        </div>
+        <div class="journey-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-circle">→</div>
+          <div class="arrow-line"></div>
+        </div>
+        <div class="journey-col point-b">
+          <span class="journey-tag tag-b">B 點 · 12 個月後</span>
+          <h3>系統在跑，<br>你在做決策</h3>
+          <ul class="gain-list">
+            <li><span class="icon">✓</span><span>60–80% 重複任務由 AI 自動處理，員工升級做有價值的事</span></li>
+            <li><span class="icon">✓</span><span>清晰的 AI 工作流 SOP，新人 7 天上手不靠老人帶</span></li>
+            <li><span class="icon">✓</span><span>客服、內容、數據三條線同時跑，不需要加人</span></li>
+            <li><span class="icon">✓</span><span>業務流程文件化＋自動化，交接不再是風險</span></li>
+            <li><span class="icon">✓</span><span>競爭力不是用工具，是懂得設計工作流的底層能力</span></li>
+            <li><span class="icon">✓</span><span>從執行者角色解放，每週多出時間做策略和關係</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIME INVESTMENT -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">時間投入</div>
+    <h2 class="section-title">你需要花多少時間？</h2>
+    <p class="section-sub">從簽約到自主運行，14 個月分三個節奏</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot active">M1–2</div>
+        <div class="tl-content">
+          <div class="tl-period">第 1–2 個月 · 密集導入期</div>
+          <div class="tl-title">建立地基：從業務診斷到第一個 AI 工作流上線</div>
+          <div class="tl-desc">最需要你投入的兩個月。不是自己摸索——顧問帶著你從業務痛點出發，找到第一個可以被 AI 接手的重複流程，讓它真的跑起來。</div>
+          <div class="tl-tags">
+            <span class="tl-tag">⏱ 每週 4–5 小時</span>
+            <span class="tl-tag">顧問全程陪跑</span>
+            <span class="tl-tag">業務診斷 + 工作流設計</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active">M3–6</div>
+        <div class="tl-content">
+          <div class="tl-period">第 3–6 個月 · 擴張複製期</div>
+          <div class="tl-title">把第一個成功複製到三條核心業務線</div>
+          <div class="tl-desc">有了第一個工作流，你已經有直觀感受。帶著這個感受，把同樣邏輯複製到客服、內容生產或數據整理——你的團隊也在這個階段被帶起來。</div>
+          <div class="tl-tags">
+            <span class="tl-tag">⏱ 每週 2–3 小時</span>
+            <span class="tl-tag">SSA 系統方法論</span>
+            <span class="tl-tag">團隊導入</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">M7–14</div>
+        <div class="tl-content">
+          <div class="tl-period">第 7–14 個月 · 自主運行期（含贈送 2 個月）</div>
+          <div class="tl-title">系統跑了，你在做你只有你能做的事</div>
+          <div class="tl-desc">這個階段系統已經在跑。你的時間從「確認流程正不正常」轉移到「策略優化和業務拓展」。每月只需少量時間看指標、做調整。</div>
+          <div class="tl-tags">
+            <span class="tl-tag">⏱ 每週 1–2 小時</span>
+            <span class="tl-tag">指標回顧</span>
+            <span class="tl-tag">持續優化</span>
+            <span class="tl-tag">贈送月份服務包含</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px; padding:20px 24px; background:rgba(196,80,42,0.05); border:1px solid rgba(196,80,42,0.12); border-radius:12px; font-size:15px; color:var(--slate); line-height:1.7;">
+      📌 <strong style="color:var(--ink)">總計：你需要投入約 60–80 小時的老闆時間。</strong>相當於 1.5–2 個工作週——換來一套不會離職的 AI 工作系統。
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section>
+  <div class="container">
+    <div class="section-label">起跑包含哪些</div>
+    <h2 class="section-title">NT$90,000 起跑包，你得到的</h2>
+    <p class="section-sub">不是買一堆課程，是一個完整的「導入成功保障包」</p>
+    <div class="package-grid">
+      <div class="pkg-card">
+        <div class="pkg-icon">🧭</div>
+        <div class="pkg-title">2 個月顧問陪跑導入</div>
+        <div class="pkg-desc">從業務診斷、工作流設計到第一個 AI 流程真正上線——有人帶，不是你自己摸。</div>
+        <div class="pkg-value">市場行情 NT$60,000+</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-icon">🚀</div>
+        <div class="pkg-title">SSA 系統創業加速器</div>
+        <div class="pkg-desc">幫你看清商業系統的底層邏輯——知道用 AI 加速什麼，而不是加速做錯的事。</div>
+        <div class="pkg-value">市價 NT$39,800</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-icon">🤖</div>
+        <div class="pkg-title">AI 商業應用專班</div>
+        <div class="pkg-desc">從工具選擇到工作流設計的實戰課程，讓你和你的團隊真的學會用 AI 做生意。</div>
+        <div class="pkg-value">市價 NT$6,000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTMENT BREAKDOWN -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">費用明細</div>
+    <h2 class="section-title">錢花在哪裡，清楚列給你看</h2>
+    <p class="section-sub">沒有隱藏費用，沒有模糊定價</p>
+    <div class="invest-card">
+      <div class="invest-header">
+        <h3>第一年完整費用結構</h3>
+        <span class="badge">透明定價</span>
+      </div>
+      <div class="invest-body">
+        <div class="invest-row">
+          <div class="name">
+            <strong>起跑包（一次性）</strong>
+            含 2 個月顧問陪跑 + SSA 課程 + AI 商業應用專班
+          </div>
+          <div class="price">NT$90,000</div>
+        </div>
+        <div class="invest-row">
+          <div class="name">
+            <strong>年費（12 個月 + 贈送 2 個月）</strong>
+            每月 NT$6,000 × 12 個月，簽年約加送 2 個月
+          </div>
+          <div class="price">NT$72,000</div>
+        </div>
+        <div style="height:1px; background:var(--border); margin:8px 0;"></div>
+        <div class="invest-row total">
+          <div class="name"><strong>第一年總投入</strong></div>
+          <div class="price">NT$162,000</div>
+        </div>
+
+        <div style="height:24px;"></div>
+        <div style="font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--mist); margin-bottom:12px;">包含市場價值</div>
+
+        <div class="invest-row included">
+          <div class="name">SSA 系統創業加速器課程（含在起跑包）</div>
+          <div class="price">NT$39,800</div>
+        </div>
+        <div class="invest-row included">
+          <div class="name">AI 商業應用專班（含在起跑包）</div>
+          <div class="price">NT$6,000</div>
+        </div>
+        <div class="invest-row included">
+          <div class="name">顧問陪跑 2 個月（含在起跑包）</div>
+          <div class="price">NT$60,000+</div>
+        </div>
+        <div class="invest-row included">
+          <div class="name">額外贈送 2 個月服務（年約贈）</div>
+          <div class="price">NT$12,000</div>
+        </div>
+
+        <div class="invest-note">
+          <strong>組合包含總價值：NT$189,800+</strong>，你付 NT$162,000，直接節省 NT$27,800。更重要的是：這不是折扣促銷，而是「導入成功」的完整保障——課程 + 陪跑 + 系統，三件事同時到位。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CP VALUE -->
+<section>
+  <div class="container">
+    <div class="section-label">換算 CP 值</div>
+    <h2 class="section-title">NT$162,000 能換回多少？</h2>
+    <p class="section-sub">用你的業務數字來算，不是我說了算</p>
+    <div class="cp-grid">
+      <div class="cp-card dark">
+        <div class="cp-label">場景一 · 人力替代</div>
+        <div class="cp-num">NT$420,000</div>
+        <div class="cp-desc">如果 MUSEON 幫你省下 1 個月薪 35,000 的重複性職位，一年省下的人力成本</div>
+        <div class="cp-breakdown">
+          <div class="cp-breakdown-item"><span>節省人力成本</span><span class="val">NT$35,000/月</span></div>
+          <div class="cp-breakdown-item"><span>一年合計</span><span class="val">NT$420,000</span></div>
+          <div class="cp-breakdown-item"><span>vs 你的投入</span><span class="val">NT$162,000</span></div>
+        </div>
+      </div>
+      <div class="cp-card light">
+        <div class="cp-label">場景二 · 效率成長</div>
+        <div class="cp-num" style="color:var(--teal)">NT$1,200,000</div>
+        <div class="cp-desc">如果 AI 工作流讓業務效率提升 10%，以月營收 100 萬計算的年增收入</div>
+        <div class="cp-breakdown">
+          <div class="cp-breakdown-item"><span>月營收基準</span><span class="val">NT$1,000,000</span></div>
+          <div class="cp-breakdown-item"><span>效率提升 10%</span><span class="val">NT$100,000/月</span></div>
+          <div class="cp-breakdown-item"><span>一年增收</span><span class="val">NT$1,200,000</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roi-banner">
+      <h3>第一年潛在回報 vs 投入成本</h3>
+      <div class="roi-num">9.9×</div>
+      <p class="roi-sub">
+        投資 NT$162,000，潛在回報 <strong>NT$1,600,000+</strong><br>
+        （場景一 + 場景二 保守合計）<br><br>
+        這還不算：省下的老闆時間、團隊能力升級的長期複利、<br>
+        以及在 AI 時代比競爭對手早 12 個月建好系統的戰略優勢
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- MUSEON POSITIONING -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">MUSEON 是什麼</div>
+    <h2 class="section-title">不是 ChatGPT，不是客服機器人</h2>
+    <p class="section-sub">MUSEON 是一個「思維品質引擎」——幫你看清自己看不到的六個盲點，然後動手解決</p>
+    <div class="package-grid">
+      <div class="pkg-card">
+        <div class="pkg-icon">🔍</div>
+        <div class="pkg-title">盲點偵測</div>
+        <div class="pkg-desc">六大決策盲點：不知自己是誰、沒方向目標、不掌握 GAP、未盤點累積、不懂槓桿、缺整合佈局。MUSEON 幫你看到你看不到的。</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-icon">⚙️</div>
+        <div class="pkg-title">工作流建立</div>
+        <div class="pkg-desc">不是告訴你「AI 能幹嘛」，而是找到你業務裡最值得自動化的那件事，讓它真的跑起來、跑穩定。</div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-icon">📈</div>
+        <div class="pkg-title">持續策略陪伴</div>
+        <div class="pkg-desc">月費包含持續的策略顧問功能。不是買完就走，是有一個 AI 夥伴持續陪你做決策、看數據、做調整。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>準備好從 A 點<em>出發</em>了嗎？</h2>
+    <p>第一步不是做決定，是看清楚你的業務卡點在哪裡</p>
+    <a href="#" class="cta-btn">預約免費業務診斷</a>
+    <div class="cta-note">診斷不是業務拜訪——是一次真實的盲點對焦。60 分鐘，你會帶走一份可以立刻用的清單。</div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>MUSEON</span> — 你的 AI 策略夥伴 · 讓中小企業老闆看清自己看不到的盲點
+    <br>© 2026 MUSEON · 臥龍崗管理顧問有限公司
+  </div>
+</footer>
+
+</body>
+</html>
