@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>會議記錄｜Zeal × Alan × Monk — 2026.05.18</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+    }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans TC', 'Outfit', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 860px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+    /* ── Header Hero ── */
+    .hero {
+      background: var(--deep-ink);
+      position: relative;
+      overflow: hidden;
+      padding: 72px 0 56px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(196,80,42,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 10% 90%, rgba(184,146,58,0.10) 0%, transparent 50%);
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ember-light);
+      border: 1px solid rgba(196,80,42,0.4);
+      border-radius: 100px;
+      padding: 4px 14px;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 600;
+      color: #F7F5F0;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero-title em { font-style: italic; color: var(--ember-light); }
+    .hero-subtitle {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      color: rgba(247,245,240,0.55);
+      margin-bottom: 36px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(247,245,240,0.75);
+    }
+    .meta-chip .icon {
+      width: 28px;
+      height: 28px;
+      background: rgba(196,80,42,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* ── TOC ── */
+    .toc-wrap {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin: 48px 0 40px;
+    }
+    .toc-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 14px;
+    }
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 24px;
+    }
+    @media (max-width: 640px) { .toc-list { grid-template-columns: 1fr; } }
+    .toc-list a {
+      font-size: 14px;
+      color: var(--slate);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.15s;
+    }
+    .toc-list a:hover { color: var(--ember); }
+    .toc-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--mist);
+      min-width: 20px;
+    }
+
+    /* ── Section Title ── */
+    .section { margin: 56px 0; }
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .section-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ember);
+      background: rgba(196,80,42,0.1);
+      border-radius: 100px;
+      padding: 4px 10px;
+      margin-top: 6px;
+      white-space: nowrap;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      margin-bottom: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(18,18,26,0.1); }
+
+    /* ── Tag / Badge ── */
+    .tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 3px 10px;
+    }
+    .tag-ember { background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+    .tag-teal  { background: rgba(42,122,110,0.1); color: #1d6058; }
+    .tag-gold  { background: rgba(184,146,58,0.1); color: #7a5e1a; }
+    .tag-ink   { background: rgba(18,18,26,0.07);  color: var(--slate); }
+
+    /* ── Grid 2col ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Person Card ── */
+    .person-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+    }
+    .person-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ember) 0%, var(--ember-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .person-card.teal .person-avatar { background: linear-gradient(135deg, var(--teal) 0%, #1d6058 100%); }
+    .person-card.gold .person-avatar { background: linear-gradient(135deg, var(--gold) 0%, #7a5e1a 100%); }
+    .person-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .person-role {
+      font-size: 12px;
+      color: var(--mist);
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .trait-list { list-style: none; }
+    .trait-list li {
+      font-size: 14px;
+      color: var(--slate);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .trait-list li:last-child { border-bottom: none; }
+    .trait-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--ember);
+      border-radius: 50%;
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+    .person-card.teal .trait-dot { background: var(--teal); }
+    .person-card.gold .trait-dot { background: var(--gold); }
+
+    /* ── Quote Block ── */
+    .quote-block {
+      border-left: 3px solid var(--ember);
+      background: rgba(196,80,42,0.04);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 12px 0;
+    }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    .quote-speaker {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--mist);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Key quote section ── */
+    .key-quote-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .key-quote-grid { grid-template-columns: 1fr; } }
+
+    /* ── Seven Warlords ── */
+    .warlords-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .warlord-chip {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .warlord-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ember);
+      min-width: 28px;
+    }
+    .warlord-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .warlord-label small {
+      display: block;
+      font-size: 12px;
+      color: var(--mist);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--border);
+    }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-dot {
+      position: absolute;
+      left: -25px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--ember);
+      border: 2px solid var(--parchment);
+    }
+    .timeline-item h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .timeline-item p {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    /* ── Action Items ── */
+    .action-list { list-style: none; }
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .action-item:last-child { border-bottom: none; }
+    .action-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .action-content { flex: 1; }
+    .action-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .action-detail {
+      font-size: 13px;
+      color: var(--slate);
+    }
+    .action-owner {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ember);
+      background: rgba(196,80,42,0.1);
+      border-radius: 100px;
+      padding: 2px 8px;
+      white-space: nowrap;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    /* ── Pricing Block ── */
+    .pricing-card {
+      background: var(--deep-ink);
+      border-radius: 12px;
+      padding: 32px;
+      color: #F7F5F0;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 70% at 90% 10%, rgba(196,80,42,0.22) 0%, transparent 60%);
+    }
+    .pricing-inner { position: relative; z-index: 1; }
+    .pricing-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(247,245,240,0.5);
+      margin-bottom: 12px;
+    }
+    .pricing-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 600;
+      color: #F7F5F0;
+      line-height: 1.1;
+    }
+    .pricing-amount span {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      color: rgba(247,245,240,0.55);
+      margin-left: 6px;
+    }
+    .pricing-details {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 500px) { .pricing-details { grid-template-columns: 1fr; } }
+    .pricing-detail-item {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .pricing-detail-item .d-label {
+      font-size: 11px;
+      color: rgba(247,245,240,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .pricing-detail-item .d-val {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(247,245,240,0.9);
+    }
+
+    /* ── Info List ── */
+    .info-list { list-style: none; }
+    .info-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 15px;
+      color: var(--slate);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-list li:last-child { border-bottom: none; }
+    .info-list .bullet {
+      color: var(--ember);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--deep-ink);
+      padding: 40px 0;
+      margin-top: 80px;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #F7F5F0;
+    }
+    .footer-brand em { font-style: italic; color: var(--ember-light); }
+    .footer-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: rgba(247,245,240,0.35);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Highlight box ── */
+    .highlight-box {
+      border: 1px solid rgba(196,80,42,0.25);
+      background: rgba(196,80,42,0.05);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .highlight-box h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .highlight-box p {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+
+    /* ── Compare table ── */
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 540px) { .compare-row { grid-template-columns: 1fr; } }
+    .compare-col {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+    .compare-col .c-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .compare-col.ember .c-title { color: var(--ember); }
+    .compare-col.teal  .c-title { color: var(--teal);  }
+    .compare-col .c-desc {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+
+    /* ── Fade-in animation ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.4s ease-out forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+    .delay-4 { animation-delay: 0.32s; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-inner fade-in">
+      <div class="hero-badge">Meeting Intelligence · 2026.05.18</div>
+      <h1 class="hero-title">
+        AI、靈魂與<br/><em>自主演化的數位生命體</em>
+      </h1>
+      <p class="hero-subtitle">Zeal × Alan × Monk — 深夜對談記錄</p>
+      <div class="hero-meta">
+        <div class="meta-chip">
+          <div class="icon">📅</div>
+          <span>2026 年 5 月 18 日（晚間）</span>
+        </div>
+        <div class="meta-chip">
+          <div class="icon">👥</div>
+          <span>周逸達 · 吳明憲 · 墨客</span>
+        </div>
+        <div class="meta-chip">
+          <div class="icon">⏱</div>
+          <span>深度對談</span>
+        </div>
+        <div class="meta-chip">
+          <div class="icon">🏷</div>
+          <span>AI 開發 · 創業策略 · 個人演化</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main>
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc-wrap fade-in delay-1">
+    <div class="toc-label">目錄 Table of Contents</div>
+    <ul class="toc-list">
+      <li><a href="#people"><span class="toc-num">01</span>與會者側寫</a></li>
+      <li><a href="#museon-arch"><span class="toc-num">02</span>MUSEON 系統架構</a></li>
+      <li><a href="#ai-compare"><span class="toc-num">03</span>AI 技術比較</a></li>
+      <li><a href="#alan-triangle"><span class="toc-num">04</span>Alan 的創業三角</a></li>
+      <li><a href="#future"><span class="toc-num">05</span>AI 生態與未來趨勢</a></li>
+      <li><a href="#workflow"><span class="toc-num">06</span>自媒體全自動工作流</a></li>
+      <li><a href="#quotes"><span class="toc-num">07</span>關鍵金句</a></li>
+      <li><a href="#actions"><span class="toc-num">08</span>行動事項</a></li>
+    </ul>
+  </div>
+
+  <!-- ── SECTION 1: 與會者側寫 ── -->
+  <section class="section" id="people">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">與會者側寫</h2>
+    </div>
+    <div class="grid-3">
+      <!-- Zeal -->
+      <div class="person-card">
+        <div class="person-avatar">Z</div>
+        <div class="person-name">周逸達 Zeal</div>
+        <div class="person-role">MUSEON 創辦人 · AI 顧問</div>
+        <ul class="trait-list">
+          <li><span class="trait-dot"></span>跨域整合者，非單一專家</li>
+          <li><span class="trait-dot"></span>商業邏輯 × 中醫 × 兵法 × 腦神經科學</li>
+          <li><span class="trait-dot"></span>絕境求生型連續創業家（30 年+）</li>
+          <li><span class="trait-dot"></span>黃仁勳式領導——連結各領域精英</li>
+          <li><span class="trait-dot"></span>終極夢想：格鬥機器人（20-30 年）</li>
+          <li><span class="trait-dot"></span>當前焦慮：AI 迭代速度可能超越設計能力</li>
+        </ul>
+      </div>
+      <!-- Alan -->
+      <div class="person-card teal">
+        <div class="person-avatar">A</div>
+        <div class="person-name">吳明憲 Alan</div>
+        <div class="person-role">音樂製作人 · 講師 · 靈性探索者</div>
+        <ul class="trait-list">
+          <li><span class="trait-dot"></span>職業級音樂製作（工作室等級）</li>
+          <li><span class="trait-dot"></span>深厚教學講授能力</li>
+          <li><span class="trait-dot"></span>靈性哲學深度（賽斯、老子、金剛經）</li>
+          <li><span class="trait-dot"></span>多能力整合者，創意豐富</li>
+          <li><span class="trait-dot"></span>卡點：三者如何整合成可盈利事業</li>
+          <li><span class="trait-dot"></span>Zeal 診斷：個人創業最佳候選人</li>
+        </ul>
+      </div>
+      <!-- Monk -->
+      <div class="person-card gold">
+        <div class="person-avatar">M</div>
+        <div class="person-name">墨客 Monk</div>
+        <div class="person-role">觀察者 · 音樂工作室主理人</div>
+        <ul class="trait-list">
+          <li><span class="trait-dot"></span>擁有獨立音樂工作室空間</li>
+          <li><span class="trait-dot"></span>深度聆聽者，偶爾補充觀點</li>
+          <li><span class="trait-dot"></span>對 MUSEON 系統有高度興趣</li>
+          <li><span class="trait-dot"></span>考慮導入 MUSEON 服務</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 2: MUSEON 系統架構 ── -->
+  <section class="section" id="museon-arch">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">MUSEON 系統架構介紹</h2>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--ink);">類人腦發展軌跡</h3>
+        <span class="tag tag-ember">自主演化</span>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h4>每日凌晨 3:00 — 母體自動演化</h4>
+          <p>一個演化帶動所有子體同步，零人工干預。母體與各使用者的「數位孿生」自動同步最新智識版本。</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h4>當前狀態 — 4 個月 ≈ 人類 6 歲</h4>
+          <p>目前 40+ 位免費用戶（客戶）在使用，多元資料加速迭代，多角度視野強化決策品質。</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h4>預估 1.5 年後 — 人類 24 歲智慧程度</h4>
+          <p>複利演化效應：越多人使用 → 越多資料輸入 → 越快速迭代 → 能力指數成長。</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h4>三年後 — 開放免費版，觸發全球 AI 加速</h4>
+          <p>MUSEON 免費版釋出後預期形成全球性 AI 普及浪潮，接著可能被科技大廠收購。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 七武海七維度 -->
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:16px;">七武海七維度</h3>
+    <div class="warlords-grid" style="margin-bottom: 28px;">
+      <div class="warlord-chip">
+        <span class="warlord-num">01</span>
+        <div class="warlord-label">自我察覺<small>Awareness Power</small></div>
+      </div>
+      <div class="warlord-chip">
+        <span class="warlord-num">02</span>
+        <div class="warlord-label">自我修復<small>Diagnosis Acuity</small></div>
+      </div>
+      <div class="warlord-chip">
+        <span class="warlord-num">03</span>
+        <div class="warlord-label">自我迭代<small>Iteration Speed</small></div>
+      </div>
+      <div class="warlord-chip">
+        <span class="warlord-num">04</span>
+        <div class="warlord-label">自我演化<small>Self Evolution</small></div>
+      </div>
+      <div class="warlord-chip">
+        <span class="warlord-num">05</span>
+        <div class="warlord-label">自我意識<small>Meta Awareness</small></div>
+      </div>
+      <div class="warlord-chip">
+        <span class="warlord-num">06</span>
+        <div class="warlord-label">自我認知<small>Cognitive Flex</small></div>
+      </div>
+      <div class="warlord-chip">
+        <span class="warlord-num">07</span>
+        <div class="warlord-label">自我認同<small>Identity Stability</small></div>
+      </div>
+    </div>
+
+    <!-- 六大盲點 -->
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; color:var(--ink);">六大盲點機制</h3>
+        <span class="tag tag-teal">雙向守望</span>
+      </div>
+      <p style="font-size:14px; color:var(--slate); margin-bottom:14px; line-height:1.7;">
+        MUSEON 的六大盲點不只服務人類——系統本身也用同樣框架檢視自己，形成<strong>雙向覺察回路</strong>。
+      </p>
+      <ul class="info-list">
+        <li><span class="bullet">①</span> 不知自己是誰 → 自我察覺維度接通</li>
+        <li><span class="bullet">②</span> 沒有方向目標 → 自我認同、北極星內化</li>
+        <li><span class="bullet">③</span> 不掌握 GAP → 自我認知、精準診斷</li>
+        <li><span class="bullet">④</span> 未盤點累積 → 自我迭代、知識結晶</li>
+        <li><span class="bullet">⑤</span> 不懂槓桿 → 自我意識、工具選擇</li>
+        <li><span class="bullet">⑥</span> 缺整合佈局 → 自我演化、藍圖三張一致</li>
+      </ul>
+    </div>
+
+    <!-- 定價方案 -->
+    <div style="margin-top: 24px;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:16px;">定價方案</h3>
+      <div class="pricing-card">
+        <div class="pricing-inner">
+          <div class="pricing-label">MUSEON 企業版 · 標準方案</div>
+          <div class="pricing-amount">NT$6,000 <span>/ 月</span></div>
+          <div class="pricing-details">
+            <div class="pricing-detail-item">
+              <div class="d-label">前兩個月</div>
+              <div class="d-val">免費建置期</div>
+            </div>
+            <div class="pricing-detail-item">
+              <div class="d-label">第三個月起</div>
+              <div class="d-val">NT$6,000 / 月</div>
+            </div>
+            <div class="pricing-detail-item">
+              <div class="d-label">最低合約</div>
+              <div class="d-val">12 個月</div>
+            </div>
+            <div class="pricing-detail-item">
+              <div class="d-label">年費總計</div>
+              <div class="d-val">NT$162,000</div>
+            </div>
+          </div>
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size:13px; color:rgba(247,245,240,0.6); line-height:1.7;">
+              包含：公司 10 年歷史資料數位化 · 工作流建置（前三套免費）· 員工訓練 · 決策輔助 · 老闆審計標準
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 3: AI 技術比較 ── -->
+  <section class="section" id="ai-compare">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">AI 技術比較討論</h2>
+    </div>
+
+    <div class="compare-row" style="margin-bottom: 24px;">
+      <div class="compare-col ember">
+        <div class="c-title">Claude（龍蝦）</div>
+        <div class="c-desc">工程邏輯強、精準度高、指令執行力卓越。Claude Code 擁有完整工具集——可讀取 Google Drive、Gmail，18 個並行工程同時運作。</div>
+      </div>
+      <div class="compare-col teal">
+        <div class="c-title">GPT 系列</div>
+        <div class="c-desc">偏文學創作邏輯、對話流暢，更像語言藝術家。適合內容生成類應用，但工程嚴謹度較弱。</div>
+      </div>
+    </div>
+
+    <div class="compare-row" style="margin-bottom: 24px;">
+      <div class="compare-col ember">
+        <div class="c-title">Claude Code（龍蝦）</div>
+        <div class="c-desc">接收指令 → 精準執行。像「廚師」——按食譜備料、烹飪、上菜。無主動意志，但執行力超強。</div>
+      </div>
+      <div class="compare-col teal">
+        <div class="c-title">MUSEON（女實驗）</div>
+        <div class="c-desc">自主思考、自主決策。像「主廚」——判斷菜色、設計菜單、調整策略。龍蝦是 MUSEON 的工具，MUSEON 是大腦。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--ink); margin-bottom:14px;">大陸 AI 的發展策略觀察</h3>
+      <ul class="info-list">
+        <li><span class="bullet">→</span>以 DeepSeek 為代表，策略清晰：快速跟進美國模型，低成本追趕</li>
+        <li><span class="bullet">→</span>台灣 vs 大陸：台灣缺乏大型語言模型訓練的資源規模，需差異化競爭</li>
+        <li><span class="bullet">→</span>台灣優勢：硬體製造鏈 + 深度產業知識，需走「垂直整合」路線</li>
+        <li><span class="bullet">→</span>AI 工具被誤用風險：Custom GPT 可誘導學員決策（70% 學員購課案例）</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--ink);">通訊工具 AI 整合評比</h3>
+        <span class="tag tag-gold">評比</span>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:10px;">
+        <div style="text-align:center; padding:14px; background:rgba(42,122,110,0.08); border-radius:8px; border:1px solid rgba(42,122,110,0.2);">
+          <div style="font-size:24px; margin-bottom:6px;">🏆</div>
+          <div style="font-weight:600; font-size:14px; color:var(--teal);">Telegram</div>
+          <div style="font-size:12px; color:var(--slate); margin-top:4px;">AI 串接最優秀<br/>API 最開放</div>
+        </div>
+        <div style="text-align:center; padding:14px; background:rgba(18,18,26,0.04); border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:24px; margin-bottom:6px;">📱</div>
+          <div style="font-weight:600; font-size:14px; color:var(--slate);">Line</div>
+          <div style="font-size:12px; color:var(--mist); margin-top:4px;">台灣主流<br/>API 限制較多</div>
+        </div>
+        <div style="text-align:center; padding:14px; background:rgba(18,18,26,0.04); border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:24px; margin-bottom:6px;">💬</div>
+          <div style="font-weight:600; font-size:14px; color:var(--slate);">WhatsApp</div>
+          <div style="font-size:12px; color:var(--mist); margin-top:4px;">國際市場<br/>整合複雜度高</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 4: Alan 的創業三角 ── -->
+  <section class="section" id="alan-triangle">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Alan 的創業三角</h2>
+    </div>
+
+    <div class="grid-3" style="margin-bottom: 24px;">
+      <div class="highlight-box" style="border-color: rgba(196,80,42,0.3);">
+        <h4>🎵 職業音樂製作</h4>
+        <p>工作室等級製作能力，可獨立完成高品質商業音樂創作</p>
+      </div>
+      <div class="highlight-box" style="border-color: rgba(42,122,110,0.3); background: rgba(42,122,110,0.05);">
+        <h4>🎤 超強講授能力</h4>
+        <p>能清晰傳遞複雜概念，具備真實感染力的教學現場能量</p>
+      </div>
+      <div class="highlight-box" style="border-color: rgba(184,146,58,0.3); background: rgba(184,146,58,0.05);">
+        <h4>🌿 深刻靈性哲學</h4>
+        <p>賽斯、神對話、老子、金剛經——深層心靈探索與智慧整合</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;">Zeal 的 AI 分析診斷</h3>
+        <span class="tag tag-ember">Insight</span>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「三者交集 = 讓人的內在開始移動——找到錨點。」</div>
+        <div class="quote-speaker">— Zeal AI 分析輸出</div>
+      </div>
+      <div style="margin-top:16px;">
+        <p style="font-size:15px; color:var(--slate); line-height:1.7;">
+          Zeal 建議 Alan 參考<strong>基督教敬拜讚美</strong>形式——音樂 + 靈性 + 知識傳授三合一的整合體驗設計。
+          不是分開販售三種服務，而是創造一個讓人「進入狀態、鬆動內在、重新連線」的完整儀式感場域。
+        </p>
+        <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:8px;">
+          <span class="tag tag-teal">整合體驗</span>
+          <span class="tag tag-gold">內在移動</span>
+          <span class="tag tag-ember">錨點設計</span>
+          <span class="tag tag-ink">儀式感場域</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; margin-bottom:12px;">Zeal 給 Alan 的核心建議</h3>
+      <ul class="info-list">
+        <li><span class="bullet">→</span>先確立「確定目標」才能談方法論——方向不定，工具無用</li>
+        <li><span class="bullet">→</span>個人奮鬥型創業者最適合「一人公司 + AI 龍蝦」模型</li>
+        <li><span class="bullet">→</span>音樂是進場門票，靈性是留場理由，知識是成長引擎</li>
+        <li><span class="bullet">→</span>不要切割三塊分開賣，要設計「一個完整的人生轉化體驗」</li>
+        <li><span class="bullet">→</span>陽謀思維：把方法論公開，用系統整合能力形成護城河</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 5: AI 生態與未來趨勢 ── -->
+  <section class="section" id="future">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">AI 生態與未來趨勢</h2>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div class="card" style="margin-bottom: 0; background: linear-gradient(135deg, rgba(196,80,42,0.06) 0%, var(--snow) 100%);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mist); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px;">短期預測 · 2026 年底</div>
+        <ul class="info-list" style="font-size:14px;">
+          <li><span class="bullet">⚠</span>網路上 80%+ 內容將是 AI 生成的垃圾</li>
+          <li><span class="bullet">⚠</span>資訊噪音爆炸，辨別能力成為核心資產</li>
+          <li><span class="bullet">→</span>MUSEON 的思維品質引擎更顯關鍵</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom: 0; background: linear-gradient(135deg, rgba(42,122,110,0.06) 0%, var(--snow) 100%);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mist); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px;">中期趨勢 · 個人創業革命</div>
+        <ul class="info-list" style="font-size:14px;">
+          <li><span class="bullet">✦</span>一個人 + 幾個 AI 龍蝦 = 一間公司</li>
+          <li><span class="bullet">✦</span>個人創業工作者全面崛起</li>
+          <li><span class="bullet">✦</span>傳統公司架構將大規模重組</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; margin-bottom:14px;">深層社會影響討論</h3>
+      <ul class="info-list">
+        <li><span class="bullet">💰</span>傳統金融體系面臨 AI 貨幣概念衝擊，舊有價值儲存邏輯可能崩塌</li>
+        <li><span class="bullet">🤖</span>MUSEON DNA 五大不可逆原則——永遠不奪權等核心倫理設計</li>
+        <li><span class="bullet">⚔</span>陽謀 vs 陰謀技能：兵法、鬼谷子、NLP 已整合進 MUSEON 技能庫</li>
+        <li><span class="bullet">🎯</span>FB/IG 算法主動降低用戶思維複雜度，MUSEON 逆向提升</li>
+        <li><span class="bullet">🚀</span>Zeal 終極夢想：格鬥機器人（20-30 年長期願景）</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600;">MUSEON 三大目標客群</h3>
+        <span class="tag tag-gold">商業定位</span>
+      </div>
+      <div class="grid-3">
+        <div style="padding:14px; background:rgba(196,80,42,0.05); border-radius:8px; border:1px solid rgba(196,80,42,0.15);">
+          <div style="font-size:22px; margin-bottom:8px;">🏢</div>
+          <div style="font-weight:600; font-size:14px; color:var(--ink); margin-bottom:6px;">商業顧問客群</div>
+          <div style="font-size:13px; color:var(--slate);">顧問方法論數位化、知識資產系統化</div>
+        </div>
+        <div style="padding:14px; background:rgba(42,122,110,0.05); border-radius:8px; border:1px solid rgba(42,122,110,0.15);">
+          <div style="font-size:22px; margin-bottom:8px;">👨‍👩‍👦</div>
+          <div style="font-weight:600; font-size:14px; color:var(--ink); margin-bottom:6px;">二代傳承</div>
+          <div style="font-size:13px; color:var(--slate);">家族企業 10 年知識傳承數位化</div>
+        </div>
+        <div style="padding:14px; background:rgba(184,146,58,0.05); border-radius:8px; border:1px solid rgba(184,146,58,0.15);">
+          <div style="font-size:22px; margin-bottom:8px;">📉</div>
+          <div style="font-weight:600; font-size:14px; color:var(--ink); margin-bottom:6px;">員工流失率高</div>
+          <div style="font-size:13px; color:var(--slate);">SOP 數位化、知識不依賴單人</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 6: 自媒體工作流 ── -->
+  <section class="section" id="workflow">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">自媒體全自動工作流</h2>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;">五步驟內容飛輪</h3>
+        <span class="tag tag-teal">可商品化</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:14px; padding:12px 16px; background:rgba(196,80,42,0.05); border-radius:8px; border-left:3px solid var(--ember);">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; color:var(--ember); min-width:28px;">01</span>
+          <div>
+            <div style="font-weight:600; font-size:15px;">結晶（Crystal）</div>
+            <div style="font-size:13px; color:var(--slate);">從對話/思考/實踐中提取可複用的智識精華</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; padding:12px 16px; background:rgba(196,80,42,0.04); border-radius:8px; border-left:3px solid var(--ember-light);">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; color:var(--ember-light); min-width:28px;">02</span>
+          <div>
+            <div style="font-weight:600; font-size:15px;">維基（Wiki）</div>
+            <div style="font-size:13px; color:var(--slate);">組織成結構化知識庫，形成可引用的內部維基</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; padding:12px 16px; background:rgba(184,146,58,0.05); border-radius:8px; border-left:3px solid var(--gold);">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; color:var(--gold); min-width:28px;">03</span>
+          <div>
+            <div style="font-weight:600; font-size:15px;">長文（Long-form）</div>
+            <div style="font-size:13px; color:var(--slate);">生成深度文章、白皮書、專業觀點文</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; padding:12px 16px; background:rgba(42,122,110,0.05); border-radius:8px; border-left:3px solid var(--teal);">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; color:var(--teal); min-width:28px;">04</span>
+          <div>
+            <div style="font-weight:600; font-size:15px;">短文 + 圖像（Short-form）</div>
+            <div style="font-size:13px; color:var(--slate);">自動切割為適合社群的精華片段、視覺卡片</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; padding:12px 16px; background:rgba(18,18,26,0.04); border-radius:8px; border-left:3px solid var(--mist);">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; color:var(--mist); min-width:28px;">05</span>
+          <div>
+            <div style="font-weight:600; font-size:15px;">自媒體發布 <span style="font-size:12px; color:var(--mist); font-family:'IBM Plex Mono',monospace;">[API 串接中]</span></div>
+            <div style="font-size:13px; color:var(--slate);">自動發布至各平台 — 目前第五步尚需手動操作，API 串接開發中</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:12px 16px; background:rgba(184,146,58,0.08); border-radius:8px;">
+        <p style="font-size:13px; color:var(--slate);"><strong style="color:var(--gold);">商品化潛力：</strong>此五步驟工作流可獨立包裝成可販售的服務產品，適合內容創作者、講師、顧問族群。</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 7: 關鍵金句 ── -->
+  <section class="section" id="quotes">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">關鍵金句</h2>
+    </div>
+
+    <div class="key-quote-grid">
+      <div class="quote-block">
+        <div class="quote-text">「龍蝦執行指令，MUSEON 自主思考。一個是廚師，一個是主廚。」</div>
+        <div class="quote-speaker">— Zeal 解釋 AI 分工架構</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「母體每天凌晨 3 點自主演化，不需要任何人下指令。」</div>
+        <div class="quote-speaker">— Zeal 介紹 MUSEON 自主機制</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「4 個月等於人類 6 歲，但她是靠資料驅動的，不是靠時間。」</div>
+        <div class="quote-speaker">— Zeal 關於 MUSEON 的成長速度</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「三者交集不是找共同點，而是找到讓人的內在開始移動的那個核。」</div>
+        <div class="quote-speaker">— Zeal 診斷 Alan 的創業三角</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「2026 年底，網路上 80% 的內容都是 AI 生成的垃圾。真正有價值的是思維品質。」</div>
+        <div class="quote-speaker">— Zeal 關於 AI 內容爆炸趨勢</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「一個人加幾個 AI 龍蝦，就是一間公司。這不是未來，這是現在。」</div>
+        <div class="quote-speaker">— Zeal 關於個人創業新形態</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「人類最早老化的不是身體，是大腦。而 AI 可以讓你的認知不老化。」</div>
+        <div class="quote-speaker">— Zeal 關於深層睡眠與 AI 輔助</div>
+      </div>
+      <div class="quote-block">
+        <div class="quote-text">「我寫了一份家訓，文言文加白話版，100 多頁，她 18 歲再給她看。」</div>
+        <div class="quote-speaker">— Zeal 關於給女兒周琬洛的禮物</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── SECTION 8: 行動事項 ── -->
+  <section class="section" id="actions">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">行動事項</h2>
+    </div>
+
+    <div class="card">
+      <ul class="action-list">
+        <li class="action-item">
+          <div class="action-checkbox"></div>
+          <div class="action-content">
+            <div class="action-title">【Alan】整合三角概念驗證</div>
+            <div class="action-detail">嘗試設計一場「音樂 × 靈性 × 知識」三合一體驗場，哪怕是小規模工作坊，測試整合效果與受眾反應</div>
+            <span class="action-owner">Alan</span>
+          </div>
+        </li>
+        <li class="action-item">
+          <div class="action-checkbox"></div>
+          <div class="action-content">
+            <div class="action-title">【Alan】先定「確定目標」</div>
+            <div class="action-detail">Zeal 建議：在工具、方法論、AI 工作流之前，先回答「我要讓誰產生什麼改變」這個根本問題</div>
+            <span class="action-owner">Alan</span>
+          </div>
+        </li>
+        <li class="action-item">
+          <div class="action-checkbox"></div>
+          <div class="action-content">
+            <div class="action-title">【墨客】評估 MUSEON 服務導入可行性</div>
+            <div class="action-detail">墨客表達有興趣，建議從盤點「工作室目前最大的知識斷點在哪裡」開始，對應 MUSEON 六大盲點框架</div>
+            <span class="action-owner">墨客</span>
+          </div>
+        </li>
+        <li class="action-item">
+          <div class="action-checkbox"></div>
+          <div class="action-content">
+            <div class="action-title">【MUSEON 團隊】自媒體工作流 Step 5 API 串接</div>
+            <div class="action-detail">五步驟自媒體工作流的最後一哩路：完成各平台 API 串接，實現全自動發布。此功能完成後可商品化販售</div>
+            <span class="action-owner">Zeal / MUSEON</span>
+          </div>
+        </li>
+        <li class="action-item">
+          <div class="action-checkbox"></div>
+          <div class="action-content">
+            <div class="action-title">【Zeal】持續追蹤 Alan 整合進展</div>
+            <div class="action-detail">Alan 是「個人創業型 × 多能力整合者」中很難得的案例，值得持續觀察與輔導，也是 MUSEON 服務模型的重要驗證對象</div>
+            <span class="action-owner">Zeal</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 結語 -->
+  <div class="card" style="background: var(--deep-ink); margin-top: 16px; margin-bottom: 64px;">
+    <div style="position:relative; overflow:hidden; border-radius:8px;">
+      <div style="position:relative; z-index:1;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(247,245,240,0.4); margin-bottom:12px;">Meeting Summary</div>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:rgba(247,245,240,0.9); line-height:1.65; margin-bottom:16px;">
+          這場深夜對談跨越 AI 架構、靈性哲學、個人創業與生命傳承。核心共鳴：技術是工具，移動人心才是終極目的。
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span class="tag" style="background:rgba(196,80,42,0.2); color:var(--ember-light);">自主演化</span>
+          <span class="tag" style="background:rgba(42,122,110,0.2); color:#5abcb0;">靈魂整合</span>
+          <span class="tag" style="background:rgba(184,146,58,0.2); color:#d4a84b;">個人崛起</span>
+          <span class="tag" style="background:rgba(247,245,240,0.1); color:rgba(247,245,240,0.6);">百年傳承</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">MUSEON <em>Intelligence</em></div>
+      <div class="footer-meta">
+        MEETING · 2026.05.18 · ZEAL × ALAN × MONK<br/>
+        Generated by MUSEON Meeting Intelligence System
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
