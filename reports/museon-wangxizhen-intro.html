@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON × 王璽臻 | 心理安全感實踐室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+  }
+
+  /* ─── HERO ─────────────────────── */
+  .hero {
+    background: var(--deep-ink);
+    color: var(--snow);
+    padding: 80px 24px 72px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(ellipse, rgba(196,80,42,0.18) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    border: 1px solid rgba(196,80,42,0.5);
+    color: var(--ember-light);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 58px);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--ember-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(253,252,250,0.65);
+    margin-bottom: 16px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  .hero-divider {
+    width: 40px; height: 2px;
+    background: var(--ember);
+    margin: 28px auto 32px;
+  }
+  .hero-intro {
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: 17px;
+    color: rgba(253,252,250,0.8);
+    line-height: 1.8;
+  }
+
+  /* ─── SECTION CONTAINER ─────────── */
+  .section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 72px 24px;
+  }
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--slate);
+    margin-bottom: 44px;
+    max-width: 580px;
+    line-height: 1.8;
+  }
+
+  /* ─── CARD GRID ─────────────────── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 26px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 8px 28px rgba(18,18,26,0.08);
+    transform: translateY(-2px);
+  }
+  .card-icon {
+    width: 44px; height: 44px;
+    background: rgba(196,80,42,0.08);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+  .card .tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+  }
+
+  /* ─── INDUSTRY SECTION (DARK) ───── */
+  .section-dark {
+    background: var(--deep-ink);
+    color: var(--snow);
+  }
+  .section-dark .section-title { color: var(--snow); }
+  .section-dark .section-desc { color: rgba(253,252,250,0.65); }
+  .section-dark .card {
+    background: var(--surface);
+    border-color: var(--border-dark);
+  }
+  .section-dark .card h3 { color: var(--snow); }
+  .section-dark .card p { color: rgba(253,252,250,0.6); }
+  .section-dark .card-icon { background: rgba(196,80,42,0.15); }
+
+  /* ─── CLIENTS IMPACT ────────────── */
+  .impact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .impact-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    align-items: start;
+  }
+  .impact-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--ember);
+    line-height: 1;
+    min-width: 40px;
+    padding-top: 2px;
+  }
+  .impact-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .impact-content p {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+
+  /* ─── DIFF SECTION ──────────────── */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .diff-grid { grid-template-columns: 1fr; }
+  }
+  .diff-card {
+    border-radius: 14px;
+    padding: 26px 24px;
+    border: 1px solid var(--border);
+  }
+  .diff-card.highlighted {
+    background: linear-gradient(135deg, rgba(196,80,42,0.06), rgba(184,146,58,0.06));
+    border-color: rgba(196,80,42,0.25);
+  }
+  .diff-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .diff-card h4 .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ember);
+    flex-shrink: 0;
+  }
+  .diff-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .diff-card ul li {
+    font-size: 14px;
+    color: var(--slate);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .diff-card ul li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--ember);
+    font-size: 12px;
+    top: 2px;
+  }
+
+  /* ─── QUOTE ─────────────────────── */
+  .quote-block {
+    background: linear-gradient(135deg, var(--deep-ink), var(--surface));
+    color: var(--snow);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0 24px;
+  }
+  .quote-block::before {
+    content: '"';
+    position: absolute;
+    top: -20px; left: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 160px;
+    color: rgba(196,80,42,0.12);
+    line-height: 1;
+    font-weight: 600;
+  }
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(253,252,250,0.9);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .quote-source {
+    font-size: 13px;
+    color: rgba(253,252,250,0.45);
+    letter-spacing: 1px;
+  }
+
+  /* ─── CTA SECTION ───────────────── */
+  .cta-section {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--parchment);
+    border-top: 1px solid var(--border);
+  }
+  .cta-section p {
+    font-size: 16px;
+    color: var(--slate);
+    margin-bottom: 10px;
+  }
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .cta-note {
+    font-size: 13px;
+    color: var(--mist);
+    margin-top: 16px;
+  }
+
+  /* ─── FOOTER ────────────────────── */
+  .footer {
+    background: var(--deep-ink);
+    color: rgba(253,252,250,0.4);
+    text-align: center;
+    padding: 28px 24px;
+    font-size: 13px;
+  }
+  .footer span { color: var(--ember-light); }
+
+  /* ─── SEPARATOR ─────────────────── */
+  .sep {
+    height: 1px;
+    background: var(--border);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding: 60px 20px 56px; }
+    .quote-block { padding: 36px 24px; margin: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ────────────────────────────────── -->
+<section class="hero">
+  <span class="hero-tag">MUSEON × 王璽臻</span>
+  <h1>讓組織安全感的工作<br><span>被看見、被量化、被放大</span></h1>
+  <p class="hero-sub">心理安全感實踐室的 AI 工作夥伴</p>
+  <div class="hero-divider"></div>
+  <p class="hero-intro">
+    你的核心工作是幫企業找回組織安全感——
+    你賣的不是工具，是判斷力。
+    MUSEON 不搶你的位置，它讓你的判斷力更有效率、更有說服力、更能被記住。
+  </p>
+</section>
+
+<!-- ─── SECTION 1: 為你個人 ─────────────────── -->
+<div style="background: var(--parchment);">
+  <div class="section">
+    <span class="section-tag">01 — 為你的工作</span>
+    <h2 class="section-title">你最貴的成本是時間和腦力<br>MUSEON 幫你把它花在刀口上</h2>
+    <p class="section-desc">
+      顧問工作中那些耗時但不需要你親自動腦的部分——MUSEON 接手。
+      讓你把精力留給真正需要人類判斷的事。
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <h3>訪談與會議記錄</h3>
+        <p>錄音或文字稿丟進來，自動產出結構化重點、待辦清單、下次跟進項目。每次工作坊後的整理時間從 2 小時壓到 15 分鐘。</p>
+        <span class="tag">節省 80% 整理時間</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>診斷報告生成</h3>
+        <p>把你的訪談筆記、問卷回饋、觀察記錄整合成可交付給客戶的分析報告，附可視化圖表，讓客戶直覺理解現況。</p>
+        <span class="tag">提升方案說服力</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔁</div>
+        <h3>方法論資產化</h3>
+        <p>把你累積的顧問框架轉化為可重複使用的工具包。不需要每次從零開始——同樣品質的交付，時間成本大幅下降。</p>
+        <span class="tag">提高客單價空間</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">📌</div>
+        <h3>客戶脈絡記憶</h3>
+        <p>MUSEON 記住每個客戶的組織狀況、上次診斷結果、改善進展。你換案不換記憶，省掉每次重新翻找的時間。</p>
+        <span class="tag">深度記憶不遺忘</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ─── SECTION 2: 為這個產業 ──────────────── -->
+<div class="section-dark">
+  <div class="section">
+    <span class="section-tag" style="color: var(--ember-light);">02 — 為這個產業</span>
+    <h2 class="section-title">組織安全感是一個正在被重新定義的領域<br>先看懂的人佔先機</h2>
+    <p class="section-desc">
+      全球關於心理安全感的研究與實踐正在快速演進，
+      MUSEON 幫你持續掌握邊界，確保你的方法論不落後。
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🔬</div>
+        <h3>研究整合與趨勢分析</h3>
+        <p style="color: rgba(253,252,250,0.6);">快速消化 Google、Amy Edmondson 等最新心理安全感研究，整合成你能直接引用的論點與數據。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏭</div>
+        <h3>跨產業個案比對</h3>
+        <p style="color: rgba(253,252,250,0.6);">不同產業（科技、製造、醫療）的組織安全感挑戰大不相同。MUSEON 幫你分析差異，讓你的方案更精準。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📐</div>
+        <h3>量化指標設計</h3>
+        <p style="color: rgba(253,252,250,0.6);">把「心理安全感提升了」這個直覺感受，轉化成客戶 CFO 看得懂的數字。讓你的成效不只是質感，還有說服力。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECTION 3: 為你的客群 ──────────────── -->
+<div style="background: var(--parchment);">
+  <div class="section">
+    <span class="section-tag">03 — 為你的客群</span>
+    <h2 class="section-title">讓你的客戶親眼看見改變正在發生</h2>
+    <p class="section-desc">
+      組織安全感的改善往往是無形的——員工說話更坦率了、跨部門壁壘降低了。
+      MUSEON 幫你把無形的改變，變成有形的數據。
+    </p>
+    <div class="impact-list">
+      <div class="impact-item">
+        <div class="impact-num">01</div>
+        <div class="impact-content">
+          <h4>員工聲音快速分析</h4>
+          <p>匿名問卷、訪談逐字稿、員工回饋表，丟進來就能得到分類彙整、熱點議題、情緒分布。
+          讓你在課後 48 小時內就有數據可以跟高階主管對話。</p>
+        </div>
+      </div>
+      <div class="impact-item">
+        <div class="impact-num">02</div>
+        <div class="impact-content">
+          <h4>改善成效視覺化</h4>
+          <p>前測 vs 後測對比、改善曲線、關鍵指標追蹤——讓主管不只「感覺進步了」，
+          而是「看到進步了多少」。增加續約的依據，降低客戶流失率。</p>
+        </div>
+      </div>
+      <div class="impact-item">
+        <div class="impact-num">03</div>
+        <div class="impact-content">
+          <h4>主管行動清單</h4>
+          <p>根據診斷結果，自動生成主管可以「下週就做」的具體行動建議。
+          讓客戶不需要等待你的下次顧問時程，就能持續推進組織改善。</p>
+        </div>
+      </div>
+      <div class="impact-item">
+        <div class="impact-num">04</div>
+        <div class="impact-content">
+          <h4>團隊報告客製化</h4>
+          <p>同一份分析，針對 HR、直屬主管、C-suite 產出不同版本的摘要。
+          每個人看到的是對自己最相關的洞見，決策速度加快。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ─── SECTION 4: MUSEON 差異 ──────────────── -->
+<div style="background: var(--snow);">
+  <div class="section">
+    <span class="section-tag">04 — MUSEON 的不同</span>
+    <h2 class="section-title">不是更快的搜尋引擎<br>是真的理解脈絡的思維夥伴</h2>
+    <p class="section-desc">
+      ChatGPT 知道很多事，但它不記得你。MUSEON 不一樣——它從每次互動中學習，
+      越用越了解你的工作方式和客戶狀況。
+    </p>
+    <div class="diff-grid">
+      <div class="diff-card highlighted">
+        <h4><span class="dot"></span>MUSEON</h4>
+        <ul>
+          <li>記住每個客戶的脈絡，不需要每次重新解釋</li>
+          <li>根據對話目的自動切換模式（分析 / 建議 / 陪伴 / 挑戰）</li>
+          <li>主動問讓你想清楚的問題，不只回答問題</li>
+          <li>繁體中文原生，真的理解台灣職場文化語境</li>
+          <li>從每次互動學習，越用越了解你的工作模式</li>
+          <li>整合多個 Skill：顧問分析 + 市場研究 + 報告生成</li>
+        </ul>
+      </div>
+      <div class="diff-card">
+        <h4><span class="dot" style="background: var(--mist);"></span>一般 AI 工具</h4>
+        <ul>
+          <li>每次對話從零開始，沒有你的工作記憶</li>
+          <li>只會回答你問的問題，不會主動挑戰假設</li>
+          <li>翻譯腔中文，無法理解台灣企業的隱性規則</li>
+          <li>功能是固定的，無法根據你的需求演化</li>
+          <li>給資訊，但不幫你判斷這個資訊對你有沒有用</li>
+          <li>是工具，不是夥伴</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── QUOTE SECTION ────────────────────────── -->
+<div style="padding: 60px 0; background: var(--parchment);">
+  <div class="quote-block">
+    <p class="quote-text">
+      「我不是要取代你的判斷力——<br>
+      我是讓你的判斷力可以服務更多人、影響更大的組織。」
+    </p>
+    <p class="quote-source">MUSEON — 壁爐旁的精密儀器</p>
+  </div>
+</div>
+
+<!-- ─── CTA ──────────────────────────────────── -->
+<div class="cta-section">
+  <p>想親眼看看 MUSEON 怎麼幫到你？</p>
+  <h2>讓我們用一個真實案例開始</h2>
+  <p style="color: var(--slate); max-width: 500px; margin: 0 auto 8px;">
+    帶一個你正在進行中的客戶案例，我可以當場示範如何幫你分析診斷資料、
+    生成報告、設計後續行動清單。
+  </p>
+  <p class="cta-note">透過 Feng 安排，不需要另行預約 ✦ 30 分鐘 Demo</p>
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────── -->
+<footer class="footer">
+  <p>MUSEON <span>×</span> 心理安全感實踐室 ｜ Powered by <span>MUSEON AI</span></p>
+  <p style="margin-top: 6px; font-size: 11px;">此頁面由 Feng 委託 MUSEON 製作，專為王璽臻量身介紹</p>
+</footer>
+
+</body>
+</html>
