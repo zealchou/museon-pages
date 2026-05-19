@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON × 心理安全感實踐室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ember:       #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark:  #9A3A1C;
+    --teal:        #2A7A6E;
+    --gold:        #B8923A;
+    --ink:         #12121A;
+    --slate:       #5A5A6E;
+    --mist:        #9898A8;
+    --border:      #E2E0DA;
+    --parchment:   #F7F5F0;
+    --snow:        #FDFCFA;
+    --deep-ink:    #0E0E16;
+    --surface:     #16161F;
+    --raised:      #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 400ms ease-out both; }
+  .delay-1 { animation-delay: 80ms; }
+  .delay-2 { animation-delay: 160ms; }
+  .delay-3 { animation-delay: 240ms; }
+  .delay-4 { animation-delay: 320ms; }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  @media (max-width: 768px) { .container { padding: 0 24px; } }
+  @media (max-width: 640px) { .container { padding: 0 16px; } }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--deep-ink);
+    padding: 96px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 60%, rgba(196,80,42,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(42,122,110,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 600;
+    color: #FDFCFA;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+  .hero-subtitle {
+    font-size: 18px;
+    color: rgba(253,252,250,0.65);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.3);
+    color: var(--ember-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+  .hero-badge::before { content: '●'; font-size: 8px; }
+
+  /* ─── SECTION 共用 ─── */
+  section { padding: 64px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    font-size: 17px;
+    color: var(--slate);
+    max-width: 640px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+  }
+
+  /* ─── UNDERSTAND ─── */
+  .understand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .understand-grid { grid-template-columns: 1fr; } }
+
+  .ucard {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .ucard:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(18,18,26,0.08); }
+  .ucard-icon { font-size: 24px; margin-bottom: 12px; }
+  .ucard h4 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .ucard p { font-size: 14px; color: var(--slate); line-height: 1.7; }
+
+  /* ─── USE CASES ─── */
+  .use-cases { background: var(--snow); }
+
+  .case-list { display: flex; flex-direction: column; gap: 20px; }
+
+  .case-item {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 20px;
+    align-items: start;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .case-item:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(18,18,26,0.08); }
+
+  .case-num {
+    width: 48px;
+    height: 48px;
+    background: rgba(196,80,42,0.08);
+    border: 1.5px solid rgba(196,80,42,0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ember);
+    flex-shrink: 0;
+  }
+  .case-content h4 { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .case-content p { font-size: 15px; color: var(--slate); line-height: 1.75; margin-bottom: 12px; }
+  .case-tag {
+    display: inline-block;
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  /* ─── INDUSTRY IMPACT ─── */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 768px) { .impact-grid { grid-template-columns: 1fr; } }
+
+  .icard {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 24px;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .icard:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(18,18,26,0.08); }
+  .icard-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .icard h4 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 10px; line-height: 1.4; }
+  .icard p { font-size: 14px; color: var(--slate); line-height: 1.7; }
+
+  /* ─── CLIENT EFFECT ─── */
+  .client-effect {
+    background: var(--deep-ink);
+    color: #FDFCFA;
+    border-top: none !important;
+  }
+  .client-effect .section-title { color: #FDFCFA; }
+  .client-effect .section-desc { color: rgba(253,252,250,0.6); }
+  .client-effect .section-eyebrow { color: var(--ember-light); }
+
+  .effect-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .effect-grid { grid-template-columns: 1fr; } }
+
+  .ecard {
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 10px;
+    padding: 24px;
+    transition: transform 200ms ease;
+  }
+  .ecard:hover { transform: translateY(-2px); }
+  .ecard-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(196,80,42,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  .ecard h4 { font-size: 15px; font-weight: 600; color: #FDFCFA; margin-bottom: 8px; }
+  .ecard p { font-size: 14px; color: rgba(253,252,250,0.55); line-height: 1.7; }
+
+  /* ─── DIFF TABLE ─── */
+  .diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 32px;
+    font-size: 15px;
+  }
+  .diff-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--slate);
+    background: var(--parchment);
+    border-bottom: 2px solid var(--border);
+  }
+  .diff-table th.hl { color: var(--ember); }
+  .diff-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--slate);
+    vertical-align: top;
+    line-height: 1.65;
+  }
+  .diff-table td:first-child { font-weight: 500; color: var(--ink); }
+  .diff-table td.museon { color: var(--ink); font-weight: 500; }
+  .diff-table tr:hover td { background: rgba(196,80,42,0.03); }
+  .ck { color: var(--teal); }
+  .cx { color: var(--mist); }
+
+  @media (max-width: 640px) {
+    .diff-table { display: none; }
+    .diff-mob { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+  }
+  @media (min-width: 641px) { .diff-mob { display: none; } }
+
+  .dm-item {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .dm-item h5 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+  .dm-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+  .dm-row span:first-child { color: var(--slate); }
+
+  /* ─── IDENTITY ─── */
+  .identity-box {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ember);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-top: 32px;
+  }
+  .identity-box p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .identity-box cite {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-top: 12px;
+    font-style: normal;
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--ember-dark) 0%, var(--ember) 100%);
+    padding: 80px 0;
+    text-align: center;
+    border-top: none !important;
+  }
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: #FDFCFA;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .cta-section p {
+    font-size: 17px;
+    color: rgba(253,252,250,0.82);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--deep-ink);
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid var(--border-dark);
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #FDFCFA;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .footer-tagline {
+    font-size: 13px;
+    color: rgba(253,252,250,0.35);
+    font-style: italic;
+    font-family: 'Outfit', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow fade-up">MUSEON × 心理安全感實踐室</div>
+    <h1 class="hero-title fade-up delay-1">
+      讓你的判斷力<br><em>走得更遠</em>
+    </h1>
+    <p class="hero-subtitle fade-up delay-2">
+      你賣的從來不是工具，是診斷力與洞見。<br>
+      MUSEON 讓這份判斷力複製、積累、持續創造價值——即使你不在場。
+    </p>
+    <div class="hero-badge fade-up delay-3">為組織安全感顧問量身介紹</div>
+  </div>
+</section>
+
+<!-- ══ UNDERSTAND ══ -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow fade-up">我們理解你的工作</div>
+    <h2 class="section-title fade-up delay-1">組織安全感顧問的四個核心挑戰</h2>
+    <p class="section-desc fade-up delay-2">
+      進入一家企業、診斷心理安全感現況、提出改善方案——這是高度個人化的腦力工作。
+      你最稀缺的不是方法論，是<strong>時間與精力</strong>。
+    </p>
+    <div class="understand-grid fade-up delay-3">
+      <div class="ucard">
+        <div class="ucard-icon">📋</div>
+        <h4>客戶研究耗時</h4>
+        <p>每次進場前都要重新了解企業文化、組織結構、產業背景，花掉大量非顧問時間。</p>
+      </div>
+      <div class="ucard">
+        <div class="ucard-icon">📊</div>
+        <h4>診斷報告撰寫費力</h4>
+        <p>工作坊後的回饋整理、行動清單、診斷報告，每一份都從頭寫，重複勞動多。</p>
+      </div>
+      <div class="ucard">
+        <div class="ucard-icon">🔄</div>
+        <h4>知識難以複用</h4>
+        <p>每個企業案例都有洞見，但這些洞見散落在筆記與記憶裡，難以積累成方法論資產。</p>
+      </div>
+      <div class="ucard">
+        <div class="ucard-icon">📱</div>
+        <h4>客戶跟進容易斷</h4>
+        <p>介入結束後，後續追蹤、提醒、成效確認往往變成個人負擔，難以系統化。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ USE CASES ══ -->
+<section class="use-cases">
+  <div class="container">
+    <div class="section-eyebrow fade-up">具體能做什麼</div>
+    <h2 class="section-title fade-up delay-1">MUSEON 在你工作流程中的角色</h2>
+    <p class="section-desc fade-up delay-2">
+      不是取代你的判斷，而是把工作流程裡的「非顧問勞動」自動化，
+      讓你的每小時只做最高價值的事。
+    </p>
+    <div class="case-list fade-up delay-3">
+      <div class="case-item">
+        <div class="case-num">01</div>
+        <div class="case-content">
+          <h4>進場前企業研究包</h4>
+          <p>提供企業名稱，MUSEON 自動整理：產業特性、近期動態、組織規模、常見心理安全感痛點類型，以及針對此次介入的<strong>破冰問題建議</strong>。你進場前就已經了解對方。</p>
+          <span class="case-tag">省下 2–4 小時</span>
+        </div>
+      </div>
+      <div class="case-item">
+        <div class="case-num">02</div>
+        <div class="case-content">
+          <h4>工作坊後診斷報告初稿</h4>
+          <p>把工作坊的錄音、筆記、學員回饋丟給 MUSEON，它幫你整理成結構化的診斷報告初稿，包含：現況摘要、關鍵發現、行動建議清單。你負責<strong>審閱與深化</strong>，不用從空白頁開始。</p>
+          <span class="case-tag">初稿 30 分鐘內完成</span>
+        </div>
+      </div>
+      <div class="case-item">
+        <div class="case-num">03</div>
+        <div class="case-content">
+          <h4>方法論知識庫積累</h4>
+          <p>每個案例的發現、每次工作坊的設計，都沉澱成可複用的知識結晶。下次面對類似組織文化問題，MUSEON 提醒你「上次有個類似案例，處理方法是⋯⋯」讓你的<strong>經驗持續複利</strong>。</p>
+          <span class="case-tag">知識資產化</span>
+        </div>
+      </div>
+      <div class="case-item">
+        <div class="case-num">04</div>
+        <div class="case-content">
+          <h4>客戶提案頁面生成</h4>
+          <p>輸入客戶背景與痛點，MUSEON 生成精緻的提案頁面，包含：問題診斷框架、介入設計說明、預期成效。每個提案都<strong>個性化且專業</strong>，縮短準備時間，提升成交印象。</p>
+          <span class="case-tag">提案品質升一級</span>
+        </div>
+      </div>
+      <div class="case-item">
+        <div class="case-num">05</div>
+        <div class="case-content">
+          <h4>客戶後續跟進追蹤</h4>
+          <p>介入結束後，MUSEON 追蹤客戶的後續行動清單完成狀況，在適當時機提醒你跟進，確保顧問價值<strong>真正落地</strong>，而不是停在報告裡。</p>
+          <span class="case-tag">ROI 可見化</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ INDUSTRY IMPACT ══ -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow fade-up">產業層面</div>
+    <h2 class="section-title fade-up delay-1">心理安全感顧問業的三個升級</h2>
+    <p class="section-desc fade-up delay-2">
+      AI 不只讓個別顧問效率更高，它改變的是整個服務的邊界與深度。
+    </p>
+    <div class="impact-grid fade-up delay-3">
+      <div class="icard">
+        <div class="icard-label">服務規模</div>
+        <h4>一個人的能量，覆蓋更多企業</h4>
+        <p>過去一個月深度服務 3–4 家。AI 接手行政後，你的深度投入可以覆蓋 8–10 家，且品質不下降。</p>
+      </div>
+      <div class="icard">
+        <div class="icard-label">知識傳遞</div>
+        <h4>顧問洞見不再只活在人腦裡</h4>
+        <p>多年積累的方法論，透過系統化沉澱，形成可複製、可傳遞的「組織安全感介入知識庫」。</p>
+      </div>
+      <div class="icard">
+        <div class="icard-label">成效驗證</div>
+        <h4>介入效果數據可見</h4>
+        <p>結構化的前後測、追蹤紀錄，讓你的顧問服務有清晰成效報告，大幅強化客戶續約意願。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLIENT EFFECT ══ -->
+<section class="client-effect">
+  <div class="container">
+    <div class="section-eyebrow fade-up">對你的客群</div>
+    <h2 class="section-title fade-up delay-1">企業主管收到什麼不同？</h2>
+    <p class="section-desc fade-up delay-2">
+      你的客戶——HR 主管、CEO、團隊領導者——
+      會感受到服務品質的明顯升級。
+    </p>
+    <div class="effect-grid fade-up delay-3">
+      <div class="ecard">
+        <div class="ecard-icon">📌</div>
+        <h4>個性化診斷報告</h4>
+        <p>不是通用模板，每份報告都精準反映企業的獨特處境，讀起來像顧問真的深度了解他們。</p>
+      </div>
+      <div class="ecard">
+        <div class="ecard-icon">📈</div>
+        <h4>清晰可執行的行動路線</h4>
+        <p>具體改善清單，附優先序建議，主管不需要自己解讀，直接交辦執行，降低推動阻力。</p>
+      </div>
+      <div class="ecard">
+        <div class="ecard-icon">🔁</div>
+        <h4>持續感知的顧問存在</h4>
+        <p>介入結束後你還在。定期跟進確認讓客戶感受到持續陪伴，而非一次性的服務體驗。</p>
+      </div>
+      <div class="ecard">
+        <div class="ecard-icon">🗂️</div>
+        <h4>設計精良的對外文件</h4>
+        <p>提案、報告、學員資料全部設計精良，企業主管在內部分享時也同時為你做了品牌背書。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DIFFERENTIATOR ══ -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow fade-up">和市面上 AI 的差異</div>
+    <h2 class="section-title fade-up delay-1">為什麼不是 ChatGPT？</h2>
+    <p class="section-desc fade-up delay-2">
+      市面上的 AI 工具大多是通用助理——你說完它做，做完就忘。
+      MUSEON 的設計哲學不同：<strong>有記憶、有脈絡、持續進化</strong>。
+    </p>
+
+    <table class="diff-table fade-up delay-3">
+      <thead>
+        <tr>
+          <th>能力項目</th>
+          <th>一般 AI（ChatGPT 等）</th>
+          <th class="hl">MUSEON</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>記得你的客戶</td>
+          <td><span class="cx">✕</span> 每次都要重新解釋</td>
+          <td class="museon"><span class="ck">✓</span> 持久記憶所有客戶背景</td>
+        </tr>
+        <tr>
+          <td>業種脈絡理解</td>
+          <td><span class="cx">✕</span> 通用知識，無行業深度</td>
+          <td class="museon"><span class="ck">✓</span> 從你的案例持續學習業種語言</td>
+        </tr>
+        <tr>
+          <td>知識積累</td>
+          <td><span class="cx">✕</span> 對話結束即清空</td>
+          <td class="museon"><span class="ck">✓</span> 每次互動都沉澱成可複用洞見</td>
+        </tr>
+        <tr>
+          <td>主動提醒跟進</td>
+          <td><span class="cx">✕</span> 被動等你問</td>
+          <td class="museon"><span class="ck">✓</span> 主動追蹤，適時提醒</td>
+        </tr>
+        <tr>
+          <td>視覺文件輸出</td>
+          <td><span class="cx">△</span> 純文字為主</td>
+          <td class="museon"><span class="ck">✓</span> 產出設計感強的 HTML 報告頁</td>
+        </tr>
+        <tr>
+          <td>多工具整合</td>
+          <td><span class="cx">✕</span> 單點工具，孤立使用</td>
+          <td class="museon"><span class="ck">✓</span> 整合 Telegram / 日曆 / 檔案 / 報告</td>
+        </tr>
+        <tr>
+          <td>人格與回應風格</td>
+          <td><span class="cx">✕</span> 每次重新「認識」你</td>
+          <td class="museon"><span class="ck">✓</span> 記住你的偏好，越用越懂你</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 手機版 -->
+    <div class="diff-mob fade-up delay-3">
+      <div class="dm-item">
+        <h5>記得你的客戶</h5>
+        <div class="dm-row"><span>一般 AI</span><span style="color:var(--mist)">每次重新解釋</span></div>
+        <div class="dm-row"><span>MUSEON</span><span style="color:var(--teal)">✓ 持久記憶客戶背景</span></div>
+      </div>
+      <div class="dm-item">
+        <h5>知識積累</h5>
+        <div class="dm-row"><span>一般 AI</span><span style="color:var(--mist)">對話結束即清空</span></div>
+        <div class="dm-row"><span>MUSEON</span><span style="color:var(--teal)">✓ 每次互動都沉澱洞見</span></div>
+      </div>
+      <div class="dm-item">
+        <h5>主動提醒</h5>
+        <div class="dm-row"><span>一般 AI</span><span style="color:var(--mist)">被動等你問</span></div>
+        <div class="dm-row"><span>MUSEON</span><span style="color:var(--teal)">✓ 主動追蹤適時提醒</span></div>
+      </div>
+      <div class="dm-item">
+        <h5>多工具整合</h5>
+        <div class="dm-row"><span>一般 AI</span><span style="color:var(--mist)">孤立使用</span></div>
+        <div class="dm-row"><span>MUSEON</span><span style="color:var(--teal)">✓ 整合 Telegram / 報告 / 日曆</span></div>
+      </div>
+    </div>
+
+    <div class="identity-box fade-up delay-4">
+      <p>「MUSEON 不是你的工具，是你的工作夥伴。它記得你的客戶、你的方法、你的偏好——越用越懂你，越用越有價值。」</p>
+      <cite>MUSEON 核心設計哲學</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <div class="container">
+    <h2 class="fade-up">準備好看看<br>MUSEON 能為你做什麼了嗎？</h2>
+    <p class="fade-up delay-1">
+      和 Feng 說一聲，我們可以針對你的工作流程做一次具體示範。
+      不是 demo——是真的幫你的下一個客戶做點有用的事。
+    </p>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">MUSEON</div>
+  <div class="footer-tagline">溫暖的精密感 · 有記憶的 AI 工作夥伴</div>
+</footer>
+
+</body>
+</html>
