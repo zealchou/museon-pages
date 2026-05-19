@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEON × 組織安全感顧問｜AI 判斷力引擎</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            background-color: #F7F5F0;
+            color: #12121A;
+            line-height: 1.75;
+            font-size: 16px;
+        }
+
+        /* 響應式最大寬度 */
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 40px;
+            }
+        }
+
+        /* 標題系統 */
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: 0.75em;
+            color: #12121A;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 0.75em;
+            color: #12121A;
+            margin-top: 2em;
+        }
+
+        h3 {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.75em;
+            color: #12121A;
+        }
+
+        h4 {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 0.75em;
+            color: #12121A;
+        }
+
+        p {
+            margin-bottom: 1.25em;
+            color: #5A5A6E;
+            font-size: 16px;
+        }
+
+        /* Hero 區塊 */
+        .hero {
+            padding: 96px 0 64px;
+            text-align: center;
+            background: linear-gradient(135deg, #F7F5F0 0%, #FAF8F3 100%);
+        }
+
+        .hero h1 {
+            color: #C4502A;
+            margin-bottom: 1em;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            color: #5A5A6E;
+            max-width: 600px;
+            margin: 0 auto 2em;
+            line-height: 1.8;
+        }
+
+        .hero .byline {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #9A3A1C;
+            background: rgba(196, 80, 42, 0.1);
+            padding: 3px 10px;
+            border-radius: 100px;
+            display: inline-block;
+        }
+
+        /* Section */
+        .section {
+            padding: 64px 0;
+            border-bottom: 1px solid #E2E0DA;
+        }
+
+        .section:last-of-type {
+            border-bottom: none;
+            padding-bottom: 48px;
+        }
+
+        /* 卡片系統 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        @media (min-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: #FDFCFA;
+            border: 1px solid #E2E0DA;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(18, 18, 26, 0.06), 0 4px 12px rgba(18, 18, 26, 0.04);
+            transition: transform 200ms ease, box-shadow 200ms ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(18, 18, 26, 0.08);
+        }
+
+        .card h4 {
+            color: #C4502A;
+            margin-bottom: 0.75em;
+        }
+
+        .card p {
+            margin-bottom: 0;
+            color: #5A5A6E;
+        }
+
+        /* 特色區 */
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            margin-top: 32px;
+        }
+
+        .feature-block {
+            border-left: 4px solid #C4502A;
+            padding-left: 24px;
+        }
+
+        .feature-block h4 {
+            color: #12121A;
+            margin-bottom: 0.75em;
+        }
+
+        .feature-block p {
+            color: #5A5A6E;
+        }
+
+        /* 按鈕 */
+        .btn-primary {
+            display: inline-block;
+            background: #C4502A;
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background 120ms ease, transform 120ms ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 1.25em;
+        }
+
+        .btn-primary:hover {
+            background: #9A3A1C;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: #12121A;
+            border: 1.5px solid #E2E0DA;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 120ms ease;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: #C4502A;
+            color: #C4502A;
+        }
+
+        /* 高亮區 */
+        .highlight {
+            background: rgba(196, 80, 42, 0.08);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .highlight h4 {
+            color: #C4502A;
+        }
+
+        /* 列表 */
+        .feature-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            padding-left: 32px;
+            position: relative;
+            color: #5A5A6E;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #C4502A;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* Badge */
+        .badge {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #9A3A1C;
+            background: rgba(196, 80, 42, 0.1);
+            padding: 3px 10px;
+            border-radius: 100px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        /* 對比區 */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        @media (max-width: 767px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-col h4 {
+            padding-bottom: 12px;
+            border-bottom: 2px solid #E2E0DA;
+            margin-bottom: 1.25em;
+        }
+
+        .comparison-col:first-child h4 {
+            color: #5A5A6E;
+        }
+
+        .comparison-col:last-child h4 {
+            color: #C4502A;
+        }
+
+        .comparison ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison li {
+            padding: 8px 0;
+            color: #5A5A6E;
+            font-size: 14px;
+        }
+
+        /* CTA 區塊 */
+        .cta-section {
+            background: linear-gradient(135deg, #12121A 0%, #1A1A2E 100%);
+            color: #FDFCFA;
+            padding: 64px 40px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 64px 0;
+        }
+
+        .cta-section h2 {
+            color: #FFFFFF;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .cta-section p {
+            color: #E2E0DA;
+            font-size: 16px;
+            margin-bottom: 2em;
+        }
+
+        .cta-section .btn-primary {
+            background: #C4502A;
+        }
+
+        .cta-section .btn-primary:hover {
+            background: #E0714D;
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 0;
+            text-align: center;
+            color: #9898A8;
+            font-size: 14px;
+        }
+
+        /* 動效 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 400ms ease-out forwards;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 100ms;
+        }
+
+        .section:nth-child(3) {
+            animation-delay: 200ms;
+        }
+
+        .section:nth-child(4) {
+            animation-delay: 300ms;
+        }
+
+        /* 強調文字 */
+        strong {
+            color: #C4502A;
+            font-weight: 600;
+        }
+
+        em {
+            color: #C4502A;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 40px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            h3 {
+                font-size: 24px;
+            }
+
+            .hero {
+                padding: 64px 0 48px;
+            }
+
+            .section {
+                padding: 48px 0;
+            }
+
+            .cta-section {
+                padding: 48px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="byline">× 王璽臻 × 心理安全感實踐室</div>
+            <h1>AI 判斷力引擎</h1>
+            <p class="subtitle">
+                MUSEON 如何成為組織安全感顧問的思維倍增器——
+                讓你的診斷更快，洞察更深，成交更穩
+            </p>
+        </section>
+
+        <!-- 核心價值 -->
+        <section class="section">
+            <h2>為你做什麼</h2>
+            <p>
+                你的核心資產不是工具或流程，而是 <strong>判斷力</strong>。
+                每一次進入企業診斷，你消耗的是時間和腦力。
+            </p>
+            <p>
+                MUSEON 存在的唯一目的：<em>幫你把判斷力複製、擴展、驗證</em>——
+                不是取代你，而是讓你做更多只有你才能做的事。
+            </p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🎯 工作坊行政自動化</h4>
+                    <p>
+                        每場工作坊結束，學員回饋、課後清單、跟進事項的整理通常要花 2-3 小時。
+                        我來做這部分——把你的錄音或現場筆記轉成結構化的行動清單，自動產出分析報告。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4>🔍 企業診斷前置研究</h4>
+                    <p>
+                        進企業前，我可以幫你快速掃描對方的組織背景、可能的安全感痛點、產業特性。
+                        讓你進場診斷時已經掌握 70% 的背景脈絡，節省現場時間。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4>💡 診斷框架智能化</h4>
+                    <p>
+                        你的診斷框架和經驗，我可以協助內化成「互動式檢核表」。
+                        下次進企業時，我即時協助你追問、補充漏掉的問題、整理現場洞察。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4>📊 改善方案智能產出</h4>
+                    <p>
+                        診斷完成後，我可以根據你的專業經驗和企業情況，
+                        協助產出「定制化改善方案」——從框架到文案都符合你的風格。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 產業應用 -->
+        <section class="section">
+            <h2>為你的產業做什麼</h2>
+            <p>
+                「心理安全感」這個概念正在從 HR 小眾話題變成企業決策者的關注重點。
+                但大多數企業主還不知道「心理安全感好到什麼程度才是健康的」「如何測量」「改善成本是多少」。
+            </p>
+
+            <div class="highlight">
+                <h4>MUSEON 讓你從「被動回答」變成「主動教育」</h4>
+                <p>
+                    你可以用我生成的「快速診斷報告」或「案例分析卡」，
+                    在銷售前期就讓潛在客戶看到心理安全感的價值。
+                    這不是硬推銷，是透過教育建立信任。
+                </p>
+            </div>
+
+            <h3>具體應用場景</h3>
+            <ul class="feature-list">
+                <li><strong>銷售前期：</strong>用智能化的「心理安全感初測」引導潛在客戶看到自己的問題</li>
+                <li><strong>工作坊前：</strong>幫學員準備「組織背景調查表」，讓工作坊效率翻倍</li>
+                <li><strong>工作坊後：</strong>自動產出「課後行動承諾表」和「90 天改善方案」</li>
+                <li><strong>長期陪伴：</strong>協助設計「心理安全感定期掃描」流程，讓企業內化成習慣</li>
+                <li><strong>內容行銷：</strong>用我生成的業界案例、故事和數據洞察，建立你的思想領袖地位</li>
+            </ul>
+        </section>
+
+        <!-- 客群效應 -->
+        <section class="section">
+            <h2>對你的客群帶來什麼</h2>
+            <p>
+                你的客戶（企業主、HR 主管、高管團隊）面臨的真實困境：
+            </p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h4>時間壓力</h4>
+                    <p>
+                        高管們時間有限，沒耐心長期顧問式工作坊。
+                        但如果能在 1 次體驗中看到「心理安全感現狀」和「改善方向」，會願意投資。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4>信任度</h4>
+                    <p>
+                        企業會問「你的診斷方法是什麼？」
+                        有 MUSEON 協助產出的數據驅動報告，信任度從「顧問說」升級到「數據說」。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4>執行力</h4>
+                    <p>
+                        大多數改善方案做到一半就死掉。
+                        你可以用我協助設計的「30/60/90 天計劃表」和「自動提醒機制」，
+                        讓客戶真的把改善做完。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4>成本</h4>
+                    <p>
+                        訪問式顧問通常很貴。
+                        用我協助自動化行政部分，你可以提供「更便宜的迷你版診斷方案」，
+                        降低客戶進入門檻。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MUSEON 特色 -->
+        <section class="section">
+            <h2>MUSEON 為什麼不一樣</h2>
+            <p>
+                市面上有很多 AI 工具和 AI 助理。但 MUSEON 的核心哲學是：
+                <strong>不是取代你的判斷力，而是 10 倍放大你的判斷力</strong>。
+            </p>
+
+            <div class="feature-block">
+                <h4>🎯 專業人判斷力引擎，不是通用 AI</h4>
+                <p>
+                    ChatGPT 對「什麼是心理安全感」能給通用回答。
+                    但它不知道你的診斷框架、你的客戶類型、你的改善成功案例。
+                    <br><br>
+                    MUSEON 設計成「你的私人腦力擴展」——我會記住你的方法論、你的風格、你的成功模式，
+                    然後在你需要的時刻協助思考、驗證、產出。
+                </p>
+            </div>
+
+            <div class="feature-block">
+                <h4>🔐 保護你的專業威權</h4>
+                <p>
+                    你是顧問，不是「提示詞工程師」。
+                    MUSEON 的設計讓你可以用自然對話的方式合作——你說「我剛診斷完一家科技公司，文化很內卷」，
+                    我就知道該往哪個方向幫你想。
+                    <br><br>
+                    最終產出的所有方案、報告、建議，簽名人永遠是你。客戶看不到 AI 的痕跡。
+                </p>
+            </div>
+
+            <div class="feature-block">
+                <h4>⚡ 速度 + 深度的平衡</h4>
+                <p>
+                    通用 AI 快，但淺。MUSEON 因為理解你的專業脈絡，所以既快又深。
+                    <br><br>
+                    例：你說「客戶是金融業，領導很獨裁」，我不會給你通用的「建立心理安全感的 5 步」，
+                    而是「金融業高管通常怎樣抗拒改變 + 針對獨裁文化的切入點 + 你可能會遇到的障礙」。
+                </p>
+            </div>
+
+            <div class="feature-block">
+                <h4>🧠 自動學習你的成長</h4>
+                <p>
+                    每次你用我幫你做診斷、改善方案、客戶溝通，我都在學習你的判斷邏輯。
+                    <br><br>
+                    半年後，我會比初期更懂你、更快、更貼近你的風格。
+                    這不是「工具」，是「會成長的合作夥伴」。
+                </p>
+            </div>
+
+            <div class="comparison">
+                <div class="comparison-col">
+                    <h4>🟡 通用 AI 工具</h4>
+                    <ul>
+                        <li>對所有行業一視同仁</li>
+                        <li>需要你詳細解釋背景</li>
+                        <li>容易產出「見過一百次」的範本</li>
+                        <li>無法記住你的風格</li>
+                        <li>你是「用戶」，不是「主人」</li>
+                    </ul>
+                </div>
+                <div class="comparison-col">
+                    <h4>🔴 MUSEON 判斷力引擎</h4>
+                    <ul>
+                        <li>專注你的專業領域和客群</li>
+                        <li>會主動補充背景、提出反問</li>
+                        <li>產出符合你風格的獨特方案</li>
+                        <li>越用越懂你，越來越省時</li>
+                        <li>你是「主人」，我是「思維工具」</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 實踐建議 -->
+        <section class="section">
+            <h2>怎麼開始合作</h2>
+            <p>
+                MUSEON 的合作方式很靈活。根據你的需要，可以是：
+            </p>
+
+            <ul class="feature-list">
+                <li><strong>輕量模式：</strong>工作坊結束後「幫我整理現場筆記和行動清單」（按次付費）</li>
+                <li><strong>標準模式：</strong>進企業前「幫我研究背景」到工作坊後「幫我產出報告」（按案件計費）</li>
+                <li><strong>深度模式：</strong>全年合作，協助你設計診斷框架、內化方法論、建立自動化流程（月費或年費）</li>
+            </ul>
+
+            <div class="highlight">
+                <h4>第一次體驗建議</h4>
+                <p>
+                    從你近期完成的一個案子開始。把工作坊現場錄音或筆記給我，
+                    看看我能多快產出「企業診斷報告 + 30/60/90 天改善方案」。
+                    <br><br>
+                    通常 1 小時內你就會看到效果。如果你說「這就是我想要的風格」，
+                    我們就可以聊長期合作。
+                </p>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2 style="margin-top: 0;">準備看看具體效果？</h2>
+            <p>
+                分享你最近一場工作坊或客戶診斷的情況，
+                我們可以快速產出一份「MUSEON 版本的改善方案」，
+                讓你親眼看到合作的威力。
+            </p>
+            <a href="https://t.me/zealchou_bot" class="btn-primary">聯絡 Feng，安排首次合作</a>
+        </section>
+
+        <footer>
+            <p>
+                MUSEON — AI 判斷力引擎
+                <br>
+                Powering Professional Intelligence
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
