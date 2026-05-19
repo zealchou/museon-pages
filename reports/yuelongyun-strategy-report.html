@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玥瓏云 — 企業診斷策略報告書</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --gold: #c9a84c;
+    --gold-light: #f0d98a;
+    --red: #c0392b;
+    --teal: #1a6b5a;
+    --teal-light: #e8f5f1;
+    --amber: #e67e22;
+    --amber-light: #fef3e2;
+    --slate: #34495e;
+    --parchment: #faf8f2;
+    --border: #e0ddd4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.8;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #1a3a30 100%);
+    color: white;
+    padding: 72px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: center;
+  }
+  .hero-meta-item .label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+  .hero-meta-item .value { font-size: 15px; color: white; font-weight: 500; margin-top: 2px; }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .section-title .num {
+    font-size: 13px;
+    color: var(--gold);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 48px 0;
+  }
+
+  /* PAIN CARD */
+  .pain-grid { display: grid; gap: 16px; }
+  .pain-card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    border-left: 4px solid var(--red);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .pain-card.amber { border-left-color: var(--amber); }
+  .pain-card.teal { border-left-color: var(--teal); }
+  .pain-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .pain-tag {
+    background: #fde8e8;
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+  .pain-tag.amber { background: var(--amber-light); color: var(--amber); }
+  .pain-tag.teal { background: var(--teal-light); color: var(--teal); }
+  .pain-title { font-weight: 700; font-size: 16px; }
+  .pain-body { font-size: 14px; color: var(--slate); line-height: 1.7; }
+  .pain-quote {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #f8f8f8;
+    border-left: 3px solid #ddd;
+    font-size: 13px;
+    color: #666;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+
+  /* WHY TABLE */
+  .why-block {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+  }
+  .why-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .why-row:last-child { border-bottom: none; }
+  .why-label {
+    background: #f5f3ee;
+    padding: 18px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--slate);
+    display: flex;
+    align-items: flex-start;
+    border-right: 1px solid var(--border);
+  }
+  .why-content {
+    padding: 18px 20px;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* STRATEGY CARD */
+  .strategy-block { display: grid; gap: 20px; }
+  .strategy-card {
+    background: white;
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .strategy-card::before {
+    content: attr(data-num);
+    position: absolute;
+    top: -10px; right: 20px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.08);
+    font-family: 'Noto Serif TC', serif;
+    line-height: 1;
+  }
+  .strategy-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .strategy-card-title .tag {
+    font-size: 11px;
+    background: #e8f5f1;
+    color: var(--teal);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .strategy-card-title .tag.p1 { background: #fde8e8; color: var(--red); }
+  .strategy-card-title .tag.p2 { background: var(--amber-light); color: var(--amber); }
+  .strategy-body { font-size: 14px; color: var(--slate); line-height: 1.8; }
+  .action-list { margin-top: 14px; display: grid; gap: 8px; }
+  .action-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 14px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .action-item .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .action-item .text { line-height: 1.6; }
+
+  /* SUBSIDY */
+  .subsidy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 600px) { .subsidy-grid { grid-template-columns: 1fr; } }
+  .subsidy-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    border-top: 3px solid var(--gold);
+  }
+  .subsidy-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .subsidy-amount {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--gold);
+    font-family: 'Noto Serif TC', serif;
+    margin-bottom: 8px;
+  }
+  .subsidy-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+  .subsidy-tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 11px;
+    background: #f5f3ee;
+    color: #666;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* ROI TABLE */
+  .roi-table {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .roi-header {
+    background: linear-gradient(135deg, #1a3a30, #203a43);
+    color: white;
+    padding: 18px 24px;
+  }
+  .roi-header h3 { font-size: 16px; font-weight: 700; }
+  .roi-header p { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+  .roi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  @media(max-width: 600px) { .roi-row { grid-template-columns: 1fr 1fr; } }
+  .roi-row.head { background: #f5f3ee; font-weight: 700; font-size: 12px; color: var(--slate); }
+  .roi-cell { padding: 12px 16px; border-right: 1px solid var(--border); }
+  .roi-cell:last-child { border-right: none; }
+  .roi-row:last-child { border-bottom: none; }
+  .highlight { color: var(--teal); font-weight: 700; }
+
+  /* PRIORITY */
+  .priority-timeline { position: relative; padding-left: 30px; }
+  .priority-timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .timeline-item { position: relative; margin-bottom: 24px; }
+  .timeline-dot {
+    position: absolute;
+    left: -25px;
+    top: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+  .timeline-content {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .timeline-phase {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .timeline-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  .timeline-body { font-size: 13px; color: var(--slate); line-height: 1.7; }
+
+  /* FOOTER */
+  .report-footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 12px;
+    line-height: 2;
+  }
+  .report-footer strong { color: var(--gold-light); }
+
+  /* CALLOUT */
+  .callout {
+    background: linear-gradient(135deg, #0f2027, #203a43);
+    border-radius: 14px;
+    padding: 28px 32px;
+    color: white;
+    margin: 24px 0;
+  }
+  .callout h4 { font-size: 16px; color: var(--gold-light); margin-bottom: 10px; font-weight: 700; }
+  .callout p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.8; }
+
+  @media(max-width: 680px) {
+    .hero h1 { font-size: 28px; }
+    .why-row { grid-template-columns: 1fr; }
+    .why-label { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">企業診斷策略報告書</div>
+  <h1>玥瓏云<span>的成長卡點</span><br>與突破路徑</h1>
+  <p class="hero-sub">根據星誠管顧企業政府補助診斷訪談（1h 34min）深度分析</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="label">受診企業</div>
+      <div class="value">玥瓏云（士維）</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">診斷顧問</div>
+      <div class="value">星誠管顧 宗宸</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">核心業務</div>
+      <div class="value">AI 數位員工 ／ 客製系統</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label">報告日期</div>
+      <div class="value">2026-05-19</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1 企業卡點 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fde8e8;">🔴</div>
+    <div class="section-title">
+      <span class="num">SECTION 01</span>
+      六大企業卡點
+    </div>
+  </div>
+
+  <div class="pain-grid">
+
+    <div class="pain-card">
+      <div class="pain-card-header">
+        <span class="pain-tag">P1 — 最緊急</span>
+        <span class="pain-title">接案量嚴重不足 × 現金流警報</span>
+      </div>
+      <div class="pain-body">
+        創業近1年，營業額持續低於預期。手頭雖有2～3個外部案子在跟進，但全部卡在「還在討論」狀態，無一正式成交。現金流若再放半年，公司將面臨營運危機。
+      </div>
+      <div class="pain-quote">「再放半年就付現金流而已。」— 士維</div>
+    </div>
+
+    <div class="pain-card amber">
+      <div class="pain-card-header">
+        <span class="pain-tag amber">P2 — 結構性</span>
+        <span class="pain-title">客戶成交週期過長 × ROI無法說清楚</span>
+      </div>
+      <div class="pain-body">
+        潛在客戶持續拖延決策，主因有二：① 沒有感受到時間緊迫性；② 士維在訪談過程中從未提出「投資報酬率」框架——客戶不知道「花這筆錢，多久回本」。這是目前最可解決的結構性卡點。
+      </div>
+      <div class="pain-quote">「我從頭到尾都沒有提過這件事情。」— 士維（針對ROI計算）</div>
+    </div>
+
+    <div class="pain-card amber">
+      <div class="pain-card-header">
+        <span class="pain-tag amber">P3 — 策略性</span>
+        <span class="pain-title">產品定位模糊 × 三條業務線並跑</span>
+      </div>
+      <div class="pain-body">
+        目前同時推進：① 客製化系統開發、② 數位員工（AI Agent）、③ AI看室內設計圖報價。三條線沒有主軸，導致對外說不清楚「我是誰」，客戶也無法快速理解價值。
+        訪談尾段確認主攻「數位員工」方向，但聚焦工作尚未完成。
+      </div>
+      <div class="pain-quote">「我不太主打是客製化系統的區塊，這是過渡期。」— 士維</div>
+    </div>
+
+    <div class="pain-card teal">
+      <div class="pain-card-header">
+        <span class="pain-tag teal">P4 — 能力缺口</span>
+        <span class="pain-title">業務訪談技巧不足 × 不敢問客戶痛點</span>
+      </div>
+      <div class="pain-body">
+        士維背景為健康管理師，對「主動探問客戶痛點、逼出決策」感到不自在。跑業務時習慣被動等待，缺乏系統性訪談腳本，導致訪談完無法推進到下一步。
+      </div>
+      <div class="pain-quote">「就不是很接近好可不可以...不知道怎麼處理。」— 士維（談業務推進）</div>
+    </div>
+
+    <div class="pain-card teal">
+      <div class="pain-card-header">
+        <span class="pain-tag teal">P5 — 市場</span>
+        <span class="pain-title">品牌知名度接近零 × 只能靠人脈轉介</span>
+      </div>
+      <div class="pain-body">
+        目前獲客方式幾乎100%依賴人脈轉介，沒有對外品牌形象。士維自認需要先有4～5家穩定客戶後才會建立品牌，但缺乏客戶就無從建立品牌，形成雞生蛋的困局。
+      </div>
+    </div>
+
+    <div class="pain-card teal">
+      <div class="pain-card-header">
+        <span class="pain-tag teal">P6 — 認知</span>
+        <span class="pain-title">客戶對AI數位員工的認知不清 × 導入意願低</span>
+      </div>
+      <div class="pain-body">
+        潛在客戶（尤其是傳統產業）不清楚「AI數位員工對自己業務的具體幫助」，連自己每個工作流程要花多少時間都說不清楚。客戶教育成本高，是結構性摩擦。
+      </div>
+      <div class="pain-quote">「客戶都不知道，什麼意思。連客戶自己都可能不太清楚。」— 士維</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2 根因分析 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff3cd;">🔍</div>
+    <div class="section-title">
+      <span class="num">SECTION 02</span>
+      為什麼會這樣？根因分析
+    </div>
+  </div>
+
+  <div class="why-block">
+    <div class="why-row">
+      <div class="why-label">⛓ 沒有ROI腳本</div>
+      <div class="why-content">士維的訪談從未建立「導入前 vs. 導入後」的量化比較框架。顧問宗宸點出：只要問客戶「最花時間的工作流程是什麼」，再估算「AI接管後省幾個人的時間」，一個月節省金額就能算出來。<strong>過去沒有這套腳本，所以客戶從未感受到緊迫性。</strong></div>
+    </div>
+    <div class="why-row">
+      <div class="why-label">🎭 角色轉換尚未完成</div>
+      <div class="why-content">士維前職是健康管理師，關係型服務、陪伴模式；現在轉型做科技顧問，需要主動挖掘、量化價值、逼出決策。這個角色轉換沒有被系統性支援，導致舊的行為模式帶進新業務。</div>
+    </div>
+    <div class="why-row">
+      <div class="why-label">📡 定位未收斂</div>
+      <div class="why-content">三條業務線並跑，對外說不清主攻方向。客戶在沒有明確定位下，無法快速判斷「這個公司是否解決我的問題」，自然拖延決策。訪談末段才首次明確鎖定「數位員工」為主軸。</div>
+    </div>
+    <div class="why-row">
+      <div class="why-label">🔄 獲客漏斗斷裂</div>
+      <div class="why-content">目前漏斗：人脈認識→轉介→洽談→無限拖延。缺少「需求訪談→ROI計算→提案」的結構化步驟。量太少（接觸客戶量不足）＋質不夠（沒有轉化腳本），兩個問題同時存在。</div>
+    </div>
+    <div class="why-row">
+      <div class="why-label">🏗 產品尚未完成</div>
+      <div class="why-content">數位員工主產品（製麵廠進度delay）、AI看圖報價（尚在體驗期、未正式商轉）。兩個核心產品都未上線，導致無法產出可量化的成效案例，進而影響成交說服力。</div>
+    </div>
+    <div class="why-row" style="border-bottom:none;">
+      <div class="why-label">💰 資本不足制約節奏</div>
+      <div class="why-content">現金流緊張，無法投入品牌推廣、招募專職業務人員。人才缺口（需要懂AI、能跑業務的人）無法快速填補，導致所有工作集中在士維一人身上，瓶頸無法突破。</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3 策略建議 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#e8f5f1;">🎯</div>
+    <div class="section-title">
+      <span class="num">SECTION 03</span>
+      五大策略建議
+    </div>
+  </div>
+
+  <div class="strategy-block">
+
+    <div class="strategy-card" data-num="01">
+      <div class="strategy-card-title">
+        <span class="tag p1">立即執行</span>
+        在每一次訪談中植入 ROI 計算框架
+      </div>
+      <div class="strategy-body">
+        這是最高槓桿、成本最低的單一改變。訪談客戶時，不是問「你需要系統嗎」，而是問工作流程數字：
+      </div>
+      <div class="action-list">
+        <div class="action-item">
+          <span class="icon">❓</span>
+          <span class="text"><strong>問題一：</strong>「你們目前最花時間的工作是什麼？平均一週花幾小時？」</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">❓</span>
+          <span class="text"><strong>問題二：</strong>「這個工作目前是幾個人在做？月薪大概多少？」</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">📊</span>
+          <span class="text"><strong>現場計算：</strong>「假設AI能接手其中30%～50%，等於省下X個員工的時間，換算成月薪=你的系統成本在X個月內回本。」</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">🎯</span>
+          <span class="text"><strong>關鍵效果：</strong>客戶從「感覺可有可無」變成「有具體數字的投資決策」，成交週期大幅縮短。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card" data-num="02">
+      <div class="strategy-card-title">
+        <span class="tag p1">30天內</span>
+        鎖定「數位員工」單一定位，刪除模糊
+      </div>
+      <div class="strategy-body">
+        客製化系統是過渡收入，不是主軸。AI看圖報價是工具，不是公司標籤。<strong>主攻方向確認為「數位員工」</strong>：
+      </div>
+      <div class="action-list">
+        <div class="action-item">
+          <span class="icon">🎯</span>
+          <span class="text">對外標語統一：「我們讓你的工作流程，有一個不睡覺的AI同事。」</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">📋</span>
+          <span class="text">鎖定目標客群：傳統產業（工廠、設計業、保險業）中，有重複性高工作流程的20家企業為初期名單。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">🗂</span>
+          <span class="text">建立1頁式服務說明：工作流程盤點→AI分析→實作→成效回報（4個步驟，拒絕技術話術）。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card" data-num="03">
+      <div class="strategy-card-title">
+        <span class="tag p2">60天內</span>
+        建立結構化業務訪談腳本
+      </div>
+      <div class="strategy-body">
+        業務能力不是天份，是腳本。針對士維的角色轉換需求，建議建立一套5步驟的訪談模板：
+      </div>
+      <div class="action-list">
+        <div class="action-item">
+          <span class="icon">1️⃣</span>
+          <span class="text"><strong>暖場（5分鐘）：</strong>問對方公司近況、最近大的挑戰是什麼——讓對方說話，不要自我介紹產品。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">2️⃣</span>
+          <span class="text"><strong>工作流盤點（15分鐘）：</strong>請對方說出最花時間的3個工作，記下每個大概幾小時/人力。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">3️⃣</span>
+          <span class="text"><strong>現場ROI試算（5分鐘）：</strong>手算或用試算工具，當場給出「回本時間估算」。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">4️⃣</span>
+          <span class="text"><strong>提案框架（10分鐘）：</strong>「基於你的狀況，我建議從X工作流開始，做一個月試驗，看成效。」</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">5️⃣</span>
+          <span class="text"><strong>明確下一步（2分鐘）：</strong>「下週五前，我把試驗方案發給你，你看完後我們安排30分鐘決定要不要進行。」</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card" data-num="04">
+      <div class="strategy-card-title">
+        <span class="tag p2">90天</span>
+        打造第一個可量化的成效案例
+      </div>
+      <div class="strategy-body">
+        玥瓏云現在最缺的是「成功案例」。建議找一個願意配合的客戶，以較優惠的條件換取公開可引用的成效數據：
+      </div>
+      <div class="action-list">
+        <div class="action-item">
+          <span class="icon">📈</span>
+          <span class="text">挑選目前最接近成交的台北每頁案子或保險經紀人案，降低前期門檻換取完整的成效記錄（每週追蹤報告）。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">📊</span>
+          <span class="text">成效記錄格式：「導入前每週花X小時 → 導入後Y小時，節省Z% → 換算月省NT$____」。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">🔗</span>
+          <span class="text">這個案例將成為後續業務訪談最強的說服工具，以及申請補助時的成效佐證。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card" data-num="05">
+      <div class="strategy-card-title">
+        <span class="tag">中期</span>
+        招募AI溝通型業務，解放士維
+      </div>
+      <div class="strategy-body">
+        士維同時身兼技術主力+業務+PM，是最大的瓶頸。建議盡快招募或合作一位「懂AI但不一定會coding、能跑業務」的夥伴：
+      </div>
+      <div class="action-list">
+        <div class="action-item">
+          <span class="icon">🤝</span>
+          <span class="text">優先考慮「外包接案AI」模式：士維把需求丟給他，一週內產出系統，士維聚焦在需求訪談和客戶關係。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">📣</span>
+          <span class="text">業務合作夥伴可用「抽成模式」而非固定薪，降低現金流壓力。</span>
+        </div>
+        <div class="action-item">
+          <span class="icon">🔓</span>
+          <span class="text">士維的核心稀缺性在於「帶入營運顧問視角」，這才是與資訊公司最大差異——讓這個能力放大，不要花在coding上。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4 補助案建議 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff8e1;">💰</div>
+    <div class="section-title">
+      <span class="num">SECTION 04</span>
+      補助案申請建議
+    </div>
+  </div>
+
+  <div class="callout">
+    <h4>核心原則（宗宸顧問提示）</h4>
+    <p>政府補助委員的邏輯：<strong>系統必須跟外部消費者有關聯，而不是純粹內部使用</strong>。玥瓏云的「AI數位員工」系統需要說明「這個系統最終如何讓客戶的消費者受益」，補助機率才會提升。</p>
+  </div>
+
+  <div class="subsidy-grid">
+
+    <div class="subsidy-card">
+      <div class="subsidy-name">🏭 SBIR 小型企業創新研發</div>
+      <div class="subsidy-amount">最高 NT$150萬</div>
+      <div class="subsidy-desc">適合「AI軟體報價系統」或「數位員工智能平台」的研發項目。以解決消費者問題為訴求（設計師服務客戶更快速）為核心論述。</div>
+      <div class="subsidy-tag">適合度 ★★★★☆</div>
+    </div>
+
+    <div class="subsidy-card">
+      <div class="subsidy-name">🤖 AIGO 人工智慧應用</div>
+      <div class="subsidy-amount">最高 NT$200萬</div>
+      <div class="subsidy-desc">針對AI應用系統研發，玥瓏云的「AI看室內設計圖自動報價」產品高度符合。需佐證「消費端效益」：讓消費者更快知道裝修成本，減少等待時間。</div>
+      <div class="subsidy-tag">適合度 ★★★★★</div>
+    </div>
+
+    <div class="subsidy-card">
+      <div class="subsidy-name">🏢 數位轉型補助（中小企業處）</div>
+      <div class="subsidy-amount">最高 NT$100萬</div>
+      <div class="subsidy-desc">以玥瓏云的客戶（導入數位員工的中小企業）角度申請，或以委外服務商身份協助客戶申請，讓客戶的預算壓力降低，間接提升成交率。</div>
+      <div class="subsidy-tag">適合度 ★★★☆☆</div>
+    </div>
+
+    <div class="subsidy-card">
+      <div class="subsidy-name">📊 產業升級轉型輔導</div>
+      <div class="subsidy-amount">補助比率 50%～70%</div>
+      <div class="subsidy-desc">針對製造業、設計業的AI工具導入項目。玥瓏云可以扮演「服務提供商」，協助客戶申請，並把補助款的一部份轉換為系統建置費。雙方共贏。</div>
+      <div class="subsidy-tag">適合度 ★★★★☆</div>
+    </div>
+
+  </div>
+
+  <!-- ROI TABLE -->
+  <div class="roi-table" style="margin-top:24px;">
+    <div class="roi-header">
+      <h3>📊 ROI 試算示範表（客戶溝通用）</h3>
+      <p>訪談時現場試算，讓客戶感受具體回本時間</p>
+    </div>
+    <div class="roi-row head">
+      <div class="roi-cell">情境</div>
+      <div class="roi-cell">現況成本（月）</div>
+      <div class="roi-cell">導入後節省（月）</div>
+      <div class="roi-cell">回本時間</div>
+    </div>
+    <div class="roi-row">
+      <div class="roi-cell">10人公司，每人節省30%工時</div>
+      <div class="roi-cell">員工成本 $500,000</div>
+      <div class="roi-cell"><span class="highlight">$150,000</span></div>
+      <div class="roi-cell"><span class="highlight">約 13 個月</span></div>
+    </div>
+    <div class="roi-row">
+      <div class="roi-cell">行政3人→AI協助後留1人</div>
+      <div class="roi-cell">行政薪資 $90,000</div>
+      <div class="roi-cell"><span class="highlight">$60,000</span></div>
+      <div class="roi-cell"><span class="highlight">約 8 個月</span></div>
+    </div>
+    <div class="roi-row">
+      <div class="roi-cell">報價流程 4hr→0.5hr</div>
+      <div class="roi-cell">人工時間成本高</div>
+      <div class="roi-cell"><span class="highlight">75% 時間節省</span></div>
+      <div class="roi-cell"><span class="highlight">快速可感受</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5 行動優先序 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#f3e8ff;">🗺</div>
+    <div class="section-title">
+      <span class="num">SECTION 05</span>
+      行動路線圖（90天）
+    </div>
+  </div>
+
+  <div class="priority-timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Week 1–2 ／ 立即行動</div>
+        <div class="timeline-title">建立ROI訪談腳本 + 測試對話</div>
+        <div class="timeline-body">
+          把ROI計算邏輯寫成一頁A4，下次訪談就帶著用。對現有2～3個在談案子，<strong>回頭問：「你現在最花時間的是什麼？我幫你算一下。」</strong>這一句話可能就是成交缺的那塊。
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Week 3–4 ／ 定位收斂</div>
+        <div class="timeline-title">鎖定「數位員工」，刪除其他業務對外話術</div>
+        <div class="timeline-body">
+          製作一份針對「數位員工」的服務說明頁（可先用士維自己的需求，讓MUSEON幫你生成）。所有人脈介紹時，統一說這一件事，不再說「我也做客製化系統、也做AI看圖」。
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Month 2 ／ 成交突破</div>
+        <div class="timeline-title">完成第一筆正式數位員工案，建立成效記錄</div>
+        <div class="timeline-body">
+          鎖定現有最接近成交的案子，以較優惠條件換取完整成效記錄。<strong>這個案例是玥瓏云未來最重要的銷售工具。</strong>沒有真實成效數據，所有說服都是軟的。
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Month 2–3 ／ 補助啟動</div>
+        <div class="timeline-title">針對「AI軟體報價系統」或「AI數位員工平台」送SBIR / AIGO申請</div>
+        <div class="timeline-body">
+          以宗宸顧問的架構為基礎，準備申請文件。核心論述鎖定：<strong>「此系統如何讓客戶的消費者受益」</strong>，例如室內設計案：加速消費者獲得報價→減少等待時間→提升交易效率。
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-phase">Month 3 ／ 規模準備</div>
+        <div class="timeline-title">招募AI業務夥伴（抽成制），釋放士維的時間</div>
+        <div class="timeline-body">
+          有了第一個成效案例後，業務說服難度大幅下降。此時招募一位「跑業務+懂AI」的夥伴，讓士維回歸技術主導+顧問角色，公司才能真正進入規模化階段。
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 6 核心競爭優勢再確認 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#e8f5f1;">⚡</div>
+    <div class="section-title">
+      <span class="num">SECTION 06</span>
+      玥瓏云的真正差異化優勢
+    </div>
+  </div>
+
+  <div class="callout">
+    <h4>士維本人說出的競爭優勢（訪談 1:31:10）</h4>
+    <p>
+      「<strong>第一，時間快</strong>：AI coding能很快把客製化軟體給客戶。<br>
+      <strong>第二，成本低</strong>：AI coding成本比人工成本還低。<br>
+      <strong>第三，深度廣度超預期</strong>：AI coding過程中，很多東西都會超乎預期。<br>
+      <strong>第四，帶入營運顧問</strong>：在做需求訪談的過程，我們會帶入營運顧問角色，不單純是AI資訊公司，而是客戶的死黨團隊。」
+    </p>
+  </div>
+
+  <div class="why-block">
+    <div class="why-row">
+      <div class="why-label">🔑 核心差異</div>
+      <div class="why-content">
+        玥瓏云不是資訊公司，不是工具公司——是<strong>「附帶商業診斷的AI實作團隊」</strong>。這個定位在市場上極稀缺。
+        問題是對外從未說清楚這件事。<strong>把「帶入營運顧問視角」變成最重要的行銷主軸，而不是藏在訪談裡的隱藏武器。</strong>
+      </div>
+    </div>
+    <div class="why-row" style="border-bottom:none;">
+      <div class="why-label">⚠️ 警示</div>
+      <div class="why-content">
+        如果士維繼續什麼都做（客製系統+數位員工+AI看圖），這個核心差異就會被稀釋掉。<strong>聚焦才能強大，分散只會模糊。</strong>
+        目前最需要的不是更多功能，而是讓現有的核心價值被更多人看見。
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="report-footer">
+  <p>本報告由 <strong>MUSEON AI 顧問系統</strong> 根據星誠管顧企業診斷逐字稿深度分析生成</p>
+  <p>診斷對象：玥瓏云（士維）｜訪談顧問：宗宸｜報告日期：2026-05-19</p>
+  <p style="margin-top:12px; opacity:0.4;">MUSEON — 讓每一次對話，都沉澱成可複用的智慧</p>
+</div>
+
+</body>
+</html>
