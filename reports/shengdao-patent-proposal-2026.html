@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSEON × 聖島 — AI 輔助專利說明書本地端部署合作提案</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:       #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark:  #9A3A1C;
+      --teal:        #2A7A6E;
+      --gold:        #B8923A;
+      --ink:         #12121A;
+      --slate:       #5A5A6E;
+      --mist:        #9898A8;
+      --border:      #E2E0DA;
+      --parchment:   #F7F5F0;
+      --snow:        #FDFCFA;
+      --deep-ink:    #0E0E16;
+    }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body { background: var(--parchment); color: var(--ink); font-family: 'Outfit','Noto Sans TC',sans-serif; line-height: 1.75; }
+    @media print { body { background: white; } }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 0 40px; }
+    section { padding: 72px 0 56px; }
+    section + section { border-top: 1px solid var(--border); }
+
+    h1, h2 { font-family: 'Cormorant Garamond',serif; font-weight: 600; color: var(--ink); }
+    h3, h4 { font-weight: 600; color: var(--ink); }
+
+    .lbl {
+      font-family: 'IBM Plex Mono',monospace; font-size: 11px; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ember-dark); background: rgba(196,80,42,.08);
+      border-radius: 100px; padding: 3px 10px; display: inline-block; margin-bottom: 14px;
+    }
+    .sec-title { font-family: 'Cormorant Garamond',serif; font-size: 38px; font-weight: 600; line-height: 1.2; margin-bottom: 10px; }
+    .sec-sub   { font-size: 15.5px; color: var(--slate); margin-bottom: 44px; max-width: 58ch; line-height: 1.75; }
+
+    p { color: var(--slate); font-size: 15px; line-height: 1.8; margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* COVER */
+    .cover {
+      background: var(--deep-ink); color: white;
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden; padding: 0; border-top: none !important;
+    }
+    .cover::before {
+      content: ''; position: absolute; top: -120px; right: -180px;
+      width: 560px; height: 560px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,80,42,.18) 0%, transparent 68%);
+    }
+    .cover::after {
+      content: ''; position: absolute; bottom: -80px; left: -100px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,146,58,.10) 0%, transparent 68%);
+    }
+    .ci { position: relative; z-index: 1; padding: 80px 80px 0; }
+    .c-logo {
+      font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase; color: var(--ember-light);
+      margin-bottom: 100px; display: flex; align-items: center; gap: 10px;
+    }
+    .c-logo::before { content:''; display:inline-block; width:24px; height:2px; background:var(--ember); }
+    .c-tag {
+      font-family: 'IBM Plex Mono',monospace; font-size: 11px; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--ember-light);
+      background: rgba(196,80,42,.18); border-radius: 100px; padding: 4px 12px;
+      display: inline-block; margin-bottom: 28px;
+    }
+    .c-title {
+      font-family: 'Cormorant Garamond',serif; font-size: 54px; font-weight: 600;
+      line-height: 1.1; color: #FDFCFA; margin-bottom: 12px; max-width: 16ch;
+    }
+    .c-title span { color: var(--ember-light); }
+    .c-divider { width: 56px; height: 2px; background: var(--ember); margin: 32px 0; }
+    .c-sub { font-size: 17px; font-weight: 300; color: rgba(253,252,250,.60); max-width: 46ch; line-height: 1.75; }
+    .cf {
+      position: relative; z-index: 1; padding: 40px 80px 64px;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      border-top: 1px solid rgba(255,255,255,.07);
+    }
+    .cf-parties { display: flex; align-items: flex-start; gap: 8px; }
+    .cf-party { font-size: 13px; color: rgba(253,252,250,.50); line-height: 1.9; }
+    .cf-party strong { display: block; font-size: 15px; font-weight: 600; color: rgba(253,252,250,.85); margin-bottom: 2px; }
+    .cf-vs { font-family:'Cormorant Garamond',serif; font-size:22px; font-style:italic; color:var(--ember-light); padding:0 24px; align-self:center; }
+    .cf-date { font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(253,252,250,.35); text-align:right; line-height:1.9; }
+
+    /* SUMMARY BOX */
+    .sum-box { background:var(--deep-ink); border-radius:14px; padding:48px; color:white; position:relative; overflow:hidden; }
+    .sum-box::before { content:''; position:absolute; top:-60px; right:-60px; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle, rgba(196,80,42,.14) 0%, transparent 68%); }
+    .sum-box .lbl { color:var(--ember-light); background:rgba(196,80,42,.18); }
+    .sum-item { display:flex; gap:22px; margin-bottom:32px; position:relative; z-index:1; }
+    .sum-item:last-child { margin-bottom:0; }
+    .sum-n { font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:600; font-style:italic; color:var(--ember-light); line-height:1; flex-shrink:0; width:36px; padding-top:2px; }
+    .sum-t h4 { font-size:16px; font-weight:600; color:#FDFCFA; margin-bottom:5px; }
+    .sum-t p  { font-size:14px; color:rgba(253,252,250,.58); margin:0; line-height:1.7; }
+
+    /* PAIN */
+    .pain { display:flex; gap:24px; padding:28px 0; border-bottom:1px solid var(--border); }
+    .pain:first-of-type { padding-top:0; }
+    .pain:last-of-type  { border-bottom:none; }
+    .pain-ico { width:48px; height:48px; border-radius:12px; background:rgba(196,80,42,.07); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .pain h4 { font-size:16px; margin-bottom:6px; }
+    .pain p  { font-size:14px; margin:0; }
+
+    /* ARCH */
+    .arch { background:var(--snow); border:1px solid var(--border); border-radius:14px; padding:40px; margin:32px 0; }
+    .arch-row { display:flex; align-items:stretch; gap:10px; margin-bottom:10px; }
+    .arch-row:last-child { margin-bottom:0; }
+    .a-node { flex:1; text-align:center; padding:14px 12px; border-radius:8px; font-size:13px; font-weight:500; line-height:1.45; }
+    .a-node strong { display:block; font-size:12px; font-weight:700; margin-bottom:4px; }
+    .a-node.usr { background:rgba(42,122,110,.08); border:1.5px solid rgba(42,122,110,.28); color:#1d6860; }
+    .a-node.eng { background:rgba(196,80,42,.08); border:1.5px solid rgba(196,80,42,.28); color:var(--ember-dark); }
+    .a-node.srv { background:rgba(18,18,26,.05); border:1.5px solid var(--border); color:var(--slate); }
+    .a-node.dat { background:rgba(184,146,58,.08); border:1.5px solid rgba(184,146,58,.28); color:#8a6a1c; }
+    .a-arr { display:flex; align-items:center; font-size:18px; color:var(--mist); flex-shrink:0; }
+    .arch-note { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mist); text-align:center; margin-top:24px; padding-top:20px; border-top:1px dashed var(--border); letter-spacing:.04em; }
+
+    /* WORKFLOW */
+    .wf-step { display:flex; gap:22px; padding:20px 0; position:relative; }
+    .wf-step::after { content:''; position:absolute; left:19px; top:52px; bottom:0; width:2px; background:linear-gradient(to bottom,rgba(196,80,42,.4),transparent); }
+    .wf-step:last-child::after { display:none; }
+    .wf-circle { width:40px; height:40px; border-radius:50%; background:var(--ember); color:white; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; z-index:1; }
+    .wf-body { padding-top:6px; }
+    .wf-body h4 { font-size:15px; margin-bottom:5px; }
+    .wf-body p  { font-size:14px; margin:0; }
+
+    /* DELIVERABLES */
+    .g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+    .d-card { background:var(--snow); border:1px solid var(--border); border-radius:12px; padding:32px; position:relative; overflow:hidden; }
+    .d-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--ember); border-radius:12px 12px 0 0; }
+    .d-card.gold::before { background:var(--gold); }
+    .d-card.teal::before { background:var(--teal); }
+    .d-num { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; font-style:italic; color:rgba(196,80,42,.10); line-height:1; margin-bottom:10px; }
+    .d-card.gold .d-num { color:rgba(184,146,58,.12); }
+    .d-card.teal .d-num { color:rgba(42,122,110,.10); }
+    .d-card h4 { font-size:16px; margin-bottom:10px; }
+    .d-card p  { font-size:14px; margin-bottom:0; }
+    .ck { list-style:none; margin-top:14px; }
+    .ck li { font-size:13.5px; color:var(--slate); padding:5px 0; display:flex; gap:8px; align-items:flex-start; }
+    .ck li::before { content:'✓'; color:var(--teal); font-weight:700; flex-shrink:0; }
+
+    /* PHASE CARDS */
+    .ph-card { background:var(--snow); border:1px solid var(--border); border-radius:12px; padding:28px 32px; display:flex; gap:28px; align-items:flex-start; margin-bottom:20px; }
+    .ph-badge { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; font-style:italic; flex-shrink:0; color:white; }
+    .ph-badge.p1 { background:var(--ember); }
+    .ph-badge.p2 { background:var(--teal); }
+    .ph-badge.p3 { background:var(--gold); }
+    .ph-body { flex:1; }
+    .ph-body h4 { font-size:16px; margin-bottom:4px; }
+    .ph-meta { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mist); letter-spacing:.06em; margin-bottom:10px; }
+    .ph-body p { font-size:14px; }
+    .ph-note { margin-top:14px; padding:12px 16px; border-radius:6px; font-size:13px; color:var(--slate); }
+    .ph-note.p1 { background:rgba(196,80,42,.05); }
+    .ph-note.p2 { background:rgba(42,122,110,.05); }
+    .ph-note.p3 { background:rgba(184,146,58,.06); }
+
+    /* GANTT */
+    .gantt { width:100%; border-collapse:collapse; font-size:13px; margin:32px 0; }
+    .gantt th { background:var(--ink); color:white; padding:10px 14px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; letter-spacing:.05em; text-transform:uppercase; text-align:left; }
+    .gantt th.wk { text-align:center; padding:10px 4px; }
+    .gantt th:first-child { border-radius:8px 0 0 0; }
+    .gantt th:last-child  { border-radius:0 8px 0 0; }
+    .gantt td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--slate); vertical-align:middle; }
+    .gantt tr:last-child td { border-bottom:none; }
+    .gantt tr:nth-child(even) td { background:rgba(247,245,240,.4); }
+    .wkc { text-align:center; padding:8px 3px; }
+    .dot { width:26px; height:20px; border-radius:4px; margin:0 auto; }
+    .dot.p1 { background:rgba(196,80,42,.22); border:1.5px solid var(--ember); }
+    .dot.p2 { background:rgba(42,122,110,.18); border:1.5px solid var(--teal); }
+    .dot.p3 { background:rgba(184,146,58,.18); border:1.5px solid var(--gold); }
+    .dot.off{ background:transparent; border:1.5px solid var(--border); }
+
+    /* PRICING */
+    .ptbl { width:100%; border-collapse:collapse; margin:28px 0 0; }
+    .ptbl th { background:var(--ink); color:white; padding:12px 20px; font-size:13px; font-weight:500; text-align:left; }
+    .ptbl th:first-child { border-radius:8px 0 0 0; }
+    .ptbl th.r { border-radius:0 8px 0 0; text-align:right; }
+    .ptbl td { padding:14px 20px; border-bottom:1px solid var(--border); font-size:14px; color:var(--slate); vertical-align:top; }
+    .ptbl td.r { text-align:right; font-weight:600; color:var(--ink); }
+    .ptbl tr:last-child td { border-bottom:none; }
+    .ptotal td { background:var(--ember); color:white!important; font-weight:700!important; font-size:15px!important; padding:16px 20px; border-bottom:none!important; }
+    .ptotal td:first-child { border-radius:0 0 0 8px; }
+    .ptotal td:last-child  { border-radius:0 0 8px 0; }
+    .p-opt { background:var(--snow); border:1.5px dashed var(--border); border-radius:8px; padding:20px 24px; margin-top:14px; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .p-amt { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:600; color:var(--gold); flex-shrink:0; }
+
+    /* ROI */
+    .roi-g { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin:28px 0; }
+    .roi-i { text-align:center; padding:24px 16px; background:var(--snow); border:1px solid var(--border); border-radius:10px; }
+    .roi-n { font-family:'Cormorant Garamond',serif; font-size:46px; font-weight:700; font-style:italic; color:var(--ember); line-height:1; margin-bottom:6px; }
+    .roi-l { font-size:13px; color:var(--slate); font-weight:500; }
+
+    /* WHY */
+    .why-i { padding:32px 0; border-bottom:1px solid var(--border); display:flex; gap:28px; align-items:flex-start; }
+    .why-i:last-child { border-bottom:none; }
+    .why-n { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:600; font-style:italic; color:rgba(196,80,42,.15); line-height:1; flex-shrink:0; width:44px; }
+    .why-i h4 { font-size:17px; margin-bottom:8px; }
+    .why-i p  { font-size:14.5px; }
+
+    /* CLAUSES */
+    .cl-g { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:28px 0; }
+    .cl-c { background:var(--snow); border:1px solid var(--border); border-radius:10px; padding:24px; }
+    .cl-c .ico { font-size:24px; margin-bottom:12px; display:block; }
+    .cl-c h4 { font-size:15px; margin-bottom:8px; }
+    .cl-c p  { font-size:13.5px; }
+
+    /* NEXT STEPS */
+    .ns-box { background:var(--deep-ink); border-radius:14px; padding:48px; color:white; position:relative; overflow:hidden; }
+    .ns-box::after { content:''; position:absolute; bottom:-80px; right:-80px; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle,rgba(184,146,58,.10) 0%,transparent 68%); }
+    .ns-box .lbl { color:var(--ember-light); background:rgba(196,80,42,.18); }
+    .ns-list { list-style:none; margin-top:32px; position:relative; z-index:1; }
+    .ns-list li { display:flex; gap:20px; align-items:flex-start; margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid rgba(255,255,255,.05); }
+    .ns-list li:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ns-n { width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(196,80,42,.5); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--ember-light); flex-shrink:0; }
+    .ns-t h4 { font-size:15px; font-weight:600; color:#FDFCFA; margin-bottom:4px; }
+    .ns-t p  { font-size:13.5px; color:rgba(253,252,250,.52); margin:0; }
+
+    /* CALLOUT */
+    .callout { border-left:3px solid var(--ember); padding:16px 20px; background:rgba(196,80,42,.04); border-radius:0 8px 8px 0; margin:24px 0; }
+    .callout p { font-size:14.5px; color:var(--ink); margin:0; }
+
+    /* CTA / FOOTER */
+    .cta-sec { text-align:center; padding:64px 0 80px; }
+    .cta-sec h3 { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:600; color:var(--ink); margin-bottom:12px; }
+    .cta-sec p { font-size:15px; color:var(--mist); margin-bottom:32px; }
+    .cta-btn { display:inline-block; background:var(--ember); color:white; padding:14px 36px; border-radius:6px; font-size:15px; font-weight:600; text-decoration:none; letter-spacing:.02em; }
+    .cta-contact { margin-top:28px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--mist); letter-spacing:.06em; line-height:1.9; }
+    .doc-foot { border-top:1px solid var(--border); padding:28px 0; text-align:center; }
+    .doc-foot p { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mist); margin:0; letter-spacing:.06em; }
+
+    /* STAT ROW */
+    .stat-row { display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; }
+    .stat-i { text-align:center; }
+    .stat-n { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:700; color:var(--ember); line-height:1; }
+    .stat-l { font-size:12px; color:var(--mist); margin-top:3px; }
+
+    @media (max-width:640px) {
+      .container { padding:0 20px; }
+      .ci { padding:48px 28px 0; }
+      .cf { padding:32px 28px 48px; flex-direction:column; gap:20px; }
+      .c-title { font-size:40px; }
+      .g3,.cl-g,.roi-g { grid-template-columns:1fr; }
+      .sum-box { padding:28px 24px; }
+      .ph-card { flex-direction:column; gap:16px; }
+      .arch-row { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════
+     SECTION 0 · COVER
+══════════════════════ -->
+<section class="cover">
+  <div class="ci">
+    <div class="c-logo">MUSEON</div>
+    <div class="c-tag">Confidential Proposal · 合作提案</div>
+    <h1 class="c-title">
+      AI 輔助<br/>
+      <span>專利說明書</span><br/>
+      本地端部署<br/>
+      合作提案
+    </h1>
+    <div class="c-divider"></div>
+    <p class="c-sub">
+      不上雲端、不外洩資料——<br/>
+      在聖島自有 AI 伺服器上，建立一套真正能用的<br/>
+      專利說明書生成方法論引擎。
+    </p>
+  </div>
+
+  <div class="cf">
+    <div class="cf-parties">
+      <div class="cf-party">
+        <strong>提案方</strong>
+        MUSEON<br/>臥龍崗智能管理顧問有限公司
+      </div>
+      <div class="cf-vs">×</div>
+      <div class="cf-party">
+        <strong>合作方</strong>
+        聖島國際專利商標聯合事務所<br/>Saint Island Int'l Patent &amp; Law Offices
+      </div>
+    </div>
+    <div class="cf-date">
+      文件版本 v1.0<br/>
+      2026 年 5 月 20 日<br/>
+      機密文件 · 請勿外傳
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 1 · 執行摘要
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Executive Summary</div>
+    <h2 class="sec-title">三句話說清楚</h2>
+    <p class="sec-sub">這份提案回答一個核心問題：聖島已有 AI 伺服器，但 AI 輔助說明書進度遲緩——我們能做什麼？</p>
+
+    <div class="sum-box">
+      <div class="sum-item">
+        <div class="sum-n">1</div>
+        <div class="sum-t">
+          <h4>問題：AI 工具有了，但缺乏正確的人機協作框架</h4>
+          <p>AI 生成的初稿品質不穩定，不知道如何將現有工作流與 AI 有效結合，導致專利師寧願不用或用後要大幅修改，失去對 AI 的信心，節省不了時間。</p>
+        </div>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">2</div>
+        <div class="sum-t">
+          <h4>解法：MUSEON 直接在聖島伺服器部署方法論引擎</h4>
+          <p>MUSEON 不是 SaaS 雲端服務，而是「怎麼用 AI 寫專利說明書」的 Skill 框架與工作流——完整部署在聖島本地伺服器，資料永遠不離開您的網路邊界。</p>
+        </div>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">3</div>
+        <div class="sum-t">
+          <h4>成果：說明書從 10 小時壓縮至 2–3 小時，品質標準化</h4>
+          <p>12 週完成診斷、部署、培訓三個階段。AI 負責高品質結構化初稿，專利師保留 Claims 最終判斷主權，書寫品質全面一致化。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 2 · 現況與挑戰
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Situation Analysis</div>
+    <h2 class="sec-title">聖島的現況與挑戰</h2>
+    <p class="sec-sub">成立逾半世紀、全台五據點、500 人規模的專業機構，面臨 AI 時代的轉型施力點困境。</p>
+
+    <div style="background:var(--snow);border:1px solid var(--border);border-radius:10px;padding:28px 32px;margin-bottom:36px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;">
+      <div style="flex:1;min-width:220px;">
+        <div class="lbl" style="margin-bottom:8px;">機構背景</div>
+        <p style="font-size:14px;color:var(--slate);max-width:44ch;margin:0;line-height:1.75;">
+          聖島國際專利商標聯合事務所於 1974 年成立，是台灣規模最大的專利商標機構之一，全台五個據點，與全球逾 100 個國家的合作事務所建立長期關係，每年處理數以千計的各類專利申請案。
+        </p>
+      </div>
+      <div class="stat-row">
+        <div class="stat-i"><div class="stat-n">52<span style="font-size:18px;">年</span></div><div class="stat-l">成立至今</div></div>
+        <div class="stat-i"><div class="stat-n">500<span style="font-size:18px;">人</span></div><div class="stat-l">專業人員</div></div>
+        <div class="stat-i"><div class="stat-n">5<span style="font-size:18px;">處</span></div><div class="stat-l">全台據點</div></div>
+        <div class="stat-i"><div class="stat-n">100<span style="font-size:18px;">+</span></div><div class="stat-l">合作國家</div></div>
+      </div>
+    </div>
+
+    <div class="pain">
+      <div class="pain-ico">⚠️</div>
+      <div>
+        <h4>AI 初稿品質不穩定，產出差距大</h4>
+        <p>團隊已嘗試使用 AI 工具輔助撰寫說明書，但每次輸出品質參差不齊——有時結構完整，有時需要大幅重寫，反而讓專利師花更多時間修改，逐漸喪失使用 AI 的意願與信心。</p>
+      </div>
+    </div>
+    <div class="pain">
+      <div class="pain-ico">🔒</div>
+      <div>
+        <h4>資料安全是核心紅線，不能妥協</h4>
+        <p>專利資料屬於高度機密，包含客戶的技術發明細節與商業佈局，一旦外洩可能造成無法挽回的損失。聖島已自購 AI 伺服器正是出於這個考量——任何解決方案必須保證資料本地化，零上雲。</p>
+      </div>
+    </div>
+    <div class="pain">
+      <div class="pain-ico">📋</div>
+      <div>
+        <h4>缺乏組織層級的 AI 使用方法論</h4>
+        <p>不同專利師用不同方式使用 AI，沒有統一的 Prompt 框架、工作流程和品質標準。個人差異極大，無法形成組織能力積累，也無法保障客戶交付品質的一致性。</p>
+      </div>
+    </div>
+    <div class="pain">
+      <div class="pain-ico">⏱️</div>
+      <div>
+        <h4>說明書撰寫是最大時間瓶頸</h4>
+        <p>一份完整的專利說明書，從技術理解、文件架構到細節撰寫，平均耗費 8–12 小時，是整個申請流程中最耗時的環節。此瓶頸直接限制了接案量上限與整體交付速度。</p>
+      </div>
+    </div>
+    <div class="pain">
+      <div class="pain-ico">🧩</div>
+      <div>
+        <h4>AI 伺服器已就位，但工具與工作流尚未整合</h4>
+        <p>硬體投資已完成，代表組織對 AI 轉型的決心明確。缺少的是「如何把現有工作流的每個環節，有邏輯地與 AI 接起來」的方法論層次設計與實施路徑。</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>核心洞察：</strong>問題不在 AI 工具本身，而在於沒有「人機協作框架」——告訴 AI 什麼、什麼時候告訴、怎麼驗收、哪些判斷必須回到人手上。MUSEON 能做的，正是這個框架層的設計與落地。</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 3 · 解決方案
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Our Solution</div>
+    <h2 class="sec-title">本地端部署架構說明</h2>
+    <p class="sec-sub">MUSEON 方法論引擎直接在聖島伺服器上運行，資料不離廠，工作流不斷層。</p>
+
+    <div class="arch">
+      <div style="text-align:center;margin-bottom:28px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);text-transform:uppercase;">系統架構示意圖（本地端部署）</span>
+      </div>
+
+      <div class="arch-row">
+        <div class="a-node usr"><strong>專利師</strong>輸入技術摘要<br/>Claims 最終審查</div>
+        <div class="a-arr">→</div>
+        <div class="a-node usr"><strong>現有案件管理系統</strong>ERP / 文件系統<br/>保持原有架構不變</div>
+        <div class="a-arr">→</div>
+        <div class="a-node eng"><strong>MUSEON Skill Layer</strong>標準化 Prompt 框架<br/>工作流路由引擎</div>
+      </div>
+
+      <div style="text-align:center;color:var(--mist);font-size:20px;padding:8px 0;">↓</div>
+
+      <div class="arch-row">
+        <div class="a-node srv"><strong>聖島本地 AI 伺服器</strong>LLM 推論引擎（本地運行）<br/>資料永不離開內網</div>
+        <div class="a-arr">→</div>
+        <div class="a-node eng"><strong>MUSEON 工作流模組</strong>說明書生成 / 品質檢核<br/>術語管理 / 版本控制</div>
+        <div class="a-arr">→</div>
+        <div class="a-node dat"><strong>本地知識庫</strong>歷史案例 / 術語詞庫<br/>書寫範本（本地儲存）</div>
+      </div>
+
+      <div style="text-align:center;color:var(--mist);font-size:20px;padding:8px 0;">↓</div>
+
+      <div class="arch-row">
+        <div class="a-node usr" style="flex:1;"><strong>輸出：高品質說明書初稿</strong>符合台灣 TIPO / PCT / USPTO 格式 · 術語一致 · 結構標準化 · 專利師聚焦審查 Claims</div>
+      </div>
+
+      <div class="arch-note">⚡ 所有運算發生在聖島本地伺服器 · 無任何資料傳輸至外部網路 · 完全符合保密義務要求</div>
+    </div>
+
+    <h3 style="font-size:20px;margin:44px 0 20px;">AI 輔助說明書撰寫工作流（五步驟）</h3>
+
+    <div class="wf-step">
+      <div class="wf-circle">01</div>
+      <div class="wf-body">
+        <h4>技術交底書輸入 + 結構解析</h4>
+        <p>專利師將客戶技術交底書導入系統，MUSEON 自動解析技術核心、發明目的、解決問題，提取關鍵技術特徵，生成說明書結構骨架。取代「空白頁開始思考」的心智負擔。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-circle">02</div>
+      <div class="wf-body">
+        <h4>技術術語標準化 + 領域詞庫比對</h4>
+        <p>系統自動比對聖島自有術語詞庫（電子、機械、生醫等技術領域），確保術語與歷史案例一致、符合 TIPO 規範，從源頭減少審查核駁風險。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-circle">03</div>
+      <div class="wf-body">
+        <h4>說明書主體生成（AI 初稿）</h4>
+        <p>根據結構骨架與標準化術語，MUSEON Skill 框架驅動本地 LLM 生成完整初稿——發明摘要、先前技術、發明說明、實施例、圖式說明，格式符合台灣及 PCT 規範。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-circle">04</div>
+      <div class="wf-body">
+        <h4>品質自動檢核（80 項規則）</h4>
+        <p>系統自動執行四項檢核：完整性（各章節齊全）、一致性（術語前後統一）、合規性（格式符合法規）、邏輯性（技術描述前後呼應）。問題以結構化報告呈現，供專利師快速定位修訂重點。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-circle">05</div>
+      <div class="wf-body">
+        <h4>專利師審查 + Claims 最終確認</h4>
+        <p>AI 初稿交由專利師進行最終審查，重點聚焦在請求項（Claims）的保護範圍判斷與策略調整——這是人類專業判斷不可取代的核心價值所在。系統輔助標記需要注意的段落。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 4 · 三大可交付成果
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Deliverables</div>
+    <h2 class="sec-title">三大可交付成果</h2>
+    <p class="sec-sub">合作結束時，聖島擁有的不是一個「外部服務」，而是完全內化的能力資產。</p>
+
+    <div class="g3" style="margin-top:32px;">
+      <div class="d-card">
+        <div class="d-num">01</div>
+        <h4>本地端 AI 工作流系統</h4>
+        <p>完整部署在聖島伺服器上的 MUSEON 說明書引擎，包含 Prompt 框架、工作流模組與品質檢核機制。</p>
+        <ul class="ck">
+          <li>說明書五步驟自動化流程</li>
+          <li>技術領域術語詞庫（含擴充工具）</li>
+          <li>品質自動檢核模組（80 項規則）</li>
+          <li>TIPO / PCT / USPTO 三規格範本</li>
+          <li>系統操作後台與日誌記錄</li>
+        </ul>
+      </div>
+      <div class="d-card gold">
+        <div class="d-num">02</div>
+        <h4>組織知識庫與術語標準</h4>
+        <p>將聖島 52 年累積的案例經驗、術語體系、書寫風格，轉化為可被 AI 引用的結構化知識資產。</p>
+        <ul class="ck">
+          <li>分技術領域術語詞庫</li>
+          <li>優質案例說明書範本庫（脫敏）</li>
+          <li>不同難度的寫作風格指南</li>
+          <li>常見核駁對應寫法資料庫</li>
+          <li>可自主持續更新的知識庫架構</li>
+        </ul>
+      </div>
+      <div class="d-card teal">
+        <div class="d-num">03</div>
+        <h4>完整培訓體系與操作手冊</h4>
+        <p>讓所有專利師都能獨立操作系統，掌握 AI 輔助寫作的思維方式，而不只是「會用工具」。</p>
+        <ul class="ck">
+          <li>專利師操作手冊（含案例演練）</li>
+          <li>系統管理員維護手冊</li>
+          <li>AI 輔助品質判斷框架</li>
+          <li>四梯次分組實戰培訓課程</li>
+          <li>上線後 90 天技術支援承諾</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 5 · 三個 Phase 時程表
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Project Timeline</div>
+    <h2 class="sec-title">三個 Phase 時程規劃</h2>
+    <p class="sec-sub">總計 12 週，分三個階段循序推進，每個階段皆有明確里程碑與可量化的驗收標準。</p>
+
+    <div class="ph-card">
+      <div class="ph-badge p1">P1</div>
+      <div class="ph-body">
+        <div class="ph-meta">Phase 1 · 第 1–3 週 · 診斷與規劃</div>
+        <h4>了解現況，設計客製化方案</h4>
+        <p>深入了解聖島現有 AI 伺服器規格、現行工作流與技術領域分佈，訪談資深專利師，設計量身定制的 MUSEON 部署方案與品質基準。</p>
+        <ul class="ck" style="margin-top:12px;">
+          <li>AI 伺服器規格盤點（GPU / RAM / 模型版本）</li>
+          <li>現有工作流訪談（5–8 位資深專利師）</li>
+          <li>技術領域分佈統計（電子/機械/生醫/化學占比）</li>
+          <li>歷史說明書品質基準建立（抽樣 20 件分析）</li>
+          <li>客製化部署方案文件 + 雙方里程碑確認</li>
+        </ul>
+        <div class="ph-note p1"><strong style="color:var(--ember);">驗收里程碑：</strong>完成診斷報告，雙方確認 Phase 2 部署技術規格與優先技術領域。</div>
+      </div>
+    </div>
+
+    <div class="ph-card">
+      <div class="ph-badge p2">P2</div>
+      <div class="ph-body">
+        <div class="ph-meta">Phase 2 · 第 4–9 週 · 本地部署與整合測試</div>
+        <h4>在聖島伺服器部署引擎，完成真實案例驗證</h4>
+        <p>MUSEON 工作流引擎本地部署，建立術語詞庫與知識庫，以 3–5 件真實案件作為試點完整走流程，收集問題並持續優化兩輪。</p>
+        <ul class="ck" style="margin-top:12px;">
+          <li>MUSEON 說明書引擎本地端部署完成</li>
+          <li>初始術語詞庫建立（優先最常見 2–3 技術領域）</li>
+          <li>說明書品質自動檢核模組設定與調校</li>
+          <li>3–5 件真實案件完整流程測試</li>
+          <li>基於測試結果的迭代優化（兩輪）</li>
+          <li>與現有案件管理系統介面串接確認</li>
+        </ul>
+        <div class="ph-note p2"><strong style="color:var(--teal);">驗收里程碑：</strong>3 件以上真實案件 AI 初稿品質達「專利師審查時間 ≤ 原本 40%」標準。</div>
+      </div>
+    </div>
+
+    <div class="ph-card">
+      <div class="ph-badge p3">P3</div>
+      <div class="ph-body">
+        <div class="ph-meta">Phase 3 · 第 10–12 週 · 培訓與正式上線</div>
+        <h4>訓練專利師，輸出操作手冊，全面上線</h4>
+        <p>分組培訓所有使用系統的專利師，輸出完整操作手冊與維護文件，完成系統管理員移交，確保聖島團隊能自主運作，不依賴 MUSEON 日常介入。</p>
+        <ul class="ck" style="margin-top:12px;">
+          <li>四梯次分組實戰培訓（每梯 8–12 人）</li>
+          <li>專利師操作手冊定稿（中文，含案例演練）</li>
+          <li>系統管理員維護手冊移交</li>
+          <li>全量術語詞庫（覆蓋全部技術領域）</li>
+          <li>正式上線 + 上線後第一週陪跑支援</li>
+          <li>上線後 90 天技術支援合約簽署</li>
+        </ul>
+        <div class="ph-note p3"><strong style="color:var(--gold);">驗收里程碑：</strong>全體專利師完成培訓並獨立完成一件 AI 輔助說明書；系統管理員通過移交測試。</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:18px;margin:48px 0 20px;">甘特圖：12 週工作包排程</h3>
+    <div style="overflow-x:auto;">
+      <table class="gantt">
+        <thead>
+          <tr>
+            <th style="width:200px;min-width:150px;">工作包</th>
+            <th class="wk">W1</th><th class="wk">W2</th><th class="wk">W3</th>
+            <th class="wk">W4</th><th class="wk">W5</th><th class="wk">W6</th>
+            <th class="wk">W7</th><th class="wk">W8</th><th class="wk">W9</th>
+            <th class="wk">W10</th><th class="wk">W11</th><th class="wk">W12</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">現況診斷訪談</td>
+            <td class="wkc"><div class="dot p1"></div></td><td class="wkc"><div class="dot p1"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">技術規格確認 + 方案設計</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot p1"></div></td><td class="wkc"><div class="dot p1"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">本地端引擎部署</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">術語詞庫建立</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot p2"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">真實案件試點測試</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot p2"></div></td>
+            <td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">優化迭代（2 輪）</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot p2"></div></td><td class="wkc"><div class="dot p2"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">分組培訓課程</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot p3"></div></td><td class="wkc"><div class="dot p3"></div></td><td class="wkc"><div class="dot off"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">操作手冊輸出 + 移交</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot p3"></div></td><td class="wkc"><div class="dot p3"></div></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--ink);">正式上線</td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td>
+            <td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot off"></div></td><td class="wkc"><div class="dot p3"></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--slate);">
+        <div class="dot p1" style="width:20px;height:16px;display:inline-block;"></div>Phase 1 診斷規劃
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--slate);">
+        <div class="dot p2" style="width:20px;height:16px;display:inline-block;"></div>Phase 2 部署整合
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--slate);">
+        <div class="dot p3" style="width:20px;height:16px;display:inline-block;"></div>Phase 3 培訓上線
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 6 · 費用說明
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Investment</div>
+    <h2 class="sec-title">費用說明</h2>
+    <p class="sec-sub">透明定價，每個 Phase 費用清晰，年度維護選配方案確保系統長期健康運作。</p>
+
+    <div class="roi-g">
+      <div class="roi-i"><div class="roi-n">70<span style="font-size:22px;">%</span></div><div class="roi-l">說明書撰寫時間節省</div></div>
+      <div class="roi-i"><div class="roi-n">210<span style="font-size:22px;">h</span></div><div class="roi-l">估計每月節省人力</div></div>
+      <div class="roi-i"><div class="roi-n">6<span style="font-size:22px;">個月</span></div><div class="roi-l">預估投資回收週期</div></div>
+    </div>
+
+    <div class="callout">
+      <p><strong>ROI 試算基礎：</strong>一份說明書平均 10 小時 → AI 輔助後 2–3 小時，節省 7–8 小時。每月 30 份 × 7 小時 = 210 小時節省。以台灣專利師平均時薪 NT$2,500 估算，每月可節省約 <strong>NT$525,000</strong> 人力成本，6 個月即可回收全部投資。</p>
+    </div>
+
+    <table class="ptbl">
+      <thead>
+        <tr>
+          <th>服務項目</th><th>期間</th><th>主要內容</th><th class="r">費用（NTD）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--ember);display:inline-block;flex-shrink:0;"></span>
+              <strong style="color:var(--ink);">Phase 1　診斷與規劃</strong>
+            </div>
+          </td>
+          <td style="white-space:nowrap;">3 週</td>
+          <td>現況訪談、伺服器規格盤點、品質基準建立、客製化部署方案設計與診斷報告</td>
+          <td class="r">NT$ 120,000</td>
+        </tr>
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;flex-shrink:0;"></span>
+              <strong style="color:var(--ink);">Phase 2　本地部署與整合</strong>
+            </div>
+          </td>
+          <td style="white-space:nowrap;">6 週</td>
+          <td>MUSEON 引擎本地部署、術語詞庫建立、3–5 件真實案件測試、兩輪優化迭代</td>
+          <td class="r">NT$ 480,000</td>
+        </tr>
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block;flex-shrink:0;"></span>
+              <strong style="color:var(--ink);">Phase 3　培訓與上線</strong>
+            </div>
+          </td>
+          <td style="white-space:nowrap;">3 週</td>
+          <td>四梯次分組培訓、操作手冊輸出、系統移交驗收、正式上線與第一週陪跑</td>
+          <td class="r">NT$ 180,000</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="ptotal">
+          <td colspan="3"><strong>專案總費用（12 週）</strong></td>
+          <td><strong>NT$ 780,000</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <h4 style="font-size:15px;margin:28px 0 12px;color:var(--ink);">年度維護選配方案（建議）</h4>
+
+    <div class="p-opt">
+      <div>
+        <strong style="display:block;margin-bottom:4px;font-size:15px;color:var(--ink);">年度完整維護合約</strong>
+        <span style="font-size:13.5px;color:var(--slate);">每季 1 次系統更新 · 每月 1 次遠端健康檢查 · 無限次線上技術支援 · 術語詞庫年度擴充</span>
+      </div>
+      <div class="p-amt">NT$ 180,000<span style="font-size:12px;font-weight:400;color:var(--mist);">/年</span></div>
+    </div>
+
+    <div class="p-opt">
+      <div>
+        <strong style="display:block;margin-bottom:4px;font-size:15px;color:var(--ink);">基本維護合約</strong>
+        <span style="font-size:13.5px;color:var(--slate);">每半年 1 次系統更新 · Email 技術支援（工作日 48 小時回覆）</span>
+      </div>
+      <div class="p-amt">NT$ 96,000<span style="font-size:12px;font-weight:400;color:var(--mist);">/年</span></div>
+    </div>
+
+    <div class="callout" style="margin-top:24px;">
+      <p><strong>建議付款條件：</strong>Phase 1 完成確認後支付 30%（NT$234,000）；Phase 2 里程碑達成後支付 50%（NT$390,000）；Phase 3 正式上線後支付尾款 20%（NT$156,000）。年度維護費於合約簽署後一次支付。</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 7 · 為什麼選擇 MUSEON
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Why MUSEON</div>
+    <h2 class="sec-title">三個差異化理由</h2>
+    <p class="sec-sub">市面上有許多 AI 寫作工具，但我們做的是它們沒辦法做的事。</p>
+
+    <div class="why-i">
+      <div class="why-n">01</div>
+      <div>
+        <h4>方法論優先，不是工具優先</h4>
+        <p>大多數 AI 工具解決「有沒有 AI」的問題，MUSEON 解決「AI 用得對不對」的問題。我們設計的是人機協作框架——決定什麼時候用 AI、給 AI 什麼資訊、怎麼驗收產出、哪些判斷必須回到人手上。這套框架才是讓 AI 真正有效的關鍵，也是無法被單純更換 AI 工具取代的護城河。聖島的核心競爭力不是 AI 工具本身，而是「讓專利師的專業判斷被 AI 有效放大」的能力。</p>
+      </div>
+    </div>
+    <div class="why-i">
+      <div class="why-n">02</div>
+      <div>
+        <h4>本地端優先設計，從底層保障資料主權</h4>
+        <p>MUSEON 的架構從設計之初就以「本地端部署」為預設，而非雲端服務的妥協改版。我們深刻理解專業服務機構在資料安全上的不妥協性——尤其是涉及客戶技術發明的專利資料。所有 Skill 框架、工作流模組、知識庫，都完全運行在聖島自有伺服器上，沒有任何資料需要離開您的網路邊界，這是技術架構上的保證，而非合約上的承諾。</p>
+      </div>
+    </div>
+    <div class="why-i">
+      <div class="why-n">03</div>
+      <div>
+        <h4>知識內化，而非服務依賴</h4>
+        <p>許多顧問或 AI 供應商的商業模式建立在「讓您持續依賴服務」上。MUSEON 的交付目標相反：12 週後，聖島的團隊擁有完整操作手冊、內化的知識庫、獨立維護的能力。我們鼓勵您在基礎穩固後自主迭代。年度維護合約是選配，而非綁定——這是我們對交付品質最高形式的承諾：如果您的團隊用不下去，代表我們沒做好，而不是讓您繼續付費依賴我們。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 8 · 合作保護條款
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Partnership Protections</div>
+    <h2 class="sec-title">合作保護條款</h2>
+    <p class="sec-sub">清晰的承諾讓合作更有信心。以下條款將逐一納入正式服務合約。</p>
+
+    <div class="cl-g">
+      <div class="cl-c">
+        <span class="ico">🔐</span>
+        <h4>資料主權保障</h4>
+        <p>專案執行期間 MUSEON 接觸的所有聖島文件（含測試用說明書、術語資料、技術交底書）均視為機密資料。所有資料儲存於聖島本地伺服器，合約結束後 MUSEON 側不保留任何副本，並以書面確認資料清除。</p>
+      </div>
+      <div class="cl-c">
+        <span class="ico">📄</span>
+        <h4>保密協議（NDA）</h4>
+        <p>專案啟動前簽署雙向 NDA，保密範疇涵蓋：技術交底書、申請策略、客戶名稱與業務數據、聖島內部工作流細節。保密期間：合約存續 + 終止後 5 年。所有 MUSEON 專案成員個別簽署。</p>
+      </div>
+      <div class="cl-c">
+        <span class="ico">🎯</span>
+        <h4>成效保證條款</h4>
+        <p>Phase 2 里程碑明確可量測：若 3 件試點案件 AI 初稿無法讓審查時間縮短至少 40%，MUSEON 承諾免費追加兩週優化服務直到達標。品質基準以 Phase 1 診斷建立的評分標準為依據，雙方事先確認。</p>
+      </div>
+      <div class="cl-c">
+        <span class="ico">📦</span>
+        <h4>智慧財產歸屬</h4>
+        <p>專案產出的所有工件（術語詞庫、操作手冊、客製化工作流設定）使用權歸聖島所有。MUSEON 保留底層方法論框架著作權，但授予聖島永久、不可撤銷的使用授權，雙方不得將對方商業機密用於第三方服務。</p>
+      </div>
+      <div class="cl-c">
+        <span class="ico">🔄</span>
+        <h4>變更管理機制</h4>
+        <p>若聖島 AI 伺服器規格、組織結構或業務重點在專案期間發生重大變化，雙方可透過書面協議調整 Phase 2/3 交付範疇，費用依實際工作量比例調整。Phase 1 診斷費用不退，屬已交付的分析報告。</p>
+      </div>
+      <div class="cl-c">
+        <span class="ico">🛡️</span>
+        <h4>技術移轉保障</h4>
+        <p>MUSEON 保證所有部署的系統元件均使用開放原始碼或聖島可自主維護的技術棧，不使用需長期付費授權的專有技術依賴。若 MUSEON 未來停止運作，聖島可憑操作手冊獨立維護現有系統，不受任何技術封鎖。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     SECTION 9 · 下一步
+══════════════════════ -->
+<section>
+  <div class="container">
+    <div class="lbl">Next Steps</div>
+    <h2 class="sec-title">三個立即行動</h2>
+    <p class="sec-sub">從今天到簽約只需三步。最快 2 週後即可啟動 Phase 1 診斷。</p>
+
+    <div class="ns-box">
+      <div class="lbl">Action Plan</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#FDFCFA;margin-top:8px;position:relative;z-index:1;">
+        確認合作意願，本週內預約技術說明會
+      </h3>
+      <ul class="ns-list">
+        <li>
+          <div class="ns-n">01</div>
+          <div class="ns-t">
+            <h4>安排 60 分鐘技術說明會（建議本週）</h4>
+            <p>由 MUSEON 技術顧問現場或線上演示 AI 輔助說明書工作流的實際運作。可攜帶一份真實說明書作為現場 Demo 素材，親眼看到 AI 產出品質與工時差異。聯絡：zeal.chou@gmail.com</p>
+          </div>
+        </li>
+        <li>
+          <div class="ns-n">02</div>
+          <div class="ns-t">
+            <h4>AI 伺服器規格預填表（說明會前 3 天交回）</h4>
+            <p>MUSEON 將提供標準化伺服器規格問卷，請 IT 人員填寫 GPU 型號、記憶體規格、目前安裝的 LLM 版本等基本資訊，讓說明會可直接聚焦技術可行性確認，節省雙方時間。</p>
+          </div>
+        </li>
+        <li>
+          <div class="ns-n">03</div>
+          <div class="ns-t">
+            <h4>合約審閱 + Phase 1 啟動（目標：說明會後 1 週）</h4>
+            <p>說明會後若雙方達成共識，MUSEON 在 3 個工作日內提供正式服務合約草稿。律師審閱確認後簽署，即可安排 Phase 1 診斷訪談時程。最快啟動：2026 年 6 月第一週。</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     CTA
+══════════════════════ -->
+<section style="border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="cta-sec">
+      <h3>準備好讓 AI 成為您的說明書引擎了嗎？</h3>
+      <p>我們期待與聖島的資深團隊合作，把半世紀的專業判斷力與 AI 的生成效率真正結合起來。</p>
+      <a href="mailto:zeal.chou@gmail.com?subject=【聖島×MUSEON】技術說明會預約" class="cta-btn">預約技術說明會 →</a>
+      <div class="cta-contact">
+        MUSEON · 臥龍崗智能管理顧問有限公司<br/>
+        聯絡人：Zeal Chou（周逸達）　|　zeal.chou@gmail.com
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════
+     FOOTER
+══════════════════════ -->
+<footer class="doc-foot">
+  <div class="container">
+    <p>MUSEON PROPOSAL · 聖島國際專利商標聯合事務所 · v1.0 · 2026-05-20 · CONFIDENTIAL · 未經許可請勿轉發</p>
+  </div>
+</footer>
+
+</body>
+</html>
