@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教練對話情報分析｜佳雯 × 周逸達｜2025-02-12</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --yellow: #d29922;
+  --red: #f85149;
+  --purple: #a371f7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ─── HEADER ─── */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.header .badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 0.8rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.header .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.header .meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.card-header:hover { background: var(--surface2); }
+
+.card-header .card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.card-header .toggle {
+  color: var(--muted);
+  font-size: 0.75rem;
+  transition: transform 0.2s;
+}
+
+.card.open .toggle { transform: rotate(180deg); }
+
+.card-body {
+  display: none;
+  padding: 0 1.2rem 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.card.open .card-body { display: block; }
+
+/* ─── EXECUTIVE SUMMARY ─── */
+.exec-summary {
+  background: linear-gradient(135deg, #161b22 0%, #1c2129 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.exec-summary h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.exec-summary p {
+  color: var(--text);
+  font-size: 14.5px;
+}
+
+/* ─── SECTIONS ─── */
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  margin-top: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── DECISIONS TABLE ─── */
+.decision-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin-top: 0.8rem;
+}
+
+.decision-table th {
+  text-align: left;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.decision-table td {
+  padding: 0.7rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.decision-table tr:last-child td { border-bottom: none; }
+
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.tag-green { background: rgba(63,185,80,0.15); color: var(--green); }
+.tag-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.tag-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+.tag-purple { background: rgba(163,113,247,0.15); color: var(--purple); }
+
+/* ─── TOPICS ─── */
+.topic {
+  margin-bottom: 1.5rem;
+}
+
+.topic-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topic-title::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.topic-points {
+  padding-left: 1.1rem;
+  color: #c9d1d9;
+  font-size: 14px;
+}
+
+.topic-points li {
+  margin-bottom: 0.4rem;
+  list-style: none;
+  position: relative;
+}
+
+.topic-points li::before {
+  content: '–';
+  position: absolute;
+  left: -1rem;
+  color: var(--muted);
+}
+
+.quote {
+  background: var(--surface2);
+  border-left: 3px solid var(--purple);
+  padding: 0.6rem 1rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 13.5px;
+  color: #c9d1d9;
+  margin: 0.6rem 0;
+  font-style: normal;
+}
+
+.quote .attr {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* ─── ACTION ITEMS ─── */
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.action-item:last-child { border-bottom: none; }
+
+.action-num {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.action-content { flex: 1; }
+
+.action-task {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.action-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ─── STRATEGIC INSIGHTS ─── */
+.insight-block {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.insight-block .label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.insight-block p {
+  font-size: 14px;
+  color: #c9d1d9;
+  margin-bottom: 0.4rem;
+}
+
+.insight-block p:last-child { margin-bottom: 0; }
+
+/* ─── PERSONA ─── */
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.persona-card {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.persona-card h4 {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.persona-card .role {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.persona-card p {
+  font-size: 13.5px;
+  color: #c9d1d9;
+  line-height: 1.6;
+}
+
+/* ─── PARKING LOT ─── */
+.parking-item {
+  display: flex;
+  gap: 0.8rem;
+  padding: 0.6rem 0;
+  font-size: 14px;
+  color: #c9d1d9;
+  border-bottom: 1px solid var(--border);
+}
+
+.parking-item:last-child { border-bottom: none; }
+
+.parking-icon { color: var(--yellow); flex-shrink: 0; }
+
+/* ─── FOOTER ─── */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.privacy-notice {
+  background: rgba(210,153,34,0.08);
+  border: 1px solid rgba(210,153,34,0.25);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 12px;
+  color: var(--yellow);
+  margin-bottom: 1.5rem;
+}
+
+/* ─── TIMELINE ─── */
+.timeline {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.2rem;
+  font-size: 14px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.3rem;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--bg);
+}
+
+.timeline-time {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-event {
+  color: #c9d1d9;
+}
+
+.timeline-event strong { color: var(--text); }
+
+/* ─── MATRIX ─── */
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.matrix-cell {
+  background: var(--surface2);
+  border-radius: 6px;
+  padding: 0.7rem;
+  font-size: 13px;
+}
+
+.matrix-cell .key {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+}
+
+.matrix-cell .val {
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* ─── HIGHLIGHT BOX ─── */
+.highlight-box {
+  background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(163,113,247,0.08));
+  border: 1px solid rgba(88,166,255,0.2);
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin: 1rem 0;
+}
+
+.highlight-box h4 {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.highlight-box p {
+  font-size: 14px;
+  color: #c9d1d9;
+  line-height: 1.7;
+}
+
+/* ─── OPEN STATE ─── */
+.card.open .card-header { border-bottom: none; }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <div class="badge">Meeting Intelligence Report</div>
+  <h1>教練對話情報分析</h1>
+  <div class="meta">
+    <span>📅 2025-02-12</span>
+    <span>⏱ 約 1.5 小時</span>
+    <span>👥 佳雯 × 周逸達（企管顧問）</span>
+    <span>🏷 商業教練 / 聯盟籌備</span>
+  </div>
+</div>
+
+<!-- ═══════════════ EXECUTIVE SUMMARY ═══════════════ -->
+<div class="exec-summary">
+  <h2>執行摘要</h2>
+  <p>這是一場教練輔導會議，周逸達幫助佳雯（身心靈產業創業者）確認「事業共創圈」聯盟的北極星願景與核心策略。會議產出：① 佳雯的使命收斂為「協助身心靈創業者從有能力到能放大影響力」的蛻變路線；② 確認核心團隊招募方法：先列 10 人名單、兩週內先談 5 人、每人最多聊兩次；③ 決議 6 月 29 日前要有第一個付費加入的創始會員，並做逆推行動計劃；④ 周逸達分享個人重大洞察——「使命認同」不等於「人認同」，這是過去所有合作崩潰的根本原因。</p>
+</div>
+
+<!-- ═══════════════ SECTION 1: 結構摘要 ═══════════════ -->
+<div class="section-label">一、討論主題與決議</div>
+
+<div class="topic">
+  <div class="topic-title">1-1｜50 人名單的篩選策略</div>
+  <ul class="topic-points">
+    <li>佳雯手上有 50 個身心靈老師的名單，希望找到核心團隊成員</li>
+    <li>周逸達建議：先用直覺列出 5–10 人，不用全部聊，否則「會想死」</li>
+    <li>兩次訪談法：第一次聊理念與北極星，第二次聊做法與三重漏斗</li>
+    <li>如果聊兩次發現理念不合，直接放棄——「勞民傷財，沒效果」</li>
+    <li>周逸達提醒：不是每個都要聊到完整的三重漏斗，從直覺切入最重要</li>
+  </ul>
+  <div class="quote">
+    「理念不合，根本沒辦法通勤進不同賽道的合作，也沒辦法槓杆。」
+    <div class="attr">— 周逸達</div>
+  </div>
+</div>
+
+<div class="topic">
+  <div class="topic-title">1-2｜佳雯的北極星：使命收斂</div>
+  <ul class="topic-points">
+    <li>周逸達用教練引導，幫佳雯把「理念」收斂成一句清晰的使命</li>
+    <li>關鍵字：「蛻變」——協助身心靈創業者突破限制性信念，讓能力被看見</li>
+    <li>「富而喜悅的莊園」：能力的展現 + 關係的平衡，內外皆富足</li>
+    <li>品牌識別：拒絕犧牲家庭生活來換取事業成就的人</li>
+    <li>佳雯自己活出了 X 模型運作良好的範例：目標導向 + 找外部資源 + 不自我設限</li>
+  </ul>
+  <div class="quote">
+    「為什麼他們平衡不了？因為大部分的人連每年出國一次去背包客這個都沒有，他的根本問題可能是連想都不敢想。」
+    <div class="attr">— 周逸達</div>
+  </div>
+</div>
+
+<div class="topic">
+  <div class="topic-title">1-3｜聯盟的服務層次與設計</div>
+  <ul class="topic-points">
+    <li>聯盟會員分兩圈：內圈（核心夥伴）+ 外圈（外部合作夥伴）</li>
+    <li>內圈享有：免費參加例會、擔任幹部/志工從做中學</li>
+    <li>成長路徑設計（檢核表）：自媒體 → 官網/Google → 私域經營 → 行銷放大 → 自動化</li>
+    <li>「徽章系統」：從學習者 → 助教/陪跑者 → 導師（一星到五星）</li>
+    <li>活動要有「志工承擔」機制，而非只是參加活動——才能創造真正的自我認同</li>
+    <li>聯盟不做分潤制度，避免落入直銷形象；以「會費基金」由會長團隊支配</li>
+  </ul>
+  <div class="quote">
+    「付一次年費，來這邊有免費的老師幫他們做這五件事，還陪跑，還做到你做到為止。」
+    <div class="attr">— 周逸達</div>
+  </div>
+</div>
+
+<div class="topic">
+  <div class="topic-title">1-4｜招募說明會策略</div>
+  <ul class="topic-points">
+    <li>目前已辦 2–3 場說明會，第三場在 5 月 30 日</li>
+    <li>建議：不一個個主動邀請，而是請名單上的 50 人「幫忙邀請人」來參加</li>
+    <li>「用邀請取代邀約」：讓他們因為邀到人身負責任而自然想參與</li>
+    <li>六月同時考慮與小紅老師（療癒師線上分享）錯開或合併開課</li>
+    <li>創業專班 + 聯盟會員同時推，專班加 3000 元送聯盟年費</li>
+  </ul>
+</div>
+
+<div class="topic">
+  <div class="topic-title">1-5｜羅真案例（教練客戶）</div>
+  <ul class="topic-points">
+    <li>羅真是周逸達的教練客戶，公司面臨嚴重管理危機（7 人走了 5 人）</li>
+    <li>洞察：羅真的底層是「安心感」，但這個字太中性，甚至吸引了需要她來處理情緒失控客戶的人</li>
+    <li>羅真事業 10 年起起伏伏，因為使命設定時就出了問題</li>
+    <li>周逸達正在帶她重新定位：從「安心感」轉向「好玩」——好玩是正向渴望，而非負面框架</li>
+    <li>對比：佳雯自己就活出了「好玩」的狀態，且不犧牲家庭</li>
+  </ul>
+</div>
+
+<div class="topic">
+  <div class="topic-title">1-6｜周逸達的個人重大發現</div>
+  <ul class="topic-points">
+    <li>上課頓悟：過去找合作夥伴時，「認同我的願景」其實是「認同我」而非「認同使命」</li>
+    <li>後果：每次事業起飛就有人離開去獨立——這是「依法不依人」的相反</li>
+    <li>Amber 案例：明明冰山下價值觀高度契合，卻因為冰山上「美業」的形象而從未想過合作</li>
+    <li>新的找人框架：不看 TA 的外在身份標籤（相），而看冰山下真正的北極星</li>
+  </ul>
+  <div class="quote">
+    「他們的認同其實是認同什麼？認同『我』。他是認同人，不是依法不依人。」
+    <div class="attr">— 周逸達</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 2: 決議 ═══════════════ -->
+<div class="section-label">二、決議事項</div>
+
+<div class="card open">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="card-title">📋 決議事項（共 5 項）</span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="card-body">
+    <table class="decision-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>決議內容</th>
+          <th>提出者</th>
+          <th>狀態</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>用直覺先列 5–10 人名單（核心團隊候選），兩週內先談 5 人</td>
+          <td>周逸達</td>
+          <td><span class="tag tag-green">待執行</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>每次訪談最多兩次：第一次聊理念與北極星，第二次聊做法與三重漏斗</td>
+          <td>周逸達</td>
+          <td><span class="tag tag-green">待執行</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>6 月 29 日前要有第一個付費加入的創始會員，並做逆推行動計劃</td>
+          <td>周逸達</td>
+          <td><span class="tag tag-yellow">倒數中</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>說明會改用「請你幫我邀人」取代直接邀請，提高到場率與品質</td>
+          <td>周逸達</td>
+          <td><span class="tag tag-yellow">待執行</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>聯盟不做個人分潤，會費作為分會共同基金由會長團隊支配</td>
+          <td>周逸達</td>
+          <td><span class="tag tag-blue">策略確定</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 3: 行動項目 ═══════════════ -->
+<div class="section-label">三、行動項目</div>
+
+<div class="action-item">
+  <div class="action-num">1</div>
+  <div class="action-content">
+    <div class="action-task">列出 10 人核心團隊候選名單（用直覺，不用完美）</div>
+    <div class="action-meta">
+      <span class="tag tag-blue">負責人：佳雯</span>
+      <span class="tag tag-yellow">期限：下次會議前</span>
+      <span class="tag tag-purple">來源：主題 1-1</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-item">
+  <div class="action-num">2</div>
+  <div class="action-content">
+    <div class="action-task">兩週內主動出擊，先談 5 人</div>
+    <div class="action-meta">
+      <span class="tag tag-blue">負責人：佳雯</span>
+      <span class="tag tag-yellow">期限：2 週內</span>
+      <span class="tag tag-purple">來源：主題 1-1</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-item">
+  <div class="action-num">3</div>
+  <div class="action-content">
+    <div class="action-task">確認並內化自己的北極星使命宣言（文字收斂到一句話）</div>
+    <div class="action-meta">
+      <span class="tag tag-blue">負責人：佳雯</span>
+      <span class="tag tag-yellow">期限：下次會議前</span>
+      <span class="tag tag-purple">來源：主題 1-2</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-item">
+  <div class="action-num">4</div>
+  <div class="action-content">
+    <div class="action-task">修改簡報最後一頁：從「創始會員」改為「陪伴走過」的框架</div>
+    <div class="action-meta">
+      <span class="tag tag-blue">負責人：佳雯</span>
+      <span class="tag tag-yellow">期限：下次會議前</span>
+      <span class="tag tag-purple">來源：主題 1-3</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-item">
+  <div class="action-num">5</div>
+  <div class="action-content">
+    <div class="action-task">做出 6 月 29 日前第一個付費會員的逆推行動計劃</div>
+    <div class="action-meta">
+      <span class="tag tag-blue">負責人：佳雯</span>
+      <span class="tag tag-yellow">期限：下次會議前</span>
+      <span class="tag tag-purple">來源：主題 1-4</span>
+    </div>
+  </div>
+</div>
+
+<div class="action-item">
+  <div class="action-num">6</div>
+  <div class="action-content">
+    <div class="action-task">下次會議：6 月 3 日（週二）16:00，線下</div>
+    <div class="action-meta">
+      <span class="tag tag-green">確認</span>
+      <span class="tag tag-purple">來源：主題 1-4</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 4: 停車場 ═══════════════ -->
+<div class="section-label">四、停車場（離題但值得追蹤）</div>
+
+<div class="parking-item">
+  <span class="parking-icon">🅿</span>
+  <div>
+    <strong>林翰（埃及團夥伴）</strong>：專門賣身心靈貨品，流量很準。他是否適合加入聯盟外圈？他要什麼？需不需要特別針對他設計接觸策略？
+  </div>
+</div>
+<div class="parking-item">
+  <span class="parking-icon">🅿</span>
+  <div>
+    <strong>BNI 商會分潤機制研究</strong>：周逸達提到 BNI 的結構，佳雯對分潤有疑慮但也好奇。建議：如果要做類似模式，需先確認法規層面的傳直銷界定問題。
+  </div>
+</div>
+<div class="parking-item">
+  <span class="parking-icon">🅿</span>
+  <div>
+    <strong>與小紅老師的合作模式</strong>：線上療癒師分享是否與聯盟說明會合併？分潤條件還需要談。建議下次會議前先自行對焦一次。
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 5: 戰略洞察 ═══════════════ -->
+<div class="section-label">五、戰略洞察</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="card-title">⚔️ 陽謀佈局分析</span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="insight-block">
+      <div class="label">周逸達的佈局策略</div>
+      <p>這場會議表面是教練對話，實質是完整的商業策略啟動會議。周逸達用「讓佳雯自己得出答案」而非直接給答案的方式，這是高段教練的「感召」而非「教導」。</p>
+      <p>他對佳雯的簡報不直接修改，而是引導她自己看到需要修改的點（最後一頁的「創始會員」框架），這是讓對方自我認領的技巧。</p>
+    </div>
+    <div class="insight-block">
+      <div class="label">佳雯的談判位置</div>
+      <p>佳雯在這場會議中處於「接收者」+「行動者」的姿態。她有很高的教練信任度，但也有潛在的盲點：她的北極星到會議結束時仍未完全收斂成一句話。</p>
+      <p>她對「招募第一批會員」有心理障礙（不是那種愛衝第一批的人），但她其實更適合用「陪伴者」而非「先鋒者」的框架來招募——這個調整是會議的關鍵收穫之一。</p>
+    </div>
+    <div class="insight-block">
+      <div class="label">時機判斷</div>
+      <p>會議中段周逸達提到「我今天跟你分享我能量學的發現」，這是罕見的主動分享。這顯示他對佳雯有一定信任基礎，且認為這個發現對她有直接價值。這是關係深化的信號。</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="card-title">🌊 情緒動態地圖</span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="matrix-grid">
+      <div class="matrix-cell">
+        <div class="key">開場情緒</div>
+        <div class="val">佳雯：焦慮（50 人名單不知從何聊起）</div>
+      </div>
+      <div class="matrix-cell">
+        <div class="key">中期情緒</div>
+        <div class="val">佳雯：被理解（周逸達的 X 模型解讀讓她驚訝又認同）</div>
+      </div>
+      <div class="matrix-cell">
+        <div class="key">後期情緒</div>
+        <div class="val">轉為清晰、有方向感（北極星浮現、有了行動框架）</div>
+      </div>
+      <div class="matrix-cell">
+        <div class="key">周逸達</div>
+        <div class="val">主導、穩定，教練節奏佳，適時分享個人脆弱面</div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <div class="insight-block">
+        <div class="label">關鍵情緒轉折</div>
+        <p>🟢 <strong>真共識</strong>：兩人都同意「不是每個都要聊」「兩次為上限」「使命需要收斂」</p>
+        <p>🟡 <strong>待確認</strong>：佳雯對「創始會員」框架的調整——她理解但尚未完全內化</p>
+        <p>🔴 <strong>潛在張力</strong>：佳雯對「大量邀請」說明會仍有抗拒，傾向等有興趣的人自己來——這可能影響招募速度</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="card-title">👤 參與者動態分析</span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="persona-grid">
+      <div class="persona-card">
+        <h4>周逸達｜企管顧問</h4>
+        <div class="role">教練 × 顧問 雙重角色</div>
+        <p>主導全場節奏，用「引導而非給答案」的方式推進。適時揭露個人脆弱（英雄主義的盲點），拉近信任距離。對佳雯的肯定直接且具體（X 模型解讀），能捕捉對方話語背後的深層邏輯。</p>
+      </div>
+      <div class="persona-card">
+        <h4>佳雯｜身心靈創業者</h4>
+        <div class="role">教練客戶 × 聯盟創辦人</div>
+        <p>高度開放、願意被挑戰。具備良好的自我覺察能力，但有過度複雜化問題的傾向。對「招募」有心理障礙，但在被理解後能快速調整框架。</p>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <div class="insight-block">
+        <div class="label">佳雯的溝通建議</div>
+        <p>• 她不是衝第一批的人，但善於「陪伴走過」——招募時用這個框架會更順<br>
+        • 她對使命宣言有直覺但需要收斂——下次見面時先問她「一句話版本」<br>
+        • 她對「主動邀請」有抗拒，建議用「請你幫我邀」取代直接推銷</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="card-title">🎯 核心框架：X 模型 × 三重漏斗 × 八槓桿</span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="highlight-box">
+      <h4>X 模型應用：佳雯 vs 她想服務的創業者</h4>
+      <p><strong>佳雯具備的</strong>：① 過去成功經驗（MCC 教練招募，半年完成）② 自我認同（「我做得到」）③ 累積的外部資源</p>
+      <p><strong>她要服務的創業者</strong>：人生沒目標 → 生活圈太小沒有累積 → 沒有自信 → 外部沒人可槓杆 → 永遠解決不了問題 → 強化負面信念（負向迴圈）</p>
+      <p><strong>聯盟的解法</strong>：用社群打破孤立，用遊戲化挑戰創造小成功經驗，強化自我認同後再放大目標——逆時針順序</p>
+    </div>
+    <div class="highlight-box">
+      <h4>三重漏斗 × 兩次訪談法</h4>
+      <p><strong>第一次訪談（冰山上 + 冰山下）</strong>：<br>
+      ① 你想要的是什麼？（北極星）<br>
+      ② 你的做法/做法是什麼？（三重漏斗現狀）<br>
+      ③ 你內在的感受是什麼？（使命根源）</p>
+      <p><strong>第二次訪談（選擇性）</strong>：<br>
+      如果第一次確認北極星有交集，才聊第二次：<br>
+      ① 八槓桿現況盤點<br>
+      ② 缺口分析<br>
+      ③ 下一步行動</p>
+    </div>
+    <div class="highlight-box">
+      <h4>聯盟內圈 vs 外圈結構</h4>
+      <p>內圈（核心夥伴）：使命認同 × 高能力 → 進入核心團隊<br>
+      外圈（合作夥伴）：有合作機會但使命不一定完全對齊 → 各自獨立運作<br>
+      員工：有能力無使命 → 執行角色<br>
+      自工：有使命無能力 → 栽培中</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 6: 承諾追蹤 ═══════════════ -->
+<div class="section-label">六、下次會議議程（6 月 3 日）</div>
+
+<div class="card open">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="card-title">📅 下次見面 6 月 3 日 16:00</span>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">第一優先</div>
+        <div class="timeline-event">檢視 <strong>10 人名單</strong> + 談了幾個人</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">第二優先</div>
+        <div class="timeline-event">佳雯的北極星宣言——<strong>一句話版本</strong>是否能清楚說出</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">第三優先</div>
+        <div class="timeline-event">檢視 <strong>6 月 29 日逆推計劃</strong> 的進度</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">第四優先</div>
+        <div class="timeline-event">簡報最後一頁修改後的版本確認</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">隨時討論</div>
+        <div class="timeline-event">與小紅老師合作模式的進度更新</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<div class="footer">
+  <span>Meeting Intelligence Report｜Generated by Hermes</span>
+  <span>2025-02-12</span>
+</div>
+
+<div class="privacy-notice">
+  ⚠️ 本報告內含人格分析與博弈推斷，僅供決策參考，請勿直接分享給被分析者。
+</div>
+
+</div>
+
+<script>
+function toggleCard(el) {
+  const card = el.closest('.card');
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
