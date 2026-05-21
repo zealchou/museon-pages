@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教練對話情報分析｜羅真 × 周逸達｜2025-05</title>
+<style>
+:root {
+  --bg: #0a0d12;
+  --surface: #111820;
+  --surface2: #1a2332;
+  --border: #1e2d42;
+  --text: #e8eef5;
+  --muted: #7a8fa6;
+  --accent: #4da6ff;
+  --accent2: #7c5dfa;
+  --green: #2dd4a0;
+  --amber: #f5a623;
+  --red: #f06060;
+  --tag-bg: rgba(77,166,255,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════ LAYOUT ══════════════ */
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+/* ══════════════ HERO HEADER ══════════════ */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: start;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+
+.hero-left .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+.hero-left h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.hero-left .meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 0.8rem;
+}
+
+.hero-left .meta-row span { display: flex; align-items: center; gap: 0.3rem; }
+
+.hero-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  min-width: 120px;
+}
+
+.hero-badge .duration {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.hero-badge .duration-label {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 0.3rem;
+  letter-spacing: 0.08em;
+}
+
+.hero-badge .date {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 0.8rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+  width: 100%;
+}
+
+/* ══════════════ EXEC SUMMARY ══════════════ */
+.exec-card {
+  background: linear-gradient(135deg, var(--surface) 0%, #0f1e2e 100%);
+  border: 1px solid rgba(77,166,255,0.25);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  margin-bottom: 3rem;
+}
+
+.exec-card .label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.exec-card p {
+  font-size: 14.5px;
+  color: #c8d8e8;
+  line-height: 1.8;
+}
+
+/* ══════════════ SECTION HEADER ══════════════ */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+
+.section-head h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.section-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ══════════════ TOPIC CARDS ══════════════ */
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.topic-header {
+  padding: 1rem 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.topic-header:hover { background: var(--surface2); }
+
+.topic-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(77,166,255,0.15);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.topic-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  margin-left: 0.8rem;
+}
+
+.topic-toggle {
+  color: var(--muted);
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.topic-body {
+  display: none;
+  padding: 0 1.3rem 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.topic-card.open .topic-body { display: block; }
+.topic-card.open .topic-toggle { transform: rotate(180deg); }
+
+.points {
+  padding: 0.8rem 0 0 0;
+  list-style: none;
+}
+
+.points li {
+  font-size: 14px;
+  color: #a8bdd0;
+  padding: 0.35rem 0;
+  padding-left: 1rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.points li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.quote-block {
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid var(--accent2);
+  border-radius: 0 8px 8px 0;
+  padding: 0.7rem 1rem;
+  margin: 0.8rem 0;
+  font-size: 13.5px;
+  color: #90a8c0;
+  font-style: normal;
+}
+
+.quote-block .attr {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+.quote-block strong { color: var(--accent); }
+
+/* ══════════════ DECISIONS ══════════════ */
+.decision-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: var(--surface2);
+}
+
+th {
+  text-align: left;
+  padding: 0.8rem 1.2rem;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 0.9rem 1.2rem;
+  font-size: 13.5px;
+  color: #b8cad8;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tag-green { background: rgba(45,212,160,0.15); color: var(--green); }
+.tag-amber { background: rgba(245,166,35,0.15); color: var(--amber); }
+.tag-blue { background: rgba(77,166,255,0.15); color: var(--accent); }
+.tag-purple { background: rgba(124,93,250,0.15); color: var(--accent2); }
+
+/* ══════════════ ACTION ITEMS ══════════════ */
+.action-list { list-style: none; }
+
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.action-item:last-child { border-bottom: none; }
+
+.action-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.action-body { flex: 1; }
+
+.action-task {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.action-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 12px;
+}
+
+.action-tag {
+  background: var(--surface2);
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* ══════════════ INSIGHT BLOCKS ══════════════ */
+.insight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.insight-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem;
+}
+
+.insight-card .insight-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+.insight-card p {
+  font-size: 13.5px;
+  color: #9ab0c4;
+  line-height: 1.7;
+}
+
+.insight-card .key-sentence {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.highlight-box {
+  background: linear-gradient(135deg, rgba(77,166,255,0.06), rgba(124,93,250,0.06));
+  border: 1px solid rgba(77,166,255,0.15);
+  border-radius: 12px;
+  padding: 1.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.highlight-box h4 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.highlight-box p {
+  font-size: 14px;
+  color: #a8bdd0;
+  line-height: 1.8;
+}
+
+/* ══════════════ TIMELINE ══════════════ */
+.timeline-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+
+.timeline-header {
+  padding: 1rem 1.3rem;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.timeline-body { padding: 1.2rem; }
+
+.timeline-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.timeline-item:last-child { border-bottom: none; }
+
+.timeline-time {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 60px;
+  padding-top: 2px;
+}
+
+.timeline-content {
+  font-size: 13.5px;
+  color: #8fa8bc;
+  flex: 1;
+}
+
+.timeline-content strong { color: var(--text); }
+
+/* ══════════════ PERSONA CARDS ══════════════ */
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.persona-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.3rem;
+}
+
+.persona-card h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.persona-card .persona-role {
+  font-size: 11.5px;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+.persona-card p {
+  font-size: 13.5px;
+  color: #8fa8bc;
+  line-height: 1.7;
+}
+
+.persona-tag {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0.15rem;
+}
+
+/* ══════════════ PARKING LOT ══════════════ */
+.parking-wrap { margin-bottom: 2.5rem; }
+
+.parking-item {
+  display: flex;
+  gap: 0.8rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13.5px;
+  color: #7a8fa6;
+}
+
+.parking-item:last-child { border-bottom: none; }
+
+.parking-icon {
+  color: var(--amber);
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ══════════════ FRAMEWORK BOX ══════════════ */
+.framework-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.framework-header {
+  padding: 1rem 1.3rem;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.framework-body { padding: 1.3rem; }
+
+.framework-item {
+  margin-bottom: 1.2rem;
+}
+
+.framework-item:last-child { margin-bottom: 0; }
+
+.framework-item h5 {
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.04em;
+}
+
+.framework-item p {
+  font-size: 13.5px;
+  color: #8fa8bc;
+  line-height: 1.7;
+}
+
+/* ══════════════ FOOTER ══════════════ */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.privacy-box {
+  background: rgba(245,166,35,0.06);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 12px;
+  color: var(--amber);
+  margin-top: 1.5rem;
+}
+
+/* ══════════════ ANIMATIONS ══════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero, .exec-card, .section-head, .topic-card, .decision-table-wrap, .action-list, .insight-grid, .timeline-wrap, .persona-grid {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.exec-card { animation-delay: 0.05s; }
+.section-head { animation-delay: 0.1s; }
+.topic-card:nth-child(1) { animation-delay: 0.15s; }
+.topic-card:nth-child(2) { animation-delay: 0.2s; }
+.topic-card:nth-child(3) { animation-delay: 0.25s; }
+.topic-card:nth-child(4) { animation-delay: 0.3s; }
+.topic-card:nth-child(5) { animation-delay: 0.35s; }
+
+.card.open .topic-header { border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">Meeting Intelligence Report</div>
+    <h1>教練對話情報分析</h1>
+    <div class="meta-row">
+      <span>👥 羅真 × 周逸達（企管顧問）</span>
+      <span>🏷 企業教練 / 品牌定位 / 組織文化</span>
+      <span>📅 2025年5月</span>
+    </div>
+  </div>
+  <div class="hero-badge">
+    <div class="duration">57</div>
+    <div class="duration-label">MINUTES</div>
+    <div class="date">2025-05</div>
+  </div>
+</div>
+
+<!-- ═══ EXEC SUMMARY ═══ -->
+<div class="exec-card">
+  <div class="label">執行摘要</div>
+  <p>這是一場面對面教練輔導，羅真（驚奇活動公司創辦人）與周逸達（企管顧問）進行了 57 分鐘深度對話。核心主題是將「好玩」從口號落實為公司核心價值與審計標準，並重新定義公司的使命邊界。羅真發現自己過去「依人不依法」——用使命感動而非篩選核心團隊，導致留不住人。會議產出：①「好玩」三維定義（發現亮點、創造體驗、贏得共鳴）；② 將「安心感」重新詮釋為正向價值而非負面補償；③ 行動計劃從作息調整開始——先讓自己的生活穩定，公司的混亂自然終止。</p>
+</div>
+
+<!-- ═══ SECTION 1: TOPICS ═══ -->
+<div class="section-head">
+  <h2>一、討論主題</h2>
+</div>
+
+<!-- TOPIC 1 -->
+<div class="topic-card open" id="topic1">
+  <div class="topic-header" onclick="toggleTopic('topic1')">
+    <div style="display:flex;align-items:center;gap:0.8rem;flex:1;">
+      <div class="topic-num">1</div>
+      <div class="topic-title">「好玩」的定義：从模糊到清晰</div>
+    </div>
+    <span class="topic-toggle">▼</span>
+  </div>
+  <div class="topic-body">
+    <ul class="points">
+      <li>羅真自認不是好玩的人，但渴望「好玩」——這讓他對如何定義這件事感到困惑</li>
+      <li>周逸達引導：「好玩」不是一種人格特質，而是可以透過練習培養的能力</li>
+      <li>「好玩」需要貫穿在與客戶接觸的第一瞬間——名片、提案、合約工具都是載體</li>
+      <li>案例：自媒體探店網紅「名正探柯南」的 logo——第一眼就讓人記住，是好玩的最直接示範</li>
+    </ul>
+    <div class="quote-block">
+      <strong>「好玩是給員工的，不是給老闆的。老闆在享受好玩，要求大家創造好玩，這樣是可以的——的重點是你有沒有要求。」</strong>
+      <div class="attr">— 周逸達</div>
+    </div>
+    <ul class="points">
+      <li>好玩的三個具體能力：① 發現亮點的能力（把平凡變有趣）；② 轉化並創造體驗的能力；③ 讓成果得到共鳴的能力</li>
+      <li>「好玩」不能只停留在感覺，需要被定義成可審計的標準，讓員工知道什麼已達標</li>
+    </ul>
+  </div>
+</div>
+
+<!-- TOPIC 2 -->
+<div class="topic-card" id="topic2">
+  <div class="topic-header" onclick="toggleTopic('topic2')">
+    <div style="display:flex;align-items:center;gap:0.8rem;flex:1;">
+      <div class="topic-num">2</div>
+      <div class="topic-title">「安心感」的陷阱：負面用詞如何悄悄扭曲了你的客戶結構</div>
+    </div>
+    <span class="topic-toggle">▼</span>
+  </div>
+  <div class="topic-body">
+    <ul class="points">
+      <li>「安心感」是中性詞——用它做品牌核心，會意外吸引「情緒不穩定、需要被照顧」的客戶</li>
+      <li>這些客戶佔營業額一半，但讓羅真長期處於消耗狀態，身體相繼出問題</li>
+      <li>周逸達：「因為你不安，所以要找安心感」——這個邏輯會把不安的人一直帶進來</li>
+      <li>解法：重新定義「安心感」——不是你來救我，而是我們一起把事情做好</li>
+      <li>Slogan 範例：「讓你的公司可以有序傳承」vs「讓你不再擔心員工離職」（後者是負面假設）</li>
+    </ul>
+    <div class="quote-block">
+      <strong>「當你的審計標準是負面的，你吸引來的員工和客戶也會是負面的——然後你又花力氣去改變他們，這就是一個消耗的迴圈。」</strong>
+      <div class="attr">— 周逸達</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC 3 -->
+<div class="topic-card" id="topic3">
+  <div class="topic-header" onclick="toggleTopic('topic3')">
+    <div style="display:flex;align-items:center;gap:0.8rem;flex:1;">
+      <div class="topic-num">3</div>
+      <div class="topic-title">核心團隊的關鍵洞察：依法不依人 vs 依人不依法</div>
+    </div>
+    <span class="topic-toggle">▼</span>
+  </div>
+  <div class="topic-body">
+    <ul class="points">
+      <li>羅真內訓最大收穫：過去找合作夥伴時，是「依人不依法」——對方「認同我」而非「認同使命」</li>
+      <li>後果：事業起飛就有人離開去獨立，因為他們來的起點就是「不要餓死」而非共同使命</li>
+      <li>周逸達的框架：三個層次的人——① 有使命無專業→當志工；② 有專業無使命→當員工；③ 兩個都有→進核心團隊</li>
+      <li>使命感動≠使命實踐：要找的是「就算沒有我，他本來就在做這件事」的人</li>
+      <li>Amber 案例：美業創業，員工都想跟她一樣——使命對齊，但因為「她看起來不缺幫忙」而被錯過</li>
+    </ul>
+    <div class="quote-block">
+      <strong>「人為何而來，就為何而走。我以前找的都是快要餓死的人，等他們不餓了就離開了。」</strong>
+      <div class="attr">— 周逸達</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC 4 -->
+<div class="topic-card" id="topic4">
+  <div class="topic-header" onclick="toggleTopic('topic4')">
+    <div style="display:flex;align-items:center;gap:0.8rem;flex:1;">
+      <div class="topic-num">4</div>
+      <div class="topic-title">好玩的實踐：如何在五蘊中系統性地創造好玩</div>
+    </div>
+    <span class="topic-toggle">▼</span>
+  </div>
+  <div class="topic-body">
+    <ul class="points">
+      <li>「好玩」不是事業部門的事，是整個生活方式——需要在事、財、情、家、體五個領域中都有意識地實踐</li>
+      <li>真正的順序：先在生活其他四個面向玩起來，事業的好玩自然發生</li>
+      <li>周逸達的具體建議：每個月安排兩天純玩，列好玩清單，然後落實——這是親證，不是口号</li>
+      <li>用「以身作則」代替「要求」：當羅真自己成為好玩的人，公司自然會有好玩的氛圍</li>
+    </ul>
+    <div class="quote-block">
+      <strong>「你先做到一，這件事就不要再放手了。一做到之後兩三個禮拜，再加第二件事。不要一次加太多。」</strong>
+      <div class="attr">— 周逸達</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC 5 -->
+<div class="topic-card" id="topic5">
+  <div class="topic-header" onclick="toggleTopic('topic5')">
+    <div style="display:flex;align-items:center;gap:0.8rem;flex:1;">
+      <div class="topic-num">5</div>
+      <div class="topic-title">行動計劃：從作息節奏開始，六個月為週期</div>
+    </div>
+    <span class="topic-toggle">▼</span>
+  </div>
+  <div class="topic-body">
+    <ul class="points">
+      <li>羅真作息極度混乱：凌晨 3:30 還在工作，7:00 又起來，身體相繼出問題——這是身體在發訊號</li>
+      <li>具體作息改造：早上 5:00–7:00（自己的時間，不看手機）→ 7:00–9:00（家庭時間）→ 9:00 進公司</li>
+      <li>下午 5:00 準時下班，晚間時間留給家人和朋友——「這個時間我可以自己抓」</li>
+      <li>關鍵：員工需要在固定的時間找到你，讓他們養成自己判斷什麼事該找你的節奏</li>
+      <li>六個月目標：公司節奏和流程穩定 → 驚奇自然穩定</li>
+    </ul>
+    <div class="quote-block">
+      <strong>「先把公司跟生活的節奏跟流程穩定。我們可以打賭，六個月之內，驚奇一定穩定。」</strong>
+      <div class="attr">— 周逸達</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 2: DECISIONS ═══ -->
+<div class="section-head">
+  <h2>二、決議事項</h2>
+</div>
+
+<div class="decision-table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>決議</th>
+        <th>提出</th>
+        <th>狀態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>「好玩」三維定義：發現亮點 × 創造體驗 × 贏得共鳴</td>
+        <td>周逸達</td>
+        <td><span class="tag tag-blue">確定了</span></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>重新審計「安心感」的審計標準——從正向出發，排除負面假設</td>
+        <td>周逸達</td>
+        <td><span class="tag tag-amber">待執行</span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>核心團隊從「使命感」出發篩選：有使命無專業→志工；有專業無使命→員工；兩者都有→核心</td>
+        <td>周逸達</td>
+        <td><span class="tag tag-blue">確定框架</span></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>羅真每天 5:00–7:00 為自己的時間，晚間時間留給家人——作息優先於產出</td>
+        <td>周逸達</td>
+        <td><span class="tag tag-amber">待執行</span></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>六個月為週期，公司節奏和流程穩定後，驚奇自然穩定</td>
+        <td>周逸達</td>
+        <td><span class="tag tag-green">目標建立</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ SECTION 3: ACTIONS ═══ -->
+<div class="section-head">
+  <h2>三、行動項目</h2>
+</div>
+
+<ul class="action-list">
+  <li class="action-item">
+    <div class="action-num">1</div>
+    <div class="action-body">
+      <div class="action-task">把「好玩」定義寫成三個可打勾的審計標準，讓員工知道什麼已達標</div>
+      <div class="action-meta">
+        <span class="action-tag">負責人：羅真</span>
+        <span class="action-tag">期限：下次見面</span>
+      </div>
+    </div>
+  </li>
+  <li class="action-item">
+    <div class="action-num">2</div>
+    <div class="action-body">
+      <div class="action-task">重新檢視公司的文案和 Slogan——所有負面用詞替換為正向版本</div>
+      <div class="action-meta">
+        <span class="action-tag">負責人：羅真</span>
+        <span class="action-tag">期限：下次見面</span>
+      </div>
+    </div>
+  </li>
+  <li class="action-item">
+    <div class="action-num">3</div>
+    <div class="action-body">
+      <div class="action-task">列出作息規劃（早上的時間切割、下午的結案節奏、晚間界線）並標注可能的阻礙點</div>
+      <div class="action-meta">
+        <span class="action-tag">負責人：羅真</span>
+        <span class="action-tag">期限：下次見面</span>
+      </div>
+    </div>
+  </li>
+  <li class="action-item">
+    <div class="action-num">4</div>
+    <div class="action-body">
+      <div class="action-task">開始實踐「好玩清單」——每個月安排兩天純玩，親身驗證</div>
+      <div class="action-meta">
+        <span class="action-tag">負責人：羅真</span>
+        <span class="action-tag">期限：持續進行</span>
+      </div>
+    </div>
+  </li>
+  <li class="action-item">
+    <div class="action-num">5</div>
+    <div class="action-body">
+      <div class="action-task">盤點過去做得最好的三個案子——找出它們「好玩」的共同元素，變成參考標準</div>
+      <div class="action-meta">
+        <span class="action-tag">負責人：羅真</span>
+        <span class="action-tag">期限：下次見面</span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<!-- ═══ SECTION 4: NEXT MEETING ═══ -->
+<div class="section-head">
+  <h2>四、下次見面規劃</h2>
+</div>
+
+<div class="timeline-wrap">
+  <div class="timeline-header">下次會議議程</div>
+  <div class="timeline-body">
+    <div class="timeline-item">
+      <div class="timeline-time">優先一</div>
+      <div class="timeline-content">檢視 <strong>「好玩」三維審計標準</strong> 的實際內容</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">優先二</div>
+      <div class="timeline-content">檢視 <strong>作息規劃</strong>——標注阻礙點，討論如何各個擊破</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">優先三</div>
+      <div class="timeline-content">三個最佳案子的 <strong>好玩元素分析</strong>——實際萃取標準</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">優先四</div>
+      <div class="timeline-content">Slogan 審計 — <strong>負面用詞→正向版本</strong> 的具體修改</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 5: INSIGHTS ═══ -->
+<div class="section-head">
+  <h2>五、戰略洞察</h2>
+</div>
+
+<div class="insight-grid">
+  <div class="insight-card">
+    <div class="insight-label">陽謀佈局</div>
+    <p class="key-sentence">周逸達用教練而非給答案的方式，讓羅真自己得出結論——這是「感召」而非「教導」。</p>
+    <p style="margin-top:0.6rem;">他的核心策略：先讓羅真對自己的方向產生認同（好玩），再引入框架（依法不依人），最後落實到行動（作息）。一步步把主人的被動姿態轉化為主動。</p>
+  </div>
+  <div class="insight-card">
+    <div class="insight-label">自我認同迴圈</div>
+    <p class="key-sentence">羅真內在尋求認可的出發點，導致他在公司中過度投入、在家庭中缺席。</p>
+    <p style="margin-top:0.6rem;">他的能量 70% 用在壓制黑暗面，只有 30% 在創造光明面——而解決方案不是修正黑暗面，是把能量轉移到放大光明面（好玩、創造、陪伴）。</p>
+  </div>
+</div>
+
+<div class="highlight-box">
+  <h4>X 模型應用：羅真 vs 他想服務的客戶</h4>
+  <p><strong>羅真的客戶痛點</strong>：已經有一定累積（脫離「餓死」狀態），但因為害怕失去而不敢擴張——這群人是最怕失敗的，也是最需要「好玩」來打破僵局的。</p>
+  <p style="margin-top:0.5rem;"><strong>羅真的核心課題</strong>：他自己就是這類人的代表——有累積、有家庭壓力、有事業瓶頸，所以他的「好玩」不是表演，是真實的掙扎與突破。</p>
+</div>
+
+<div class="highlight-box">
+  <h4>組織文化建設的兩種路徑</h4>
+  <p><strong>錯誤路徑</strong>：老闆自己不是好玩的人，卻要求員工創造好玩——這造成雙重標準與消耗。</p>
+  <p style="margin-top:0.5rem;"><strong>正確路徑</strong>：先把「好玩」落實在自己的生活中（陪伴家人、安排玩耍時間），員工自然感受得到，主管也會跟著建立節奏。最終公司會像周逸達說的——「不想變大都不行，因為走在對的路上」。</p>
+</div>
+
+<!-- ═══ SECTION 6: PERSONA ═══ -->
+<div class="section-head">
+  <h2>六、參與者動態</h2>
+</div>
+
+<div class="persona-grid">
+  <div class="persona-card">
+    <h4>周逸達｜企管顧問</h4>
+    <div class="persona-role">教練 × 顧問 雙重角色</div>
+    <p>節奏穩定，適時揭露脆弱面（分享自己過去「依人不依法」的失敗），拉近信任。用教練引導而非直接給答案，讓羅真自己碰撞出結論。</p>
+    <div style="margin-top:0.8rem;">
+      <span class="persona-tag">目標導向</span>
+      <span class="persona-tag">擅長引導</span>
+      <span class="persona-tag">適時分享脆弱</span>
+    </div>
+  </div>
+  <div class="persona-card">
+    <h4>羅真｜驚奇創辦人</h4>
+    <div class="persona-role">教練客戶 × 活動公司經營者</div>
+    <p>高度開放，願意被挑戰。自我覺察能力強但過去執行力分散。身體已發出健康警訊，亟需在生活節奏上做出根本性改變。</p>
+    <div style="margin-top:0.8rem;">
+      <span class="persona-tag">使命導向</span>
+      <span class="persona-tag">过度投入工作</span>
+      <span class="persona-tag">渴望被認可</span>
+    </div>
+  </div>
+</div>
+
+<div class="framework-card">
+  <div class="framework-header">
+    <span style="font-size:1rem;">🧭</span> 核心框架：好玩的完整地圖
+  </div>
+  <div class="framework-body">
+    <div class="framework-item">
+      <h5>好玩的三個能力維度</h5>
+      <p>① 發現亮點：把平凡重複的事物找到有趣的角度<br>② 轉化創造：不是只想，而是讓對方真正感受到體驗到<br>③ 獲得共鳴：自己爽不夠，必須在客戶端產生真正的價值迴響</p>
+    </div>
+    <div class="framework-item">
+      <h5>五蘊中的好玩實踐</h5>
+      <p>把「好玩」視為一種生活方式，落實在：事（工作）、財（收入分配）、情（人際關係）、家（家庭時間）、體（健康與玩耍）。事業好玩只是最後的自然結果。</p>
+    </div>
+    <div class="framework-item">
+      <h5>防護牆與勾著理論</h5>
+      <p>留人靠兩件事：① 防護牆（Muse 是別的公司沒有的獨特價值，讓離開的代價高）；② 勾著（持續提供新東西讓他停下來）——但底層邏輯還是「共同使命」。</p>
+    </div>
+    <div class="framework-item">
+      <h5>組織改編三個月紀律</h5>
+      <p>新標準落實：前三個月是導入期，沒做到不是錯，是不習慣。從第四個月開始正常要求。負責人要每天問：「今天有做到嗎？沒有是因為不習慣還是有阻礙？」</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARKING LOT ═══ -->
+<div class="section-head">
+  <h2>七、停車場（離題但值得追蹤）</h2>
+</div>
+
+<div class="parking-wrap">
+  <div class="parking-item">
+    <div class="parking-icon">🅿</div>
+    <div><strong>M4 名單確認</strong>：羅真在內訓後篩出 4 個符合商務合作條件的名單，需要在未來討論如何接觸與合作方式</div>
+  </div>
+  <div class="parking-item">
+    <div class="parking-icon">🅿</div>
+    <div><strong>聯盟合作的可能性</strong>：周逸達提到羅真不是聯盟的合作對象（因為 TA 不同），但可以成為第一個外部合作案例</div>
+  </div>
+  <div class="parking-item">
+    <div class="parking-icon">🅿</div>
+    <div><strong>員工流失的根因分析</strong>：羅真說很多員工「不見了」——這個現象需要進一步拆解，是因為沒有使命、沒有防護牆、還是沒有鉤子</div>
+  </div>
+  <div class="parking-item">
+    <div class="parking-icon">🅿</div>
+    <div><strong>SOP 與傳承教育訓練</strong>：下午如何讓員工交出符合標準的東西，減少羅真的補救性加班——這是穩定作息的前提</div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+  <span>Meeting Intelligence Report · Generated by Hermes</span>
+  <span>2025-05 · 57 min</span>
+</div>
+
+<div class="privacy-box">
+  ⚠️ 本報告含人格分析與博弈推斷，僅供決策參考，請勿直接分享給被分析者。
+</div>
+
+</div>
+
+<script>
+function toggleTopic(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
