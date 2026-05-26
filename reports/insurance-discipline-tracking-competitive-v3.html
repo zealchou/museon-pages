@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>保險團隊紅綠燈追蹤系統 — 競品分析 & 費用評估</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ember: #e67e22; --ember-light: #f39c12; --ember-dark: #d35400;
+      --navy: #1a2744; --navy-mid: #2c3e50; --navy-light: #34495e;
+      --teal: #1abc9c; --success: #27ae60; --warning: #f39c12;
+      --danger: #e74c3c; --parchment: #fdf6ee; --snow: #fff;
+      --ink: #1a1a2e; --slate: #5a6a7a; --mist: #95a5a6;
+      --border: #e0d8cc; --gold: #c8a84b;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI','PingFang TC','Microsoft JhengHei','Noto Sans TC',sans-serif; background: var(--parchment); color: var(--ink); line-height: 1.75; font-size: 15px; }
+    .hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, #1b3d6e 100%); color: #fff; padding: 60px 24px 52px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content:''; position:absolute; top:-60px; left:-80px; width:320px; height:320px; border-radius:50%; background:rgba(230,126,34,.1); }
+    .hero::after  { content:''; position:absolute; bottom:-80px; right:-60px; width:280px; height:280px; border-radius:50%; background:rgba(26,188,156,.08); }
+    .badge { display:inline-block; background:rgba(230,126,34,.18); border:1.5px solid rgba(230,126,34,.55); color:var(--ember-light); border-radius:24px; padding:6px 20px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:18px; }
+    .hero h1 { font-size:clamp(22px,4vw,38px); font-weight:800; line-height:1.25; margin-bottom:12px; position:relative; z-index:1; }
+    .hero h1 span { color: var(--ember-light); }
+    .hero-sub { font-size:15px; color:rgba(255,255,255,.7); max-width:560px; margin:0 auto 28px; position:relative; z-index:1; }
+    .hero-stats { display:flex; justify-content:center; gap:28px; flex-wrap:wrap; position:relative; z-index:1; }
+    .hero-stat .num { display:block; font-size:28px; font-weight:800; color:var(--ember-light); line-height:1; }
+    .hero-stat .lbl { font-size:11px; color:rgba(255,255,255,.58); margin-top:4px; }
+    .divider-v { width:1px; height:44px; background:rgba(255,255,255,.15); align-self:center; }
+    .toc-nav { background:var(--snow); border-bottom:2px solid var(--border); position:sticky; top:0; z-index:100; overflow-x:auto; }
+    .toc-nav ul { display:flex; list-style:none; white-space:nowrap; padding:0 20px; gap:0; }
+    .toc-nav li a { display:block; padding:13px 14px; color:var(--slate); text-decoration:none; font-size:12px; font-weight:600; border-bottom:3px solid transparent; transition:all .2s; }
+    .toc-nav li a:hover { color:var(--ember); border-bottom-color:var(--ember); }
+    .container { max-width:960px; margin:0 auto; padding:0 20px; }
+    section { padding:52px 0; border-bottom:1px solid var(--border); }
+    section:last-child { border-bottom:none; }
+    .section-label { font-size:11px; font-weight:700; color:var(--ember); letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px; }
+    .section-title { font-size:clamp(20px,3vw,28px); font-weight:800; color:var(--navy); margin-bottom:8px; }
+    .section-desc { color:var(--slate); font-size:14px; margin-bottom:32px; max-width:680px; }
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px; margin-bottom:24px; }
+    .card { background:var(--snow); border:1.5px solid var(--border); border-radius:12px; padding:20px; }
+    .card-icon { font-size:28px; margin-bottom:10px; }
+    .card-title { font-weight:700; font-size:14px; color:var(--navy); margin-bottom:6px; }
+    .card-desc { font-size:13px; color:var(--slate); }
+    .card.hl { border-color:var(--ember); background:linear-gradient(135deg,#fff8f3,#fff); }
+    .card.hl .card-title { color:var(--ember-dark); }
+    .comp-wrap { overflow-x:auto; margin-bottom:20px; }
+    .comp-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .comp-table thead th { background:var(--navy); color:#fff; padding:11px 13px; text-align:left; white-space:nowrap; }
+    .comp-table tbody tr:nth-child(even) { background:#f8f5f0; }
+    .comp-table tbody td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .comp-table tbody tr.ours td { background:#fff8f3; font-weight:600; }
+    .comp-table tbody tr.ours td:first-child { border-left:3px solid var(--ember); }
+    .tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:700; }
+    .tag-no  { background:#fdecea; color:#c0392b; }
+    .tag-part{ background:#fef9e7; color:#9a6500; }
+    .tag-own { background:#fef0e7; color:#e67e22; }
+    .price-hero { background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%); border-radius:16px; padding:36px 32px; color:#fff; margin-bottom:24px; }
+    .price-main { font-size:56px; font-weight:900; color:var(--ember-light); line-height:1; margin-bottom:6px; }
+    .price-sub  { font-size:14px; color:rgba(255,255,255,.65); margin-bottom:20px; }
+    .price-phases { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .pp { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:10px; padding:14px 16px; text-align:center; }
+    .pp .amt { font-size:22px; font-weight:800; color:var(--ember-light); }
+    .pp .lbl { font-size:11px; color:rgba(255,255,255,.55); margin-top:4px; }
+    .pp .whn { font-size:12px; color:rgba(255,255,255,.72); margin-top:6px; font-weight:600; }
+    .vs-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:16px; align-items:center; margin-bottom:20px; }
+    .cv { background:var(--snow); border:1.5px solid var(--border); border-radius:12px; padding:18px 20px; }
+    .cv.ours { border-color:var(--ember); background:#fff8f3; }
+    .cv .cvt { font-size:12px; font-weight:700; color:var(--mist); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+    .cv .cvn { font-size:16px; font-weight:800; color:var(--navy); margin-bottom:10px; }
+    .cv .cvp { font-size:22px; font-weight:900; color:var(--ember); }
+    .cv .cvd { font-size:12px; color:var(--slate); margin-top:4px; }
+    .vsbadge { background:var(--navy); color:#fff; border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0; }
+    .cvl { list-style:none; margin-top:10px; }
+    .cvl li { font-size:13px; color:var(--slate); padding:3px 0 3px 18px; position:relative; }
+    .cvl li.g::before { content:'✓'; position:absolute; left:0; color:var(--success); font-weight:bold; }
+    .cvl li.b::before { content:'✗'; position:absolute; left:0; color:var(--danger); font-weight:bold; }
+    .game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; margin-bottom:24px; }
+    .gc { background:var(--snow); border:1.5px solid var(--border); border-radius:12px; padding:20px; position:relative; overflow:hidden; }
+    .gc::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--ember); }
+    .gn { font-size:11px; font-weight:700; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+    .gt { font-size:14px; font-weight:800; color:var(--navy); margin-bottom:6px; }
+    .gd { font-size:13px; color:var(--slate); margin-bottom:8px; }
+    .gw { font-size:12px; color:var(--ember-dark); background:#fff5ef; padding:6px 10px; border-radius:6px; }
+    .fg { background:var(--snow); border:1.5px solid var(--border); border-radius:12px; padding:22px 24px; margin-bottom:16px; }
+    .fg h4 { font-size:13px; font-weight:800; color:var(--navy); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .fg h4 span { background:var(--navy); color:#fff; border-radius:6px; padding:2px 8px; font-size:11px; }
+    .fl { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+    .fi { font-size:13px; color:var(--ink); padding-left:18px; position:relative; }
+    .fi::before { content:'✓'; position:absolute; left:0; color:var(--success); font-weight:700; }
+    .future-box { background:linear-gradient(135deg,#f0fff8,#f7fff5); border:1.5px solid #a9dfbf; border-radius:14px; padding:28px; margin-bottom:20px; }
+    .future-box h3 { color:#1e8449; font-size:16px; font-weight:800; margin-bottom:14px; }
+    .fsteps { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-top:16px; }
+    .fs { background:#fff; border:1px solid #a9dfbf; border-radius:10px; padding:14px 16px; }
+    .fs .fsn { font-size:11px; font-weight:700; color:#1e8449; letter-spacing:.08em; margin-bottom:4px; }
+    .fs .fst { font-size:13px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+    .fs .fsd { font-size:12px; color:var(--slate); }
+    .hl-box { background:#fff8f3; border:1.5px solid #f5cba7; border-radius:12px; padding:20px 22px; margin-bottom:16px; }
+    .hl-box h4 { color:var(--ember-dark); font-size:14px; font-weight:800; margin-bottom:8px; }
+    .hl-box p  { font-size:13px; color:var(--ink); line-height:1.7; }
+    .info { background:var(--snow); border:1.5px solid var(--border); border-radius:12px; padding:18px 22px; }
+    footer { background:var(--navy); color:rgba(255,255,255,.55); text-align:center; padding:28px 20px; font-size:12px; }
+    footer strong { color:var(--ember-light); }
+    @media(max-width:600px){
+      .price-phases { grid-template-columns:1fr; }
+      .vs-grid { grid-template-columns:1fr; }
+      .vsbadge { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">競品分析 &amp; 費用評估報告</div>
+  <h1>保險團隊基本功訓練<br><span>紅綠燈追蹤系統</span></h1>
+  <p class="hero-sub">Insurance Sales Daily Discipline Tracking System<br>競品比較 · 費用評估 · 遊戲化黏著度策略整合</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">11</span><span class="lbl">核心模組</span></div>
+    <div class="divider-v"></div>
+    <div class="hero-stat"><span class="num">NT$15萬</span><span class="lbl">買斷完整交付</span></div>
+    <div class="divider-v"></div>
+    <div class="hero-stat"><span class="num">8+</span><span class="lbl">遊戲化機制</span></div>
+    <div class="divider-v"></div>
+    <div class="hero-stat"><span class="num">PWA</span><span class="lbl">跨平台免安裝</span></div>
+  </div>
+</div>
+
+<nav class="toc-nav">
+  <ul>
+    <li><a href="#s1">01 系統定位</a></li>
+    <li><a href="#s2">02 競品比較</a></li>
+    <li><a href="#s3">03 功能規格</a></li>
+    <li><a href="#s4">04 費用評估</a></li>
+    <li><a href="#s5">05 遊戲化策略</a></li>
+    <li><a href="#s6">06 未來對接</a></li>
+  </ul>
+</nav>
+
+<section id="s1">
+  <div class="container">
+    <div class="section-label">01 — 系統定位</div>
+    <h2 class="section-title">這套系統解決什麼核心問題？</h2>
+    <p class="section-desc">團隊規模擴大後，主管無法每天人工掌握每位夥伴的基本功執行狀況。這套系統的核心不是記錄客戶資料，而是<strong>追蹤業務行為</strong>，讓主管一眼看紅綠燈，不用追人。</p>
+    <div class="card-grid">
+      <div class="card hl">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">追蹤業務行為</div>
+        <div class="card-desc">一日三訪、問卷調查、聯絡客戶、保戶服務、增員邀約——每日回報，自動計分</div>
+      </div>
+      <div class="card hl">
+        <div class="card-icon">🔴🟡🟢</div>
+        <div class="card-title">紅綠燈即時判斷</div>
+        <div class="card-desc">分數自動換算三色燈，主管一眼抓出需要輔導的人，不再逐一追問</div>
+      </div>
+      <div class="card hl">
+        <div class="card-icon">📸</div>
+        <div class="card-title">照片佐證審核</div>
+        <div class="card-desc">業務上傳作業佐證，主管在線審核通過或退回，保留完整稽核紀錄</div>
+      </div>
+      <div class="card hl">
+        <div class="card-icon">📊</div>
+        <div class="card-title">FYC 目標追蹤</div>
+        <div class="card-desc">半年 150FYC、年度 300FYC 手動輸入，搭配基本功分數看活動量與業績關聯</div>
+      </div>
+    </div>
+    <div class="hl-box">
+      <h4>⚠️ v1 規格特別說明</h4>
+      <p>本系統 v1 <strong>不內建 AI 功能</strong>——無 AI 行為分析、無 AI 趨勢預測。前端採 <strong>PWA 架構</strong>（非原生 APP），免安裝、跨平台，Android / iOS / 電腦瀏覽器均可使用。未來可與 MUSEON AI 系統對接，解鎖進階分析（詳見第 06 章）。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="container">
+    <div class="section-label">02 — 競品比較</div>
+    <h2 class="section-title">市場上有什麼選擇？</h2>
+    <p class="section-desc">台灣保險業追蹤管理工具大致分四類。以下 8 維度全面比較。</p>
+    <div class="comp-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>每日基本功追蹤</th>
+            <th>紅綠燈分數</th>
+            <th>照片佐證</th>
+            <th>主管審核</th>
+            <th>FYC 目標</th>
+            <th>遊戲化</th>
+            <th>前端</th>
+            <th>費用（20人 5年）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>LINE 群組 + Excel</strong><br><span style="color:var(--mist);font-size:11px">最常見現況</span></td>
+            <td><span class="tag tag-part">手工整理</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td><span class="tag tag-part">圖片混雜</span></td>
+            <td><span class="tag tag-no">無系統</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td>—</td>
+            <td>看似免費<br><span style="color:var(--mist);font-size:11px">隱性人力成本高</span></td>
+          </tr>
+          <tr>
+            <td><strong>Google Form + Sheets</strong></td>
+            <td><span class="tag tag-part">需自行設計</span></td>
+            <td><span class="tag tag-no">手動計算</span></td>
+            <td><span class="tag tag-part">Drive 上傳</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td><span class="tag tag-part">表格管理</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td>瀏覽器</td>
+            <td>免費<br><span style="color:var(--mist);font-size:11px">維護成本高</span></td>
+          </tr>
+          <tr>
+            <td><strong>CRM 通用 SaaS</strong><br><span style="color:var(--mist);font-size:11px">Salesforce / HubSpot</span></td>
+            <td><span class="tag tag-part">需大量客製</span></td>
+            <td><span class="tag tag-no">無保險邏輯</span></td>
+            <td><span class="tag tag-part">附件功能</span></td>
+            <td><span class="tag tag-part">工作流功能</span></td>
+            <td><span class="tag tag-part">可設定</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td>原生 APP</td>
+            <td>NT$144–720 萬</td>
+          </tr>
+          <tr>
+            <td><strong>台灣保險業 SaaS</strong><br><span style="color:var(--mist);font-size:11px">業界現有產品</span></td>
+            <td><span class="tag tag-part">通用化不精準</span></td>
+            <td><span class="tag tag-no">少數有簡版</span></td>
+            <td><span class="tag tag-part">部分支援</span></td>
+            <td><span class="tag tag-part">簡易版</span></td>
+            <td><span class="tag tag-part">有，限制多</span></td>
+            <td><span class="tag tag-no">無</span></td>
+            <td>原生 APP</td>
+            <td>NT$60–180 萬</td>
+          </tr>
+          <tr class="ours">
+            <td><strong>🏆 本系統（客製買斷）</strong><br><span style="color:var(--ember);font-size:11px">Insurance Sales Daily Discipline</span></td>
+            <td><span class="tag tag-own">完整 8 項基本功</span></td>
+            <td><span class="tag tag-own">自動三色燈</span></td>
+            <td><span class="tag tag-own">上傳＋審核流程</span></td>
+            <td><span class="tag tag-own">完整審核＋備註</span></td>
+            <td><span class="tag tag-own">半年＋年度目標</span></td>
+            <td><span class="tag tag-own">8+ 機制內建</span></td>
+            <td>PWA（免安裝）</td>
+            <td><strong>NT$15 萬買斷</strong><br><span style="color:var(--ember);font-size:11px">原始碼歸業主 · 0 月費</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="vs-grid">
+      <div class="cv">
+        <div class="cvt">通用 SaaS（月費制）</div>
+        <div class="cvn">台灣保險業 SaaS</div>
+        <div class="cvp">NT$60–180 萬</div>
+        <div class="cvd">20 人 · 5 年 · 月費累計</div>
+        <ul class="cvl">
+          <li class="b">月月繳，停用即失去</li>
+          <li class="b">無遊戲化機制</li>
+          <li class="b">客製需另外收費</li>
+          <li class="b">資料在對方伺服器</li>
+          <li class="b">通用邏輯，不夠精準</li>
+        </ul>
+      </div>
+      <div class="vsbadge">VS</div>
+      <div class="cv ours">
+        <div class="cvt" style="color:var(--ember)">本系統（客製買斷）</div>
+        <div class="cvn">紅綠燈追蹤系統</div>
+        <div class="cvp">NT$15 萬</div>
+        <div class="cvd">一次性買斷 · 永久使用</div>
+        <ul class="cvl">
+          <li class="g">一次付清，0 月費</li>
+          <li class="g">8+ 遊戲化機制內建</li>
+          <li class="g">專為保險業務邏輯設計</li>
+          <li class="g">資料在業主自己伺服器</li>
+          <li class="g">原始碼完整交付</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="container">
+    <div class="section-label">03 — 功能規格</div>
+    <h2 class="section-title">NT$15 萬包含哪些功能？</h2>
+    <p class="section-desc">v1 完整交付 11 個模組，從帳號管理到報表匯出，一次到位。</p>
+    <div class="fg">
+      <h4>👔 主管管理端 <span>6 大模組</span></h4>
+      <div class="fl">
+        <div class="fi">儀表板：今日紅綠燈總覽</div>
+        <div class="fi">人員管理：帳號、狀態、成長階段</div>
+        <div class="fi">任務設定：每日/每週基本功 + 權重分數</div>
+        <div class="fi">作業審核：通過、退回、退件原因</div>
+        <div class="fi">主管輔導：備註 + 下次追蹤日</div>
+        <div class="fi">報表匯出：Excel 每日/每週/個人</div>
+      </div>
+    </div>
+    <div class="fg">
+      <h4>🧑 業代使用端 <span>5 大模組</span></h4>
+      <div class="fl">
+        <div class="fi">每日基本功填報（8 項行為）</div>
+        <div class="fi">照片佐證上傳 + 退件補件流程</div>
+        <div class="fi">個人紅綠燈分數 + 趨勢查看</div>
+        <div class="fi">FYC 半年/年度目標進度</div>
+        <div class="fi">主管回饋查看 + 改善任務回報</div>
+      </div>
+    </div>
+    <div class="fg">
+      <h4>🔒 安全與稽核 <span>合規設計</span></h4>
+      <div class="fl">
+        <div class="fi">不存客戶個資（姓名/電話/保單）</div>
+        <div class="fi">任務異動稽核紀錄</div>
+        <div class="fi">作業審核紀錄（誰/何時/結果）</div>
+        <div class="fi">分數人工調整紀錄</div>
+        <div class="fi">PWA 架構，資料在業主伺服器</div>
+      </div>
+    </div>
+    <div class="info">
+      <p style="font-size:13px;color:var(--slate);">
+        📌 <strong style="color:var(--navy);">v2 預留：</strong>LINE 提醒通知、任務推播、主任自動黃燈提醒 ——
+        <strong style="color:var(--navy);">v3 預留：</strong>執行力趨勢分析、自動週報生成、新人流失預警（可接 MUSEON AI）
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="container">
+    <div class="section-label">04 — 費用評估</div>
+    <h2 class="section-title">投資金額與付款方式</h2>
+    <p class="section-desc">NT$15 萬買斷，11 個模組全部交付，分三期付款，降低業主風險。</p>
+    <div class="price-hero">
+      <div class="price-main">NT$ 150,000</div>
+      <div class="price-sub">一次性買斷 · 11 模組完整交付 · PWA 架構 · 原始碼歸屬業主</div>
+      <div class="price-phases">
+        <div class="pp"><div class="amt">NT$45,000</div><div class="lbl">第一期 30%</div><div class="whn">簽約後付款</div></div>
+        <div class="pp"><div class="amt">NT$75,000</div><div class="lbl">第二期 50%</div><div class="whn">v1 核心功能上線</div></div>
+        <div class="pp"><div class="amt">NT$30,000</div><div class="lbl">第三期 20%</div><div class="whn">完整驗收通過</div></div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">💰</div>
+        <div class="card-title">5 年 TCO 比較</div>
+        <div class="card-desc">SaaS 月費 20 人 5 年：NT$60–180 萬<br>本系統買斷：NT$15 萬 + 伺服器費<br><strong style="color:var(--success);">節省 75–90%</strong></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🖥️</div>
+        <div class="card-title">伺服器費用（業主自備）</div>
+        <div class="card-desc">VPS / 雲端主機：NT$400–1,500/月<br>推薦 DigitalOcean $12/月 或 AWS Lightsail $10/月<br>5 年約 NT$3–9 萬</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <div class="card-title">包含內容</div>
+        <div class="card-desc">11 模組 · PWA 前端 · 後端 API · 資料庫 · 基礎部署協助 · 3 個月 bug 修復保固</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">不包含（另報價）</div>
+        <div class="card-desc">v2 LINE 整合 · v3 AI 分析 · 每月維護服務費（可選加購）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="container">
+    <div class="section-label">05 — 遊戲化黏著度策略</div>
+    <h2 class="section-title">讓業務員「自己想用」，不是被迫用</h2>
+    <p class="section-desc">系統再好，業務不填就是廢。遊戲化機制讓填報變成成就感，主管管理也有正向回饋。完整企劃：<a href="https://zealchou.github.io/museon-pages/reports/insurance-gamification-v2.html" target="_blank" style="color:var(--ember);">業務成長地圖 v2.0</a></p>
+    <div class="hl-box">
+      <h4>💡 為什麼保險業特別需要遊戲化？</h4>
+      <p>保險業務三大特性：① <strong>高自主性</strong>（沒人盯著也要自律）、② <strong>高流失率</strong>（新人 6 個月流失率 50-70%）、③ <strong>業績週期長</strong>（努力和結果有時間差）。遊戲化補足這三個缺口：讓自律變有趣、讓新人有成就感、讓每日行為和即時獎勵連結。</p>
+    </div>
+    <div class="game-grid">
+      <div class="gc">
+        <div class="gn">機制 01</div>
+        <div class="gt">🔥 連勝系統（Streak）</div>
+        <div class="gd">連續 5 天完成顯示「小火焰」，連續 7 天顯示「黃金火焰」徽章，打破連勝有視覺提示。</div>
+        <div class="gw">→ 觸發「不要斷鏈」心理，讓業務不自覺維持每日填報習慣</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 02</div>
+        <div class="gt">⭐ 等級成長系統</div>
+        <div class="gd">新手 → 初階業代 → 資深業代 → 主任候選人，依累積分數自動升級，升級有動畫通知。</div>
+        <div class="gw">→ 讓業務看到長期成長路徑，不只是「今天填完」的短期目標</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 03</div>
+        <div class="gt">🏆 週排行榜</div>
+        <div class="gd">每週一重置，顯示前三名。榜外顯示「你的排名」和距離第三名的差距分數。</div>
+        <div class="gw">→ 競爭心驅動，讓業務看到「再一點就上榜」的拉力</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 04</div>
+        <div class="gt">📋 挑戰任務系統</div>
+        <div class="gd">每週「本週挑戰」：完成 30 次拜訪、邀約 5 位增員等，完成後解鎖特殊徽章。</div>
+        <div class="gw">→ 基本功之外提供超額激勵，讓積極業務有更多發揮空間</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 05</div>
+        <div class="gt">🎖️ 成就徽章系統</div>
+        <div class="gd">「百日業代」「三訪王」「增員達人」「零缺席」等 12+ 種徽章，可在個人頁展示。</div>
+        <div class="gw">→ 身份認同機制，徽章成為一種「可晒」的社交貨幣</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 06</div>
+        <div class="gt">👨‍🏫 師徒連結積分</div>
+        <div class="gd">主管完成輔導備註 + 業代回報改善任務，師徒雙方各獲得積分獎勵。</div>
+        <div class="gw">→ 讓主管「願意輔導」也有獎勵，不只業代在玩遊戲</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 07</div>
+        <div class="gt">🎉 里程碑慶典</div>
+        <div class="gd">完成 8 週訓練期、月度紅燈清零、首次達成 FYC 目標，系統推播慶典通知。</div>
+        <div class="gw">→ 把里程碑可視化，創造「值得紀念」的情緒記憶點</div>
+      </div>
+      <div class="gc">
+        <div class="gn">機制 08</div>
+        <div class="gt">💚 連勝復活機制</div>
+        <div class="gd">連勝斷掉後 7 天內，系統提供「復活週」機會，完成特定任務可恢復部分積分。</div>
+        <div class="gw">→ 降低「已經斷了不如放棄」的心理門檻，維持長期參與動機</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="container">
+    <div class="section-label">06 — 未來發展</div>
+    <h2 class="section-title">MUSEON AI 對接路線（預留）</h2>
+    <p class="section-desc">v1 不含 AI，但架構預留 API 介面，日後可與 MUSEON AI 對接，解鎖下一層能力。不影響 v1 完整使用。</p>
+    <div class="future-box">
+      <h3>🔌 對接後可解鎖的能力</h3>
+      <p style="font-size:14px;color:var(--slate);margin-bottom:4px;">v1 買斷後，視業主需求另行評估，獨立報價。</p>
+      <div class="fsteps">
+        <div class="fs">
+          <div class="fsn">AI 擴充 01</div>
+          <div class="fst">執行力趨勢預警</div>
+          <div class="fsd">自動偵測分數連續下滑 3 天的業務，提前通知主管介入</div>
+        </div>
+        <div class="fs">
+          <div class="fsn">AI 擴充 02</div>
+          <div class="fst">新人流失風險預測</div>
+          <div class="fsd">根據前 8 週行為模式，預測哪些新人有流失風險</div>
+        </div>
+        <div class="fs">
+          <div class="fsn">AI 擴充 03</div>
+          <div class="fst">自動週報生成</div>
+          <div class="fsd">MUSEON 自動彙整本週紅綠燈摘要、推薦輔導重點</div>
+        </div>
+        <div class="fs">
+          <div class="fsn">AI 擴充 04</div>
+          <div class="fst">基本功與業績關聯</div>
+          <div class="fsd">找出「拜訪數 + 問卷數」與 FYC 的統計關聯，識別最有效的基本功組合</div>
+        </div>
+      </div>
+    </div>
+    <div class="info">
+      <p style="font-size:13px;color:var(--slate);line-height:1.8;">
+        📅 <strong style="color:var(--navy);">建議時間軸：</strong>v1 上線後至少運行 3 個月，累積真實行為數據後再評估 MUSEON 對接。資料量越大，AI 分析越準確。<br>
+        🔒 <strong style="color:var(--navy);">資料主權保障：</strong>所有業務行為數據存在業主自己的伺服器，MUSEON 對接採 API 讀取，業主隨時可撤回授權。
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>保險團隊基本功訓練 × 紅綠燈追蹤系統</strong> — 競品分析 &amp; 費用評估報告<br>
+  由 <strong>MUSEON</strong> 生成 · 2026-05-26 · 內容僅供業主評估參考
+</footer>
+
+</body>
+</html>
