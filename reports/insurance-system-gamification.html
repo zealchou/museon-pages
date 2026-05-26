@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>保險團隊基本功訓練 × 紅綠燈追蹤系統 — 遊戲化黏著度提升方案</title>
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:        #e67e22;
+      --ember-light:  #f39c12;
+      --ember-dark:   #d35400;
+      --navy:         #2c3e50;
+      --navy-light:   #34495e;
+      --blue:         #3498db;
+      --blue-light:   #5dade2;
+      --teal:         #1abc9c;
+      --success:      #27ae60;
+      --warning:      #f39c12;
+      --danger:       #e74c3c;
+      --parchment:    #fdf6ee;
+      --snow:         #ffffff;
+      --ink:          #1a1a2e;
+      --slate:        #5a6a7a;
+      --mist:         #95a5a6;
+      --border:       #e0d8cc;
+      --gold:         #c8a84b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ===== Hero Header ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 40%, #1a3a5c 100%);
+      color: #fff;
+      padding: 64px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(230,126,34,0.12);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -60px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(52,152,219,0.10);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(230,126,34,0.18);
+      border: 1.5px solid rgba(230,126,34,0.55);
+      color: var(--ember-light);
+      border-radius: 24px;
+      padding: 6px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 4.5vw, 42px);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+    .hero h1 span { color: var(--ember-light); }
+    .hero-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,0.72);
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat .num {
+      display: block;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--ember-light);
+      line-height: 1;
+    }
+    .hero-stat .label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+    .divider-h { width: 1px; height: 48px; background: rgba(255,255,255,0.15); align-self: center; }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== TOC Nav ===== */
+    .toc-nav {
+      background: var(--snow);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .toc-nav ul {
+      display: flex;
+      list-style: none;
+      white-space: nowrap;
+      padding: 0 20px;
+      gap: 0;
+    }
+    .toc-nav li a {
+      display: block;
+      padding: 14px 16px;
+      color: var(--slate);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      transition: all .2s;
+    }
+    .toc-nav li a:hover {
+      color: var(--ember);
+      border-bottom-color: var(--ember);
+    }
+
+    /* ===== Sections ===== */
+    section {
+      padding: 64px 0;
+    }
+    section:nth-child(odd) { background: var(--parchment); }
+    section:nth-child(even) { background: #f0ebe2; }
+
+    .section-header {
+      margin-bottom: 40px;
+    }
+    .section-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      color: var(--slate);
+      font-size: 15px;
+      max-width: 620px;
+    }
+
+    /* ===== Card Grid ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--snow);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    /* ===== Reason Cards ===== */
+    .reason-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .reason-card {
+      background: var(--snow);
+      border-radius: 12px;
+      border-left: 5px solid var(--danger);
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .reason-card.yellow { border-left-color: var(--warning); }
+    .reason-card.blue   { border-left-color: var(--blue); }
+    .reason-num {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--danger);
+      margin-bottom: 8px;
+    }
+    .reason-card.yellow .reason-num { color: var(--warning); }
+    .reason-card.blue   .reason-num { color: var(--blue); }
+    .reason-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .reason-body { font-size: 14px; color: var(--slate); line-height: 1.65; }
+    .reason-insight {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fdf0e8;
+      color: var(--ember-dark);
+    }
+
+    /* ===== Principle Blocks ===== */
+    .principle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .principle-block {
+      background: var(--snow);
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .principle-icon { font-size: 28px; margin-bottom: 8px; }
+    .principle-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .principle-text { font-size: 13px; color: var(--slate); }
+
+    /* ===== Mechanism List ===== */
+    .mechanism-list { display: flex; flex-direction: column; gap: 20px; }
+    .mechanism-item {
+      background: var(--snow);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: box-shadow .2s;
+    }
+    .mechanism-item:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .mechanism-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: #fff;
+    }
+    .mechanism-num {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .mechanism-emoji { font-size: 24px; }
+    .mechanism-name {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .mechanism-subtitle {
+      font-size: 12px;
+      opacity: 0.72;
+      margin-top: 2px;
+    }
+    .mechanism-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+    .mechanism-col {
+      padding: 20px;
+      border-right: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .mechanism-col:last-child { border-right: none; }
+    .mechanism-col-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mist);
+      margin-bottom: 8px;
+    }
+    .mechanism-col p { color: var(--slate); line-height: 1.6; }
+
+    @media (max-width: 620px) {
+      .mechanism-body { grid-template-columns: 1fr; }
+      .mechanism-col { border-right: none; border-bottom: 1px solid var(--border); }
+      .mechanism-col:last-child { border-bottom: none; }
+    }
+
+    /* ===== Streak Visualizer ===== */
+    .streak-demo {
+      background: var(--parchment);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+    }
+    .streak-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .streak-day {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .streak-day.green  { background: #d4edda; color: #155724; }
+    .streak-day.red    { background: #f8d7da; color: #721c24; }
+    .streak-day.empty  { background: #e9ecef; color: #868e96; border: 1.5px dashed #ced4da; }
+    .streak-fire { font-size: 13px; color: var(--ember); font-weight: 700; margin-left: 6px; }
+
+    /* ===== Progress Bar ===== */
+    .progress-wrap { margin: 10px 0; }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 5px;
+    }
+    .progress-bar {
+      height: 10px;
+      border-radius: 5px;
+      background: #e9ecef;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: linear-gradient(90deg, var(--ember), var(--ember-light));
+    }
+    .progress-fill.blue  { background: linear-gradient(90deg, var(--blue), var(--blue-light)); }
+    .progress-fill.teal  { background: linear-gradient(90deg, var(--teal), #48dbfb); }
+    .progress-fill.gold  { background: linear-gradient(90deg, var(--gold), #f9d86e); }
+
+    /* ===== Badge Gallery ===== */
+    .badge-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .badge-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--snow);
+      border: 1.5px solid var(--border);
+      border-radius: 22px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .badge-item .be { font-size: 16px; }
+    .badge-item.gold-badge   { border-color: var(--gold); background: #fdf8e8; }
+    .badge-item.ember-badge  { border-color: var(--ember); background: #fef3e8; }
+    .badge-item.blue-badge   { border-color: var(--blue); background: #e8f4fd; }
+    .badge-item.teal-badge   { border-color: var(--teal); background: #e8faf5; }
+
+    /* ===== Rank Table ===== */
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--snow);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .rank-table th {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .rank-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--slate);
+    }
+    .rank-table tr:last-child td { border-bottom: none; }
+    .rank-table tr:hover td { background: #fdf6ee; }
+    .rank-crown { color: var(--gold); font-weight: 700; }
+
+    /* ===== Psychology Cards ===== */
+    .psych-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .psych-card {
+      background: var(--snow);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+    .psych-model-name {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .psych-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .psych-body { font-size: 14px; color: var(--slate); line-height: 1.65; }
+    .psych-map { margin-top: 12px; display: flex; flex-direction: column; gap: 7px; }
+    .psych-map-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 13px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--ember);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .dot.blue { background: var(--blue); }
+    .dot.teal { background: var(--teal); }
+    .psych-map-row span { color: var(--slate); }
+
+    /* ===== Trap List ===== */
+    .trap-list { display: flex; flex-direction: column; gap: 14px; }
+    .trap-item {
+      background: var(--snow);
+      border-radius: 10px;
+      border-left: 4px solid var(--danger);
+      padding: 16px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .trap-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .trap-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .trap-body { font-size: 14px; color: var(--slate); line-height: 1.6; }
+    .trap-fix { margin-top: 8px; font-size: 13px; font-weight: 600; color: #0e8a6e; }
+
+    /* ===== Roadmap ===== */
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .roadmap-phase {
+      background: var(--snow);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .roadmap-phase-header {
+      padding: 18px 20px;
+    }
+    .roadmap-phase-header.phase1 { background: linear-gradient(90deg, #2c3e50, #34495e); }
+    .roadmap-phase-header.phase2 { background: linear-gradient(90deg, var(--ember-dark), var(--ember)); }
+    .roadmap-phase-header.phase3 { background: linear-gradient(90deg, #1abc9c, #16a085); }
+    .roadmap-phase-title { color: #fff; font-size: 16px; font-weight: 800; }
+    .roadmap-phase-period { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; }
+    .roadmap-phase-body { padding: 20px; }
+    .roadmap-focus-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mist);
+      margin-bottom: 10px;
+    }
+    .roadmap-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 7px;
+      font-size: 14px;
+      color: var(--slate);
+      align-items: flex-start;
+    }
+    .roadmap-item .check { color: var(--success); flex-shrink: 0; }
+    .roadmap-kpi {
+      margin-top: 14px;
+      padding: 12px;
+      background: var(--parchment);
+      border-radius: 8px;
+    }
+    .roadmap-kpi-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--mist);
+      margin-bottom: 6px;
+    }
+    .roadmap-kpi-items { display: flex; flex-direction: column; gap: 5px; }
+    .roadmap-kpi-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      color: var(--slate);
+    }
+    .kpi-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .kpi-dot.ember { background: var(--ember); }
+    .kpi-dot.blue  { background: var(--blue); }
+    .kpi-dot.teal  { background: var(--teal); }
+
+    /* ===== Manager Grid ===== */
+    .manager-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+    }
+    .manager-tool {
+      background: var(--snow);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 20px;
+      text-align: center;
+      transition: transform .2s;
+    }
+    .manager-tool:hover { transform: translateY(-2px); }
+    .manager-tool-icon { font-size: 30px; margin-bottom: 10px; }
+    .manager-tool-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .manager-tool-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+    /* ===== Highlight Boxes ===== */
+    .highlight-box {
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin: 24px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .highlight-box.ember-box  { background: #fef3e8; border-left: 4px solid var(--ember); }
+    .highlight-box.blue-box   { background: #e8f4fd; border-left: 4px solid var(--blue); }
+    .highlight-box.teal-box   { background: #e8faf5; border-left: 4px solid var(--teal); }
+    .highlight-box.navy-box   { background: #eaf0fb; border-left: 4px solid var(--navy); }
+    .highlight-box-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .highlight-box-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .highlight-box.ember-box .highlight-box-title { color: var(--ember-dark); }
+    .highlight-box.blue-box  .highlight-box-title { color: var(--blue); }
+    .highlight-box.teal-box  .highlight-box-title { color: #0e8a6e; }
+    .highlight-box.navy-box  .highlight-box-title { color: var(--navy); }
+    .highlight-box-body { font-size: 14px; color: var(--slate); line-height: 1.65; }
+
+    /* ===== Traffic Lights ===== */
+    .traffic-lights {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 12px 0 28px;
+    }
+    .tl {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+    }
+    .tl-red    { background: #e74c3c; box-shadow: 0 0 10px rgba(231,76,60,0.4); }
+    .tl-yellow { background: #f39c12; box-shadow: 0 0 10px rgba(243,156,18,0.4); }
+    .tl-green  { background: #27ae60; box-shadow: 0 0 10px rgba(39,174,96,0.4); }
+    .tl-desc { font-size: 13px; color: var(--slate); margin-left: 8px; }
+
+    /* ===== Utilities ===== */
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mb-0  { margin-bottom: 0; }
+    strong.ember  { color: var(--ember); }
+    strong.blue   { color: var(--blue); }
+    strong.navy   { color: var(--navy); }
+    strong.teal   { color: var(--teal); }
+
+    /* ===== Footer ===== */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      padding: 36px 20px;
+      font-size: 13px;
+    }
+    footer strong { color: var(--ember-light); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .hero-stats { gap: 16px; }
+      .divider-h  { display: none; }
+      .reason-cards { grid-template-columns: 1fr; }
+      .principle-grid { grid-template-columns: 1fr 1fr; }
+      .psych-grid { grid-template-columns: 1fr; }
+      .roadmap    { grid-template-columns: 1fr; }
+      .manager-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .principle-grid { grid-template-columns: 1fr; }
+      .manager-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🎮 遊戲化設計方案</div>
+    <h1>保險團隊基本功訓練<br><span>× 紅綠燈追蹤系統</span></h1>
+    <p class="hero-sub">讓「每日打卡」從義務變成習慣，從習慣變成榮耀<br>以遊戲化設計提升業務員黏著度與自主驅動力</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num">8</span>
+        <span class="label">遊戲化核心機制</span>
+      </div>
+      <div class="divider-h"></div>
+      <div class="hero-stat">
+        <span class="num">3</span>
+        <span class="label">行為心理學框架</span>
+      </div>
+      <div class="divider-h"></div>
+      <div class="hero-stat">
+        <span class="num">6</span>
+        <span class="label">個月導入路線圖</span>
+      </div>
+      <div class="divider-h"></div>
+      <div class="hero-stat">
+        <span class="num">4</span>
+        <span class="label">主管端專屬工具</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== TOC NAV ===== -->
+<nav class="toc-nav">
+  <ul>
+    <li><a href="#sec1">一、為何放棄</a></li>
+    <li><a href="#sec2">二、設計原則</a></li>
+    <li><a href="#sec3">三、八大機制</a></li>
+    <li><a href="#sec4">四、主管工具</a></li>
+    <li><a href="#sec5">五、行為心理</a></li>
+    <li><a href="#sec6">六、設計陷阱</a></li>
+    <li><a href="#sec7">七、六月路線圖</a></li>
+  </ul>
+</nav>
+
+<!-- ===== SECTION 1 ===== -->
+<section id="sec1">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2 class="section-title">為什麼保險業務員容易放棄打卡系統？</h2>
+      <p class="section-desc">理解問題根源，才能設計出真正有效的解法。三個放棄原因對應三種截然不同的心理需求。</p>
+    </div>
+
+    <div class="traffic-lights">
+      <div class="tl tl-green"></div>
+      <div class="tl tl-yellow"></div>
+      <div class="tl tl-red"></div>
+      <span class="tl-desc">紅綠燈評分是系統核心——但如果業務員不打卡，燈就永遠不會亮</span>
+    </div>
+
+    <div class="reason-cards">
+      <div class="reason-card">
+        <div class="reason-num">01</div>
+        <div class="reason-title">不感覺有價值</div>
+        <div class="reason-body">
+          業務員最在意「成交」和「收入」。如果打卡只是填表，看不到與 FYC 目標的直接連結，就會被視為多餘的行政工作。<br><br>
+          他們心裡的潛台詞：「我跑三訪比填表更賺錢。」
+        </div>
+        <div class="reason-insight">💡 解方向：讓每一次打卡都能即時看到「離目標更近了多少」</div>
+      </div>
+      <div class="reason-card yellow">
+        <div class="reason-num">02</div>
+        <div class="reason-title">感覺被監控而非被幫助</div>
+        <div class="reason-body">
+          保險業務員高度重視自主性，不喜歡被管。紅燈＝主管介入，在某些業務員眼中等於「被抓到」。系統設計如果偏向「稽核感」，會觸發強烈抵抗。<br><br>
+          他們心裡的潛台詞：「我只是忘了打，不代表我沒去跑業務。」
+        </div>
+        <div class="reason-insight" style="background:#fff8e1;color:#a05800;">💡 解方向：把系統定位為「個人成長教練」，而非「主管的監控工具」</div>
+      </div>
+      <div class="reason-card blue">
+        <div class="reason-num">03</div>
+        <div class="reason-title">太麻煩，習慣門檻太高</div>
+        <div class="reason-body">
+          業務員每天外跑，用手機打卡要花時間。如果系統流程複雜、上傳照片步驟繁瑣，幾天後就放棄。<br><br>
+          他們心裡的潛台詞：「我記性不好，忘了一次就懶得補了。」
+        </div>
+        <div class="reason-insight" style="background:#e8f4fd;color:#1a6fa8;">💡 解方向：加入「提醒觸發」與「補救機制」，降低完美主義壓力</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2 ===== -->
+<section id="sec2">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2 class="section-title">遊戲化核心設計原則</h2>
+      <p class="section-desc">遊戲化不是把系統做成遊戲，而是把「做正確的事」這件事，賦予更強烈的意義感與成就感。</p>
+    </div>
+
+    <div class="highlight-box ember-box">
+      <div class="highlight-box-icon">🧠</div>
+      <div>
+        <div class="highlight-box-title">業務員的核心驅動力</div>
+        <div class="highlight-box-body">
+          保險業務員個性獨立、業績導向、比較心強。他們需要的不是被督促，而是被<strong>看見</strong>。<br>
+          四個核心需求：<strong class="ember">自主感</strong>（我自己選擇做）、<strong class="blue">社群地位</strong>（我比別人強）、<strong class="teal">可見成就</strong>（有形的認可）、<strong class="navy">競爭心</strong>（排行比較）
+        </div>
+      </div>
+    </div>
+
+    <div class="principle-grid mt-24">
+      <div class="principle-block">
+        <div class="principle-icon">⚡</div>
+        <div class="principle-name">即時回饋</div>
+        <div class="principle-text">打卡後立即看到進度變化、積分增加、連勝延長。延遲回饋等於行為不被強化，習慣難以建立。</div>
+      </div>
+      <div class="principle-block">
+        <div class="principle-icon">📊</div>
+        <div class="principle-name">可見進度</div>
+        <div class="principle-text">用進度條、連勝計數、等級顯示，讓抽象的「努力」變成具體可量化的成長軌跡。</div>
+      </div>
+      <div class="principle-block">
+        <div class="principle-icon">🏆</div>
+        <div class="principle-name">社群比較</div>
+        <div class="principle-text">週排行榜、師徒積分、團隊總分。利用業務員天生的競爭心，讓比較成為動力而非壓力。</div>
+      </div>
+      <div class="principle-block">
+        <div class="principle-icon">💰</div>
+        <div class="principle-name">真實業績連結</div>
+        <div class="principle-text">每個遊戲化里程碑都對應 FYC 目標百分比，讓業務員看到「基本功 → 業績」的直接因果。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3 ===== -->
+<section id="sec3">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2 class="section-title">八大遊戲化機制</h2>
+      <p class="section-desc">每個機制都有明確的名稱、操作說明與預期效果，可獨立上線，也可組合使用。</p>
+    </div>
+
+    <div class="mechanism-list">
+
+      <!-- M1 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">1</div>
+          <div class="mechanism-emoji">🔥</div>
+          <div>
+            <div class="mechanism-name">連勝系統（Streak）</div>
+            <div class="mechanism-subtitle">連續綠燈天數 × 損失厭惡心理</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>連續 N 天維持綠燈狀態，記錄為連勝。系統顯示「🔥 連勝 14 天」。一旦中斷（出現黃或紅燈）連勝歸零，從第 1 天重新計算。</p>
+            <div class="streak-demo">
+              <div style="font-size:11px;font-weight:700;color:var(--mist);margin-bottom:8px;">本週連勝示意</div>
+              <div class="streak-row">
+                <div class="streak-day green">一</div>
+                <div class="streak-day green">二</div>
+                <div class="streak-day green">三</div>
+                <div class="streak-day green">四</div>
+                <div class="streak-day green">五</div>
+                <div class="streak-day empty">六</div>
+                <div class="streak-day empty">日</div>
+                <span class="streak-fire">🔥 連勝 5 天</span>
+              </div>
+            </div>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">里程碑徽章</div>
+            <div class="badge-gallery">
+              <div class="badge-item"><span class="be">🌱</span>初燃 7 天</div>
+              <div class="badge-item ember-badge"><span class="be">🔥</span>燃燒 30 天</div>
+              <div class="badge-item gold-badge"><span class="be">🏅</span>百日不滅</div>
+            </div>
+            <p style="font-size:13px;color:var(--slate);margin-top:10px;">不同連勝長度解鎖對應等級徽章，顯示在個人主頁，讓主管與同事都看見。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>損失厭惡心理發揮作用——「今天忘了打卡，14 天連勝就沒了」的痛感，遠大於「再打一天」的成本。<br><br>研究顯示連勝機制可提升每日回訪率 <strong style="color:var(--ember)">40–60%</strong>（Duolingo 案例），7 天連勝是黏著臨界點。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M2 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">2</div>
+          <div class="mechanism-emoji">⭐</div>
+          <div>
+            <div class="mechanism-name">等級制度（Rank System）</div>
+            <div class="mechanism-subtitle">累積基本功分數 × 職涯認同感</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>依照累積基本功總分晉升等級，每個等級有對應名稱與專屬圖示。名稱刻意設計為業務員熟悉的職涯路徑，強化認同感。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">等級架構</div>
+            <table class="rank-table">
+              <thead>
+                <tr><th>等級</th><th>稱號</th><th>所需分數</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Lv.1</td><td>🌱 新星業務</td><td>0 +</td></tr>
+                <tr><td>Lv.2</td><td>🌟 見習主任</td><td>500 +</td></tr>
+                <tr><td>Lv.3</td><td>💼 業務主任</td><td>1,500 +</td></tr>
+                <tr><td>Lv.4</td><td class="rank-crown">👑 資深主任</td><td>4,000 +</td></tr>
+                <tr><td>Lv.5</td><td class="rank-crown">🏆 卓越主任</td><td>8,000 +</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>等級系統滿足「勝任感」需求，讓業務員感覺自己在系統中有職涯成長，而非只是被評分。<br><br>等級一旦獲得不因單次紅燈降級（只有復活機制才會調整），保護業務員的自尊心。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M3 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">3</div>
+          <div class="mechanism-emoji">📊</div>
+          <div>
+            <div class="mechanism-name">週排行榜（Leaderboard）</div>
+            <div class="mechanism-subtitle">社群比較 × 正向競爭設計</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>每週一公布上週基本功執行力排行。排名依照「基本功完成率 × 照片佐證通過率」計算，不單純看打卡次數，防止刷數字。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">設計細節</div>
+            <p style="margin-bottom:8px;">只公開顯示<strong>前三名</strong>，<strong>不顯示末位</strong>。</p>
+            <div class="badge-gallery">
+              <div class="badge-item gold-badge"><span class="be">🥇</span>週冠軍＋特效</div>
+              <div class="badge-item"><span class="be">🥈</span>亞軍</div>
+              <div class="badge-item"><span class="be">🥉</span>季軍</div>
+            </div>
+            <p style="font-size:13px;color:var(--slate);margin-top:10px;">每人可私密查看自己的排名，但不對全隊公開。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>讓業績好的人有額外榮耀，讓落後的人有追趕動力，<strong>但不公開羞辱後段</strong>。「只顯示前三名」是關鍵設計——保護弱勢、獎勵強者，避免後段業務員完全放棄。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M4 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">4</div>
+          <div class="mechanism-emoji">🎯</div>
+          <div>
+            <div class="mechanism-name">挑戰任務（Weekly Quest）</div>
+            <div class="mechanism-subtitle">短期目標設定 × 主管客製化</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>每週系統自動發布一個「挑戰任務」，完成後獲得額外積分與特殊徽章。主管也可客製發布針對個人的私密挑戰，精準引導輔導方向。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">挑戰範例</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="background:var(--parchment);border-radius:8px;padding:10px 12px;font-size:13px;">
+                🎯 <strong>本週全隊挑戰</strong><br>
+                <span style="color:var(--slate);">完成 5 次三訪客戶，獲得「勤訪勇士」徽章＋200 積分</span>
+              </div>
+              <div style="background:#e8f4fd;border-radius:8px;padding:10px 12px;font-size:13px;">
+                🔒 <strong>主管私密任務（給小明）</strong><br>
+                <span style="color:var(--slate);">本週完成 3 次增員邀約，主管會特別嘉獎</span>
+              </div>
+            </div>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>短期目標比年度目標更容易觸發行動。每週更換的挑戰保持新鮮感，避免打卡系統變成無聊的例行公事。<br><br>主管客製功能讓輔導更精準，業務員同時感受到「有人關注我的成長」。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M5 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">5</div>
+          <div class="mechanism-emoji">🏅</div>
+          <div>
+            <div class="mechanism-name">成就徽章系統（Achievement Badges）</div>
+            <div class="mechanism-subtitle">長期累積認可 × 可展示成就</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>設計 20+ 個成就徽章，依照業務行為里程碑自動解鎖。徽章永久保存在個人主頁，可分享給主管或在團隊聚會中展示。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">核心徽章範例</div>
+            <div class="badge-gallery">
+              <div class="badge-item gold-badge"><span class="be">⚔️</span>百訪勇士</div>
+              <div class="badge-item ember-badge"><span class="be">🌙</span>月月全勤</div>
+              <div class="badge-item blue-badge"><span class="be">🤝</span>增員先鋒</div>
+              <div class="badge-item teal-badge"><span class="be">💎</span>FYC 50%</div>
+              <div class="badge-item gold-badge"><span class="be">🎓</span>早會達人</div>
+              <div class="badge-item ember-badge"><span class="be">🚀</span>季度全力</div>
+            </div>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>徽章系統滿足「可見成就」需求，讓努力有形化。特別是「百訪勇士」這類累積型徽章，讓業務員在過程中就感受到進度，不必等到年度目標才有成就感。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M6 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">6</div>
+          <div class="mechanism-emoji">👨‍👩‍👧</div>
+          <div>
+            <div class="mechanism-name">師徒連結積分（Mentor Bonus）</div>
+            <div class="mechanism-subtitle">增員意願強化 × 傳承文化建立</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>業務員帶進來的新人（徒弟）每達成基本功里程碑，師父獲得 <strong style="color:var(--ember)">10% 加成積分</strong>。師父等級越高，加成比例越大（Lv.4 可達 20%）。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">積分計算範例</div>
+            <div style="background:var(--parchment);border-radius:10px;padding:14px;font-size:13px;">
+              <div style="margin-bottom:6px;font-weight:700;color:var(--navy);">徒弟完成週任務時</div>
+              <div style="color:var(--slate);line-height:1.8;">
+                ✅ 徒弟獲得 100 積分<br>
+                🎁 師父（Lv.2）額外獲得 <strong style="color:var(--ember)">10 積分</strong><br>
+                📈 師父（Lv.4）額外獲得 <strong style="color:var(--ember)">20 積分</strong>
+              </div>
+            </div>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>讓增員不只是公司要求，而是自己積分增長的來源。資深業務有動力帶好新人，新人也因為「不想讓師父失望」而維持打卡習慣。<br><br>同時強化公司傳承文化，形成良性生態。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M7 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">7</div>
+          <div class="mechanism-emoji">🎉</div>
+          <div>
+            <div class="mechanism-name">里程碑慶典（Milestone Celebration）</div>
+            <div class="mechanism-subtitle">FYC 進度儀式感 × 情感共鳴</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>當業務員達成 FYC 目標的特定比例時，系統觸發「慶典畫面」——動態慶賀效果、個人化恭喜訊息，同時自動推送通知給主管。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">FYC 慶典觸發點</div>
+            <div>
+              <div class="progress-wrap">
+                <div class="progress-label"><span>🎯 FYC 25% 達標</span><span style="color:var(--slate);font-weight:400;">初次里程碑</span></div>
+                <div class="progress-bar"><div class="progress-fill blue" style="width:25%"></div></div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-label"><span>🎊 FYC 50% 達標</span><span style="color:var(--ember);font-weight:700;">半年里程碑</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-label"><span>🏆 FYC 100% 達標</span><span style="color:var(--gold);font-weight:700;">年度里程碑</span></div>
+                <div class="progress-bar"><div class="progress-fill gold" style="width:100%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>把過去靜默的達標時刻，變成有儀式感的慶祝事件。業務員更願意分享給家人朋友，強化自我認同。<br><br>主管收到通知後可即時表達認可，形成<strong>正向回饋閉環</strong>。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- M8 -->
+      <div class="mechanism-item">
+        <div class="mechanism-header">
+          <div class="mechanism-num">8</div>
+          <div class="mechanism-emoji">🔄</div>
+          <div>
+            <div class="mechanism-name">分數復活機制（Recovery Path）</div>
+            <div class="mechanism-subtitle">低谷期逃脫口 × 掙脫感設計</div>
+          </div>
+        </div>
+        <div class="mechanism-body">
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">機制說明</div>
+            <p>當業務員連續多天紅燈時，系統啟動「復活任務」：完成連續 3 天全勤打卡即可恢復一個等級，並獲得「浴火重生」特殊徽章。</p>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">復活流程</div>
+            <div style="background:var(--parchment);border-radius:10px;padding:14px;font-size:13px;color:var(--slate);line-height:2;">
+              😔 連續 3 天紅燈 → 觸發復活任務<br>
+              📋 「接受 3 天全勤挑戰」按鈕出現<br>
+              ✅ 第 1 天 → 第 2 天 → 第 3 天全勤<br>
+              <span style="color:var(--ember);font-weight:700;">🎉 恢復一級＋解鎖「浴火重生」徽章</span>
+            </div>
+          </div>
+          <div class="mechanism-col">
+            <div class="mechanism-col-label">預期效果</div>
+            <p>防止業務員因一次失敗完全放棄。「給掙脫感」是關鍵設計心理——人在低谷中最需要看到出口。<br><br>復活機制同時給主管輔導的切入點：看到誰剛完成復活，即時給予鼓勵。</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /mechanism-list -->
+  </div>
+</section>
+
+<!-- ===== SECTION 4 ===== -->
+<section id="sec4">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2 class="section-title">主管端遊戲化工具</h2>
+      <p class="section-desc">主管不只是「紅燈時介入的人」——遊戲化讓主管成為業務員成長路上最有力的啟動者與見證人。</p>
+    </div>
+
+    <div class="manager-grid">
+      <div class="manager-tool">
+        <div class="manager-tool-icon">🎯</div>
+        <div class="manager-tool-title">發布秘密挑戰</div>
+        <div class="manager-tool-desc">對特定業務員發布私密任務，例如「這週完成兩次增員邀約」。業務員收到後有被重視感，覺得主管在關注我的成長。</div>
+      </div>
+      <div class="manager-tool">
+        <div class="manager-tool-icon">👍</div>
+        <div class="manager-tool-title">即時鼓勵徽章</div>
+        <div class="manager-tool-desc">主管可「一鍵認可」業務員的某項行為，發出特殊徽章。操作簡單、效果強——讓讚美有形化、留存化，不只是口頭一句話。</div>
+      </div>
+      <div class="manager-tool">
+        <div class="manager-tool-icon">📋</div>
+        <div class="manager-tool-title">智慧主管看板</div>
+        <div class="manager-tool-desc">一頁看清：誰連勝最長、誰最近在進步（Delta 指標）、誰需要關注（近 3 天趨勢惡化）。節省時間，輔導更精準。</div>
+      </div>
+      <div class="manager-tool">
+        <div class="manager-tool-icon">🏆</div>
+        <div class="manager-tool-title">月度最佳成長獎</div>
+        <div class="manager-tool-desc">主管每月手動選出「最佳成長業務員」，理由可自填。公開在系統中，讓努力的過程被看見，不只看 FYC 結果。</div>
+      </div>
+    </div>
+
+    <div class="highlight-box navy-box mt-24">
+      <div class="highlight-box-icon">📊</div>
+      <div>
+        <div class="highlight-box-title">智慧看板三個核心指標</div>
+        <div class="highlight-box-body">
+          <strong>① 連勝王</strong>：目前隊上連勝天數最長的業務員是誰？顯示前三名，讓主管知道誰狀態最好可以樹立典範。<br>
+          <strong>② 進步之星</strong>：最近 7 天基本功執行率提升幅度最大的業務員（Delta 值）——讓主管看到「正在努力但尚未到頂」的人，給予及時鼓勵。<br>
+          <strong>③ 需要關注</strong>：連續 3 天出現黃／紅燈，且趨勢持續往下的業務員清單——這才是真正需要主管主動輔導的對象，而非所有紅燈人員。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5 ===== -->
+<section id="sec5">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2 class="section-title">行為心理學對應</h2>
+      <p class="section-desc">每個機制背後都有經過驗證的行為科學支撐，讓設計有理論依據，不只是直覺猜測。</p>
+    </div>
+
+    <div class="psych-grid">
+      <div class="psych-card">
+        <div class="psych-model-name">BJ Fogg 行為模型</div>
+        <div class="psych-title">動機 × 能力 × 提示</div>
+        <div class="psych-body">行為發生 = 動機足夠 ＋ 能力可達 ＋ 出現提示，三者缺一不可。大多數打卡系統只解決「動機」，卻忽略「能力（操作簡便）」和「提示（適時提醒）」。</div>
+        <div class="psych-map">
+          <div class="psych-map-row">
+            <div class="dot"></div>
+            <span><strong>Motivation（動機）</strong>：連勝、排行榜、里程碑慶典、徽章</span>
+          </div>
+          <div class="psych-map-row">
+            <div class="dot blue"></div>
+            <span><strong>Ability（能力）</strong>：復活機制降低門檻、加速積分扶新人上馬</span>
+          </div>
+          <div class="psych-map-row">
+            <div class="dot teal"></div>
+            <span><strong>Prompt（提示）</strong>：挑戰任務推播、師父提醒、主管即時鼓勵</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="psych-card">
+        <div class="psych-model-name">自我決定理論（SDT）</div>
+        <div class="psych-title">自主感 × 勝任感 × 歸屬感</div>
+        <div class="psych-body">人的內在動力由三個基本心理需求驅動。遊戲化設計必須同時滿足三者，否則即使有外在獎勵，持久性也不足。</div>
+        <div class="psych-map">
+          <div class="psych-map-row">
+            <div class="dot"></div>
+            <span><strong>自主感</strong>：業務員可選擇接受或拒絕挑戰任務，不被強制</span>
+          </div>
+          <div class="psych-map-row">
+            <div class="dot blue"></div>
+            <span><strong>勝任感</strong>：等級制度＋徽章＋進度條，讓成長可見、可量化</span>
+          </div>
+          <div class="psych-map-row">
+            <div class="dot teal"></div>
+            <span><strong>歸屬感</strong>：師徒系統＋週排行榜＋主管即時認可</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="psych-card">
+        <div class="psych-model-name">損失厭惡（Loss Aversion）</div>
+        <div class="psych-title">失去的痛 &gt; 得到的喜悅</div>
+        <div class="psych-body">諾貝爾獎研究：失去某樣東西的痛苦，是得到同樣東西喜悅的 2–2.5 倍。這就是為什麼連勝機制有效——「斷連勝」的痛感遠大於「再打一天」的成本。</div>
+        <div class="psych-map">
+          <div class="psych-map-row">
+            <div class="dot"></div>
+            <span><strong>連勝設計</strong>：讓業務員「捨不得斷掉」，主動維持每日打卡</span>
+          </div>
+          <div class="psych-map-row">
+            <div class="dot blue"></div>
+            <span><strong>等級設計</strong>：等級不輕易降級，讓業務員有「守住」的動力</span>
+          </div>
+          <div class="psych-map-row">
+            <div class="dot teal"></div>
+            <span><strong>復活設計</strong>：已失去時給明確出口，防止「破罐子破摔」</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box blue-box mt-24">
+      <div class="highlight-box-icon">🔬</div>
+      <div>
+        <div class="highlight-box-title">關鍵洞察：損失厭惡如何讓人「不想中斷」</div>
+        <div class="highlight-box-body">
+          Duolingo 研究數據：加入連勝機制後，用戶每日回訪率提升 <strong>47%</strong>，7 天流失率降低 <strong>32%</strong>。<br>
+          關鍵在於：連勝天數越長，中斷成本越高（損失厭惡效果越強）。<strong>7 天連勝</strong>是「黏著臨界點」——超過 7 天後，業務員會主動想辦法維持，不需要外部提醒。<br>
+          設計建議：第 1–3 天給加倍積分（扶上馬），幫助業務員快速跨越 7 天臨界點。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 6 ===== -->
+<section id="sec6">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2 class="section-title">不要碰的設計陷阱</h2>
+      <p class="section-desc">遊戲化設計中，「哪些不能做」和「哪些該做」同樣重要。這三個陷阱是保險業打卡系統最常見的失敗點。</p>
+    </div>
+
+    <div class="trap-list">
+      <div class="trap-item">
+        <div class="trap-icon">⚠️</div>
+        <div>
+          <div class="trap-title">陷阱一：讓打卡變成「為了積分而做假」</div>
+          <div class="trap-body">
+            如果積分誘因太強，業務員會找方法「刷分」——打了卡但沒有真的行動，或上傳不相關的照片。遊戲化的積分失去意義，整個系統公信力崩潰。<br>
+            <strong>真正風險：</strong>主管數據失真，誤判業務員實際狀況，輔導時機錯失，FYC 目標與打卡數字脫鉤。
+          </div>
+          <div class="trap-fix">✅ 防護機制：照片佐證已是現有設計。建議加入「佐證品質評分」——主管審核通過後才計完整分，並顯示「待審核」狀態，讓業務員知道系統有人把關。</div>
+        </div>
+      </div>
+      <div class="trap-item">
+        <div class="trap-icon">⚠️</div>
+        <div>
+          <div class="trap-title">陷阱二：排行榜讓資深業務員感覺不被重視</div>
+          <div class="trap-body">
+            如果排行榜只有全員統一標準，資深業務員（已高度熟練）的積分增速天然低於新人（學習曲線陡峭），導致他們覺得「打了這麼多年卻排在新人後面」而放棄。<br>
+            <strong>真正風險：</strong>流失最有影響力的資深業務員，讓他們不再示範打卡行為給新人看，師徒生態瓦解。
+          </div>
+          <div class="trap-fix">✅ 防護機制：設計「同級排行」——新人跟新人比，資深跟資深比。全隊排行榜只顯示「最佳成長」（Delta 值），而非絕對積分，讓努力過程被看見。</div>
+        </div>
+      </div>
+      <div class="trap-item">
+        <div class="trap-icon">⚠️</div>
+        <div>
+          <div class="trap-title">陷阱三：積分太難賺讓系統感覺玩不起來</div>
+          <div class="trap-body">
+            如果業務員打卡一週才賺 50 積分、升一級要 500 積分，會感覺遙遙無期而放棄。這是多數積分系統的死亡陷阱——設計者怕「濫發」，結果門檻太高讓人覺得「反正也升不上去」。<br>
+            <strong>真正風險：</strong>連勝和等級機制都形同虛設，業務員完全無感，遊戲化淪為裝飾。
+          </div>
+          <div class="trap-fix">✅ 防護機制：採用「加速積分」設計——第 1–7 天積分倍率 1.5x，新人前三週有引導獎勵，確保任何認真打卡的業務員都能在兩週內看到等級變化。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box teal-box mt-24">
+      <div class="highlight-box-icon">🛡️</div>
+      <div>
+        <div class="highlight-box-title">核心防護原則：遊戲化的目的是「讓正確行為更有趣」</div>
+        <div class="highlight-box-body">
+          積分設計的黃金原則：<strong>行為難度 × 稀缺性 = 積分價值感</strong>。三訪要比早會打卡難，所以三訪積分應該更高。照片佐證通過才計完整分，讓積分真正反映真實行為，系統才有長期公信力。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 7 ===== -->
+<section id="sec7">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <h2 class="section-title">六個月實施路線圖</h2>
+      <p class="section-desc">分三期推進——不要一次全上，讓業務員和主管都有適應期，確保每個機制真正落地生根。</p>
+    </div>
+
+    <div class="roadmap">
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-header phase1">
+          <div class="roadmap-phase-title">導入期</div>
+          <div class="roadmap-phase-period">📅 第 1–2 個月</div>
+        </div>
+        <div class="roadmap-phase-body">
+          <div class="roadmap-focus-label">本期聚焦：建立打卡習慣</div>
+          <div class="roadmap-item"><span class="check">✅</span><span>上線連勝系統（Streak）</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>啟用基本成就徽章（5 枚）</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>主管看板基礎版上線</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>新人前 7 天積分倍率 1.5x</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>主管教育訓練（工具使用方式）</span></div>
+          <div class="roadmap-kpi">
+            <div class="roadmap-kpi-label">成功指標</div>
+            <div class="roadmap-kpi-items">
+              <div class="roadmap-kpi-item"><div class="kpi-dot ember"></div>週打卡率 ≥ 60%</div>
+              <div class="roadmap-kpi-item"><div class="kpi-dot blue"></div>7 天連勝達成率 ≥ 30%</div>
+              <div class="roadmap-kpi-item"><div class="kpi-dot teal"></div>主管每週使用看板 ≥ 1 次</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-header phase2">
+          <div class="roadmap-phase-title">強化期</div>
+          <div class="roadmap-phase-period">📅 第 3–4 個月</div>
+        </div>
+        <div class="roadmap-phase-body">
+          <div class="roadmap-focus-label">本期聚焦：社群競爭機制</div>
+          <div class="roadmap-item"><span class="check">✅</span><span>上線週排行榜（前三名制）</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>啟用挑戰任務（Weekly Quest）</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>主管即時鼓勵徽章功能</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>等級制度（Lv.1–5）正式上線</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>師徒連結積分啟用</span></div>
+          <div class="roadmap-kpi">
+            <div class="roadmap-kpi-label">成功指標</div>
+            <div class="roadmap-kpi-items">
+              <div class="roadmap-kpi-item"><div class="kpi-dot ember"></div>週打卡率 ≥ 75%</div>
+              <div class="roadmap-kpi-item"><div class="kpi-dot blue"></div>主管每月發出 ≥ 10 個鼓勵徽章</div>
+              <div class="roadmap-kpi-item"><div class="kpi-dot teal"></div>30 天連勝達成人數 ≥ 15%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-header phase3">
+          <div class="roadmap-phase-title">文化期</div>
+          <div class="roadmap-phase-period">📅 第 5–6 個月</div>
+        </div>
+        <div class="roadmap-phase-body">
+          <div class="roadmap-focus-label">本期聚焦：文化深根與自主演化</div>
+          <div class="roadmap-item"><span class="check">✅</span><span>里程碑慶典上線（FYC 連結）</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>月度最佳成長獎機制啟用</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>復活機制正式啟用</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>進階徽章（20 枚完整版）</span></div>
+          <div class="roadmap-item"><span class="check">✅</span><span>半年成效回顧 ＋ 機制優化</span></div>
+          <div class="roadmap-kpi">
+            <div class="roadmap-kpi-label">成功指標</div>
+            <div class="roadmap-kpi-items">
+              <div class="roadmap-kpi-item"><div class="kpi-dot ember"></div>週打卡率穩定 ≥ 85%</div>
+              <div class="roadmap-kpi-item"><div class="kpi-dot blue"></div>業務員主動分享里程碑截圖</div>
+              <div class="roadmap-kpi-item"><div class="kpi-dot teal"></div>FYC 達成率 vs 去年同期 ↑</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box ember-box mt-24">
+      <div class="highlight-box-icon">🎯</div>
+      <div>
+        <div class="highlight-box-title">六個月後的終極目標：打卡不再需要「要求」</div>
+        <div class="highlight-box-body">
+          最成功的系統是業務員主動想要打卡，因為不打卡意味著「失去連勝」「落後排行榜」「師父的積分不增長」。<br>
+          當打卡行為從「義務」變成「習慣」，再從「習慣」變成「文化」——這個系統就真正成功了。<br><br>
+          <strong>衡量標準：六個月後，業務員是否說「這個系統讓我更清楚自己的進度」而非「這個系統讓我感覺被監控」。</strong>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <strong>保險團隊基本功訓練 × 紅綠燈追蹤系統 — 遊戲化黏著度提升方案</strong>
+  <div style="margin-top:8px;">本報告由 MUSEON AI 顧問系統生成 · 2026-05-26</div>
+  <div style="margin-top:4px;font-size:12px;">設計原則：讓「紀律」有意義感，讓「進步」被看見，讓「堅持」有榮耀</div>
+</footer>
+
+</body>
+</html>
