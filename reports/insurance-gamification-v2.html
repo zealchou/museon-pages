@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>業務成長地圖 — 保險經紀人基本功養成與教練支援系統 v2.0</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ember: #C4502A;
+      --ember-light: #e0703a;
+      --ember-dark: #9e3d1f;
+      --navy: #181737;
+      --navy-light: #2c2b50;
+      --gold: #b6853d;
+      --gold-light: #d4a85a;
+      --teal: #1abc9c;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --parchment: #fdf6ee;
+      --snow: #ffffff;
+      --ink: #1a1a2e;
+      --slate: #5a6a7a;
+      --mist: #95a5a6;
+      --border: #e0d8cc;
+      --section-alt: #f5ede2;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #2a1f4a 100%);
+      color: #fff;
+      padding: 72px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: -60px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: rgba(196,80,42,0.10);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; right: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(182,133,61,0.10);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(196,80,42,0.18);
+      border: 1.5px solid rgba(196,80,42,0.55);
+      color: var(--ember-light);
+      border-radius: 24px;
+      padding: 6px 22px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 5vw, 48px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero h1 em { color: var(--ember-light); font-style: normal; }
+    .hero-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.68);
+      max-width: 580px;
+      margin: 0 auto 40px;
+    }
+    .hero-tagline {
+      display: inline-block;
+      background: rgba(182,133,61,0.18);
+      border: 1px solid rgba(182,133,61,0.4);
+      color: var(--gold-light);
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 18px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NAV */
+    .nav {
+      background: var(--snow);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+    }
+    .nav ul { display: flex; list-style: none; white-space: nowrap; padding: 0 16px; }
+    .nav a {
+      display: block;
+      padding: 13px 14px;
+      color: var(--slate);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      transition: all .2s;
+    }
+    .nav a:hover { color: var(--ember); border-bottom-color: var(--ember); }
+
+    /* LAYOUT */
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+    section { padding: 72px 0; }
+    section:nth-child(even) { background: var(--section-alt); }
+
+    .sec-hd { margin-bottom: 44px; }
+    .sec-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ember);
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .sec-title {
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .sec-desc { color: var(--slate); font-size: 15px; max-width: 640px; }
+
+    /* CARDS */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+
+    .card {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.10); }
+
+    .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .card-body { font-size: 14px; color: var(--slate); line-height: 1.65; }
+
+    .icon-ember { background: rgba(196,80,42,.12); }
+    .icon-teal  { background: rgba(26,188,156,.12); }
+    .icon-gold  { background: rgba(182,133,61,.12); }
+    .icon-navy  { background: rgba(24,23,55,.10); }
+    .icon-blue  { background: rgba(52,152,219,.12); }
+
+    /* ABILITY CARDS */
+    .ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+    .ability-card {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 20px 16px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .ability-emoji { font-size: 32px; margin-bottom: 10px; }
+    .ability-name { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .ability-def { font-size: 12px; color: var(--slate); margin-bottom: 10px; }
+    .ability-tasks { font-size: 12px; color: var(--ember); font-weight: 600; }
+    .ability-feel { font-size: 12px; color: var(--teal); margin-top: 8px; font-style: italic; }
+
+    /* LAYERS */
+    .layers { display: flex; flex-direction: column; gap: 0; }
+    .layer {
+      display: flex;
+      gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .layer:last-child { border-bottom: none; }
+    .layer-num {
+      min-width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+    }
+    .layer-content {}
+    .layer-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .layer-desc { font-size: 14px; color: var(--slate); }
+    .layer-core { 
+      display: inline-block;
+      background: var(--ember);
+      color: #fff;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    /* MECHANISM CARDS */
+    .mech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+    .mech-card {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 22px;
+      border-left: 4px solid var(--ember);
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    .mech-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .mech-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .mech-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .mech-body { font-size: 13px; color: var(--slate); line-height: 1.65; }
+    .mech-purpose { 
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal);
+    }
+
+    /* DUAL VIEW */
+    .dual-view { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 640px) { .dual-view { grid-template-columns: 1fr; } }
+
+    .view-panel {
+      border-radius: 12px;
+      padding: 28px;
+      border: 1px solid var(--border);
+    }
+    .view-panel.mgr { 
+      background: linear-gradient(135deg, #1a1a2e 0%, #2c2b50 100%);
+      color: #fff;
+    }
+    .view-panel.agent {
+      background: linear-gradient(135deg, var(--ember-dark) 0%, var(--ember) 100%);
+      color: #fff;
+    }
+    .view-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .view-title { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+    .view-item { 
+      display: flex; 
+      align-items: flex-start;
+      gap: 10px; 
+      margin-bottom: 10px; 
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .view-item::before { 
+      content: '▸';
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* TIMELINE */
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 36px; }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -31px;
+      top: 6px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--ember);
+      border: 3px solid var(--parchment);
+    }
+    .tl-week { font-size: 12px; font-weight: 700; color: var(--ember); text-transform: uppercase; margin-bottom: 4px; }
+    .tl-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .tl-items { font-size: 13px; color: var(--slate); }
+    .tl-items li { margin-bottom: 4px; padding-left: 12px; position: relative; }
+    .tl-items li::before { content: '·'; position: absolute; left: 0; color: var(--ember); font-weight: 900; }
+
+    /* LANGUAGE TABLE */
+    .lang-table { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; }
+    .lang-table th { 
+      background: var(--navy); 
+      color: #fff; 
+      padding: 14px 20px; 
+      text-align: left;
+      font-size: 13px;
+    }
+    .lang-table td { 
+      padding: 12px 20px; 
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .lang-table tr:last-child td { border-bottom: none; }
+    .lang-table tr:nth-child(even) td { background: rgba(0,0,0,.02); }
+    .bad { color: #e74c3c; text-decoration: line-through; opacity: 0.6; }
+    .good { color: var(--teal); font-weight: 600; }
+
+    /* KPI */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .kpi-card {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .kpi-value { font-size: 32px; font-weight: 900; color: var(--ember); line-height: 1; margin-bottom: 6px; }
+    .kpi-label { font-size: 13px; color: var(--slate); }
+
+    /* RISK */
+    .risk-list { display: flex; flex-direction: column; gap: 16px; }
+    .risk-item {
+      background: var(--snow);
+      border-radius: 12px;
+      padding: 20px 24px;
+      border-left: 4px solid var(--warning);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .risk-tag {
+      background: var(--warning);
+      color: #fff;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .risk-content {}
+    .risk-problem { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .risk-solution { font-size: 13px; color: var(--slate); }
+
+    /* SPEECH */
+    .speech-box {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: 12px;
+      padding: 36px;
+      color: #fff;
+      position: relative;
+    }
+    .speech-box::before {
+      content: '❝';
+      position: absolute;
+      top: 20px; left: 24px;
+      font-size: 48px;
+      color: rgba(196,80,42,.4);
+      line-height: 1;
+    }
+    .speech-text { 
+      font-size: 16px; 
+      line-height: 1.9; 
+      color: rgba(255,255,255,.88);
+      padding-left: 20px;
+    }
+    .speech-text p { margin-bottom: 12px; }
+    .speech-text p:last-child { margin-bottom: 0; }
+
+    /* FINALE */
+    .finale {
+      background: linear-gradient(135deg, var(--ember-dark) 0%, var(--ember) 60%, var(--gold) 100%);
+      color: #fff;
+      text-align: center;
+      padding: 80px 24px;
+    }
+    .finale h2 { font-size: clamp(24px, 4vw, 40px); font-weight: 900; margin-bottom: 20px; }
+    .finale p { font-size: 18px; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+
+    /* TAGS */
+    .tag { 
+      display: inline-block;
+      background: rgba(196,80,42,.1);
+      color: var(--ember);
+      border: 1px solid rgba(196,80,42,.25);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 3px 2px;
+    }
+    .tag-green { background: rgba(39,174,96,.1); color: var(--success); border-color: rgba(39,174,96,.25); }
+    .tag-gold { background: rgba(182,133,61,.1); color: var(--gold); border-color: rgba(182,133,61,.25); }
+
+    /* WEEK MAP */
+    .week-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 640px) { .week-map { grid-template-columns: repeat(2, 1fr); } }
+    .week-item {
+      background: var(--snow);
+      border-radius: 10px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .week-num { font-size: 22px; font-weight: 900; color: var(--ember); margin-bottom: 4px; }
+    .week-label { font-size: 11px; font-weight: 700; color: var(--slate); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
+    .week-desc { font-size: 13px; color: var(--ink); }
+
+    /* BADGES */
+    .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+    .badge-item {
+      background: var(--snow);
+      border-radius: 10px;
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .badge-icon { font-size: 28px; margin-bottom: 8px; }
+    .badge-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .badge-desc { font-size: 11px; color: var(--slate); }
+
+    @media (max-width: 768px) { .dual-view, .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    hr.divider { border: none; border-top: 2px solid var(--border); margin: 32px 0; }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">整合優化版 v2.0</div>
+  <h1>業務<em>成長地圖</em></h1>
+  <div class="hero-sub">保險經紀人基本功養成與教練支援系統<br>把每日制度變成成長遊戲，讓基本功看得見、做得到、持續得下去</div>
+  <div class="hero-tagline">不是追蹤人，而是陪人升級</div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <ul>
+    <li><a href="#background">背景</a></li>
+    <li><a href="#positioning">核心定位</a></li>
+    <li><a href="#abilities">五大能力</a></li>
+    <li><a href="#structure">三層結構</a></li>
+    <li><a href="#mechanics">遊戲機制</a></li>
+    <li><a href="#dual">雙端設計</a></li>
+    <li><a href="#language">語言重設</a></li>
+    <li><a href="#rollout">導入流程</a></li>
+    <li><a href="#rewards">獎勵設計</a></li>
+    <li><a href="#kpi">成功指標</a></li>
+    <li><a href="#risks">風險對策</a></li>
+    <li><a href="#speech">開場話術</a></li>
+  </ul>
+</nav>
+
+<!-- BACKGROUND -->
+<section id="background">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">01 企劃背景</div>
+      <h2 class="sec-title">主管真正的困境：不是不知道結果，是不知道過程</h2>
+      <p class="sec-desc">業績、FYC、成交件數都是落後指標。等主管看到業績落後時，最佳輔導時機早已錯過。</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon icon-ember">📊</div>
+        <div class="card-title">落後指標的陷阱</div>
+        <div class="card-body">月底看業績才發現問題，輔導時機已失。真正需要管理的是每日行為，不是月底結果。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-navy">🚦</div>
+        <div class="card-title">監控感的抗拒</div>
+        <div class="card-body">「打卡、分數、紅綠燈、審核」讓業代感覺被監視，不是被輔助，制度難以長期執行。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-teal">🗺️</div>
+        <div class="card-title">解法：成長地圖</div>
+        <div class="card-body">同一套資料，用成長語言呈現。業代看見自己的進度，主管看見誰需要支援。</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p style="font-size: 15px; color: var(--slate);">原始系統核心任務：<span class="tag">早會出席</span><span class="tag">一日三訪</span><span class="tag">問卷調查</span><span class="tag">聯絡客戶</span><span class="tag">保戶服務</span><span class="tag">線上培訓</span><span class="tag">增員邀約</span><span class="tag">主管指定任務</span></p>
+  </div>
+</section>
+
+<!-- POSITIONING -->
+<section id="positioning">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">02 核心定位轉換</div>
+      <h2 class="sec-title">從「追蹤系統」到「成長地圖」</h2>
+      <p class="sec-desc">名稱決定感受。同一套功能，定位不同，使用動機完全不同。</p>
+    </div>
+    <div class="dual-view">
+      <div class="view-panel mgr">
+        <div class="view-label">原始定位</div>
+        <div class="view-title">保險團隊基本功訓練與紅綠燈追蹤系統</div>
+        <div class="view-item">適合主管後台，不適合業代端溝通</div>
+        <div class="view-item">「追蹤」「紅綠燈」「打卡」「審核」易產生被監控感</div>
+        <div class="view-item">制度定位是管理工具，業代被動接受</div>
+      </div>
+      <div class="view-panel agent">
+        <div class="view-label">建議定位</div>
+        <div class="view-title">業務成長地圖</div>
+        <div class="view-item">讓業代看見每天推進了哪一項能力</div>
+        <div class="view-item">卡在哪裡、下一步怎麼做、什麼時候需要教練支援</div>
+        <div class="view-item">業代是主角，制度是他們的成長工具</div>
+      </div>
+    </div>
+    <div style="margin-top: 28px; background: var(--snow); border-radius: 12px; padding: 24px 28px; border: 1px solid var(--border);">
+      <div style="font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 12px;">核心設計哲學</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--ember); margin-bottom: 6px;">主管端視角</div>
+          <div style="font-size: 14px; color: var(--slate);">看到的是「<strong>管理狀態</strong>」——誰穩定、誰卡關、誰需要教練介入</div>
+        </div>
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--teal); margin-bottom: 6px;">業代端視角</div>
+          <div style="font-size: 14px; color: var(--slate);">看到的是「<strong>成長進度</strong>」——今天推進哪格、本週穩定幾天、下一步怎麼做</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABILITIES -->
+<section id="abilities">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">03 五大能力設計</div>
+      <h2 class="sec-title">把冷冰冰的任務，轉換成能力累積</h2>
+      <p class="sec-desc">不是被要求做事，而是在累積自己的專業能力。語言不同，動機完全不同。</p>
+    </div>
+    <div class="ability-grid">
+      <div class="ability-card">
+        <div class="ability-emoji">🎯</div>
+        <div class="ability-name">開發力</div>
+        <div class="ability-def">創造新接觸、開啟新機會</div>
+        <div class="ability-tasks">一日三訪 · 問卷調查 · 名單開發</div>
+        <div class="ability-feel">"我在累積開發市場的能力"</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-emoji">🤝</div>
+        <div class="ability-name">連結力</div>
+        <div class="ability-def">維持關係、創造下次互動</div>
+        <div class="ability-tasks">聯絡客戶 · 增員邀約 · 面談追蹤</div>
+        <div class="ability-feel">"我在建立可持續的關係網"</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-emoji">🛡️</div>
+        <div class="ability-name">信任力</div>
+        <div class="ability-def">透過服務建立專業信任</div>
+        <div class="ability-tasks">保戶服務 · 服務回訪 · 保單健檢</div>
+        <div class="ability-feel">"我在累積客戶信任"</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-emoji">📚</div>
+        <div class="ability-name">專業力</div>
+        <div class="ability-def">持續學習、提升顧問專業</div>
+        <div class="ability-tasks">早會出席 · 線上培訓 · 案例演練</div>
+        <div class="ability-feel">"我在提升自己的顧問能力"</div>
+      </div>
+      <div class="ability-card">
+        <div class="ability-emoji">⚡</div>
+        <div class="ability-name">穩定力</div>
+        <div class="ability-def">不靠情緒，維持每日節奏</div>
+        <div class="ability-tasks">每日回報 · 連續完成 · 週回顧</div>
+        <div class="ability-feel">"我在建立自己的工作節奏"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRUCTURE -->
+<section id="structure">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">04 三層遊戲化結構</div>
+      <h2 class="sec-title">每日 → 每週 → 8 週養成</h2>
+      <p class="sec-desc">三個時間維度，讓制度變成有節奏的成長遊戲。</p>
+    </div>
+    <div class="layers">
+      <div class="layer">
+        <div class="layer-num">1</div>
+        <div class="layer-content">
+          <div class="layer-title">每日一回合（Daily Round）</div>
+          <div class="layer-desc">每天是一個回合。業代打開系統，看到今日可推進的能力任務。完成後即時顯示今日進度、本週穩定天數與下一步建議。每日回合控制在 3 分鐘內完成。</div>
+          <div class="layer-core">核心問句：今天我推進了哪一格？</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-num">2</div>
+        <div class="layer-content">
+          <div class="layer-title">每週一關（Weekly Checkpoint）</div>
+          <div class="layer-desc">每週主管進行一次成長回顧，查看團隊整體能力狀態、個人卡關狀態與改善任務完成情況。週回顧不公開批判個人紅燈名單，公開場合談團隊能力，個別卡關私下支援。</div>
+          <div class="layer-core">核心問句：這週我們哪裡穩定？哪裡需要補強？</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-num">3</div>
+        <div class="layer-content">
+          <div class="layer-title">8 週養成地圖（8-Week Growth Map）</div>
+          <div class="layer-desc">新人以 8 週為一個養成週期。8 週結束後，系統產出一份個人成長報告，包含穩定天數、任務完成率、五大能力進度、最強能力、最需補強能力，以及主管教練建議。</div>
+          <div class="layer-core">核心問句：這 8 週，我養成了哪些能力？</div>
+          <hr class="divider" style="margin: 16px 0;">
+          <div class="week-map">
+            <div class="week-item">
+              <div class="week-num">W1-2</div>
+              <div class="week-label">建立節奏</div>
+              <div class="week-desc">每日習慣養成、熟悉系統回報</div>
+            </div>
+            <div class="week-item">
+              <div class="week-num">W3-4</div>
+              <div class="week-label">穩定基本功</div>
+              <div class="week-desc">五大能力全面啟動、週穩定標記導入</div>
+            </div>
+            <div class="week-item">
+              <div class="week-num">W5-6</div>
+              <div class="week-label">補強弱項</div>
+              <div class="week-desc">能力雷達圖解鎖、卡關修復任務啟動</div>
+            </div>
+            <div class="week-item">
+              <div class="week-num">W7-8</div>
+              <div class="week-label">連結成果</div>
+              <div class="week-desc">基本功與 FYC 目標連結、8 週成長報告產出</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MECHANICS -->
+<section id="mechanics">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">05 遊戲化機制設計</div>
+      <h2 class="sec-title">10 個讓制度產生黏性的遊戲機制</h2>
+      <p class="sec-desc">每個機制都有明確的設計目的，不是為了娛樂，而是為了強化正確行為模式。</p>
+    </div>
+    <div class="mech-grid">
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">1</div>
+          <div class="mech-name">🗺️ 成長地圖</div>
+        </div>
+        <div class="mech-body">8 週養成設計成一張可視化地圖。每一階段有明確任務、解鎖內容與回顧成果，讓新人知道自己在哪一階段。</div>
+        <div class="mech-purpose">→ 從被動接受任務，變成主動推進地圖</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">2</div>
+          <div class="mech-name">⚡ 今日推進（每日回合）</div>
+        </div>
+        <div class="mech-body">將每日打卡改為「今日推進」。每天完成一個小回合，系統即時顯示能力進度與本週穩定天數。每次操作不超過 3 分鐘。</div>
+        <div class="mech-purpose">→ 日常基本功有即時回饋，不只是交差</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">3</div>
+          <div class="mech-name">🔥 連勝系統（穩定連擊）</div>
+        </div>
+        <div class="mech-body">連續 5 天完成今日推進，顯示「連勝 5 天」徽章。連勝不斷檔時，系統顯示正向強化訊息，鼓勵維持節奏而非一次爆量。</div>
+        <div class="mech-purpose">→ 鼓勵每日穩定執行，而非週末補件</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">4</div>
+          <div class="mech-name">📅 週穩定標記</div>
+        </div>
+        <div class="mech-body">每週至少 4 天完成今日推進，即可獲得週穩定標記。積累的週穩定標記是個人能力資產，不設過期機制。</div>
+        <div class="mech-purpose">→ 鼓勵穩定，不鼓勵短期爆量</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">5</div>
+          <div class="mech-name">📡 能力雷達圖</div>
+        </div>
+        <div class="mech-body">完成 2 週以上紀錄後解鎖個人能力雷達圖，顯示五大能力的分布狀況。業代能清楚看到自己的強項與需要補強的方向。</div>
+        <div class="mech-purpose">→ 讓業代看見能力分布，產生補強動機</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">6</div>
+          <div class="mech-name">🛠️ 卡關修復任務</div>
+        </div>
+        <div class="mech-body">某能力連續低於門檻，系統給出最小改善任務：開發力卡關→「明天完成 1 次拜訪演練」；連結力卡關→「今天聯絡 1 個客戶」。不懲罰，只給出路。</div>
+        <div class="mech-purpose">→ 讓落後變成可修復，不只是被貼標籤</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">7</div>
+          <div class="mech-name">🏆 成就徽章系統</div>
+        </div>
+        <div class="mech-body">設計 10 個里程碑徽章：首次完成、連勝 7 天、解鎖雷達圖、完成 8 週養成、卡關修復成功等。徽章只個人可見，不公開比較。</div>
+        <div class="mech-purpose">→ 讓努力被自己看見，建立成就感</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">8</div>
+          <div class="mech-name">👥 師徒連結積分</div>
+        </div>
+        <div class="mech-body">主管教練支援後，業代可以標記「教練陪跑完成」。師徒雙方各獲得積分，鼓勵主管主動介入支援，而非等問題惡化。</div>
+        <div class="mech-purpose">→ 讓主管支援行為可追蹤、可回饋</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">9</div>
+          <div class="mech-name">🎉 里程碑慶典</div>
+        </div>
+        <div class="mech-body">完成 8 週養成、達成月度穩定率目標等里程碑時，系統推播慶典通知。不是競賽名次，而是個人成長里程碑的見證。</div>
+        <div class="mech-purpose">→ 讓重要節點被記住，強化長期動機</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-head">
+          <div class="mech-num">10</div>
+          <div class="mech-name">♻️ 節奏復活機制</div>
+        </div>
+        <div class="mech-body">連勝斷掉後，系統提供「復活週」機制：本週如果連續 4 天完成，標記為「節奏回穩」。降低中斷後的心理門檻，讓業代願意重新開始。</div>
+        <div class="mech-purpose">→ 讓斷掉的人有重來的理由</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DUAL -->
+<section id="dual">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">06 雙端體驗設計</div>
+      <h2 class="sec-title">同一套資料，兩種不同的呈現</h2>
+    </div>
+    <div class="dual-view">
+      <div class="view-panel mgr">
+        <div class="view-label">主管端（教練視角）</div>
+        <div class="view-title">管理儀表板</div>
+        <div class="view-item">今日總覽：全體今日推進狀況</div>
+        <div class="view-item">能力分布：團隊哪一項能力偏弱</div>
+        <div class="view-item">卡關名單：誰需要教練支援</div>
+        <div class="view-item">師徒連結：教練陪跑完成情況</div>
+        <div class="view-item">週回顧：穩定度與改善任務</div>
+        <div class="view-item">FYC 追蹤：基本功與結果關聯</div>
+      </div>
+      <div class="view-panel agent">
+        <div class="view-label">業代端（成長視角）</div>
+        <div class="view-title">我的成長地圖</div>
+        <div class="view-item">今日推進：今天可推進哪一格</div>
+        <div class="view-item">五大能力進度：雷達圖可視化</div>
+        <div class="view-item">本週穩定天數與連勝紀錄</div>
+        <div class="view-item">下一步建議：卡關修復任務</div>
+        <div class="view-item">教練提醒：主管的支援訊息</div>
+        <div class="view-item">成就徽章：個人里程碑記錄</div>
+      </div>
+    </div>
+    <div style="margin-top: 20px; background: var(--snow); border-radius: 12px; padding: 24px 28px; border: 1px solid var(--border);">
+      <div style="font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 12px;">業代端首頁文案示例</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; font-size: 13px; color: var(--slate);">
+        <div style="background: #f8f4f0; border-radius: 8px; padding: 14px;">
+          <div style="font-weight: 700; color: var(--ember); margin-bottom: 4px;">今日推進</div>
+          你的開發力已完成 2/3，再完成 1 次拜訪即可完成今日目標。
+        </div>
+        <div style="background: #f8f4f0; border-radius: 8px; padding: 14px;">
+          <div style="font-weight: 700; color: var(--teal); margin-bottom: 4px;">本週進度</div>
+          本週已穩定推進 3 天，距離週穩定標記還差 1 天。
+        </div>
+        <div style="background: #f8f4f0; border-radius: 8px; padding: 14px;">
+          <div style="font-weight: 700; color: var(--warning); margin-bottom: 4px;">卡關提醒</div>
+          目前卡在連結力。建議今天先完成 1 次客戶聯絡，讓節奏回穩。
+        </div>
+        <div style="background: #f8f4f0; border-radius: 8px; padding: 14px;">
+          <div style="font-weight: 700; color: var(--navy); margin-bottom: 4px;">教練回饋</div>
+          明天先完成 1 次拜訪流程演練，再進行實際約訪。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGE -->
+<section id="language">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">07 語言重設計</div>
+      <h2 class="sec-title">同樣的功能，不同的語言，完全不同的感受</h2>
+      <p class="sec-desc">紅綠燈保留在主管後台，業代端改用成長語言。監控感來自語言選擇，不是來自功能本身。</p>
+    </div>
+    <table class="lang-table">
+      <thead>
+        <tr>
+          <th>場景</th>
+          <th>❌ 舊式監控語言</th>
+          <th>✅ 成長語言</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>燈號</td>
+          <td class="bad">你是紅燈 / 未達標</td>
+          <td class="good">目前卡關 → 需要補強</td>
+        </tr>
+        <tr>
+          <td>未完成</td>
+          <td class="bad">未完成任務 / 你落後了</td>
+          <td class="good">尚未推進的能力</td>
+        </tr>
+        <tr>
+          <td>作業退回</td>
+          <td class="bad">退回作業 / 審核不通過</td>
+          <td class="good">需要補強紀錄</td>
+        </tr>
+        <tr>
+          <td>主管介入</td>
+          <td class="bad">主管已收到警示</td>
+          <td class="good">教練確認 / 啟動陪跑</td>
+        </tr>
+        <tr>
+          <td>主管評語</td>
+          <td class="bad">王小明本週紅燈 3 天，需加強</td>
+          <td class="good">王小明卡在開發力，建議安排拜訪陪跑</td>
+        </tr>
+        <tr>
+          <td>每日填報</td>
+          <td class="bad">打卡 / 簽到</td>
+          <td class="good">今日推進 / 推進一格</td>
+        </tr>
+        <tr>
+          <td>連勝斷掉</td>
+          <td class="bad">你拖累團隊進度</td>
+          <td class="good">本週節奏需要調整，今天先完成最小任務</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ROLLOUT -->
+<section id="rollout">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">08 分階段導入流程</div>
+      <h2 class="sec-title">4 週導入節奏，先建信任再擴大</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-week">第 0 週 — 主管共識週</div>
+        <div class="tl-title">先讓主管團隊統一語言</div>
+        <ul class="tl-items">
+          <li>確立：這不是監控制度，紅燈不是處罰，分數不是人格評價</li>
+          <li>確立：主管角色是教練，不是監工</li>
+          <li>產出：五大能力定義、每日任務權重、紅黃綠處理規則</li>
+          <li>產出：主管溝通話術手冊（見第 12 節）</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">第 1 週 — 小組試跑週</div>
+        <div class="tl-title">先找一組新人或小團隊試跑</div>
+        <ul class="tl-items">
+          <li>只導入每日推進，不開排名，不做懲罰</li>
+          <li>每日回報控制在 3 分鐘內</li>
+          <li>觀察：大家是否感覺被監控？哪個任務最容易卡？</li>
+          <li>收集使用者反應，調整文案</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">第 2 週 — 週回顧導入</div>
+        <div class="tl-title">開始建立每週節奏</div>
+        <ul class="tl-items">
+          <li>每週固定一次成長回顧，主管看團隊能力分布</li>
+          <li>卡關者只給一個最小改善任務</li>
+          <li>公開談團隊趨勢，私下談個人卡關</li>
+          <li>不公開紅燈名單，不比較誰最差</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">第 3 週 — 擴大到其他小組</div>
+        <div class="tl-title">讓制度變成團隊共同語言</div>
+        <ul class="tl-items">
+          <li>加入週穩定標記與連勝系統</li>
+          <li>加入能力雷達圖（2 週後解鎖）</li>
+          <li>擴大至其他主任與業代</li>
+          <li>開始建立小組共學節奏</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">第 4 週 — 正式制度化</div>
+        <div class="tl-title">納入團隊日常，不再是「試跑」</div>
+        <ul class="tl-items">
+          <li>固定節奏：每日推進 + 每週回顧 + 每月目標追蹤</li>
+          <li>啟動 8 週新人養成正式週期</li>
+          <li>師徒連結積分機制啟動</li>
+          <li>8 週成長報告模板確定</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REWARDS -->
+<section id="rewards">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">09 獎勵設計原則</div>
+      <h2 class="sec-title">成長型獎勵，不是競賽型刺激</h2>
+      <p class="sec-desc">獎勵的本質不是送禮，而是讓努力被看見，並換到更好的成長資源。</p>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--ember); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border);">❌ 不建議使用</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="card" style="border-left: 4px solid var(--danger);">
+            <div class="card-body">公開排行榜 — 容易創造比較壓力與造假動機</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--danger);">
+            <div class="card-body">末位懲罰 / 紅燈公告 — 讓制度變成羞辱工具</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--danger);">
+            <div class="card-body">抽獎 / 金幣兌換現金 — 外在動機蓋過內在成長</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--teal); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border);">✅ 建議的成長型獎勵</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="card" style="border-left: 4px solid var(--teal);">
+            <div class="card-body">週穩定標記 — 個人成就，看見自己的穩定性</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--teal);">
+            <div class="card-body">能力雷達圖解鎖 — 讓業代看見自己的能力分布</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--teal);">
+            <div class="card-body">教練陪跑資格 — 完成改善任務後的進階支援</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--teal);">
+            <div class="card-body">8 週成長報告 — 完成養成週期的個人成長資產</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--teal);">
+            <div class="card-body">自選改善任務權 — 達標後可選擇下週補強方向</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 28px;">
+      <div style="font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 16px;">成就徽章設計（個人可見，不公開比較）</div>
+      <div class="badge-grid">
+        <div class="badge-item"><div class="badge-icon">🚀</div><div class="badge-name">首發</div><div class="badge-desc">完成第一次今日推進</div></div>
+        <div class="badge-item"><div class="badge-icon">🔥</div><div class="badge-name">連勝 7 天</div><div class="badge-desc">連續 7 天不中斷</div></div>
+        <div class="badge-item"><div class="badge-icon">📡</div><div class="badge-name">雷達解鎖</div><div class="badge-desc">完成 2 週紀錄</div></div>
+        <div class="badge-item"><div class="badge-icon">🛠️</div><div class="badge-name">卡關突破</div><div class="badge-desc">完成卡關修復任務</div></div>
+        <div class="badge-item"><div class="badge-icon">👥</div><div class="badge-name">師徒共學</div><div class="badge-desc">完成教練陪跑</div></div>
+        <div class="badge-item"><div class="badge-icon">🗺️</div><div class="badge-name">地圖完成</div><div class="badge-desc">8 週養成完成</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KPI -->
+<section id="kpi">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">10 成功指標</div>
+      <h2 class="sec-title">北極星：每週穩定完成基本功的人員比例</h2>
+      <p class="sec-desc">保險業務養成的關鍵不是偶爾爆發，而是穩定執行。這個指標比單日分數重要。</p>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">85%+</div>
+        <div class="kpi-label">每日推進完成率目標</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">70%+</div>
+        <div class="kpi-label">每週穩定率目標</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">90%+</div>
+        <div class="kpi-label">主管週回顧完成率</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">50%+</div>
+        <div class="kpi-label">黃燈修復率目標</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">70%+</div>
+        <div class="kpi-label">8 週養成完成率</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">≤3 min</div>
+        <div class="kpi-label">每日填報時間中位數</div>
+      </div>
+    </div>
+    <div style="margin-top: 28px; background: var(--snow); border-radius: 12px; padding: 24px; border: 1px solid var(--border);">
+      <div style="font-size: 15px; font-weight: 700; color: var(--ember); margin-bottom: 12px;">⚠️ Guardrails（觸發即停止修正）</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; font-size: 13px; color: var(--slate);">
+        <div>→ 每日填報超過 3 分鐘 → 表單太重，立刻簡化</div>
+        <div>→ 敏感資料退件率超過 3% → 上傳規則不清楚，調整說明</div>
+        <div>→ 團隊覺得被監控 → 主管文案與溝通方式失敗，重訓主管</div>
+        <div>→ 紅燈人員被公開批評 → 制度暫停修正</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RISKS -->
+<section id="risks">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">11 風險與對策</div>
+      <h2 class="sec-title">五個最常見的導入失敗模式</h2>
+    </div>
+    <div class="risk-list">
+      <div class="risk-item">
+        <div class="risk-tag">風險 1</div>
+        <div class="risk-content">
+          <div class="risk-problem">團隊覺得被監控</div>
+          <div class="risk-solution">對策：業代端禁用「打卡」「審核」「紅燈落後」，改用「今日推進」「教練確認」「目前卡關」。監控語言只保留在主管端後台。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-tag">風險 2</div>
+        <div class="risk-content">
+          <div class="risk-problem">主管仍用舊式檢討方式</div>
+          <div class="risk-solution">對策：導入前先訓練主管話術。公開場合只談團隊能力，不談個人紅燈。個人卡關一律用一對一教練支援，不在群組公開點名。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-tag">風險 3</div>
+        <div class="risk-content">
+          <div class="risk-problem">業代為了分數造假</div>
+          <div class="risk-solution">對策：分數只作行動參考，不作唯一績效。不設過度獎勵。關鍵任務可抽查。佐證要求低敏、簡單、清楚，降低造假動機。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-tag">風險 4</div>
+        <div class="risk-content">
+          <div class="risk-problem">照片佐證產生個資問題</div>
+          <div class="risk-solution">對策：上傳前顯示提示，禁止包含客戶姓名、電話、身分證、保單號碼、醫療或財務資訊。主管審核可退回，系統保留審核紀錄。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-tag">風險 5</div>
+        <div class="risk-content">
+          <div class="risk-problem">制度太複雜導致不用</div>
+          <div class="risk-solution">對策：每日回報控制在 3 分鐘內。v1 只做核心任務，先小組試跑再擴大。每週只給一個改善任務，不一次要求太多。複雜功能留給 v2。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEECH -->
+<section id="speech">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-tag">12 主管開場話術</div>
+      <h2 class="sec-title">第一次向團隊說明時，可以這樣說</h2>
+    </div>
+    <div class="speech-box">
+      <div class="speech-text">
+        <p>各位，接下來我們要導入一套新的基本功制度。但我先說清楚，這不是為了監控大家，也不是為了每天抓誰沒做。</p>
+        <p>保險業務最難的地方，是很多成果不是今天做、明天就看得到。所以我們要把每天真正能掌握的事情整理出來，變成一張成長地圖。</p>
+        <p>以後我們不只看業績，也會看每個人的<strong>開發力、連結力、信任力、專業力和穩定力</strong>。每天只要花大約 3 分鐘，記錄今天推進了哪一格。</p>
+        <p>如果你節奏穩定，系統會讓你看見自己正在累積。如果你需要補強，系統會提醒你下一步。如果你目前卡關，不是處罰，而是提醒我這個主管要進來支援你。</p>
+        <p>這套制度不是要把人排名，而是要讓每個人知道自己卡在哪裡，下一步怎麼走。<strong>我們要把基本功變成一場成長遊戲。不是為了玩，而是為了讓成長看得見。</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINALE -->
+<div class="finale">
+  <h2>不是追蹤人，而是陪人升級</h2>
+  <p>把每天本來就該執行的基本功，設計成一套有地圖、有關卡、有進度、有教練、有回顧、有成長感的養成系統。讓制度從壓力工具，變成團隊共同成長的節奏。</p>
+  <div style="margin-top: 32px; font-size: 14px; opacity: 0.65;">業務成長地圖 v2.0 | 整合 GPTs 企劃 × MUSEON 遊戲化引擎</div>
+</div>
+
+</body>
+</html>
