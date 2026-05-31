@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>虎尾心祺美睫 × 雲林美業市場報告</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@300;400;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F7F5F0;
+    color: #12121A;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #12121A 0%, #1E1E2A 60%, #2A1A14 100%);
+    color: #fff;
+    padding: 64px 32px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(196,80,42,0.18) 0%, transparent 60%);
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(196,80,42,0.25);
+    border: 1px solid rgba(196,80,42,0.5);
+    color: #E0714D;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero-sub {
+    color: rgba(255,255,255,0.65);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .ember { color: #E0714D; }
+
+  /* Container */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* Summary Cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: -36px 0 48px;
+    position: relative;
+    z-index: 10;
+  }
+  .stat-card {
+    background: #FDFCFA;
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(18,18,26,0.08);
+    border: 1px solid #E2E0DA;
+  }
+  .stat-card .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: #C4502A;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-card .label {
+    font-size: 13px;
+    color: #5A5A6E;
+    line-height: 1.4;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    background: #C4502A;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #12121A;
+  }
+
+  /* Cards */
+  .card {
+    background: #FDFCFA;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #E2E0DA;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #12121A;
+  }
+
+  /* Market info row */
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0EDE8;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #C4502A;
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .info-dot.teal { background: #2A7A6E; }
+  .info-dot.gold { background: #B8923A; }
+
+  /* Competitor table */
+  .comp-table { width: 100%; border-collapse: collapse; }
+  .comp-table th {
+    background: #12121A;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .comp-table th:first-child { border-radius: 8px 0 0 0; }
+  .comp-table th:last-child { border-radius: 0 8px 0 0; }
+  .comp-table td {
+    padding: 10px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #F0EDE8;
+    vertical-align: top;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:nth-child(even) td { background: #F7F5F0; }
+  .badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.1);
+    color: #C4502A;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .badge.teal { background: rgba(42,122,110,0.1); color: #2A7A6E; }
+
+  /* Strategy blocks */
+  .strategy-block {
+    background: #FDFCFA;
+    border-radius: 16px;
+    padding: 24px 28px;
+    border: 1px solid #E2E0DA;
+    margin-bottom: 16px;
+    border-left: 4px solid #C4502A;
+  }
+  .strategy-block.teal { border-left-color: #2A7A6E; }
+  .strategy-block.gold { border-left-color: #B8923A; }
+  .strategy-block h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .strategy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .strategy-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 15px;
+    color: #5A5A6E;
+    line-height: 1.6;
+  }
+  .strategy-list li::before {
+    content: '→';
+    color: #C4502A;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .strategy-block.teal .strategy-list li::before { color: #2A7A6E; }
+  .strategy-block.gold .strategy-list li::before { color: #B8923A; }
+
+  /* Action checklist */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .check-item {
+    background: #FDFCFA;
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid #E2E0DA;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .check-box {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid #E2E0DA;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .check-item .title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .check-item .desc { font-size: 13px; color: #5A5A6E; }
+  .priority {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .priority.high { background: rgba(196,80,42,0.12); color: #C4502A; }
+  .priority.mid { background: rgba(184,146,58,0.12); color: #B8923A; }
+  .priority.low { background: rgba(42,122,110,0.12); color: #2A7A6E; }
+
+  /* Highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, #12121A, #1E1E2A);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #fff;
+    margin-bottom: 48px;
+  }
+  .highlight-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #E0714D;
+  }
+  .highlight-box p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: #9898A8;
+    border-top: 1px solid #E2E0DA;
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 20px 64px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .comp-table { font-size: 13px; }
+    .comp-table th, .comp-table td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-tag">2026 市場調查報告</div>
+  <h1>雲林虎尾美業市場<br><span class="ember">× 心祺美睫營運策略</span></h1>
+  <p class="hero-sub">從市場全貌到店家策略，一份讓你知道怎麼做的報告</p>
+</div>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="summary-grid">
+    <div class="stat-card">
+      <div class="num">466億</div>
+      <div class="label">2023年台灣<br>美業年產值</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">3.5萬+</div>
+      <div class="label">全台美業<br>店家數量</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">+1.2倍</div>
+      <div class="label">5年美甲美睫<br>店家成長</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">藍海</div>
+      <div class="label">雲林縣競爭<br>密度低</div>
+    </div>
+  </div>
+
+  <!-- 市場概況 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-icon">📊</div>
+      <h2>一、市場是怎麼樣的？</h2>
+    </div>
+    <div class="card">
+      <h3>台灣整體美業趨勢</h3>
+      <div class="info-row">
+        <div class="info-dot"></div>
+        <div>美業持續成長，美甲美睫是成長最快的類別，連鎖品牌和獨立工作室都在擴增</div>
+      </div>
+      <div class="info-row">
+        <div class="info-dot"></div>
+        <div>大部分店家集中在六都，雲林、嘉義等縣市相對沒有那麼多競爭——<strong>這是機會點</strong></div>
+      </div>
+      <div class="info-row">
+        <div class="info-dot teal"></div>
+        <div>消費者越來越重視「一站式服務」（美甲＋美睫＋護膚），願意多花一點找能全部解決的店</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>虎尾鎮的特點</h3>
+      <div class="info-row">
+        <div class="info-dot"></div>
+        <div>雲林第二大聚落，人口有一定基礎，但消費習慣較保守</div>
+      </div>
+      <div class="info-row">
+        <div class="info-dot teal"></div>
+        <div><strong>熟客和口碑是最強的獲客方式</strong>——朋友說好用，勝過任何廣告</div>
+      </div>
+      <div class="info-row">
+        <div class="info-dot gold"></div>
+        <div>大型連鎖美業品牌還沒有大量進入虎尾，獨立店家有地利優勢</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 競爭者 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-icon">🔍</div>
+      <h2>二、附近有哪些競爭對手？</h2>
+    </div>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>店家名稱</th>
+            <th>主要服務</th>
+            <th>特點</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>雅釩美學</strong><br><small style="color:#9898A8">中華路</small></td>
+            <td>美睫、美甲、紋繡</td>
+            <td>一對一服務，口碑文章多 <span class="badge">強口碑</span></td>
+          </tr>
+          <tr>
+            <td><strong>伊美時尚美甲</strong><br><small style="color:#9898A8">林森路一段</small></td>
+            <td>美甲、美睫</td>
+            <td>LINE 熱點有登錄，網路曝光有基礎</td>
+          </tr>
+          <tr>
+            <td><strong>小柯美甲美睫沙龍</strong></td>
+            <td>美甲、美睫</td>
+            <td>有 Facebook 粉專，社群有經營</td>
+          </tr>
+          <tr>
+            <td><strong>米花二弄三巷</strong></td>
+            <td>美甲</td>
+            <td>暈染款式，網路分享度高 <span class="badge teal">網路熱門</span></td>
+          </tr>
+          <tr>
+            <td><strong>心祺美睫（你們）</strong></td>
+            <td>美睫＋美甲＋除毛＋粉刺＋紋繡</td>
+            <td>服務最全，5位老師，複合式 <span class="badge" style="background:rgba(42,122,110,0.12);color:#2A7A6E">虎尾最完整</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="highlight-box">
+      <h3>心祺的核心優勢</h3>
+      <p>虎尾其他店家大多只做美甲或美睫，心祺是少數能做<strong style="color:#E0714D">「除毛＋粉刺護膚＋紋繡」</strong>的複合式美業。這個差異很重要——因為顧客可以一次解決多個需求，不用跑好幾家店。</p>
+    </div>
+  </div>
+
+  <!-- 策略 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-icon">🎯</div>
+      <h2>三、心祺該怎麼做？</h2>
+    </div>
+
+    <div class="strategy-block">
+      <h3>🏷️ 定位策略</h3>
+      <ul class="strategy-list">
+        <li>不要跟工作室比誰更便宜，要往「整體美學顧問」方向走——顧客來這裡是為了解決問題，不只是省錢</li>
+        <li>除毛＋粉刺護膚是虎尾其他店沒在做的，可以當作主打差異點</li>
+        <li>訴求：「你在台北大城市才能享受的標準服務，在虎尾我也能給你」</li>
+      </ul>
+    </div>
+
+    <div class="strategy-block teal">
+      <h3>📱 社群行銷（成本最低、效果最好）</h3>
+      <ul class="strategy-list">
+        <li><strong>Instagram 作品集：</strong>每次施作後拍「before/after」，讓效果說話。美甲和美睫分開整理成 highlight</li>
+        <li><strong>Google 地圖優化：</strong>確保「心祺美業」在 Google Maps 上資訊完整——地址、電話、照片、服務項目都要齊，並請熟客留下評論</li>
+        <li><strong>LINE 官方帳號：</strong>設定預約提醒、到期回訪自動訊息（接睫毛3週就該回來補）</li>
+        <li><strong>短影音（Reels/TikTok）：</strong>拍施作過程——粉刺護理的真實過程、接睫毛的時間流逝剪輯，在地點閱加上外縣市分享效果很好</li>
+      </ul>
+    </div>
+
+    <div class="strategy-block gold">
+      <h3>💰 讓顧客一直回來</h3>
+      <ul class="strategy-list">
+        <li><strong>儲值優惠：</strong>儲值 $3,000 送 $300，增加顧客黏著度，讓他們有理由一直回來</li>
+        <li><strong>定期提醒：</strong>美睫和美甲每3~4週主動提醒，粉刺護理建議每月一次，設計成「護理方案包」</li>
+        <li><strong>朋友介紹獎勵：</strong>介紹新客來，老客戶和新客戶都有優惠——在小城市，口碑比任何廣告都強</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 行動清單 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-icon">✅</div>
+      <h2>四、這個月先做這些</h2>
+    </div>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="title">Google Maps 確認資訊完整</div>
+          <div class="desc">確認地址、電話、服務項目都填好，請現有顧客幫忙留一則真實評論</div>
+        </div>
+        <div class="priority high">立即做</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="title">IG 帳號整理</div>
+          <div class="desc">作品照分類整理，確保服務項目一目了然，新顧客看一眼就知道你們做什麼</div>
+        </div>
+        <div class="priority high">立即做</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="title">LINE 官方帳號設定</div>
+          <div class="desc">建立自動預約提醒訊息，顧客做完接睫毛後3週自動提醒回來補</div>
+        </div>
+        <div class="priority mid">本月內</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="title">選一個主打服務集中宣傳</div>
+          <div class="desc">服務太多容易讓人不知道你最強什麼。建議先選美睫或粉刺護膚，這個月集中拍攝相關素材</div>
+        </div>
+        <div class="priority mid">本月內</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="title">推出轉介紹方案</div>
+          <div class="desc">設計一個「介紹朋友來，雙方都有折扣」的小活動，讓熟客幫你傳出去</div>
+        </div>
+        <div class="priority low">下個月</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 尾聲 -->
+  <div class="card" style="background: linear-gradient(135deg, rgba(196,80,42,0.05), rgba(184,146,58,0.05)); border-color: rgba(196,80,42,0.2);">
+    <h3 style="color: #C4502A; margin-bottom: 10px;">📌 一句話總結</h3>
+    <p style="color: #5A5A6E; font-size: 15px; line-height: 1.8;">心祺最大的優勢是服務最齊全——但這個優勢還沒有被充分「說出去」。接下來最重要的一步，是讓更多人知道：<strong>在虎尾想一次解決美容需求，心祺是最好的選擇。</strong></p>
+  </div>
+
+</div>
+
+<div class="footer">
+  由 MUSEON AI 協助產出 · 2026年5月 · 資料來源：台灣美業產業報告、虎尾在地競業調查
+</div>
+
+</body>
+</html>
