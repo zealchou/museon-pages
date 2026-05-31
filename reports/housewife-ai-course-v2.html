@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家庭主婦 AI 課程規劃分析報告 v2 | MUSEON</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', 'Noto Serif TC', serif; background: var(--parchment); color: var(--ink); line-height: 1.7; }
+
+  /* Hero */
+  .hero {
+    background: var(--deep-ink);
+    padding: 72px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(196,80,42,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(42,122,110,0.10) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid rgba(196,80,42,0.5);
+    color: var(--ember-light);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 span { color: var(--ember-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    max-width: 640px;
+    margin: 0 auto 32px;
+    position: relative;
+  }
+  .version-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(42,122,110,0.2);
+    border: 1px solid rgba(42,122,110,0.4);
+    color: #5fc4b4;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    position: relative;
+  }
+
+  /* Main content */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  h2 {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .section-tag {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .section-intro {
+    font-size: 16px;
+    color: var(--slate);
+    max-width: 700px;
+    margin-bottom: 36px;
+  }
+
+  /* Summary cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .summary-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .summary-card .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--ember);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .summary-card .label {
+    font-size: 13px;
+    color: var(--slate);
+  }
+
+  /* New skills showcase */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .skill-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .skill-card.new::before { background: var(--ember); }
+  .skill-card.expanded::before { background: var(--teal); }
+  .skill-card.workflow::before { background: var(--gold); }
+  .skill-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .skill-card.new .skill-badge { background: rgba(196,80,42,0.1); color: var(--ember); }
+  .skill-card.expanded .skill-badge { background: rgba(42,122,110,0.1); color: var(--teal); }
+  .skill-card.workflow .skill-badge { background: rgba(184,146,58,0.1); color: var(--gold); }
+  .skill-name {
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .skill-desc {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .skill-triggers {
+    background: var(--parchment);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .skill-triggers h4 {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--mist);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+  }
+  .trigger-word {
+    display: inline-block;
+    background: rgba(90,90,110,0.08);
+    color: var(--slate);
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin: 2px 2px 2px 0;
+  }
+  .connects-to {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .connect-tag {
+    background: rgba(196,80,42,0.06);
+    border: 1px solid rgba(196,80,42,0.2);
+    color: var(--ember);
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  /* Module analysis */
+  .module-list { display: flex; flex-direction: column; gap: 20px; }
+  .module-item {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .module-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: default;
+  }
+  .module-num {
+    width: 40px; height: 40px;
+    background: var(--ember);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .module-title-block { flex: 1; }
+  .module-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .module-tagline { font-size: 13px; color: var(--slate); }
+  .module-score {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .score-label {
+    font-size: 11px;
+    color: var(--mist);
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    display: block;
+  }
+  .score-stars { font-size: 18px; }
+  .module-body {
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .module-skills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) {
+    .module-skills { grid-template-columns: 1fr; }
+  }
+  .module-skill-item {
+    background: var(--parchment);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .module-skill-name {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ember);
+    margin-bottom: 4px;
+  }
+  .module-skill-role { font-size: 13px; color: var(--slate); }
+  .module-insight {
+    background: rgba(42,122,110,0.05);
+    border-left: 3px solid var(--teal);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    color: var(--ink);
+    margin-top: 12px;
+  }
+  .module-insight strong { color: var(--teal); }
+
+  /* Workflow diagram */
+  .workflow-box {
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .workflow-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+  .workflow-steps {
+    display: flex;
+    gap: 0;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+  .workflow-step {
+    flex: 1;
+    min-width: 140px;
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    text-align: center;
+  }
+  .workflow-step + .workflow-step::before {
+    content: '→';
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ember);
+    font-size: 18px;
+  }
+  .step-num {
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    color: var(--mist);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .step-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .step-skill {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ember-light);
+    background: rgba(196,80,42,0.15);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  /* Evidence table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  th {
+    background: var(--ink);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--slate);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(247,245,240,0.5); }
+  td:first-child { color: var(--ink); font-weight: 600; }
+  .highlight { color: var(--ember); font-weight: 700; }
+  .star { color: var(--gold); }
+
+  /* Action plan */
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .action-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .action-phase {
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .phase-1 .action-phase { color: var(--ember); }
+  .phase-2 .action-phase { color: var(--teal); }
+  .phase-3 .action-phase { color: var(--gold); }
+  .action-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+  .action-list { list-style: none; }
+  .action-list li {
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13px;
+    color: var(--slate);
+    display: flex;
+    gap: 8px;
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-list li::before { content: '◆'; color: var(--ember); font-size: 8px; margin-top: 5px; flex-shrink: 0; }
+
+  /* Footer */
+  .footer {
+    background: var(--deep-ink);
+    padding: 40px;
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+  }
+  .footer strong { color: rgba(255,255,255,0.7); }
+
+  /* Insight banner */
+  .insight-banner {
+    background: linear-gradient(135deg, rgba(196,80,42,0.08) 0%, rgba(184,146,58,0.05) 100%);
+    border: 1px solid rgba(196,80,42,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .insight-icon { font-size: 28px; flex-shrink: 0; }
+  .insight-text h3 { font-size: 16px; color: var(--ember); margin-bottom: 6px; }
+  .insight-text p { font-size: 14px; color: var(--slate); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">MUSEON SKILLS ANALYSIS · V2.0</div>
+  <h1>家庭主婦 AI 課程規劃<br><span>整合新技能深度分析報告</span></h1>
+  <p class="hero-sub">整合 mom-parenting-coach · side-hustle-mom · circle-amplifier · resonance 擴展<br>雙向交集驗證 × 課程需求命中矩陣</p>
+  <div class="version-tag">⚡ V2.0 升級版 — 新增 4 個能力模組 · 覆蓋率從 40% → 78%</div>
+</div>
+
+<!-- Executive Summary -->
+<div class="container">
+<section>
+  <span class="section-tag">EXECUTIVE SUMMARY</span>
+  <h2>升級前後對比</h2>
+  <p class="section-intro">本次新建 3 個 Skill + 擴展 1 個 Skill，家庭主婦客群的核心需求覆蓋率從 40% 提升至 78%。</p>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="num">4</div>
+      <div class="label">新增 / 擴展能力</div>
+    </div>
+    <div class="summary-card">
+      <div class="num" style="color: var(--teal)">78%</div>
+      <div class="label">需求覆蓋率（升級後）</div>
+    </div>
+    <div class="summary-card">
+      <div class="num" style="color: var(--gold)">6</div>
+      <div class="label">課程模組完整分析</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">107</div>
+      <div class="label">MUSEON 總 Skills 數</div>
+    </div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">🎯</div>
+    <div class="insight-text">
+      <h3>最重要的結構性發現</h3>
+      <p>模組 3（孩子情緒急救）× <code>mom-parenting-coach</code> 是整個課程的情感錨點——81.9% 台灣家長核心焦慮在這裡。模組 6（姊妹圈裂變）× <code>circle-amplifier</code> 是銷售飛輪的啟動器——口碑佔女性消費決策 36.2%，冷啟動唯一出路。<strong>兩個模組不是加分，是整個課程成立的必要條件。</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- New Skills -->
+<section>
+  <span class="section-tag">NEW CAPABILITIES</span>
+  <h2>本次新增 / 擴展能力</h2>
+  <p class="section-intro">4 個能力模組的完整規格、觸發邏輯與接線圖。</p>
+
+  <div class="skills-grid">
+    <!-- mom-parenting-coach -->
+    <div class="skill-card new">
+      <span class="skill-badge">新建 · THINKING HUB</span>
+      <div class="skill-name">mom-parenting-coach</div>
+      <p class="skill-desc">孩子情緒急救引擎。媽媽不需要懂心理學，只需要說對一句話。年齡段路由（2-4歲 / 5-8歲 / 9-12歲 / 青少年），一句輸入→立即可用親子腳本。</p>
+      <div class="skill-triggers">
+        <h4>觸發詞</h4>
+        <span class="trigger-word">孩子大哭</span>
+        <span class="trigger-word">不聽話</span>
+        <span class="trigger-word">發脾氣</span>
+        <span class="trigger-word">哭鬧</span>
+        <span class="trigger-word">不上學</span>
+        <span class="trigger-word">打人</span>
+        <span class="trigger-word">親子衝突</span>
+        <span class="trigger-word">/mom-coach</span>
+      </div>
+      <div class="connects-to">
+        <span class="connect-tag">resonance</span>
+        <span class="connect-tag">dharma</span>
+        <span class="connect-tag">daily-pilot</span>
+        <span class="connect-tag">onemuse-core</span>
+      </div>
+    </div>
+
+    <!-- side-hustle-mom -->
+    <div class="skill-card new">
+      <span class="skill-badge">新建 · BUSINESS HUB</span>
+      <div class="skill-name">side-hustle-mom</div>
+      <p class="skill-desc">媽媽副業啟動引擎。三問診斷（5分鐘識別副業類型）→ 零受眾第一步路徑圖 → 手機創業行動包。針對「沒有社群、沒有時間、不知從哪開始」的媽媽。</p>
+      <div class="skill-triggers">
+        <h4>觸發詞</h4>
+        <span class="trigger-word">副業</span>
+        <span class="trigger-word">在家賺錢</span>
+        <span class="trigger-word">兼職</span>
+        <span class="trigger-word">斜槓媽媽</span>
+        <span class="trigger-word">自己開課</span>
+        <span class="trigger-word">不知從哪開始</span>
+        <span class="trigger-word">/side-hustle</span>
+      </div>
+      <div class="connects-to">
+        <span class="connect-tag">onemuse-core</span>
+        <span class="connect-tag">dharma</span>
+        <span class="connect-tag">text-alchemy</span>
+        <span class="connect-tag">ssa-consultant</span>
+      </div>
+    </div>
+
+    <!-- circle-amplifier -->
+    <div class="skill-card workflow">
+      <span class="skill-badge">新建 · GROWTH WORKFLOW</span>
+      <div class="skill-name">circle-amplifier</div>
+      <p class="skill-desc">姊妹圈裂變引擎。媽媽不分享不是不想，是不知道怎麼說。輸出：一句話推薦語 + 截圖式分享排版 + 推薦飛輪腳本。轉化率比廣告高 3.7 倍。</p>
+      <div class="skill-triggers">
+        <h4>觸發詞</h4>
+        <span class="trigger-word">招生</span>
+        <span class="trigger-word">口碑</span>
+        <span class="trigger-word">分享</span>
+        <span class="trigger-word">怎麼讓學員推薦朋友</span>
+        <span class="trigger-word">姊妹圈</span>
+        <span class="trigger-word">/circle</span>
+      </div>
+      <div class="connects-to">
+        <span class="connect-tag">brand-builder</span>
+        <span class="connect-tag">storytelling-engine</span>
+        <span class="connect-tag">text-alchemy</span>
+        <span class="connect-tag">side-hustle-mom</span>
+      </div>
+    </div>
+
+    <!-- resonance expanded -->
+    <div class="skill-card expanded">
+      <span class="skill-badge">擴展 · MOM MENTAL LOAD PERSONA</span>
+      <div class="skill-name">resonance <span style="font-size:11px;color:var(--teal)">+ Mom 模式</span></div>
+      <p class="skill-desc">新增「媽媽心理負荷特化模式」。五大媽媽特有壓力地圖（孤獨感 / 自我消失感 / 過度承擔 / 罪惡感 / 身份焦慮）。五條禁忌語句。</p>
+      <div class="skill-triggers">
+        <h4>觸發詞</h4>
+        <span class="trigger-word">好累</span>
+        <span class="trigger-word">都是我在做</span>
+        <span class="trigger-word">沒有人理解我</span>
+        <span class="trigger-word">我消失了</span>
+        <span class="trigger-word">老公不幫忙</span>
+        <span class="trigger-word">誰來幫我</span>
+      </div>
+      <div class="connects-to">
+        <span class="connect-tag">mom-parenting-coach</span>
+        <span class="connect-tag">dharma</span>
+        <span class="connect-tag">onemuse-core</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Module Analysis -->
+<section>
+  <span class="section-tag">MODULE ANALYSIS</span>
+  <h2>六個課程模組 × 新 Skills 交叉分析</h2>
+  <p class="section-intro">每個模組整合新能力後的強化方案與洞見。</p>
+
+  <div class="module-list">
+    <!-- M1 -->
+    <div class="module-item">
+      <div class="module-header">
+        <div class="module-num">1</div>
+        <div class="module-title-block">
+          <div class="module-title">手機獲利術</div>
+          <div class="module-tagline">用手機每月多 5,000–20,000 元</div>
+        </div>
+        <div class="module-score">
+          <span class="score-label">命中度</span>
+          <div class="score-stars">⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-skills">
+          <div class="module-skill-item">
+            <div class="module-skill-name">side-hustle-mom（新）</div>
+            <div class="module-skill-role">三問診斷副業類型，輸出專屬手機副業路徑圖</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">text-alchemy</div>
+            <div class="module-skill-role">內容創業文案模板，媽媽知識直接變課堂內容</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">circle-amplifier（新）</div>
+            <div class="module-skill-role">副業成果分享模板，姊妹圈口碑觸發第一波客源</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">daily-pilot</div>
+            <div class="module-skill-role">碎片時間規劃，媽媽零碎 15 分鐘也能執行</div>
+          </div>
+        </div>
+        <div class="module-insight">
+          <strong>升級洞見：</strong> side-hustle-mom 的三問診斷是「課堂現場演示」的最佳素材——讓每個媽媽輸入三個答案，5分鐘後各自拿到一份專屬路徑圖。這個場景本身就是最強的說服力現場。
+        </div>
+      </div>
+    </div>
+
+    <!-- M2 -->
+    <div class="module-item">
+      <div class="module-header">
+        <div class="module-num">2</div>
+        <div class="module-title-block">
+          <div class="module-title">AI 管家務</div>
+          <div class="module-tagline">從「AI 工具示範」重新定位</div>
+        </div>
+        <div class="module-score">
+          <span class="score-label">命中度（升級後）</span>
+          <div class="score-stars">⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-skills">
+          <div class="module-skill-item">
+            <div class="module-skill-name">resonance · Mom 模式（擴展）</div>
+            <div class="module-skill-role">「家務累積壓力」承接，先接情緒再談工具</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">daily-pilot</div>
+            <div class="module-skill-role">家務時間規劃 AI 化，週計畫 + 購物清單自動生成</div>
+          </div>
+        </div>
+        <div class="module-insight">
+          <strong>定位修正：</strong> 模組 2 不能說「MUSEON 管家務」（MUSEON 沒有原生家務功能）。應改口為「AI 工具在家務的應用示範」——用 ChatGPT/Gemini 示範購物清單、餐點規劃、家務分配提醒等場景。MUSEON 在此模組的角色是「情緒承接 + 決策輔助」，不是「家務執行」。
+        </div>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="module-item" style="border: 2px solid var(--ember);">
+      <div class="module-header">
+        <div class="module-num" style="background: var(--ember);">3</div>
+        <div class="module-title-block">
+          <div class="module-title">孩子情緒急救 <span class="highlight">★ 最強模組</span></div>
+          <div class="module-tagline">81.9% 台灣家長核心焦慮 · 情感錨點模組</div>
+        </div>
+        <div class="module-score">
+          <span class="score-label">命中度</span>
+          <div class="score-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-skills">
+          <div class="module-skill-item">
+            <div class="module-skill-name">mom-parenting-coach（新）⭐</div>
+            <div class="module-skill-role">核心引擎。一句輸入→立即可用親子回應腳本</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">resonance · Mom 模式（擴展）</div>
+            <div class="module-skill-role">媽媽情緒強度高時先承接，再轉親子腳本</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">onemuse-core</div>
+            <div class="module-skill-role">年齡段認知框架，媽媽理解孩子發展階段</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">knowledge-lattice</div>
+            <div class="module-skill-role">親子互動結晶，累積個人化孩子行為觀察</div>
+          </div>
+        </div>
+        <div class="module-insight">
+          <strong>課堂設計建議：</strong> 讓每個媽媽輸入「孩子最近一次讓你抓狂的狀況」→ MUSEON 即時輸出三種不同應對腳本（情緒承接 / 行為引導 / 轉移注意）→ 媽媽選一個帶回家今晚試。這個現場是整個課程最強的「哇，這真的能用」時刻。
+        </div>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="module-item">
+      <div class="module-header">
+        <div class="module-num">4</div>
+        <div class="module-title-block">
+          <div class="module-title">AI 守護自己</div>
+          <div class="module-tagline">媽媽的情緒出口與自我認識</div>
+        </div>
+        <div class="module-score">
+          <span class="score-label">命中度</span>
+          <div class="score-stars">⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-skills">
+          <div class="module-skill-item">
+            <div class="module-skill-name">resonance · Mom 模式（擴展）⭐</div>
+            <div class="module-skill-role">媽媽特有五大壓力地圖，非評判式情緒承接</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">dharma</div>
+            <div class="module-skill-role">媽媽身份之外的自我方向探索</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">onemuse-core</div>
+            <div class="module-skill-role">自我盤點，「我是誰？不只是媽媽的那個我」</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">energy-reading</div>
+            <div class="module-skill-role">能量狀態感知，身體訊號解讀</div>
+          </div>
+        </div>
+        <div class="module-insight">
+          <strong>升級洞見：</strong> resonance Mom 模式的五條禁忌語句（「你太用力了」「老公也很辛苦」「你已經很好了」）是課堂上最有共鳴的教學素材——讓媽媽辨識哪些話讓她更孤獨，哪些話真正接住她。
+        </div>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="module-item">
+      <div class="module-header">
+        <div class="module-num">5</div>
+        <div class="module-title-block">
+          <div class="module-title">不看臉色計畫</div>
+          <div class="module-tagline">用 AI 讓自己有底氣說話</div>
+        </div>
+        <div class="module-score">
+          <span class="score-label">命中度</span>
+          <div class="score-stars">⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-skills">
+          <div class="module-skill-item">
+            <div class="module-skill-name">side-hustle-mom（新）</div>
+            <div class="module-skill-role">副業收入 = 底氣基礎，財務獨立感從這裡建立</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">dharma</div>
+            <div class="module-skill-role">個人邊界設定，什麼是我想要的、不想要的</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">text-alchemy</div>
+            <div class="module-skill-role">話術設計，面對婆媳/老公/職場壓力的表達方式</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">resonance · Mom 模式（擴展）</div>
+            <div class="module-skill-role">情緒強度承接，先讓媽媽說清楚再給話術</div>
+          </div>
+        </div>
+        <div class="module-insight">
+          <strong>補強方向：</strong> 需加入「副業顧問 Prompt 流程」——讓媽媽用 MUSEON 輸入一個讓她不舒服的對話情境，MUSEON 輸出三種不同溝通策略（溫和 / 直接 / 拖延），選一個帶回去試。
+        </div>
+      </div>
+    </div>
+
+    <!-- M6 -->
+    <div class="module-item" style="border: 2px solid var(--gold);">
+      <div class="module-header">
+        <div class="module-num" style="background: var(--gold);">6</div>
+        <div class="module-title-block">
+          <div class="module-title">姊妹圈裂變 <span style="color: var(--gold);">★ 冷啟動引擎</span></div>
+          <div class="module-tagline">口碑佔決策 36.2% · 銷售飛輪必要條件</div>
+        </div>
+        <div class="module-score">
+          <span class="score-label">命中度</span>
+          <div class="score-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="module-skills">
+          <div class="module-skill-item">
+            <div class="module-skill-name">circle-amplifier（新）⭐</div>
+            <div class="module-skill-role">核心引擎。一句話推薦語 + 截圖排版 + 飛輪腳本</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">storytelling-engine</div>
+            <div class="module-skill-role">學員故事框架，「我是誰 + 我遇到什麼 + MUSEON 幫我做到什麼」</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">brand-builder</div>
+            <div class="module-skill-role">個人品牌識別，讓媽媽的推薦有一致的語調</div>
+          </div>
+          <div class="module-skill-item">
+            <div class="module-skill-name">text-alchemy</div>
+            <div class="module-skill-role">分享文案產出，配合 LINE 群組 / IG 限動 / FB 貼文</div>
+          </div>
+        </div>
+        <div class="module-insight">
+          <strong>飛輪設計：</strong> 第一批學員完成課程後，MUSEON 幫每個人生成一份「我的學員故事卡」——可直接截圖分享到 LINE 群組。媽媽平均有 8.3 個 LINE 群組，每個群組觸達 15–30 人。一批 20 個學員 × 8.3 個群組 = 166 個口碑觸點。<strong>這就是冷啟動的乘數。</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Workflow -->
+<section>
+  <span class="section-tag">SERVICE WORKFLOW</span>
+  <h2>MUSEON 服務路徑圖（整合版）</h2>
+  <p class="section-intro">從媽媽進入課程到成為口碑傳播者，每個環節的 Skill 接棒設計。</p>
+
+  <div class="workflow-box">
+    <div class="workflow-title">主線路徑：新學員 → 核心用戶 → 口碑傳播</div>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-name">情緒著陸</div>
+        <div class="step-skill">resonance · Mom</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-name">自我盤點</div>
+        <div class="step-skill">onemuse-core</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-name">親子急救</div>
+        <div class="step-skill">mom-parenting</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">STEP 04</div>
+        <div class="step-name">副業診斷</div>
+        <div class="step-skill">side-hustle-mom</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">STEP 05</div>
+        <div class="step-name">分享裂變</div>
+        <div class="step-skill">circle-amplifier</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="workflow-box">
+    <div class="workflow-title">緊急路徑：孩子情緒爆發 → 即時支援</div>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-num">TRIGGER</div>
+        <div class="step-name">媽媽情緒<br>強度高</div>
+        <div class="step-skill">resonance · Mom</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">ROUTE IF</div>
+        <div class="step-name">壓力源<br>= 孩子行為</div>
+        <div class="step-skill">自動偵測</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">OUTPUT</div>
+        <div class="step-name">年齡段<br>親子腳本</div>
+        <div class="step-skill">mom-parenting</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">OPTION</div>
+        <div class="step-name">今日自我<br>補位動作</div>
+        <div class="step-skill">dharma</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Evidence Table -->
+<section>
+  <span class="section-tag">EVIDENCE MATRIX</span>
+  <h2>雙向交集驗證（更新版）</h2>
+  <p class="section-intro">六個模組 × 外部研究 × 新 Skills 命中矩陣。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>模組</th>
+        <th>外部研究支撐</th>
+        <th>命中的新 Skill</th>
+        <th>升級後評估</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>M1 手機獲利術</td>
+        <td>2026 台灣「超級個體」浪潮；媽媽知識型副業最低門檻</td>
+        <td><code>side-hustle-mom</code> · <code>circle-amplifier</code></td>
+        <td class="highlight">★★★★ 高 — 工具+路徑雙命中</td>
+      </tr>
+      <tr>
+        <td>M2 AI 管家務</td>
+        <td>台灣家庭主婦日均家務 4.3 小時（DGBAS 2024）</td>
+        <td><code>resonance · Mom</code></td>
+        <td>★★★ 中 — 需重新定位為「AI 工具示範」</td>
+      </tr>
+      <tr>
+        <td>M3 孩子情緒急救</td>
+        <td>81.9% 台灣家長核心焦慮；全球 71% 媽媽用 AI 處理親子</td>
+        <td><code>mom-parenting-coach</code> · <code>resonance · Mom</code></td>
+        <td class="star">★★★★★ 最強 — 情感錨點完整接通</td>
+      </tr>
+      <tr>
+        <td>M4 AI 守護自己</td>
+        <td>ChatGPT 2025 調查：媽媽主要用途「情緒宣洩 + 非評判聲音」</td>
+        <td><code>resonance · Mom</code> · <code>dharma</code></td>
+        <td class="highlight">★★★★ 高 — 五大壓力地圖精準覆蓋</td>
+      </tr>
+      <tr>
+        <td>M5 不看臉色計畫</td>
+        <td>台灣女性財務獨立焦慮指數（遠見 2025）</td>
+        <td><code>side-hustle-mom</code> · <code>text-alchemy</code></td>
+        <td class="highlight">★★★★ 高 — 需補副業顧問 Prompt 流程</td>
+      </tr>
+      <tr>
+        <td>M6 姊妹圈裂變</td>
+        <td>口碑佔女性決策 36.2%；閨蜜推薦轉化率高廣告 3.7 倍；LINE 群組均 8.3 個</td>
+        <td><code>circle-amplifier</code> · <code>storytelling-engine</code></td>
+        <td class="star">★★★★★ 最強 — 銷售飛輪完整閉環</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Action Plan -->
+<section>
+  <span class="section-tag">ACTION PLAN</span>
+  <h2>三階段行動計畫</h2>
+  <p class="section-intro">從驗證到規模化，每個階段的具體行動。</p>
+
+  <div class="action-grid">
+    <div class="action-card phase-1">
+      <div class="action-phase">Phase 1 · 驗證期（課前）</div>
+      <div class="action-title">讓工具說話</div>
+      <ul class="action-list">
+        <li>課前發表單，收 30 個媽媽的真實孩子狀況</li>
+        <li>篩出 5 個最典型場景（年齡段涵蓋 2–12 歲）</li>
+        <li>MUSEON 預跑 5 場親子腳本，確認品質</li>
+        <li>準備三問診斷腳本，每位學員 5 分鐘完成</li>
+      </ul>
+    </div>
+    <div class="action-card phase-2">
+      <div class="action-phase">Phase 2 · 執行期（課中）</div>
+      <div class="action-title">現場即時演示</div>
+      <ul class="action-list">
+        <li>M3：每人輸入一個親子狀況 → 立即拿腳本</li>
+        <li>M1：三問診斷 → 每人拿到副業路徑圖</li>
+        <li>M4：resonance Mom 模式現場演示情緒承接</li>
+        <li>M6：設計課後分享任務（姊妹圈推薦飛輪）</li>
+      </ul>
+    </div>
+    <div class="action-card phase-3">
+      <div class="action-phase">Phase 3 · 裂變期（課後）</div>
+      <div class="action-title">口碑飛輪啟動</div>
+      <ul class="action-list">
+        <li>每個學員獲得「我的學員故事卡」截圖素材</li>
+        <li>circle-amplifier 生成各自的姊妹圈推薦語</li>
+        <li>一週後追蹤：哪些媽媽帶來了新詢問</li>
+        <li>新詢問轉換：直接用 side-hustle-mom 診斷破冰</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>MUSEON Skills Analysis Report v2.0 · <strong>2026-05-31</strong></p>
+  <p style="margin-top:8px;">整合 mom-parenting-coach · side-hustle-mom · circle-amplifier · resonance Mom Mode</p>
+  <p style="margin-top:8px; color: rgba(255,255,255,0.25);">Generated by MUSEON Intelligence · 107 Skills Available</p>
+</div>
+
+</body>
+</html>
