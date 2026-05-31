@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雙向覺察系統 — Museon 家庭主婦 AI 課程深度戰略報告 v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--deep-ink);
+    color: #fff;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,80,42,0.25) 0%, transparent 70%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -40px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,146,58,0.15) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: #E0714D;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 em {
+    color: var(--ember-light);
+    font-style: italic;
+  }
+  .hero p {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 680px;
+    margin: 0 auto 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-meta span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+  .hero-meta strong { color: rgba(255,255,255,0.85); }
+
+  /* Container */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Section */
+  section { padding: 64px 0; }
+  section:nth-child(even) { background: var(--snow); }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .section-subtitle {
+    font-size: 1rem;
+    color: var(--slate);
+    margin-bottom: 40px;
+    max-width: 640px;
+  }
+
+  /* Insight Box */
+  .insight-box {
+    background: var(--deep-ink);
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    border-left: 4px solid var(--ember);
+    position: relative;
+  }
+  .insight-box::before {
+    content: '核心洞見';
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .insight-box p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.9);
+  }
+  .insight-box strong { color: #fff; }
+
+  /* Stage Cards */
+  .stage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .stage-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stage-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .stage-card.s1::before { background: var(--teal); }
+  .stage-card.s2::before { background: var(--gold); }
+  .stage-card.s3::before { background: var(--ember); }
+
+  .stage-age {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
+    margin-bottom: 6px;
+  }
+  .stage-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .stage-card.s1 .stage-name { color: var(--teal); }
+  .stage-card.s2 .stage-name { color: var(--gold); }
+  .stage-card.s3 .stage-name { color: var(--ember); }
+
+  .stage-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stage-points li {
+    font-size: 0.9rem;
+    color: var(--slate);
+    padding-left: 18px;
+    position: relative;
+  }
+  .stage-points li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--mist);
+  }
+
+  /* Mom Persona Table */
+  .persona-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 32px;
+    background: var(--snow);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .persona-table th {
+    background: var(--deep-ink);
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 14px 20px;
+    text-align: left;
+    font-weight: 500;
+  }
+  .persona-table td {
+    padding: 14px 20px;
+    font-size: 0.88rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--slate);
+  }
+  .persona-table tr:last-child td { border-bottom: none; }
+  .persona-table td:first-child { font-weight: 600; color: var(--ink); }
+  .persona-table tr:hover td { background: var(--parchment); }
+
+  /* Competitor Table */
+  .comp-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 32px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--snow);
+  }
+  .comp-table th {
+    background: var(--deep-ink);
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    padding: 14px 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .comp-table td {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--slate);
+    vertical-align: middle;
+  }
+  .comp-table td:first-child { font-weight: 600; color: var(--ink); min-width: 160px; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:hover td { background: var(--parchment); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .tag-yes { background: rgba(42,122,110,0.12); color: var(--teal); border: 1px solid rgba(42,122,110,0.25); }
+  .tag-no { background: rgba(90,90,110,0.08); color: var(--mist); border: 1px solid var(--border); }
+  .tag-partial { background: rgba(184,146,58,0.12); color: var(--gold); border: 1px solid rgba(184,146,58,0.25); }
+  .tag-museon { background: rgba(196,80,42,0.12); color: var(--ember); border: 1px solid rgba(196,80,42,0.3); font-size: 12px; padding: 4px 14px; }
+
+  /* White Space Cards */
+  .whitespace-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .whitespace-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .whitespace-card .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--ember);
+    opacity: 0.25;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .whitespace-card h4 {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .whitespace-card p { font-size: 0.88rem; color: var(--slate); line-height: 1.65; }
+
+  /* Architecture */
+  .arch-flow {
+    background: var(--deep-ink);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 32px;
+    color: #fff;
+  }
+  .arch-flow h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .flow-node {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    min-width: 140px;
+  }
+  .flow-node.trigger { border-color: rgba(196,80,42,0.5); background: rgba(196,80,42,0.12); }
+  .flow-node.router { border-color: rgba(184,146,58,0.5); background: rgba(184,146,58,0.1); }
+  .flow-node.output-a { border-color: rgba(42,122,110,0.5); background: rgba(42,122,110,0.1); }
+  .flow-node.output-b { border-color: rgba(196,80,42,0.5); background: rgba(196,80,42,0.1); }
+  .flow-node.memory { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+  .flow-node .label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+  .flow-node .text { font-weight: 600; color: rgba(255,255,255,0.9); line-height: 1.4; }
+  .flow-arrow { color: rgba(255,255,255,0.3); font-size: 1.2rem; }
+
+  .moat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .moat-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .moat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember), transparent);
+  }
+  .moat-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
+  .moat-card:nth-child(1) .moat-icon { background: rgba(42,122,110,0.1); }
+  .moat-card:nth-child(2) .moat-icon { background: rgba(196,80,42,0.1); }
+  .moat-card:nth-child(3) .moat-icon { background: rgba(184,146,58,0.1); }
+  .moat-card:nth-child(4) .moat-icon { background: rgba(90,90,110,0.1); }
+  .moat-card h4 { font-weight: 700; font-size: 1rem; margin-bottom: 8px; color: var(--ink); }
+  .moat-card p { font-size: 0.88rem; color: var(--slate); line-height: 1.65; }
+
+  /* Skill Grid */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .skill-chip {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .skill-chip .name {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--ember);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .skill-chip .desc { font-size: 0.8rem; color: var(--slate); line-height: 1.5; }
+  .skill-chip.new { border-color: rgba(196,80,42,0.3); background: rgba(196,80,42,0.04); }
+  .skill-chip.expand { border-color: rgba(184,146,58,0.3); background: rgba(184,146,58,0.04); }
+
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--slate);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .legend-dot.new { background: var(--ember); }
+  .legend-dot.expand { background: var(--gold); }
+  .legend-dot.existing { background: var(--mist); }
+
+  /* Flywheel */
+  .flywheel {
+    background: var(--deep-ink);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .flywheel::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(196,80,42,0.1);
+  }
+  .flywheel h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .flywheel-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 540px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .flywheel-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .flywheel-step:last-child { border-bottom: none; }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content .title {
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+  .step-content .desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.55; }
+
+  /* Action */
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .action-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .priority-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .p0 { background: rgba(196,80,42,0.1); color: var(--ember); border: 1px solid rgba(196,80,42,0.25); }
+  .p1 { background: rgba(184,146,58,0.1); color: var(--gold); border: 1px solid rgba(184,146,58,0.25); }
+  .p2 { background: rgba(42,122,110,0.1); color: var(--teal); border: 1px solid rgba(42,122,110,0.25); }
+  .action-card h4 { font-weight: 700; font-size: 1rem; margin-bottom: 10px; color: var(--ink); }
+  .action-card p { font-size: 0.88rem; color: var(--slate); line-height: 1.65; }
+
+  /* Sources */
+  .sources-list {
+    columns: 2;
+    column-gap: 32px;
+    margin-top: 20px;
+  }
+  .source-item {
+    font-size: 0.8rem;
+    color: var(--mist);
+    margin-bottom: 8px;
+    break-inside: avoid;
+  }
+  .source-item a { color: var(--ember-light); text-decoration: none; }
+  .source-item a:hover { text-decoration: underline; }
+
+  /* Footer */
+  footer {
+    background: var(--deep-ink);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 40px;
+    font-size: 13px;
+  }
+  footer strong { color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 60px 24px 48px; }
+    section { padding: 48px 0; }
+    .stage-grid, .moat-grid { grid-template-columns: 1fr; }
+    .sources-list { columns: 1; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">Museon × Dobby 課程戰略 v3</div>
+  <h1>雙向覺察系統<br><em>當媽媽先穩，孩子才能穩</em></h1>
+  <p>整合兒童腦神經科學、人格系統、記憶型 AI 的完整親子教養框架——<br>這是全球目前不存在的產品白地</p>
+  <div class="hero-meta">
+    <span>研究日期 <strong>2026-05-31</strong></span>
+    <span>外部來源 <strong>14 份</strong></span>
+    <span>競品分析 <strong>11 款</strong></span>
+    <span>學術引用 <strong>20+ 篇</strong></span>
+  </div>
+</section>
+
+<!-- 核心發現 -->
+<section>
+  <div class="container">
+    <div class="section-label">核心洞見</div>
+    <div class="section-title">兩個模組，其實是同一個問題的兩個入口</div>
+    <p class="section-subtitle">Frontiers 2025 + PMC 研究確認：媽媽情緒調節困難是孩子情緒失調的直接因果中介，不是相關，是中介。</p>
+
+    <div class="insight-box">
+      <p>Zeal 的核心洞見：坊間解法為什麼不適用於所有人？<br>
+      因為他們忽略了兩個維度的交叉：<strong>孩子的發展階段</strong>（腦神經成熟度不同）× <strong>個人化的人格系統</strong>（媽媽與孩子各有不同的求存策略）。<br>
+      Museon 擁有 MuseMEM + Anima + Ares 三元架構，是全球目前唯一有技術基礎構建此護城河的系統。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 兒童發展三階段 -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">學術基礎 — 腦神經科學</div>
+    <div class="section-title">三個發展階段，三種截然不同的問題</div>
+    <p class="section-subtitle">哈佛發展兒童中心 + StatPearls + NIMH 研究確認：0-7、7-14、14-21 歲的情緒架構不同，對應的教養策略也必須不同。</p>
+
+    <div class="stage-grid">
+      <div class="stage-card s1">
+        <div class="stage-age">0 — 7 歲</div>
+        <div class="stage-name">依附建構期</div>
+        <ul class="stage-points">
+          <li>情緒調節本質上是<strong>外調節</strong>——完全依賴照顧者的鏡像回應</li>
+          <li>前額葉尚未發育，杏仁核主導反應，邏輯說服<strong>完全無效</strong></li>
+          <li>1-3 歲是神經可塑性最高峰，安全感基底在此奠定</li>
+          <li>媽媽的穩定度 = 孩子的神經系統穩定度（直接等號）</li>
+          <li><strong>教養核心</strong>：先「共調節」，再「命名情緒」</li>
+        </ul>
+      </div>
+      <div class="stage-card s2">
+        <div class="stage-age">7 — 14 歲</div>
+        <div class="stage-name">認知轉型期</div>
+        <ul class="stage-points">
+          <li>同儕關係開始凌駕家庭，成為情緒參照主要來源</li>
+          <li>認知重評（cognitive reappraisal）能力開始萌現</li>
+          <li>邊緣系統活動增加，但前額葉調控仍在成型</li>
+          <li>性別影響神經成熟時間點（Lewis et al. 2006）</li>
+          <li><strong>教養核心</strong>：從「你應該」轉向「你覺得呢」</li>
+        </ul>
+      </div>
+      <div class="stage-card s3">
+        <div class="stage-age">14 — 21 歲</div>
+        <div class="stage-name">前額葉建構期</div>
+        <ul class="stage-points">
+          <li>杏仁核先成熟，前額葉調控至 25 歲才完成</li>
+          <li>決策更多由情緒性杏仁核驅動（AACAP 確認）</li>
+          <li>這不是道德問題，是神經發育的結構性事實</li>
+          <li>社群評價焦慮 + 睡眠節律改變是系統性問題</li>
+          <li><strong>教養核心</strong>：降低評判，提高安全感容器</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 媽媽人格 × 情緒調節 -->
+<section>
+  <div class="container">
+    <div class="section-label">學術基礎 — 人格系統</div>
+    <div class="section-title">媽媽的人格類型，決定她需要什麼急救策略</div>
+    <p class="section-subtitle">Prinzie et al. 2009 元分析 + Bosley 2023 + Bilge & Sezgin 2020 確認：相同的孩子情緒觸發點，不同人格特質的媽媽需要完全不同的自我調節策略。</p>
+
+    <table class="persona-table">
+      <thead>
+        <tr>
+          <th>媽媽人格特質</th>
+          <th>面對情緒觸發的典型反應</th>
+          <th>Museon 個性化策略調整</th>
+          <th>人格系統對應</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>高神經質型</td>
+          <td>情緒反應強、自責、過度涉入</td>
+          <td>先做自我急救（呼吸 + 非評判語句），再給孩子腳本</td>
+          <td>Big Five N 軸 / 人類圖投射者</td>
+        </tr>
+        <tr>
+          <td>高外向性型</td>
+          <td>容易主導、填補沉默、想立即解決</td>
+          <td>給「等待腳本」（沉默是工具，不是失敗）</td>
+          <td>Big Five E 軸 / 萬謬 M型</td>
+        </tr>
+        <tr>
+          <td>高盡責性型</td>
+          <td>強調規則、難忍不確定性</td>
+          <td>提前給「規則暫停許可」（情緒時刻規則讓路）</td>
+          <td>Big Five C 軸 / 萬謬 O型</td>
+        </tr>
+        <tr>
+          <td>高開放性型</td>
+          <td>彈性大、但缺乏邊界收尾</td>
+          <td>情緒事件後加一個「邊界重建語句」</td>
+          <td>Big Five O 軸 / 人類圖顯示者</td>
+        </tr>
+        <tr>
+          <td>高宜人性型</td>
+          <td>過度讓步、自我壓抑</td>
+          <td>給「媽媽主權聲明腳本」（你的需求不需要讓位）</td>
+          <td>Big Five A 軸 / 榮格受傷療癒者原型</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box" style="background: rgba(42,122,110,0.08); border-color: var(--teal); color: var(--ink);">
+      <p style="color: var(--ink);">Chess & Thomas（1991）的個性化教養奠基研究：<strong>「對兒童最好的教養方式，會依孩子的氣質而異。」</strong><br>
+      延伸：當媽媽的人格特質也納入方程式，「適配性」從單向（媽媽適配孩子）升維為雙向——<strong>媽媽 × 孩子的氣質互動系統</strong>，這正是坊間所有解法的盲點。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 競品分析 -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">市場白地分析</div>
+    <div class="section-title">全球 11 款競品掃描結果</div>
+    <p class="section-subtitle">沒有任何一款做到「媽媽人格 × 孩子人格 × 記憶型 AI 即時對話 × 情緒急救」四維組合。</p>
+
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>產品</th>
+            <th>人格系統</th>
+            <th>雙向（媽媽+孩子）</th>
+            <th>記憶型 AI</th>
+            <th>情緒急救</th>
+            <th>市場</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Joy Parenting Club</td>
+            <td><span class="tag tag-no">✗ 無</span></td>
+            <td><span class="tag tag-no">✗ 媽媽單向</span></td>
+            <td><span class="tag tag-yes">✓ 有</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>美國 $14M</td>
+          </tr>
+          <tr>
+            <td>Guidi AI</td>
+            <td><span class="tag tag-no">✗ 無</span></td>
+            <td><span class="tag tag-no">✗ 家長單向</span></td>
+            <td><span class="tag tag-yes">✓ 有</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>歐洲</td>
+          </tr>
+          <tr>
+            <td>STAR/CHILD</td>
+            <td><span class="tag tag-partial">△ 星座</span></td>
+            <td><span class="tag tag-yes">✓ 親子盤面</span></td>
+            <td><span class="tag tag-no">✗ 靜態內容</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>美國（英文）</td>
+          </tr>
+          <tr>
+            <td>MamaZen</td>
+            <td><span class="tag tag-no">✗ 無</span></td>
+            <td><span class="tag tag-no">✗ 媽媽單向</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-partial">△ 冥想</span></td>
+            <td>美國</td>
+          </tr>
+          <tr>
+            <td>AlphaMa</td>
+            <td><span class="tag tag-no">✗ 無</span></td>
+            <td><span class="tag tag-no">✗ 媽媽單向</span></td>
+            <td><span class="tag tag-partial">△ 部分</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>美國</td>
+          </tr>
+          <tr>
+            <td>PACEE（清華研究原型）</td>
+            <td><span class="tag tag-no">✗ 無框架</span></td>
+            <td><span class="tag tag-yes">✓ 雙向情緒模型</span></td>
+            <td><span class="tag tag-partial">△ 研究階段</span></td>
+            <td><span class="tag tag-partial">△ 研究原型</span></td>
+            <td>中國（學術）</td>
+          </tr>
+          <tr>
+            <td>Align（人類圖 App）</td>
+            <td><span class="tag tag-yes">✓ 人類圖</span></td>
+            <td><span class="tag tag-no">✗ 個人導向</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>美國</td>
+          </tr>
+          <tr>
+            <td>哇呜說（中國）</td>
+            <td><span class="tag tag-partial">△ 孩子角色扮演</span></td>
+            <td><span class="tag tag-no">✗ 孩子單向</span></td>
+            <td><span class="tag tag-partial">△ 部分</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>中國</td>
+          </tr>
+          <tr>
+            <td>Huckleberry</td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-partial">△ 睡眠追蹤</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>美國 $13M+</td>
+          </tr>
+          <tr>
+            <td>MyWonder（YC）</td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td><span class="tag tag-no">✗</span></td>
+            <td>美國 新創</td>
+          </tr>
+          <tr>
+            <td style="color: var(--ember); font-weight: 800;">Museon（目標）</td>
+            <td><span class="tag tag-museon">✦ 人類圖+萬謬+榮格</span></td>
+            <td><span class="tag tag-museon">✦ 媽媽×孩子雙向</span></td>
+            <td><span class="tag tag-museon">✦ MuseMEM 記憶</span></td>
+            <td><span class="tag tag-museon">✦ 雙軌同步啟動</span></td>
+            <td>台灣/亞洲（繁中）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="whitespace-grid">
+      <div class="whitespace-card">
+        <div class="num">白地1</div>
+        <h4>雙重人格剖析 → 互動指引閉環</h4>
+        <p>STAR/CHILD 最接近（星座親子盤），但缺 AI 對話、缺情緒急救、缺記憶系統。是靜態訂閱，不是動態 AI。</p>
+      </div>
+      <div class="whitespace-card">
+        <div class="num">白地2</div>
+        <h4>情緒急救 × 人格系統組合</h4>
+        <p>「4/6 明示者媽媽 + 2/4 發電者孩子，接下來 3 分鐘你應該這樣回應。」這句話目前沒有任何產品能說出來。</p>
+      </div>
+      <div class="whitespace-card">
+        <div class="num">白地3</div>
+        <h4>台灣/亞洲本地化</h4>
+        <p>STAR/CHILD 只有英文，台灣媽媽群體對人類圖/MBTI 接受度極高，但沒有任何對應本土化繁中產品。首發窗口：2025-2027。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 架構設計 -->
+<section>
+  <div class="container">
+    <div class="section-label">Museon 差異化架構</div>
+    <div class="section-title">雙軌個性化情緒急救系統</div>
+    <p class="section-subtitle">一句輸入，同時路由媽媽急救 + 孩子腳本，根據人格系統 × 發展階段動態調整。</p>
+
+    <div class="arch-flow">
+      <h3>情緒急救系統流程圖</h3>
+
+      <div class="flow-row">
+        <div class="flow-node trigger">
+          <div class="label">觸發</div>
+          <div class="text">媽媽輸入一句話<br>「孩子又崩潰了」</div>
+        </div>
+      </div>
+      <div class="flow-row"><span class="flow-arrow">↓</span></div>
+      <div class="flow-row">
+        <div class="flow-node router">
+          <div class="label">智能路由層</div>
+          <div class="text">孩子年齡段<br>媽媽人格類型<br>孩子人格類型</div>
+        </div>
+      </div>
+      <div class="flow-row"><span class="flow-arrow">↙</span> <span style="width:60px"></span> <span class="flow-arrow">↘</span></div>
+      <div class="flow-row">
+        <div class="flow-node output-b">
+          <div class="label">軌道 A（先跑）</div>
+          <div class="text">媽媽急救語<br>5 秒自我穩定<br>個性化接住句</div>
+        </div>
+        <div class="flow-node output-a" style="margin-left: 24px;">
+          <div class="label">軌道 B（3秒後）</div>
+          <div class="text">孩子腳本<br>年齡段 + 人格<br>30 秒可執行步驟</div>
+        </div>
+      </div>
+      <div class="flow-row"><span class="flow-arrow">↓</span></div>
+      <div class="flow-row">
+        <div class="flow-node memory">
+          <div class="label">記憶更新</div>
+          <div class="text">MuseMEM 更新親子模型<br>有效腳本記錄 → 下次更精準</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="moat-grid">
+      <div class="moat-card">
+        <div class="moat-icon">🧠</div>
+        <h4>護城河 1：雙向記憶（MuseMEM）</h4>
+        <p>同時累積媽媽的情緒模式 + 孩子的反應模式。競品只有單向記憶。用得越久，替換成本越高——Bessemer「hard to rip out」護城河。</p>
+      </div>
+      <div class="moat-card">
+        <div class="moat-icon">🔮</div>
+        <h4>護城河 2：人格互動建模（Anima）</h4>
+        <p>Anima 具備七層鏡像框架，可整合人類圖、萬謬、榮格原型。根據媽媽 × 孩子人格組合動態調整建議——這不是 API 能快速複製的。</p>
+      </div>
+      <div class="moat-card">
+        <div class="moat-icon">📚</div>
+        <h4>護城河 3：知識庫深度（Ares）</h4>
+        <p>整合三階段腦神經科學 + 人格系統 + Gottman 情緒教練法 + 台灣文化脈絡。PACEE 研究（清華 2025）確認：AI + 父母的親子教育效果顯著優於純人工介入。</p>
+      </div>
+      <div class="moat-card">
+        <div class="moat-icon">🌸</div>
+        <h4>護城河 4：台灣文化首發優勢</h4>
+        <p>全球無繁中 AI 親子教養 app 結合人格系統。台灣媽媽對人類圖/MBTI 接受度極高，LINE 群組是主要傳播節點（ACM 2023 台灣研究確認）。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skill 清單 -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">Museon Skill 架構</div>
+    <div class="section-title">現有資產 × 升級建議</div>
+    <p class="section-subtitle">現有 12 個相關 skills，覆蓋率已達 75%，核心缺口只有「發展階段路由器」需新建。</p>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot existing"></div> 現有（可直接調用）</div>
+      <div class="legend-item"><div class="legend-dot expand"></div> 擴展（加媽媽/孩子 persona）</div>
+      <div class="legend-item"><div class="legend-dot new"></div> 新建（真實空缺）</div>
+    </div>
+
+    <div class="skill-grid">
+      <div class="skill-chip">
+        <div class="name">mom-parenting-coach</div>
+        <div class="desc">孩子情緒急救引擎，雙軌輸出，年齡段路由</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">resonance</div>
+        <div class="desc">媽媽情緒承接，Mom Mental Load persona 已擴展</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">human-design-blueprint</div>
+        <div class="desc">人類圖解讀，媽媽+孩子分別建檔</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">wan-miu-16</div>
+        <div class="desc">16型人格分析，AOEM/PSRU 四軸線</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">combined-reading</div>
+        <div class="desc">合盤比對，媽媽 × 孩子互動模式診斷</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">anima-individual</div>
+        <div class="desc">七層鏡像人物建檔，長期親子模型</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">shadow / shadow-muse</div>
+        <div class="desc">榮格陰影工作，媽媽求存策略深層探索</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">energy-reading</div>
+        <div class="desc">能量狀態解讀，當下狀態快速評估</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">onemuse-core</div>
+        <div class="desc">OneMuse 核心，六大盲點自我察覺</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">side-hustle-mom</div>
+        <div class="desc">媽媽副業三問診斷，零受眾冷啟動</div>
+      </div>
+      <div class="skill-chip">
+        <div class="name">circle-amplifier</div>
+        <div class="desc">姊妹圈裂變飛輪，LINE 群組傳播設計</div>
+      </div>
+      <div class="skill-chip expand">
+        <div class="name">▴ mom-parenting-coach v2</div>
+        <div class="desc">擴展：整合人類圖類型路由層，根據類型切換腳本策略</div>
+      </div>
+      <div class="skill-chip new">
+        <div class="name">★ child-dev-router</div>
+        <div class="desc">新建：三階段腦神經框架路由器，根據孩子年齡切換科學依據</div>
+      </div>
+      <div class="skill-chip new">
+        <div class="name">★ mom-persona-coach</div>
+        <div class="desc">新建：媽媽人格類型 × 急救策略個人化，根據 Big Five / 人類圖調整</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 飛輪 -->
+<section>
+  <div class="container">
+    <div class="section-label">壟斷策略</div>
+    <div class="section-title">三元護城河飛輪</div>
+    <p class="section-subtitle">記憶 × 人格 × 知識庫三層疊加，用得越久越難被替換。</p>
+
+    <div class="flywheel">
+      <h3>Museon 親子 AI 護城河飛輪</h3>
+      <div class="flywheel-steps">
+        <div class="flywheel-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="title">媽媽首次使用</div>
+            <div class="desc">輸入孩子年齡 + 快速人格評估（3 題）→ 系統即刻個性化</div>
+          </div>
+        </div>
+        <div class="flywheel-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="title">MuseMEM 開始累積</div>
+            <div class="desc">每次急救互動都更新媽媽 × 孩子的雙向記憶模型</div>
+          </div>
+        </div>
+        <div class="flywheel-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="title">Anima 精準度提升</div>
+            <div class="desc">人格組合 × 有效腳本記錄 → 下次建議越來越精準</div>
+          </div>
+        </div>
+        <div class="flywheel-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="title">「成功時刻」卡片生成</div>
+            <div class="desc">完成一次急救 → 自動生成可貼 LINE 群組的「媽媽勳章卡」</div>
+          </div>
+        </div>
+        <div class="flywheel-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="title">姊妹圈口碑裂變</div>
+            <div class="desc">台灣媽媽 LINE 群組（ACM 研究確認）傳的是「自己的成功」，不是廣告</div>
+          </div>
+        </div>
+        <div class="flywheel-step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <div class="title">替換成本極高 → 新使用者進入飛輪</div>
+            <div class="desc">記憶積累越深，競品越難挖走 — Bessemer「hard to rip out」護城河</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 行動建議 -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">行動建議</div>
+    <div class="section-title">三個優先步驟</div>
+    <p class="section-subtitle">從現有資產出發，漸進式構建護城河，不是全部重建。</p>
+
+    <div class="action-grid">
+      <div class="action-card">
+        <div class="priority-badge p0">P0 立即</div>
+        <h4>構建個性化路由層</h4>
+        <p>在 <code>mom-parenting-coach</code> 加入三問路由：(1) 孩子幾歲？(2) 媽媽是哪種類型（快速選擇）？(3) 現在最強烈的感受是什麼？三問後系統即個性化輸出，不需完整測驗。</p>
+      </div>
+      <div class="action-card">
+        <div class="priority-badge p1">P1 本週</div>
+        <h4>新建 child-dev-router</h4>
+        <p>三階段框架腳本：0-7 歲（共調節優先，不說理）/ 7-14 歲（引導式問題，讓孩子主導）/ 14-21 歲（降低評判，增加安全感容器）。整合進 <code>mom-parenting-coach</code> 的路由出口。</p>
+      </div>
+      <div class="action-card">
+        <div class="priority-badge p2">P2 驗證</div>
+        <h4>課堂現場 Demo 設計</h4>
+        <p>媽媽說出孩子一個真實狀況 → Museon 即時問「孩子幾歲、你是什麼類型」→ 輸出個性化雙軌腳本。讓學員親眼見到「跟一般 AI 不一樣的地方」——個人化是最強的說服力。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 研究來源 -->
+<section>
+  <div class="container">
+    <div class="section-label">研究來源</div>
+    <div class="section-title">學術支撐與市場資料</div>
+
+    <div class="sources-list">
+      <div class="source-item">Harvard Center on Developing Child, Working Paper No.2 (2004) — <a href="https://developingchild.harvard.edu/resources/working-paper/childrens-emotional-development-is-built-into-the-architecture-of-their-brains/" target="_blank">連結</a></div>
+      <div class="source-item">StatPearls, Malik & Marwaha (2022) — Child Development Milestones — <a href="https://www.ncbi.nlm.nih.gov/books/NBK534819/" target="_blank">連結</a></div>
+      <div class="source-item">Gullone et al. (2010) — 認知重評發展常模 — Journal of Child Psychology and Psychiatry</div>
+      <div class="source-item">Morris, Criss & Silk (2017) — Parenting Impact on Emotion Regulation — Child Development Perspectives</div>
+      <div class="source-item">Casey et al. (2019) — Teen Brain & Emotional Regulation — Neuroscience Letters</div>
+      <div class="source-item">AACAP Teen Brain Fact Sheet — <a href="https://www.aacap.org/AACAP/Families_and_Youth/Facts_for_Families/FFF-Guide/The-Teen-Brain-Behavior-Problem-Solving-and-Decision-Making-095.aspx" target="_blank">連結</a></div>
+      <div class="source-item">Chess & Thomas (1991) — Goodness of Fit Parenting — Journal of Child Psychology</div>
+      <div class="source-item">Allen (2015) — When One Size Doesn't Fit All — temperament-based parenting</div>
+      <div class="source-item">Prinzie et al. (2009) — Big Five & Parenting Meta-Analysis — Journal of Personality and Social Psychology</div>
+      <div class="source-item">Bilge & Sezgin (2020) — Mother Personality & Child Emotion Regulation — Alpha Psychiatry</div>
+      <div class="source-item">Bosley (2023) — Parental Attachment, Personality & Child ER</div>
+      <div class="source-item">Frontiers 2025 — Parent Emotion Regulation as Mediator — <a href="https://www.frontiersin.org/journals/global-womens-health/articles/10.3389/fgwh.2025.1587786/full" target="_blank">連結</a></div>
+      <div class="source-item">PACEE (2025) — Tsinghua AI Parenting Dual-Emotion Model — <a href="https://arxiv.org/html/2511.14414v3" target="_blank">連結</a></div>
+      <div class="source-item">Bessemer State of AI 2025 — Memory as Moat — <a href="https://www.bvp.com/atlas/the-state-of-ai-2025" target="_blank">連結</a></div>
+      <div class="source-item">STAR/CHILD App (星座親子合盤) — <a href="https://apps.apple.com/us/app/star-child/id6475495211" target="_blank">App Store</a></div>
+      <div class="source-item">ACM 2023 — Taiwan SAHM LINE Group Social Support Study — <a href="https://dl.acm.org/doi/10.1145/3633068" target="_blank">連結</a></div>
+      <div class="source-item">Joy Parenting Club $14M Series A — Forbes 2025 — <a href="https://www.forbes.com/sites/sindhyavalloppillil/2025/11/12/parenting-reimagined-how-joy-parenting-apps-14m-bet-on-ai-is-building-the-village-modern-families-lost/" target="_blank">連結</a></div>
+      <div class="source-item">Knox & Fonagy (2003) — Archetype, Attachment, Analysis — Jungian Theory</div>
+      <div class="source-item">媽媽寶寶 2025 育兒趨勢 — <a href="https://www.mombaby.com.tw/articles/9932346" target="_blank">連結</a></div>
+      <div class="source-item">LinkedIn: The Case for Family Intelligence (2026/03) — <a href="https://www.linkedin.com/pulse/case-family-intelligence-why-nobody-built-ai-most-important-kadiu-lm2ce" target="_blank">連結</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>由 <strong>Museon</strong> 內部 DSE 引擎生成 · 外部搜尋 × 14 來源整合 · 2026-05-31</p>
+  <p style="margin-top: 8px;">版本 v3 — 整合兒童腦神經科學 × 人格系統 × 競品白地分析</p>
+</footer>
+
+</body>
+</html>
