@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你先穩，孩子才能穩 — 媽媽 × AI 情緒急救工作坊</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #0E0E16 0%, #1a0a05 60%, #2a0f08 100%);
+    color: #FDFCFA;
+    padding: 80px 24px 72px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .hero h1 em { font-style: italic; color: var(--ember-light); }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(253,252,250,0.7);
+    margin-bottom: 40px;
+    max-width: 540px;
+    margin-left: auto; margin-right: auto;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item { text-align: center; }
+  .hero-meta-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--ember-light);
+    line-height: 1;
+  }
+  .hero-meta-label {
+    font-size: 13px;
+    color: rgba(253,252,250,0.5);
+    margin-top: 4px;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 64px 0; }
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--slate);
+    max-width: 620px;
+    line-height: 1.8;
+  }
+
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .insight-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .insight-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--ember);
+    border-radius: 16px 16px 0 0;
+  }
+  .insight-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--ember);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .insight-label { font-size: 14px; color: var(--slate); }
+
+  .timeline { margin-top: 48px; }
+  .timeline-item {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+  .timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 52px;
+    bottom: -8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+  .timeline-dot {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--snow);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ember);
+    position: relative;
+    z-index: 1;
+    margin-top: 8px;
+  }
+  .timeline-dot.active {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: white;
+  }
+  .timeline-content {
+    flex: 1;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .timeline-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .timeline-time {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    background: var(--parchment);
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .timeline-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .timeline-desc {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .museon-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(196,80,42,0.08);
+    border: 1px solid rgba(196,80,42,0.2);
+    color: var(--ember);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .museon-tag::before { content: '⚡'; }
+
+  .brain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  @media (max-width: 600px) { .brain-grid { grid-template-columns: 1fr; } }
+  .brain-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 22px;
+    text-align: center;
+  }
+  .brain-age {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ember);
+    margin-bottom: 6px;
+  }
+  .brain-stage { font-size: 13px; font-weight: 600; color: var(--slate); margin-bottom: 16px; }
+  .brain-icon { font-size: 36px; margin-bottom: 12px; }
+  .brain-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .brain-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+  .brain-crisis {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(196,80,42,0.06);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--ember-dark);
+    font-style: italic;
+  }
+
+  .dual-track {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+  }
+  @media (max-width: 600px) { .dual-track { grid-template-columns: 1fr; } }
+  .track-card {
+    border-radius: 20px;
+    padding: 32px 28px;
+  }
+  .track-card.mom {
+    background: linear-gradient(135deg, #fff8f5, #fef0e8);
+    border: 1px solid rgba(196,80,42,0.2);
+  }
+  .track-card.kid {
+    background: linear-gradient(135deg, #f5fffe, #e8f7f5);
+    border: 1px solid rgba(42,122,110,0.2);
+  }
+  .track-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .track-card.mom .track-label { color: var(--ember); }
+  .track-card.kid .track-label { color: var(--teal); }
+  .track-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .track-time { font-size: 13px; color: var(--slate); margin-bottom: 20px; }
+  .track-steps { list-style: none; }
+  .track-steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .track-step-num {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .track-card.mom .track-step-num { background: var(--ember); color: white; }
+  .track-card.kid .track-step-num { background: var(--teal); color: white; }
+
+  .funnel { margin-top: 48px; }
+  .funnel-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 16px;
+  }
+  .funnel-bar-wrap {
+    flex: 1;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+    height: 52px;
+  }
+  .funnel-bar {
+    height: 100%;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+  }
+  .funnel-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 110px;
+    text-align: right;
+  }
+
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .persona-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+  }
+  .persona-emoji { font-size: 40px; margin-bottom: 12px; }
+  .persona-type { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .persona-risk {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .risk-high { background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+  .risk-mid { background: rgba(201,148,58,0.1); color: var(--warning); }
+  .risk-low { background: rgba(45,138,110,0.1); color: var(--teal); }
+  .persona-desc { font-size: 12px; color: var(--slate); line-height: 1.6; }
+
+  .competitor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 32px;
+    font-size: 14px;
+  }
+  .competitor-table th {
+    background: var(--ink);
+    color: var(--snow);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .competitor-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .competitor-table tr:nth-child(even) td { background: var(--parchment); }
+  .competitor-table tr.highlight td { background: rgba(196,80,42,0.06); font-weight: 600; }
+  .check { color: var(--teal); font-weight: 700; }
+  .cross { color: var(--mist); }
+  .star { color: var(--ember); font-weight: 700; }
+
+  .cta-section {
+    background: linear-gradient(135deg, #0E0E16, #1a0a05);
+    color: white;
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .cta-section p { color: rgba(253,252,250,0.65); font-size: 16px; margin-bottom: 40px; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--ember);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 8px 12px;
+  }
+  .cta-btn.secondary {
+    background: rgba(253,252,250,0.08);
+    border: 1px solid rgba(253,252,250,0.2);
+  }
+
+  footer {
+    background: var(--ink);
+    color: rgba(253,252,250,0.4);
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+  }
+
+  .divider { height: 1px; background: var(--border); }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(196,80,42,0.06), rgba(196,80,42,0.03));
+    border: 1px solid rgba(196,80,42,0.15);
+    border-left: 4px solid var(--ember);
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    margin-top: 24px;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--slate);
+  }
+
+  @media (max-width: 640px) {
+    section { padding: 48px 0; }
+    .hero { padding: 60px 24px 52px; }
+    .hero-meta { gap: 20px; }
+    .funnel-price { min-width: 80px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">課程規劃提案 v1 · 2026.05.31</div>
+  <h1>你先穩，<em>孩子才能穩</em></h1>
+  <p class="hero-sub">媽媽 × AI 情緒急救工作坊 — 1.5 小時改變親子情緒失控的慢性循環</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="hero-meta-num">90</div>
+      <div class="hero-meta-label">分鐘</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-num">6</div>
+      <div class="hero-meta-label">個段落</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-num">4</div>
+      <div class="hero-meta-label">個 AI 互動點</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-num">NT$999</div>
+      <div class="hero-meta-label">入場定價</div>
+    </div>
+  </div>
+</div>
+
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">核心命題</div>
+    <h2 class="section-title">為什麼坊間解法都沒用？</h2>
+    <p class="section-desc">孩子崩潰的那一刻，媽媽的神經系統早已先崩。現有所有 App 和課程只救孩子或只救媽媽——沒有一個同時啟動兩層。</p>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="insight-num">81.9%</div>
+        <div class="insight-label">台灣家長將「孩子情緒管理」列為核心焦慮（2025 親子天下調查）</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">0</div>
+        <div class="insight-label">款市面 App 同時啟動「媽媽穩定 + 孩子腳本」兩層（11 款競品全面掃描確認）</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">100%</div>
+        <div class="insight-label">學術確認：媽媽情緒調節困難是孩子情緒失調的直接因果中介（Frontiers 2025）</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      「你先穩，孩子才能穩」不是心靈雞湯——是腦神經科學的機制設計。媽媽的神經系統未穩定時，任何腳本都執行不了。
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="container">
+    <div class="section-label">課程架構</div>
+    <h2 class="section-title">90 分鐘，改變一個慢性循環</h2>
+    <p class="section-desc">每個段落都有 Museon AI 真實互動點——不是老師示範，是她親手跑出屬於她孩子的腳本。課程結束時她的 LINE 裡已經有 Museon 在了。</p>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot">開</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-time">0–10 分鐘</span>
+            <span class="timeline-title">開場：媽媽，你不用一個人撐</span>
+          </div>
+          <div class="timeline-desc">
+            共情開場不是氣氛操作——是讓媽媽的神經系統先進入「安全模式」，才能接收後續技能。用研究數據重新框架：孩子崩潰 = 媽媽本能的「威脅感測器」被啟動，這是生物設計，不是你的錯。
+          </div>
+          <div class="museon-tag">Museon 互動：萬謬16型快速測驗（3 題）→ 自動分配學習路徑</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot active">1</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-time">10–30 分鐘</span>
+            <span class="timeline-title">第一關：認識你孩子的大腦</span>
+          </div>
+          <div class="timeline-desc">
+            三個發展階段，三種完全不同的「崩潰地圖」。0–7 歲情緒腦主導，「叫他冷靜」等於要他用還沒長出來的腦區。這不是管教問題，是神經科學。學員每人輸入孩子年齡 + 最近一次情境，Museon 即時分析。
+          </div>
+          <div class="museon-tag">Museon 互動：child-dev-router — 輸入年齡 + 情境 → 即時腦神經分析</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot active">2</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-time">30–45 分鐘</span>
+            <span class="timeline-title">第二關：認識你自己的求存策略</span>
+          </div>
+          <div class="timeline-desc">
+            同樣的孩子哭鬧，焦慮型媽媽過度安撫，迴避型媽媽情緒切斷。沒有對錯——但配錯了，孩子情緒失調會被強化。親子合盤揭露碰撞點，讓你用「你的方式」接住「你的孩子」。
+          </div>
+          <div class="museon-tag">Museon 互動：combined-reading 親子版 → 碰撞點 × 共振組合分析</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot active">核</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-time">45–70 分鐘</span>
+            <span class="timeline-title">核心技能：雙軌急救站實操</span>
+          </div>
+          <div class="timeline-desc">
+            每位媽媽輸入她自己的真實情境（「孩子在超市地上打滾不肯走」），Museon 同時展開兩條軌道：先給媽媽 5 秒急救，再給孩子 30 秒腳本。這個「先媽媽」的順序是設計，不是客氣——媽媽穩了，腳本才跑得了。
+          </div>
+          <div class="museon-tag">Museon 互動：parent-child-sync-rescue Live 操作 → 個人化雙軌腳本</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">4</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-time">70–80 分鐘</span>
+            <span class="timeline-title">第三關：姊妹圈擴散飛輪</span>
+          </div>
+          <div class="timeline-desc">
+            台灣媽媽主戰場是 LINE 群組（ACM 2023 確認）。急救完成後自動生成「成功時刻」截圖卡——媽媽傳進群組的是她的成功，不是推薦 App。卡片含年齡段標籤，精準命中同年齡層媽媽群組。
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">結</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-time">80–90 分鐘</span>
+            <span class="timeline-title">結尾：你的 AI 媽媽夥伴</span>
+          </div>
+          <div class="timeline-desc">
+            課程結束時，她的 LINE 裡已經有 Museon 在了——導流完成是體驗的自然延伸，不是另外一個動作。介紹 30 天免費試用，以及下一步線下 3 小時工作坊（NT$2,500–3,500）。
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">課程核心知識</div>
+    <h2 class="section-title">三個腦，三種崩潰地圖</h2>
+    <p class="section-desc">不同年齡的孩子崩潰，根本原因不同。用同一套方法管所有年齡，注定大半時間無效。</p>
+
+    <div class="brain-grid">
+      <div class="brain-card">
+        <div class="brain-icon">🧡</div>
+        <div class="brain-age">0–7 歲</div>
+        <div class="brain-stage">情緒腦主導期</div>
+        <div class="brain-title">邊緣系統還沒有「開關」</div>
+        <div class="brain-desc">前額葉尚未成熟，情緒爆發是神經學必然——不是任性，是大腦還沒長好。「叫他冷靜」等於要他用還沒長出來的腦區。</div>
+        <div class="brain-crisis">常見情境：超市地板打滾、拒絕換衣服、玩具收不了</div>
+      </div>
+      <div class="brain-card">
+        <div class="brain-icon">💛</div>
+        <div class="brain-age">7–14 歲</div>
+        <div class="brain-stage">社交腦接管期</div>
+        <div class="brain-title">同儕比父母更重要</div>
+        <div class="brain-desc">鏡像神經元高度敏感，羞恥感、被排除恐懼是這個年齡的核心驅動。「我不管」背後通常是「我很受傷但不知道怎麼說」。</div>
+        <div class="brain-crisis">常見情境：回家悶不吭聲、在學校與同學衝突、不服管教</div>
+      </div>
+      <div class="brain-card">
+        <div class="brain-icon">💙</div>
+        <div class="brain-age">14–21 歲</div>
+        <div class="brain-stage">前額葉重組期</div>
+        <div class="brain-title">冒險傾向 + 認同危機</div>
+        <div class="brain-desc">前額葉重組帶來高冒險、低風險評估。認同危機讓所有「你應該」變成攻擊。需要的不是管控，是「見證」。</div>
+        <div class="brain-crisis">常見情境：激烈衝突後不說話、挑戰底線、過度消耗手機</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="container">
+    <div class="section-label">課程核心技能</div>
+    <h2 class="section-title">雙軌急救站：同一個觸發點，兩條路同時啟動</h2>
+    <p class="section-desc">全球 11 款競品掃描確認：沒有任何一款做「同一觸發點，同時啟動兩層」。這是白地，也是護城河。</p>
+
+    <div class="dual-track">
+      <div class="track-card mom">
+        <div class="track-label">軌道 A · 媽媽優先</div>
+        <div class="track-title">媽媽急救</div>
+        <div class="track-time">⏱ 5 秒先跑</div>
+        <ul class="track-steps">
+          <li>
+            <div class="track-step-num">1</div>
+            <div>非評判接住語：<em>「你的崩潰和孩子的崩潰同時發生，是正常的」</em></div>
+          </li>
+          <li>
+            <div class="track-step-num">2</div>
+            <div>5 秒呼吸提示（神經系統重設）</div>
+          </li>
+          <li>
+            <div class="track-step-num">3</div>
+            <div>確認媽媽進入「安全模式」才展開孩子腳本</div>
+          </li>
+        </ul>
+      </div>
+      <div class="track-card kid">
+        <div class="track-label">軌道 B · 孩子腳本</div>
+        <div class="track-title">孩子急救</div>
+        <div class="track-time">⏱ 30 秒可用</div>
+        <ul class="track-steps">
+          <li>
+            <div class="track-step-num">1</div>
+            <div><strong>接住</strong>：身體靠近，不說話，先陪著</div>
+          </li>
+          <li>
+            <div class="track-step-num">2</div>
+            <div><strong>命名</strong>：「你現在很[情緒]，因為[事情]」（依年齡段調整語句）</div>
+          </li>
+          <li>
+            <div class="track-step-num">3</div>
+            <div><strong>引導</strong>：給孩子一個「可以做的行動」，不是要求停止</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      設計核心：先穩媽媽，才給腳本。媽媽神經系統未穩定時，任何腳本都執行不了——這是腦神經科學，不是態度問題。
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">個性化護城河</div>
+    <h2 class="section-title">每個媽媽、每個孩子，腳本都不同</h2>
+    <p class="section-desc">坊間解法失效的根本原因：一套腳本給所有媽媽。Museon 的護城河：人格系統 × 發展階段 × 求存策略三維交叉，每個人拿到「她的版本」。</p>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-emoji">🌊</div>
+        <div class="persona-type">焦慮型媽媽</div>
+        <div class="persona-risk risk-high">高碰撞風險</div>
+        <div class="persona-desc">習慣過度安撫，孩子學會用情緒爆發獲得控制感。需要「設限腳本」不是「安撫腳本」。</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">🌪</div>
+        <div class="persona-type">迴避型媽媽</div>
+        <div class="persona-risk risk-high">高碰撞風險</div>
+        <div class="persona-desc">情緒切斷讓孩子學到「崩潰沒人理」。需要「存在腳本」—— 靠近但不急著解決。</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">🌿</div>
+        <div class="persona-type">安全型媽媽</div>
+        <div class="persona-risk risk-low">最佳基礎</div>
+        <div class="persona-desc">情緒調節彈性高，需要的是「精準化工具」強化已有能力，而非基礎重建。</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">⚡</div>
+        <div class="persona-type">矛盾型媽媽</div>
+        <div class="persona-risk risk-mid">中等風險</div>
+        <div class="persona-desc">時而過度反應、時而忽視，孩子難以預測媽媽反應，形成高度焦慮依附。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="container">
+    <div class="section-label">市場白地</div>
+    <h2 class="section-title">沒有任何競品做了這件事</h2>
+    <p class="section-desc">全球 11 款競品掃描，結論明確：同一觸發點同步啟動兩層 + 三維個性化，是未被任何人佔領的白地。</p>
+
+    <table class="competitor-table">
+      <thead>
+        <tr>
+          <th>產品</th>
+          <th>救孩子</th>
+          <th>救媽媽</th>
+          <th>個性化</th>
+          <th>同步啟動</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Happypillar（親子共調節）</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>MamaZen（媽媽神經系統）</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>AlphaMa（mental load）</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>Momeaze（2026/05 上線）</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>KidSense</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr class="highlight">
+          <td>Museon（本課程）</td>
+          <td class="star">★</td>
+          <td class="star">★</td>
+          <td class="star">★ 三維交叉</td>
+          <td class="star">★ 唯一</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">商業漏斗</div>
+    <h2 class="section-title">四層轉換設計</h2>
+    <p class="section-desc">課程不是終點，是入口。每一層體驗深度決定下一層轉換意願。LINE LIFF 內嵌 GUI 讓媽媽零摩擦進入，課程結束即完成導流。</p>
+
+    <div class="funnel">
+      <div class="funnel-row">
+        <div style="min-width: 72px; font-size: 13px; color: var(--slate);">免費體驗</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 100%; background: linear-gradient(90deg, #9898A8, #5A5A6E);">
+            預約體驗 · 限額 20 人
+          </div>
+        </div>
+        <div class="funnel-price">免費</div>
+      </div>
+      <div class="funnel-row">
+        <div style="min-width: 72px; font-size: 13px; color: var(--slate);">入場券</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 82%; background: linear-gradient(90deg, var(--ember), var(--ember-light));">
+            線上 1.5 小時工作坊（本課程）
+          </div>
+        </div>
+        <div class="funnel-price">NT$999</div>
+      </div>
+      <div class="funnel-row">
+        <div style="min-width: 72px; font-size: 13px; color: var(--slate);">升級</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 62%; background: linear-gradient(90deg, var(--gold), #8a6a2a);">
+            線下 3 小時 + Museon 現場互動
+          </div>
+        </div>
+        <div class="funnel-price">NT$2,500–3,500</div>
+      </div>
+      <div class="funnel-row">
+        <div style="min-width: 72px; font-size: 13px; color: var(--slate);">頂層</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 42%; background: linear-gradient(90deg, #2A7A6E, #1a5a50);">
+            Museon AI 年訂閱
+          </div>
+        </div>
+        <div class="funnel-price">NT$96,000/年</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      ⚠️ 設計建議：999 → 96,000 是 96 倍跳躍。建議中間增加 NT$8,800 橋接層（3 個月試用 + 小群組社群），避免信任爆破裝置效應。
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="container">
+    <div class="section-label">冷啟動策略</div>
+    <h2 class="section-title">姊妹圈飛輪：讓媽媽傳媽媽</h2>
+    <p class="section-desc">ACM 2023 研究確認：台灣 SAHM 以 LINE 群組為主要支持系統。LINE 群組傳播的是「立即可用的資源」——因此，讓媽媽分享的不是 App，而是她的成功時刻。</p>
+
+    <div class="insight-grid" style="margin-top: 32px;">
+      <div class="insight-card">
+        <div style="font-size: 32px; margin-bottom: 12px;">📱</div>
+        <div style="font-weight: 700; margin-bottom: 8px; font-size: 15px;">成功時刻截圖卡</div>
+        <div style="font-size: 13px; color: var(--slate); line-height: 1.6;">急救完成後自動生成「我今天用了一個方法，幫 6 歲的孩子從情緒爆發到平靜，花了 4 分鐘」——媽媽傳的是她的成功，不是推薦</div>
+      </div>
+      <div class="insight-card">
+        <div style="font-size: 32px; margin-bottom: 12px;">👥</div>
+        <div style="font-weight: 700; margin-bottom: 8px; font-size: 15px;">年齡段標籤精準傳播</div>
+        <div style="font-size: 13px; color: var(--slate); line-height: 1.6;">卡片含年齡段標籤（3-5歲/6-9歲/10歲+）——LINE 媽媽群組通常按孩子年齡聚群，精準命中</div>
+      </div>
+      <div class="insight-card">
+        <div style="font-size: 32px; margin-bottom: 12px;">🌊</div>
+        <div style="font-weight: 700; margin-bottom: 8px; font-size: 15px;">主角是媽媽不是 App</div>
+        <div style="font-size: 13px; color: var(--slate); line-height: 1.6;">卡片無 App logo 主視覺，媽媽才是主角。「炫耀型」傳播轉換率高於「推薦型」——88% 消費者信任朋友推薦，炫耀更高</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <div class="container">
+    <h2>這份課程，還沒有人做到</h2>
+    <p>同一觸發點，同時啟動媽媽 + 孩子兩層。三維個性化讓每個媽媽拿到她的版本。</p>
+    <a href="#" class="cta-btn">LINE LIFF 立即體驗</a>
+    <a href="#" class="cta-btn secondary">了解完整課程</a>
+  </div>
+</div>
+
+<footer>
+  <div>MUSEON × Dobby 課程規劃提案 v1 · 2026.05.31 · 內部討論用</div>
+  <div style="margin-top: 8px;">學術來源：Frontiers (2025) · PMC (2025) · ACM (2023) · Harvard CDC · AACAP · Chess & Thomas (1991)</div>
+</footer>
+
+</body>
+</html>
