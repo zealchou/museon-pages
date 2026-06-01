@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON 媽媽分享小卡設計稿</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+  }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: var(--slate);
+    font-size: 14px;
+    margin-bottom: 48px;
+  }
+
+  .tab-nav {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 24px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: var(--snow);
+    color: var(--slate);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--ember);
+    color: white;
+    border-color: var(--ember);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .card-showcase {
+    max-width: 540px;
+    margin: 0 auto;
+  }
+  .showcase-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  /* === CARD BASE === */
+  .share-card {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(18,18,26,0.12);
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+  }
+
+  /* === CARD 1 — 料理卡 === */
+  .card-cooking {
+    background: linear-gradient(145deg, #FEF9F0 0%, #FDF0E0 100%);
+    border: 1px solid #F0E4CC;
+  }
+  .card-cooking .card-tag { background: #FDE8C2; color: #9A5A10; }
+  .dish-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .dish-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
+  .dish-name { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .dish-tags { display: flex; gap: 6px; margin-top: 4px; }
+  .ntag { font-size: 11px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
+  .ntag-protein { background: #FDE8CC; color: #9A5A10; }
+  .ntag-veg { background: #D4EDDE; color: #1A6A3A; }
+  .ntag-carb { background: #D6EAFA; color: #1A5A8A; }
+
+  /* === CARD 2 — 省錢卡 === */
+  .card-saving {
+    background: linear-gradient(145deg, #F0FAF5 0%, #DCF3E8 100%);
+    border: 1px solid #C0E8D0;
+  }
+  .card-saving .card-tag { background: #BFEDD6; color: #0F6A3A; }
+  .amount-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .bar-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .bar-label { font-size: 12px; color: var(--slate); width: 48px; flex-shrink: 0; }
+  .bar-track {
+    flex: 1; height: 8px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 100px; overflow: hidden;
+  }
+  .bar-fill { height: 100%; border-radius: 100px; background: var(--teal); }
+  .bar-val { font-size: 12px; font-weight: 600; color: var(--teal); width: 36px; text-align: right; }
+
+  /* === CARD 3 — 副業卡 === */
+  .card-hustle {
+    background: linear-gradient(145deg, #FAF0FA 0%, #F0DCF5 100%);
+    border: 1px solid #E0C8EC;
+  }
+  .card-hustle .card-tag { background: #EDD6F8; color: #6A1A8A; }
+  .type-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 100px;
+    background: rgba(122,42,154,0.12);
+    color: #7A2A9A;
+    font-weight: 700;
+    font-size: 17px;
+    margin: 10px 0 14px;
+  }
+  .strength-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px;
+    background: rgba(255,255,255,0.55);
+    border-radius: 10px; margin-bottom: 7px;
+    font-size: 13px; font-weight: 500;
+  }
+  .strength-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #9A3AB8; flex-shrink: 0;
+  }
+
+  /* === CARD 4 — 親子卡 === */
+  .card-parenting {
+    background: linear-gradient(145deg, #F0F5FF 0%, #DCE8FF 100%);
+    border: 1px solid #C4D8F8;
+  }
+  .card-parenting .card-tag { background: #C8DAFF; color: #1A3A8A; }
+  .insight-box {
+    background: rgba(255,255,255,0.65);
+    border-radius: 14px; padding: 14px 18px;
+    margin: 10px 0; border-left: 3px solid #3A6ADA;
+  }
+  .insight-text {
+    font-size: 16px; font-weight: 600;
+    color: var(--ink); line-height: 1.5;
+  }
+  .action-row {
+    display: flex; align-items: center;
+    gap: 10px; font-size: 13px;
+    color: var(--slate); margin-bottom: 7px;
+  }
+  .action-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #3A6ADA; color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* === SHARED === */
+  .card-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; margin-bottom: 18px;
+  }
+  .card-tag {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 100px;
+  }
+  .museon-badge {
+    font-size: 10px; font-weight: 600; color: var(--mist);
+    font-family: 'Outfit', sans-serif; letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .museon-badge::before {
+    content: ''; width: 14px; height: 14px;
+    border-radius: 3px; background: var(--ember); display: inline-block;
+  }
+  .card-headline {
+    font-size: 13px; font-weight: 500;
+    color: var(--slate); margin-bottom: 4px;
+  }
+  .card-main-text {
+    font-size: 22px; font-weight: 700;
+    color: var(--ink); line-height: 1.3; margin-bottom: 14px;
+  }
+  .card-footer {
+    margin-top: auto; padding-top: 14px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-footer-cta { font-size: 12px; font-weight: 600; color: var(--ember); }
+  .card-footer-date { font-size: 11px; color: var(--mist); }
+
+  /* Info boxes */
+  .info-box {
+    border-radius: 10px; padding: 9px 13px;
+    font-size: 13px; margin: 8px 0 10px;
+    line-height: 1.5;
+  }
+
+  /* Spec */
+  .spec-section {
+    max-width: 540px; margin: 40px auto 0;
+    background: var(--snow); border-radius: 16px;
+    padding: 24px; border: 1px solid var(--border);
+  }
+  .spec-title {
+    font-weight: 600; font-size: 14px;
+    color: var(--ink); margin-bottom: 16px;
+  }
+  .spec-row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key { color: var(--slate); }
+  .spec-val { font-weight: 500; color: var(--ink); text-align: right; max-width: 60%; }
+
+  /* Trigger table */
+  .trigger-section {
+    max-width: 540px; margin: 16px auto 0;
+    background: var(--snow); border-radius: 16px;
+    padding: 24px; border: 1px solid var(--border);
+  }
+  .trigger-row {
+    display: grid; grid-template-columns: 36px 1fr 1fr;
+    gap: 12px; align-items: center;
+    padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .trigger-row:last-child { border-bottom: none; }
+  .trigger-icon { font-size: 20px; text-align: center; }
+  .trigger-skill { font-weight: 500; color: var(--ink); }
+  .trigger-when { color: var(--slate); }
+
+  /* All grid */
+  .all-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; max-width: 720px; margin: 0 auto;
+  }
+
+  @media (max-width: 500px) {
+    .all-grid { grid-template-columns: 1fr; }
+    .share-card { padding: 22px; }
+    .amount-big { font-size: 52px; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">媽媽分享小卡</h1>
+<p class="page-subtitle">四種 Museon 互動後自動產出的分享卡片 · LINE LIFF 場景</p>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(this,'all')">全部預覽</button>
+  <button class="tab-btn" onclick="switchTab(this,'cooking')">料理卡</button>
+  <button class="tab-btn" onclick="switchTab(this,'saving')">省錢卡</button>
+  <button class="tab-btn" onclick="switchTab(this,'hustle')">副業卡</button>
+  <button class="tab-btn" onclick="switchTab(this,'parenting')">親子卡</button>
+  <button class="tab-btn" onclick="switchTab(this,'spec')">規格說明</button>
+</div>
+
+<!-- ALL -->
+<div class="tab-content active" id="tab-all">
+  <div class="all-grid">
+
+    <!-- C1 料理 -->
+    <div class="share-card card-cooking">
+      <div class="card-header">
+        <span class="card-tag">今日料理</span>
+        <span class="museon-badge">MUSEON</span>
+      </div>
+      <p class="card-headline">用冰箱食材，Museon 幫你規劃了</p>
+      <p class="card-main-text">番茄炒蛋<br>玉米排骨湯<br>涼拌小黃瓜</p>
+      <div class="dish-tags" style="margin-bottom:12px">
+        <span class="ntag ntag-protein">蛋白質 ✓</span>
+        <span class="ntag ntag-veg">蔬菜 ✓</span>
+        <span class="ntag ntag-carb">碳水 ✓</span>
+      </div>
+      <div class="info-box" style="background:rgba(255,255,255,0.5);color:#7A5A20">
+        ✓ 適合 3–7 歲 · 預算 NT$280
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-cta">📤 分享給姊妹</span>
+        <span class="card-footer-date">2026/06/01</span>
+      </div>
+    </div>
+
+    <!-- C2 省錢 -->
+    <div class="share-card card-saving">
+      <div class="card-header">
+        <span class="card-tag">本週省錢</span>
+        <span class="museon-badge">MUSEON</span>
+      </div>
+      <p class="card-headline">這週比上週少花了</p>
+      <div style="margin-bottom:16px;display:flex;align-items:baseline;gap:4px">
+        <span class="amount-big">842</span>
+        <span style="font-size:20px;color:var(--slate)">元</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">超市</span>
+        <div class="bar-track"><div class="bar-fill" style="width:72%"></div></div>
+        <span class="bar-val">-480</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">外食</span>
+        <div class="bar-track"><div class="bar-fill" style="width:44%"></div></div>
+        <span class="bar-val">-240</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">娛樂</span>
+        <div class="bar-track"><div class="bar-fill" style="width:22%"></div></div>
+        <span class="bar-val">-122</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-cta">下週目標 3,200 元</span>
+        <span class="card-footer-date">第 3 週</span>
+      </div>
+    </div>
+
+    <!-- C3 副業 -->
+    <div class="share-card card-hustle">
+      <div class="card-header">
+        <span class="card-tag">副業診斷</span>
+        <span class="museon-badge">MUSEON</span>
+      </div>
+      <p class="card-headline">我的媽媽副業類型</p>
+      <span class="type-badge">✨ 知識變現型</span>
+      <div class="strength-item"><div class="strength-dot"></div>善於整理，適合線上教學</div>
+      <div class="strength-item"><div class="strength-dot"></div>每週 6 小時可啟動</div>
+      <div class="strength-item"><div class="strength-dot"></div>3 個月後月增 NT$8,000</div>
+      <div class="card-footer">
+        <span class="card-footer-cta">🚀 查看啟動計畫</span>
+        <span class="card-footer-date">2026/06/01</span>
+      </div>
+    </div>
+
+    <!-- C4 親子 -->
+    <div class="share-card card-parenting">
+      <div class="card-header">
+        <span class="card-tag">今日親子</span>
+        <span class="museon-badge">MUSEON</span>
+      </div>
+      <p class="card-headline" style="color:#1A4AAA">7–14 歲 · 獨立型</p>
+      <div class="insight-box">
+        <p class="insight-text">「他不是不聽話，<br>是在練習自己的邊界」</p>
+      </div>
+      <div class="action-row"><div class="action-num">1</div><span>給選擇，不給命令</span></div>
+      <div class="action-row"><div class="action-num">2</div><span>先說「我理解你的感受」</span></div>
+      <div class="action-row"><div class="action-num">3</div><span>10 分鐘不看手機一起聊</span></div>
+      <div class="card-footer">
+        <span class="card-footer-cta">📤 分享給同齡媽媽</span>
+        <span class="card-footer-date">2026/06/01</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COOKING -->
+<div class="tab-content" id="tab-cooking">
+  <div class="card-showcase">
+    <p class="showcase-label">Card 01 · 今日料理卡</p>
+    <div class="share-card card-cooking" style="max-width:400px;margin:0 auto">
+      <div class="card-header">
+        <span class="card-tag">今日料理</span>
+        <span class="museon-badge">MUSEON AI</span>
+      </div>
+      <p class="card-headline">用冰箱裡的食材，Museon 幫你規劃了</p>
+      <p class="card-main-text" style="font-size:24px">番茄炒蛋<br>玉米排骨湯<br>涼拌小黃瓜</p>
+      <div class="dish-row">
+        <span class="dish-icon">🍅</span>
+        <div>
+          <div class="dish-name">番茄炒蛋</div>
+          <div class="dish-tags"><span class="ntag ntag-protein">蛋白質</span><span class="ntag ntag-veg">蔬菜</span></div>
+        </div>
+      </div>
+      <div class="dish-row">
+        <span class="dish-icon">🌽</span>
+        <div>
+          <div class="dish-name">玉米排骨湯</div>
+          <div class="dish-tags"><span class="ntag ntag-protein">蛋白質</span><span class="ntag ntag-carb">鈣質</span></div>
+        </div>
+      </div>
+      <div class="dish-row">
+        <span class="dish-icon">🥒</span>
+        <div>
+          <div class="dish-name">涼拌小黃瓜</div>
+          <div class="dish-tags"><span class="ntag ntag-veg">蔬菜</span></div>
+        </div>
+      </div>
+      <div class="info-box" style="background:rgba(255,255,255,0.5);color:#7A5A20;margin-top:10px">
+        ✓ 符合 3–7 歲均衡搭配 · 預算 NT$280 以內
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-cta">📤 分享給姊妹</span>
+        <span class="card-footer-date">2026/06/01</span>
+      </div>
+    </div>
+    <div class="spec-section">
+      <div class="spec-title">觸發時機與自動填入</div>
+      <div class="spec-row"><span class="spec-key">觸發 Skill</span><span class="spec-val">meal-planner-mom</span></div>
+      <div class="spec-row"><span class="spec-key">觸發詞</span><span class="spec-val">「今天煮什麼」「冰箱有…」「幫我規劃」</span></div>
+      <div class="spec-row"><span class="spec-key">自動填入</span><span class="spec-val">菜名 · 食材 · 營養標籤 · 孩子年齡段 · 預算</span></div>
+      <div class="spec-row"><span class="spec-key">分享格式</span><span class="spec-val">1080×1080 PNG + LINE 貼文文字</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVING -->
+<div class="tab-content" id="tab-saving">
+  <div class="card-showcase">
+    <p class="showcase-label">Card 02 · 本週省錢卡</p>
+    <div class="share-card card-saving" style="max-width:400px;margin:0 auto">
+      <div class="card-header">
+        <span class="card-tag">本週省錢</span>
+        <span class="museon-badge">MUSEON AI</span>
+      </div>
+      <p class="card-headline">這週比上週少花了</p>
+      <div style="margin-bottom:20px;display:flex;align-items:baseline;gap:4px">
+        <span class="amount-big">842</span>
+        <span style="font-size:22px;color:var(--slate)">元</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">超市</span>
+        <div class="bar-track"><div class="bar-fill" style="width:72%"></div></div>
+        <span class="bar-val">-480</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">外食</span>
+        <div class="bar-track"><div class="bar-fill" style="width:44%"></div></div>
+        <span class="bar-val">-240</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">娛樂</span>
+        <div class="bar-track"><div class="bar-fill" style="width:22%"></div></div>
+        <span class="bar-val">-122</span>
+      </div>
+      <div class="info-box" style="background:rgba(255,255,255,0.5);color:#0A5A30;margin-top:10px">
+        📈 本月累計省下 NT$2,240 · 達成率 74%
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-cta">下週目標 3,200 元以內</span>
+        <span class="card-footer-date">第 3 週</span>
+      </div>
+    </div>
+    <div class="spec-section">
+      <div class="spec-title">觸發時機與自動填入</div>
+      <div class="spec-row"><span class="spec-key">觸發 Skill</span><span class="spec-val">finance-pilot（主婦省錢模式）</span></div>
+      <div class="spec-row"><span class="spec-key">觸發詞</span><span class="spec-val">「這週花了」「幫我記帳」「省了多少」</span></div>
+      <div class="spec-row"><span class="spec-key">自動填入</span><span class="spec-val">省錢金額 · 分類長條圖 · 達成率 · 下週目標</span></div>
+      <div class="spec-row"><span class="spec-key">分享格式</span><span class="spec-val">1080×1080 PNG + 省錢宣告文字</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- HUSTLE -->
+<div class="tab-content" id="tab-hustle">
+  <div class="card-showcase">
+    <p class="showcase-label">Card 03 · 副業診斷卡</p>
+    <div class="share-card card-hustle" style="max-width:400px;margin:0 auto">
+      <div class="card-header">
+        <span class="card-tag">副業診斷</span>
+        <span class="museon-badge">MUSEON AI</span>
+      </div>
+      <p class="card-headline">MUSEON 幫我診斷的媽媽副業類型</p>
+      <span class="type-badge">✨ 知識變現型</span>
+      <div class="strength-item"><div class="strength-dot"></div>善於整理資訊，適合線上教學 / 課程</div>
+      <div class="strength-item"><div class="strength-dot"></div>每週 6 小時可啟動副業</div>
+      <div class="strength-item"><div class="strength-dot"></div>3 個月後預計月增 NT$8,000</div>
+      <div class="info-box" style="background:rgba(255,255,255,0.5);color:#5A1A7A;margin-top:4px">
+        根據你的個性 × 可用時間 × 現有技能診斷
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-cta">🚀 查看我的啟動計畫</span>
+        <span class="card-footer-date">2026/06/01</span>
+      </div>
+    </div>
+    <div class="spec-section">
+      <div class="spec-title">觸發時機與自動填入</div>
+      <div class="spec-row"><span class="spec-key">觸發 Skill</span><span class="spec-val">side-hustle-mom</span></div>
+      <div class="spec-row"><span class="spec-key">觸發詞</span><span class="spec-val">「我想賺錢」「適合什麼副業」「時間不多」</span></div>
+      <div class="spec-row"><span class="spec-key">自動填入</span><span class="spec-val">類型名稱 · 三大優勢 · 時間×收入預估</span></div>
+      <div class="spec-row"><span class="spec-key">分享格式</span><span class="spec-val">1080×1080 PNG + 副業宣告文字</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PARENTING -->
+<div class="tab-content" id="tab-parenting">
+  <div class="card-showcase">
+    <p class="showcase-label">Card 04 · 今日親子卡</p>
+    <div class="share-card card-parenting" style="max-width:400px;margin:0 auto">
+      <div class="card-header">
+        <span class="card-tag">今日親子</span>
+        <span class="museon-badge">MUSEON AI</span>
+      </div>
+      <p class="card-headline" style="color:#1A4AAA">7–14 歲 · 青春期前期 · 獨立型</p>
+      <div class="insight-box">
+        <p class="insight-text">「他不是不聽話，<br>是在練習自己的邊界」</p>
+      </div>
+      <p style="font-size:13px;color:var(--slate);margin-bottom:10px;font-weight:500">今晚你可以試試這三件事：</p>
+      <div class="action-row"><div class="action-num">1</div><span>給他兩個選擇，不要下命令</span></div>
+      <div class="action-row"><div class="action-num">2</div><span>先說「我理解你的感受」</span></div>
+      <div class="action-row"><div class="action-num">3</div><span>10 分鐘不看手機，一起聊</span></div>
+      <div class="card-footer">
+        <span class="card-footer-cta">📤 分享給同齡媽媽</span>
+        <span class="card-footer-date">2026/06/01</span>
+      </div>
+    </div>
+    <div class="spec-section">
+      <div class="spec-title">觸發時機與自動填入</div>
+      <div class="spec-row"><span class="spec-key">觸發 Skill</span><span class="spec-val">parent-child-sync-rescue</span></div>
+      <div class="spec-row"><span class="spec-key">觸發詞</span><span class="spec-val">「孩子又發脾氣」「不知道怎麼辦」「他不聽話」</span></div>
+      <div class="spec-row"><span class="spec-key">自動填入</span><span class="spec-val">年齡段 + 人格類型 · 核心洞見 · 三個今晚行動</span></div>
+      <div class="spec-row"><span class="spec-key">分享格式</span><span class="spec-val">1080×1080 PNG + 親子感悟文字</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SPEC -->
+<div class="tab-content" id="tab-spec">
+  <div style="max-width:540px;margin:0 auto">
+    <div class="spec-section" style="margin-top:0">
+      <div class="spec-title">通用規格</div>
+      <div class="spec-row"><span class="spec-key">尺寸</span><span class="spec-val">1080 × 1080 px（正方形）</span></div>
+      <div class="spec-row"><span class="spec-key">格式</span><span class="spec-val">PNG + LINE Flex Message</span></div>
+      <div class="spec-row"><span class="spec-key">背景</span><span class="spec-val">暖色漸層（各卡片不同，品牌感統一）</span></div>
+      <div class="spec-row"><span class="spec-key">品牌色</span><span class="spec-val">Ember #C4502A（右上 badge）</span></div>
+      <div class="spec-row"><span class="spec-key">字體</span><span class="spec-val">Cormorant Garamond（大數字）+ Noto Sans TC（正文）</span></div>
+      <div class="spec-row"><span class="spec-key">右上 badge</span><span class="spec-val">「MUSEON AI」統一標記</span></div>
+    </div>
+    <div class="trigger-section">
+      <div class="spec-title">四卡觸發矩陣</div>
+      <div class="trigger-row" style="font-weight:600;font-size:12px;color:var(--mist)">
+        <div></div><div>Skill</div><div>自動產出時機</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">🍳</div>
+        <div class="trigger-skill">meal-planner-mom</div>
+        <div class="trigger-when">每次規劃好料理後</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">💰</div>
+        <div class="trigger-skill">finance-pilot</div>
+        <div class="trigger-when">每週記帳 / 省錢報告後</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">💼</div>
+        <div class="trigger-skill">side-hustle-mom</div>
+        <div class="trigger-when">副業診斷完成後</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">👩‍👧</div>
+        <div class="trigger-skill">parent-child-sync-rescue</div>
+        <div class="trigger-when">每次親子急救對策後</div>
+      </div>
+    </div>
+    <div class="trigger-section">
+      <div class="spec-title">飛輪機制（小卡如何帶來新用戶）</div>
+      <div style="font-size:13px;color:var(--slate);line-height:2">
+        媽媽用 Museon 互動<br>
+        → 自動產出小卡<br>
+        → 一鍵丟 LINE 群組<br>
+        → 姊妹問「哪個工具生的」<br>
+        → 掃 QR 進群 → 下一個媽媽訂閱<br>
+        <br>
+        <strong style="color:var(--ink)">每張卡平均帶來 0.3 個新用戶</strong>（姊妹圈轉換估算）
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(btn, id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
