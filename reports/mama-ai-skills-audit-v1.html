@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON 媽媽 AI 技能審計 + 輸出卡設計</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--parchment); color: var(--ink); line-height: 1.6; }
+  .header { background: var(--deep-ink); padding: 40px 24px; text-align: center; border-bottom: 2px solid var(--ember); }
+  .header-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ember); margin-bottom: 12px; }
+  .header h1 { font-family: 'Georgia', serif; font-size: 28px; color: white; margin-bottom: 8px; }
+  .header p { color: var(--mist); font-size: 14px; }
+  .tabs { background: var(--surface); display: flex; overflow-x: auto; border-bottom: 1px solid #2A2A38; position: sticky; top: 0; z-index: 10; }
+  .tab-btn { padding: 14px 20px; color: var(--mist); cursor: pointer; font-size: 13px; white-space: nowrap; border-bottom: 2px solid transparent; background: none; border-top: none; border-left: none; border-right: none; transition: all 0.2s; }
+  .tab-btn:hover { color: white; }
+  .tab-btn.active { color: var(--ember); border-bottom-color: var(--ember); }
+  .content { display: none; }
+  .content.active { display: block; }
+  .section { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+  .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .section-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ember); }
+  .audit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .audit-stat { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+  .audit-stat .number { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .audit-stat .number.ok { color: var(--teal); }
+  .audit-stat .number.warn { color: var(--gold); }
+  .audit-stat .label { font-size: 12px; color: var(--slate); }
+  .skill-card { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .skill-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .skill-name { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+  .badge-new { background: #dcfce7; color: #166534; }
+  .badge-expanded { background: #dbeafe; color: #1d4ed8; }
+  .skill-desc { font-size: 13px; color: var(--slate); line-height: 1.6; margin-bottom: 12px; }
+  .connects-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .connects-chip { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #f3f0eb; color: var(--slate); border: 1px solid var(--border); }
+  .warn-item { background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #854d0e; }
+  .info-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #166534; margin-bottom: 16px; }
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 28px; }
+  @media (max-width: 600px) { .card-grid { grid-template-columns: 1fr; } .audit-grid { grid-template-columns: repeat(2, 1fr); } }
+  .share-card { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .share-card .card-header { padding: 16px; display: flex; align-items: center; gap: 10px; }
+  .share-card .card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.2); }
+  .share-card .card-type { font-size: 11px; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+  .share-card .card-body { padding: 16px; background: white; }
+  .share-card .result-line { font-size: 14px; color: var(--ink); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .share-card .result-line:before { content: '✓'; color: var(--teal); font-weight: 700; }
+  .share-card .footer-line { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 11px; color: var(--slate); display: flex; justify-content: space-between; }
+  .card-highlight { font-size: 20px; font-weight: 800; color: var(--ink); margin: 8px 0 12px; }
+  .card-meal .card-header { background: linear-gradient(135deg, #059669, #10b981); color: white; }
+  .card-save .card-header { background: linear-gradient(135deg, #B8923A, #d4af5a); color: white; }
+  .card-hustle .card-header { background: linear-gradient(135deg, #C4502A, #e0714d); color: white; }
+  .card-parent .card-header { background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; }
+  .mechanism-box { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .mechanism-title { font-weight: 700; font-size: 15px; margin-bottom: 16px; color: var(--ink); }
+  .flow-step { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-num { width: 28px; height: 28px; border-radius: 50%; background: var(--ember); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .flow-text { font-size: 13px; color: var(--slate); padding-top: 4px; }
+  .flow-text strong { color: var(--ink); }
+  .warning-strip { background: var(--deep-ink); color: var(--mist); text-align: center; padding: 10px; font-size: 12px; }
+  .warning-strip .museon { color: var(--ember); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">MUSEON × 媽媽 AI 商模</div>
+  <h1>技能審計 + 輸出卡設計</h1>
+  <p>2026-06-01 · 雙邊同步完成 · 適用 LINE LIFF SaaS 商模</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('audit', this)">01 審計報告</button>
+  <button class="tab-btn" onclick="switchTab('cards', this)">02 輸出卡設計</button>
+  <button class="tab-btn" onclick="switchTab('mechanism', this)">03 飛輪機制</button>
+</div>
+
+<!-- 01 審計報告 -->
+<div id="audit" class="content active">
+  <div class="section">
+    <div class="section-title"><div class="dot"></div>整體審計結果</div>
+    <div class="audit-grid">
+      <div class="audit-stat"><div class="number ok">281</div><div class="label">總連線數</div></div>
+      <div class="audit-stat"><div class="number warn">1</div><div class="label">警告（無阻塞）</div></div>
+      <div class="audit-stat"><div class="number ok">0</div><div class="label">錯誤</div></div>
+    </div>
+    <div class="info-box">
+      ✅ 四個 Skills 全部雙邊安裝完成（Claude 側 ~/.claude/skills/ + MUSEON Bot 側 data/skills/native/）。validate_connections.py 0 錯誤通過。
+    </div>
+    <div class="warn-item" style="margin-bottom: 24px;">
+      <span>⚠️</span>
+      <div><strong>museon-cli-forge</strong> 孤立 Skill（無 inputs 也無 outputs）——既有問題，與本次媽媽 AI 商模無關，不影響四個新 Skills 功能。</div>
+    </div>
+
+    <div class="section-title"><div class="dot"></div>四個技能狀態</div>
+
+    <div class="skill-card">
+      <div class="skill-header"><span class="skill-name">meal-planner-mom</span><span class="badge badge-new">新建</span></div>
+      <p class="skill-desc">媽媽智慧菜單引擎。四維度交叉：冰箱食材 × 孩子年齡段營養 × 今日預算 × 料理時間。競品 Whisk/NoWaste 只做食材→食譜，缺「孩子年齡營養」和「家庭預算整合」——是台灣市場白地。</p>
+      <div class="connects-list">
+        <span class="connects-chip">→ finance-pilot（預算寫回）</span>
+        <span class="connects-chip">→ child-dev-router（年齡營養）</span>
+        <span class="connects-chip">→ workflow-mama-daily-ai（早間路由）</span>
+        <span class="connects-chip">→ circle-amplifier（料理卡分享）</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-header"><span class="skill-name">workflow-mama-daily-ai</span><span class="badge badge-new">新建</span></div>
+      <p class="skill-desc">媽媽 AI 一日工作流整合器。早/白/晚三時段自動路由：早 → 菜單，白 → 副業進度，晚 → 教養腳本 + 分享卡。LINE LIFF 場景下的主要入口。</p>
+      <div class="connects-list">
+        <span class="connects-chip">→ meal-planner-mom（早間）</span>
+        <span class="connects-chip">→ finance-pilot（白天）</span>
+        <span class="connects-chip">→ side-hustle-mom（副業）</span>
+        <span class="connects-chip">→ child-dev-router（晚間）</span>
+        <span class="connects-chip">→ combined-reading（親子）</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-header"><span class="skill-name">finance-pilot</span><span class="badge badge-expanded">擴張</span></div>
+      <p class="skill-desc">原為企業/個人記帳。擴張後加入「主婦省錢模式」：觸發詞加省錢/超市/家用，輸出改為主婦白話版（月家計報告 + 採購省錢建議）。接收 meal-planner-mom 的採購金額 → 形成「煮飯預算閉環」。</p>
+      <div class="connects-list">
+        <span class="connects-chip">← meal-planner-mom（採購金額）</span>
+        <span class="connects-chip">← side-hustle-mom（副業收入）</span>
+        <span class="connects-chip">→ circle-amplifier（省錢卡分享）</span>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-header"><span class="skill-name">side-hustle-mom</span><span class="badge badge-expanded">擴張</span></div>
+      <p class="skill-desc">媽媽副業診斷。擴張後加入「收入追蹤」輸出，接通 finance-pilot → 「副業收入 + 家庭支出合計」閉環。三問診斷（技能 × 時間 × 目標）→ 個性化副業路徑 → 具體行動包。</p>
+      <div class="connects-list">
+        <span class="connects-chip">→ finance-pilot（收入寫回）</span>
+        <span class="connects-chip">→ circle-amplifier（副業進度卡）</span>
+        <span class="connects-chip">→ workflow-mama-daily-ai（白天路由）</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 02 輸出卡設計 -->
+<div id="cards" class="content">
+  <div class="section">
+    <div class="section-title"><div class="dot"></div>四種分享小卡（LINE 格式）</div>
+    <p style="font-size: 13px; color: var(--slate); margin-bottom: 20px; line-height: 1.7;">
+      每次媽媽在 LINE LIFF 與 Museon 互動後，<strong>自動產出對應小卡</strong>——不需要她另外操作。設計為 1:1.91 比例（LINE 分享最佳），一鍵丟入姊妹群組。
+    </p>
+
+    <div class="card-grid">
+      <div class="share-card card-meal">
+        <div class="card-header">
+          <div class="card-icon">🥦</div>
+          <div><div class="card-type">今日料理卡</div><div style="font-size: 13px; font-weight: 700; color: white;">meal-planner-mom</div></div>
+        </div>
+        <div class="card-body">
+          <div style="font-size: 12px; color: var(--slate); margin-bottom: 4px;">今天冰箱 → 三道菜</div>
+          <div class="card-highlight">今日省 NT$240</div>
+          <div class="result-line">番茄炒蛋（7歲補鐵版）</div>
+          <div class="result-line">蒜炒高麗菜（6分鐘）</div>
+          <div class="result-line">豆腐味噌湯（補鈣）</div>
+          <div class="footer-line"><span>孩子 7 歲 · 預算 NT$300</span><span>MUSEON</span></div>
+        </div>
+      </div>
+
+      <div class="share-card card-save">
+        <div class="card-header">
+          <div class="card-icon">💰</div>
+          <div><div class="card-type">本週省錢卡</div><div style="font-size: 13px; font-weight: 700; color: white;">finance-pilot</div></div>
+        </div>
+        <div class="card-body">
+          <div style="font-size: 12px; color: var(--slate); margin-bottom: 4px;">vs 上週家計</div>
+          <div class="card-highlight">省了 NT$1,840</div>
+          <div class="result-line">超市換購 -NT$620</div>
+          <div class="result-line">外食少一次 -NT$680</div>
+          <div class="result-line">剩菜再利用 -NT$540</div>
+          <div class="footer-line"><span>2026/06/01 週報</span><span>MUSEON</span></div>
+        </div>
+      </div>
+
+      <div class="share-card card-hustle">
+        <div class="card-header">
+          <div class="card-icon">🚀</div>
+          <div><div class="card-type">副業進度卡</div><div style="font-size: 13px; font-weight: 700; color: white;">side-hustle-mom</div></div>
+        </div>
+        <div class="card-body">
+          <div style="font-size: 12px; color: var(--slate); margin-bottom: 4px;">本月副業收入</div>
+          <div class="card-highlight">NT$3,200</div>
+          <div class="result-line">手作飾品接單 × 4</div>
+          <div class="result-line">教學影片收益</div>
+          <div class="result-line">今日行動包完成</div>
+          <div class="footer-line"><span>目標 NT$8,000 · 進度 40%</span><span>MUSEON</span></div>
+        </div>
+      </div>
+
+      <div class="share-card card-parent">
+        <div class="card-header">
+          <div class="card-icon">💜</div>
+          <div><div class="card-type">親子共鳴卡</div><div style="font-size: 13px; font-weight: 700; color: white;">child-dev-router</div></div>
+        </div>
+        <div class="card-body">
+          <div style="font-size: 12px; color: var(--slate); margin-bottom: 4px;">今晚情境</div>
+          <div class="card-highlight">孩子拒寫功課</div>
+          <div class="result-line">先接住情緒（3句腳本）</div>
+          <div class="result-line">7歲前額葉：選擇題策略</div>
+          <div class="result-line">媽媽急救：先深呼吸</div>
+          <div class="footer-line"><span>孩子 7 歲 · 人類圖薦骨型</span><span>MUSEON</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mechanism-box">
+      <div class="mechanism-title">小卡觸發時機（自動，媽媽不需額外操作）</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="font-size: 13px; color: var(--slate);">
+          <strong style="color: var(--ink); display: block; margin-bottom: 4px;">料理卡</strong>
+          meal-planner-mom 輸出完成 → 自動生成 → LINE LIFF 推「今日料理卡出爐，分享給姊妹？」
+        </div>
+        <div style="font-size: 13px; color: var(--slate);">
+          <strong style="color: var(--ink); display: block; margin-bottom: 4px;">省錢卡</strong>
+          每週一 finance-pilot 出週報 → 自動生成 → 推「你這週省了 NT$X」
+        </div>
+        <div style="font-size: 13px; color: var(--slate);">
+          <strong style="color: var(--ink); display: block; margin-bottom: 4px;">副業進度卡</strong>
+          side-hustle-mom 行動包完成 → 自動記錄 → 每週五出進度卡
+        </div>
+        <div style="font-size: 13px; color: var(--slate);">
+          <strong style="color: var(--ink); display: block; margin-bottom: 4px;">親子共鳴卡</strong>
+          child-dev-router 教養腳本輸出 → 自動生成 → 一鍵分享「我用這招解決了！」
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 03 飛輪機制 -->
+<div id="mechanism" class="content">
+  <div class="section">
+    <div class="section-title"><div class="dot"></div>姊妹圈 LINE 飛輪（SaaS 冷啟動）</div>
+
+    <div class="mechanism-box">
+      <div class="mechanism-title">七步飛輪循環</div>
+      <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Dobby 課程（NT$999）</strong>→ 媽媽親手跑 Museon，當場解決真實問題（孩子7歲拒寫功課）</div></div>
+      <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>她的 LINE 裡已有 Museon</strong>→ 課程結束前完成 LINE 加入，Museon 當天就在她手機</div></div>
+      <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>Museon 自動在對的時間出現</strong>→ 早上7點送料理卡，晚上8點送教養腳本，不需要她主動查詢</div></div>
+      <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>卡片自動產出、一鍵分享</strong>→ 「今晚用這招解決了！」+ 親子共鳴卡丟進姊妹群，卡片說清楚了不用她解釋</div></div>
+      <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>姊妹主動問「這什麼工具？」</strong>→ 轉發 LINE 連結，一次裂變 3-5 個新媽媽</div></div>
+      <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>新媽媽進入 30 天免費試用</strong>→ 試用期自動發料理卡/省錢卡，7天後推 NT$499/月升級</div></div>
+      <div class="flow-step"><div class="flow-num">7</div><div class="flow-text"><strong>形成媽媽社群話題</strong>→ 「我省了 NT$1,840」變社群話題，循環回步驟 4-5</div></div>
+    </div>
+
+    <div class="mechanism-box">
+      <div class="mechanism-title">LINE SaaS 三層定價（月租）</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0;">
+          <div><div style="font-weight: 700; font-size: 14px; color: #166534;">個人媽媽版</div><div style="font-size: 12px; color: #15803d;">教養 + 財務 + 料理（LINE DM）</div></div>
+          <div style="font-size: 22px; font-weight: 800; color: #166534;">NT$499/月</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px; background: #eff6ff; border-radius: 8px; border: 1px solid #bfdbfe;">
+          <div><div style="font-weight: 700; font-size: 14px; color: #1d4ed8;">姊妹社群版</div><div style="font-size: 12px; color: #1e40af;">≥4 人組群共享</div></div>
+          <div style="font-size: 22px; font-weight: 800; color: #1d4ed8;">NT$299/人月</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px; background: #fff7ed; border-radius: 8px; border: 1px solid #fed7aa;">
+          <div><div style="font-weight: 700; font-size: 14px; color: #c2410c;">課程導師版</div><div style="font-size: 12px; color: #ea580c;">最多 20 學員帳號（Dobby 這類導師）</div></div>
+          <div style="font-size: 22px; font-weight: 800; color: #c2410c;">NT$3,999/月</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>技術可行性：</strong>多用戶隔離已有基礎（SessionSource 索引，2026-05 Phase A 完成）。每個媽媽有獨立 session_id，資料不互串。LINE LIFF SaaS 下一步：LINE Bot → LIFF URL 整合 + 訂閱管理 webhook，估計開發量 2-3 週。
+    </div>
+  </div>
+</div>
+
+<div class="warning-strip">
+  <span class="museon">MUSEON</span> 媽媽 AI 商模 · 技能審計 v1.0 · 2026-06-01
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
