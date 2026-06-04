@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>One Muse 萬謬人生三日課程 — 講師手冊 v0.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1410;
+    --parchment: #f7f3ec;
+    --gold: #b8922a;
+    --gold-light: #c8a230;
+    --day1: #b8922a;
+    --day1-bg: #fdf6e8;
+    --day2: #9c4a5e;
+    --day2-bg: #fdf0f3;
+    --day3: #2a7a5e;
+    --day3-bg: #edf7f3;
+    --border: #e0d5c0;
+    --text: #1a1410;
+    --text-muted: #7a6a58;
+    --text-light: #a09080;
+    --caution: #c45a20;
+    --caution-bg: #fff6f0;
+  }
+
+  body { background:#fff; color:var(--text); font-family:'Noto Sans TC',sans-serif; font-size:13px; line-height:1.8; }
+
+  @media print {
+    body { font-size:11pt; }
+    .page-break { page-break-after:always; }
+    .no-break { page-break-inside:avoid; }
+  }
+
+  /* COVER */
+  .cover { background:var(--ink); color:var(--parchment); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:60px 40px; position:relative; }
+  .cover::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(184,146,42,0.12) 0%,transparent 70%); }
+  .cover-inner { position:relative; z-index:1; max-width:600px; }
+  .cover-label { font-family:'Cinzel',serif; font-size:11px; letter-spacing:6px; color:var(--gold); margin-bottom:40px; }
+  .cover-title { font-family:'Noto Serif TC',serif; font-size:42px; font-weight:300; letter-spacing:4px; line-height:1.4; margin-bottom:16px; }
+  .cover-title em { font-style:normal; color:var(--gold-light); }
+  .cover-sub { font-size:15px; color:rgba(247,243,236,0.6); letter-spacing:2px; margin-bottom:48px; }
+  .cover-divider { width:80px; height:1px; background:var(--gold); margin:0 auto 36px; opacity:0.5; }
+  .cover-quote { font-family:'Noto Serif TC',serif; font-size:15px; color:var(--gold-light); line-height:2.2; max-width:500px; margin:0 auto 40px; }
+  .cover-arc { font-family:'Cinzel',serif; font-size:12px; letter-spacing:4px; color:rgba(247,243,236,0.5); }
+  .cover-arc span { color:var(--gold-light); margin:0 10px; }
+  .cover-badge { display:inline-block; margin-top:48px; border:1px solid rgba(184,146,42,0.4); border-radius:2px; padding:10px 28px; font-size:12px; letter-spacing:2px; color:rgba(247,243,236,0.6); }
+  .cover-badge strong { color:var(--gold); display:block; font-size:14px; letter-spacing:1px; margin-bottom:4px; font-family:'Noto Serif TC',serif; font-weight:400; }
+
+  /* LAYOUT */
+  .container { max-width:860px; margin:0 auto; padding:48px 40px 80px; }
+
+  /* TYPOGRAPHY */
+  .chapter-label { font-family:'Cinzel',serif; font-size:10px; letter-spacing:5px; color:var(--gold); text-transform:uppercase; margin-bottom:8px; }
+  h1.chapter-title { font-family:'Noto Serif TC',serif; font-size:28px; font-weight:300; letter-spacing:2px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  h2.section-title { font-family:'Noto Serif TC',serif; font-size:20px; font-weight:400; letter-spacing:1px; margin:36px 0 16px; }
+  p { margin-bottom:14px; color:var(--text); }
+
+  /* DAY HEADERS */
+  .day-header { padding:28px 32px; margin-bottom:32px; border-radius:4px; }
+  .day-header.d1 { background:var(--day1-bg); border-left:4px solid var(--day1); }
+  .day-header.d2 { background:var(--day2-bg); border-left:4px solid var(--day2); }
+  .day-header.d3 { background:var(--day3-bg); border-left:4px solid var(--day3); }
+  .day-label { font-family:'Cinzel',serif; font-size:10px; letter-spacing:5px; margin-bottom:10px; }
+  .d1 .day-label { color:var(--day1); } .d2 .day-label { color:var(--day2); } .d3 .day-label { color:var(--day3); }
+  .day-header h2 { font-family:'Noto Serif TC',serif; font-size:22px; font-weight:400; letter-spacing:1px; margin-bottom:10px; }
+  .d1 .day-header h2 { color:#7a5f18; } .d2 .day-header h2 { color:var(--day2); } .d3 .day-header h2 { color:var(--day3); }
+  .day-cq { font-family:'Noto Serif TC',serif; font-size:14px; color:var(--text-muted); line-height:1.9; margin-bottom:14px; }
+  .day-goals { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
+  .goal-item { background:rgba(255,255,255,0.7); border:1px solid var(--border); border-radius:2px; padding:10px 14px; font-size:12px; color:var(--text-muted); line-height:1.7; }
+
+  /* MODULE CARDS */
+  .module-card { border:1px solid var(--border); border-radius:4px; margin-bottom:18px; overflow:hidden; }
+  .module-card.fixed-practice { border-left:3px solid var(--gold); }
+  .module-card.key-module { border-left:3px solid var(--day1); }
+  .module-card.key-module.d2 { border-left-color:var(--day2); }
+  .module-card.key-module.d3 { border-left-color:var(--day3); }
+  .module-card.caution { border-left:3px solid var(--caution); }
+  .module-header { display:flex; align-items:center; gap:14px; padding:12px 16px; background:#faf9f6; border-bottom:1px solid var(--border); }
+  .module-time { font-size:12px; color:var(--text-light); white-space:nowrap; min-width:118px; font-family:'Cinzel',serif; letter-spacing:0.5px; }
+  .module-name { flex:1; font-family:'Noto Serif TC',serif; font-size:15px; font-weight:400; }
+  .module-tag { font-size:10px; letter-spacing:1px; padding:3px 10px; border-radius:2px; border:1px solid var(--border); color:var(--text-light); white-space:nowrap; }
+  .fixed-badge { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; padding:2px 10px; border:1px solid var(--gold); color:var(--gold); border-radius:2px; white-space:nowrap; }
+  .module-body { padding:14px 16px; }
+  .module-desc { font-size:13px; color:var(--text); line-height:1.8; margin-bottom:10px; }
+  .module-emotion { font-size:12px; color:var(--text-light); margin-bottom:10px; }
+  .module-emotion span { color:var(--text-muted); }
+
+  .block-title { font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px; color:var(--gold); margin:12px 0 8px; text-transform:uppercase; }
+
+  ul.step-list, ul.q-list, ul.note-list { list-style:none; padding:0; margin:0 0 10px; }
+  ul.step-list { counter-reset:step; }
+  ul.step-list li { padding:5px 0 5px 20px; position:relative; font-size:13px; color:var(--text-muted); line-height:1.7; border-bottom:1px solid rgba(0,0,0,0.03); }
+  ul.step-list li::before { content:counter(step); counter-increment:step; position:absolute; left:0; font-family:'Cinzel',serif; font-size:10px; color:var(--gold); top:7px; }
+  ul.q-list li { padding:5px 0 5px 22px; position:relative; font-size:13px; color:var(--text); line-height:1.7; }
+  ul.q-list li::before { content:'Q'; position:absolute; left:0; font-size:10px; color:var(--gold); top:7px; font-family:'Cinzel',serif; }
+  ul.note-list li { padding:4px 0 4px 16px; position:relative; font-size:12px; color:var(--text-muted); line-height:1.7; }
+  ul.note-list li::before { content:'·'; position:absolute; left:4px; color:var(--gold); }
+
+  .recover-box { background:var(--day1-bg); border-left:2px solid var(--day1); padding:10px 14px; border-radius:0 2px 2px 0; font-family:'Noto Serif TC',serif; font-size:13px; color:#7a5f18; line-height:1.8; margin-top:10px; }
+  .recover-box.d2 { background:var(--day2-bg); border-left-color:var(--day2); color:var(--day2); }
+  .recover-box.d3 { background:var(--day3-bg); border-left-color:var(--day3); color:var(--day3); }
+
+  .caution-box { background:var(--caution-bg); border:1px solid rgba(196,90,32,0.2); border-radius:3px; padding:12px 16px; margin-top:10px; }
+  .caution-box .block-title { color:var(--caution); }
+  .caution-box li { font-size:12px; color:#8b3c10; }
+
+  /* TABLES */
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:12px; }
+  th { background:var(--ink); color:var(--parchment); font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:9px 12px; text-align:left; font-weight:400; }
+  td { padding:8px 12px; border-bottom:1px solid var(--border); color:var(--text-muted); line-height:1.7; vertical-align:top; }
+  tr:nth-child(even) td { background:#faf9f6; }
+
+  /* OVERVIEW */
+  .overview-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:20px 0; }
+  .overview-panel { border:1px solid var(--border); border-radius:4px; padding:18px; text-align:center; }
+  .overview-panel.d1 { border-top:3px solid var(--day1); }
+  .overview-panel.d2 { border-top:3px solid var(--day2); }
+  .overview-panel.d3 { border-top:3px solid var(--day3); }
+  .overview-panel .day-badge { font-family:'Cinzel',serif; font-size:10px; letter-spacing:4px; margin-bottom:8px; }
+  .d1 .day-badge { color:var(--day1); } .d2 .day-badge { color:var(--day2); } .d3 .day-badge { color:var(--day3); }
+  .overview-panel h3 { font-family:'Noto Serif TC',serif; font-size:14px; font-weight:400; margin-bottom:6px; line-height:1.5; }
+  .overview-panel p { font-size:12px; color:var(--text-muted); line-height:1.7; margin:0; }
+
+  /* HEART BOX */
+  .heart-box { background:var(--ink); color:var(--parchment); border-radius:4px; padding:24px 28px; margin:20px 0; }
+  .heart-box h3 { font-family:'Cinzel',serif; font-size:10px; letter-spacing:4px; color:var(--gold); margin-bottom:12px; }
+  .heart-box p { font-family:'Noto Serif TC',serif; font-size:15px; line-height:2.2; color:var(--parchment); margin:0; }
+  .heart-box em { color:var(--gold-light); font-style:normal; }
+
+  /* PRACTICE CARDS */
+  .practice-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0; }
+  .practice-card { border:1px solid var(--border); border-radius:3px; padding:14px; }
+  .practice-card .day-ver { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; color:var(--gold); margin-bottom:6px; }
+  .practice-card h4 { font-family:'Noto Serif TC',serif; font-size:13px; font-weight:400; margin-bottom:8px; }
+  .practice-card ul { list-style:none; padding:0; }
+  .practice-card li { font-size:12px; color:var(--text-muted); line-height:1.8; padding-left:14px; position:relative; }
+  .practice-card li::before { content:'▸'; position:absolute; left:0; font-size:9px; color:var(--gold); top:4px; }
+
+  /* EMOTION GRID */
+  .emotion-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:14px 0; }
+  .emotion-item { border:1px solid var(--border); border-radius:3px; padding:12px 14px; }
+  .emotion-name { font-weight:500; font-size:13px; color:var(--text); margin-bottom:4px; }
+  .emotion-signal { font-size:12px; color:var(--text-muted); line-height:1.6; }
+
+  /* FERRYMAN */
+  .ferryman-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0; }
+  .ferryman-card { background:var(--day3-bg); border:1px solid rgba(42,122,94,0.2); border-radius:3px; padding:16px; text-align:center; }
+  .ferryman-glyph { font-family:'Noto Serif TC',serif; font-size:30px; color:var(--day3); margin-bottom:6px; font-weight:300; }
+  .ferryman-name { font-family:'Noto Serif TC',serif; font-size:15px; color:var(--text); margin-bottom:5px; }
+  .ferryman-desc { font-size:12px; color:var(--text-muted); line-height:1.8; }
+
+  /* PLEDGE */
+  .pledge-box { background:var(--ink); color:var(--parchment); border-radius:4px; padding:28px; text-align:center; margin:28px 0; }
+  .pledge-box h3 { font-family:'Noto Serif TC',serif; font-size:18px; font-weight:300; letter-spacing:2px; margin-bottom:20px; }
+  .pledge-list { list-style:none; padding:0; max-width:500px; margin:0 auto 18px; text-align:left; }
+  .pledge-list li { font-family:'Noto Serif TC',serif; font-size:14px; color:rgba(247,243,236,0.85); line-height:2.2; padding:5px 0 5px 26px; position:relative; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .pledge-list li::before { content:attr(data-n); position:absolute; left:0; font-family:'Cinzel',serif; font-size:10px; color:var(--gold); top:10px; }
+  .pledge-closing { font-family:'Noto Serif TC',serif; font-size:15px; color:var(--gold-light); letter-spacing:1px; line-height:2; }
+
+  /* INFO BOX */
+  .info-box { background:#f5f3ee; border:1px solid var(--border); border-radius:3px; padding:14px 18px; margin:14px 0; }
+  .info-box p { margin:0; font-size:13px; color:var(--text-muted); }
+  .info-box strong { color:var(--text); }
+
+  /* FOOTER */
+  .page-footer { border-top:1px solid var(--border); padding:18px 0; text-align:center; font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px; color:var(--text-light); margin-top:56px; }
+
+  .ornament { text-align:center; margin:28px 0; color:var(--border); letter-spacing:8px; font-size:12px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover page-break">
+  <div class="cover-inner">
+    <div class="cover-label">One Muse · Facilitator Guide · v0.3</div>
+    <h1 class="cover-title">萬謬<em>人生</em><br>三日課程</h1>
+    <p class="cover-sub">情緒造局 × 能量學整合版</p>
+    <div class="cover-divider"></div>
+    <div class="cover-quote">
+      情緒是生命用來「感知、連結、行動、創造」的作業系統。<br>
+      個人是感知自己，關係是連結他人，事業是共同創造。<br>
+      三天的終點，是成為別人生命中的擺渡人。
+    </div>
+    <div class="cover-arc">感知自己 <span>›</span> 連結他人 <span>›</span> 成為擺渡人</div>
+    <div class="cover-badge">
+      <strong>講師專用手冊</strong>
+      FACILITATOR ONLY · CONFIDENTIAL
+    </div>
+  </div>
+</div>
+
+
+<!-- CH.0 使用說明 -->
+<div class="container">
+  <div class="chapter-label">Chapter 0</div>
+  <h1 class="chapter-title">手冊使用說明</h1>
+
+  <div class="overview-grid">
+    <div class="overview-panel d1">
+      <div class="day-badge">DAY ONE</div>
+      <h3>感知自己<br>看見舊情緒如何造局</h3>
+      <p>情緒是雷達 · 9:00–18:00</p>
+    </div>
+    <div class="overview-panel d2">
+      <div class="day-badge">DAY TWO</div>
+      <h3>連結他人<br>確認真渴望是什麼</h3>
+      <p>情緒是燃料 · 9:00–18:00</p>
+    </div>
+    <div class="overview-panel d3">
+      <div class="day-badge">DAY THREE</div>
+      <h3>成為擺渡人<br>從一人局到共同創造</h3>
+      <p>情緒是場域 · 9:00–18:00</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">手冊架構</h2>
+  <table>
+    <tr><th>章節</th><th>內容</th></tr>
+    <tr><td>Ch.0 使用說明</td><td>手冊結構、帶領心法、安全守則</td></tr>
+    <tr><td>Ch.1 設計哲學</td><td>課程第一性原理、44 功能分群、One Muse 核心工具</td></tr>
+    <tr><td>Ch.2 Day 1 帶領指引</td><td>每個模組：目的 / 步驟 / 引導問題 / 常見卡點</td></tr>
+    <tr><td>Ch.3 Day 2 帶領指引</td><td>同上</td></tr>
+    <tr><td>Ch.4 Day 3 帶領指引</td><td>同上</td></tr>
+    <tr><td>Ch.5 固定練習縱向指引</td><td>三個固定練習 1.0 / 2.0 / 3.0 深度說明</td></tr>
+    <tr><td>Ch.6 工具速查</td><td>情緒辨識表、擺渡人語言卡、緊急應對指引</td></tr>
+  </table>
+
+  <h2 class="section-title">帶領核心心法</h2>
+  <div class="heart-box">
+    <h3>FACILITATOR PRINCIPLES</h3>
+    <p>
+      <em>鏡射，不診斷。</em>你的工作是讓學員看見自己，不是幫他們分析。<br>
+      <em>見證，不拯救。</em>學員不需要你修復他們，他們需要的是你相信他們可以自己走過。<br>
+      <em>場域先於內容。</em>安全容器建立好之前，再好的課程設計都是白費。<br>
+      <em>你的情緒是工具。</em>你的感動、你的穩定、你的好奇，都是帶領的一部分。
+    </p>
+  </div>
+
+  <h2 class="section-title">安全守則</h2>
+  <div class="module-card caution no-break">
+    <div class="module-body">
+      <div class="block-title">必要安全契約（Day 1 第一件事）</div>
+      <ul class="step-list">
+        <li>保密：在場分享的內容，不帶出這個空間。</li>
+        <li>不評論：聆聽時不給建議、不分析、不比較。</li>
+        <li>不拯救：別人在情緒中，你的工作是見證，不是修復。</li>
+        <li>可以 Pass：任何活動都可以選擇不分享，這是學員的自主權。</li>
+        <li>不強迫揭露：分享什麼、分享多深，是學員自己的選擇。</li>
+      </ul>
+      <div class="caution-box">
+        <div class="block-title">⚠ 緊急情況處理</div>
+        <ul class="note-list">
+          <li>學員情緒強烈崩潰：停下活動，讓學員到角落，說「我在這裡，你是安全的，不需要趕快好」。不急著解決情緒。</li>
+          <li>出現傷害自己的語言：暫停整個場域，課後私下評估轉介。課程期間先確保人身安全。</li>
+          <li>學員「拯救」另一個學員：溫和打斷「我看到你很想幫他，那也許就是你的情緒——我們先讓他走完自己那段，好嗎？」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-break"></div>
+
+
+<!-- CH.1 設計哲學 -->
+<div class="container">
+  <div class="chapter-label">Chapter 1</div>
+  <h1 class="chapter-title">課程設計哲學</h1>
+
+  <div class="heart-box">
+    <h3>CORE PRINCIPLE · 第一性原理</h3>
+    <p>課程不是教 44 個功能，而是讓學員<em>活出</em>這一句：<br><br>
+    情緒是生命用來「感知、連結、行動、創造」的作業系統。<br>
+    個人是感知自己，關係是連結他人，事業是共同創造。<br><br>
+    三天是這四個字的<em>實作路徑</em>，不是認知課程。</p>
+  </div>
+
+  <h2 class="section-title">三天弧線與大學對應</h2>
+  <table>
+    <tr><th>天數</th><th>核心問題</th><th>情緒角色</th><th>冰山層</th><th>大學</th></tr>
+    <tr><td>Day 1</td><td>我的人生有哪些結果，是長期被舊情緒牽著走而創造的？</td><td>情緒是雷達</td><td>冰山下（個人）</td><td>修身</td></tr>
+    <tr><td>Day 2</td><td>什麼樣的目標，會讓我的情緒、身體、語言、行動被點亮？</td><td>情緒是燃料</td><td>冰山中（關係）</td><td>齊家</td></tr>
+    <tr><td>Day 3</td><td>我如何把自己的局，變成別人也願意加入的大局？</td><td>情緒是場域</td><td>冰山上（事業）</td><td>治國平天下</td></tr>
+  </table>
+
+  <p><strong>主軸牌：</strong>「我是被情緒影響，還是透過情緒創造自己想要的結果？」這不是情緒管理牌，是人生主權牌。三天每個活動都在回答這張牌。</p>
+
+  <h2 class="section-title">44 功能分群邏輯（備課底層）</h2>
+  <div class="info-box"><p><strong>使用原則：</strong>44 個功能是備課素材，不是課程清單。每天只有 5–7 個功能被「撞到」。講師知道功能名稱是為了知道「現在的活動在激活什麼」，不是要向學員介紹功能。</p></div>
+  <table>
+    <tr><th>群組</th><th>功能序號</th><th>對應天數</th><th>核心意涵</th></tr>
+    <tr><td>覺察器</td><td>1–5</td><td>Day 1</td><td>察覺自己 / 需求 / 價值觀 / 方向 / 情緒比思想誠實</td></tr>
+    <tr><td>保護器</td><td>6–9</td><td>Day 1</td><td>危險警報 / 自我保護 / 風險評估 / 優先排序</td></tr>
+    <tr><td>能量管理器</td><td>10–13</td><td>Day 1/2</td><td>能量調度 / 動機引擎 / 打破慣性 / 體驗生命</td></tr>
+    <tr><td>學習進化器</td><td>14–18</td><td>Day 1</td><td>回饋 / 強化學習 / 發現盲點 / 反思 / 推動進化</td></tr>
+    <tr><td>身份塑造器</td><td>19–21</td><td>Day 1</td><td>記憶強化 / 創造身份認同 / 認識世界</td></tr>
+    <tr><td>溝通語言</td><td>22–25</td><td>Day 2</td><td>溝通信號 / 建立連結 / 建立信任 / 判斷距離</td></tr>
+    <tr><td>社交導航</td><td>26–28</td><td>Day 2</td><td>吸引排斥 / 認識他人 / 同步群體</td></tr>
+    <tr><td>助人核心</td><td>29–32</td><td>Day 2/3</td><td>察覺需求 / 陪伴轉化 / 創造安全感 / 傳遞希望</td></tr>
+    <tr><td>決策系統</td><td>33–34</td><td>Day 3</td><td>快速決策 / 顯化目標</td></tr>
+    <tr><td>影響力系統</td><td>35–38</td><td>Day 3</td><td>影響他人 / 創造追隨 / 創造願景 / 提升士氣</td></tr>
+    <tr><td>組織系統</td><td>39–40</td><td>Day 3</td><td>凝聚團隊 / 建立文化</td></tr>
+    <tr><td>創造系統</td><td>41–44</td><td>Day 3</td><td>創造想像力 / 創造藝術 / 創造產品 / 創造文明</td></tr>
+  </table>
+
+  <h2 class="section-title">One Muse 核心工具速查</h2>
+  <table>
+    <tr><th>工具</th><th>在課程中的角色</th></tr>
+    <tr><td>冰山六層</td><td>行為→感受→觀點→期待→渴望→自我，Day 1 冰山初探帶領框架</td></tr>
+    <tr><td>八方位能量學</td><td>乾坤震巽坎離艮兌，對應情緒八向度，Day 1 曼陀羅情緒圖底層邏輯</td></tr>
+    <tr><td>顯化四步驟</td><td>清晰畫面→強烈正向情緒→渲染他人→CTA，Day 2 做 1+2，Day 3 做 3+4</td></tr>
+    <tr><td>萬謬 16 型</td><td>背景工具，幫講師理解學員情緒模式傾向，不在課程正式介紹</td></tr>
+    <tr><td>大學三角色</td><td>為人君（自律）/ 為人親（自愛）/ 為人師（精進），Day 3 擺渡人定義核心</td></tr>
+    <tr><td>德財觀</td><td>有德斯有人→有人斯有土→有土斯有財，Day 3 結業 CTA 哲學底層</td></tr>
+  </table>
+</div>
+<div class="page-break"></div>
+
+
+<!-- CH.2 DAY 1 -->
+<div class="container">
+  <div class="chapter-label">Chapter 2</div>
+  <h1 class="chapter-title">Day 1 帶領指引：感知自己</h1>
+
+  <div class="day-header d1 no-break">
+    <div class="day-label">DAY ONE · 情緒是雷達</div>
+    <h2>看見我如何被情緒造局</h2>
+    <div class="day-cq">核心問題：我的人生有哪些結果，其實是長期被情緒牽著走而創造出來的？</div>
+    <div class="day-goals">
+      <div class="goal-item">情緒比思想更誠實——它是自我覺察器，不是問題。</div>
+      <div class="goal-item">舊劇本是保護機制，不是壞人——情緒是生存保護器。</div>
+      <div class="goal-item">我的人生困局是重複循環，不是單一事件。</div>
+      <div class="goal-item">我的身份是情緒記憶堆疊出來的——我可以重新選擇。</div>
+    </div>
+  </div>
+
+  <div class="info-box"><p><strong>Day 1 設計原則：</strong>44 功能第一群（覺察器1–5 + 保護器6–9 + 學習進化器14–18 + 身份塑造器19–21）。不是教功能，是讓學員在活動中<strong>撞到</strong>這些功能正在自己身上運作。</p></div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">09:00 – 09:30</span><span class="module-name">固定練習一：情緒雷達 1.0</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">呼吸定錨、身體掃描、情緒命名。五個書寫問題，三天固定開場。</div>
+      <div class="module-emotion">觸及功能：<span>功能1 察覺自己 · 功能2 察覺需求 · 功能10 能量調度</span></div>
+      <div class="block-title">帶領步驟</div>
+      <ul class="step-list">
+        <li>帶三次深呼吸，引導學員閉眼讓自己「到達這個空間」。</li>
+        <li>身體掃描：頭→肩→胸→腹→腿，問「哪裡有張力，哪裡比較輕鬆？」</li>
+        <li>請學員睜眼，依序書寫五個情緒雷達問題。</li>
+        <li>不邀請分享，靜默停留一分鐘。</li>
+      </ul>
+      <div class="block-title">五個引導問題</div>
+      <ul class="q-list">
+        <li>我現在最明顯的情緒是什麼？它在身體哪裡？</li>
+        <li>它正在影響我怎麼看今天？</li>
+        <li>如果我不覺察，它可能會把我帶去哪裡？</li>
+        <li>這個情緒想保護我什麼？</li>
+        <li>今天我想用這個情緒創造什麼？</li>
+      </ul>
+      <div class="recover-box">帶領金句：「情緒先被看見，不急著修正。你不需要改變現在的感覺，只需要讓它有名字。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">09:30 – 09:50</span><span class="module-name">開場與安全契約</span><span class="module-tag">場域建立</span></div>
+    <div class="module-body">
+      <div class="module-desc">建立三天的安全容器。五條安全守則，語氣溫和但明確。</div>
+      <ul class="note-list">
+        <li>每條守則說完後，停頓三秒，讓話落地。</li>
+        <li>最後問「這五條，大家都願意一起守護嗎？」讓學員點頭或說是。</li>
+        <li>提醒：「場域建立是助人能力的起點。你今天體驗到什麼，三天後你也要能為別人做到。」</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card key-module no-break">
+    <div class="module-header"><span class="module-time">09:50 – 10:30</span><span class="module-name">碎念交響樂</span><span class="module-tag">體驗活動</span></div>
+    <div class="module-body">
+      <div class="module-desc">兩人一組，A 數呼吸，B 低聲唸批判語句，三分鐘後交換，填情緒雷達表。</div>
+      <div class="module-emotion">觸及功能：<span>功能7 自我保護 · 功能16 發現盲點 · 功能8 風險評估</span></div>
+      <div class="block-title">碎念語句示範（B 唸給 A）</div>
+      <ul class="note-list">
+        <li>你是不是不夠好？你再努力一點就好了。</li>
+        <li>這樣會不會很丟臉？別人是不是不喜歡你？</li>
+        <li>你憑什麼？你有資格嗎？你是不是又要失敗了？</li>
+      </ul>
+      <div class="block-title">復盤引導問題</div>
+      <ul class="q-list">
+        <li>你是什麼時候被聲音帶走的？</li>
+        <li>哪一句話最像你平常腦中的聲音？</li>
+        <li>這些聲音平常替你創造什麼結果？</li>
+      </ul>
+      <div class="recover-box">帶領金句：「看見大腦在自動碎念，就是第一步——你不是那個聲音，你是聽見那個聲音的人。」</div>
+    </div>
+  </div>
+
+  <div class="module-card key-module no-break">
+    <div class="module-header"><span class="module-time">10:45 – 11:20</span><span class="module-name">小講：情緒是你的作業系統</span><span class="module-tag">核心概念</span></div>
+    <div class="module-body">
+      <div class="module-desc">正式介紹 44 功能第一群邏輯：覺察器→保護器→身份塑造器，對應能量學冰山下層次。</div>
+      <div class="block-title">三個開場句（選一句）</div>
+      <ul class="note-list">
+        <li>「你以為你在做選擇，其實是你的情緒在做選擇。」</li>
+        <li>「情緒不是你的問題，它是保護你的機制——只是保護的，是過去的你。」</li>
+        <li>「你是誰，很大程度上是你的情緒記憶堆疊出來的。」</li>
+      </ul>
+      <div class="block-title">小講結構（20–25 分鐘）</div>
+      <ul class="step-list">
+        <li>情緒是作業系統（不是 bug）：手機作業系統負責排序所有訊號，情緒也是如此。</li>
+        <li>覺察器群（1–5）：情緒告訴你「你是誰、你要什麼、什麼重要、你是否偏離自己」。</li>
+        <li>保護器群（6–9）：舊情緒在保護「過去的你」，不是現在的你。</li>
+        <li>身份塑造器（19–21）：「你是誰」是情緒記憶的累積——你可以重新選擇新情緒，累積新身份。</li>
+        <li>收束：「萬謬人生的根本原因是用一套舊作業系統，試圖創造新結果。三天的目的，是讓你看見那個系統，然後選擇要不要升級。」</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">11:20 – 12:15</span><span class="module-name">生命切片地圖</span><span class="module-tag">書寫工作</span></div>
+    <div class="module-body">
+      <div class="module-desc">寫下人生 5 個重要事件，標注主要情緒，圈出重複情緒模式。</div>
+      <div class="module-emotion">觸及功能：<span>功能14–15 回饋與強化學習 · 功能17 創造反思 · 功能19 記憶強化</span></div>
+      <div class="block-title">書寫提示（每個事件）</div>
+      <ul class="q-list">
+        <li>這個事件，我當時的情緒是什麼？</li>
+        <li>這個情緒讓我做了什麼決定？</li>
+        <li>這個決定帶來了什麼結果？</li>
+      </ul>
+      <ul class="note-list">
+        <li>書寫前先示範：用自己一個人生事件示範冰山格式，降低學員門檻。</li>
+        <li>書寫 30 分鐘後，帶學員圈出五個事件重複出現的「情緒+決定」組合。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">13:30 – 14:00</span><span class="module-name">固定練習二：他人情緒回收</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">三人一組：分享者念詩，聆聽者只說「我看見…」「我感受到…」，不分析、不建議、不拯救。</div>
+      <div class="module-emotion">觸及功能：<span>功能22 溝通信號 · 功能23 建立連結 · 功能29 察覺他人需求</span></div>
+      <ul class="note-list">
+        <li>給聆聽者明確語言限制：只能說「我看見…」或「我感受到…」，不能說「我覺得你應該…」。</li>
+        <li>先示範一次（講師當分享者，助教當聆聽者）。</li>
+      </ul>
+      <div class="recover-box">帶領金句：「鏡射不診斷，是助人能力的第一塊肌肉。你今天學的，三天後他們要能在生活中用。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">14:00 – 14:45</span><span class="module-name">曼陀羅情緒圖</span><span class="module-tag">能量學八方位</span></div>
+    <div class="module-body">
+      <div class="module-desc">用顏色與圖形畫出情緒世界地圖。中心「我」，八方位填入情緒狀態，對應能量學八方位。</div>
+      <table>
+        <tr><th>方位</th><th>能量學</th><th>情緒向度</th></tr>
+        <tr><td>上（乾）</td><td>使命/身份</td><td>我現在感受到自己的方向嗎？</td></tr>
+        <tr><td>下（坤）</td><td>記憶/積累</td><td>過去什麼情緒記憶最有重量？</td></tr>
+        <tr><td>左（坎）</td><td>連結/共振</td><td>我現在跟誰有情感連結？</td></tr>
+        <tr><td>右（離）</td><td>覺察/洞見</td><td>我看見了什麼原本沒看見的？</td></tr>
+        <tr><td>左上（巽）</td><td>探索/好奇</td><td>什麼讓我感到好奇？</td></tr>
+        <tr><td>右上（震）</td><td>行動/執行</td><td>什麼情緒驅動我想行動？</td></tr>
+        <tr><td>左下（艮）</td><td>邊界/守護</td><td>什麼讓我感到需要保護？</td></tr>
+        <tr><td>右下（兌）</td><td>互動/連結</td><td>什麼情緒出現在我跟人互動時？</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">14:45 – 15:30</span><span class="module-name">冰山初探</span><span class="module-tag">冰山六層</span></div>
+    <div class="module-body">
+      <div class="module-desc">從一個最近的衝突事件，用冰山六層拆開。</div>
+      <div class="module-emotion">觸及功能：<span>功能7–9 · 功能6 危險警報 · 功能2 察覺需求</span></div>
+      <div class="block-title">六層引導問題</div>
+      <ul class="q-list">
+        <li>行為層：你做了什麼？對方做了什麼？</li>
+        <li>感受層：你當時感受到什麼情緒？（只說情緒名稱，不說故事）</li>
+        <li>觀點層：你怎麼解讀這件事？（你的解釋，不是事實）</li>
+        <li>期待層：你期待對方怎麼做？</li>
+        <li>渴望層：這個期待背後，你真正渴望的是什麼？</li>
+        <li>自我層：這個渴望，跟你是誰有什麼關係？</li>
+      </ul>
+      <div class="block-title">常見卡點</div>
+      <ul class="note-list">
+        <li>卡在行為層→輕推：「那時候你的肩膀有沒有緊？胸口有沒有什麼感覺？」</li>
+        <li>渴望層停住→引導：「如果對方那時候做了你期待的事，你會感覺到什麼？那個感覺是什麼？」</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">15:45 – 16:30</span><span class="module-name">情緒造局地圖</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">畫出完整循環：觸發事件→情緒→詮釋→反應→關係影響→人生結果→強化信念→下一次觸發。</div>
+      <ul class="note-list">
+        <li>白板示範：用共同例子畫完整造局循環，讓學員先看明白再自己畫。</li>
+        <li>強調：「這個循環不是要說誰不好，是讓你看見——你有一條自己鋪的路，你一直走在上面。」</li>
+      </ul>
+      <div class="recover-box">帶領金句：「這個地圖就是萬謬人生的具象圖——看見它，是第一步自由。」</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">16:30 – 17:00</span><span class="module-name">固定練習三：舊局轉新局 1.0</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">兩人配對：A 分享情緒造局片段，B 只說「我看見你的…」「我感受到你…」。不解釋、不分析、不建議。</div>
+      <div class="recover-box">帶領金句：「被看見比被分析更有力量——這是擺渡人最核心的練習。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">17:00 – 17:40</span><span class="module-name">萬謬劇本表</span><span class="module-tag">書寫工作</span></div>
+    <div class="module-body">
+      <div class="module-desc">表格具象化：舊情緒 / 舊信念 / 舊選擇 / 舊結果。寫完後寫「我願意放下的劇本是……」</div>
+      <div class="recover-box">帶領金句：「把舊劇本寫出來，是第一步的解放——你不再是劇本，你是看見劇本的人。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">17:40 – 18:00</span><span class="module-name">Day 1 收束</span><span class="module-tag">場域關閉</span></div>
+    <div class="module-body">
+      <div class="module-desc">每人說一句：「我今天看見自己的舊局是……」圓圈分享，不評論，全場見證。</div>
+      <div class="block-title">今晚睡前作業</div>
+      <ul class="note-list">
+        <li>閉眼回想今天最有觸動的那個情緒，問它：「你在保護我什麼？」</li>
+        <li>把答案寫在本子上，明天帶來。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="page-break"></div>
+
+
+<!-- CH.3 DAY 2 -->
+<div class="container">
+  <div class="chapter-label">Chapter 3</div>
+  <h1 class="chapter-title">Day 2 帶領指引：連結他人</h1>
+
+  <div class="day-header d2 no-break">
+    <div class="day-label">DAY TWO · 情緒是燃料</div>
+    <h2>用情緒確認真渴望是什麼</h2>
+    <div class="day-cq">核心問題：當我開始看見自己，情緒開始向外流動——我如何透過情緒連結他人、確認我真正想創造的局？</div>
+    <div class="day-goals">
+      <div class="goal-item">情緒是動機引擎——真目標不靠頭腦確認，靠身體測謊。</div>
+      <div class="goal-item">情緒是連結橋——我的情緒信號，是讓別人感受到我的語言。</div>
+      <div class="goal-item">慾望目標 vs 使命目標——前者滿足自己，後者讓自己被點亮。</div>
+      <div class="goal-item">助人能力的底層，是先察覺他人情緒，不是先給答案。</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">09:00 – 09:30</span><span class="module-name">固定練習一：情緒雷達 2.0</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">回想 Day 1 舊劇本，用身體掃描感受哪裡收縮、哪裡想打開。</div>
+      <div class="module-emotion">觸及功能：<span>功能10 能量調度 · 功能11 動機引擎 · 功能12 打破慣性</span></div>
+      <div class="block-title">三個引導問題</div>
+      <ul class="q-list">
+        <li>昨天最揮之不去的那個情緒，今天還在嗎？在身體哪裡？</li>
+        <li>它想告訴我什麼，是我昨天還沒有完整聽到的？</li>
+        <li>今天我帶著什麼能量進入這個場域？</li>
+      </ul>
+      <div class="recover-box d2">帶領金句：「身體是情緒的儲存容器——先讓身體說話，再讓頭腦接收。神經系統先安全，才談真渴望。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">09:50 – 10:35</span><span class="module-name">他人劇本拍賣會</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">常見劇本卡放在桌上，學員挑出最像自己的，說明「為什麼它不是我的真渴望」。</div>
+      <div class="module-emotion">觸及功能：<span>功能26 吸引排斥 · 功能27 認識他人 · 功能4 察覺人生方向</span></div>
+      <div class="block-title">劇本卡示範（準備 15–20 張）</div>
+      <ul class="note-list">
+        <li>要成功 · 要乖 · 要有用 · 不能失敗 · 不能讓人失望 · 要顧好每個人</li>
+        <li>要被喜歡 · 不能太顯眼 · 要賺很多錢 · 要有安全感 · 不能軟弱</li>
+        <li>要對家人負責 · 要繼續父母的期待 · 我要先讓別人高興再說</li>
+      </ul>
+      <div class="recover-box d2">帶領金句：「分辨『我想要』vs『我被要求想要』——能量學說的清淨關係，從這裡開始。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">10:50 – 11:30</span><span class="module-name">我要什麼四象限</span><span class="module-tag">書寫工作</span></div>
+    <div class="module-body">
+      <div class="module-desc">四象限：①我想要 ②我假裝想要 ③我不敢承認想要 ④我不想再要。重點是③。</div>
+      <ul class="note-list">
+        <li>③象限最重要：「不敢承認想要的，通常是最真實的真渴望——它被壓著，因為它太重要，害怕失去或被笑。」</li>
+        <li>書寫完後，同桌兩人輕聲分享③，聆聽者只問：「可以多說一點嗎？」</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card key-module d2 no-break">
+    <div class="module-header"><span class="module-time">11:30 – 12:15</span><span class="module-name">小講：慾望目標 vs 使命目標</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">慾望目標滿足個人需求，達到後空虛。使命目標比自己更大，付出代價也甘願。連結乾卦＋震卦。</div>
+      <div class="block-title">三個核心問句</div>
+      <ul class="q-list">
+        <li>這個目標達到了之後，你會感到「終於」還是「還要再多」？</li>
+        <li>這個目標，讓你說出來時感到燃燒，還是只是合理？</li>
+        <li>如果三年後沒達到，你後悔的是什麼？</li>
+      </ul>
+      <div class="recover-box d2">帶領金句：「三天結束後的 CTA 是成為擺渡人——擺渡人的目標是使命目標，不是慾望目標。」</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">13:30 – 14:00</span><span class="module-name">固定練習二：他人情緒回收（願景版）</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">三人組：A 念詩，聆聽者說「我聽見你真正重視的是……」「我看見你的可能性是……」</div>
+      <div class="block-title">語言升級（Day 1 → Day 2）</div>
+      <ul class="note-list">
+        <li>Day 1：「我看見…」「我感受到…」（描述觀察）</li>
+        <li>Day 2：「我聽見你真正重視的是…」「我看見你的可能性是…」（指向渴望與潛能）</li>
+      </ul>
+      <div class="recover-box d2">帶領金句：「讓對方感受到『被看見可能性』比『被分析問題』更有力量——這是擺渡人的核心技術。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">14:00 – 14:40</span><span class="module-name">身體目標測謊</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">學員念出三個目標，觀察胸口/喉嚨/肚子/腳底的身體反應。身體打開 vs 身體收縮。</div>
+      <div class="module-emotion">觸及功能：<span>功能11 動機引擎：身體比頭腦更誠實</span></div>
+      <ul class="note-list">
+        <li>打開（溫熱、輕鬆、想站直）→ 比較可能是真渴望</li>
+        <li>收縮（緊繃、沉重、頭腦判斷「應該」）→ 可能是他人劇本</li>
+        <li>能量學：「能量流動的方向，就是真渴望的方向。」</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card key-module d2 no-break">
+    <div class="module-header"><span class="module-time">15:45 – 16:30</span><span class="module-name">顯化四步驟 1+2</span><span class="module-tag">One Muse 核心</span></div>
+    <div class="module-body">
+      <div class="module-desc">步驟1：清晰畫面（SMART）。步驟2：測正向情緒強度 1–10，低於 7 分重寫。</div>
+      <div class="block-title">步驟 1 引導問題（清晰畫面）</div>
+      <ul class="q-list">
+        <li>三年後的一個早晨，你醒在哪裡？</li>
+        <li>身旁有誰？你今天要去服務誰？</li>
+        <li>你做的事帶給你什麼感覺？</li>
+        <li>你的生活是什麼顏色？什麼溫度？</li>
+      </ul>
+      <div class="block-title">步驟 2（情緒強度）</div>
+      <ul class="note-list">
+        <li>請學員大聲念出願景（第一人稱現在式）。</li>
+        <li>念完問：「你的身體感受到幾分燃燒感？0=完全沒感覺，10=非常點燃。」</li>
+        <li>低於 7 分→「這個願景可能還不夠真——可以加入更多具體細節。」</li>
+      </ul>
+      <div class="recover-box d2">帶領金句：「顯化法則核心：情緒強度決定吸引力強度。沒有感受的願景，吸引不了任何東西。」</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">16:30 – 17:00</span><span class="module-name">固定練習三：願景造局 2.0</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">兩人配對：A 說三年願景，B 用四句回應。</div>
+      <div class="block-title">B 的四句話（要背起來）</div>
+      <ul class="note-list">
+        <li>「我聽見你真正重視的是……」</li>
+        <li>「我看見你的可能性是……」</li>
+        <li>「我感受到你的力量在……」</li>
+        <li>「你讓我相信……」</li>
+      </ul>
+      <div class="recover-box d2">帶領金句：「傳遞希望是擺渡人的核心肌肉——讓人相信自己可以，比給答案更有價值。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">17:40 – 18:00</span><span class="module-name">Day 2 收束</span><span class="module-tag">場域關閉</span></div>
+    <div class="module-body">
+      <div class="module-desc">每人說：「我願意承認，我真正想創造的局是……」圓圈見證，不評論。</div>
+      <div class="block-title">今晚睡前作業</div>
+      <ul class="note-list">
+        <li>帶著願景原型閉眼感受一次，測身體溫度——幾分？記下來，明天帶來。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="page-break"></div>
+
+
+<!-- CH.4 DAY 3 -->
+<div class="container">
+  <div class="chapter-label">Chapter 4</div>
+  <h1 class="chapter-title">Day 3 帶領指引：成為擺渡人</h1>
+
+  <div class="day-header d3 no-break">
+    <div class="day-label">DAY THREE · 情緒是場域</div>
+    <h2>從一人造局到共同創造</h2>
+    <div class="day-cq">核心問題：我如何把自己的局，變成別人也願意加入的大局？我如何成為別人生命中的擺渡人？</div>
+    <div class="day-goals">
+      <div class="goal-item">情緒是決策工具，不是干擾——直覺判斷就是情緒的高速運算。</div>
+      <div class="goal-item">影響力不是技巧，是情緒真實——讓別人「選擇想要」而非「不得不」。</div>
+      <div class="goal-item">為人君親師：先對自己做到，才能成為別人的擺渡人。</div>
+      <div class="goal-item">成為擺渡人是一輩子的職志，不是三天的技術。</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">09:00 – 09:30</span><span class="module-name">固定練習一：情緒雷達 3.0</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">帶著願景畫面閉眼一分鐘，感受身體溫度。問自己：「今天我準備承擔的是什麼？」</div>
+      <div class="block-title">三個引導問題</div>
+      <ul class="q-list">
+        <li>三天後的今天，我看見自己的舊局是什麼？新局是什麼？</li>
+        <li>今天我帶著什麼情緒準備行動？</li>
+        <li>有誰需要我今天的力量？我願意成為他的什麼？</li>
+      </ul>
+      <div class="recover-box d3">帶領金句：「承擔是成熟情緒的標誌——擺渡人不是不害怕，是在害怕中選擇承擔。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">10:00 – 10:45</span><span class="module-name">GAP Canvas</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">四格：①現在在哪裡 ②三年後願景 ③差距在哪裡 ④最小下一步（48小時內）</div>
+      <ul class="note-list">
+        <li>強調「48小時內」：「不是計畫，是一個你明天或後天就能做的動作。」</li>
+        <li>問題：「如果你明天只能做一件事，什麼動作最靠近你的願景？」</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">11:00 – 11:45</span><span class="module-name">信任路線</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">一人閉眼走，夥伴全程用語言引導（不接觸）。走完後角色互換。</div>
+      <ul class="note-list">
+        <li>引導者只能說話，不能用手扶持。「你在用語言成為他的眼睛——這就是擺渡人做的事。」</li>
+        <li>復盤：「被引導時，你最信任的那一刻，對方說了什麼？」</li>
+      </ul>
+      <div class="recover-box d3">帶領金句：「擺渡人陪的不是行動，是方向。信任路線就是擺渡人關係的體感版本。」</div>
+    </div>
+  </div>
+
+  <div class="module-card key-module d3 no-break">
+    <div class="module-header"><span class="module-time">11:45 – 12:15</span><span class="module-name">小講：影響力 vs 操控 × 為人君親師</span><span class="module-tag">核心概念</span></div>
+    <div class="module-body">
+      <div class="module-emotion">觸及功能：<span>功能35–38 影響力系統</span></div>
+      <div class="block-title">第一段：影響力 vs 操控（10 分鐘）</div>
+      <ul class="note-list">
+        <li>操控：讓別人「不得不」——不做就有代價（威脅/內疚/恐懼）。對方服從但失去信任。</li>
+        <li>影響力：讓別人「選擇想要」——做了會更靠近自己的真渴望。對方追隨並帶著自己的力量。</li>
+        <li>核心問句：「你用情緒影響別人時，讓他更靠近自己，還是更依賴你？」</li>
+      </ul>
+      <div class="block-title">第二段：能量學 × 為人君親師（20 分鐘）</div>
+      <ul class="note-list">
+        <li>大學：行善積德 = 為人君（領導）/ 為人親（照顧）/ 為人師（指導）。</li>
+        <li>為人君於己：領導自己（自律）— 能量有方向，才能為別人指路。</li>
+        <li>為人親於己：照顧自己（自愛）— 先得到滋養，才能成為別人的容器。</li>
+        <li>為人師於己：指導自己（精進）— 在自己的成長路上走，才有足跡讓別人跟隨。</li>
+        <li>德財觀：有德斯有人→有人斯有土→有土斯有財→有財斯有用。先修身，資源才流向你。</li>
+      </ul>
+      <div class="recover-box d3">帶領金句：「成為擺渡人不是角色，是你修自己之後自然散發的吸引力。你體驗了三天，就有資格陪別人走。」</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">13:30 – 14:00</span><span class="module-name">固定練習二：行動詞回收</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">每人從詩中圈出一個行動詞（動詞），說出這個詞在三天體驗的呼應。</div>
+      <div class="recover-box d3">帶領金句：「行動詞是從感受到行動的橋——這是顯化的最後一哩路。你的行動詞，就是你對自己的承諾。」</div>
+    </div>
+  </div>
+
+  <div class="module-card no-break">
+    <div class="module-header"><span class="module-time">14:45 – 15:30</span><span class="module-name">助人三角色輪轉</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">三人輪流：分享者（真實困境）/ 助人者（三句話）/ 觀察者（觀察有沒有想修復）。</div>
+      <div class="block-title">助人者的三句話（擺渡人語言）</div>
+      <ul class="note-list">
+        <li>「我聽見你說的是……」（確認感受，不添加詮釋）</li>
+        <li>「我看見你真正在乎的是……」（指向渴望層，不指向問題層）</li>
+        <li>「我相信你有能力……」（傳遞希望，不給答案）</li>
+      </ul>
+      <div class="recover-box d3">帶領金句：「不拯救是最高形式的尊重——相信對方有能力走過，而不是幫他跨過去。」</div>
+    </div>
+  </div>
+
+  <div class="module-card key-module d3 no-break">
+    <div class="module-header"><span class="module-time">15:45 – 16:30</span><span class="module-name">造局邀請練習</span><span class="module-tag">V2 保留</span></div>
+    <div class="module-body">
+      <div class="module-desc">每人輪流站前面說三年願景（第一人稱現在式，兩分鐘），最後說邀請句。</div>
+      <ul class="note-list">
+        <li>全場安靜聆聽，不鼓掌，直到最後一位說完才一起鼓掌。</li>
+        <li>說完邀請句後，全場任何人可站起來說「我願意支持你的局，因為……」</li>
+      </ul>
+      <div class="recover-box d3">帶領金句：「能說出讓別人感受到可能性的願景，才叫造局。」</div>
+    </div>
+  </div>
+
+  <div class="module-card fixed-practice no-break">
+    <div class="module-header"><span class="module-time">16:30 – 17:00</span><span class="module-name">固定練習三：合作造局 3.0</span><span class="fixed-badge">固定練習</span></div>
+    <div class="module-body">
+      <div class="module-desc">聽完造局邀請後，全場任何人可站起說「我願意支持你的局，因為……」三分鐘達成至少一個支持承諾。</div>
+      <div class="recover-box d3">帶領金句：「這不是認識活動，是共振儀式——被看見可能性的人，才會願意真正支持你。」</div>
+    </div>
+  </div>
+
+  <div class="module-card key-module d3 no-break">
+    <div class="module-header"><span class="module-time">17:35 – 18:00</span><span class="module-name">結業 CTA：成為擺渡人</span><span class="module-tag">完課儀式</span></div>
+    <div class="module-body">
+      <div class="block-title">完課儀式三步驟</div>
+      <ul class="step-list">
+        <li>每人說：「我在三天裡看見自己的……，也看見了別人的……」（圓圈見證）</li>
+        <li>全體一起念出三句擺渡人承諾。</li>
+        <li>24小時內破謬行動：告訴一個人你在三天裡看見的他的可能性，用學到的語言說。</li>
+      </ul>
+      <div class="block-title">大學路徑收束</div>
+      <ul class="note-list">
+        <li>Day 1 修身→ Day 2 齊家→ Day 3 治國平天下</li>
+        <li>德財觀：先修自己狀態，資源才流向你。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pledge-box">
+    <h3>成為擺渡人的三句承諾</h3>
+    <ul class="pledge-list">
+      <li data-n="I">我願意先覺察自己的情緒，不把慣性丟給別人。</li>
+      <li data-n="II">我願意在別人低能量時，看見他的潛能，而不是只看見他的問題。</li>
+      <li data-n="III">我願意用具體行動支持一個人，讓他相信自己可以開始改變。</li>
+    </ul>
+    <div class="pledge-closing">你體驗了，你就有資格陪別人走。<br>不是因為你完美了，而是因為你走過了。</div>
+  </div>
+
+</div>
+<div class="page-break"></div>
+
+
+<!-- CH.5 固定練習 -->
+<div class="container">
+  <div class="chapter-label">Chapter 5</div>
+  <h1 class="chapter-title">三個固定練習縱向指引</h1>
+
+  <div class="info-box"><p>三個固定練習貫穿三天，每天深化一版。三天九次練習構成肌肉記憶——學員帶走的不是知識，是能力。</p></div>
+
+  <h2 class="section-title">固定練習一：情緒雷達</h2>
+  <div class="practice-row">
+    <div class="practice-card">
+      <div class="day-ver">DAY 1 · 1.0</div><h4>情緒命名</h4>
+      <ul><li>我現在是什麼情緒？在哪裡？</li><li>它影響我怎麼看今天？</li><li>它想保護我什麼？</li></ul>
+    </div>
+    <div class="practice-card">
+      <div class="day-ver">DAY 2 · 2.0</div><h4>身體掃描</h4>
+      <ul><li>昨天的情緒今天還在嗎？在哪裡？</li><li>它想告訴我昨天沒聽到的什麼？</li><li>今天我帶著什麼能量進場？</li></ul>
+    </div>
+    <div class="practice-card">
+      <div class="day-ver">DAY 3 · 3.0</div><h4>承擔 + 選擇</h4>
+      <ul><li>我看見的舊局/新局是什麼？</li><li>今天我帶著什麼情緒準備行動？</li><li>有誰需要我今天的力量？</li></ul>
+    </div>
+  </div>
+
+  <h2 class="section-title">固定練習二：他人情緒回收</h2>
+  <div class="practice-row">
+    <div class="practice-card">
+      <div class="day-ver">DAY 1 · 觀察版</div><h4>鏡射觀察</h4>
+      <ul><li>「我看見……」</li><li>「我感受到……」</li><li>只描述，不分析，不建議</li></ul>
+    </div>
+    <div class="practice-card">
+      <div class="day-ver">DAY 2 · 願景版</div><h4>指向潛能</h4>
+      <ul><li>「我聽見你真正重視的是……」</li><li>「我看見你的可能性是……」</li><li>從觀察升級到指向渴望</li></ul>
+    </div>
+    <div class="practice-card">
+      <div class="day-ver">DAY 3 · 行動詞版</div><h4>激活行動</h4>
+      <ul><li>每人圈出詩裡的行動詞</li><li>說出與三天體驗的呼應</li><li>情緒→語言→行動</li></ul>
+    </div>
+  </div>
+
+  <h2 class="section-title">固定練習三：造局練習</h2>
+  <div class="practice-row">
+    <div class="practice-card">
+      <div class="day-ver">DAY 1 · 1.0</div><h4>被看見</h4>
+      <ul><li>A 分享情緒造局片段</li><li>B 只說「我看見你的…」</li><li>鏡射不評判</li></ul>
+    </div>
+    <div class="practice-card">
+      <div class="day-ver">DAY 2 · 2.0</div><h4>被看見可能性</h4>
+      <ul><li>A 說三年願景（現在式）</li><li>B 用四句話回應</li><li>傳遞希望</li></ul>
+    </div>
+    <div class="practice-card">
+      <div class="day-ver">DAY 3 · 3.0</div><h4>共振邀請</h4>
+      <ul><li>任何人可站起說「我願意支持你的局，因為……」</li><li>三分鐘至少一個支持承諾</li><li>共振儀式</li></ul>
+    </div>
+  </div>
+</div>
+<div class="page-break"></div>
+
+
+<!-- CH.6 工具速查 -->
+<div class="container">
+  <div class="chapter-label">Chapter 6</div>
+  <h1 class="chapter-title">工具速查</h1>
+
+  <h2 class="section-title">情緒辨識速查表</h2>
+  <div class="emotion-grid">
+    <div class="emotion-item"><div class="emotion-name">憤怒</div><div class="emotion-signal">在說：我的界線被侵犯了。<br>帶領：問「你在保護什麼？」</div></div>
+    <div class="emotion-item"><div class="emotion-name">悲傷</div><div class="emotion-signal">在說：我失去了重要的東西。<br>帶領：允許悲傷，問「失去的是什麼？」</div></div>
+    <div class="emotion-item"><div class="emotion-name">羞愧</div><div class="emotion-signal">在說：我害怕不被接納。<br>帶領：先建立安全感，不急著探問。</div></div>
+    <div class="emotion-item"><div class="emotion-name">焦慮</div><div class="emotion-signal">在說：我對未來失去掌控感。<br>帶領：帶回當下，「你現在安全嗎？」</div></div>
+    <div class="emotion-item"><div class="emotion-name">羨慕</div><div class="emotion-signal">在說：那裡有我不敢承認的渴望。<br>帶領：「那讓你羨慕的，可能是你的真渴望。」</div></div>
+    <div class="emotion-item"><div class="emotion-name">感動</div><div class="emotion-signal">在說：那裡有我真正重視的價值。<br>帶領：「是什麼讓你感動？那個東西是什麼？」</div></div>
+    <div class="emotion-item"><div class="emotion-name">興奮</div><div class="emotion-signal">在說：那裡可能有我的使命目標。<br>帶領：「這個興奮，是害怕的還是使命的？」</div></div>
+    <div class="emotion-item"><div class="emotion-name">沉重</div><div class="emotion-signal">在說：可能是他人劇本或恐懼驅動。<br>帶領：「這個沉重，是你自己的，還是別人交給你的？」</div></div>
+  </div>
+
+  <h2 class="section-title">擺渡人語言卡</h2>
+  <table>
+    <tr><th>情境</th><th>可以說的話</th><th>不要說的話</th></tr>
+    <tr><td>對方在情緒中</td><td>「我在這裡。你不需要趕快好。」<br>「我看見你現在很……」</td><td>「你不要這樣」「這沒什麼大不了」<br>「你應該……」</td></tr>
+    <tr><td>對方分享困境</td><td>「我聽見你說的是……」<br>「我看見你真正在乎的是……」</td><td>「我覺得你應該」<br>「我也有過類似的（轉移話題）」</td></tr>
+    <tr><td>對方低能量</td><td>「我相信你有能力……」<br>「我看見你的潛能在……」</td><td>「加油！」<br>「你很厲害的！（空洞鼓勵）」</td></tr>
+    <tr><td>對方想放棄</td><td>「告訴我你現在最重要的是什麼」<br>「你最初為什麼開始這件事？」</td><td>「不能放棄！」<br>「你都做到這裡了！」</td></tr>
+  </table>
+
+  <h2 class="section-title">顯化四步驟速查</h2>
+  <table>
+    <tr><th>步驟</th><th>核心問句</th><th>天數</th><th>常見問題</th></tr>
+    <tr><td>1. 清晰畫面</td><td>三年後的一天，我在哪裡？和誰？做什麼？</td><td>Day 2</td><td>畫面模糊→加入感官細節（顏色/溫度/聲音）</td></tr>
+    <tr><td>2. 強烈正向情緒</td><td>我的身體對這個畫面是幾分燃燒感？</td><td>Day 2</td><td>低於 7 分→可能是他人劇本，重新確認真渴望</td></tr>
+    <tr><td>3. 渲染他人</td><td>我說出這個願景時，別人能感受到可能性嗎？</td><td>Day 3</td><td>對方沒感受→願景還在腦子裡，沒進入情緒</td></tr>
+    <tr><td>4. 行動呼籲 CTA</td><td>我邀請誰？用什麼方式支持我的局？</td><td>Day 3</td><td>邀請太模糊→先做最小一步，再擴大</td></tr>
+  </table>
+
+  <h2 class="section-title">擺渡人三角色</h2>
+  <div class="ferryman-grid">
+    <div class="ferryman-card">
+      <div class="ferryman-glyph">君</div>
+      <div class="ferryman-name">為人君</div>
+      <div class="ferryman-desc">領導自己 · 自律<br>先讓自己的能量有方向，才能為別人指路。<br><br>問句：「我今天有沒有先領導自己？」</div>
+    </div>
+    <div class="ferryman-card">
+      <div class="ferryman-glyph">親</div>
+      <div class="ferryman-name">為人親</div>
+      <div class="ferryman-desc">照顧自己 · 自愛<br>先讓自己得到滋養，才能成為別人的容器。<br><br>問句：「我今天有沒有照顧自己？」</div>
+    </div>
+    <div class="ferryman-card">
+      <div class="ferryman-glyph">師</div>
+      <div class="ferryman-name">為人師</div>
+      <div class="ferryman-desc">指導自己 · 精進<br>先持續走在自己的成長路，才有足跡讓別人跟隨。<br><br>問句：「我今天有沒有學到什麼？」</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">課後支持圈設計</h2>
+  <table>
+    <tr><th>頻率</th><th>形式</th><th>目的</th></tr>
+    <tr><td>每週一次</td><td>兩人情緒雷達（15 分鐘）</td><td>維持情緒覺察習慣，互為見證者</td></tr>
+    <tr><td>每兩週一次</td><td>造局進度分享（小組，30 分鐘）</td><td>追蹤真渴望進展，互相支持 GAP</td></tr>
+    <tr><td>每月一次</td><td>助人三角色輪轉複習（小組，60 分鐘）</td><td>持續練習擺渡人能力，不讓肌肉退化</td></tr>
+  </table>
+
+  <div class="ornament">· · ·</div>
+
+  <div class="heart-box">
+    <h3>給所有帶領者的一句話</h3>
+    <p>
+      你不是教他們情緒。<br>
+      你是<em>用你自己走過的情緒</em>，陪他們走他們的。<br><br>
+      最好的帶領，是你在場域裡的真實——你的穩定、你的好奇、你的感動。<br>
+      那才是學員最深的學習來源。
+    </p>
+  </div>
+
+  <div class="page-footer">
+    One Muse · 萬謬人生三日課程 · 講師手冊 v0.3 · 2026 · 講師專用，請勿外傳
+  </div>
+</div>
+
+</body>
+</html>
