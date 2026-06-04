@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>設計原理手冊 — 知識變現三漏斗架構</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ember:#C4502A;--ember-light:#E0714D;
+  --teal:#2A7A6E;--gold:#B8923A;
+  --parchment:#F8F5F0;--parchment-2:#F0EDE8;
+  --border:#E2E0DA;--text-primary:#12121A;
+  --text-secondary:#4A4A5A;--text-muted:#8A8A9A;
+  --card-bg:#FDFCFA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit','Noto Sans TC',sans-serif;background:var(--parchment);color:var(--text-primary);line-height:1.75;font-size:16px;}
+
+.cover{background:linear-gradient(135deg,#0E0E1A 0%,#1A1A2E 55%,#2A1410 100%);color:#fff;padding:96px 48px 80px;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(196,80,42,0.12) 0%,transparent 65%);border-radius:50%;}
+.cover-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ember-light);border:1px solid rgba(224,113,77,0.35);padding:4px 14px;border-radius:100px;display:inline-block;margin-bottom:24px;}
+.cover h1{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;line-height:1.15;color:#fff;margin-bottom:16px;}
+.cover h1 em{color:var(--ember-light);font-style:normal;}
+.cover-sub{font-size:17px;color:rgba(255,255,255,0.55);margin-bottom:48px;max-width:540px;line-height:1.7;}
+.cover-meta{display:flex;gap:40px;flex-wrap:wrap;}
+.cmi{display:flex;flex-direction:column;gap:4px;}
+.cml{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+.cmv{font-size:20px;font-weight:600;color:var(--ember-light);}
+
+.container{max-width:880px;margin:0 auto;padding:0 32px;}
+section{padding:72px 0;border-bottom:1px solid var(--border);}
+.stag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ember);background:rgba(196,80,42,0.08);padding:4px 12px;border-radius:100px;display:inline-block;margin-bottom:16px;}
+h2{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;line-height:1.2;margin-bottom:8px;}
+h3{font-size:19px;font-weight:600;line-height:1.35;margin-bottom:12px;}
+p{color:var(--text-secondary);margin-bottom:16px;max-width:66ch;}
+p:last-child{margin-bottom:0;}
+
+.intro-box{background:linear-gradient(135deg,rgba(196,80,42,0.06) 0%,rgba(184,146,58,0.04) 100%);border:1px solid rgba(196,80,42,0.2);border-radius:12px;padding:32px 36px;margin:32px 0;}
+.intro-box .big{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--text-primary);line-height:1.4;margin-bottom:16px;}
+.intro-box p{font-size:15px;}
+
+.pcard{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;margin-bottom:24px;overflow:hidden;}
+.pcard-head{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:20px;background:#FAFAF8;}
+.pnum{width:44px;height:44px;background:var(--ember);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#fff;flex-shrink:0;}
+.pcard-title{flex:1;}
+.pcard-title h3{margin-bottom:4px;}
+.pcard-title .ptag{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+.pcard-body{padding:0;display:grid;grid-template-columns:1fr 1fr;}
+.pcard-col{padding:24px 28px;}
+.pcard-col+.pcard-col{border-left:1px solid var(--border);background:rgba(196,80,42,0.015);}
+.pcl{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.pcl.why{color:var(--teal);}
+.pcl.why::before{content:'';display:inline-block;width:6px;height:6px;background:var(--teal);border-radius:50%;}
+.pcl.say{color:var(--ember);}
+.pcl.say::before{content:'';display:inline-block;width:6px;height:6px;background:var(--ember);border-radius:50%;}
+ul.plist{list-style:none;padding:0;}
+ul.plist li{font-size:14px;color:var(--text-secondary);padding:8px 0 8px 20px;border-bottom:1px solid var(--border);position:relative;line-height:1.6;}
+ul.plist li:last-child{border-bottom:none;}
+ul.plist li::before{content:'→';position:absolute;left:0;color:var(--text-muted);font-size:12px;top:9px;}
+.quote{font-size:14px;font-style:italic;color:var(--text-secondary);background:rgba(196,80,42,0.04);border-left:3px solid var(--ember-light);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:12px;line-height:1.7;}
+.quote:last-child{margin-bottom:0;}
+.quote.gold{background:rgba(184,146,58,0.05);border-left-color:var(--gold);}
+
+.math-box{background:#12121A;border-radius:12px;padding:32px 36px;margin:28px 0;}
+.math-section{margin-bottom:24px;}
+.math-section:last-child{margin-bottom:0;}
+.math-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.math-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.mc{background:rgba(255,255,255,0.07);border-radius:8px;padding:14px 20px;text-align:center;min-width:110px;}
+.mc.result{border:1px solid rgba(196,80,42,0.5);background:rgba(196,80,42,0.12);}
+.mc.bad{border:1px solid rgba(255,80,80,0.3);}
+.mv{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--ember-light);line-height:1;}
+.mc.result .mv{color:#fff;}
+.mc.bad .mv{color:rgba(255,100,100,0.9);}
+.ml{font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;}
+.mop{font-family:'IBM Plex Mono',monospace;font-size:22px;color:rgba(255,255,255,0.2);}
+.mvd{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-top:10px;}
+.mvd.bad{color:rgba(255,100,100,0.7);}
+.mvd.good{color:rgba(80,200,140,0.8);}
+
+.sys-map{display:flex;align-items:stretch;margin:32px 0;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.sys-node{flex:1;padding:24px 20px;text-align:center;border-right:1px solid var(--border);}
+.sys-node:last-child{border-right:none;}
+.sys-node.main{background:rgba(196,80,42,0.04);}
+.sys-node.aux{opacity:.65;}
+.sn-icon{font-size:26px;margin-bottom:8px;display:block;}
+.sn-label{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:4px;}
+.sn-role{font-size:12px;color:var(--text-muted);line-height:1.4;}
+.sn-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.06em;padding:2px 8px;border-radius:100px;margin-top:6px;}
+.sn-badge.main{background:rgba(196,80,42,0.12);color:var(--ember);}
+.sn-badge.aux{background:rgba(0,0,0,0.06);color:var(--text-muted);}
+
+.stbl{width:100%;border-collapse:collapse;margin:28px 0;}
+.stbl th{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);background:var(--parchment-2);}
+.stbl td{font-size:14px;color:var(--text-secondary);padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;}
+.stbl td:first-child{font-weight:600;color:var(--text-primary);font-size:15px;width:28%;}
+.stbl tr:last-child td{border-bottom:none;}
+.stbl tr:hover td{background:rgba(196,80,42,0.015);}
+
+.closing{background:linear-gradient(135deg,#0E0E1A 0%,#1A1A2E 100%);color:#fff;padding:72px 48px;text-align:center;}
+.closing h2{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:#fff;margin-bottom:16px;}
+.closing p{color:rgba(255,255,255,0.5);font-size:16px;max-width:54ch;margin:0 auto;}
+
+@media(max-width:640px){
+  .cover{padding:56px 24px;}
+  .cover h1{font-size:34px;}
+  .container{padding:0 20px;}
+  .pcard-body{grid-template-columns:1fr;}
+  .pcard-col+.pcard-col{border-left:none;border-top:1px solid var(--border);}
+  .sys-map{flex-direction:column;}
+  .sys-node{border-right:none;border-bottom:1px solid var(--border);}
+  .sys-node:last-child{border-bottom:none;}
+  .math-row{flex-direction:column;}
+  .cover-meta{gap:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="container">
+    <div class="cover-tag">Consultant Design Principles</div>
+    <h1>為什麼<em>這樣設計</em><br>三漏斗架構的原理</h1>
+    <p class="cover-sub">給顧問的設計說明書。理解每個決策背後的邏輯，你就能在客戶面前用同一套語言說服他——而不只是告訴他「要這樣做」。</p>
+    <div class="cover-meta">
+      <div class="cmi"><span class="cml">服務對象</span><span class="cmv">身心整合教練</span></div>
+      <div class="cmi"><span class="cml">核心目標</span><span class="cmv">月收 30 萬</span></div>
+      <div class="cmi"><span class="cml">手冊版本</span><span class="cmv">設計原理 v1</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<section>
+  <span class="stag">核心哲學</span>
+  <h2>一句話說清楚</h2>
+  <div class="intro-box">
+    <div class="big">知識變現不是「賣課程」，<br>是「建立一個自動篩人的系統」。</div>
+    <p>你的客戶過去用的是一次性邏輯——開一門課，賣一次，下一期重來。這是勞力密集型，收入跟時間成線性關係。我們設計的是複利型：廣告投入 → 系統篩選 → 訂閱沉澱 → 高客單收割。投入一次，持續收回。這個區別，是三漏斗架構所有決策的出發點。</p>
+  </div>
+  <p>當你理解這個核心，你就知道每個設計選擇都不是偏好問題，而是結構問題。下面五個原理，分別解釋一個關鍵決策的「為什麼」。</p>
+</section>
+
+<section>
+  <span class="stag">原理 1</span>
+  <h2>為什麼 F1+F2 是主線，BNI 是輔助</h2>
+  <div class="sys-map">
+    <div class="sys-node main">
+      <span class="sn-icon">▶</span>
+      <div class="sn-label">F1 VSL</div>
+      <div class="sn-role">廣告驅動<br>自動化流量</div>
+      <span class="sn-badge main">主線</span>
+    </div>
+    <div class="sys-node main">
+      <span class="sn-icon">◎</span>
+      <div class="sn-label">F2 訂閱社群</div>
+      <div class="sn-role">名單沉澱<br>持續底薪</div>
+      <span class="sn-badge main">主線</span>
+    </div>
+    <div class="sys-node aux">
+      <span class="sn-icon">◈</span>
+      <div class="sn-label">F3 BNI</div>
+      <div class="sn-role">冷啟動補充<br>非主要收入</div>
+      <span class="sn-badge aux">輔助</span>
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="pcard-head">
+      <div class="pnum">1</div>
+      <div class="pcard-title">
+        <div class="ptag">核心設計決策</div>
+        <h3>可複製性是選主線的唯一標準</h3>
+      </div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-col">
+        <div class="pcl why">為什麼這樣設計</div>
+        <ul class="plist">
+          <li>BNI 依賴個人關係，每多一單需多花一份人際維繫時間，且與既有會員服務模式重疊，無法獨立擴張</li>
+          <li>F1 廣告投入後，每多一個潛客的邊際成本接近零——唯一能讓「你睡著時還在進名單」的機制</li>
+          <li>F2 訂閱產生持續性現金流。100 訂閱 × 月費 500 = 月收 5 萬底薪，不管當月賣不賣課</li>
+          <li>三漏斗設計目的：F1 進名單 → F2 沉澱信任 → F3 1-1 收割高客單。這是一套系統，不是三個獨立活動</li>
+        </ul>
+      </div>
+      <div class="pcard-col">
+        <div class="pcl say">面對客戶可以說的話</div>
+        <div class="quote">「BNI 幫你暖身，但 BNI 不會幫你退休。真正讓你解放的是：有人在你不工作的時候還在幫你累積名單。那個人是廣告，不是你的人際關係。」</div>
+        <div class="quote">「你現在做的事，你的收入跟你的時間是線性的。三漏斗要讓你的收入跟你的時間脫鉤。」</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="stag">原理 2</span>
+  <h2>為什麼定價要 6–8 萬，不是 4 萬</h2>
+  <div class="math-box">
+    <div class="math-section">
+      <div class="math-lbl">如果客單 4 萬</div>
+      <div class="math-row">
+        <div class="mc"><div class="mv">30 萬</div><div class="ml">月收目標</div></div>
+        <div class="mop">÷</div>
+        <div class="mc bad"><div class="mv">4 萬</div><div class="ml">客戶想要的定價</div></div>
+        <div class="mop">=</div>
+        <div class="mc bad"><div class="mv">7–8</div><div class="ml">每月需成交單數</div></div>
+      </div>
+      <div class="mvd bad">✗ 超出身心教練服務體能上限（滿載約 10–12 位）</div>
+    </div>
+    <div class="math-section">
+      <div class="math-lbl">如果客單 6–8 萬</div>
+      <div class="math-row">
+        <div class="mc"><div class="mv">30 萬</div><div class="ml">月收目標</div></div>
+        <div class="mop">÷</div>
+        <div class="mc result"><div class="mv">6–8 萬</div><div class="ml">建議定價區間</div></div>
+        <div class="mop">=</div>
+        <div class="mc result"><div class="mv">4–5</div><div class="ml">每月需成交單數</div></div>
+      </div>
+      <div class="mvd good">✓ 達標且保留空間給新客戶持續進來</div>
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="pcard-head">
+      <div class="pnum">2</div>
+      <div class="pcard-title">
+        <div class="ptag">核心設計決策</div>
+        <h3>定價是服務體能問題，不只是心理問題</h3>
+      </div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-col">
+        <div class="pcl why">為什麼這樣設計</div>
+        <ul class="plist">
+          <li>身心整合 1-1 是高耗能服務，每位客戶每月 2–3 次深度會談加備課，服務容量上限約 10–12 位</li>
+          <li>4 萬客單要達 30 萬，需 7–8 單。在 10–12 位容量下幾乎無空間接新客戶，增長停滯</li>
+          <li>6–8 萬只需 4–5 單，既達標，又保留 5–7 個位子讓 F2 訂閱成員升級進入</li>
+          <li>定價是篩選機制：6–8 萬的客戶對結果更認真，流失率更低，整體服務品質更好</li>
+        </ul>
+      </div>
+      <div class="pcard-col">
+        <div class="pcl say">面對客戶可以說的話</div>
+        <div class="quote">「你現在想賣 4 萬，因為覺得比較容易成交。但算一下——月收 30 萬需要 7–8 個客戶，你每個月有這個能量服務那麼多人嗎？」</div>
+        <div class="quote">「6–8 萬的客戶，不是賺得比較多，而是你能把同樣時間用在更少、更投入的人身上，服務品質反而更高。」</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="stag">原理 3</span>
+  <h2>為什麼月 1 要快速預售，不是等系統建好</h2>
+  <div class="pcard">
+    <div class="pcard-head">
+      <div class="pnum">3</div>
+      <div class="pcard-title">
+        <div class="ptag">核心設計決策</div>
+        <h3>廣告要錢 → 要先有錢 → 最快取錢的方式是預售</h3>
+      </div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-col">
+        <div class="pcl why">為什麼這樣設計</div>
+        <ul class="plist">
+          <li>F1 廣告每月需 1 萬。無收入 → 無廣告 → 無 F1 名單 → 整個系統無法啟動。這是現金流邏輯，不是排程問題</li>
+          <li>預售不需要系統完整。只需「一個清楚的服務承諾」+「一個收款連結」就可以開始</li>
+          <li>預售本身是市場驗證：有人付錢代表定位有效；沒人付則早期發現，比後期修正便宜得多</li>
+          <li>客戶看到第一筆錢進來，才會真正相信這套系統有效，才有動力繼續執行後續步驟</li>
+        </ul>
+      </div>
+      <div class="pcard-col">
+        <div class="pcl say">面對客戶可以說的話</div>
+        <div class="quote">「系統建好再賣的問題是：建系統要時間，你的耐心和資金都有限。我們先用你現在能做的方式拿到第一筆錢，這筆錢讓廣告跑起來，廣告進名單，名單才有訂閱可賣。」</div>
+        <div class="quote">「預售不是臨時方案，是驗證你的定位對不對。有人付錢，你就知道方向是對的。」</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="stag">原理 4</span>
+  <h2>為什麼手冊要有顧問視角軌</h2>
+  <div class="pcard">
+    <div class="pcard-head">
+      <div class="pnum">4</div>
+      <div class="pcard-title">
+        <div class="ptag">核心設計決策</div>
+        <h3>你的角色是診斷師，不是執行員</h3>
+      </div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-col">
+        <div class="pcl why">為什麼這樣設計</div>
+        <ul class="plist">
+          <li>客戶卡住有三種可能：不行動（動機問題）、方向錯（認知問題）、工具不到位（執行問題）。三種情況處理方式完全不同</li>
+          <li>只有客戶軌的手冊，你每次見面都在即興診斷，這是消耗你能量最快的方式</li>
+          <li>有顧問軌，你打開就知道「這週確認什麼」「客戶沒做是哪種原因」——靠系統，不靠記憶</li>
+          <li>這是你服務價值的核心：你幫客戶「看清楚為什麼沒做」，不只是幫他「做事」</li>
+        </ul>
+      </div>
+      <div class="pcard-col">
+        <div class="pcl say">面對客戶可以說的話</div>
+        <div class="quote">「我們每次會談不只是跑進度，是診斷。你這週做了什麼、卡在哪裡——我根據你的狀況決定推進方式，不是照表操課。」</div>
+        <div class="quote gold">給自己說的：「你帶手冊見客戶，不是因為你不懂，而是因為你不需要靠記憶工作。手冊讓你在客戶面前更有信心，因為你知道下一步是什麼，也知道卡住時怎麼診斷。」</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="stag">原理 5</span>
+  <h2>為什麼 F2 是低入場訂閱，不是直接賣大課</h2>
+  <div class="pcard">
+    <div class="pcard-head">
+      <div class="pnum">5</div>
+      <div class="pcard-title">
+        <div class="ptag">核心設計決策</div>
+        <h3>訂閱社群 = 永久名單池 + 固定底薪 + 大課暖場</h3>
+      </div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-col">
+        <div class="pcl why">為什麼這樣設計</div>
+        <ul class="plist">
+          <li>直接賣大課的問題：課賣完名單就冷掉，下一輪要重新暖身。這是「每次從零開始」的邏輯</li>
+          <li>低入場訂閱讓「對你有興趣但還不確定」的人先進來，持續接觸，接觸夠了才升級大課或 1-1</li>
+          <li>200 訂閱 × 月費 500 = 月收 10 萬底薪，不靠新客戶也有固定收入，保護你在廣告效果不穩月份不慌</li>
+          <li>訂閱成員是最好的大課候選人。他們已信任你、習慣你的內容，成交大課的難度遠低於陌生流量</li>
+        </ul>
+      </div>
+      <div class="pcard-col">
+        <div class="pcl say">面對客戶可以說的話</div>
+        <div class="quote">「訂閱社群不是課程的暖場，它是你的資產。每個月訂閱的人就是在用錢投票說『我信任你』。等你累積到 200 個這樣的人，你發一場挑戰營，60 個人出來，你就賺到了。」</div>
+        <div class="quote">「低入場的目的是降低決策門檻。讓他先進來，我再讓他愛上你的內容。」</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="stag">設計原理總覽</span>
+  <h2>五個決策一張表</h2>
+  <p>每個設計選擇背後都有一個邏輯鏈。你說服客戶的方式，不是叫他相信你，而是讓他自己算清楚。</p>
+  <table class="stbl">
+    <thead>
+      <tr>
+        <th>設計決策</th>
+        <th>底層邏輯</th>
+        <th>關鍵數字</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>F1+F2 是主線</td>
+        <td>可複製性 > 人際關係依賴。廣告+訂閱依賴系統，系統不休息</td>
+        <td>1 萬廣告 → 邊際成本趨零的名單增長</td>
+      </tr>
+      <tr>
+        <td>定價 6–8 萬</td>
+        <td>月收目標 30 萬的財務反推。4 萬客單需 7–8 單，超出服務體能</td>
+        <td>6–8 萬 × 4–5 單 = 24–40 萬，可持續</td>
+      </tr>
+      <tr>
+        <td>月1 快速預售</td>
+        <td>無收入 → 無廣告 → 系統無法啟動。預售是最快取得廣告資金的方式</td>
+        <td>預售 2 單 × 6 萬 = 12 萬（覆蓋一年廣告）</td>
+      </tr>
+      <tr>
+        <td>手冊雙軌設計</td>
+        <td>顧問的價值是診斷，不是執行。需要視角才能在客戶卡住時正確推進</td>
+        <td>客戶軌 + 顧問軌 = 每週會談不依賴即興</td>
+      </tr>
+      <tr>
+        <td>F2 低入場訂閱</td>
+        <td>先建名單池，再從池子裡升級高客單。訂閱 = 月底薪 + 大課暖場來源</td>
+        <td>200 訂閱 × 500 = 月收 10 萬持續底薪</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</div>
+
+<div class="closing">
+  <h2>理解原理之後</h2>
+  <p>你不只是在執行一份計畫。你在幫客戶從「賣時間換錢」切換到「建系統讓錢找你」的邏輯。這個切換是他最大的認知挑戰——而你的工作，是每次見面都幫他往前移動一點。</p>
+</div>
+
+</body>
+</html>
