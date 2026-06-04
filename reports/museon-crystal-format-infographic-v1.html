@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSEON 結晶格式 — 經銷商培訓</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+TC:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #181737;
+      --fog-gold: #b6853d;
+      --fog-gold-light: rgba(182,133,61,0.18);
+      --fog-gold-dim:   rgba(182,133,61,0.55);
+      --ember:   #C4502A;
+      --ember-bg: rgba(196,80,42,0.15);
+      --text:    #f5f0e8;
+      --text-dim: rgba(245,240,232,0.60);
+      --text-muted: rgba(245,240,232,0.35);
+      --border:  rgba(182,133,61,0.28);
+      --card-bg: rgba(255,255,255,0.04);
+      --card-border: rgba(182,133,61,0.22);
+      --surface: rgba(255,255,255,0.06);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+
+    /* ── 16:9 wrapper ── */
+    .slide-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── background subtle grid ── */
+    .slide-wrapper::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(182,133,61,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(182,133,61,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* ── top header bar ── */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4% 3%;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      background: rgba(24,23,55,0.9);
+      position: relative; z-index: 2;
+    }
+    .header-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(16px, 2.2vw, 26px);
+      font-weight: 700;
+      color: var(--fog-gold);
+      letter-spacing: 0.06em;
+    }
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(14px, 1.8vw, 22px);
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .header-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(9px, 0.9vw, 11px);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember);
+      background: var(--ember-bg);
+      border: 1px solid rgba(196,80,42,0.4);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ── main content area ── */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      padding: 1.8% 2.5% 1.2%;
+      gap: 1.5%;
+      position: relative; z-index: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* ════════════════════════════
+       LEFT COLUMN — 25%
+    ════════════════════════════ */
+    .col-left {
+      width: 24%;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .col-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(8px, 0.85vw, 11px);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      margin-bottom: 4%;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .col-title span {
+      color: var(--fog-gold);
+    }
+
+    .input-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 4%;
+      flex: 1;
+    }
+    .input-card {
+      border: 1.5px dashed rgba(182,133,61,0.35);
+      border-radius: 8px;
+      padding: 5% 7%;
+      background: rgba(182,133,61,0.04);
+      display: flex;
+      align-items: center;
+      gap: 8%;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .input-card:nth-child(2) { transform: rotate(-0.4deg); }
+    .input-card:nth-child(3) { transform: rotate(0.3deg); }
+    .input-card:nth-child(4) { transform: rotate(-0.2deg); }
+
+    .input-icon {
+      font-size: clamp(14px, 1.6vw, 20px);
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+    .input-label {
+      font-size: clamp(10px, 1.05vw, 13px);
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .input-label-sub {
+      font-size: clamp(8px, 0.8vw, 10px);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .col-footer-note {
+      margin-top: 4%;
+      font-size: clamp(8px, 0.8vw, 10px);
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ════════════════════════════
+       MIDDLE COLUMN — 14%
+    ════════════════════════════ */
+    .col-middle {
+      width: 13%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6%;
+    }
+
+    .crystallize-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(12px, 1.4vw, 18px);
+      font-weight: 600;
+      color: var(--fog-gold);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    /* arrow */
+    .arrow-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8%;
+      width: 100%;
+    }
+    .arrow-shaft {
+      width: 4px;
+      height: clamp(24px, 5vh, 50px);
+      background: linear-gradient(180deg, var(--fog-gold-dim), var(--fog-gold));
+      border-radius: 2px;
+    }
+    .arrow-head {
+      width: 0; height: 0;
+      border-left: clamp(8px, 1.2vw, 14px) solid transparent;
+      border-right: clamp(8px, 1.2vw, 14px) solid transparent;
+      border-top: clamp(14px, 2vw, 22px) solid var(--fog-gold);
+    }
+
+    /* gem SVG */
+    .gem-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6%;
+    }
+    .gem {
+      position: relative;
+      width: clamp(44px, 6vw, 72px);
+      height: clamp(44px, 6vw, 72px);
+      filter: drop-shadow(0 0 10px rgba(182,133,61,0.55))
+              drop-shadow(0 0 22px rgba(182,133,61,0.25));
+    }
+    .gem svg { width: 100%; height: 100%; }
+
+    .gem-note {
+      font-size: clamp(8px, 0.82vw, 10px);
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+    .gem-note strong {
+      color: var(--fog-gold-dim);
+    }
+
+    /* ════════════════════════════
+       RIGHT COLUMN — 63%
+    ════════════════════════════ */
+    .col-right {
+      width: 63%;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .col-right .col-title { margin-bottom: 3%; }
+
+    /* crystal card */
+    .crystal-card {
+      flex: 1;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(182,133,61,0.3);
+      border-radius: 12px;
+      padding: 2.4% 3%;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .crystal-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ember), var(--fog-gold), transparent);
+      border-radius: 12px 12px 0 0;
+    }
+
+    /* card top meta */
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 3%;
+    }
+    .badge-type {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(8px, 0.85vw, 10px);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #fff;
+      background: var(--ember);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(8px, 0.82vw, 10px);
+      font-weight: 500;
+      color: var(--fog-gold);
+      background: var(--fog-gold-light);
+      border: 1px solid rgba(182,133,61,0.35);
+      padding: 2px 9px;
+      border-radius: 100px;
+    }
+    .card-id {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(8px, 0.78vw, 9px);
+      color: var(--text-muted);
+    }
+
+    /* card title */
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(14px, 1.7vw, 21px);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 2%;
+    }
+
+    /* card divider */
+    .card-divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(182,133,61,0.3), transparent);
+      margin-bottom: 2.5%;
+    }
+
+    /* card section label */
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(7px, 0.75vw, 9px);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--fog-gold);
+      margin-bottom: 1.5%;
+    }
+
+    /* card body text */
+    .card-body-row {
+      display: flex;
+      gap: 3%;
+      margin-bottom: 2%;
+    }
+    .insight-block,
+    .apply-block {
+      flex: 1;
+    }
+    .card-body {
+      font-size: clamp(10px, 1.05vw, 13px);
+      color: var(--text);
+      line-height: 1.75;
+    }
+    .card-body .highlight {
+      color: var(--fog-gold);
+      font-weight: 500;
+    }
+    .card-body .arrow {
+      color: var(--ember);
+      font-weight: 600;
+    }
+
+    .apply-example {
+      background: rgba(196,80,42,0.08);
+      border-left: 3px solid var(--ember);
+      border-radius: 0 6px 6px 0;
+      padding: 3% 4%;
+      margin-top: 1.5%;
+    }
+    .apply-example .card-body { font-size: clamp(9px, 0.98vw, 12px); }
+
+    /* card footer */
+    .card-footer {
+      margin-top: auto;
+      padding-top: 2%;
+      border-top: 1px solid rgba(182,133,61,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4%;
+      flex-wrap: wrap;
+    }
+    .footer-source {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(7px, 0.78vw, 9px);
+      color: var(--text-muted);
+    }
+    .footer-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stat-item {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(8px, 0.85vw, 10px);
+      color: var(--text-muted);
+    }
+    .stat-item .stat-num {
+      color: var(--fog-gold);
+      font-weight: 600;
+      font-size: clamp(10px, 1.05vw, 13px);
+    }
+    .stat-dot { color: var(--border); }
+
+    /* ════════════════════════════
+       BOTTOM BANNER
+    ════════════════════════════ */
+    .bottom-banner {
+      flex-shrink: 0;
+      border-top: 1px solid var(--border);
+      background: linear-gradient(90deg,
+        rgba(182,133,61,0.08) 0%,
+        rgba(182,133,61,0.14) 50%,
+        rgba(182,133,61,0.08) 100%);
+      padding: 1.3% 3%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      position: relative; z-index: 2;
+    }
+    .banner-gem { font-size: clamp(14px, 1.5vw, 18px); opacity: 0.8; }
+    .banner-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(14px, 1.75vw, 22px);
+      font-weight: 600;
+      color: var(--fog-gold);
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+    .banner-text .arrow-token {
+      color: var(--ember);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+<div class="slide-wrapper">
+
+  <!-- ── HEADER ── -->
+  <div class="header-bar">
+    <div class="header-logo">✦ MUSEON</div>
+    <div class="header-title">Knowledge Crystal Format — 結晶格式解析</div>
+    <div class="header-badge">經銷商培訓 · v1</div>
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="main-content">
+
+    <!-- LEFT: 輸入素材 -->
+    <div class="col-left">
+      <div class="col-title">01 &nbsp;<span>輸入素材</span>　·　原始輸入</div>
+
+      <div class="input-cards">
+        <div class="input-card">
+          <div class="input-icon">💬</div>
+          <div>
+            <div class="input-label">對話紀錄</div>
+            <div class="input-label-sub">Telegram / 會議轉錄</div>
+          </div>
+        </div>
+        <div class="input-card">
+          <div class="input-icon">📅</div>
+          <div>
+            <div class="input-label">會議摘要</div>
+            <div class="input-label-sub">客戶訪談 / 策略討論</div>
+          </div>
+        </div>
+        <div class="input-card">
+          <div class="input-icon">📄</div>
+          <div>
+            <div class="input-label">工作 SOP</div>
+            <div class="input-label-sub">流程文件 / 操作規範</div>
+          </div>
+        </div>
+        <div class="input-card">
+          <div class="input-icon">⭐</div>
+          <div>
+            <div class="input-label">客戶反饋</div>
+            <div class="input-label-sub">成交/失敗案例回饋</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-footer-note">這些是原始資料，<br/>零散、未結構化</div>
+    </div>
+
+    <!-- MIDDLE: 結晶過程 -->
+    <div class="col-middle">
+      <div class="crystallize-label">結晶化</div>
+
+      <div class="arrow-wrap">
+        <div class="arrow-shaft"></div>
+        <div class="arrow-head"></div>
+      </div>
+
+      <div class="gem-wrap">
+        <div class="gem">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- outer gem shape -->
+            <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="rgba(182,133,61,0.12)" stroke="#b6853d" stroke-width="1.5"/>
+            <!-- inner faces -->
+            <polygon points="40,4 72,22 40,38" fill="rgba(182,133,61,0.22)"/>
+            <polygon points="40,4 8,22 40,38" fill="rgba(182,133,61,0.10)"/>
+            <polygon points="72,22 72,58 40,38" fill="rgba(182,133,61,0.18)"/>
+            <polygon points="8,22 8,58 40,38" fill="rgba(182,133,61,0.08)"/>
+            <polygon points="72,58 40,76 40,38" fill="rgba(182,133,61,0.20)"/>
+            <polygon points="8,58 40,76 40,38" fill="rgba(182,133,61,0.14)"/>
+            <!-- highlight edge -->
+            <line x1="40" y1="4" x2="72" y2="22" stroke="rgba(245,240,232,0.5)" stroke-width="1"/>
+            <line x1="40" y1="4" x2="40" y2="38" stroke="rgba(245,240,232,0.3)" stroke-width="0.8"/>
+            <!-- glow dot -->
+            <circle cx="40" cy="18" r="3" fill="rgba(245,240,232,0.6)"/>
+          </svg>
+        </div>
+        <div class="gem-note">
+          <strong>提煉</strong> × <strong>精化</strong> × <strong>固化</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 結晶卡片 -->
+    <div class="col-right">
+      <div class="col-title">03 &nbsp;<span>結晶輸出</span>　·　Knowledge Crystal 卡片示例</div>
+
+      <div class="crystal-card">
+        <!-- meta row -->
+        <div class="card-meta">
+          <span class="badge-type">Insight</span>
+          <span class="tag">#銷售</span>
+          <span class="tag">#溝通策略</span>
+          <span class="tag">#客戶關係</span>
+          <span class="card-id">KSL-2025-0847</span>
+        </div>
+
+        <!-- title -->
+        <div class="card-title">提案前先問目的，不要急著回答</div>
+        <div class="card-divider"></div>
+
+        <!-- two col: insight + apply -->
+        <div class="card-body-row">
+          <div class="insight-block">
+            <div class="section-label">核心洞見</div>
+            <div class="card-body">
+              直接回答問題 = 給對方<span class="highlight">武器</span>。<br/>
+              商務場景先<span class="highlight">解碼意圖</span>，<br/>
+              再提供答案，而非照自己的框架說。
+            </div>
+          </div>
+          <div class="apply-block">
+            <div class="section-label">如何應用</div>
+            <div class="apply-example">
+              <div class="card-body">
+                客戶問：「你們跟 A 工具有什麼不同？」<br/>
+                <span class="arrow">→</span> 先問：「你在評估什麼？」<br/>
+                <span class="arrow">→</span> 根據他的標準回答，<br/>
+                &emsp;&emsp;不是照自己熟悉的優勢說。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- footer -->
+        <div class="card-footer">
+          <div class="footer-source">📎 來源：2025-12 客戶訪談紀錄 ×3　|　交叉驗證：Rita 銷售 log ×12</div>
+          <div class="footer-stats">
+            <div class="stat-item">已應用 <span class="stat-num">47</span> 次</div>
+            <div class="stat-dot">·</div>
+            <div class="stat-item">成功率 <span class="stat-num">89%</span></div>
+            <div class="stat-dot">·</div>
+            <div class="stat-item">信心度 <span class="stat-num">HIGH</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+  <!-- ── BOTTOM BANNER ── -->
+  <div class="bottom-banner">
+    <div class="banner-gem">◆</div>
+    <div class="banner-text">
+      每一次互動都可以結晶
+      <span class="arrow-token"> → </span>
+      MUSEON 越用越懂你的公司
+    </div>
+    <div class="banner-gem">◆</div>
+  </div>
+
+</div><!-- /slide-wrapper -->
+</body>
+</html>
