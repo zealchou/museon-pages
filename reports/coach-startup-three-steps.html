@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>啟動前三件事 · 執行細節手冊</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Noto Serif TC', serif;
+    background: #F7F5F0;
+    color: #12121A;
+    line-height: 1.7;
+  }
+
+  .hero {
+    background: #0E0E16;
+    color: #FDFCFA;
+    padding: 60px 40px 48px;
+    text-align: center;
+  }
+  .hero .label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #B8923A;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 32px;
+    font-weight: normal;
+    margin-bottom: 12px;
+    color: #FDFCFA;
+  }
+  .hero p {
+    font-size: 15px;
+    color: #9898A8;
+    max-width: 520px;
+    margin: 0 auto 24px;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: #C4502A;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    padding: 5px 16px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  .intro-banner {
+    background: #16161F;
+    color: #FDFCFA;
+    border-left: 4px solid #C4502A;
+    padding: 20px 24px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 40px;
+  }
+  .intro-banner strong { color: #B8923A; }
+  .intro-banner p {
+    font-size: 14px;
+    color: #9898A8;
+    margin-top: 8px;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 0;
+  }
+
+  .step-card {
+    background: #FDFCFA;
+    border-radius: 12px;
+    border: 1px solid #E2E0DA;
+    margin-bottom: 40px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .step-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid #E2E0DA;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #C4502A;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-title-block h2 {
+    font-size: 20px;
+    font-weight: normal;
+    color: #12121A;
+    margin-bottom: 4px;
+  }
+  .step-title-block .subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: #9898A8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .step-body { padding: 24px 28px; }
+
+  .section-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #C4502A;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  p {
+    font-size: 15px;
+    color: #12121A;
+    margin-bottom: 12px;
+  }
+
+  .checklist { list-style: none; margin: 0 0 16px; }
+  .checklist li {
+    font-size: 15px;
+    padding: 10px 0 10px 28px;
+    position: relative;
+    border-bottom: 1px solid #F0EEE8;
+    color: #12121A;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '☐';
+    position: absolute;
+    left: 0;
+    color: #C4502A;
+    font-size: 16px;
+    top: 9px;
+  }
+
+  .callout {
+    background: #F0EEE8;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .callout.warning { background: #FFF3EE; border-left: 3px solid #C4502A; }
+  .callout.gold { background: #FBF6EC; border-left: 3px solid #B8923A; }
+  .callout .callout-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #5A5A6E;
+  }
+  .callout.warning .callout-label { color: #C4502A; }
+  .callout.gold .callout-label { color: #B8923A; }
+  .callout p { font-size: 14px; margin-bottom: 0; color: #12121A; }
+  .callout p:not(:last-child) { margin-bottom: 8px; }
+
+  .example-box {
+    background: #0E0E16;
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin: 16px 0;
+  }
+  .example-box .ex-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #B8923A;
+    margin-bottom: 12px;
+  }
+  .example-box p {
+    color: #FDFCFA;
+    font-size: 14px;
+    font-style: italic;
+    margin-bottom: 0;
+    line-height: 1.8;
+  }
+  .example-box .fill-in {
+    color: #E0714D;
+    font-style: normal;
+  }
+
+  .material-list { list-style: none; margin: 0 0 16px; }
+  .material-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #E2E0DA;
+    font-size: 14px;
+    color: #12121A;
+  }
+  .material-list li:last-child { border-bottom: none; }
+  .material-icon {
+    width: 28px;
+    height: 28px;
+    background: #2A7A6E;
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  .material-content .mat-name {
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: #12121A;
+  }
+  .material-content .mat-detail {
+    font-size: 13px;
+    color: #5A5A6E;
+    margin-top: 2px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .time-badge {
+    display: inline-block;
+    background: #16161F;
+    color: #B8923A;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  .template-box {
+    background: #FDFCFA;
+    border: 1.5px dashed #C4502A;
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin: 16px 0;
+  }
+  .template-box .tmpl-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #C4502A;
+    margin-bottom: 10px;
+  }
+  .template-box p {
+    font-size: 15px;
+    color: #12121A;
+    margin-bottom: 6px;
+  }
+  .template-box .blank {
+    color: #C4502A;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
+  .step-summary {
+    display: flex;
+    border-top: 1px solid #E2E0DA;
+  }
+  .summary-item {
+    flex: 1;
+    padding: 14px 16px;
+    text-align: center;
+    border-right: 1px solid #E2E0DA;
+  }
+  .summary-item:last-child { border-right: none; }
+  .summary-item .s-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #9898A8;
+    margin-bottom: 4px;
+  }
+  .summary-item .s-value {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #C4502A;
+  }
+
+  .prep-section {
+    background: #FDFCFA;
+    border-radius: 12px;
+    border: 1px solid #E2E0DA;
+    margin-bottom: 40px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .prep-header {
+    background: #2A7A6E;
+    padding: 20px 28px;
+    color: white;
+  }
+  .prep-header h2 {
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 4px;
+  }
+  .prep-header p {
+    font-size: 13px;
+    opacity: 0.8;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 0;
+  }
+  .prep-body { padding: 24px 28px; }
+
+  .footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: #9898A8;
+    border-top: 1px solid #E2E0DA;
+  }
+  .footer strong { color: #C4502A; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 32px; }
+    .hero h1 { font-size: 24px; }
+    .container { padding: 32px 16px; }
+    .step-header, .step-body, .prep-body { padding: 20px; }
+    .step-summary { flex-direction: column; }
+    .summary-item { border-right: none; border-bottom: 1px solid #E2E0DA; }
+    .summary-item:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="label">身心整合教練 · 執行細節手冊</div>
+  <h1>啟動前三件事</h1>
+  <p>從決定開始到 Day 1 例會，你只需要做好這三件事。<br>每件事都有「做什麼」「怎麼做」「準備什麼」三個層次。</p>
+  <span class="badge">預計完成時間：1 天以內</span>
+</div>
+
+<div class="container">
+
+  <div class="intro-banner">
+    <strong>這份手冊解決什麼問題？</strong>
+    <p>很多人「知道要做 BNI 漏斗」但不知道「從哪裡開始動」。這三件事就是你的最小起步清單——做完之後，你才真正準備好進入第一週的節奏。少一件都不算準備好。</p>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div class="step-title-block">
+        <h2>確認下次例會日期，定出你的 Day 1</h2>
+        <div class="subtitle">時間錨定 · 完成時間 5 分鐘</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="time-badge">⏱ 完成時間：5 分鐘</div>
+
+      <div class="section-title">為什麼這件事不能跳過</div>
+      <p>沒有「Day 1」就沒有行動壓力。很多人計畫「下週開始」，下週又變成「再下週」。這件事的作用是把計畫的起點變成一個具體的日期，讓後面所有動作都有時間軸。</p>
+      <p>Day 1 = 你第一次在 BNI 例會用新的電梯稿上台的那一天。</p>
+
+      <div class="section-title">執行細節：三個動作</div>
+      <ul class="checklist">
+        <li>打開 BNI 群組或行事曆，找到下次例會的日期和時間，把它寫在你看得到的地方（手機備忘錄 / 月曆 / 白板都可以）</li>
+        <li>在例會前一天設一個提醒：「明天要帶電梯稿去念」</li>
+        <li>把這份手冊的另外兩件事在「例會前 48 小時」完成——這就是你的截止日</li>
+      </ul>
+
+      <div class="callout warning">
+        <div class="callout-label">⚠ 注意</div>
+        <p>如果下次例會是 3 天後，你今天就要完成步驟 2 和步驟 3，不能等前一天才準備。電梯稿需要你念出來練習，不是寫完就算。</p>
+      </div>
+
+      <div class="callout gold">
+        <div class="callout-label">💡 執行提示</div>
+        <p>確認後立刻傳一個訊息給自己：「Day 1：[日期]」——這個動作本身就是一個心理契約，比在腦袋裡記著有效。</p>
+      </div>
+
+    </div>
+    <div class="step-summary">
+      <div class="summary-item">
+        <div class="s-label">需要材料</div>
+        <div class="s-value">無</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-label">產出</div>
+        <div class="s-value">Day 1 日期</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-label">完成標準</div>
+        <div class="s-value">日期已寫下</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div class="step-title-block">
+        <h2>能用一句話描述自己</h2>
+        <div class="subtitle">定位句公式 · 完成時間 30 分鐘</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="time-badge">⏱ 完成時間：30 分鐘</div>
+
+      <div class="section-title">為什麼這件事不能跳過</div>
+      <p>BNI 夥伴在決定要不要幫你引薦時，腦袋裡只有一個問題：「我要說這個人是做什麼的？」如果你連一句話都說不清楚，夥伴不是不幫你——是他不知道怎麼幫你說。</p>
+      <p>這一句話不是給你自己用的，是給夥伴用的。他聽完之後，要能夠在跟客戶聊天時把它自然說出來。</p>
+
+      <div class="section-title">公式結構</div>
+      <div class="template-box">
+        <div class="tmpl-label">✏ 填入你的版本</div>
+        <p>「我幫 <span class="blank">＿＿＿（誰）</span>，</p>
+        <p>解決 <span class="blank">＿＿＿（什麼問題）</span>，</p>
+        <p>結果是 <span class="blank">＿＿＿（什麼改變）</span>。」</p>
+      </div>
+
+      <div class="section-title">填入範例（身心整合教練）</div>
+      <div class="example-box">
+        <div class="ex-label">範例句</div>
+        <p>「我幫<span class="fill-in">外表成功但私下說『我不知道還能撐多久』的企業主</span>，解決<span class="fill-in">靠焦慮驅動自己的慣性模式</span>，找到<span class="fill-in">不靠焦慮也能持續前進的方式</span>。」</p>
+      </div>
+
+      <div class="section-title">執行細節：四個動作</div>
+      <ul class="checklist">
+        <li>用上面的公式，把三個空格填完，寫在紙上或手機備忘錄裡</li>
+        <li>把這一句話念出來——不是默讀，要真的用嘴說——計時 20 秒，確認念起來自然、不拗口</li>
+        <li>念給一個不是你客戶的人聽（家人、朋友都可以），問他：「你聽完之後，知道我要引薦什麼樣的人給我嗎？」</li>
+        <li>如果對方說不出來，修改「解決什麼問題」那一段，讓它更具體。重複直到對方能說出你要的引薦對象</li>
+      </ul>
+
+      <div class="callout gold">
+        <div class="callout-label">💡 常見錯誤</div>
+        <p>第一次填的時候，大部分人的「誰」太廣（「所有有壓力的人」），或者「問題」太抽象（「找到自己」）。<strong>越具體越容易引薦。</strong>「外表成功但說過我不知道還能撐多久的企業主」比「有壓力的人」好引薦 10 倍。</p>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-label">⚠ 注意</div>
+        <p>這一句話不需要涵蓋你所有服務。它只有一個功能：讓夥伴知道引薦哪一種人。其他的，等到咖啡約談再說。</p>
+      </div>
+
+    </div>
+    <div class="step-summary">
+      <div class="summary-item">
+        <div class="s-label">需要材料</div>
+        <div class="s-value">紙筆或手機</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-label">產出</div>
+        <div class="s-value">定位句 1 句</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-label">完成標準</div>
+        <div class="s-value">能念出來，別人聽得懂</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div class="step-title-block">
+        <h2>準備預約連結，讓引薦能立刻接住</h2>
+        <div class="subtitle">預約系統建置 · 完成時間 20–40 分鐘</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="time-badge">⏱ 完成時間：20–40 分鐘</div>
+
+      <div class="section-title">為什麼這件事不能跳過</div>
+      <p>引薦的熱度在 24 小時以內。如果夥伴把潛在客戶介紹給你，你卻還在說「等我確認一下哪天有空」，熱度就冷了。預約連結的作用是讓你在收到引薦的那一秒，就有辦法立刻把球接住。</p>
+
+      <div class="section-title">選一個方式，只選一個</div>
+
+      <ul class="material-list">
+        <li>
+          <div class="material-icon">A</div>
+          <div class="material-content">
+            <div class="mat-name">Calendly（推薦）</div>
+            <div class="mat-detail">免費版夠用 · 對方選時間不用來回確認 · 設定一次永久使用</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">B</div>
+          <div class="material-content">
+            <div class="mat-name">LINE 預約（簡單版）</div>
+            <div class="mat-detail">如果客群不熟悉 Calendly · 直接傳 LINE ID + 「歡迎直接加我預約」也可以</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">C</div>
+          <div class="material-content">
+            <div class="mat-name">Google 日曆預約（進階）</div>
+            <div class="mat-detail">Google 帳號即可啟用 · 功能與 Calendly 類似 · 介面對台灣客群較熟悉</div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="section-title">Calendly 設定步驟（如果選 A）</div>
+      <ul class="checklist">
+        <li>到 calendly.com 用 Google 帳號登入（免費版即可）</li>
+        <li>建立一個「60 分鐘診斷諮詢」的行程類型，標題就叫這個名字</li>
+        <li>設定你能接受預約的時段（建議每天留 2 個時段，例如 10:00–11:00 和 15:00–16:00）</li>
+        <li>設定緩衝時間：每場前後各 15 分鐘，避免場與場之間沒有喘息</li>
+        <li>複製連結，存到手機備忘錄標記「★ 預約連結」，方便隨時貼上</li>
+        <li>測試：用另一台裝置點連結，走一遍預約流程，確認收到確認信</li>
+      </ul>
+
+      <div class="section-title">收到引薦後的訊息模板（第一則）</div>
+      <div class="example-box">
+        <div class="ex-label">直接複製，填入空格後發送</div>
+        <p>「您好，我是 <span class="fill-in">＿＿＿</span>，是透過 <span class="fill-in">＿＿（夥伴名）</span> 認識您的。他說您最近狀態非常拼，我很想聽您說說您在做什麼。</p>
+        <p style="margin-top:12px;">我有一個 60 分鐘的對談，不用準備什麼，就讓我聽聽您的狀況。您這週或下週哪個時間方便？</p>
+        <p style="margin-top:12px;">您可以從這個連結選時間，我會確認：<span class="fill-in">＿＿＿（你的預約連結）</span>」</p>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-label">⚠ 關鍵提醒</div>
+        <p>預約連結要隨時在手機上可以一秒複製。不要等收到引薦才去找連結——引薦者和潛在客戶在同一個對話窗口等你，超過 5 分鐘沒回，熱度就開始降了。</p>
+      </div>
+
+    </div>
+    <div class="step-summary">
+      <div class="summary-item">
+        <div class="s-label">需要材料</div>
+        <div class="s-value">Google 帳號</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-label">產出</div>
+        <div class="s-value">預約連結 1 條</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-label">完成標準</div>
+        <div class="s-value">連結可用、測試通過</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATERIAL PREP SECTION -->
+  <div class="prep-section">
+    <div class="prep-header">
+      <h2>客戶素材準備清單</h2>
+      <p>完成上面三步後，確認這些素材齊備，才算真正準備好進入 Week 1</p>
+    </div>
+    <div class="prep-body">
+
+      <div class="section-title">必備素材（Day 1 前完成）</div>
+      <ul class="material-list">
+        <li>
+          <div class="material-icon">✓</div>
+          <div class="material-content">
+            <div class="mat-name">Day 1 日期</div>
+            <div class="mat-detail">下次 BNI 例會的日期，行事曆已標記，前一天提醒已設定</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">✓</div>
+          <div class="material-content">
+            <div class="mat-name">定位句（1 句）</div>
+            <div class="mat-detail">「我幫___，解決___，結果是___。」寫在手機備忘錄，可以隨時複製貼上</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">✓</div>
+          <div class="material-content">
+            <div class="mat-name">電梯稿 · 套四（Week 1 用）</div>
+            <div class="mat-detail">從執行手冊複製「關鍵節點版」，填入自己名字，手機存好，上台前 10 分鐘默念一遍</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">✓</div>
+          <div class="material-content">
+            <div class="mat-name">預約連結</div>
+            <div class="mat-detail">Calendly 或 Google 日曆，存在手機備忘錄「★ 常用」夾，一秒複製</div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="section-title">建議準備（非必要但加分）</div>
+      <ul class="material-list">
+        <li>
+          <div class="material-icon">+</div>
+          <div class="material-content">
+            <div class="mat-name">三位優先咖啡對象名單</div>
+            <div class="mat-detail">從 BNI 名單找會計師、人資顧問、律師、企業教練，圈出 3 個例會後要主動開口約的</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">+</div>
+          <div class="material-content">
+            <div class="mat-name">一個成功案例故事（3 句草稿）</div>
+            <div class="mat-detail">「客戶來找我前的狀態」「過程發生什麼」「結束後他說了什麼話」，Week 2 咖啡約談時自然說出來</div>
+          </div>
+        </li>
+        <li>
+          <div class="material-icon">+</div>
+          <div class="material-content">
+            <div class="mat-name">LINE 狀態更新</div>
+            <div class="mat-detail">更新為「身心整合陪跑教練 · 歡迎預約 60 分鐘對談」，讓關注你的人看到</div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout gold">
+        <div class="callout-label">✅ 完成標準</div>
+        <p>上面「必備素材」四項全部打勾，你才算完成啟動準備。帶著這四樣東西走進例會，Week 1 就開始了。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Next step -->
+  <div class="step-card">
+    <div class="step-header" style="border-bottom:none;">
+      <div class="step-number" style="background:#2A7A6E;">→</div>
+      <div class="step-title-block">
+        <h2>完成後，下一步是什麼</h2>
+        <div class="subtitle">進入 Week 1 節奏</div>
+      </div>
+    </div>
+    <div class="step-body" style="padding-top: 8px;">
+      <p>這三件事做完，你已經有：<strong>Day 1 日期 + 定位句 + 預約連結</strong>。</p>
+      <p>例會當天用「套四電梯稿」上台，例會後找 3 位夥伴說「下週我想請你喝個咖啡，20 分鐘」。這就是 Week 1 的全部任務。</p>
+      <div class="callout" style="margin-top:16px;">
+        <div class="callout-label">手冊系列導覽</div>
+        <p><strong>本冊：</strong>啟動前三件事（你現在在這裡）</p>
+        <p><strong>主執行手冊：</strong>Week 1–4 週度步驟 + 電梯稿 + 診斷諮詢腳本 + 成交話術 + VSL 建設</p>
+        <p><strong>設計理念手冊：</strong>每個設計選擇背後的邏輯與原因</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>MUSEON</strong> AI CONSULTING · 身心整合教練執行系列 v1.0 · 2026
+</div>
+
+</body>
+</html>
