@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>合作計畫說明 — 為什麼我們這樣設計</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ember:#C4502A;--ember-light:#E0714D;--teal:#2A7A6E;--gold:#B8923A;--navy:#181737;--parchment:#F8F5F0;--border:#E2E0DA;--text-primary:#12121A;--text-secondary:#4A4A5A;--text-muted:#8A8A9A;--card-bg:#FDFCFA;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit','Noto Sans TC',sans-serif;background:var(--parchment);color:var(--text-primary);line-height:1.75;font-size:16px;}
+.cover{background:linear-gradient(135deg,var(--navy) 0%,#1A1A2E 55%,#2A1410 100%);color:#fff;padding:96px 48px 80px;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-80px;right:-80px;width:450px;height:450px;background:radial-gradient(circle,rgba(196,80,42,0.1) 0%,transparent 65%);border-radius:50%;}
+.cover-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ember-light);border:1px solid rgba(224,113,77,0.3);padding:5px 16px;border-radius:100px;display:inline-block;margin-bottom:28px;}
+.cover h1{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:600;line-height:1.12;color:#fff;margin-bottom:14px;}
+.cover h1 em{color:var(--ember-light);font-style:normal;}
+.cover-sub{font-size:16px;color:rgba(255,255,255,0.5);margin-bottom:48px;max-width:520px;line-height:1.75;}
+.cover-note{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:12px 20px;font-size:13px;color:rgba(255,255,255,0.55);}
+.cover-note strong{color:rgba(255,255,255,0.85);font-weight:500;}
+.container{max-width:860px;margin:0 auto;padding:0 36px;}
+section{padding:72px 0;border-bottom:1px solid var(--border);}
+section:last-child{border-bottom:none;}
+.stag{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);background:rgba(196,80,42,0.08);padding:4px 12px;border-radius:100px;display:inline-block;margin-bottom:14px;}
+h2{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1.2;margin-bottom:8px;}
+p{color:var(--text-secondary);margin-bottom:16px;max-width:68ch;}
+p:last-child{margin-bottom:0;}
+.intro-box{background:linear-gradient(135deg,rgba(196,80,42,0.06) 0%,rgba(184,146,58,0.03) 100%);border:1px solid rgba(196,80,42,0.18);border-radius:14px;padding:32px 36px;margin:32px 0;}
+.intro-box .big{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--text-primary);line-height:1.45;margin-bottom:14px;}
+.intro-box p{font-size:15px;}
+.pcard{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;margin-bottom:28px;overflow:hidden;}
+.pcard-head{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:18px;background:#FAFAF8;}
+.pnum{width:42px;height:42px;background:var(--ember);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#fff;flex-shrink:0;margin-top:2px;}
+.pcard-title h3{font-size:18px;font-weight:600;margin-bottom:4px;line-height:1.35;}
+.ptag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+.pcard-body{padding:0;}
+.prow{padding:20px 28px;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;}
+.prow:last-child{border-bottom:none;}
+.prow-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px;}
+.prow-icon.situation{background:rgba(42,122,110,0.1);}
+.prow-icon.reason{background:rgba(196,80,42,0.1);}
+.prow-icon.outcome{background:rgba(184,146,58,0.1);}
+.prow-label{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.prow-label.situation{color:var(--teal);}
+.prow-label.reason{color:var(--ember);}
+.prow-label.outcome{color:var(--gold);}
+.prow-text{font-size:14.5px;color:var(--text-secondary);line-height:1.7;}
+.prow-text strong{color:var(--text-primary);font-weight:600;}
+.math-box{background:#12121A;border-radius:12px;padding:28px 32px;margin:12px 0 4px;}
+.math-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
+.math-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.math-row:last-child{margin-bottom:0;}
+.mc{background:rgba(255,255,255,0.07);border-radius:8px;padding:12px 18px;text-align:center;min-width:100px;}
+.mc.bad{border:1px solid rgba(255,90,90,0.25);}
+.mc.good{border:1px solid rgba(80,200,140,0.35);}
+.mc.result{background:rgba(196,80,42,0.15);border:1px solid rgba(196,80,42,0.4);}
+.mv{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;line-height:1;color:rgba(255,255,255,0.8);}
+.mc.bad .mv{color:rgba(255,100,100,0.85);}
+.mc.good .mv{color:rgba(80,200,140,0.9);}
+.mc.result .mv{color:#fff;}
+.ml{font-size:11px;color:rgba(255,255,255,0.35);margin-top:5px;}
+.mop{font-family:'IBM Plex Mono',monospace;font-size:20px;color:rgba(255,255,255,0.18);}
+.mvd{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-top:8px;}
+.mvd.bad{color:rgba(255,100,100,0.6);}
+.mvd.good{color:rgba(80,200,140,0.7);}
+.timeline{display:flex;margin:20px 0 0;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.titem{flex:1;padding:16px 20px;border-right:1px solid var(--border);}
+.titem:last-child{border-right:none;}
+.tmonth{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+.tmain{font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.35;}
+.tsub{font-size:12px;color:var(--text-muted);line-height:1.5;}
+.titem.highlight{background:rgba(196,80,42,0.04);}
+.titem.highlight .tmonth{color:var(--ember);}
+.titem.highlight .tmain{color:var(--ember);}
+.cquote{background:rgba(196,80,42,0.04);border-left:3px solid var(--ember);padding:14px 18px;border-radius:0 10px 10px 0;margin:10px 0 4px;font-size:14px;color:var(--text-secondary);font-style:italic;line-height:1.7;}
+.sum-table{width:100%;border-collapse:collapse;margin:24px 0 0;}
+.sum-table th{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding:10px 16px;text-align:left;border-bottom:2px solid var(--border);}
+.sum-table td{padding:14px 16px;font-size:14px;color:var(--text-secondary);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;}
+.sum-table td:first-child{font-weight:600;color:var(--text-primary);white-space:nowrap;}
+.footer{padding:48px 36px;text-align:center;background:#FAFAF8;border-top:1px solid var(--border);}
+.footer p{font-size:13px;color:var(--text-muted);margin:0;}
+@media(max-width:640px){
+  .cover{padding:64px 24px 52px;}.cover h1{font-size:38px;}
+  .container{padding:0 20px;}section{padding:52px 0;}h2{font-size:30px;}
+  .pcard-head,.prow{flex-direction:column;gap:10px;}
+  .timeline{flex-direction:column;}.titem{border-right:none;border-bottom:1px solid var(--border);}
+  .titem:last-child{border-bottom:none;}.sum-table td:first-child{white-space:normal;}
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="container">
+    <div class="cover-tag">合作計畫說明</div>
+    <h1>為什麼<em>我們</em><br>這樣設計？</h1>
+    <p class="cover-sub">這份文件說明合作計畫背後每一個設計決策——為什麼這樣安排、邏輯是什麼、目標是什麼。</p>
+    <div class="cover-note">
+      <span>✦</span>
+      <span>這是 <strong>顧問與客戶的共讀文件</strong>，讓彼此對計畫背後的邏輯有一致的理解與認同</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="stag">計畫背景</div>
+    <h2>這個計畫解決什麼問題</h2>
+    <div class="intro-box">
+      <div class="big">你的目標不只是「賣課」，<br>而是建立一套不需要每次從零開始的收入系統。</div>
+      <p>你有知識、有服務能力——缺的是一套讓知識持續創造收入的結構。這份計畫從零搭建這個結構，目標是月收入穩定達到 30 萬。</p>
+    </div>
+    <p>計畫由三個漏斗組成：F1 負責讓陌生人認識你、F2 負責讓有興趣的人付費進場、F3 負責高單價深度服務。三條漏斗相互餵流量，形成可以自我運作的系統。</p>
+    <div class="timeline">
+      <div class="titem highlight">
+        <div class="tmonth">月 1</div>
+        <div class="tmain">快速現金流</div>
+        <div class="tsub">預售諮詢<br>取得廣告預算</div>
+      </div>
+      <div class="titem">
+        <div class="tmonth">月 1–2</div>
+        <div class="tmain">建 F1 系統</div>
+        <div class="tsub">VSL 拍攝<br>廣告頁架好</div>
+      </div>
+      <div class="titem">
+        <div class="tmonth">月 2–3</div>
+        <div class="tmain">廣告測試</div>
+        <div class="tsub">名單開始<br>自動累積</div>
+      </div>
+      <div class="titem">
+        <div class="tmonth">月 3–4</div>
+        <div class="tmain">F2 挑戰營</div>
+        <div class="tsub">批量成交<br>推向 30 萬</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="stag">五個設計決策</div>
+    <h2>計畫背後的邏輯</h2>
+    <p style="margin-bottom:40px;">每一個設計選擇都有具體理由，是根據你的現況量身訂做的。</p>
+
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pnum">1</div>
+        <div class="pcard-title">
+          <h3>主線是系統流量，不是人際引薦</h3>
+          <div class="ptag">F1 + F2 主軸 / BNI 輔助</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="prow">
+          <div class="prow-icon situation">👤</div>
+          <div class="prow-content">
+            <div class="prow-label situation">你的現況</div>
+            <div class="prow-text">你有 BNI，但引薦關係從零開始、無法預測，也跟 BNI 其他會員的現有服務有重疊——依靠人際引薦作為主要收入，不穩定也沒有複製性。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon reason">⚙️</div>
+          <div class="prow-content">
+            <div class="prow-label reason">設計選擇</div>
+            <div class="prow-text">把 F1（VSL + 廣告）和 F2（訂閱社群）設為主線，讓系統產生流量——<strong>廣告不休息，系統不依賴你的關係網絡</strong>。BNI 只在冷啟動階段作補充，不是長期核心。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon outcome">🎯</div>
+          <div class="prow-content">
+            <div class="prow-label outcome">預期成果</div>
+            <div class="prow-text">三個月後，不需要主動拓展人脈，每天有新的名單進來。你的時間用於高價值服務，而不是在人際維護上。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pnum">2</div>
+        <div class="pcard-title">
+          <h3>客單定在 6–8 萬，不是 4 萬</h3>
+          <div class="ptag">定價結構 / 財務反推</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="prow">
+          <div class="prow-icon situation">👤</div>
+          <div class="prow-content">
+            <div class="prow-label situation">你的現況</div>
+            <div class="prow-text">直覺想定 4 萬，覺得比較容易成交。但月收目標是 30 萬，每月廣告成本 1 萬。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon reason">⚙️</div>
+          <div class="prow-content">
+            <div class="prow-label reason">設計選擇</div>
+            <div class="prow-text">用財務反推：</div>
+            <div class="math-box">
+              <div class="math-label">客單 4 萬的問題</div>
+              <div class="math-row">
+                <div class="mc bad"><div class="mv">30萬</div><div class="ml">月收目標</div></div>
+                <div class="mop">÷</div>
+                <div class="mc bad"><div class="mv">4萬</div><div class="ml">客單</div></div>
+                <div class="mop">=</div>
+                <div class="mc result"><div class="mv">7–8單</div><div class="ml">每月需成交</div></div>
+              </div>
+              <div class="mvd bad">→ 每月 7–8 個深度 1-1 個案，服務體能不支撐，品質必然下降</div>
+              <div style="height:20px;"></div>
+              <div class="math-label">客單 6–8 萬的設計</div>
+              <div class="math-row">
+                <div class="mc good"><div class="mv">30萬</div><div class="ml">月收目標</div></div>
+                <div class="mop">÷</div>
+                <div class="mc good"><div class="mv">6–8萬</div><div class="ml">客單</div></div>
+                <div class="mop">=</div>
+                <div class="mc result"><div class="mv">4–5單</div><div class="ml">每月需成交</div></div>
+              </div>
+              <div class="mvd good">→ 可持續交付，廣告 ROI 才算得過去</div>
+            </div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon outcome">🎯</div>
+          <div class="prow-content">
+            <div class="prow-label outcome">預期成果</div>
+            <div class="prow-text">月收 30 萬可以在<strong>不過勞的前提下實現</strong>，服務品質不因量大而下降，也為後續成長留有空間。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pnum">3</div>
+        <div class="pcard-title">
+          <h3>第一個月先預售，不等系統建好</h3>
+          <div class="ptag">冷啟動策略 / 快速現金流</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="prow">
+          <div class="prow-icon situation">👤</div>
+          <div class="prow-content">
+            <div class="prow-label situation">你的現況</div>
+            <div class="prow-text">合作計畫從零開始計算，當前收入為零。廣告投放需要預算，但不能還沒賺錢就先花錢投廣告。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon reason">⚙️</div>
+          <div class="prow-content">
+            <div class="prow-label reason">設計選擇</div>
+            <div class="prow-text">第一個月主力是<strong>一對一諮詢預售</strong>——用你現有的能力直接接 1–2 個高客單個案。賺到的費用就是廣告預算。系統建設和現金流同步進行，不互相等待。</div>
+            <div class="cquote">先有錢，才能讓廣告幫你找更多人。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon outcome">🎯</div>
+          <div class="prow-content">
+            <div class="prow-label outcome">預期成果</div>
+            <div class="prow-text">第一個月結束時，不只是「計畫在推進」，而是<strong>已經有真實收入</strong>，廣告預算來自服務費而非自己墊資，風險最低。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pnum">4</div>
+        <div class="pcard-title">
+          <h3>執行手冊設計成顧問與客戶的共同工具</h3>
+          <div class="ptag">交付品質 / 可複製服務</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="prow">
+          <div class="prow-icon situation">👤</div>
+          <div class="prow-content">
+            <div class="prow-label situation">你的現況</div>
+            <div class="prow-text">知識變現是一個需要長期執行的過程，過程中難免有卡關——是動力問題、話術問題，還是策略選錯了？不同情況需要不同的回應方式。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon reason">⚙️</div>
+          <div class="prow-content">
+            <div class="prow-label reason">設計選擇</div>
+            <div class="prow-text">執行手冊把每個步驟設計成「這週做什麼 + 每種卡關情況的判斷和推進方式」。<strong>手冊在場，不需要即興應對</strong>——每次諮詢有固定節奏，不依賴記憶力或當場判斷。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon outcome">🎯</div>
+          <div class="prow-content">
+            <div class="prow-label outcome">預期成果</div>
+            <div class="prow-text">服務品質穩定可預期，不隨時間或狀態起伏。這是一套<strong>可以持續交付的服務方式</strong>，而不是靠個人狀態支撐的服務。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-head">
+        <div class="pnum">5</div>
+        <div class="pcard-title">
+          <h3>F2 用低門檻訂閱切入，不直接辦大課</h3>
+          <div class="ptag">F2 挑戰營 / 名單策略</div>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="prow">
+          <div class="prow-icon situation">👤</div>
+          <div class="prow-content">
+            <div class="prow-label situation">你的現況</div>
+            <div class="prow-text">社群從零開始，沒有名單基礎。直接辦高客單大課，沒有足夠的潛在客戶池，很難批量成交。</div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon reason">⚙️</div>
+          <div class="prow-content">
+            <div class="prow-label reason">設計選擇</div>
+            <div class="prow-text">F2 設計成低入場訂閱社群，三個功能同時進行：<br><br>
+              <strong>① 名單池</strong>：進社群的人就是願意付費的潛在客戶，未來大課直接從這裡轉化<br>
+              <strong>② 月收基底</strong>：訂閱費用提供每月穩定底薪，不全靠大課發售<br>
+              <strong>③ 大課暖場</strong>：在社群持續互動，等大課發售時，信任已建立
+            </div>
+          </div>
+        </div>
+        <div class="prow">
+          <div class="prow-icon outcome">🎯</div>
+          <div class="prow-content">
+            <div class="prow-label outcome">預期成果</div>
+            <div class="prow-text">到第三、四個月發售大課時，不是對陌生人說話，而是<strong>對已經認識你、信任你的社群成員說話</strong>——轉化率和成交速度完全不同。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="stag">整體邏輯</div>
+    <h2>五個決策的連結</h2>
+    <p style="margin-bottom:28px;">這五個設計選擇不是獨立的，而是一個連貫的邏輯鏈——每個決策都在為下一個決策鋪路。</p>
+    <table class="sum-table">
+      <thead>
+        <tr>
+          <th>決策</th>
+          <th>解決的問題</th>
+          <th>為下一步做了什麼</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>① 系統流量主線</td><td>引薦不穩定、無法複製</td><td>名單自動累積，不依賴人際</td></tr>
+        <tr><td>② 客單 6–8 萬</td><td>月收目標在服務體能內無法達到</td><td>確保財務目標可持續</td></tr>
+        <tr><td>③ 第一個月預售</td><td>沒有廣告預算</td><td>從服務費取得廣告啟動資金</td></tr>
+        <tr><td>④ 雙軌執行手冊</td><td>卡關時不知道怎麼調整</td><td>服務品質穩定可複製</td></tr>
+        <tr><td>⑤ F2 低入場訂閱</td><td>沒有名單，大課難成交</td><td>預建社群，大課發售有基礎</td></tr>
+      </tbody>
+    </table>
+    <div class="intro-box" style="margin-top:40px;">
+      <div class="big">這個計畫的核心邏輯：<br>解決下一個問題之前，先解決現在的問題。</div>
+      <p>每一步都在為下一步創造條件——沒有「先建系統再說」，也沒有「先廣告再說」。順序是設計出來的，不是隨機的。這也是為什麼我們能有信心說，照著這個節奏走，四個月後可以到 30 萬。</p>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="container">
+    <p>合作計畫說明 v2 · 2026 · 如有疑問，在執行過程中隨時提出</p>
+  </div>
+</div>
+
+</body>
+</html>
