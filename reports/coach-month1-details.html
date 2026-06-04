@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月 1 執行細節手冊 — 身心整合教練 · Week by Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1e;
+    --surface: #16161f;
+    --raised: #1e1e2a;
+    --border: #2a2a38;
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --gold: #B8923A;
+    --gold-light: #d4aa5a;
+    --teal: #2A7A6E;
+    --teal-light: #3aab9a;
+    --text-primary: #f0ede8;
+    --text-secondary: #9898a8;
+    --text-muted: #5a5a6e;
+    --success: #2D8A6E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1520 50%, #0e1020 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 40px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 350px;
+    background: radial-gradient(ellipse, rgba(196,80,42,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.3);
+    color: var(--ember-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 100px; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5vw, 50px);
+    font-weight: 600; color: #f0ede8; line-height: 1.15; margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--ember-light); font-style: italic; }
+  .hero-sub { font-size: 17px; color: var(--text-secondary); max-width: 540px; margin: 0 auto 32px; }
+
+  .hero-meta {
+    display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+  }
+  .meta-pill {
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .meta-pill strong { color: var(--gold-light); }
+
+  .container { max-width: 980px; margin: 0 auto; padding: 0 40px; }
+  @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+  section { padding: 56px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 600; color: #f0ede8; margin-bottom: 8px; line-height: 1.25;
+  }
+  .section-desc { color: var(--text-secondary); font-size: 15px; margin-bottom: 40px; max-width: 640px; }
+
+  /* Week Cards */
+  .week-block { margin-bottom: 40px; }
+  .week-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .week-num {
+    flex-shrink: 0;
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--ember-dark), var(--ember));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600; color: #fff;
+  }
+  .week-num.gold { background: linear-gradient(135deg, #8a6a20, var(--gold)); }
+  .week-num.teal { background: linear-gradient(135deg, #1a5a52, var(--teal)); }
+  .week-num.muted { background: var(--raised); border: 1px solid var(--border); color: var(--text-muted); }
+  .week-info h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; color: #f0ede8; margin-bottom: 2px;
+  }
+  .week-info p { font-size: 14px; color: var(--text-secondary); }
+
+  /* Dual Track */
+  .dual-track {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .dual-track { grid-template-columns: 1fr; } }
+
+  .track-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .track-card.client { border-left: 3px solid var(--ember); }
+  .track-card.goku { border-left: 3px solid var(--teal); }
+  .track-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .client .track-title { color: var(--ember-light); }
+  .goku .track-title { color: var(--teal-light); }
+
+  .task-list { list-style: none; }
+  .task-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-secondary);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-step {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; color: var(--text-muted);
+    margin-top: 1px;
+  }
+  .task-text { flex: 1; line-height: 1.6; }
+  .task-text strong { color: var(--text-primary); display: block; margin-bottom: 2px; }
+  .task-text span { font-size: 12px; }
+
+  /* Criteria Box */
+  .criteria-box {
+    background: rgba(45,138,110,0.08);
+    border: 1px solid rgba(45,138,110,0.25);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  .criteria-box-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--success); margin-bottom: 10px;
+  }
+  .criteria-box-list { list-style: none; }
+  .criteria-box-list li {
+    font-size: 13px; color: var(--text-secondary);
+    padding: 4px 0; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .criteria-box-list li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+
+  /* Material Checklist */
+  .material-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .material-grid { grid-template-columns: 1fr; } }
+
+  .material-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .material-week {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .material-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .material-item:last-child { border-bottom: none; }
+  .check-sq {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  /* Diagnosis Table */
+  .diag-table { width: 100%; border-collapse: collapse; }
+  .diag-table th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 16px;
+    background: var(--raised);
+    border-bottom: 1px solid var(--border);
+  }
+  .diag-table th:first-child { border-radius: 8px 0 0 0; }
+  .diag-table th:last-child { border-radius: 0 8px 0 0; }
+  .diag-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-secondary);
+    vertical-align: top;
+  }
+  .diag-table tr:last-child td { border-bottom: none; }
+  .diag-table td:first-child { color: var(--ember-light); font-weight: 500; }
+  .diag-table td:nth-child(2) { color: var(--text-secondary); }
+  .diag-table td:last-child { color: var(--teal-light); }
+  .diag-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  footer {
+    text-align: center; padding: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">手冊 3 — 月 1 執行細節</div>
+  <h1>第一個月，<span>做什麼？</span><br>怎麼做？</h1>
+  <p class="hero-sub">Week by Week 任務展開，雙軌格式（客戶軌 + Goku 顧問軌），附完成判準與卡關診斷</p>
+  <div class="hero-meta">
+    <div class="meta-pill">目標：<strong>VSL 上線</strong></div>
+    <div class="meta-pill">重心：<strong>建設期</strong></div>
+    <div class="meta-pill">廣告：<strong>W4 開跑</strong></div>
+    <div class="meta-pill">BNI：<strong>鋪墊出席</strong></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-label">Week by Week 任務</div>
+    <div class="section-title">四週完整展開</div>
+    <p class="section-desc">每週有明確的任務清單。「客戶軌」是你（教練）要做的，「Goku 軌」是顧問配合推進的。</p>
+
+    <!-- Week 1 -->
+    <div class="week-block">
+      <div class="week-header">
+        <div class="week-num">W1</div>
+        <div class="week-info">
+          <h3>知識萃取週</h3>
+          <p>從舊課程素材中挖出你的核心訊息，建立整個 VSL 的基礎</p>
+        </div>
+      </div>
+      <div class="dual-track">
+        <div class="track-card client">
+          <div class="track-title">客戶軌（你要做的）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>整理舊課程素材清單</strong>
+                <span>列出所有你有的素材：PPT、講義、音檔、影片、筆記。不用整理，先列清單就好。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>回答知識萃取 10 問（見手冊 4）</strong>
+                <span>每個問題至少寫 100 字，不要寫「標準答案」，寫你實際的故事和看法。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>找出 3 個最有力的客戶故事</strong>
+                <span>找服務過的人，寫出「他當時的問題」「你怎麼幫他」「他後來的變化」。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>確認目標受眾的「具體痛點句」</strong>
+                <span>寫出 5 句「我的客戶在找我之前，內心常常說的話」。用他們的語言，不用你的術語。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">5</div>
+              <div class="task-text">
+                <strong>把 10 問答案和素材傳給 Goku</strong>
+                <span>不需要精修，粗稿即可。Goku 負責整理成 VSL 訊息框架。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="track-card goku">
+          <div class="track-title">Goku 顧問軌（配合推進）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>發送知識萃取 10 問問卷</strong>
+                <span>週一發出，附截止日（週五），說明這是整個 M1 計畫的基礎。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>週三追一次進度</strong>
+                <span>不是催，是問「哪個問題比較難回答？」順便解說目的。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>收到後整理「核心訊息框架」</strong>
+                <span>萃取：主要痛點 × 1、轉化故事 × 1、核心方法 × 1、成效承諾 × 1。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>W1 結束前對齊：核心訊息確認</strong>
+                <span>和客戶開 30 分鐘確認會，確保「訊息框架」和她實際要說的一致。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="criteria-box">
+        <div class="criteria-box-title">W1 完成判準</div>
+        <ul class="criteria-box-list">
+          <li>知識萃取 10 問全部回答（不是跳過，是真的寫了內容）</li>
+          <li>至少 3 個客戶故事有「問題 + 過程 + 結果」三段</li>
+          <li>核心訊息框架（痛點/轉化/方法/成效）由 Goku 整理完成</li>
+          <li>客戶確認訊息框架符合她的定位和語氣</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week-block">
+      <div class="week-header">
+        <div class="week-num gold">W2</div>
+        <div class="week-info">
+          <h3>腳本定稿週</h3>
+          <p>把訊息框架轉化為 7 段式 VSL 腳本，週五前腳本凍結</p>
+        </div>
+      </div>
+      <div class="dual-track">
+        <div class="track-card client">
+          <div class="track-title">客戶軌（你要做的）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>閱讀 Goku 提供的腳本草稿</strong>
+                <span>重點看：這是「我會說的話」嗎？有沒有地方聽起來不像你？</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>大聲朗讀腳本一遍</strong>
+                <span>用你平常說話的語速朗讀，計時。感覺卡或別扭的地方標出來。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>把「不像我」的段落用文字反饋給 Goku</strong>
+                <span>不需要自己改，說「這段聽起來太正式了，我平常講話更像這樣…」即可。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>確認 CTA（行動呼籲）是你敢說的</strong>
+                <span>成交電話的邀請語氣你要能自然說出口，不能是念稿。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">5</div>
+              <div class="task-text">
+                <strong>週五前簽核腳本（或書面確認「OK 錄製」）</strong>
+                <span>簽核後就不再修改，除非有重大問題。先發後優化比完美再發更重要。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="track-card goku">
+          <div class="track-title">Goku 顧問軌（配合推進）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>根據訊息框架起草 7 段式 VSL 腳本</strong>
+                <span>參考手冊 4 的腳本架構。週一前交第一版給客戶。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>收到反饋後修訂（最多 2 輪）</strong>
+                <span>第 1 輪修語氣，第 2 輪微調細節。第 3 輪起堅持「先上線再優化」。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>建立問卷表單（Google Form 或 Typeform）</strong>
+                <span>7-10 個問題，用於篩選進入策略電話的潛在客戶。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>設定落地頁框架（Carrd/Notion/Canva 均可）</strong>
+                <span>先建骨架，W3 客戶錄製完後填入影片連結。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="criteria-box">
+        <div class="criteria-box-title">W2 完成判準</div>
+        <ul class="criteria-box-list">
+          <li>7 段式 VSL 腳本完成（痛點/希望/解決/佐證/產品/成交/行動，每段至少 3 句）</li>
+          <li>客戶大聲朗讀過，標出的「不像我」段落已修訂</li>
+          <li>問卷表單建立完成，有 7 題以上</li>
+          <li>週五前腳本正式簽核凍結</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week-block">
+      <div class="week-header">
+        <div class="week-num teal">W3</div>
+        <div class="week-info">
+          <h3>錄製與上線週</h3>
+          <p>把腳本變成影片，落地頁上線測試，本週末前一切就位</p>
+        </div>
+      </div>
+      <div class="dual-track">
+        <div class="track-card client">
+          <div class="track-title">客戶軌（你要做的）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>選定錄製場景（家中 or 外景）</strong>
+                <span>背景要乾淨，光線要充足（面向窗戶），不需要攝影棚。手機自拍就夠。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>先錄 1-2 分鐘暖機片段</strong>
+                <span>自我介紹練習，不用好，感受一下自己看螢幕念稿還是自然說話。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>正式錄製完整 VSL（10-20 分鐘）</strong>
+                <span>建議分段錄，每段 3-5 分鐘。NG 不要怕，錄到「感覺自然」的版本。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>把素材傳給 Goku 做基本剪輯</strong>
+                <span>只需要剪掉明顯的 NG 和過長的停頓，加上字幕。不需要花俏效果。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">5</div>
+              <div class="task-text">
+                <strong>看剪輯成品並確認（24 小時內）</strong>
+                <span>不要追求完美，確認「這版可以讓陌生人看」就可以上線了。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="track-card goku">
+          <div class="track-title">Goku 顧問軌（配合推進）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>提供錄製簡易 SOP 給客戶</strong>
+                <span>設備建議、燈光設置、腳本提示卡製作方式，一頁清楚說明。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>收到素材後 48 小時內完成初剪</strong>
+                <span>工具：CapCut 或 Descript。基本剪輯 + 中文字幕。不需後製特效。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>上傳 YouTube（不公開）+ 取得嵌入連結</strong>
+                <span>設定：不公開，只有連結可看。填入落地頁。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>完成落地頁並進行測試</strong>
+                <span>手機端測試，確認影片可播放、表單可送出、感謝頁面正常。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">5</div>
+              <div class="task-text">
+                <strong>設定廣告帳號並準備素材</strong>
+                <span>FB/IG 廣告帳號確認，準備 3-5 張廣告圖（用 Canva），W4 開跑。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="criteria-box">
+        <div class="criteria-box-title">W3 完成判準</div>
+        <ul class="criteria-box-list">
+          <li>VSL 影片已錄製並剪輯完成，上傳 YouTube（不公開）</li>
+          <li>落地頁上線，VSL + 問卷表單都可正常運作</li>
+          <li>手機端全流程測試通過（看影片 → 填問卷 → 看感謝頁）</li>
+          <li>廣告素材（圖 ×3）準備就緒，廣告帳號已設定</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Week 4 -->
+    <div class="week-block">
+      <div class="week-header">
+        <div class="week-num muted">W4</div>
+        <div class="week-info">
+          <h3>廣告開跑 + BNI 鋪墊週</h3>
+          <p>小預算測試廣告，同步出席 BNI，收集第一波數據</p>
+        </div>
+      </div>
+      <div class="dual-track">
+        <div class="track-card client">
+          <div class="track-title">客戶軌（你要做的）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>出席 BNI 聚會（本週至少 1 次）</strong>
+                <span>準備好 1 分鐘自我介紹（見下方），重點：你能幫誰解決什麼問題，不是介紹課程。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>交換名片後當天傳訊息給 3 人</strong>
+                <span>不要發廣告，說「今天聽到你做的事很有意思，哪天方便深聊 10 分鐘？」</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>確認廣告已開啟，每天看一次數據</strong>
+                <span>看：花了多少錢、點了幾次、有沒有問卷。只看，不急著改。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>週五把當週廣告數據截圖傳給 Goku</strong>
+                <span>曝光數 / 點擊數 / 問卷填寫數 / 花費金額。這些數字決定 M2 怎麼優化。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="track-card goku">
+          <div class="track-title">Goku 顧問軌（配合推進）</div>
+          <ul class="task-list">
+            <li class="task-item">
+              <div class="task-step">1</div>
+              <div class="task-text">
+                <strong>設定廣告並開跑（預算 2,500-3,000/週）</strong>
+                <span>目標：觀看影片。受眾：30-50 歲女性，對身心健康/職場壓力有興趣。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">2</div>
+              <div class="task-text">
+                <strong>準備 M1 總結報告格式</strong>
+                <span>週報格式：廣告數據 + 問卷填寫數 + BNI 進度 + 下週行動項。</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">3</div>
+              <div class="task-text">
+                <strong>提供 BNI 1 分鐘介紹腳本</strong>
+                <span>痛點導向：「你身邊有沒有認識的人…感覺身體很疲憊但檢查沒問題…」</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div class="task-step">4</div>
+              <div class="task-text">
+                <strong>週五進行 M1 複盤電話（30 分鐘）</strong>
+                <span>回顧里程碑達成，定 M2 優先動作，更新計畫。</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="criteria-box">
+        <div class="criteria-box-title">W4 完成判準</div>
+        <ul class="criteria-box-list">
+          <li>廣告已跑至少 5 天，有初步 CTR 數據</li>
+          <li>BNI 出席 ≥ 1 次，交換名片 ≥ 5 張，主動傳訊息 ≥ 3 人</li>
+          <li>M1 整體里程碑回顧完成，M2 計畫已更新</li>
+          <li>如有問卷填寫：Goku 已聯絡，確認是否符合策略電話條件</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <section>
+    <div class="section-label">素材準備清單</div>
+    <div class="section-title">每週需要什麼素材？</div>
+    <p class="section-desc">提前準備，不讓缺素材成為卡關原因。</p>
+    <div class="material-grid">
+      <div class="material-card">
+        <div class="material-week">Week 1 需要</div>
+        <div class="material-item"><div class="check-sq"></div>所有舊課程素材清單（PPT/講義/影片/筆記）</div>
+        <div class="material-item"><div class="check-sq"></div>3 個以上服務過的客戶案例（不需要授權，匿名即可）</div>
+        <div class="material-item"><div class="check-sq"></div>你自己的「轉化故事」（為什麼做這份工作）</div>
+        <div class="material-item"><div class="check-sq"></div>你最常聽到客戶說的 5 個煩惱句子</div>
+      </div>
+      <div class="material-card">
+        <div class="material-week">Week 2 需要</div>
+        <div class="material-item"><div class="check-sq"></div>W1 素材萃取的 10 問回答（完整版）</div>
+        <div class="material-item"><div class="check-sq"></div>1 張你的專業照片（清晰，自然背景）</div>
+        <div class="material-item"><div class="check-sq"></div>現有的服務介紹文字（任何版本都行）</div>
+        <div class="material-item"><div class="check-sq"></div>一對一服務的定價確認（6 萬或 8 萬）</div>
+      </div>
+      <div class="material-card">
+        <div class="material-week">Week 3 需要</div>
+        <div class="material-item"><div class="check-sq"></div>錄製設備：手機（1080p 以上）或相機</div>
+        <div class="material-item"><div class="check-sq"></div>補光燈（選用，淘寶 300-500 元）</div>
+        <div class="material-item"><div class="check-sq"></div>清晰背景（書牆/植物牆/素色牆任一）</div>
+        <div class="material-item"><div class="check-sq"></div>腳本提示卡（A4 紙列印或平板顯示）</div>
+        <div class="material-item"><div class="check-sq"></div>YouTube 帳號（用於上傳不公開影片）</div>
+      </div>
+      <div class="material-card">
+        <div class="material-week">Week 4 需要</div>
+        <div class="material-item"><div class="check-sq"></div>FB 廣告帳號（已驗證身分）</div>
+        <div class="material-item"><div class="check-sq"></div>廣告素材圖 3 張（橫幅 / 方形 / 直式）</div>
+        <div class="material-item"><div class="check-sq"></div>BNI 的名片（如果還沒有，至少備好 LINE QR）</div>
+        <div class="material-item"><div class="check-sq"></div>1 分鐘 BNI 自我介紹（口頭練習過 3 次以上）</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">卡關診斷</div>
+    <div class="section-title">三種常見卡法 + 處置方式</div>
+    <p class="section-desc">大部分人卡關的地方都一樣，提前知道怎麼處理，不要讓它拖慢你的節奏。</p>
+    <div class="diag-wrapper">
+      <table class="diag-table">
+        <thead>
+          <tr>
+            <th style="width:25%">卡關症狀</th>
+            <th style="width:35%">真正的問題是什麼</th>
+            <th style="width:40%">Goku 的處置方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>「腳本感覺不夠好，還要再改」</td>
+            <td>追求完美主義，害怕被看見、被評判。本質是恐懼，不是腳本的問題。</td>
+            <td>強制執行「先上線版」原則：腳本只要朗讀通順、7 段完整，就可以錄製。現在的不完美，3 個月後換腳本時會感謝自己行動。</td>
+          </tr>
+          <tr>
+            <td>「廣告跑了一週完全沒反應」</td>
+            <td>可能是受眾設定、影片前 5 秒、或標題不夠抓人。不是產品的問題。</td>
+            <td>先看點擊率（CTR）：如果 &lt;0.5% 是廣告素材問題；如果點擊了但沒填問卷，是落地頁問題。系統性診斷，不要全換。</td>
+          </tr>
+          <tr>
+            <td>「BNI 的人好像對我沒興趣」</td>
+            <td>BNI 前 2 個月本來就是「讓人認識你」，不是「直接轉介」。太早期待成果。</td>
+            <td>前 2 個月的 KPI 只有：出席率 ≥ 90% + 每場主動和 2 人 1 對 1 深聊。轉介是第 3 個月的事，提前放棄是時機判斷錯誤。</td>
+          </tr>
+          <tr>
+            <td>「知識萃取 10 問不知道怎麼回答」</td>
+            <td>這些問題觸碰到「你說不清楚自己的價值」的核心問題，這是好事，說明萃取是有意義的。</td>
+            <td>Goku 安排 1 小時語音訪談，邊聊邊記錄，事後整理成文字。有些人口頭說比文字寫更自然。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <span>MUSEON</span> · 顧問：Goku · 月 1 執行細節手冊 v1.0 · 2026
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F1 VSL 建構手冊 — 身心整合教練 · 自動成交引擎</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1e;
+    --surface: #16161f;
+    --raised: #1e1e2a;
+    --border: #2a2a38;
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --gold: #B8923A;
+    --gold-light: #d4aa5a;
+    --teal: #2A7A6E;
+    --teal-light: #3aab9a;
+    --text-primary: #f0ede8;
+    --text-secondary: #9898a8;
+    --text-muted: #5a5a6e;
+    --success: #2D8A6E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  .hero {
+    background: linear-gradient(150deg, #0f0f1e 0%, #1e1218 50%, #0a0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 40px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 200px;
+    background: radial-gradient(ellipse, rgba(196,80,42,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.35);
+    color: var(--ember-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 100px; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5vw, 50px);
+    font-weight: 600; color: #f0ede8; line-height: 1.15; margin-bottom: 12px;
+  }
+  .hero h1 em { color: var(--ember-light); font-style: italic; }
+  .hero-sub { font-size: 17px; color: var(--text-secondary); max-width: 520px; margin: 0 auto 32px; }
+
+  .hero-flow {
+    display: flex; justify-content: center; align-items: center;
+    gap: 0; flex-wrap: wrap;
+  }
+  .flow-step {
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .flow-step strong { color: var(--text-primary); display: block; font-size: 13px; }
+  .flow-arrow { color: var(--text-muted); font-size: 18px; padding: 0 8px; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+  @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+  section { padding: 56px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 600; color: #f0ede8; margin-bottom: 8px; line-height: 1.25;
+  }
+  .section-desc { color: var(--text-secondary); font-size: 15px; margin-bottom: 40px; max-width: 640px; }
+
+  /* VSL Concept */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 640px) { .concept-grid { grid-template-columns: 1fr; } }
+
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .concept-icon {
+    font-size: 28px; margin-bottom: 10px;
+  }
+  .concept-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600; color: #f0ede8; margin-bottom: 6px;
+  }
+  .concept-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+  /* 10 Questions */
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) { .questions-grid { grid-template-columns: 1fr; } }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .q-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600; color: var(--gold);
+  }
+  .q-content {}
+  .q-question { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+  .q-purpose { font-size: 12px; color: var(--text-muted); }
+
+  /* VSL Script */
+  .script-flow { display: flex; flex-direction: column; gap: 0; }
+  .script-segment {
+    display: flex; gap: 0;
+    border-left: 2px solid var(--border);
+    margin-left: 20px;
+    position: relative;
+  }
+  .script-segment::before {
+    content: '';
+    position: absolute;
+    left: -9px; top: 24px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--raised);
+    border: 2px solid var(--border);
+    z-index: 1;
+  }
+  .script-segment.s1::before { background: var(--ember); border-color: var(--ember-light); }
+  .script-segment.s2::before { background: #3a2060; border-color: #7a40c0; }
+  .script-segment.s3::before { background: var(--teal); border-color: var(--teal-light); }
+  .script-segment.s4::before { background: #2a4a1a; border-color: #4aaa2a; }
+  .script-segment.s5::before { background: var(--gold); border-color: var(--gold-light); }
+  .script-segment.s6::before { background: var(--ember-dark); border-color: var(--ember); }
+  .script-segment.s7::before { background: #8a2a80; border-color: #d040c0; }
+
+  .segment-content {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 20px 20px 28px;
+    margin-left: 16px;
+    margin-bottom: 16px;
+  }
+  .segment-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .seg-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 100px;
+    background: var(--raised); color: var(--text-muted);
+  }
+  .s1 .seg-tag { background: rgba(196,80,42,0.15); color: var(--ember-light); }
+  .s2 .seg-tag { background: rgba(120,60,200,0.15); color: #b080f0; }
+  .s3 .seg-tag { background: rgba(42,122,110,0.15); color: var(--teal-light); }
+  .s4 .seg-tag { background: rgba(74,170,42,0.15); color: #7ada4a; }
+  .s5 .seg-tag { background: rgba(184,146,58,0.15); color: var(--gold-light); }
+  .s6 .seg-tag { background: rgba(154,58,28,0.2); color: var(--ember-light); }
+  .s7 .seg-tag { background: rgba(200,60,180,0.15); color: #e080d0; }
+
+  .seg-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600; color: #f0ede8;
+  }
+  .seg-duration {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--text-muted);
+    margin-left: auto;
+  }
+  .seg-goal { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+  .seg-prompts { list-style: none; }
+  .seg-prompts li {
+    font-size: 13px; color: var(--text-secondary);
+    padding: 5px 0; display: flex; gap: 8px; align-items: flex-start;
+    border-bottom: 1px solid rgba(42,42,56,0.5);
+  }
+  .seg-prompts li:last-child { border-bottom: none; }
+  .seg-prompts li::before { content: '→'; color: var(--text-muted); flex-shrink: 0; }
+  .seg-example {
+    background: var(--raised);
+    border-left: 2px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px; color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* Landing Page */
+  .lp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .lp-grid { grid-template-columns: 1fr; } }
+
+  .lp-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .lp-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .lp-item {
+    display: flex; gap: 8px; align-items: flex-start;
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .lp-item:last-child { border-bottom: none; }
+  .lp-item .dot { color: var(--ember-light); flex-shrink: 0; font-size: 10px; margin-top: 5px; }
+
+  /* Ad Budget */
+  .budget-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+  }
+  .budget-table table { width: 100%; border-collapse: collapse; }
+  .budget-table th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 16px;
+    background: var(--raised);
+    border-bottom: 1px solid var(--border);
+  }
+  .budget-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-secondary);
+    vertical-align: top;
+  }
+  .budget-table tr:last-child td { border-bottom: none; }
+  .budget-table td:first-child { color: var(--text-primary); font-weight: 500; }
+  .budget-table td.amount { color: var(--gold-light); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+
+  /* Criteria */
+  .criteria-final {
+    background: rgba(184,146,58,0.08);
+    border: 1px solid rgba(184,146,58,0.25);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .criteria-final-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600; color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+  .criteria-list { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  @media (max-width: 640px) { .criteria-list { grid-template-columns: 1fr; } }
+  .criteria-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13px; color: var(--text-secondary);
+    background: var(--raised); border-radius: 6px; padding: 10px 12px;
+  }
+  .criteria-list li::before { content: '◆'; color: var(--gold); font-size: 8px; flex-shrink: 0; margin-top: 5px; }
+
+  footer {
+    text-align: center; padding: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">手冊 4 — F1 VSL 建構</div>
+  <h1>打造你的<br><em>自動成交引擎</em></h1>
+  <p class="hero-sub">VSL 是什麼、為什麼用、怎麼做——從舊課程素材到月成交多件的完整路徑</p>
+  <div class="hero-flow">
+    <div class="flow-step"><strong>舊素材</strong>知識萃取</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><strong>VSL 腳本</strong>7 段架構</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><strong>落地頁</strong>影片+問卷</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><strong>廣告</strong>1 萬/月測試</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><strong>成交</strong>策略電話</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-label">VSL 基礎認知</div>
+    <div class="section-title">VSL 是什麼？為什麼用它？</div>
+    <p class="section-desc">VSL（Video Sales Letter，影片銷售信）不是廣告，不是課程預告，是一段「你在的時候才有的說服力」的濃縮版。</p>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-icon">🎯</div>
+        <div class="concept-name">VSL 是什麼</div>
+        <div class="concept-desc">10-20 分鐘的影片，按照特定順序說清楚：你的客戶有什麼問題 → 你如何幫他解決 → 你的服務是什麼 → 現在怎麼開始。它是你「不在場時的你」。</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">⚡</div>
+        <div class="concept-name">為什麼比文字有效</div>
+        <div class="concept-desc">身心整合的客戶需要「感覺到信任」才會購買。文字說服力弱，影片讓他們看到你的眼神、聽到你的語氣，建立情感連結，這是高單價服務的必要條件。</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">🔁</div>
+        <div class="concept-name">為什麼適合你的情況</div>
+        <div class="concept-desc">你有舊課程素材（現成知識），廣告預算 1 萬（夠測試），一對一高單價（轉化 1 人就值得）。VSL 的優勢正好符合這三個條件。</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ember-light);margin-bottom:12px;">VSL 的典型轉化邏輯</div>
+      <div style="font-size:14px;color:var(--text-secondary);line-height:1.75;">
+        <strong style="color:var(--text-primary);">100 人看廣告</strong>→ <strong style="color:var(--text-primary);">10 人點擊</strong>→ <strong style="color:var(--text-primary);">5 人看完 VSL + 填問卷</strong>→ <strong style="color:var(--text-primary);">2 人進入策略電話</strong>→ <strong style="color:var(--text-primary);">1 人成交（6 萬）</strong><br>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-muted);">廣告 1 萬/月 × 轉化率 1% = 每花 1 萬廣告費有機會帶回 6-12 萬的成交。關鍵是優化各個環節。</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">知識萃取</div>
+    <div class="section-title">從舊素材提煉的 10 個問題</div>
+    <p class="section-desc">這 10 個問題是 VSL 的原料。每個問題的答案，都會出現在腳本的某一段。請用你平常說話的語氣回答，不要寫「專業說法」。</p>
+    <div class="questions-grid">
+      <div class="q-card">
+        <div class="q-num">01</div>
+        <div class="q-content">
+          <div class="q-question">你理想客戶的日常是什麼樣子？他們為什麼痛苦？</div>
+          <div class="q-purpose">用途：VSL 段落 1（痛點共鳴）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">02</div>
+        <div class="q-content">
+          <div class="q-question">他們試過什麼方法但失敗了？為什麼失敗？</div>
+          <div class="q-purpose">用途：段落 1-2（痛點加深 + 舊方法打臉）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">03</div>
+        <div class="q-content">
+          <div class="q-question">你是怎麼走進這個領域的？有什麼觸動你的個人故事？</div>
+          <div class="q-purpose">用途：段落 2（建立情感連結和可信度）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">04</div>
+        <div class="q-content">
+          <div class="q-question">你的方法跟其他身心療癒/教練的根本差異是什麼？</div>
+          <div class="q-purpose">用途：段落 3（解決方案獨特性）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">05</div>
+        <div class="q-content">
+          <div class="q-question">你的核心方法可以用 1-3 個步驟解釋嗎？是什麼？</div>
+          <div class="q-purpose">用途：段落 3（方法論視覺化）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">06</div>
+        <div class="q-content">
+          <div class="q-question">你服務過最有代表性的一個客戶，他的前後變化是什麼？</div>
+          <div class="q-purpose">用途：段落 4（最強案例見證）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">07</div>
+        <div class="q-content">
+          <div class="q-question">為什麼你的客戶值得被認真對待？他們通常是什麼樣的人？</div>
+          <div class="q-purpose">用途：段落 4-5（受眾資格篩選）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">08</div>
+        <div class="q-content">
+          <div class="q-question">你的一對一服務包含什麼？期間多長？成效承諾是什麼？</div>
+          <div class="q-purpose">用途：段落 5（產品具體說明）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">09</div>
+        <div class="q-content">
+          <div class="q-question">客戶最常問的反對意見是什麼？你怎麼回答？</div>
+          <div class="q-purpose">用途：段落 6（預防性處理異議）</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-content">
+          <div class="q-question">如果有人今天不採取行動，3 個月後他的狀況是什麼？</div>
+          <div class="q-purpose">用途：段落 7（行動呼籲的緊迫感）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">腳本架構</div>
+    <div class="section-title">7 段式 VSL 腳本</div>
+    <p class="section-desc">每段有明確目的、關鍵提示句、和時間建議。整體控制在 10-20 分鐘，寧可說不完整也不要說太多。</p>
+    <div class="script-flow">
+
+      <div class="script-segment s1">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 1</div>
+            <div class="seg-name">痛點</div>
+            <div class="seg-duration">建議 2-3 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：讓觀眾在 30 秒內說「這說的是我」。不要自我介紹，直接進入他的世界。</div>
+          <ul class="seg-prompts">
+            <li>說出他的具體場景（早上起來身體沉、晚上又睡不好…）</li>
+            <li>點名他嘗試過的失敗方法（運動了三個月、看了醫生說沒問題…）</li>
+            <li>問一個反問句讓他點頭（你有沒有覺得，你只是疲憊，不是懶？）</li>
+          </ul>
+          <div class="seg-example">「你最後一次真正休息是什麼時候？不是睡覺，是那種醒來以後，真的覺得輕盈的感覺…」</div>
+        </div>
+      </div>
+
+      <div class="script-segment s2">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 2</div>
+            <div class="seg-name">希望</div>
+            <div class="seg-duration">建議 1-2 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：展示改變是可能的，讓觀眾產生「這可能對我有用」的期待感。</div>
+          <ul class="seg-prompts">
+            <li>描繪一個具體的「改變後狀態」（不是說理，是畫面）</li>
+            <li>用一個客戶的一句話呈現（「他告訴我，那是他三年來第一次…」）</li>
+            <li>引出你的故事：是什麼讓你相信這個改變是真的？</li>
+          </ul>
+          <div class="seg-example">「我有一位客戶，三個月前她還說『我覺得我的身體不是我的』。上個月她傳訊息給我，說她第一次在跑完步之後，哭了…」</div>
+        </div>
+      </div>
+
+      <div class="script-segment s3">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 3</div>
+            <div class="seg-name">解決方案</div>
+            <div class="seg-duration">建議 3-4 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：說清楚你的方法是什麼、為什麼不同、為什麼有效。不要說得太複雜，3 個步驟最理想。</div>
+          <ul class="seg-prompts">
+            <li>說出你方法的名稱（哪怕是你自己取的）</li>
+            <li>用 1-2-3 結構讓觀眾記住</li>
+            <li>和傳統方法做一個明確對比（不是批評，是區別）</li>
+            <li>說一個「為什麼其他方法沒效」的科學或心理解釋</li>
+          </ul>
+          <div class="seg-example">「大部分療癒方式都在解決症狀——你焦慮，就教你呼吸；你失眠，就給你助眠技巧。但我發現，症狀只是訊號，真正的問題是你的身體和情緒斷線了…」</div>
+        </div>
+      </div>
+
+      <div class="script-segment s4">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 4</div>
+            <div class="seg-name">佐證</div>
+            <div class="seg-duration">建議 2-3 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：讓觀眾相信「這對別人有效，也可能對我有效」。用真實的人的故事，不用統計數字。</div>
+          <ul class="seg-prompts">
+            <li>1-2 個客戶故事（有名字或暱稱，有具體的改變）</li>
+            <li>說明他們的「起點」讓觀眾能對應</li>
+            <li>可以引用一段客戶的原話（截圖 / 語音片段）</li>
+            <li>你自己的資歷簡述（不超過 30 秒，放在見證後面更有力）</li>
+          </ul>
+          <div class="seg-example">「小薇找我的時候，她說她每天都在工作，但她不知道自己在活著。她不是誇張，她是真的感覺不到自己存在…4 個月後…」</div>
+        </div>
+      </div>
+
+      <div class="script-segment s5">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 5</div>
+            <div class="seg-name">產品介紹</div>
+            <div class="seg-duration">建議 2-3 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：清楚說明「跟你合作」是什麼樣的體驗。要具體，不要說「全面性陪伴」這種模糊詞。</div>
+          <ul class="seg-prompts">
+            <li>說明時間（幾個月）、頻率（每週幾次）、形式（視訊/面對面）</li>
+            <li>說明你在一起做什麼（有 3 個核心模組）</li>
+            <li>說明客戶需要投入什麼（時間/心力/作業）</li>
+            <li>說明這個名額「為什麼有限」（你同時服務的人數）</li>
+          </ul>
+          <div class="seg-example">「我每次只服務 5 個人，因為每一位都需要我的全部注意力。我們每週見面一次，60-90 分鐘，為期 3 個月…」</div>
+        </div>
+      </div>
+
+      <div class="script-segment s6">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 6</div>
+            <div class="seg-name">成交</div>
+            <div class="seg-duration">建議 1-2 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：說出價格，並讓價格顯得合理。不要迴避，不要道歉。</div>
+          <ul class="seg-prompts">
+            <li>先說「如果你一個人自己摸索，需要多久多少成本？」</li>
+            <li>再說你的投資金額</li>
+            <li>處理 1-2 個常見反對意見（「太貴了」→「比你因為這個問題損失的代價便宜」）</li>
+            <li>說明這個決定對他的未來意味著什麼</li>
+          </ul>
+          <div class="seg-example">「我的一對一深度服務，投資是 X 萬元。如果你覺得這很多，我想問你：這三年，這個問題讓你失去了多少？睡眠、關係、工作效率、還有你自己的快樂…」</div>
+        </div>
+      </div>
+
+      <div class="script-segment s7">
+        <div class="segment-content">
+          <div class="segment-header">
+            <div class="seg-tag">段落 7</div>
+            <div class="seg-name">行動呼籲</div>
+            <div class="seg-duration">建議 1 分鐘</div>
+          </div>
+          <div class="seg-goal">目標：給出一個明確的下一步，讓想繼續的人知道怎麼做。</div>
+          <ul class="seg-prompts">
+            <li>一個動作，不要兩個（填問卷 OR 預約電話，選一個）</li>
+            <li>說明填完問卷後會發生什麼（Goku 審核、幾天內回覆）</li>
+            <li>製造適當的緊迫感（名額有限，不是假的）</li>
+            <li>最後一句溫暖收尾（這個決定，你不會後悔）</li>
+          </ul>
+          <div class="seg-example">「如果你看到這裡，覺得有哪怕一點點共鳴，請點下方的按鈕填一個小問卷。填完後我會親自看，然後我們約一通 30 分鐘的通話，一起看看你適不適合…」</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">落地頁設計</div>
+    <div class="section-title">落地頁元素清單</div>
+    <p class="section-desc">不需要漂亮，需要清楚。每個元素都有功能，缺一個都會影響轉化。</p>
+    <div class="lp-grid">
+      <div class="lp-section">
+        <div class="lp-title">必要元素（不能少）</div>
+        <div class="lp-item"><div class="dot">●</div>標題：一句說清楚「你能幫誰解決什麼」（不是課程名稱）</div>
+        <div class="lp-item"><div class="dot">●</div>VSL 影片：置頂，全寬，自動播放靜音（手機友善）</div>
+        <div class="lp-item"><div class="dot">●</div>問卷連結 CTA 按鈕：影片下方立刻出現，文字 = 「我想了解更多」</div>
+        <div class="lp-item"><div class="dot">●</div>2-3 行你是誰（名字 + 服務人群 + 核心資歷）</div>
+        <div class="lp-item"><div class="dot">●</div>1-2 則客戶見證截圖或文字</div>
+        <div class="lp-item"><div class="dot">●</div>再一個 CTA 按鈕（頁面底部）</div>
+      </div>
+      <div class="lp-section">
+        <div class="lp-title">加分元素（有更好）</div>
+        <div class="lp-item"><div class="dot">●</div>你的照片（有眼神的正面照，不要商務美圖風格）</div>
+        <div class="lp-item"><div class="dot">●</div>服務包含內容的簡短說明（3 點以內）</div>
+        <div class="lp-item"><div class="dot">●</div>常見問題 FAQ（3-5 個）</div>
+        <div class="lp-item"><div class="dot">●</div>適合 / 不適合誰（讓潛在客戶自我篩選）</div>
+        <div class="lp-item"><div class="dot">●</div>感謝頁（填完問卷後的下一步說明）</div>
+      </div>
+      <div class="lp-section">
+        <div class="lp-title">問卷題目建議（7-10 題）</div>
+        <div class="lp-item"><div class="dot">●</div>你主要面對的挑戰是什麼？（開放題）</div>
+        <div class="lp-item"><div class="dot">●</div>這個問題影響你多久了？</div>
+        <div class="lp-item"><div class="dot">●</div>你之前試過什麼方法？</div>
+        <div class="lp-item"><div class="dot">●</div>3 個月後，你希望有什麼改變？</div>
+        <div class="lp-item"><div class="dot">●</div>你目前的投資意願範圍？（確認資格）</div>
+        <div class="lp-item"><div class="dot">●</div>你方便通話的時間？</div>
+      </div>
+      <div class="lp-section">
+        <div class="lp-title">技術建議</div>
+        <div class="lp-item"><div class="dot">●</div>平台：Carrd（最簡單）/ Notion + Super / Framer</div>
+        <div class="lp-item"><div class="dot">●</div>問卷：Google Form / Typeform（免費版即可）</div>
+        <div class="lp-item"><div class="dot">●</div>影片：YouTube 不公開連結嵌入</div>
+        <div class="lp-item"><div class="dot">●</div>行動版測試：用手機實際走一遍流程</div>
+        <div class="lp-item"><div class="dot">●</div>不需要複雜設計，清晰 > 好看</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">廣告預算分配</div>
+    <div class="section-title">1 萬廣告費怎麼分配？</div>
+    <p class="section-desc">第一個月是測試，不是優化。用最小成本找到哪個版本有效，再放大。</p>
+    <div class="budget-table">
+      <table>
+        <thead>
+          <tr>
+            <th>週次</th>
+            <th>預算</th>
+            <th>廣告目標</th>
+            <th>測試內容</th>
+            <th>評估指標</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Week 1-2</td>
+            <td class="amount">4,000</td>
+            <td>影片觀看（Video Views）</td>
+            <td>2-3 組受眾設定，看哪組人停留最久</td>
+            <td>影片觀看率（30 秒留存率 &gt; 20%）</td>
+          </tr>
+          <tr>
+            <td>Week 3</td>
+            <td class="amount">3,000</td>
+            <td>流量（Landing Page Views）</td>
+            <td>用 W1-2 勝出受眾，導向落地頁</td>
+            <td>CTR（點擊率 &gt; 1.5%）、落地頁停留時間</td>
+          </tr>
+          <tr>
+            <td>Week 4</td>
+            <td class="amount">3,000</td>
+            <td>轉化（Conversions / 問卷）</td>
+            <td>優化後版本，看問卷填寫成本</td>
+            <td>每份問卷成本（目標 &lt; 500 元）</td>
+          </tr>
+          <tr>
+            <td style="border-top: 1px solid #3a3a50;">M2+ 放大條件</td>
+            <td class="amount" style="border-top: 1px solid #3a3a50;">1.5-2 萬</td>
+            <td colspan="2" style="border-top: 1px solid #3a3a50;">問卷成本 &lt; 500 且問卷品質合格（有效潛在客戶比率 &gt; 40%）才放大</td>
+            <td class="amount" style="border-top: 1px solid #3a3a50;">ROAS &gt; 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">完成判準</div>
+    <div class="section-title">F1 漏斗完成的標準</div>
+    <div class="criteria-final">
+      <div class="criteria-final-title">這些都達到，F1 才算真正上線</div>
+      <ul class="criteria-list">
+        <li>知識萃取 10 問全部回答（不是草草幾句）</li>
+        <li>VSL 腳本 7 段完整，客戶確認可錄製</li>
+        <li>VSL 影片錄製剪輯完成，≥ 10 分鐘</li>
+        <li>落地頁上線，手機版測試通過</li>
+        <li>問卷表單 7 題以上，感謝頁設定</li>
+        <li>廣告帳號設定完成，M1 W4 開始投放</li>
+        <li>第一週廣告數據有記錄（CTR / 點擊數 / 花費）</li>
+        <li>M2 起廣告優化有數據依據（不是憑感覺）</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <span>MUSEON</span> · 顧問：Goku · F1 VSL 建構手冊 v1.0 · 2026
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F2 社群挑戰營手冊 — 身心整合教練 · 訂閱社群設計</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1e;
+    --surface: #16161f;
+    --raised: #1e1e2a;
+    --border: #2a2a38;
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --gold: #B8923A;
+    --gold-light: #d4aa5a;
+    --teal: #2A7A6E;
+    --teal-light: #3aab9a;
+    --purple: #6040a0;
+    --purple-light: #9070d0;
+    --text-primary: #f0ede8;
+    --text-secondary: #9898a8;
+    --text-muted: #5a5a6e;
+    --success: #2D8A6E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  .hero {
+    background: linear-gradient(150deg, #0f0f1e 0%, #101828 50%, #0f1018 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 40px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 350px;
+    background: radial-gradient(ellipse, rgba(42,122,110,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(42,122,110,0.15);
+    border: 1px solid rgba(42,122,110,0.3);
+    color: var(--teal-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 100px; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5vw, 50px);
+    font-weight: 600; color: #f0ede8; line-height: 1.15; margin-bottom: 12px;
+  }
+  .hero h1 em { color: var(--teal-light); font-style: italic; }
+  .hero-sub { font-size: 17px; color: var(--text-secondary); max-width: 520px; margin: 0 auto 32px; }
+
+  .hero-numbers {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  }
+  .hero-num { text-align: center; }
+  .hero-num .val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px; font-weight: 600; color: var(--teal-light); display: block;
+  }
+  .hero-num .key {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+  @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+  section { padding: 56px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 600; color: #f0ede8; margin-bottom: 8px; line-height: 1.25;
+  }
+  .section-desc { color: var(--text-secondary); font-size: 15px; margin-bottom: 40px; max-width: 640px; }
+
+  /* Subscription Pricing */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+  .pricing-card.featured {
+    border-color: var(--teal);
+    background: linear-gradient(135deg, #16161f, #182420);
+  }
+  .pricing-badge {
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--teal);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    padding: 2px 12px; border-radius: 100px;
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+  }
+  .pricing-tier {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .pricing-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600; color: #f0ede8; margin-bottom: 4px;
+  }
+  .pricing-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 600; color: var(--teal-light);
+    margin-bottom: 4px;
+  }
+  .pricing-price span {
+    font-size: 14px; color: var(--text-muted); font-family: 'Outfit', sans-serif;
+  }
+  .pricing-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.6; }
+  .pricing-includes { list-style: none; }
+  .pricing-includes li {
+    font-size: 13px; color: var(--text-secondary);
+    padding: 5px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .pricing-includes li:last-child { border-bottom: none; }
+  .pricing-includes li::before { content: '✓'; color: var(--teal-light); font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+
+  .value-note {
+    background: rgba(42,122,110,0.08);
+    border: 1px solid rgba(42,122,110,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 14px; color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .value-note strong { color: var(--teal-light); }
+
+  /* Challenge Camp */
+  .days-grid { display: flex; flex-direction: column; gap: 12px; }
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .day-badge {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600; color: #fff;
+  }
+  .day-badge.d1 { background: linear-gradient(135deg, #1a3a5a, #2a6aaa); }
+  .day-badge.d2 { background: linear-gradient(135deg, #2a1a5a, #6a2aaa); }
+  .day-badge.d3 { background: linear-gradient(135deg, #1a5a3a, var(--teal)); }
+  .day-badge.d4 { background: linear-gradient(135deg, #5a3a1a, var(--gold)); }
+  .day-badge.d5 { background: linear-gradient(135deg, var(--ember-dark), var(--ember)); }
+  .day-content { flex: 1; }
+  .day-theme {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 4px;
+  }
+  .day-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600; color: #f0ede8; margin-bottom: 6px;
+  }
+  .day-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; }
+  .day-tasks { display: flex; gap: 8px; flex-wrap: wrap; }
+  .day-task {
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .day-cta {
+    margin-top: 10px;
+    font-size: 12px; color: var(--teal-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: italic;
+  }
+
+  /* Content Calendar */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 768px) { .calendar-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 440px) { .calendar-grid { grid-template-columns: 1fr; } }
+
+  .cal-day {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .cal-day.rest {
+    opacity: 0.5;
+    background: var(--raised);
+  }
+  .cal-weekday {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .cal-type {
+    font-size: 11px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;
+  }
+  .cal-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Conversion Path */
+  .conversion-flow {
+    display: flex; align-items: stretch; gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) { .conversion-flow { flex-direction: column; } }
+
+  .conv-stage {
+    flex: 1;
+    padding: 24px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .conv-stage:last-child { border-right: none; }
+  .conv-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px; font-weight: 600; color: var(--border);
+    position: absolute; top: 12px; right: 16px;
+    line-height: 1;
+  }
+  .conv-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 6px;
+  }
+  .conv-title {
+    font-size: 15px; font-weight: 600; color: #f0ede8; margin-bottom: 8px;
+  }
+  .conv-actions { list-style: none; }
+  .conv-actions li {
+    font-size: 12px; color: var(--text-secondary);
+    padding: 4px 0; border-bottom: 1px solid rgba(42,42,56,0.5);
+    display: flex; gap: 6px;
+  }
+  .conv-actions li:last-child { border-bottom: none; }
+  .conv-actions li::before { content: '·'; color: var(--text-muted); flex-shrink: 0; }
+
+  /* 3 Principles */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .principles-grid { grid-template-columns: 1fr; } }
+
+  .principle-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .principle-icon {
+    font-size: 32px; margin-bottom: 12px;
+  }
+  .principle-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 4px;
+  }
+  .principle-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600; color: #f0ede8; margin-bottom: 8px;
+  }
+  .principle-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
+  .principle-dos { list-style: none; }
+  .principle-dos li {
+    font-size: 12px; color: var(--text-secondary);
+    padding: 5px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 8px;
+  }
+  .principle-dos li:last-child { border-bottom: none; }
+  .principle-dos li.do::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+  .principle-dos li.dont::before { content: '✕'; color: var(--ember-light); font-weight: 700; flex-shrink: 0; }
+
+  footer {
+    text-align: center; padding: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">手冊 5 — F2 社群挑戰營</div>
+  <h1>建立你的<br><em>溫熱粉絲生態系</em></h1>
+  <p class="hero-sub">低門檻訂閱社群 + 5 天挑戰營，把陌生人變成準客戶的長線複利機器</p>
+  <div class="hero-numbers">
+    <div class="hero-num">
+      <span class="val">1,500</span>
+      <span class="key">月費定價建議</span>
+    </div>
+    <div class="hero-num">
+      <span class="val">5 天</span>
+      <span class="key">挑戰營週期</span>
+    </div>
+    <div class="hero-num">
+      <span class="val">100人</span>
+      <span class="key">M4 目標社群規模</span>
+    </div>
+    <div class="hero-num">
+      <span class="val">15萬</span>
+      <span class="key">社群滿載月收入流</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-label">訂閱社群設計</div>
+    <div class="section-title">低入場訂閱：定價建議 + 價值設計</div>
+    <p class="section-desc">訂閱社群不是「賣知識」，是建立「接觸你的習慣」。定價要夠低讓人敢試，價值要夠高讓人留下來。</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">入門級</div>
+        <div class="pricing-name">月度陪伴</div>
+        <div class="pricing-price">980 <span>/月</span></div>
+        <div class="pricing-desc">適合：剛接觸你、還在觀望的人。讓他先「低成本試試看你」。</div>
+        <ul class="pricing-includes">
+          <li>每週一篇深度文章</li>
+          <li>每月 1 次 30 分鐘群直播 Q&A</li>
+          <li>私人社群加入資格</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">推薦主力方案</div>
+        <div class="pricing-tier">核心方案</div>
+        <div class="pricing-name">療癒同伴</div>
+        <div class="pricing-price">1,500 <span>/月</span></div>
+        <div class="pricing-desc">適合：已有共鳴、想要持續陪伴的人。這是你的主力訂閱。</div>
+        <ul class="pricing-includes">
+          <li>每週一篇深度文章 + 一個身心練習音檔</li>
+          <li>每月 2 次 45 分鐘群直播</li>
+          <li>挑戰營優先報名資格</li>
+          <li>每月一對一問題徵集回覆</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">進階升級</div>
+        <div class="pricing-name">深度共創</div>
+        <div class="pricing-price">3,500 <span>/月</span></div>
+        <div class="pricing-desc">適合：高度認同、想要更多你的人。是一對一的「前室」。</div>
+        <ul class="pricing-includes">
+          <li>核心方案全部內容</li>
+          <li>每月一對一 30 分鐘通話</li>
+          <li>一對一服務優先候補資格</li>
+          <li>每季工作坊免費參加</li>
+        </ul>
+      </div>
+    </div>
+    <div class="value-note">
+      <strong>關於定價的思考：</strong>1,500/月 = 約 50 元/天。你的目標受眾通常會在星巴克花 180 元買一杯咖啡。當你讓她意識到「一杯咖啡的 1/3 = 每天有一個懂她的人陪她」，定價就不再是阻力。<br>
+      如果剛開始沒有信心，可以先從 <strong>創始會員價 999 元</strong>啟動（前 50 人），建立社群基礎後再調整至正式定價。
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">5 天挑戰營</div>
+    <div class="section-title">5 天挑戰營完整架構</div>
+    <p class="section-desc">挑戰營的目的不是教完一套方法，是讓參加者在 5 天內「感受到改變的可能性」，然後想要更多。每天的任務要在 15-30 分鐘內完成。</p>
+    <div class="days-grid">
+
+      <div class="day-card">
+        <div class="day-badge d1">D1</div>
+        <div class="day-content">
+          <div class="day-theme">主題：覺察</div>
+          <div class="day-title">你的身體在說什麼？</div>
+          <div class="day-desc">第一天建立「我願意聽自己身體說話」的意識。不教技巧，先建立連結感。讓她感受到「原來我一直忽略了這些訊號」。</div>
+          <div class="day-tasks">
+            <div class="day-task">身體掃描練習（10 分鐘）</div>
+            <div class="day-task">填寫身體感受日誌</div>
+            <div class="day-task">分享一個觀察到的感覺</div>
+          </div>
+          <div class="day-cta">打卡關鍵詞：「我注意到我的身體…」</div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-badge d2">D2</div>
+        <div class="day-content">
+          <div class="day-theme">主題：根源</div>
+          <div class="day-title">這個感覺從哪裡來？</div>
+          <div class="day-desc">引導她看到「身體症狀」和「情緒/事件」的連結。這是你方法論的核心洞見。讓她有「哇我從來沒有這樣想過」的時刻。</div>
+          <div class="day-tasks">
+            <div class="day-task">情緒-身體對照表填寫</div>
+            <div class="day-task">找到最近一個「身體反應事件」</div>
+            <div class="day-task">小組分享（若有 Telegram 群）</div>
+          </div>
+          <div class="day-cta">打卡關鍵詞：「我發現我的 __ 跟 __ 有關」</div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-badge d3">D3</div>
+        <div class="day-content">
+          <div class="day-theme">主題：鬆綁</div>
+          <div class="day-title">第一個小解脫</div>
+          <div class="day-desc">中途最關鍵的一天。給一個她「今天就可以用」的工具，讓她實際感受到輕盈。這個工具要是你方法論中最容易上手的那個。</div>
+          <div class="day-tasks">
+            <div class="day-task">教一個 5 分鐘的核心練習</div>
+            <div class="day-task">立刻做並記錄前後感受差異</div>
+            <div class="day-task">拍一張「現在的狀態」傳群組</div>
+          </div>
+          <div class="day-cta">打卡關鍵詞：「做完之後我感覺…」</div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-badge d4">D4</div>
+        <div class="day-content">
+          <div class="day-theme">主題：整合</div>
+          <div class="day-title">如何讓改變持續？</div>
+          <div class="day-desc">把前三天學到的東西「裝進日常生活」。讓她意識到這不是一次性體驗，而是一套可以持續用的方式。同時自然引出「如果想更深入怎麼辦」的問題。</div>
+          <div class="day-tasks">
+            <div class="day-task">設計自己的「身心儀式」清單</div>
+            <div class="day-task">選 1 個明天就開始的習慣</div>
+            <div class="day-task">分享你的「身心儀式」</div>
+          </div>
+          <div class="day-cta">打卡關鍵詞：「我決定從明天開始…」</div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-badge d5">D5</div>
+        <div class="day-content">
+          <div class="day-theme">主題：展望</div>
+          <div class="day-title">你想去到哪裡？</div>
+          <div class="day-desc">最後一天不教東西，讓她說話。引導她看到「5 天前的自己」和「現在的自己」的差距，然後看向她真正想要的未來。自然帶出一對一服務的邀請。</div>
+          <div class="day-tasks">
+            <div class="day-task">5 天前後對比日誌</div>
+            <div class="day-task">寫下 3 個月後想要的狀態</div>
+            <div class="day-task">觀看收尾直播（Q&A + 服務介紹）</div>
+          </div>
+          <div class="day-cta">直播最後 10 分鐘：介紹一對一服務，邀請想深入的人填問卷</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">內容排程</div>
+    <div class="section-title">每週固定輸出模板</div>
+    <p class="section-desc">一致性是社群的生命力。每週固定的輸出讓訂閱者「知道什麼時候會有什麼」，這種可預期性讓他們留下來。</p>
+    <div class="calendar-grid">
+      <div class="cal-day">
+        <div class="cal-weekday">Monday</div>
+        <div class="cal-type">週一能量帖</div>
+        <div class="cal-desc">一句話 + 一個身心小提示。讓她開週有意識。</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-weekday">Wednesday</div>
+        <div class="cal-type">深度文章</div>
+        <div class="cal-desc">500-800 字，一個身心主題。從舊課程素材萃取，不用每週原創。</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-weekday">Thursday</div>
+        <div class="cal-type">練習音檔</div>
+        <div class="cal-desc">5-10 分鐘引導練習。錄一次可用多次。是訂閱最有感的服務。</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-weekday">Friday</div>
+        <div class="cal-type">週五問答</div>
+        <div class="cal-desc">收訂閱者這週的問題，回覆 1-2 個最有代表性的。增加互動感。</div>
+      </div>
+      <div class="cal-day rest">
+        <div class="cal-weekday">Weekend</div>
+        <div class="cal-type">休息日</div>
+        <div class="cal-desc">你也需要休息。偶爾轉發一則生活感的內容即可。</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">每月額外排程</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+        <div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--teal-light);">每月第一個週四：</strong>群體直播 Q&A（45 分鐘，訂閱者限定）</div>
+        <div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--teal-light);">每月最後一天：</strong>下個月預覽 + 訂閱續約提醒（不要推銷，用期待感）</div>
+        <div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--gold-light);">每季一次：</strong>5 天挑戰營（季度招募新訂閱者的主要活動）</div>
+        <div style="font-size:13px;color:var(--text-secondary);"><strong style="color:var(--ember-light);">有空就做：</strong>客戶見證收集（直接私訊問），定期更新到落地頁</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">轉化路徑</div>
+    <div class="section-title">從訂閱會員到高客單的轉化路徑</div>
+    <p class="section-desc">F2 最重要的功能是「篩選出準備好的人」。不是每個訂閱者都適合一對一，但持續互動會讓對的人自然浮出。</p>
+    <div class="conversion-flow">
+      <div class="conv-stage">
+        <div class="conv-num">1</div>
+        <div class="conv-tag">接觸</div>
+        <div class="conv-title">陌生人進入 F2</div>
+        <ul class="conv-actions">
+          <li>看到挑戰營宣傳（F1 廣告 / 口耳相傳）</li>
+          <li>免費報名 5 天挑戰營</li>
+          <li>完成 5 天，有「想繼續」的感覺</li>
+        </ul>
+      </div>
+      <div class="conv-stage">
+        <div class="conv-num">2</div>
+        <div class="conv-tag">訂閱</div>
+        <div class="conv-title">挑戰營 → 訂閱者</div>
+        <ul class="conv-actions">
+          <li>D5 結尾介紹訂閱社群</li>
+          <li>挑戰營結束優惠 3 天（創始價）</li>
+          <li>訂閱後加入私人社群</li>
+        </ul>
+      </div>
+      <div class="conv-stage">
+        <div class="conv-num">3</div>
+        <div class="conv-tag">升溫</div>
+        <div class="conv-title">訂閱 → 高意願者</div>
+        <ul class="conv-actions">
+          <li>持續接觸每週內容（2-4 個月）</li>
+          <li>參與直播 Q&A，提問次數增加</li>
+          <li>私訊詢問課程 / 一對一</li>
+        </ul>
+      </div>
+      <div class="conv-stage">
+        <div class="conv-num">4</div>
+        <div class="conv-tag">轉化</div>
+        <div class="conv-title">高意願者 → 一對一</div>
+        <ul class="conv-actions">
+          <li>主動 or 被邀請填寫 VSL 後問卷</li>
+          <li>進入策略電話流程</li>
+          <li>成交（6-8 萬一對一服務）</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:16px;background:rgba(196,80,42,0.08);border:1px solid rgba(196,80,42,0.2);border-radius:8px;padding:16px 20px;font-size:13px;color:var(--text-secondary);line-height:1.7;">
+      <strong style="color:var(--ember-light);">主動識別高意願者的訊號：</strong>直播裡重複提問、私訊說「這個說到我心裡」、詢問一對一是否有空位、分享內容給朋友。<br>
+      識別到這些訊號後，Goku 協助你判斷是否主動邀請進入策略電話流程，不要等她自己說「我要報名」。
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">社群氛圍經營</div>
+    <div class="section-title">社群氛圍經營 3 原則</div>
+    <p class="section-desc">氛圍是社群的生命力。氛圍壞掉，內容再好也留不住人。</p>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-icon">🔥</div>
+        <div class="principle-num">原則 1</div>
+        <div class="principle-name">安全感優先</div>
+        <div class="principle-desc">身心整合的客戶很敏感。她需要先感受到「這裡是安全的」，才會願意說真心話、做真實練習。社群氛圍一旦出現評判，她就關掉了。</div>
+        <ul class="principle-dos">
+          <li class="do">鼓勵「分享感受」而不是「分享成果」</li>
+          <li class="do">你率先展示「脆弱和不確定」是OK的</li>
+          <li class="do">看到私訊就回，讓她感覺被看見</li>
+          <li class="dont">不鼓勵彼此比較練習成效</li>
+          <li class="dont">不讓「正能量強迫」的氛圍出現</li>
+        </ul>
+      </div>
+      <div class="principle-card">
+        <div class="principle-icon">🌀</div>
+        <div class="principle-num">原則 2</div>
+        <div class="principle-name">你是中心，不是老師</div>
+        <div class="principle-desc">老師和學生的關係有距離感。你要建立的是「我跟她一起走」的感覺——她是你旅途中的同伴，不是你要教的學生。這個定位讓她更願意信任你。</div>
+        <ul class="principle-dos">
+          <li class="do">分享你自己的身心狀態（真實，不完美）</li>
+          <li class="do">問她「你這週怎麼樣？」比「學到了嗎？」更好</li>
+          <li class="do">稱她名字，不稱呼「同學」「學員」</li>
+          <li class="dont">不用「學習效果如何」框架評估她</li>
+          <li class="dont">不在公開場合糾正她的練習做法</li>
+        </ul>
+      </div>
+      <div class="principle-card">
+        <div class="principle-icon">⚓</div>
+        <div class="principle-num">原則 3</div>
+        <div class="principle-name">一致性比熱情更重要</div>
+        <div class="principle-desc">很多社群在前兩個月超級活躍，之後慢慢沉寂。訂閱者留下來是因為你「可預期的穩定存在」，不是偶爾的大爆發。每週固定出現，比偶爾一次超豐富內容更有價值。</div>
+        <ul class="principle-dos">
+          <li class="do">寧可短而固定，不要長而不穩</li>
+          <li class="do">設定可持續的輸出量（自己都能長期做到的）</li>
+          <li class="do">預告下週內容，讓她期待</li>
+          <li class="dont">不要承諾自己做不到的頻率</li>
+          <li class="dont">社群沉默 7 天以上 = 危險信號</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <span>MUSEON</span> · 顧問：Goku · F2 社群挑戰營手冊 v1.0 · 2026
+</footer>
+
+</body>
+</html>
