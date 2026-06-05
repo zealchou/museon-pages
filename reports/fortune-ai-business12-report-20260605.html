@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>命理 AI 融合平台｜Business-12 商模十二力診斷報告</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Noto+Serif+TC:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E8724A;
+    --ember-dark: #8B3319;
+    --gold: #b6853d;
+    --gold-light: #D4A55C;
+    --parchment: #F5EFE6;
+    --parchment-dark: #EDE3D5;
+    --ink: #2C1810;
+    --ink-soft: #4A3728;
+    --ink-muted: #7A6558;
+    --navy: #181737;
+    --white: #FFFFFF;
+    --success: #2D6A4F;
+    --warning: #D4A017;
+    --danger: #C0392B;
+    --bf-sprint: #C4502A;
+    --bf-sustain: #2D6A4F;
+    --bf-nurture: #181737;
+    --bf-base: #b6853d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Noto Serif TC', serif;
+    line-height: 1.8;
+  }
+
+  .cover {
+    background: linear-gradient(160deg, var(--navy) 0%, #0D0C24 60%, #1a1235 100%);
+    color: var(--white);
+    padding: 80px 60px 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -60px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+  }
+  .cover-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .cover h1 em { color: var(--ember-light); font-style: normal; }
+  .cover-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 48px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 32px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .cover-meta-label { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .cover-meta-value { font-size: 14px; color: var(--gold-light); font-weight: 500; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+
+  .section { padding: 64px 0; border-bottom: 1px solid rgba(44,24,16,0.08); }
+  .section-label { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ember); margin-bottom: 8px; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .section-sub { font-size: 14px; color: var(--ink-muted); margin-bottom: 40px; }
+
+  .exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .exec-card { background: var(--white); border-radius: 12px; padding: 28px; border: 1px solid rgba(44,24,16,0.08); }
+  .exec-card-number { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 700; color: var(--ember); line-height: 1; margin-bottom: 8px; }
+  .exec-card-label { font-size: 12px; color: var(--ink-muted); font-family: 'Inter', sans-serif; }
+  .exec-card-desc { font-size: 13px; color: var(--ink-soft); margin-top: 8px; line-height: 1.6; }
+
+  .b12-category { display: flex; align-items: center; gap: 12px; margin: 40px 0 20px; padding-bottom: 12px; border-bottom: 2px solid; }
+  .b12-category.sprint { border-color: var(--bf-sprint); }
+  .b12-category.sustain { border-color: var(--bf-sustain); }
+  .b12-category.nurture { border-color: var(--bf-nurture); }
+  .b12-category.base { border-color: var(--bf-base); }
+  .b12-category-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-sprint { background: var(--bf-sprint); }
+  .dot-sustain { background: var(--bf-sustain); }
+  .dot-nurture { background: var(--bf-nurture); }
+  .dot-base { background: var(--gold); }
+  .b12-category-label { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+  .label-sprint { color: var(--bf-sprint); }
+  .label-sustain { color: var(--bf-sustain); }
+  .label-nurture { color: var(--bf-nurture); }
+  .label-base { color: var(--gold); }
+  .b12-category-desc { font-size: 13px; color: var(--ink-muted); margin-left: auto; }
+
+  .b12-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0 0 24px; }
+  .b12-card { background: var(--white); border-radius: 12px; padding: 24px; border: 1px solid rgba(44,24,16,0.08); position: relative; }
+  .b12-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 12px 12px 0 0; }
+  .b12-card.sprint::before { background: var(--bf-sprint); }
+  .b12-card.sustain::before { background: var(--bf-sustain); }
+  .b12-card.nurture::before { background: var(--bf-nurture); }
+  .b12-card.base::before { background: var(--bf-base); }
+  .b12-tag { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .tag-sprint { background: rgba(196,80,42,0.1); color: var(--bf-sprint); }
+  .tag-sustain { background: rgba(45,106,79,0.1); color: var(--bf-sustain); }
+  .tag-nurture { background: rgba(24,23,55,0.1); color: var(--bf-nurture); }
+  .tag-base { background: rgba(182,133,61,0.1); color: var(--gold); }
+  .b12-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .b12-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .b12-score { margin-left: auto; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; }
+  .score-high { color: var(--success); }
+  .score-mid { color: var(--warning); }
+  .score-low { color: var(--danger); }
+  .b12-bar-wrap { background: var(--parchment-dark); border-radius: 4px; height: 6px; margin-bottom: 16px; overflow: hidden; }
+  .b12-bar { height: 100%; border-radius: 4px; }
+  .bar-high { background: var(--success); }
+  .bar-mid { background: var(--warning); }
+  .bar-low { background: var(--danger); }
+  .b12-diagnosis { font-size: 13px; color: var(--ink-soft); line-height: 1.65; margin-bottom: 12px; }
+  .b12-action { background: var(--parchment); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--ember-dark); border-left: 3px solid var(--ember); }
+
+  .radar-wrap { background: var(--navy); border-radius: 16px; padding: 40px; margin: 32px 0; color: white; }
+  .radar-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 24px; }
+  .radar-bars { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 40px; }
+  .radar-row { display: flex; align-items: center; gap: 12px; }
+  .radar-name { font-size: 12px; color: rgba(255,255,255,0.7); width: 80px; flex-shrink: 0; }
+  .radar-bar-wrap { flex: 1; background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; overflow: hidden; }
+  .radar-bar { height: 100%; border-radius: 4px; }
+  .radar-score { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; width: 32px; text-align: right; }
+
+  .ssa-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px; }
+  .ssa-card { background: var(--white); border-radius: 12px; padding: 28px; border: 1px solid rgba(44,24,16,0.08); }
+  .ssa-card-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .ssa-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--ember); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .ssa-content { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+  .ssa-timeline { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--parchment-dark); }
+  .ssa-timeline-item { display: flex; gap: 12px; margin-bottom: 10px; }
+  .ssa-week { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--ember); width: 60px; flex-shrink: 0; padding-top: 2px; }
+  .ssa-task { font-size: 12px; color: var(--ink-soft); line-height: 1.6; }
+
+  .roundtable-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px; }
+  .strategist-card { background: var(--white); border-radius: 12px; padding: 24px; border: 1px solid rgba(44,24,16,0.08); }
+  .strategist-avatar { font-size: 28px; margin-bottom: 12px; }
+  .strategist-name { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .strategist-role { font-size: 11px; color: var(--ink-muted); font-family: 'Inter', sans-serif; margin-bottom: 12px; }
+  .strategist-view { font-size: 12px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; }
+  .strategist-verdict { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; }
+  .verdict-go { background: rgba(45,106,79,0.1); color: var(--success); }
+  .verdict-caution { background: rgba(212,160,23,0.1); color: var(--warning); }
+  .verdict-wait { background: rgba(192,57,43,0.1); color: var(--danger); }
+
+  .roundtable-consensus { background: linear-gradient(135deg, var(--navy) 0%, #1a1235 100%); border-radius: 16px; padding: 40px; margin-top: 32px; color: white; }
+  .consensus-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold-light); margin-bottom: 24px; }
+  .consensus-list { list-style: none; }
+  .consensus-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .consensus-item:last-child { border: none; }
+  .consensus-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--ember-light); line-height: 1; flex-shrink: 0; width: 32px; }
+  .consensus-content { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; }
+  .consensus-content strong { color: var(--gold-light); }
+
+  .fin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px; }
+  .fin-card { border-radius: 12px; padding: 28px; }
+  .fin-card.conservative { background: var(--parchment-dark); border: 1px solid rgba(44,24,16,0.1); }
+  .fin-card.target { background: var(--navy); color: white; }
+  .fin-card.optimistic { background: linear-gradient(135deg, var(--ember-dark), var(--ember)); color: white; }
+  .fin-scenario { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; opacity: 0.7; }
+  .fin-revenue { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .fin-unit { font-size: 12px; opacity: 0.7; margin-bottom: 20px; font-family: 'Inter', sans-serif; }
+  .fin-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.06); font-family: 'Inter', sans-serif; }
+  .fin-card.target .fin-row, .fin-card.optimistic .fin-row { border-color: rgba(255,255,255,0.1); }
+  .fin-row:last-child { border: none; font-weight: 700; }
+  .fin-row-label { opacity: 0.75; }
+
+  .unit-econ { background: var(--white); border-radius: 12px; padding: 32px; margin-top: 24px; border: 1px solid rgba(44,24,16,0.08); }
+  .unit-econ-title { font-size: 15px; font-weight: 700; margin-bottom: 20px; }
+  .unit-econ-table { width: 100%; border-collapse: collapse; }
+  .unit-econ-table th { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-muted); text-align: left; padding: 8px 12px; background: var(--parchment); }
+  .unit-econ-table td { font-size: 13px; padding: 10px 12px; border-bottom: 1px solid var(--parchment-dark); font-family: 'Inter', sans-serif; }
+  .unit-econ-table tr:last-child td { border: none; font-weight: 700; color: var(--ember-dark); background: rgba(196,80,42,0.05); }
+
+  .risk-matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 32px; }
+  .risk-card { background: var(--white); border-radius: 12px; padding: 24px; border: 1px solid rgba(44,24,16,0.08); border-left: 4px solid; }
+  .risk-card.tier0 { border-color: #C0392B; }
+  .risk-card.tier1 { border-color: #E67E22; }
+  .risk-card.tier2 { border-color: var(--warning); }
+  .risk-tier { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .tier0 .risk-tier { color: #C0392B; }
+  .tier1 .risk-tier { color: #E67E22; }
+  .tier2 .risk-tier { color: var(--warning); }
+  .risk-name { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .risk-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; }
+  .risk-mitigation { font-size: 12px; color: var(--ink-soft); padding: 8px 12px; background: var(--parchment); border-radius: 8px; }
+  .risk-mitigation strong { color: var(--ink); }
+
+  .action-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px; }
+  .phase-card { background: var(--white); border-radius: 12px; padding: 28px; border: 1px solid rgba(44,24,16,0.08); }
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .phase-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ember); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+  .phase-title { font-size: 14px; font-weight: 700; }
+  .phase-period { font-size: 11px; color: var(--ink-muted); font-family: 'Inter', sans-serif; }
+  .phase-tasks { list-style: none; }
+  .phase-task { display: flex; gap: 8px; padding: 8px 0; font-size: 13px; color: var(--ink-soft); border-bottom: 1px solid var(--parchment-dark); line-height: 1.5; }
+  .phase-task:last-child { border: none; }
+  .phase-task::before { content: '→'; color: var(--ember); flex-shrink: 0; font-size: 12px; padding-top: 2px; }
+
+  .callout { background: rgba(196,80,42,0.06); border: 1px solid rgba(196,80,42,0.2); border-radius: 10px; padding: 20px 24px; font-size: 14px; color: var(--ember-dark); line-height: 1.7; margin: 24px 0; }
+  .callout strong { color: var(--ember); }
+
+  .footer { background: var(--navy); color: rgba(255,255,255,0.5); padding: 40px 60px; font-size: 12px; font-family: 'Inter', sans-serif; display: flex; justify-content: space-between; align-items: center; }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold-light); letter-spacing: 2px; }
+
+  @media (max-width: 768px) {
+    .cover { padding: 48px 24px; }
+    .cover h1 { font-size: 32px; }
+    .container { padding: 0 20px; }
+    .exec-grid, .b12-grid, .fin-grid, .ssa-grid, .roundtable-grid, .action-phases, .risk-matrix { grid-template-columns: 1fr; }
+    .radar-bars { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="container">
+    <div class="cover-label">Business-12 商模十二力 × SSA 系統創業加速 × 九策圓桌</div>
+    <h1>命理 AI 融合平台<br><em>商模十二力完整診斷</em></h1>
+    <div class="cover-sub">多系統命理融合 × MUSEON 智能腦 × 海軍裂變設計 — 系統性商業評估</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">分析框架</div>
+        <div class="cover-meta-value">Business-12 BF01–BF12 + SSA + 九策圓桌</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">報告日期</div>
+        <div class="cover-meta-value">2026-06-05</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">目標市場</div>
+        <div class="cover-meta-value">台灣 × 亞太命理自我探索族群</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">起跑節點</div>
+        <div class="cover-meta-value">100+ 海軍 → 裂變 5 輪 → 36,400 份</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">Executive Summary</div>
+    <div class="section-title">核心結論一覽</div>
+    <div class="section-sub">十二力加權評估 + 財務健檢 + 最優先行動</div>
+    <div class="exec-grid">
+      <div class="exec-card">
+        <div class="exec-card-number">7.4</div>
+        <div class="exec-card-label">Business-12 十二力加權評分 / 10</div>
+        <div class="exec-card-desc">共享力（BF04）9.0 + 整合力（BF03）8.5 是最強槓桿；視覺力（BF10）+ 累積力（BF02）4.0 是底盤最急缺口</div>
+      </div>
+      <div class="exec-card">
+        <div class="exec-card-number">46-47%</div>
+        <div class="exec-card-label">每份報告實際淨貢獻率</div>
+        <div class="exec-card-desc">分潤 45% + 稅金流 7.3% + API 攤提後，單報告淨貢獻 NT$462–467，優於 Zeal 預估的 40%</div>
+      </div>
+      <div class="exec-card">
+        <div class="exec-card-number">Tier 0</div>
+        <div class="exec-card-label">系統穩定性為裂變前唯一硬閘</div>
+        <div class="exec-card-desc">Alan 的 bug 修復 + 三個 Skill 認真升級（口吻/模板/呈現）是所有後續行動的前提條件</div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Business-12 核心診斷：</strong>這個商業模式的結構在「短衝三力（BF01/BF11/BF12）」和「穩抗三力（BF04/BF09）」上設計成熟。最急迫的是補強「底盤三力」——<strong>BF02 累積力</strong>（第一批驗證案例為零）、<strong>BF10 視覺力</strong>（圖卡和報告都是草稿品質）。底盤不穩，上層力的投資會大幅折損——準確地說，一份視覺草稿的報告根本不會被分享，裂變飛輪無法啟動。
+    </div>
+  </div>
+</div>
+
+<!-- BUSINESS-12 FULL ANALYSIS -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">Business-12 商模十二力</div>
+    <div class="section-title">BF01–BF12 逐力診斷</div>
+    <div class="section-sub">四分類（短衝 / 穩抗 / 長養 / 底盤）× 卡點定位 × 優先行動</div>
+
+    <div class="radar-wrap">
+      <div class="radar-title">十二力快速雷達</div>
+      <div class="radar-bars">
+        <div class="radar-row"><div class="radar-name">BF01 產品力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:80%;background:#E8724A"></div></div><div class="radar-score" style="color:#E8724A">8.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF02 累積力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:40%;background:#C0392B"></div></div><div class="radar-score" style="color:#C0392B">4.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF03 整合力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:85%;background:#2D6A4F"></div></div><div class="radar-score" style="color:#2D6A4F">8.5</div></div>
+        <div class="radar-row"><div class="radar-name">BF04 共享力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:90%;background:#2D6A4F"></div></div><div class="radar-score" style="color:#2D6A4F">9.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF05 感受力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:65%;background:#D4A017"></div></div><div class="radar-score" style="color:#D4A017">6.5</div></div>
+        <div class="radar-row"><div class="radar-name">BF06 感召力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:55%;background:#D4A017"></div></div><div class="radar-score" style="color:#D4A017">5.5</div></div>
+        <div class="radar-row"><div class="radar-name">BF07 品牌力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:50%;background:#D4A017"></div></div><div class="radar-score" style="color:#D4A017">5.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF08 優化力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:60%;background:#D4A017"></div></div><div class="radar-score" style="color:#D4A017">6.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF09 社群力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:80%;background:#2D6A4F"></div></div><div class="radar-score" style="color:#2D6A4F">8.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF10 視覺力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:40%;background:#C0392B"></div></div><div class="radar-score" style="color:#C0392B">4.0</div></div>
+        <div class="radar-row"><div class="radar-name">BF11 談判力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:75%;background:#2D6A4F"></div></div><div class="radar-score" style="color:#2D6A4F">7.5</div></div>
+        <div class="radar-row"><div class="radar-name">BF12 轉換力</div><div class="radar-bar-wrap"><div class="radar-bar" style="width:70%;background:#E8724A"></div></div><div class="radar-score" style="color:#E8724A">7.0</div></div>
+      </div>
+    </div>
+
+    <!-- Sprint -->
+    <div class="b12-category sprint">
+      <div class="b12-category-dot dot-sprint"></div>
+      <div class="b12-category-label label-sprint">Sprint 短衝三力</div>
+      <div class="b12-category-desc">立即見效的槓桿</div>
+    </div>
+    <div class="b12-grid">
+      <div class="b12-card sprint">
+        <div class="b12-tag tag-sprint">BF01 · 產品力</div>
+        <div class="b12-header"><div class="b12-name">多系統命理融合報告</div><div class="b12-score score-high">8.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-high" style="width:80%"></div></div>
+        <div class="b12-diagnosis">最強護城河：N 套命理系統並列計算（紫微/八字/易經/人類圖等）→ 融合 Skill → 口吻 Skill → 排版 Skill，形成競爭者難以複製的技術壁壘。現有問題：工作流三個 Skill 都是「順手做」的草稿，準度和體驗未達「哇靠超準」的觸發門檻。</div>
+        <div class="b12-action">行動：「三件事認真調整」——描述口吻 Skill + 報告模板 + 報告呈現 Skill。這三個升級直接決定 BF02 累積力能否啟動。</div>
+      </div>
+      <div class="b12-card sprint">
+        <div class="b12-tag tag-sprint">BF11 · 談判力</div>
+        <div class="b12-header"><div class="b12-name">定價策略 + 海軍成交設計</div><div class="b12-score score-high">7.5</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-high" style="width:75%"></div></div>
+        <div class="b12-diagnosis">NT$1,000 在命理消費帶（500-3,000 元）屬低門檻進場，加上分潤結構清楚（L1 30% / L2 15%）。海軍節點給「命理技術不上不下的人」出路，是雙贏設計。弱點：尚無快速成交語言——海軍節點面對客戶時沒有標準話術。</div>
+        <div class="b12-action">補強：為海軍準備 3 句話成交腳本。「你現在算命的準度能達到幾成？我們這個是 N 個千年系統交叉驗證，結果指向同一個你。」</div>
+      </div>
+      <div class="b12-card sprint">
+        <div class="b12-tag tag-sprint">BF12 · 轉換力</div>
+        <div class="b12-header"><div class="b12-name">QR 碼 + 圖卡裂變漏斗</div><div class="b12-score score-high">7.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-high" style="width:70%"></div></div>
+        <div class="b12-diagnosis">圖卡 + QR 碼讓「社交貨幣」直接觸達陌生人，是聰明的入口設計。卡點：系統尚未穩定（Alan 修復中），掃碼後 Landing 頁的 30 秒轉換體驗尚未設計。</div>
+        <div class="b12-action">設計：掃碼後的 Landing 頁，讓「為什麼要買」的答案在 30 秒內清楚。核心信息：這不是算命，這是 N 個系統同時指向你的自我洞察。</div>
+      </div>
+    </div>
+
+    <!-- Sustain -->
+    <div class="b12-category sustain">
+      <div class="b12-category-dot dot-sustain"></div>
+      <div class="b12-category-label label-sustain">Sustain 穩抗三力</div>
+      <div class="b12-category-desc">穩定抗跌的護城河</div>
+    </div>
+    <div class="b12-grid">
+      <div class="b12-card sustain">
+        <div class="b12-tag tag-sustain">BF04 · 共享力</div>
+        <div class="b12-header"><div class="b12-name">分潤裂變 + 海軍聯盟</div><div class="b12-score score-high">9.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-high" style="width:90%"></div></div>
+        <div class="b12-diagnosis">本商模最強設計。兩層分潤（30%+15%）+ 圖卡 QR 碼 + 海軍作為節點三個共享機制同時運作。海軍節點特別聰明：他們理解產品、有成交動機、有既有人脈——說服力遠超純傭金推廣者。</div>
+        <div class="b12-action">進一步強化：海軍月 KPI（每人每月 ≥5 份）+ 海軍排行榜。讓競爭感與歸屬感並存，防止節點沉寂。</div>
+      </div>
+      <div class="b12-card sustain">
+        <div class="b12-tag tag-sustain">BF06 · 感召力</div>
+        <div class="b12-header"><div class="b12-name">品牌故事 + 情感價值主張</div><div class="b12-score score-mid">5.5</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-mid" style="width:55%"></div></div>
+        <div class="b12-diagnosis">目前尚無清楚的感召語言。產品核心是「多系統交叉驗證的自我洞察」，但這句話用戶聽不懂也感受不到。感召力是把「功能」轉化為「我需要它」的橋樑。</div>
+        <div class="b12-action">需要一句話定位：「你從來沒有同時被 N 個千年系統指向同一個你的樣子。」——讓用戶感受到稀有感與啟示感，而非「又一個算命服務」。</div>
+      </div>
+      <div class="b12-card sustain">
+        <div class="b12-tag tag-sustain">BF09 · 社群力</div>
+        <div class="b12-header"><div class="b12-name">海軍聯盟 + 墨客社群</div><div class="b12-score score-high">8.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-high" style="width:80%"></div></div>
+        <div class="b12-diagnosis">Zeal 的核心優勢：有既有社群（海軍 + 墨客學生），不是從零開始裂變。第一輪 100 人裂變是真實可行的，而不是理論假設。社群力的關鍵：讓分享行為有儀式感，「曬報告」成為群體認同的表達。</div>
+        <div class="b12-action">設計社群內「圖卡分享挑戰」——分享圖卡並 tag 一個朋友，觸發社群自主傳播。SSA 鐵粉三層晉級：滿意客戶 → 忠誠客戶 → 鐵粉大使。</div>
+      </div>
+    </div>
+
+    <!-- Nurture -->
+    <div class="b12-category nurture">
+      <div class="b12-category-dot dot-nurture"></div>
+      <div class="b12-category-label label-nurture">Nurture 長養三力</div>
+      <div class="b12-category-desc">長期複利的資產</div>
+    </div>
+    <div class="b12-grid">
+      <div class="b12-card nurture">
+        <div class="b12-tag tag-nurture">BF03 · 整合力</div>
+        <div class="b12-header"><div class="b12-name">多系統融合 + 跨平台整合</div><div class="b12-score score-high">8.5</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-high" style="width:85%"></div></div>
+        <div class="b12-diagnosis">Zeal 擁有多系統命理融合的方法論（真正的稀缺資產），Alan 提供技術整合，MUSEON 作為智能腦——三者分工清晰且各有不可替代性。未來整合 OneMuse / 墨客生態潛力巨大。</div>
+        <div class="b12-action">長期護城河策略：將融合方法論「標準化」成可授權的技術規格，防止仿製。「系統」是壁壘，不只是「服務」。</div>
+      </div>
+      <div class="b12-card nurture">
+        <div class="b12-tag tag-nurture">BF07 · 品牌力</div>
+        <div class="b12-header"><div class="b12-name">品牌定位 + 人格語調</div><div class="b12-score score-mid">5.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-mid" style="width:50%"></div></div>
+        <div class="b12-diagnosis">這個產品還沒有獨立的品牌人格。面向終端用戶的品牌是空白——口碑傳播現在依賴「人」（海軍節點）而不是「品牌」。規模化後，這個依賴會成為天花板。</div>
+        <div class="b12-action">產品需要一個名字和一個核心定位語。方向：「多維命理交叉洞察系統」類型——讓人一聽就知道這不是普通算命，而是系統級的自我認識工具。</div>
+      </div>
+      <div class="b12-card nurture">
+        <div class="b12-tag tag-nurture">BF08 · 優化力</div>
+        <div class="b12-header"><div class="b12-name">KPI 追蹤 + 持續改善</div><div class="b12-score score-mid">6.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-mid" style="width:60%"></div></div>
+        <div class="b12-diagnosis">目前系統仍在開發迭代中，缺少的是：報告準度追蹤（哪些系統命中率最高？）、裂變轉換率（哪個節點最有效？）、用戶回購率數據。優化力是把「感覺不錯」變成「可測量地好」的能力。</div>
+        <div class="b12-action">建立三個最小追蹤指標：報告好評率 / 圖卡掃碼轉換率 / 海軍節點月均推出份數。這三個數字足以驅動所有後續決策。</div>
+      </div>
+    </div>
+
+    <!-- Base -->
+    <div class="b12-category base">
+      <div class="b12-category-dot dot-base"></div>
+      <div class="b12-category-label label-base">Base 底盤三力</div>
+      <div class="b12-category-desc">所有力的基礎——底盤不穩，上層力折損</div>
+    </div>
+    <div class="b12-grid">
+      <div class="b12-card base">
+        <div class="b12-tag tag-base">BF02 · 累積力</div>
+        <div class="b12-header"><div class="b12-name">案例 + 見證 + 可複用資產</div><div class="b12-score score-low">4.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-low" style="width:40%"></div></div>
+        <div class="b12-diagnosis"><strong>最急底盤缺口。</strong> 沒有案例就沒有說服力，裂變只靠節點個人信用。SSA 口碑先行原則：沒有 90% 好評率，不大規模裂變。第一批 10-20 份報告的真實用戶反饋是最急迫的資產。</div>
+        <div class="b12-action">行動：從海軍節點自己先用，收集第一批「哇靠超準」截圖素材庫。這是整個口碑裂變飛輪的燃料，沒有它飛輪不會轉。</div>
+      </div>
+      <div class="b12-card base">
+        <div class="b12-tag tag-base">BF05 · 感受力</div>
+        <div class="b12-header"><div class="b12-name">用戶旅程 + WOW 時刻設計</div><div class="b12-score score-mid">6.5</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-mid" style="width:65%"></div></div>
+        <div class="b12-diagnosis">報告必須在用戶拿到瞬間觸發「哇靠超準」感受——這個感受是裂變動機的觸發點。SSA 七步逆向工程：從「拿到報告後第一件事是分享圖卡」往前倒推每一步體驗設計。</div>
+        <div class="b12-action">WOW 時刻設計：第一頁就要出現讓人感到「這說中了我獨特的某個點」的個人化洞察，而不是泛泛通論。個人化深度 = 分享動機強度。</div>
+      </div>
+      <div class="b12-card base">
+        <div class="b12-tag tag-base">BF10 · 視覺力</div>
+        <div class="b12-header"><div class="b12-name">圖卡設計 + 報告視覺</div><div class="b12-score score-low">4.0</div></div>
+        <div class="b12-bar-wrap"><div class="b12-bar bar-low" style="width:40%"></div></div>
+        <div class="b12-diagnosis"><strong>與累積力並列最急底盤缺口。</strong> Zeal 自評：「報告的模板是之前隨便做的，報告呈現的 Skill 也是昨天順手做的。」視覺力決定圖卡是否值得分享——在 IG 時代，視覺品質直接等於社交貨幣的面額。草稿視覺 = 廉價社交貨幣 = 沒人分享。</div>
+        <div class="b12-action">升級目標：達到「可以直接出現在朋友圈不丟臉」的標準。參考 16Personalities 圖卡——乾淨、有設計感、一眼讀懂自己的特質。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SSA -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">SSA 系統創業加速</div>
+    <div class="section-title">Founder-Market Fit × 八大槓桿 × 90 天計畫</div>
+    <div class="section-sub">以 SSA 框架驗證商模可行性與加速路徑</div>
+    <div class="ssa-grid">
+      <div class="ssa-card">
+        <div class="ssa-card-title"><div class="ssa-icon">🎯</div>Founder-Market Fit 診斷</div>
+        <div class="ssa-content">
+          <strong>命中度：極高（9/10）</strong><br><br>
+          Zeal 同時掌握：（1）命理方法論的原創融合能力，（2）有意願有能力的技術夥伴（Alan），（3）既有分發節點（海軍 + 墨客社群），（4）MUSEON 作為底層智能腦。<br><br>
+          這四個條件同時具備的創業者，在台灣命理 AI 市場裡是極少數。市場時機也準確：AI 準度已讓「命理 + 科技」組合脫離偽科學框架，進入可信的消費體驗區間。
+        </div>
+      </div>
+      <div class="ssa-card">
+        <div class="ssa-card-title"><div class="ssa-icon">⚡</div>八大槓桿識別與排序</div>
+        <div class="ssa-content">
+          當前最高槓桿排序：<br><br>
+          <strong>1. 知識槓桿（最高）</strong>——多系統融合方法論是不可複製的核心資產，必須標準化並保護。這是競爭壁壘的本質。<br><br>
+          <strong>2. 人脈槓桿</strong>——海軍節點是現成的高信任分發渠道，比任何廣告都便宜且有效。<br><br>
+          <strong>3. 平台槓桿</strong>——MUSEON 作為可擴展技術底座，邊際成本極低，是核心成本競爭力。<br><br>
+          <strong>4. 品牌槓桿</strong>——口碑飛輪一旦啟動，品牌自然沉澱。目前尚未啟動（BF07 品牌力 5.0）。
+        </div>
+      </div>
+      <div class="ssa-card">
+        <div class="ssa-card-title"><div class="ssa-icon">🔄</div>口碑先行 × 鐵粉裂變設計</div>
+        <div class="ssa-content">
+          SSA 鐵律：<strong>沒有 90% 好評率，不大規模裂變。</strong><br><br>
+          當前口碑飛輪啟動評估：
+          <ul style="margin-top:12px;padding-left:16px;font-size:12px;line-height:1.8;color:#4A3728">
+            <li>準度：Alan 修復中，穩定基準未確立</li>
+            <li>視覺：草稿狀態（BF10 4.0），需升級</li>
+            <li>體驗：WOW 時刻設計尚未完成（BF05 6.5）</li>
+            <li>案例：第一批見證素材零（BF02 4.0）</li>
+          </ul>
+          <br><strong>結論</strong>：飛輪啟動條件尚未就位。現在起跑大規模裂變，負口碑傳播速度與裂變速度一樣快。
+        </div>
+      </div>
+      <div class="ssa-card">
+        <div class="ssa-card-title"><div class="ssa-icon">📅</div>90 天三段衝刺計畫</div>
+        <div class="ssa-content">
+          <div class="ssa-timeline">
+            <div class="ssa-timeline-item">
+              <div class="ssa-week">Day 1-30</div>
+              <div class="ssa-task"><strong>精煉底盤</strong>——Alan bug 修復 + 三個 Skill 認真升級 + 視覺力升級（圖卡+報告）+ 確立產品名稱和一句話定位 + 海軍行為規範文件</div>
+            </div>
+            <div class="ssa-timeline-item">
+              <div class="ssa-week">Day 31-60</div>
+              <div class="ssa-task"><strong>種子驗證</strong>——海軍種子 10-20 人自用 + 收集第一批「哇靠超準」案例 + 海軍月 KPI 和排行榜 + 確認分潤結構合規 + 三個追蹤指標建立</div>
+            </div>
+            <div class="ssa-timeline-item">
+              <div class="ssa-week">Day 61-90</div>
+              <div class="ssa-task"><strong>點火裂變</strong>——口碑達 90%+ 後啟動全體 100 人海軍 + 社群圖卡挑戰活動 + 裂變數據追蹤 + 財務 KPI 月度追蹤 + 亞太擴張語言版本準備</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROUNDTABLE -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">九策軍師圓桌</div>
+    <div class="section-title">多視角戰略審計</div>
+    <div class="section-sub">九位軍師獨立觀點 → 三大行動共識</div>
+    <div class="roundtable-grid">
+      <div class="strategist-card">
+        <div class="strategist-avatar">⚔️</div>
+        <div class="strategist-name">孫子（兵法戰略）</div>
+        <div class="strategist-role">借力打力 · 不戰而屈人之兵</div>
+        <div class="strategist-view">海軍節點設計是最高效的「借力打力」——讓對手（普通算命師）的人脈網絡成為你的分發渠道。但節點品質管控失敗，口碑破壞的速度與裂變速度一樣快。</div>
+        <div class="strategist-verdict verdict-go">✓ 策略方向正確，執行需紀律</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">📊</div>
+        <div class="strategist-name">麥肯錫顧問</div>
+        <div class="strategist-role">數據驅動 · 假設驗證優先</div>
+        <div class="strategist-view">商業模式結構完整，但關鍵假設未被驗證：裂變率真的是 3 嗎？NT$1,000 的轉換率是多少？建議先跑小規模 A/B 測試，用真實數據校準財務模型再大規模投入。</div>
+        <div class="strategist-verdict verdict-caution">⚠ 先驗證假設再擴張</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">🚀</div>
+        <div class="strategist-name">矽谷創投</div>
+        <div class="strategist-role">增長飛輪 · 規模效應</div>
+        <div class="strategist-view">這個商模有罕見的「增長飛輪」基因：WOW 體驗 → 分享圖卡 → 新用戶 → 更多案例 → 準度更高 → WOW 更強。飛輪啟動點（技術穩定性）尚未就位，現在不是投資時機。</div>
+        <div class="strategist-verdict verdict-caution">⚠ 飛輪啟動條件未就位</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">🏪</div>
+        <div class="strategist-name">台灣本土商人</div>
+        <div class="strategist-role">口碑推薦 · 信任建立</div>
+        <div class="strategist-view">台灣人對命理的信任是靠「推薦」建立的，不是廣告。海軍節點設計完全符合台灣市場邏輯。但第一批用戶必須是真的「算准了」——口耳相傳一旦起來沒人擋得住，反之亦然。</div>
+        <div class="strategist-verdict verdict-go">✓ 完全符合台灣市場邏輯</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">🔬</div>
+        <div class="strategist-name">技術架構師</div>
+        <div class="strategist-role">系統穩定性 · 可擴展性</div>
+        <div class="strategist-view">Alan 修復的 bug 是關鍵風險點。命理「準度」是感知問題，但算錯了就是算錯了。在 bug 修好並充分測試前，不建議大規模推出。穩定性是一切的前提。</div>
+        <div class="strategist-verdict verdict-wait">✗ 技術穩定化是優先前提</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">🧠</div>
+        <div class="strategist-name">行為心理學家</div>
+        <div class="strategist-role">分享動機 · 病毒傳播機制</div>
+        <div class="strategist-view">圖卡作為「社交貨幣」設計準確——人們分享自我洞察是因為「我想讓別人知道我是這樣的人」。但這個動機只有在報告「說中了獨特的自己」時才觸發，通用性描述不觸發分享。</div>
+        <div class="strategist-verdict verdict-caution">⚠ 個人化深度決定分享動機強度</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">🌏</div>
+        <div class="strategist-name">海外擴張顧問</div>
+        <div class="strategist-role">亞太市場 · 跨境複製</div>
+        <div class="strategist-view">台灣成功模型複製到亞太的優勢：華人命理文化圈（香港、新加坡、馬來西亞）都有高密度命理消費族群，且能接受繁體中文介面。先做好台灣，擴張路徑幾乎現成。</div>
+        <div class="strategist-verdict verdict-go">✓ 亞太擴張路徑清晰</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">⚖️</div>
+        <div class="strategist-name">法律風控顧問</div>
+        <div class="strategist-role">合規 · 風險控制</div>
+        <div class="strategist-view">兩層分潤在台灣公平交易法下通常無問題，但需確認不構成多層次傳銷。命理報告的「預測性」內容需要適當免責聲明。生日等個資收集需要隱私政策。</div>
+        <div class="strategist-verdict verdict-caution">⚠ 合規細節起跑前須確認</div>
+      </div>
+      <div class="strategist-card">
+        <div class="strategist-avatar">💰</div>
+        <div class="strategist-name">財務投資人</div>
+        <div class="strategist-role">估值邏輯 · 資本效率</div>
+        <div class="strategist-view">44-47% 淨利率在 SaaS + 裂變模型裡屬於優秀。年營收 NT$3,640 萬（36,400份）有持續增長，市場估值可做到 5-10 倍營收，即 NT$1.8-3.6 億，支持市場估值故事和未來融資。</div>
+        <div class="strategist-verdict verdict-go">✓ 財務結構支持估值故事</div>
+      </div>
+    </div>
+
+    <div class="roundtable-consensus">
+      <div class="consensus-title">圓桌共識：三大行動優先序</div>
+      <ul class="consensus-list">
+        <li class="consensus-item">
+          <div class="consensus-num">1</div>
+          <div class="consensus-content"><strong>技術穩定化是所有行動的前提（Tier 0 硬閘）</strong><br>Alan bug 修復 + 三個 Skill 認真升級（描述口吻/報告模板/報告呈現）+ 充分內部測試。這不是可以「邊跑邊修」的細節——這是整個口碑飛輪成立的基礎。</div>
+        </li>
+        <li class="consensus-item">
+          <div class="consensus-num">2</div>
+          <div class="consensus-content"><strong>底盤補強：BF10 視覺力 + BF02 累積力在第一輪裂變前必須到位</strong><br>視覺升級（圖卡+報告達到「值得分享」標準）+ 第一批 10-20 個真實案例收集（海軍自用），讓口碑飛輪有燃料。沒有這兩個底盤，裂變只會加速負口碑。</div>
+        </li>
+        <li class="consensus-item">
+          <div class="consensus-num">3</div>
+          <div class="consensus-content"><strong>品牌定位確立 + 海軍 KPI 化，為規模化做基礎設施</strong><br>產品名稱 + 一句話定位 + 成交腳本（BF07 BF11 BF06 同步補強）。海軍節點月 KPI + 排行榜機制（BF04 共享力深化）。這兩件事決定裂變「深度」——讓 5 輪真的達到理論值。</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCIAL -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">財務模型</div>
+    <div class="section-title">單位經濟 + 三情境損益</div>
+    <div class="section-sub">市場底數重抓（台灣 + 亞太）× 真實毛利計算</div>
+
+    <div class="unit-econ">
+      <div class="unit-econ-title">每份報告單位經濟（售價 NT$1,000）</div>
+      <table class="unit-econ-table">
+        <tr><th>項目</th><th>金額</th><th>占比</th><th>說明</th></tr>
+        <tr><td>售價</td><td>NT$ 1,000</td><td>100%</td><td>命理消費帶低門檻，500-3,000 元區間</td></tr>
+        <tr><td>第一層分潤</td><td>-NT$ 300</td><td>30%</td><td>直接推薦者</td></tr>
+        <tr><td>第二層分潤</td><td>-NT$ 150</td><td>15%</td><td>間接推薦者</td></tr>
+        <tr><td>發票稅（5% 內含）</td><td>-NT$ 48</td><td>4.8%</td><td>含稅售價換算</td></tr>
+        <tr><td>線上金流手續費</td><td>-NT$ 25</td><td>2.5%</td><td>信用卡 / 第三方支付</td></tr>
+        <tr><td>API Token 攤提</td><td>-NT$ 10–15</td><td>~1.3%</td><td>Sonnet 級，約 10K tokens/份</td></tr>
+        <tr><td><strong>每份淨貢獻</strong></td><td><strong>NT$ 462–467</strong></td><td><strong>46–47%</strong></td><td>優於 Zeal 預估的 40%</td></tr>
+      </table>
+    </div>
+
+    <div class="fin-grid">
+      <div class="fin-card conservative">
+        <div class="fin-scenario">保守情境</div>
+        <div class="fin-revenue">NT$ 50萬</div>
+        <div class="fin-unit">月營收 / 月均 500 份</div>
+        <div class="fin-breakdown">
+          <div class="fin-row"><span class="fin-row-label">分潤支出</span><span>-$225,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">稅金流</span><span>-$36,500</span></div>
+          <div class="fin-row"><span class="fin-row-label">API 攤提</span><span>-$5,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">系統維運</span><span>-$30,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">月淨利</span><span>NT$ 203,500</span></div>
+        </div>
+      </div>
+      <div class="fin-card target">
+        <div class="fin-scenario" style="color:rgba(255,255,255,0.5)">目標情境</div>
+        <div class="fin-revenue" style="color:#D4A55C">NT$ 300萬</div>
+        <div class="fin-unit">月營收 / 月均 3,000 份</div>
+        <div class="fin-breakdown" style="color:rgba(255,255,255,0.75)">
+          <div class="fin-row"><span class="fin-row-label">分潤支出</span><span>-$1,350,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">稅金流</span><span>-$219,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">API 攤提</span><span>-$30,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">系統維運</span><span>-$60,000</span></div>
+          <div class="fin-row"><span class="fin-row-label" style="color:#D4A55C">月淨利</span><span style="color:#D4A55C">NT$ 1,341,000</span></div>
+        </div>
+      </div>
+      <div class="fin-card optimistic">
+        <div class="fin-scenario">裂變目標達成</div>
+        <div class="fin-revenue">NT$ 3,640萬</div>
+        <div class="fin-unit">年營收 / 年均 36,400 份</div>
+        <div class="fin-breakdown" style="color:rgba(255,255,255,0.85)">
+          <div class="fin-row"><span class="fin-row-label">分潤支出</span><span>-$16,380,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">稅金流</span><span>-$2,657,200</span></div>
+          <div class="fin-row"><span class="fin-row-label">API 攤提</span><span>-$500,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">系統維運</span><span>-$720,000</span></div>
+          <div class="fin-row"><span class="fin-row-label">年淨利</span><span>≈ NT$ 16,300,000</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:24px">
+      <strong>市場底數：</strong>台灣命理業 2024 年 NT$2.9 億（財政部統計，5 年成長 4.1 倍）；相信命理台灣人口約 679 萬（中研院 29.5%）；全球占星 App 市場 2025 年 USD 39-57 億，CAGR 20%，亞太佔 20-30%。36,400 份的市場滲透率僅 0.54%——市場上限不是問題，執行轉化才是關鍵。保守財測建議用中位裂變率（實際 1.5-2 人/輪 vs 理論 3 人），年 21,000 份做基準。
+    </div>
+  </div>
+</div>
+
+<!-- RISK -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">風險矩陣</div>
+    <div class="section-title">四層風險分級 + 緩解方案</div>
+    <div class="risk-matrix">
+      <div class="risk-card tier0">
+        <div class="risk-tier">Tier 0 · 起跑前必解</div>
+        <div class="risk-name">系統穩定性 / 算數 Bug（BF01 BF08）</div>
+        <div class="risk-desc">Alan 的計算 bug 是商模崩潰的直接導火線。口碑在裂變加持下，負評傳播速度與裂變速度相同。</div>
+        <div class="risk-mitigation"><strong>緩解：</strong>修復後 100 份內測，確認準度達標率 ≥90% 才啟動裂變。不是「邊跑邊修」。</div>
+      </div>
+      <div class="risk-card tier0">
+        <div class="risk-tier">Tier 0 · 起跑前必解</div>
+        <div class="risk-name">海軍節點行為規範缺失（BF04 BF07）</div>
+        <div class="risk-desc">海軍說錯話（「保證準」/ 誇大功效）= 品牌信用直接歸零。100 個節點 × 一個負向行為 = 100 個擴散源。</div>
+        <div class="risk-mitigation"><strong>緩解：</strong>起跑前準備行為規範文件 + 成交腳本 + 禁止說的話清單。品質管控是 BF04 共享力的基礎設施。</div>
+      </div>
+      <div class="risk-card tier1">
+        <div class="risk-tier">Tier 1 · 月內需處理</div>
+        <div class="risk-name">分潤毛利結構追蹤缺失（BF08）</div>
+        <div class="risk-desc">需追蹤各渠道份數比例（直銷 / L1 推薦 / L2 推薦），才能準確計算實際毛利率。</div>
+        <div class="risk-mitigation"><strong>緩解：</strong>每份報告標記來源。月度追蹤三個渠道占比與毛利結構。</div>
+      </div>
+      <div class="risk-card tier1">
+        <div class="risk-tier">Tier 1 · 月內需處理</div>
+        <div class="risk-name">法律合規 — 分潤結構與個資（BF08）</div>
+        <div class="risk-desc">兩層分潤需確認不構成多層次傳銷；生日/出生時辰等個資需隱私政策；命理內容需免責聲明。</div>
+        <div class="risk-mitigation"><strong>緩解：</strong>請律師確認。準備標準免責聲明和隱私政策文件。</div>
+      </div>
+      <div class="risk-card tier2">
+        <div class="risk-tier">Tier 2 · 季內需規劃</div>
+        <div class="risk-name">裂變率低於假設（BF12 BF04）</div>
+        <div class="risk-desc">理論 3 人裂變率在現實中常低估摩擦。現實中位約 1.5 人/輪，5 輪累計約 15,000-21,000 份。</div>
+        <div class="risk-mitigation"><strong>緩解：</strong>財測用 21,000 份（中位）做內部基準，36,400 份是努力目標，不是承諾值。</div>
+      </div>
+      <div class="risk-card tier2">
+        <div class="risk-tier">Tier 2 · 季內需規劃</div>
+        <div class="risk-name">服務容量 vs 快速規模不匹配（BF08）</div>
+        <div class="risk-desc">裂變快速達標時，MUSEON API 成本和系統負載是否能同步擴容？突然高峰流量可能造成服務降質。</div>
+        <div class="risk-mitigation"><strong>緩解：</strong>設計容量預警機制，有序排隊而非降質。用等待感製造稀缺感（「目前排隊 XXX 人」）。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION -->
+<div class="section">
+  <div class="container">
+    <div class="section-label">行動計畫</div>
+    <div class="section-title">三階段最小下一步</div>
+    <div class="section-sub">基於十二力診斷的優先行動序列</div>
+    <div class="action-phases">
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num">1</div>
+          <div class="phase-meta">
+            <div class="phase-title">精煉底盤</div>
+            <div class="phase-period">Day 1-30 · BF01 BF10 BF02 補強</div>
+          </div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task">Alan 完成 bug 修復 + 100 份內測，確認準度達標</li>
+          <li class="phase-task">認真升級三個 Skill：口吻描述 / 報告模板 / 報告呈現</li>
+          <li class="phase-task">圖卡視覺升級到「可分享標準」（16Personalities 風格方向）</li>
+          <li class="phase-task">確立產品名稱和一句話定位語（BF07 起步）</li>
+          <li class="phase-task">準備海軍行為規範文件 + 成交腳本（BF11 基礎設施）</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num">2</div>
+          <div class="phase-meta">
+            <div class="phase-title">種子驗證</div>
+            <div class="phase-period">Day 31-60 · BF02 BF04 BF08 建立</div>
+          </div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task">海軍種子節點 10-20 人自用，收集第一批真實案例（BF02）</li>
+          <li class="phase-task">建立「哇靠超準」截圖素材庫，口碑飛輪燃料備好</li>
+          <li class="phase-task">設定海軍月 KPI 和排行榜機制（BF04 深化）</li>
+          <li class="phase-task">確認分潤結構法律合規性</li>
+          <li class="phase-task">建立三個最小追蹤指標（好評率/掃碼轉換率/節點月均量）</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num">3</div>
+          <div class="phase-meta">
+            <div class="phase-title">點火裂變</div>
+            <div class="phase-period">Day 61-90 · BF09 BF12 全面啟動</div>
+          </div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task">口碑達 90%+ 後啟動全體 100 人海軍裂變</li>
+          <li class="phase-task">社群內圖卡分享挑戰活動（BF09 社群力）</li>
+          <li class="phase-task">裂變數據追蹤 + 財務 KPI 月度追蹤（BF08 優化力）</li>
+          <li class="phase-task">根據數據調整海軍節點結構（淘弱留強）</li>
+          <li class="phase-task">準備亞太擴張的語言版本和市場定位</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div>
+    <div class="footer-brand">MUSEON</div>
+    <div style="margin-top:6px">Business-12 BF01–BF12 × SSA × 九策圓桌 完整分析框架</div>
+  </div>
+  <div style="text-align:right">
+    <div>報告生成：2026-06-05</div>
+    <div style="margin-top:4px">命理 AI 融合平台商模十二力診斷 · 機密文件</div>
+  </div>
+</div>
+
+</body>
+</html>
