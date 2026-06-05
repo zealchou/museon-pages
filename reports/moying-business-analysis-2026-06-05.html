@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>墨應系 AI 命理融合平台｜商業模式分析報告 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Sans+TC:wght@400;500;600&display=swap');
+
+:root {
+  --ember: #C4502A;
+  --ember-light: #E0714D;
+  --ember-dark: #9A3A1C;
+  --teal: #2A7A6E;
+  --gold: #B8923A;
+  --ink: #12121A;
+  --slate: #5A5A6E;
+  --mist: #9898A8;
+  --border: #E2E0DA;
+  --parchment: #F7F5F0;
+  --snow: #FDFCFA;
+  --deep-ink: #0E0E16;
+  --surface: #16161F;
+  --raised: #1E1E2A;
+  --border-dark: #2A2A38;
+  --success: #2D8A6E;
+  --warning: #C9943A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  line-height: 1.75;
+  font-size: 16px;
+}
+
+/* ── COVER ── */
+.cover {
+  background: var(--deep-ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 96px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(196,80,42,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cover::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(42,122,110,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cover-inner { max-width: 1120px; margin: 0 auto; position: relative; z-index: 1; }
+.cover-tag {
+  display: inline-block;
+  background: rgba(196,80,42,0.2);
+  border: 1px solid rgba(196,80,42,0.4);
+  color: var(--ember-light);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 100px;
+  margin-bottom: 32px;
+}
+.cover h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 600;
+  color: #FDFCFA;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.cover h1 em { font-style: italic; color: var(--ember-light); }
+.cover-subtitle { font-size: 20px; color: #9898A8; margin-bottom: 64px; }
+.cover-meta { display: flex; gap: 48px; flex-wrap: wrap; }
+.cover-meta-item label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A5A6E; margin-bottom: 4px; }
+.cover-meta-item span { color: #FDFCFA; font-size: 15px; }
+.cover-grid {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background-image: linear-gradient(rgba(42,42,56,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(42,42,56,0.3) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+/* ── LAYOUT ── */
+.section { padding: 80px 40px; }
+.section-inner { max-width: 1120px; margin: 0 auto; }
+.section-alt { background: var(--snow); }
+.section-dark { background: var(--deep-ink); color: var(--snow); }
+.section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); margin-bottom: 12px; }
+.section-dark .section-label { color: var(--ember-light); }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 42px); font-weight: 600; line-height: 1.2; margin-bottom: 48px; color: var(--ink); }
+.section-dark .section-title { color: var(--snow); }
+
+/* ── CARDS ── */
+.card { background: var(--snow); border: 1px solid var(--border); border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04); }
+.card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(18,18,26,0.1); transition: all 200ms ease; }
+
+/* ── KPI ── */
+.kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 48px; }
+.kpi-card { background: var(--snow); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; text-align: center; }
+.kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--ember); line-height: 1; margin-bottom: 4px; }
+.kpi-label { font-size: 13px; color: var(--slate); }
+
+/* ── FINDINGS ── */
+.findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 24px; margin-bottom: 48px; }
+.finding-card { background: var(--snow); border: 1px solid var(--border); border-left: 3px solid var(--ember); border-radius: 10px; padding: 24px; }
+.finding-num { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 600; color: rgba(196,80,42,0.15); line-height: 1; margin-bottom: 8px; }
+.finding-card h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.finding-card p { font-size: 14px; color: var(--slate); line-height: 1.7; }
+
+/* ── ACTIONS ── */
+.actions-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.action-card { background: linear-gradient(135deg, var(--ember) 0%, var(--ember-dark) 100%); border-radius: 10px; padding: 24px; color: white; }
+.action-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; margin-bottom: 8px; }
+.action-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.action-card p { font-size: 13px; opacity: 0.85; line-height: 1.6; }
+
+/* ── RADAR ── */
+.radar-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.radar-legend-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.radar-legend-item:last-child { border-bottom: none; }
+.radar-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.radar-legend-label { font-size: 13px; font-weight: 500; color: var(--ink); flex: 1; }
+
+/* ── B12 GRID ── */
+.b12-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
+.b12-card { background: var(--snow); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.b12-tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; margin-bottom: 8px; }
+.tag-s { background: rgba(45,138,110,0.1); color: var(--success); }
+.tag-r { background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+.tag-n { background: rgba(90,90,110,0.1); color: var(--slate); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 40px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--ember) 0%, var(--gold) 50%, var(--teal) 100%); }
+.tl-item { position: relative; margin-bottom: 40px; }
+.tl-dot { position: absolute; left: -36px; top: 4px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px currentColor; }
+.tl-item:nth-child(1) .tl-dot { color: var(--ember); background: var(--ember); }
+.tl-item:nth-child(2) .tl-dot { color: var(--gold); background: var(--gold); }
+.tl-item:nth-child(3) .tl-dot { color: var(--teal); background: var(--teal); }
+.tl-phase { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.tl-item:nth-child(1) .tl-phase { color: var(--ember); }
+.tl-item:nth-child(2) .tl-phase { color: var(--gold); }
+.tl-item:nth-child(3) .tl-phase { color: var(--teal); }
+.tl-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.tl-desc { font-size: 14px; color: var(--slate); line-height: 1.7; }
+.tl-bullets { margin-top: 10px; padding-left: 16px; }
+.tl-bullets li { font-size: 13px; color: var(--slate); margin-bottom: 4px; }
+
+/* ── LEVERAGE ── */
+.leverage-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.lev-item { background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.lev-icon { font-size: 28px; margin-bottom: 8px; }
+.lev-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.lev-status { font-size: 11px; color: var(--slate); margin-bottom: 8px; }
+.bar-bg { background: var(--border); border-radius: 4px; height: 6px; }
+.bar-fill { height: 6px; border-radius: 4px; }
+
+/* ── ROUNDTABLE ── */
+.debate-topic { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 32px; }
+.debate-header { background: linear-gradient(135deg, var(--deep-ink) 0%, var(--surface) 100%); padding: 20px 28px; display: flex; align-items: center; gap: 16px; }
+.debate-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: rgba(196,80,42,0.5); line-height: 1; }
+.debate-q { font-size: 17px; font-weight: 600; color: var(--snow); }
+.debate-voices { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+.voice-card { display: flex; gap: 16px; padding: 16px; border-radius: 8px; background: var(--parchment); }
+.voice-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.voice-role { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.voice-text { font-size: 14px; color: var(--ink); line-height: 1.7; }
+.verdict { margin: 0 28px 24px; background: linear-gradient(135deg, rgba(196,80,42,0.08) 0%, rgba(184,146,58,0.06) 100%); border: 1px solid rgba(196,80,42,0.2); border-radius: 8px; padding: 16px 20px; }
+.verdict-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ember); margin-bottom: 6px; }
+.verdict p { font-size: 14px; color: var(--ink); line-height: 1.7; font-weight: 500; }
+
+/* ── FINANCE TABLE ── */
+.fin-table { width: 100%; border-collapse: collapse; border-radius: 10px; overflow: hidden; }
+.fin-table th { background: var(--deep-ink); color: var(--snow); padding: 14px 20px; text-align: left; font-size: 13px; font-weight: 600; }
+.fin-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--border); color: var(--ink); }
+.fin-table tr:last-child td { border-bottom: none; }
+.fin-table tr:nth-child(even) td { background: rgba(247,245,240,0.5); }
+.fin-table .hl td { background: rgba(42,122,110,0.06) !important; font-weight: 600; color: var(--teal); }
+.fin-table .tot td { background: rgba(196,80,42,0.06) !important; font-weight: 700; color: var(--ember-dark); font-size: 15px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.pos { color: var(--success); }
+.neg { color: var(--ember); }
+
+/* ── ROADMAP ── */
+.roadmap-track { display: flex; gap: 0; margin: 40px 0; overflow-x: auto; }
+.rp { min-width: 220px; flex: 1; border: 1px solid var(--border); border-right: none; padding: 24px; background: var(--snow); position: relative; }
+.rp:last-child { border-right: 1px solid var(--border); }
+.rp::after { content: '▶'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--border); z-index: 2; }
+.rp:last-child::after { display: none; }
+.rp-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.rp-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+.rp-items { list-style: none; }
+.rp-items li { font-size: 12px; color: var(--slate); padding: 3px 0 3px 14px; position: relative; }
+.rp-items li::before { content: '·'; position: absolute; left: 4px; font-weight: 700; }
+.q1 { border-top: 3px solid var(--ember); } .q1 .rp-lbl { color: var(--ember); }
+.q2 { border-top: 3px solid var(--gold); } .q2 .rp-lbl { color: var(--gold); }
+.q3 { border-top: 3px solid var(--teal); } .q3 .rp-lbl { color: var(--teal); }
+.q4 { border-top: 3px solid var(--slate); } .q4 .rp-lbl { color: var(--slate); }
+
+/* ── QUICK WINS ── */
+.qw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.qw-h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--ember); }
+.qw-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.qw-item:last-child { border-bottom: none; }
+.qw-box { width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--border); flex-shrink: 0; margin-top: 2px; }
+.qw-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.qw-meta { font-size: 12px; color: var(--slate); }
+.pri { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; }
+.p-c { background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+.p-h { background: rgba(201,148,58,0.1); color: var(--warning); }
+.p-m { background: rgba(42,122,110,0.1); color: var(--teal); }
+
+/* ── INSIGHT BOX ── */
+.insight { background: linear-gradient(135deg, rgba(184,146,58,0.08) 0%, rgba(196,80,42,0.05) 100%); border: 1px solid rgba(184,146,58,0.25); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 20px 24px; margin: 24px 0; }
+.insight p { font-size: 15px; color: var(--ink); line-height: 1.7; font-style: italic; }
+.insight .src { font-size: 12px; color: var(--slate); margin-top: 8px; font-style: normal; }
+
+/* ── CHIP ── */
+.chip { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; background: rgba(196,80,42,0.1); color: var(--ember-dark); }
+.chip-g { background: rgba(184,146,58,0.1); color: var(--gold); }
+.chip-t { background: rgba(42,122,110,0.1); color: var(--teal); }
+
+/* ── FOOTER ── */
+.footer { background: var(--deep-ink); padding: 48px 40px; text-align: center; }
+.footer-inner { max-width: 1120px; margin: 0 auto; }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--snow); margin-bottom: 8px; }
+.footer-tag { font-size: 14px; color: var(--mist); margin-bottom: 32px; }
+.footer-meta { font-size: 12px; color: #5A5A6E; }
+
+@media (max-width: 768px) {
+  .section { padding: 48px 16px; }
+  .cover { padding: 48px 16px; }
+  .radar-container, .b12-grid, .actions-row, .qw-grid, .kpi-row { grid-template-columns: 1fr; }
+  .leverage-grid { grid-template-columns: repeat(2,1fr); }
+  .roadmap-track { flex-direction: column; }
+  .rp { border-right: 1px solid var(--border); min-width: unset; }
+  .rp::after { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-inner">
+    <div class="cover-tag">McKinsey-Grade Business Analysis</div>
+    <h1>墨應系<br><em>AI 命理融合平台</em><br>商業模式分析報告</h1>
+    <p class="cover-subtitle">Business-12 × SSA × 九策圓桌 × 財務損益三情境</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>報告日期</label><span>2026 年 06 月 05 日</span></div>
+      <div class="cover-meta-item"><label>分析目標</label><span>墨應系 AI 命理融合平台</span></div>
+      <div class="cover-meta-item"><label>報告受眾</label><span>Zeal × Alan × Bryan</span></div>
+      <div class="cover-meta-item"><label>分析引擎</label><span>MUSEON Business Intelligence</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXEC SUMMARY -->
+<div class="section">
+<div class="section-inner">
+  <div class="section-label">Executive Summary</div>
+  <h2 class="section-title">五個核心發現</h2>
+
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-value">NT$400</div><div class="kpi-label">保守毛利／每份報告</div></div>
+    <div class="kpi-card"><div class="kpi-value">40%</div><div class="kpi-label">扣分潤後毛利率</div></div>
+    <div class="kpi-card"><div class="kpi-value">679萬</div><div class="kpi-label">台灣命理信仰人口</div></div>
+    <div class="kpi-card"><div class="kpi-value">20%</div><div class="kpi-label">亞太佔星App CAGR</div></div>
+  </div>
+
+  <div class="findings-grid">
+    <div class="finding-card">
+      <div class="finding-num">01</div>
+      <h3>市場時機窗口正開啟</h3>
+      <p>台灣命理市場五年 4.1 倍增長 + 亞太 App 市場 20% CAGR 並行，AI 融合命理正處於早期採用者進入甜蜜點。NT$1,000 屬低門檻切入，留有提升空間。</p>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">02</div>
+      <h3>毛利結構健康但分潤風險存在</h3>
+      <p>40% 毛利在數位產品屬中等，但 45% 讓渡後規模化時邊際收益受壓。月份額突破 5,000 份時，需重新評估分潤比例或建立直接通路。</p>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">03</div>
+      <h3>「哇靠超準」是商模成敗關鍵</h3>
+      <p>Bryan 的核心洞見點中死穴：準度決定口碑，口碑決定分潤網絡的推薦意願。現有 tone/排版 Skill 處於「隨便做」水準，是目前最高優先度技術債。</p>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">04</div>
+      <h3>N 系統策略需要聚焦而非廣覆蓋</h3>
+      <p>建議先以 HD + 八字兩套深度做到「準確 + 個人化深度」，核心賣點是「兩套系統交叉共鳴洞見」，而非系統數量的廣度炫耀。</p>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">05</div>
+      <h3>技術護城河需提前建立</h3>
+      <p>Alan 的 AI agent 防護機制方向正確，需同時建立「多系統交叉洞見的融合邏輯」——這才是競爭者難以複製的核心壁壘，而非單系統的 AI 解讀能力。</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:18px;font-weight:600;margin-bottom:20px">三個即時行動</h3>
+  <div class="actions-row">
+    <div class="action-card">
+      <div class="action-tag">⚡ 立即（本週）</div>
+      <h4>建立「哇靠超準」品質標準</h4>
+      <p>定義報告的準確度評測機制，收集 50 份真實用戶反饋作為 tone Skill 迭代的基線數據。</p>
+    </div>
+    <div class="action-card">
+      <div class="action-tag">🔥 近期（30 天）</div>
+      <h4>Beta 測試閉合口碑迴圈</h4>
+      <p>精選 20-30 個種子用戶，Human Design 為主力，測試完整報告體驗並建立 NPS 追蹤機制。</p>
+    </div>
+    <div class="action-card">
+      <div class="action-tag">📌 中期（90 天）</div>
+      <h4>啟動二層分潤網絡</h4>
+      <p>以口碑驗證為前提（NPS≥50），設計第一層推廣者篩選，優先找有命理社群的 KOL。</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- BUSINESS-12 -->
+<div class="section section-alt">
+<div class="section-inner">
+  <div class="section-label">Business-12 十二力診斷</div>
+  <h2 class="section-title">十二維度健康度評估</h2>
+
+  <div class="radar-container">
+    <div style="display:flex;justify-content:center">
+      <svg width="380" height="380" viewBox="0 0 380 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rFill" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#C4502A" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#C4502A" stop-opacity="0.08"/>
+          </radialGradient>
+        </defs>
+        <g transform="translate(190,190)">
+          <circle r="144" fill="none" stroke="#E2E0DA" stroke-width="1"/>
+          <circle r="108" fill="none" stroke="#E2E0DA" stroke-width="1"/>
+          <circle r="72" fill="none" stroke="#E2E0DA" stroke-width="1"/>
+          <circle r="36" fill="none" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="0" y2="-144" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="74.1" y2="-124.7" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="124.7" y2="-74.1" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="144" y2="0" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="124.7" y2="74.1" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="74.1" y2="124.7" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="0" y2="144" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-74.1" y2="124.7" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-124.7" y2="74.1" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-144" y2="0" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-124.7" y2="-74.1" stroke="#E2E0DA" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-74.1" y2="-124.7" stroke="#E2E0DA" stroke-width="1"/>
+          <!-- scores: market=3,product=3.5,channel=2.5,price=3.5,mktg=2,compete=3,profit=3.5,cost=4,scale=4,community=2,brand=2.5,moat=3 -->
+          <!-- r=score/5*144; x=r*sin(i*30); y=-r*cos(i*30) -->
+          <!-- 0:86.4,0,-86.4 | 1:100.8,50.4,-87.3 | 2:72,62.4,-36 | 3:100.8,100.8,0 | 4:57.6,49.9,28.8 | 5:86.4,43.2,74.8 -->
+          <!-- 6:100.8,0,100.8 | 7:57.6,-28.8,49.9 | 8:115.2,-99.8,57.6 | 9:57.6,-57.6,0 | 10:72,-62.4,-36 | 11:86.4,-43.2,-74.8 -->
+          <polygon points="0,-86.4 50.4,-87.3 62.4,-36 100.8,0 49.9,28.8 43.2,74.8 0,100.8 -28.8,49.9 -99.8,57.6 -57.6,0 -62.4,-36 -43.2,-74.8"
+            fill="url(#rFill)" stroke="#C4502A" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="0" cy="-86.4" r="4" fill="#C4502A"/>
+          <circle cx="50.4" cy="-87.3" r="4" fill="#C4502A"/>
+          <circle cx="62.4" cy="-36" r="4" fill="#B8923A"/>
+          <circle cx="100.8" cy="0" r="4" fill="#C4502A"/>
+          <circle cx="49.9" cy="28.8" r="4" fill="#9A3A1C"/>
+          <circle cx="43.2" cy="74.8" r="4" fill="#C4502A"/>
+          <circle cx="0" cy="100.8" r="4" fill="#C4502A"/>
+          <circle cx="-28.8" cy="49.9" r="4" fill="#9A3A1C"/>
+          <circle cx="-99.8" cy="57.6" r="4" fill="#2A7A6E"/>
+          <circle cx="-57.6" cy="0" r="4" fill="#9A3A1C"/>
+          <circle cx="-62.4" cy="-36" r="4" fill="#B8923A"/>
+          <circle cx="-43.2" cy="-74.8" r="4" fill="#C4502A"/>
+          <text x="0" y="-154" text-anchor="middle" font-size="11" fill="#5A5A6E" font-family="sans-serif">市場規模</text>
+          <text x="62" y="-98" text-anchor="start" font-size="11" fill="#5A5A6E" font-family="sans-serif">產品力</text>
+          <text x="80" y="-32" text-anchor="start" font-size="11" fill="#5A5A6E" font-family="sans-serif">通路力</text>
+          <text x="110" y="8" text-anchor="start" font-size="11" fill="#5A5A6E" font-family="sans-serif">定價力</text>
+          <text x="58" y="48" text-anchor="start" font-size="11" fill="#5A5A6E" font-family="sans-serif">行銷力</text>
+          <text x="44" y="94" text-anchor="start" font-size="11" fill="#5A5A6E" font-family="sans-serif">競爭力</text>
+          <text x="0" y="122" text-anchor="middle" font-size="11" fill="#5A5A6E" font-family="sans-serif">獲利結構</text>
+          <text x="-38" y="72" text-anchor="end" font-size="11" fill="#5A5A6E" font-family="sans-serif">成本</text>
+          <text x="-110" y="72" text-anchor="end" font-size="11" fill="#5A5A6E" font-family="sans-serif">規模性</text>
+          <text x="-112" y="8" text-anchor="end" font-size="11" fill="#5A5A6E" font-family="sans-serif">社群力</text>
+          <text x="-80" y="-32" text-anchor="end" font-size="11" fill="#5A5A6E" font-family="sans-serif">品牌力</text>
+          <text x="-52" y="-86" text-anchor="end" font-size="11" fill="#5A5A6E" font-family="sans-serif">護城河</text>
+        </g>
+      </svg>
+    </div>
+
+    <div>
+      <h3 style="font-size:16px;font-weight:600;margin-bottom:16px">十二力評分總覽</h3>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#C4502A"></div><span class="radar-legend-label">市場規模力</span><span style="color:var(--gold);font-size:13px">★★★☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">3.0</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#C4502A"></div><span class="radar-legend-label">產品差異力</span><span style="color:var(--gold);font-size:13px">★★★½☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">3.5</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#B8923A"></div><span class="radar-legend-label">通路覆蓋力</span><span style="color:var(--gold);font-size:13px">★★½☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">2.5</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#C4502A"></div><span class="radar-legend-label">定價彈性力</span><span style="color:var(--gold);font-size:13px">★★★½☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">3.5</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#9A3A1C"></div><span class="radar-legend-label">行銷獲客力</span><span style="color:var(--gold);font-size:13px">★★☆☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">2.0</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#C4502A"></div><span class="radar-legend-label">競爭壁壘力</span><span style="color:var(--gold);font-size:13px">★★★☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">3.0</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#C4502A"></div><span class="radar-legend-label">獲利結構力</span><span style="color:var(--gold);font-size:13px">★★★½☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">3.5</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#2A7A6E"></div><span class="radar-legend-label">成本結構力</span><span style="color:var(--gold);font-size:13px">★★★★☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">4.0</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#2A7A6E"></div><span class="radar-legend-label">規模複製力</span><span style="color:var(--gold);font-size:13px">★★★★☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">4.0</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#9A3A1C"></div><span class="radar-legend-label">社群黏著力</span><span style="color:var(--gold);font-size:13px">★★☆☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">2.0</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#B8923A"></div><span class="radar-legend-label">品牌溢價力</span><span style="color:var(--gold);font-size:13px">★★½☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">2.5</span></div>
+      <div class="radar-legend-item"><div class="radar-dot" style="background:#C4502A"></div><span class="radar-legend-label">護城河深度</span><span style="color:var(--gold);font-size:13px">★★★☆☆</span><span style="font-size:13px;color:var(--slate);margin-left:8px">3.0</span></div>
+      <div style="margin-top:16px;padding:12px;background:rgba(42,122,110,0.08);border-radius:8px">
+        <div style="font-size:12px;color:var(--slate);margin-bottom:4px">綜合評分</div>
+        <div style="font-size:22px;font-weight:700;color:var(--teal)">3.1 / 5.0</div>
+        <div style="font-size:12px;color:var(--slate)">具備規模化基礎，關鍵卡點在品牌與通路</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="b12-grid">
+    <div class="b12-card"><span class="b12-tag tag-s">強項</span><div style="font-size:14px;font-weight:600;margin-bottom:8px">🚀 成本結構力 4.0★</div><div style="font-size:13px;color:var(--slate);line-height:1.7">Claude API 成本 NT$5-15/份，毛利率 40% 可持續。數位交付零邊際複製成本，是最健康的底盤力之一。</div></div>
+    <div class="b12-card"><span class="b12-tag tag-s">強項</span><div style="font-size:14px;font-weight:600;margin-bottom:8px">📈 規模複製力 4.0★</div><div style="font-size:13px;color:var(--slate);line-height:1.7">Agent 並行計算架構可無限橫向擴展，10,000 份/月與 500 份/月技術成本接近線性，不存在產能瓶頸。</div></div>
+    <div class="b12-card"><span class="b12-tag tag-n">潛力</span><div style="font-size:14px;font-weight:600;margin-bottom:8px">💰 定價彈性力 3.5★</div><div style="font-size:13px;color:var(--slate);line-height:1.7">NT$1,000 低門檻定位留有 2-3 倍提升空間。未來可建立「標準版 1K / 深度版 3K / 年訂閱」階梯定價。</div></div>
+    <div class="b12-card"><span class="b12-tag tag-r">待強化</span><div style="font-size:14px;font-weight:600;margin-bottom:8px">🎯 行銷獲客力 2.0★</div><div style="font-size:13px;color:var(--slate);line-height:1.7">目前依賴分潤網絡被動獲客，缺乏自有獲客引擎。SEO 內容、社群布局、KOL 合作尚未啟動。</div></div>
+    <div class="b12-card"><span class="b12-tag tag-r">待強化</span><div style="font-size:14px;font-weight:600;margin-bottom:8px">💬 社群黏著力 2.0★</div><div style="font-size:13px;color:var(--slate);line-height:1.7">命理消費傾向「一次性」，需建立回購機制（年度更新、流年解析、合盤）轉化為訂閱或復購。</div></div>
+    <div class="b12-card"><span class="b12-tag tag-r">待強化</span><div style="font-size:14px;font-weight:600;margin-bottom:8px">🏷️ 品牌溢價力 2.5★</div><div style="font-size:13px;color:var(--slate);line-height:1.7">「墨應系」品牌識別尚未建立市場認知，需透過早期用戶口碑與視覺設計積累品牌資產。</div></div>
+  </div>
+
+  <div style="margin-top:48px">
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:24px">底盤三力健康度</h3>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="background:rgba(45,138,110,0.08);border:1px solid rgba(45,138,110,0.2);border-radius:10px;padding:24px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">✅</div>
+        <div style="font-size:15px;font-weight:600;color:var(--teal);margin-bottom:4px">成本結構</div>
+        <div style="font-size:13px;color:var(--slate)">低可變成本，高毛利，健康</div>
+      </div>
+      <div style="background:rgba(201,148,58,0.08);border:1px solid rgba(201,148,58,0.2);border-radius:10px;padding:24px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">⚠️</div>
+        <div style="font-size:15px;font-weight:600;color:var(--warning);margin-bottom:4px">產品護城河</div>
+        <div style="font-size:13px;color:var(--slate)">技術可複製，需靠準度建壁壘</div>
+      </div>
+      <div style="background:rgba(196,80,42,0.08);border:1px solid rgba(196,80,42,0.2);border-radius:10px;padding:24px;text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">🔴</div>
+        <div style="font-size:15px;font-weight:600;color:var(--ember);margin-bottom:4px">獲客引擎</div>
+        <div style="font-size:13px;color:var(--slate)">過度依賴分潤，缺自主引擎</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px">
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:32px">三時間軸戰略</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">短期（0-3 個月）— 衝刺</div>
+        <div class="tl-title">質量閉環：把「隨便做」升級為「讓人哇靠」</div>
+        <div class="tl-desc">核心任務是讓產品體驗達到口碑臨界點，這是啟動所有後續漏斗的先決條件。</div>
+        <ul class="tl-bullets">
+          <li>Tone Skill 深度迭代：50 份真實用戶反饋 → 口吻精準化</li>
+          <li>Human Design + 八字融合邏輯建立，輸出交叉洞見而非各自分析</li>
+          <li>報告模板升級（採用 MUSEON 設計規範，可截圖分享）</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">中期（3-12 個月）— 穩定</div>
+        <div class="tl-title">分潤啟動：以口碑質量支撐推廣網絡</div>
+        <div class="tl-desc">NPS ≥ 50 才是啟動分潤網絡的正確時機，而非資金壓力下早啟動。</div>
+        <ul class="tl-bullets">
+          <li>第一層分潤者（30%）：優先找有命理社群的 KOL 5-10 位</li>
+          <li>流年更新、伴侶合盤等復購產品上線，提升 LTV</li>
+          <li>法律合規確認完成，建立分潤追蹤系統</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">長期（12 個月以上）— 拉高</div>
+        <div class="tl-title">品牌化 + 亞太拓展：中文命理 AI 第一品牌</div>
+        <div class="tl-desc">台灣口碑驗證為基礎，向新加坡、馬來西亞、香港華人市場擴張。</div>
+        <ul class="tl-bullets">
+          <li>訂閱制（月訂閱 / 年訂閱）取代純一次性報告</li>
+          <li>企業版 B2B（HR 應用、團隊人格分析）</li>
+          <li>開放 API 讓命理師自建品牌（Platform 策略）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SSA -->
+<div class="section">
+<div class="section-inner">
+  <div class="section-label">SSA 系統創業加速分析</div>
+  <h2 class="section-title">三重漏斗 × 八大槓桿 × PCT 閉環</h2>
+
+  <div class="insight">
+    <p>「如果人們一拿到東西會說：哇靠，超級準！那這個東西自己就會有一條路，有商模會推得動。」</p>
+    <div class="src">— Bryan，核心口碑洞見</div>
+  </div>
+
+  <h3 style="font-size:18px;font-weight:600;margin-bottom:24px">三重漏斗設計</h3>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:48px">
+    <!-- Product Funnel -->
+    <div>
+      <div style="text-align:center;margin-bottom:16px"><span class="chip">產品漏斗</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div style="width:100%;background:rgba(196,80,42,0.88);color:white;padding:12px 16px;border-radius:6px 6px 0 0;text-align:center"><div style="font-size:13px;font-weight:600">一筆生辰資料</div><div style="font-size:11px;opacity:0.85">入口極簡，摩擦為零</div></div>
+        <div style="width:88%;background:rgba(196,80,42,0.72);color:white;padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">N 系統並行計算</div><div style="font-size:11px;opacity:0.85">HD + 八字 + 其他系統</div></div>
+        <div style="width:76%;background:rgba(196,80,42,0.56);color:white;padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">交叉洞見融合</div><div style="font-size:11px;opacity:0.85">系統間共鳴點放大</div></div>
+        <div style="width:64%;background:rgba(196,80,42,0.38);color:var(--ember-dark);padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">口吻 Skill 個人化</div><div style="font-size:11px;opacity:0.85">「說的就是我！」體驗</div></div>
+        <div style="width:52%;background:rgba(196,80,42,0.18);color:var(--ember-dark);padding:12px 16px;border-radius:0 0 6px 6px;text-align:center"><div style="font-size:13px;font-weight:600">HTML 報告交付</div><div style="font-size:11px;opacity:0.8">可分享、可截圖</div></div>
+      </div>
+    </div>
+    <!-- Marketing Funnel -->
+    <div>
+      <div style="text-align:center;margin-bottom:16px"><span class="chip chip-g">行銷漏斗</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div style="width:100%;background:rgba(184,146,58,0.88);color:white;padding:12px 16px;border-radius:6px 6px 0 0;text-align:center"><div style="font-size:13px;font-weight:600">口碑擴散曝光</div><div style="font-size:11px;opacity:0.85">社群自傳播（可截圖分享）</div></div>
+        <div style="width:88%;background:rgba(184,146,58,0.72);color:white;padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">KOL 命理師推薦</div><div style="font-size:11px;opacity:0.85">第一層 30% 分潤驅動</div></div>
+        <div style="width:76%;background:rgba(184,146,58,0.56);color:white;padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">免費體驗版吸引</div><div style="font-size:11px;opacity:0.85">部分結果預覽 → 付費解鎖</div></div>
+        <div style="width:64%;background:rgba(184,146,58,0.36);color:var(--ink);padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">SEO 命理關鍵字</div><div style="font-size:11px;opacity:0.8">自然流量 + 內容行銷</div></div>
+        <div style="width:52%;background:rgba(184,146,58,0.18);color:var(--ink);padding:12px 16px;border-radius:0 0 6px 6px;text-align:center"><div style="font-size:13px;font-weight:600">付費轉換</div><div style="font-size:11px;opacity:0.8">NT$1,000 / 份</div></div>
+      </div>
+    </div>
+    <!-- Community Funnel -->
+    <div>
+      <div style="text-align:center;margin-bottom:16px"><span class="chip chip-t">社群漏斗</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div style="width:100%;background:rgba(42,122,110,0.88);color:white;padding:12px 16px;border-radius:6px 6px 0 0;text-align:center"><div style="font-size:13px;font-weight:600">分享報告截圖</div><div style="font-size:11px;opacity:0.85">社群天然傳播素材</div></div>
+        <div style="width:88%;background:rgba(42,122,110,0.72);color:white;padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">好友互相比較盤</div><div style="font-size:11px;opacity:0.85">「你是什麼類型？」病毒傳播</div></div>
+        <div style="width:76%;background:rgba(42,122,110,0.56);color:white;padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">命理社群積累</div><div style="font-size:11px;opacity:0.85">Facebook 群 + LINE 群</div></div>
+        <div style="width:64%;background:rgba(42,122,110,0.36);color:var(--ink);padding:12px 16px;text-align:center"><div style="font-size:13px;font-weight:600">第二層推廣者</div><div style="font-size:11px;opacity:0.8">15% 分潤激勵</div></div>
+        <div style="width:52%;background:rgba(42,122,110,0.18);color:var(--ink);padding:12px 16px;border-radius:0 0 6px 6px;text-align:center"><div style="font-size:13px;font-weight:600">訂閱 / 復購</div><div style="font-size:11px;opacity:0.8">LTV 最大化</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:18px;font-weight:600;margin-bottom:24px">八大槓桿資源現況</h3>
+  <div class="leverage-grid">
+    <div class="lev-item"><div class="lev-icon">🏷️</div><div class="lev-name">品牌</div><div class="lev-status">草創期，需建立</div><div class="bar-bg"><div class="bar-fill" style="width:25%;background:var(--ember)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">🤝</div><div class="lev-name">人脈</div><div class="lev-status">Bryan / Alan 核心圈</div><div class="bar-bg"><div class="bar-fill" style="width:50%;background:var(--gold)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">📱</div><div class="lev-name">平台</div><div class="lev-status">分潤平台待建</div><div class="bar-bg"><div class="bar-fill" style="width:20%;background:var(--ember)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">💳</div><div class="lev-name">信用</div><div class="lev-status">口碑零積累</div><div class="bar-bg"><div class="bar-fill" style="width:15%;background:var(--ember)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">🧠</div><div class="lev-name">知識</div><div class="lev-status">命理系統整合深度高</div><div class="bar-bg"><div class="bar-fill" style="width:70%;background:var(--teal)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">⚙️</div><div class="lev-name">研發</div><div class="lev-status">AI Agent 架構已有</div><div class="bar-bg"><div class="bar-fill" style="width:60%;background:var(--teal)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">⏰</div><div class="lev-name">時間</div><div class="lev-status">創業早期，可投入高</div><div class="bar-bg"><div class="bar-fill" style="width:80%;background:var(--teal)"></div></div></div>
+    <div class="lev-item"><div class="lev-icon">💰</div><div class="lev-name">金錢</div><div class="lev-status">自籌，輕資本結構</div><div class="bar-bg"><div class="bar-fill" style="width:40%;background:var(--gold)"></div></div></div>
+  </div>
+
+  <div style="margin-top:48px">
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:24px">PCT 閉環設計</h3>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="card"><div style="font-size:24px;margin-bottom:12px">🎯</div><div style="font-weight:700;font-size:16px;margin-bottom:4px;color:var(--ember)">P — 產品閉環</div><div style="font-size:13px;color:var(--slate);line-height:1.7">用戶付費 → 收到報告 → 反饋「準不準」→ 反饋進 Tone Skill 迭代 → 下一份更準。自我強化的品質飛輪。</div></div>
+      <div class="card"><div style="font-size:24px;margin-bottom:12px">📣</div><div style="font-weight:700;font-size:16px;margin-bottom:4px;color:var(--gold)">C — 社群閉環</div><div style="font-size:13px;color:var(--slate);line-height:1.7">報告可截圖分享 → 朋友好奇詢問 → 分潤推薦連結 → 新用戶付費 → 推薦者獲獎勵 → 更積極推薦。</div></div>
+      <div class="card"><div style="font-size:24px;margin-bottom:12px">🔄</div><div style="font-weight:700;font-size:16px;margin-bottom:4px;color:var(--teal)">T — 信任閉環</div><div style="font-size:13px;color:var(--slate);line-height:1.7">準度建立信任 → 信任帶來復購（流年/合盤）→ 復購提升 LTV → 更多資源投入準度迭代。</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px">
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:16px">SSA 高毛利分潤模型評估</h3>
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--teal);margin-bottom:12px">✅ 正面評估</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--teal)">·</span>二層結構（30%+15%）在台灣屬分潤市場標準範圍</li>
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--teal)">·</span>第一層 30% 對命理 KOL 有吸引力，能自帶流量</li>
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--teal)">·</span>分潤驅動增長 = 無需大量廣告支出</li>
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--teal)">·</span>40% 保留毛利在數位內容中可接受</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--ember);margin-bottom:12px">⚠️ 風險評估</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--ember)">·</span>「準度未驗證」前啟動 = 推廣者信用受損風險</li>
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--ember)">·</span>規模 10K 份/月，分潤支出 NT$450K，注意現金流</li>
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--ember)">·</span>二層制須確認台灣《多層次傳銷管理法》合規性</li>
+            <li style="font-size:13px;color:var(--slate);padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--ember)">·</span>規模化後需發展自有通路，降低分潤依賴至 60%</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding:14px;background:rgba(184,146,58,0.08);border-radius:8px;border:1px solid rgba(184,146,58,0.2)">
+        <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:4px">SSA 最佳時機判斷</div>
+        <div style="font-size:14px;color:var(--ink)">啟動全力分潤的正確信號：<strong>NPS ≥ 50 + 自發截圖分享率 &gt; 30% + 50 份 Beta 完成</strong>。三個條件都滿足再放大。</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ROUNDTABLE -->
+<div class="section section-alt">
+<div class="section-inner">
+  <div class="section-label">九策軍師圓桌</div>
+  <h2 class="section-title">五角色三輪辯論</h2>
+
+  <!-- Debate 1 -->
+  <div class="debate-topic">
+    <div class="debate-header">
+      <div class="debate-num">01</div>
+      <div class="debate-q">準度 vs 速度：應先把系統做到「哇靠超準」再開分潤，還是同步跑？</div>
+    </div>
+    <div class="debate-voices">
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(196,80,42,0.1)">🗡️</div>
+        <div>
+          <div class="voice-role" style="color:var(--ember)">陽謀者｜戰略佈局</div>
+          <div class="voice-text">先準度。分潤網絡的乘數效應只有在「口碑為正」的前提下才成立。提前啟動分潤等於讓推廣者替「未完成的產品」背書，一旦用戶有負面體驗，推廣者信譽受損後主動撤退，網絡崩潰比從未建立更難。窗口期確實存在，但市場等得起 3 個月，品牌等不起一次大規模負評。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(90,90,110,0.1)">🔮</div>
+        <div>
+          <div class="voice-role" style="color:var(--slate)">陰謀者｜風險暗礁</div>
+          <div class="voice-text">注意：「哇靠超準」是個移動靶。命理從來沒有客觀準確率——是「共鳴感」而非「事實驗證」。如果等到「客觀準確」才啟動，永遠等不到。真正的風險不是準度不夠，是用戶群沒選對——選錯用戶（懷疑論者而非命理信仰者），100% 準也沒用。建議：20 人封閉 Beta 先跑，選相信命理的用戶，測共鳴感，不測「準確率」。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(42,122,110,0.1)">📊</div>
+        <div>
+          <div class="voice-role" style="color:var(--teal)">商模診斷者｜業務數字</div>
+          <div class="voice-text">數字告訴我：Beta 期 500 份/月毛利 NT$200K，不急。這個體量下，即使分潤也只多拿 NT$75K，意義不大。Brand damage 的修復成本遠高於延遲 3 個月的機會成本。建議用 3 個月做 100 份精品測試，把 NPS 數據拿到手再談分潤。</div>
+        </div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="verdict-lbl">🏛️ 仲裁結論</div>
+      <p>先準度，但定義可操作的門檻：20-30 份種子用戶 NPS ≥ 50，且至少 3 位自發表示「想推薦給朋友」，才正式開放第一層分潤邀請。分潤「招募」可同步準備，「啟動」需等門檻達標。</p>
+    </div>
+  </div>
+
+  <!-- Debate 2 -->
+  <div class="debate-topic">
+    <div class="debate-header">
+      <div class="debate-num">02</div>
+      <div class="debate-q">二層分潤 vs 直接通路：45% 讓渡是否值得？最佳啟動時機？</div>
+    </div>
+    <div class="debate-voices">
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(196,80,42,0.1)">🌍</div>
+        <div>
+          <div class="voice-role" style="color:var(--ember)">環境雷達｜市場競爭</div>
+          <div class="voice-text">台灣命理市場的獲客成本由關係決定。命理師本身就是信任節點，一個有 1,000 粉絲的 KOL 帶來的轉換率遠高於 NT$50,000 的廣告投入。45% 讓渡在早期是正確的 CAC 換算，本質上是「以毛利換 CAC」。問題不在比例，而在：何時建立自己的直通道替代路徑，使分潤佔比從 80% 降至 40%。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(184,146,58,0.1)">🪞</div>
+        <div>
+          <div class="voice-role" style="color:var(--gold)">鏡照者｜創辦人決策模式</div>
+          <div class="voice-text">我在這個決策裡看到潛在認知陷阱：45% 讓渡讓人很快看到數字在動，但可能掩蓋了「產品還沒準備好」的信號。建議設定「轉折點」——達到月 2,000 份時，開始建立第一個自有通路（SEO + 內容），讓分潤佔比自然下降，而非因分潤者失效被迫重建。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(90,90,110,0.1)">🔮</div>
+        <div>
+          <div class="voice-role" style="color:var(--slate)">陰謀者｜風險暗礁</div>
+          <div class="voice-text">最大的隱藏風險：分潤合規問題。台灣《多層次傳銷管理法》對二層制度有規範，需要法律確認 30%+15% 是否落入多層次傳銷定義。另外，第二層 15% 分潤者的品質管理如何做？第一層找錯人，第二層的噪音會更嚴重。</div>
+        </div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="verdict-lbl">🏛️ 仲裁結論</div>
+      <p>45% 讓渡在早期是合理的 CAC 投資，但需要：① 法律確認多層傳銷合規性；② 設定「自有通路啟動觸發點」（月 2,000 份）；③ 第一層推廣者篩選機制（需有社群背書）。長期目標：直接通路佔比 ≥ 50%。</p>
+    </div>
+  </div>
+
+  <!-- Debate 3 -->
+  <div class="debate-topic">
+    <div class="debate-header">
+      <div class="debate-num">03</div>
+      <div class="debate-q">N 系統深度 vs 廣度：深耕 1-2 套極準，還是廣覆蓋做差異化？</div>
+    </div>
+    <div class="debate-voices">
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(196,80,42,0.1)">🗡️</div>
+        <div>
+          <div class="voice-role" style="color:var(--ember)">陽謀者｜戰略佈局</div>
+          <div class="voice-text">先深後廣。Human Design 在台灣有搜尋量基礎，八字有文化深度，傳統師父解讀嚴重稀缺。這兩套先做到「AI 解讀天花板」，建立「HD + 八字同時解讀」的獨特性，已是市場上找不到的組合。廣度是第二階段護城河，不是第一階段差異化。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(42,122,110,0.1)">📊</div>
+        <div>
+          <div class="voice-role" style="color:var(--teal)">商模診斷者｜業務數字</div>
+          <div class="voice-text">數字支持深度。每增加一個系統：API 成本 +NT$3-5/份，開發成本 +數週，融合邏輯複雜度指數增加。Humanhd.com 只做 HD 一套就能跑成生意。建議把「系統交叉驗證洞見」做成核心賣點——兩套說同一件事 = 強調，兩套說反 = 辯證，這才是多系統的真正溢價。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar" style="background:rgba(184,146,58,0.1)">🪞</div>
+        <div>
+          <div class="voice-role" style="color:var(--gold)">鏡照者｜創辦人決策模式</div>
+          <div class="voice-text">Zeal 的背景讓他偏好「系統整合」的壯觀感，但用戶買的是「看清自己」，不是「系統數量」。Alan 的 AI agent 防護機制（跨類型角色誤導）正是廣度帶來技術複雜度的縮影——每增加一套系統，防護工作量乘以 N。建議聚焦，把防護機制做好，才能在未來安全增加系統。</div>
+        </div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="verdict-lbl">🏛️ 仲裁結論</div>
+      <p>深耕 HD + 八字，核心賣點是「兩套系統交叉共鳴」而非兩套各自分析。報告中設置「系統交叉焦點」章節：列出兩套都指向的核心洞見 + 兩套存在矛盾的辯證洞見。待月份額 ≥ 2,000 份且品質穩定後，再評估加入第三套系統。</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- FINANCE -->
+<div class="section section-dark">
+<div class="section-inner">
+  <div class="section-label">財務損益試算</div>
+  <h2 class="section-title">三情境損益模型</h2>
+  <p style="color:#9898A8;margin-bottom:40px;font-size:15px">基準假設：報告單價 NT$1,000 ／ 二層分潤 45% ／ 稅費 5% ／ 金流 2% ／ API 成本 NT$10/份</p>
+
+  <div style="overflow-x:auto">
+    <table class="fin-table" style="background:var(--surface)">
+      <thead>
+        <tr>
+          <th style="min-width:180px">項目</th>
+          <th class="num" style="min-width:150px">情境 A<br><small style="font-weight:400;opacity:0.6">Beta 期 500份/月</small></th>
+          <th class="num" style="min-width:150px">情境 B<br><small style="font-weight:400;opacity:0.6">成長期 2,000份/月</small></th>
+          <th class="num" style="min-width:150px">情境 C<br><small style="font-weight:400;opacity:0.6">規模期 10,000份/月</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>月份額（份）</td><td class="num" style="color:#9898A8">500</td><td class="num" style="color:#9898A8">2,000</td><td class="num" style="color:#9898A8">10,000</td></tr>
+        <tr><td>月總營收</td><td class="num">NT$500,000</td><td class="num">NT$2,000,000</td><td class="num">NT$10,000,000</td></tr>
+        <tr><td>— 二層分潤（45%）</td><td class="num neg">- NT$225,000</td><td class="num neg">- NT$900,000</td><td class="num neg">- NT$4,500,000</td></tr>
+        <tr><td>— 發票稅（5%）</td><td class="num neg">- NT$25,000</td><td class="num neg">- NT$100,000</td><td class="num neg">- NT$500,000</td></tr>
+        <tr><td>— 線上金流手續費（2%）</td><td class="num neg">- NT$10,000</td><td class="num neg">- NT$40,000</td><td class="num neg">- NT$200,000</td></tr>
+        <tr class="hl"><td>毛利（保留 40%）</td><td class="num">NT$200,000</td><td class="num">NT$800,000</td><td class="num">NT$4,000,000</td></tr>
+        <tr><td>— API Token 成本（NT$10/份）</td><td class="num neg">- NT$5,000</td><td class="num neg">- NT$20,000</td><td class="num neg">- NT$100,000</td></tr>
+        <tr><td>— 系統維運（伺服器等）</td><td class="num neg">- NT$15,000</td><td class="num neg">- NT$30,000</td><td class="num neg">- NT$80,000</td></tr>
+        <tr><td>— 人力成本（估算）</td><td class="num neg">- NT$80,000</td><td class="num neg">- NT$150,000</td><td class="num neg">- NT$400,000</td></tr>
+        <tr class="tot"><td>月 EBITDA</td><td class="num">NT$100,000</td><td class="num">NT$600,000</td><td class="num">NT$3,420,000</td></tr>
+        <tr><td style="font-weight:600">年化營收</td><td class="num" style="font-weight:600">NT$6,000,000</td><td class="num" style="font-weight:600">NT$24,000,000</td><td class="num" style="font-weight:600">NT$120,000,000</td></tr>
+        <tr><td style="font-weight:600">年化 EBITDA</td><td class="num pos" style="font-weight:600">NT$1,200,000</td><td class="num pos" style="font-weight:600">NT$7,200,000</td><td class="num pos" style="font-weight:600">NT$41,040,000</td></tr>
+        <tr><td>EBITDA Margin</td><td class="num">20%</td><td class="num">30%</td><td class="num">34.2%</td></tr>
+        <tr><td style="color:#9898A8">損益平衡點</td><td class="num" style="color:#9898A8" colspan="3">約 238 份/月（固定成本 NT$95K ÷ 毛利 NT$400/份）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px">
+    <div style="background:var(--raised);border:1px solid var(--border-dark);border-radius:10px;padding:20px">
+      <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#9898A8;margin-bottom:8px">情境 A 重點</div>
+      <div style="font-size:14px;color:#FDFCFA;line-height:1.7">月 EBITDA NT$10 萬，可支撐 1-2 人小團隊。關鍵任務：建立 NPS 基線 + 口碑迴圈，不追量。</div>
+    </div>
+    <div style="background:var(--raised);border:1px solid rgba(184,146,58,0.3);border-radius:10px;padding:20px">
+      <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">情境 B 重點</div>
+      <div style="font-size:14px;color:#FDFCFA;line-height:1.7">月 EBITDA NT$60 萬，進入舒適成長區。啟動 SEO + 內容行銷，建立第一條自有獲客引擎。</div>
+    </div>
+    <div style="background:var(--raised);border:1px solid rgba(42,122,110,0.3);border-radius:10px;padding:20px">
+      <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">情境 C 重點</div>
+      <div style="font-size:14px;color:#FDFCFA;line-height:1.7">年化 EBITDA NT$4,100 萬。需建立客服體系 + 法律合規部門 + 評估亞太擴張計畫。</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ROADMAP -->
+<div class="section">
+<div class="section-inner">
+  <div class="section-label">戰略路線圖</div>
+  <h2 class="section-title">12 個月里程碑</h2>
+
+  <div class="roadmap-track">
+    <div class="rp q1">
+      <div class="rp-lbl">月 1-3｜品質閉環</div>
+      <div class="rp-title">讓 50 人說「哇靠」</div>
+      <ul class="rp-items">
+        <li>定義準度評測標準</li>
+        <li>Tone Skill 深度迭代</li>
+        <li>HD + 八字融合邏輯</li>
+        <li>50 份種子用戶測試</li>
+        <li>NPS 基線建立</li>
+        <li>法律分潤合規確認</li>
+      </ul>
+    </div>
+    <div class="rp q2">
+      <div class="rp-lbl">月 4-6｜分潤啟動</div>
+      <div class="rp-title">建立第一張推廣網</div>
+      <ul class="rp-items">
+        <li>首批 KOL 招募 5-10 位</li>
+        <li>分潤追蹤系統上線</li>
+        <li>復購產品開發（流年）</li>
+        <li>目標月份額 ≥ 500</li>
+        <li>品牌識別系統設計</li>
+      </ul>
+    </div>
+    <div class="rp q3">
+      <div class="rp-lbl">月 7-9｜通路多元</div>
+      <div class="rp-title">自有引擎啟動</div>
+      <ul class="rp-items">
+        <li>SEO 命理關鍵字布局</li>
+        <li>內容行銷（命理科普）</li>
+        <li>伴侶合盤產品上線</li>
+        <li>目標月份額 ≥ 2,000</li>
+        <li>直接通路佔比 ≥ 30%</li>
+      </ul>
+    </div>
+    <div class="rp q4">
+      <div class="rp-lbl">月 10-12｜規模準備</div>
+      <div class="rp-title">邁向亞太視野</div>
+      <ul class="rp-items">
+        <li>訂閱制產品設計</li>
+        <li>企業版 B2B 評估</li>
+        <li>新加坡/馬來西亞調研</li>
+        <li>第三系統整合評估</li>
+        <li>目標月份額 ≥ 5,000</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;overflow-x:auto">
+    <svg width="100%" height="80" viewBox="0 0 900 80" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="40" x2="860" y2="40" stroke="#E2E0DA" stroke-width="2"/>
+      <line x1="40" y1="40" x2="220" y2="40" stroke="#C4502A" stroke-width="3"/>
+      <circle cx="40" cy="40" r="8" fill="#C4502A" stroke="white" stroke-width="2"/>
+      <circle cx="260" cy="40" r="8" fill="#C4502A" stroke="white" stroke-width="2"/>
+      <circle cx="480" cy="40" r="8" fill="#B8923A" stroke="white" stroke-width="2"/>
+      <circle cx="700" cy="40" r="8" fill="#2A7A6E" stroke="white" stroke-width="2"/>
+      <circle cx="860" cy="40" r="8" fill="#5A5A6E" stroke="white" stroke-width="2"/>
+      <text x="40" y="22" text-anchor="middle" font-size="11" fill="#C4502A" font-family="sans-serif" font-weight="600">現在</text>
+      <text x="260" y="22" text-anchor="middle" font-size="11" fill="#C4502A" font-family="sans-serif" font-weight="600">M3</text>
+      <text x="480" y="22" text-anchor="middle" font-size="11" fill="#B8923A" font-family="sans-serif" font-weight="600">M6</text>
+      <text x="700" y="22" text-anchor="middle" font-size="11" fill="#2A7A6E" font-family="sans-serif" font-weight="600">M9</text>
+      <text x="860" y="22" text-anchor="middle" font-size="11" fill="#5A5A6E" font-family="sans-serif" font-weight="600">M12</text>
+      <text x="40" y="60" text-anchor="middle" font-size="10" fill="#9898A8" font-family="sans-serif">Beta 啟動</text>
+      <text x="260" y="60" text-anchor="middle" font-size="10" fill="#9898A8" font-family="sans-serif">NPS ≥ 50</text>
+      <text x="480" y="60" text-anchor="middle" font-size="10" fill="#9898A8" font-family="sans-serif">月 500 份</text>
+      <text x="700" y="60" text-anchor="middle" font-size="10" fill="#9898A8" font-family="sans-serif">月 2,000 份</text>
+      <text x="860" y="60" text-anchor="middle" font-size="10" fill="#9898A8" font-family="sans-serif">月 5,000 份</text>
+    </svg>
+  </div>
+</div>
+</div>
+
+<!-- QUICK WINS -->
+<div class="section section-alt">
+<div class="section-inner">
+  <div class="section-label">立即行動清單</div>
+  <h2 class="section-title">Quick Wins × 90 天計畫</h2>
+
+  <div class="qw-grid">
+    <div>
+      <div class="qw-h3">⚡ Quick Wins（本週可完成）</div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">定義「哇靠超準」評測框架 <span class="pri p-c">CRITICAL</span></div>
+          <div class="qw-meta">5 個評測維度：共鳴感 / 細節準確 / 時間點 / 行為描述 / 洞見新奇性</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">分潤合規法律確認 <span class="pri p-c">CRITICAL</span></div>
+          <div class="qw-meta">確認二層制是否觸及多層次傳銷法，取得書面法律意見</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">選定 20 位種子用戶 <span class="pri p-h">HIGH</span></div>
+          <div class="qw-meta">篩選：相信命理 + 25-45 歲 + 願意給真實反饋 + 有社群影響力者優先</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">Alan：AI agent 防護 v1 完成 <span class="pri p-h">HIGH</span></div>
+          <div class="qw-meta">跨類型角色誤導防護，先針對 HD + 八字兩套，避免系統間「串台」</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">報告模板升級到「可截圖分享」 <span class="pri p-m">MEDIUM</span></div>
+          <div class="qw-meta">設計帶個人標籤的「命理結果卡」，尺寸適合 IG 限時動態傳播</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="qw-h3">📅 90 天計畫</div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">第 1-30 天：Beta 測試完成 <span class="pri p-c">CRITICAL</span></div>
+          <div class="qw-meta">50 份報告 / 收集 NPS / Tone Skill 迭代 3 輪 / 確立「兩套系統交叉洞見」格式</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">第 31-60 天：口碑驗證 + 分潤準備 <span class="pri p-h">HIGH</span></div>
+          <div class="qw-meta">NPS ≥ 50 達標 → 邀請首批 KOL（5 人）/ 分潤系統技術開發 / 定價頁面建立</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">第 61-90 天：分潤正式啟動 <span class="pri p-h">HIGH</span></div>
+          <div class="qw-meta">月份額目標 300-500 份 / 追蹤分潤推薦轉換率 / 流年產品 MVP / 評估第二層推廣者</div>
+        </div>
+      </div>
+      <div class="qw-item">
+        <div class="qw-box"></div>
+        <div>
+          <div class="qw-title">第 90 天：復盤 + 下季規劃 <span class="pri p-m">MEDIUM</span></div>
+          <div class="qw-meta">三情境實際數字 vs 模型對比 / 分潤網絡健康度評估 / 決策：是否加入第三命理系統</div>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:rgba(196,80,42,0.06);border:1px solid rgba(196,80,42,0.15);border-radius:8px">
+        <div style="font-size:12px;font-weight:600;color:var(--ember);margin-bottom:6px">⭐ 90 天北極星指標</div>
+        <div style="font-size:13px;color:var(--ink)">NPS ≥ 50 ｜ 月份額 ≥ 300 ｜ 3 位推廣者自發分享 ｜ 回購率 ≥ 15%</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px" class="insight">
+    <p>「隨便玩跟認真當專業事業做還是會不一樣的。」墨應系的天花板是亞太華人命理 AI 第一品牌——但這個天花板的地基，是 50 位種子用戶真心說出「哇靠，超級準」的那一刻。一切商模設計都在服務那個瞬間的到來。</p>
+    <div class="src">— 綜合 Zeal × Bryan × Alan 對話核心洞見</div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">MUSEON</div>
+    <div class="footer-tag">商業模式分析引擎｜Business-12 × SSA × 九策圓桌</div>
+    <div class="footer-meta">
+      報告日期：2026-06-05 ｜ 分析目標：墨應系 AI 命理融合平台 ｜ 版本：v1.0<br>
+      本報告由 MUSEON Business Intelligence 生成，僅供內部戰略決策使用。
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
