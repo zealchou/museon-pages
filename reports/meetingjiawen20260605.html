@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>佳雯 × Zeal 教練對話 — 多重分析會議記錄</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Noto Serif TC', serif;
+    background: #F7F5F0;
+    color: #12121A;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+  .header {
+    background: linear-gradient(135deg, #0E0E16 0%, #1E1E2A 100%);
+    color: #FDFCFA;
+    padding: 48px 48px 36px;
+    border-bottom: 3px solid #C4502A;
+  }
+  .header .badge {
+    display: inline-block;
+    background: #C4502A;
+    color: #FDFCFA;
+    font-size: 11px;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .header .meta {
+    color: #9898A8;
+    font-size: 13px;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+  .section {
+    background: #FDFCFA;
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(18,18,26,0.07);
+    border: 1px solid #E2E0DA;
+  }
+  .section-title {
+    font-size: 13px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #C4502A;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #E2E0DA;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .info-item label {
+    font-size: 11px;
+    font-family: 'Arial', sans-serif;
+    color: #9898A8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .info-item value {
+    font-size: 15px;
+    color: #12121A;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .topic-list { list-style: none; }
+  .topic-list li {
+    padding: 12px 16px;
+    border-left: 3px solid #E2E0DA;
+    margin-bottom: 10px;
+    background: #F7F5F0;
+    border-radius: 0 4px 4px 0;
+  }
+  .topic-list li.highlight { border-left-color: #C4502A; background: #fdf2ee; }
+  .topic-list li.strategy  { border-left-color: #B8923A; background: #fdf8ee; }
+  .topic-list li.relation  { border-left-color: #2A7A6E; background: #edf7f5; }
+  .topic-tag {
+    font-size: 10px;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .tag-action { background: #C4502A; color: #fff; }
+  .tag-strategy { background: #B8923A; color: #fff; }
+  .tag-relation { background: #2A7A6E; color: #fff; }
+  .tag-insight { background: #2A6A8A; color: #fff; }
+
+  .people-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+  .person-card {
+    background: #F7F5F0;
+    border: 1px solid #E2E0DA;
+    border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .person-card .name { font-size: 15px; font-weight: 700; font-family: 'Arial', sans-serif; margin-bottom: 4px; }
+  .person-card .role { font-size: 12px; color: #2A7A6E; font-family: 'Arial', sans-serif; margin-bottom: 8px; }
+  .person-card .desc { font-size: 13px; color: #5A5A6E; }
+  .person-card .status {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'Arial', sans-serif;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 8px;
+  }
+  .status-hot { background: #fdecea; color: #C4402A; }
+  .status-warm { background: #fdf8ee; color: #B8923A; }
+  .status-cold { background: #edf7f5; color: #2A7A6E; }
+  .status-partner { background: #edf0ff; color: #2A6A8A; }
+
+  .funnel { display: flex; flex-direction: column; align-items: center; }
+  .funnel-step {
+    width: 100%;
+    max-width: 520px;
+    background: #F7F5F0;
+    border: 1px solid #E2E0DA;
+    border-radius: 4px;
+    padding: 14px 20px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .funnel-step .num {
+    width: 28px; height: 28px;
+    background: #C4502A; color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-family: 'Arial', sans-serif; font-weight: 700; flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .funnel-step .step-title { font-family: 'Arial', sans-serif; font-weight: 700; font-size: 14px; }
+  .funnel-step .step-desc { font-size: 12px; color: #5A5A6E; margin-top: 2px; }
+  .funnel-arrow { font-size: 18px; color: #9898A8; margin: 2px 0; }
+
+  .action-table { width: 100%; border-collapse: collapse; }
+  .action-table th {
+    text-align: left;
+    font-size: 11px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9898A8;
+    padding: 8px 12px;
+    background: #F7F5F0;
+    border-bottom: 1px solid #E2E0DA;
+  }
+  .action-table td {
+    padding: 12px 12px;
+    border-bottom: 1px solid #E2E0DA;
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .action-table tr:last-child td { border-bottom: none; }
+  .priority-high { color: #C4402A; font-weight: 700; font-size: 12px; font-family: 'Arial', sans-serif; }
+  .priority-mid  { color: #B8923A; font-weight: 700; font-size: 12px; font-family: 'Arial', sans-serif; }
+  .priority-low  { color: #2A7A6E; font-weight: 700; font-size: 12px; font-family: 'Arial', sans-serif; }
+  .who-badge {
+    display: inline-block; font-size: 11px;
+    padding: 2px 8px; border-radius: 10px;
+    background: #E2E0DA; color: #12121A;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .insight-box {
+    background: linear-gradient(135deg, #0E0E16 0%, #1E1E2A 100%);
+    color: #FDFCFA;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .insight-box .insight-label {
+    font-size: 10px; font-family: 'Arial', sans-serif;
+    letter-spacing: 2px; text-transform: uppercase; color: #C4502A;
+    margin-bottom: 8px;
+  }
+  .insight-box p { font-size: 14px; line-height: 1.7; color: #E8E6E0; }
+  .insight-box strong { color: #C4502A; }
+
+  .timeline-item {
+    display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start;
+  }
+  .timeline-dot {
+    width: 12px; height: 12px;
+    background: #C4502A; border-radius: 50%;
+    margin-top: 5px; flex-shrink: 0;
+  }
+  .timeline-date {
+    font-size: 12px; color: #9898A8;
+    font-family: 'Arial', sans-serif;
+    min-width: 70px; margin-top: 2px; flex-shrink: 0;
+  }
+  .timeline-body .title { font-weight: 700; font-family: 'Arial', sans-serif; font-size: 14px; }
+  .timeline-body .desc { font-size: 13px; color: #5A5A6E; }
+
+  .footer {
+    text-align: center; color: #9898A8;
+    font-size: 12px; font-family: 'Arial', sans-serif;
+    padding: 32px 0 16px;
+    border-top: 1px solid #E2E0DA;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .header { padding: 28px 20px 24px; }
+    .header h1 { font-size: 22px; }
+    .section { padding: 20px 18px; }
+    .container { padding: 24px 12px; }
+    .header .meta { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">Meeting Record · MUSEON</div>
+  <h1>佳雯 × Zeal 教練對話<br>多重分析會議記錄</h1>
+  <div class="meta">
+    <span>日期 2026-06-05</span>
+    <span>參與者：佳雯（學員）· Zeal（教練）</span>
+    <span>距上次：約兩週（上次 5/20）</span>
+    <span>逐字稿節錄（前 30 分鐘）</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 基本資訊 -->
+  <div class="section">
+    <div class="section-title">會議基本資訊</div>
+    <div class="info-grid">
+      <div class="info-item">
+        <label>形式</label>
+        <value>一對一教練對話</value>
+      </div>
+      <div class="info-item">
+        <label>上次見面</label>
+        <value>2026-05-20</value>
+      </div>
+      <div class="info-item">
+        <label>談話基調</label>
+        <value>進度回顧 + 策略規劃</value>
+      </div>
+      <div class="info-item">
+        <label>主要場景</label>
+        <value>佳雯自有場地（教練辦公室）</value>
+      </div>
+      <div class="info-item">
+        <label>週期安排</label>
+        <value>7月→9月→11月課程序列</value>
+      </div>
+      <div class="info-item">
+        <label>記錄狀態</label>
+        <value>前段節錄（完整 30 分鐘以上）</value>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心議題 -->
+  <div class="section">
+    <div class="section-title">核心議題摘要</div>
+    <ul class="topic-list">
+      <li class="highlight">
+        <span class="topic-tag tag-action">場地確認</span>
+        7/17–19 One Milk 大課場地已口頭預訂，需正式書面確認
+      </li>
+      <li class="highlight">
+        <span class="topic-tag tag-action">課程漏斗</span>
+        財富流半天（3,000–3,600）→ 折抵進三天課；嘉鴻教練交換 8 次執行
+      </li>
+      <li class="highlight">
+        <span class="topic-tag tag-action">推廣缺口</span>
+        Zeal 直點：沒有主動請 Zeal + 小竹老師大力曝光三天課；12 號見面補
+      </li>
+      <li class="strategy">
+        <span class="topic-tag tag-strategy">平台好康設計</span>
+        聯盟加入誘因討論：場地折扣、Podcast/YouTube 曝光、空位預約系統
+      </li>
+      <li class="strategy">
+        <span class="topic-tag tag-strategy">空間槓桿</span>
+        Zeal 提議：一週前空白時段低成本開放散客預約，讓 BNI 會員常來提升黏著
+      </li>
+      <li class="relation">
+        <span class="topic-tag tag-relation">人脈進展</span>
+        兩週觸及：占星師、嘉鴻（財富流）、禮物老師（心智圖）、懷慶（AI架構師）、孕婦按摩師、光課老師、加牌老師
+      </li>
+      <li>
+        <span class="topic-tag tag-insight">技術機遇</span>
+        Live Coding 空間預約系統：Zeal 可兩週開發完，可整合金流 + 散客預約
+      </li>
+    </ul>
+  </div>
+
+  <!-- 人物關係分析 -->
+  <div class="section">
+    <div class="section-title">人物關係地圖</div>
+    <div class="people-grid">
+      <div class="person-card">
+        <div class="name">嘉鴻</div>
+        <div class="role">財富流教練 / 企業場</div>
+        <div class="desc">財富流第一屆；北部企業場最穩定；已協議交換：嘉鴻帶佳雯 8 次財富流，換三天課程資格</div>
+        <span class="status status-partner">確認合作</span>
+      </div>
+      <div class="person-card">
+        <div class="name">小竹老師</div>
+        <div class="role">佳雯的教練上線</div>
+        <div class="desc">三天課最重要的推廣槓桿，目前尚未主動邀請協助曝光——12 號見面是關鍵時機點</div>
+        <span class="status status-hot">待啟動槓桿</span>
+      </div>
+      <div class="person-card">
+        <div class="name">懷慶</div>
+        <div class="role">AI 架構師（Tracy 介紹）</div>
+        <div class="desc">Pre-sales 背景；從技術執行序切 AI，與 Zeal 從商業切入互補。兩人聊了兩小時——「黃金組合」潛力</div>
+        <span class="status status-hot">高潛力合作</span>
+      </div>
+      <div class="person-card">
+        <div class="name">禮物老師</div>
+        <div class="role">心智圖教學</div>
+        <div class="desc">曾赴中國兩年後回台重啟；與 AI 結合有潛力；聯盟三人約（嘉鴻、禮物、佳雯）待確認時間</div>
+        <span class="status status-warm">觀察中</span>
+      </div>
+      <div class="person-card">
+        <div class="name">孕婦按摩師（BNI 新人）</div>
+        <div class="role">身體療癒 / 孕婦專長</div>
+        <div class="desc">老爹介紹；40 出頭想轉講師；獵人型態——先看平台能給什麼，短期不加入，待成熟</div>
+        <span class="status status-cold">待成熟</span>
+      </div>
+      <div class="person-card">
+        <div class="name">光課老師</div>
+        <div class="role">光課 / 華德福教育</div>
+        <div class="desc">50+ 歲；家有長輩照顧壓力；想推廣光課但需「和高我連結後確認」，典型慢熟型決策</div>
+        <span class="status status-warm">慢熟型</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 課程漏斗 -->
+  <div class="section">
+    <div class="section-title">招生漏斗設計（佳雯版）</div>
+    <div class="funnel">
+      <div class="funnel-step">
+        <div class="num">1</div>
+        <div>
+          <div class="step-title">問卷調查（小黃老師社群）</div>
+          <div class="step-desc">了解療癒師事業推行困境 → 作為導課設計依據，精準切入痛點</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="num">2</div>
+        <div>
+          <div class="step-title">上午分享場（佳雯主持）</div>
+          <div class="step-desc">依問卷設計內容，帶出商業思維架構；讓對方認識佳雯的定位</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="num">3</div>
+        <div>
+          <div class="step-title">財富流半天課（嘉鴻共同帶領）</div>
+          <div class="step-desc">3,000–3,600；低門檻體驗；讓陌生人透過嘉鴻的信任度接觸佳雯</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="num">4</div>
+        <div>
+          <div class="step-title">折抵機制啟動</div>
+          <div class="step-desc">有上半天課 → 報名三天課可折抵 3,000–3,600，降低升級心理門檻</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="num">5</div>
+        <div>
+          <div class="step-title">三天核心課程（9 月）</div>
+          <div class="step-desc">目標自招 5–10 人；需啟動 Zeal + 小竹老師推廣槓桿（12 號確認）</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="num">6</div>
+        <div>
+          <div class="step-title">裂變：學員再分享折扣</div>
+          <div class="step-desc">上課學員分享給朋友 → 朋友再給折扣；形成推廣裂變迴路</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 策略洞察 -->
+  <div class="section">
+    <div class="section-title">深層策略洞察</div>
+
+    <div class="insight-box">
+      <div class="insight-label">洞見 01 — 最高槓桿點尚未啟動</div>
+      <p>佳雯目前以「自行接觸」為主要招生路徑，但<strong>上游師資推薦（Zeal + 小竹老師）的轉介力從未主動啟動</strong>。這是成本最低、信任度最高的推廣方式，卻是最晚才被提出的。Zeal 直接點名這個盲點——12 號見面前要想清楚怎麼提出請求。</p>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-label">洞見 02 — 精準物件需要系統，不是努力</div>
+      <p>兩週內觸及約 6–7 人，自評「不太精準」。真正的精準物件不是靠增加接觸數量得到的，而是透過<strong>嘉鴻的 8 次財富流 × 每場 6 人以上的系統化導入</strong>。散點接觸 vs 系統化漏斗，效率天差地別。</p>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-label">洞見 03 — 空間資產的隱性槓桿</div>
+      <p>Zeal 提出的空間預約概念點出了一個深層邏輯：<strong>空間的空白時段是一個未被利用的資產</strong>。低成本開放給 BNI 會員和聯盟老師，不只創造收入，更重要的是製造反覆接觸機會——「熟悉感」是商業信任的底層。</p>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-label">洞見 04 — 懷慶的互補結構值得重視</div>
+      <p>懷慶從技術執行序切入 AI，Zeal 從商業切入——<strong>兩人是同一件事情的兩個端點，具備天然的黃金組合結構</strong>。對佳雯的生態系而言，若能引入懷慶，「療癒 × AI 商業化」的定位差異化將會更立體。</p>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-label">洞見 05 — 「加 BNI 就會破框」的邏輯盲點</div>
+      <p>Zeal 直接挑戰：加入 BNI 不等於破框。真正的破框是思維方式的改變，不是社群的轉換。對於還在「用外部環境換視野」的學員，<strong>這是一個需要持續教練的核心信念議題</strong>，不只是那位孕婦按摩師。</p>
+    </div>
+  </div>
+
+  <!-- 時程規劃 -->
+  <div class="section">
+    <div class="section-title">課程時程規劃</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#2A7A6E;"></div>
+        <div class="timeline-date">6/12</div>
+        <div class="timeline-body">
+          <div class="title">Zeal + 小竹老師三人會面</div>
+          <div class="desc">正式提出三天課推廣請求；確認 9 月場次；確認嘉鴻合作細節</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#B8923A;"></div>
+        <div class="timeline-date">6/1x</div>
+        <div class="timeline-body">
+          <div class="title">帶嘉鴻拜訪文化（ESG）</div>
+          <div class="desc">ESG 深度了解；強化嘉鴻合作關係；切入企業場合作可能性</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">6/18（四）</div>
+        <div class="timeline-body">
+          <div class="title">跨組劇發表（下午）</div>
+          <div class="desc">每人 2–3 分鐘介紹 + 佳雯 10 分鐘專題演講；外區域人脈邀約機會</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#C4502A;"></div>
+        <div class="timeline-date">7/17–19</div>
+        <div class="timeline-body">
+          <div class="title">One Milk 大課</div>
+          <div class="desc">從情緒切入；場地口頭 booked 需書面確認；Zeal 7 月在台北可評估出席</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#B8923A;"></div>
+        <div class="timeline-date">7–8 月</div>
+        <div class="timeline-body">
+          <div class="title">財富流半天 × 小黃老師社群</div>
+          <div class="desc">問卷先行 → 內部分享場 → 嘉鴻帶財富流半天 → 折抵引導三天課報名</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#C4502A;"></div>
+        <div class="timeline-date">9/11–13<br>或 9/18–20</div>
+        <div class="timeline-body">
+          <div class="title">三天核心課程（9 月）</div>
+          <div class="desc">目標 5–10 人；與 Zeal SSL 9/23–24 錯開；嘉鴻確認出席</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 行動清單 -->
+  <div class="section">
+    <div class="section-title">行動項目清單</div>
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>行動事項</th>
+          <th>優先</th>
+          <th>負責</th>
+          <th>時限</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>正式確認 7/17–19 場地書面預訂</td>
+          <td><span class="priority-high">高</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>本週</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>製作問卷（小黃老師社群療癒師現況調查）</td>
+          <td><span class="priority-high">高</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>本週</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>6/12 見面：主動提出請 Zeal + 小竹老師協助三天課曝光</td>
+          <td><span class="priority-high">高</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>6/12</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>與嘉鴻確認 8 次財富流場次規劃（時間/受眾/地點）</td>
+          <td><span class="priority-high">高</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>6/12 前</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>確認 9 月三天課日期（11–13 or 18–20），對齊所有相關師資</td>
+          <td><span class="priority-high">高</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>6/12 確認</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>安排嘉鴻拜訪文化（ESG）時間</td>
+          <td><span class="priority-mid">中</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>6/18 前</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>設計平台加入好康清單（場地折扣 / Podcast 曝光 / 空間預約）</td>
+          <td><span class="priority-mid">中</span></td>
+          <td><span class="who-badge">佳雯</span></td>
+          <td>7 月前</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>與 Zeal 確認空間預約系統需求（Live Coding 可 2 週完成）</td>
+          <td><span class="priority-mid">中</span></td>
+          <td><span class="who-badge">Zeal</span></td>
+          <td>7 月前</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>懷慶第二次約談，確認合作方向</td>
+          <td><span class="priority-mid">中</span></td>
+          <td><span class="who-badge">Zeal</span></td>
+          <td>待約</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>One Milk 暖場：私下聯絡救生群 6–7 個熟悉老學員</td>
+          <td><span class="priority-mid">中</span></td>
+          <td><span class="who-badge">Zeal</span></td>
+          <td>7 月前</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 教練視角筆記 -->
+  <div class="section">
+    <div class="section-title">教練視角觀察</div>
+    <ul class="topic-list">
+      <li class="relation">
+        <strong>正確方向已啟動</strong>：財富流換課（降低現金成本）、折抵機制設計、嘉鴻合作交換——這些都是「槓桿思維」的具體落地。方向對，缺的是執行密度。
+      </li>
+      <li class="highlight">
+        <strong>最大未開採槓桿</strong>：Zeal + 小竹老師的推薦能量一直沒被主動請求。這不是因為師資不願意，而是「你需要主動開口」。最高槓桿往往要求一個主動動作，但常被遺漏。
+      </li>
+      <li class="strategy">
+        <strong>精準物件的核心問題</strong>：目前接觸策略仍偏「廣篩型」。真正精準的物件應該是：有事業轉型意圖 + 已有一定收入基礎 + 需要整合盤點。嘉鴻的財富流群體比 BNI 新人更接近這個輪廓。
+      </li>
+      <li>
+        <strong>自我察覺在提升</strong>：對話中佳雯多次自行識別問題（進度沒整理、曝光請求沒主動提），顯示覺察能力在進步——但覺察後的「立即行動」仍需加強。
+      </li>
+      <li class="strategy">
+        <strong>課程密度需要統一管理</strong>：7、9、11 月課程密度高，建議製作共享年度時間軸，讓所有師資即時對齊，避免撞期或遺漏。
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  MUSEON 智能整理 · 2026-06-05 · 本記錄依逐字稿前段（約 30 分鐘節錄）生成，完整對話需全文版補充
+</div>
+
+</body>
+</html>
