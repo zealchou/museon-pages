@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARES — 人的變化如何被看見</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --deep-ink: #0E0E16;
+    --border-dark: #2A2A38;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+    --info: #2A6A8A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--deep-ink);
+    color: #fff;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(196,80,42,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(42,122,110,0.12) 0%, transparent 50%);
+  }
+  .hero-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+  .hero-subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-meta {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--ember-light);
+  }
+  .hero-stat .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.08em;
+  }
+
+  /* Layout */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+
+  /* Sections */
+  .section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--slate);
+    max-width: 640px;
+    margin-bottom: 40px;
+  }
+
+  /* Layers Grid */
+  .layers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .layer-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .layer-card:hover {
+    border-color: var(--ember);
+    box-shadow: 0 4px 20px rgba(196,80,42,0.08);
+  }
+  .layer-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .layer-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .layer-desc { font-size: 13.5px; color: var(--slate); line-height: 1.7; }
+  .layer-tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .tag-static { background: rgba(42,106,138,0.1); color: var(--info); }
+  .tag-dynamic { background: rgba(196,80,42,0.1); color: var(--ember); }
+  .tag-evolving { background: rgba(184,146,58,0.12); color: var(--gold); }
+
+  /* Dark cards */
+  .dark-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 36px;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .dark-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .dark-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 24px;
+  }
+
+  /* EWMA bars */
+  .ewma-visual {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 80px;
+    margin-bottom: 12px;
+  }
+  .ewma-bar {
+    flex: 1;
+    border-radius: 4px 4px 0 0;
+    background: var(--ember);
+    opacity: 0.8;
+  }
+  .ewma-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    display: flex;
+    gap: 8px;
+  }
+  .ewma-label span { flex: 1; text-align: center; }
+
+  /* Confidence bars */
+  .confidence-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .conf-label { font-size: 13px; color: rgba(255,255,255,0.6); width: 100px; flex-shrink: 0; }
+  .conf-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .conf-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--teal), var(--ember-light)); }
+  .conf-val { font-size: 13px; color: rgba(255,255,255,0.8); width: 36px; text-align: right; flex-shrink: 0; }
+
+  /* Signal Flow */
+  .signal-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .signal-type {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .signal-icon { font-size: 24px; margin-bottom: 10px; }
+  .signal-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .signal-desc { font-size: 12px; color: var(--slate); }
+
+  /* Resolver */
+  .resolver-steps { display: flex; flex-direction: column; gap: 0; }
+  .resolver-step {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .resolver-step:last-child { border-bottom: none; }
+  .resolver-step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .num-a { background: rgba(196,80,42,0.12); color: var(--ember); }
+  .num-b { background: rgba(42,122,110,0.12); color: var(--teal); }
+  .num-c { background: rgba(184,146,58,0.12); color: var(--gold); }
+  .resolver-content h4 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .resolver-content p { font-size: 14px; color: var(--slate); }
+  .confidence-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .badge-high { background: rgba(45,138,110,0.12); color: var(--success); }
+  .badge-mid { background: rgba(201,148,58,0.12); color: var(--warning); }
+  .badge-low { background: rgba(152,152,168,0.12); color: var(--slate); }
+
+  /* CRM Stages */
+  .crm-stages {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .crm-stage {
+    flex: 1;
+    padding: 20px 12px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .crm-stage:last-child { border-right: none; }
+  .crm-stage.active { background: rgba(196,80,42,0.06); }
+  .crm-stage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    margin: 0 auto 8px;
+  }
+  .crm-stage.active .crm-stage-dot { background: var(--ember); }
+  .crm-stage-name { font-size: 12px; font-weight: 500; color: var(--slate); }
+  .crm-stage.active .crm-stage-name { color: var(--ember); }
+
+  /* Temperature row */
+  .temp-row { display: flex; gap: 12px; margin-bottom: 32px; }
+  .temp-card { flex: 1; border-radius: 10px; padding: 20px; text-align: center; }
+  .temp-new { background: rgba(152,152,168,0.12); }
+  .temp-cold { background: rgba(42,106,138,0.12); }
+  .temp-warm { background: rgba(201,148,58,0.12); }
+  .temp-hot { background: rgba(196,80,42,0.12); }
+  .temp-emoji { font-size: 24px; margin-bottom: 8px; }
+  .temp-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .temp-cond { font-size: 12px; color: var(--slate); margin-top: 4px; }
+
+  /* Integration Grid */
+  .integration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .integration-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .integration-card h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .integration-card p { font-size: 13px; color: var(--slate); line-height: 1.65; }
+  .integration-icon { font-size: 20px; margin-bottom: 12px; }
+
+  /* Highlight Box */
+  .highlight-box {
+    background: rgba(196,80,42,0.06);
+    border-left: 3px solid var(--ember);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .code-text {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    background: rgba(0,0,0,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--ember);
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--deep-ink);
+    color: rgba(255,255,255,0.35);
+    padding: 32px 40px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .footer span { color: var(--ember-light); }
+
+  @media (max-width: 600px) {
+    .layers-grid { grid-template-columns: 1fr; }
+    .signal-flow { grid-template-columns: repeat(2, 1fr); }
+    .integration-grid { grid-template-columns: 1fr; }
+    .temp-row { flex-wrap: wrap; }
+    .hero h1 { font-size: 36px; }
+    .hero-meta { flex-wrap: wrap; gap: 20px; }
+    .crm-stages { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">MUSEON · Athena Relationship Evolution System</div>
+  <h1>ARES —<br><em>人的變化如何被看見</em></h1>
+  <p class="hero-subtitle">不是 CRM，不是聯絡簿。是一套讓每一次互動都累積成洞見的人際智能引擎。</p>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <div class="num">163</div>
+      <div class="label">已建檔人物</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">10</div>
+      <div class="label">分析層</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">36</div>
+      <div class="label">人格軸向</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">EWMA</div>
+      <div class="label">動態演化演算法</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Section 1: What is ARES -->
+  <div class="section">
+    <div class="section-label">概念</div>
+    <h2 class="section-title">ARES 做一件事：把「一次對話」變成「長期理解」</h2>
+    <p class="section-desc">你跟一個人說過什麼、他答應過什麼、他在什麼情況下會有什麼反應——這些靠記憶，過了兩週就淡了。ARES 把這些變成結構化的活資料，並隨著每次互動自動更新。</p>
+
+    <div class="highlight-box">
+      跟其他 AI 工具的差異：ARES 記的不是「這次說了什麼」，而是「這個人在往哪個方向變化」。它追蹤的是<strong>趨勢與動量</strong>，不只是事件。
+    </div>
+  </div>
+
+  <!-- Section 2: 10 Layers -->
+  <div class="section">
+    <div class="section-label">資料架構</div>
+    <h2 class="section-title">10 層人物檔案</h2>
+    <p class="section-desc">每個人建檔後就有一個 10 層的結構等待被填入。有些層由你告訴系統，有些層由系統從互動中自動推算，有些層是 AI 隨時間演化的認知結果。</p>
+
+    <div class="layers-grid">
+      <div class="layer-card">
+        <div class="layer-num">L1</div>
+        <div class="layer-title">事實層 · Facts</div>
+        <div class="layer-desc">姓名、職稱、公司、產業、別名（如「符大哥」= Joh）。這是最基礎的 who。</div>
+        <span class="layer-tag tag-static">靜態</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L2</div>
+        <div class="layer-title">人格層 · Personality</div>
+        <div class="layer-desc">萬謬四軸分型（如「堅定實務者 PSRU」）+ 八原語驅力信號，附信心值與觀察來源記錄。</div>
+        <span class="layer-tag tag-dynamic">動態推算</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L3</div>
+        <div class="layer-title">能量層 · Energy</div>
+        <div class="layer-desc">OneMuse 人類圖解讀（內在/外在能量型態）。有讀則填，沒有則留空，不強制。</div>
+        <span class="layer-tag tag-static">靜態</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L4</div>
+        <div class="layer-title">互動環 · Interactions</div>
+        <div class="layer-desc">所有往來紀錄（通話/見面/訊息）+ 正負中性計數 + CRM 成交階段 + 下一步行動與截止日。</div>
+        <span class="layer-tag tag-dynamic">持續累積</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L5</div>
+        <div class="layer-title">槓桿層 · Leverage</div>
+        <div class="layer-desc">八大槓桿維度（通路/技術/資本/人脈/品牌/方法論/內容/時間）—— 他能換出什麼、需要什麼。這是 xmodel 槓桿交換的資料來源。</div>
+        <span class="layer-tag tag-dynamic">動態填充</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L6</div>
+        <div class="layer-title">溝通層 · Communication</div>
+        <div class="layer-desc">溝通風格、禁區話題、地雷議題、有效接觸方式、合作審計標準（他對品質的期待）。</div>
+        <span class="layer-tag tag-dynamic">動態</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L7</div>
+        <div class="layer-title">情境遮罩 · Context Masks</div>
+        <div class="layer-desc">同一個人在內部/商務/私人場合的行為差異，以及 DD 盡職調查的結果存放點。</div>
+        <span class="layer-tag tag-dynamic">動態</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L8</div>
+        <div class="layer-title">盲點閾值 · Blindspot Thresholds</div>
+        <div class="layer-desc">MUSEON 對這個人的認知清晰度——系統知道自己「對這個人了解多少」，保存最近 50 次校準歷史。讓 AI 的判斷有元認知。</div>
+        <span class="layer-tag tag-evolving">自我演化</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L9</div>
+        <div class="layer-title">DNA36 軸向 · RC Axis</div>
+        <div class="layer-desc">36 個人格軸向的個人化追蹤，每個軸有 EWMA 值、信心值、動量、來源分布。讓系統看見「這個人跟平均人格哪裡不同」。</div>
+        <span class="layer-tag tag-evolving">自我演化</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">L10</div>
+        <div class="layer-title">語氣特徵 · P-Trait</div>
+        <div class="layer-desc">P1–P6（溫度/直接度/主動度/深度/自主度/反思度）的個人化覆蓋值——讓 MUSEON 對不同人說不同風格的話。</div>
+        <span class="layer-tag tag-evolving">自我演化</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: How change is tracked -->
+  <div class="section">
+    <div class="section-label">核心機制</div>
+    <h2 class="section-title">變化怎麼被追蹤</h2>
+    <p class="section-desc">ARES 不是快照系統——它不只記「現在是什麼」，它追蹤「在往哪個方向走」。三種演化機制協同運作。</p>
+
+    <div class="dark-card">
+      <h3>① EWMA 指數加權移動平均</h3>
+      <p>每次新訊號進來，不直接覆蓋舊值，而是用加權平均讓變化平滑地發生。α=0.2 表示新訊號佔 20%、過去歷史佔 80%。一次爆衝不會改變整體評估，需要持續一致的行為才能移動指針。</p>
+
+      <div style="margin-bottom:8px; font-size:12px; color:rgba(255,255,255,0.35);">某人「執行力」軸向的 EWMA 變化曲線（模擬）</div>
+      <div class="ewma-visual">
+        <div class="ewma-bar" style="height:30%;"></div>
+        <div class="ewma-bar" style="height:38%;"></div>
+        <div class="ewma-bar" style="height:44%;"></div>
+        <div class="ewma-bar" style="height:41%;"></div>
+        <div class="ewma-bar" style="height:50%;"></div>
+        <div class="ewma-bar" style="height:57%;"></div>
+        <div class="ewma-bar" style="height:61%;"></div>
+        <div class="ewma-bar" style="height:67%;"></div>
+        <div class="ewma-bar" style="height:64%;"></div>
+        <div class="ewma-bar" style="height:72%;"></div>
+        <div class="ewma-bar" style="height:76%;"></div>
+        <div class="ewma-bar" style="height:80%;"></div>
+      </div>
+      <div class="ewma-label">
+        <span>初識</span><span></span><span></span><span>3個月</span><span></span><span></span><span></span><span>半年</span><span></span><span></span><span></span><span>一年</span>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>② 信心值成長模型</h3>
+      <p>每次觀察，對這個人某個特質的「信心」增加一點。公式：<strong style="color:var(--ember-light)">1 − (0.85 ^ 觀察次數)</strong>。早期增長快，之後趨於穩定——反映「越了解越不容易被驚喜」的現實。</p>
+
+      <div class="confidence-row">
+        <span class="conf-label">初次接觸</span>
+        <div class="conf-bar-wrap"><div class="conf-bar" style="width:14%;"></div></div>
+        <span class="conf-val">14%</span>
+      </div>
+      <div class="confidence-row">
+        <span class="conf-label">5 次互動</span>
+        <div class="conf-bar-wrap"><div class="conf-bar" style="width:56%;"></div></div>
+        <span class="conf-val">56%</span>
+      </div>
+      <div class="confidence-row">
+        <span class="conf-label">10 次互動</span>
+        <div class="conf-bar-wrap"><div class="conf-bar" style="width:80%;"></div></div>
+        <span class="conf-val">80%</span>
+      </div>
+      <div class="confidence-row">
+        <span class="conf-label">20 次互動</span>
+        <div class="conf-bar-wrap"><div class="conf-bar" style="width:96%;"></div></div>
+        <span class="conf-val">96%</span>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>③ 關係溫度感應</h3>
+      <p>根據互動頻率、情感正負向、時間衰減自動計算「溫度」，並追蹤趨勢（rising / stable / falling）。久未聯絡會自動降溫，提醒你關係有風險。</p>
+      <div style="display:flex; gap:12px;">
+        <div style="flex:1; background:rgba(152,152,168,0.15); border-radius:8px; padding:16px; text-align:center;">
+          <div style="font-size:20px; margin-bottom:6px;">🌱</div>
+          <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">new</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">剛建檔</div>
+        </div>
+        <div style="flex:1; background:rgba(42,106,138,0.2); border-radius:8px; padding:16px; text-align:center;">
+          <div style="font-size:20px; margin-bottom:6px;">❄️</div>
+          <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">cold</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">久未互動</div>
+        </div>
+        <div style="flex:1; background:rgba(201,148,58,0.2); border-radius:8px; padding:16px; text-align:center;">
+          <div style="font-size:20px; margin-bottom:6px;">🌤</div>
+          <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">warm</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">穩定往來</div>
+        </div>
+        <div style="flex:1; background:rgba(196,80,42,0.2); border-radius:8px; padding:16px; text-align:center;">
+          <div style="font-size:20px; margin-bottom:6px;">🔥</div>
+          <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">hot</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;">高頻正向</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Signals -->
+  <div class="section">
+    <div class="section-label">訊號系統</div>
+    <h2 class="section-title">從對話中自動偵測四種訊號</h2>
+    <p class="section-desc">每段對話不只是「對話」，ARES 會從中提取可行動的情報，並在適當時機主動提醒。</p>
+
+    <div class="signal-flow">
+      <div class="signal-type">
+        <div class="signal-icon">🤝</div>
+        <div class="signal-name">承諾</div>
+        <div class="signal-desc">「我會幫你…」「下次帶你去…」→ 存入待追蹤，時間到自動提醒</div>
+      </div>
+      <div class="signal-type">
+        <div class="signal-icon">🎯</div>
+        <div class="signal-name">機會</div>
+        <div class="signal-desc">透露需求或痛點 → 提醒你主動深入了解，別讓機會從指縫溜走</div>
+      </div>
+      <div class="signal-type">
+        <div class="signal-icon">⚡</div>
+        <div class="signal-name">風險</div>
+        <div class="signal-desc">情緒或關係出現不穩信號 → 建議主動關心，在問題爆發前介入</div>
+      </div>
+      <div class="signal-type">
+        <div class="signal-icon">🔭</div>
+        <div class="signal-name">觀察</div>
+        <div class="signal-desc">一般性行為模式更新 → 累積到 L9 軸向，讓人格圖像更完整</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: Resolver -->
+  <div class="section">
+    <div class="section-label">人物辨識</div>
+    <h2 class="section-title">三層身份解析：你說「符大哥」它知道是誰</h2>
+    <p class="section-desc">對話中提到一個名字或 @username，ARES 用三種方式依序嘗試找到對應的人物檔案，失敗率極低。</p>
+
+    <div class="resolver-steps">
+      <div class="resolver-step">
+        <div class="resolver-step-num num-a">A</div>
+        <div class="resolver-content">
+          <h4>Telegram UID 精準比對 <span class="confidence-badge badge-high">信心值 1.0</span></h4>
+          <p>從訊息 metadata 直接取出 Telegram 用戶 ID（7–12 位數字），查對照表。這是最確定的方式，不可能誤認任何人。</p>
+        </div>
+      </div>
+      <div class="resolver-step">
+        <div class="resolver-step-num num-b">B</div>
+        <div class="resolver-content">
+          <h4>@Username 查找 <span class="confidence-badge badge-mid">信心值 0.9</span></h4>
+          <p>從文字中抽取 @username，交叉比對外部使用者資料的 display_name，再映射到人物檔案 ID。</p>
+        </div>
+      </div>
+      <div class="resolver-step">
+        <div class="resolver-step-num num-c">C</div>
+        <div class="resolver-content">
+          <h4>模糊名稱匹配 <span class="confidence-badge badge-low">信心值 0.5–0.8</span></h4>
+          <p>中文 2–4 字姓名 / 英文首字大寫，用 <span class="code-text">SequenceMatcher</span> 比較相似度（閾值 0.55），同時掃 L1 的「別名」欄位——所以「符大哥」= Joh，「Feng」= 馮士維，系統都記得。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 6: CRM -->
+  <div class="section">
+    <div class="section-label">商業關係管理</div>
+    <h2 class="section-title">每個人都有一條清晰的「目前走到哪」</h2>
+    <p class="section-desc">L4 互動環內建 CRM 追蹤，記錄每段關係現在的階段，並設定下一步行動和截止日期。</p>
+
+    <div class="crm-stages">
+      <div class="crm-stage">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">初識</div>
+      </div>
+      <div class="crm-stage active">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">洽談中</div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">已報價</div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">成交</div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">長期客戶</div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">暫緩</div>
+      </div>
+      <div class="crm-stage">
+        <div class="crm-stage-dot"></div>
+        <div class="crm-stage-name">失聯</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>next_action + due date</strong>：每個人物都有「下一步要做什麼」和「截止日期」欄位。截止日到了，MUSEON 主動提醒——不讓重要關係因為你忘了跟進而自然冷掉。
+    </div>
+  </div>
+
+  <!-- Section 7: Integrations -->
+  <div class="section">
+    <div class="section-label">系統整合</div>
+    <h2 class="section-title">ARES 與其他模組的關係</h2>
+    <p class="section-desc">人物資料不是孤立的——它流進 MUSEON 每個需要「了解這個人」的決策環節。</p>
+
+    <div class="integration-grid">
+      <div class="integration-card">
+        <div class="integration-icon">🔄</div>
+        <h4>xmodel 槓桿交換</h4>
+        <p>從 L5 層抓「他能換出什麼 / 他需要什麼」，直接支撐槓桿交換分析，不靠你臨時回憶。</p>
+      </div>
+      <div class="integration-card">
+        <div class="integration-icon">🔍</div>
+        <h4>DD 盡職調查</h4>
+        <p>DD Skill 執行完的分析報告（商業/個人/合夥）自動存入 L7，風險訊號和建議行動一起歸檔。</p>
+      </div>
+      <div class="integration-card">
+        <div class="integration-icon">🗣</div>
+        <h4>語氣個人化</h4>
+        <p>L10 P-Trait 讓 MUSEON 對不同人說不同風格——跟 Feng 的直接度跟跟 Joh 的語氣可以完全不同。</p>
+      </div>
+      <div class="integration-card">
+        <div class="integration-icon">📡</div>
+        <h4>Telegram 自動同步</h4>
+        <p>群組成員第一次被提到，ExternalBridge 自動建立外部檔案並映射到 ARES 人物 ID，不需要手動建檔。</p>
+      </div>
+      <div class="integration-card">
+        <div class="integration-icon">🧬</div>
+        <h4>六大盲點守望</h4>
+        <p>L8 讓 MUSEON 知道自己對哪些人「信心不足」，在給建議時會主動標示不確定性，不假裝全知道。</p>
+      </div>
+      <div class="integration-card">
+        <div class="integration-icon">🕸</div>
+        <h4>關係拓撲圖</h4>
+        <p>connections 欄位記錄誰跟誰有關聯（同事/合夥/師徒），支撐群組動態分析和人脈路徑推算。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 8: Flow -->
+  <div class="section">
+    <div class="section-label">完整流程</div>
+    <h2 class="section-title">一段對話如何更新人物檔案</h2>
+    <p class="section-desc">從 Telegram 收到訊息，到 ARES 完成更新，幾乎在幾秒內完成。CPU Observer 是零 token 消耗的規則引擎。</p>
+
+    <div class="dark-card" style="padding:32px;">
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div style="background:rgba(196,80,42,0.3); border:1px solid var(--ember); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--ember-light); white-space:nowrap;">Telegram 訊息</div>
+          <div style="color:rgba(255,255,255,0.3); font-size:18px;">→</div>
+          <div style="background:var(--raised); border:1px solid var(--border-dark); border-radius:8px; padding:10px 16px; font-size:13px; color:rgba(255,255,255,0.7);">L1 主持人<br><span style="font-size:11px; color:rgba(255,255,255,0.35);">辨識訊號類型</span></div>
+          <div style="color:rgba(255,255,255,0.3); font-size:18px;">→</div>
+          <div style="background:var(--raised); border:1px solid var(--border-dark); border-radius:8px; padding:10px 16px; font-size:13px; color:rgba(255,255,255,0.7);">L4 CPU Observer<br><span style="font-size:11px; color:rgba(255,255,255,0.35);">&lt;10ms，零 token</span></div>
+        </div>
+
+        <div style="padding-left:40%; color:rgba(255,255,255,0.2); font-size:18px;">↓</div>
+
+        <div style="display:flex; gap:12px; padding-left:20%;">
+          <div style="background:var(--raised); border:1px solid var(--border-dark); border-radius:8px; padding:10px 16px; font-size:13px; color:rgba(255,255,255,0.7);">訊號分類<br><span style="font-size:11px; color:rgba(255,255,255,0.35);">承諾/機會/風險/觀察</span></div>
+          <div style="color:rgba(255,255,255,0.3); font-size:18px; display:flex; align-items:center;">→</div>
+          <div style="background:rgba(196,80,42,0.2); border:1px solid rgba(196,80,42,0.4); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--ember-light);">pending_signals.json<br><span style="font-size:11px; color:rgba(224,113,77,0.7);">訊號佇列</span></div>
+        </div>
+
+        <div style="padding-left:55%; color:rgba(255,255,255,0.2); font-size:18px;">↓</div>
+
+        <div style="display:flex; gap:12px; padding-left:35%;">
+          <div style="background:var(--raised); border:1px solid var(--border-dark); border-radius:8px; padding:10px 16px; font-size:13px; color:rgba(255,255,255,0.7);">Nightly / 即時觸發</div>
+          <div style="color:rgba(255,255,255,0.3); font-size:18px; display:flex; align-items:center;">→</div>
+          <div style="background:rgba(184,146,58,0.2); border:1px solid rgba(184,146,58,0.4); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--gold);">更新 L8/L9/L10<br><span style="font-size:11px; color:rgba(184,146,58,0.7);">EWMA 演化</span></div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:24px; padding:14px 16px; background:rgba(255,255,255,0.04); border-radius:8px; font-size:13px; color:rgba(255,255,255,0.45); border-left:2px solid rgba(255,255,255,0.1);">
+        L4 CPU Observer 是純規則引擎，不消耗任何 LLM token，執行時間 &lt;10ms。只有需要深度語意分析時，才觸發 L2 思考者（Sonnet/Opus）。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>ARES — Athena Relationship Evolution System &nbsp;·&nbsp; MUSEON 內部文件</p>
+  <p style="margin-top:8px;"><span>163 位人物</span> &nbsp;·&nbsp; 10 層分析 &nbsp;·&nbsp; 36 個 DNA 軸向 &nbsp;·&nbsp; 即時更新</p>
+  <p style="margin-top:8px; font-size:11px;">生成日期：2026-06-05 · MUSEON v2</p>
+</div>
+
+</body>
+</html>
