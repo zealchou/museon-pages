@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goku 訓練手冊 v1.0 — 李小龍體型計畫</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --mist: #9898A8;
+    --slate: #5A5A6E;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Georgia', 'Noto Serif TC', serif;
+    background: var(--deep-ink);
+    color: #E8E6DF;
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--deep-ink) 0%, #1a0a04 60%, #2a1008 100%);
+    border-bottom: 1px solid var(--border-dark);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(196,80,42,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+  .hero h1 { font-size: clamp(28px, 5vw, 48px); color: #FDFCFA; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .hero h1 span { color: var(--ember); }
+  .hero-sub { color: var(--mist); font-size: 14px; font-family: 'Helvetica Neue', sans-serif; margin-bottom: 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; font-family: 'Helvetica Neue', sans-serif; }
+  .hero-stat-num { font-size: 28px; font-weight: 700; color: var(--ember); display: block; line-height: 1; }
+  .hero-stat-label { font-size: 11px; color: var(--mist); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+  .section { padding: 32px 0 24px; border-bottom: 1px solid var(--border-dark); }
+  .section-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ember); font-family: 'Helvetica Neue', sans-serif; margin-bottom: 12px; }
+  .section-title { font-size: 22px; color: #FDFCFA; margin-bottom: 16px; font-weight: normal; }
+
+  .philosophy { background: var(--surface); border: 1px solid var(--border-dark); border-left: 3px solid var(--ember); border-radius: 8px; padding: 20px 24px; margin: 16px 0; }
+  .philosophy p { font-size: 15px; color: #C8C4BC; line-height: 1.8; }
+  .philosophy strong { color: var(--ember-light); }
+
+  .phases { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 600px) { .phases { grid-template-columns: 1fr; } }
+  .phase-card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 10px; padding: 18px; position: relative; overflow: hidden; }
+  .phase-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .phase-card.p1::after { background: var(--teal); }
+  .phase-card.p2::after { background: var(--gold); }
+  .phase-card.p3::after { background: var(--ember); }
+  .phase-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-family: 'Helvetica Neue', sans-serif; }
+  .phase-card.p1 .phase-num { color: var(--teal); }
+  .phase-card.p2 .phase-num { color: var(--gold); }
+  .phase-card.p3 .phase-num { color: var(--ember); }
+  .phase-name { font-size: 17px; color: #FDFCFA; margin-bottom: 8px; }
+  .phase-duration { font-size: 12px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; margin-bottom: 10px; }
+  .phase-desc { font-size: 13px; color: #A0A0B0; line-height: 1.6; font-family: 'Helvetica Neue', sans-serif; }
+
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 16px 0; }
+  @media (max-width: 600px) { .week-grid { grid-template-columns: 1fr 1fr; } }
+  .day-card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 10px 8px; text-align: center; }
+  .day-card.strength { border-top: 2px solid var(--ember); }
+  .day-card.cardio { border-top: 2px solid var(--teal); }
+  .day-card.recovery { border-top: 2px solid var(--gold); }
+  .day-card.rest { border-top: 2px solid var(--border-dark); opacity: 0.6; }
+  .day-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; margin-bottom: 4px; }
+  .day-theme { font-size: 12px; color: #FDFCFA; font-family: 'Helvetica Neue', sans-serif; font-weight: 600; margin-bottom: 4px; }
+  .day-detail { font-size: 10px; color: var(--slate); font-family: 'Helvetica Neue', sans-serif; line-height: 1.4; }
+
+  .workout-block { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 10px; margin: 12px 0; overflow: hidden; }
+  .workout-header { background: var(--raised); padding: 12px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-dark); }
+  .workout-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 2px 8px; border-radius: 12px; font-family: 'Helvetica Neue', sans-serif; font-weight: 600; }
+  .tag-strength { background: rgba(196,80,42,0.2); color: var(--ember-light); }
+  .tag-cardio { background: rgba(42,122,110,0.2); color: #3DB8A8; }
+  .tag-recovery { background: rgba(184,146,58,0.2); color: var(--gold); }
+  .workout-title { font-size: 15px; color: #FDFCFA; font-family: 'Helvetica Neue', sans-serif; font-weight: 600; }
+  .workout-duration { margin-left: auto; font-size: 12px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; }
+  .workout-body { padding: 16px 20px; }
+
+  .exercise-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .exercise-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 6px; border: 1px solid var(--border-dark); }
+  .ex-num { width: 22px; height: 22px; background: rgba(196,80,42,0.15); border: 1px solid rgba(196,80,42,0.3); color: var(--ember-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Helvetica Neue', sans-serif; font-weight: 700; flex-shrink: 0; }
+  .ex-name { font-size: 14px; color: #DDDAD2; font-family: 'Helvetica Neue', sans-serif; }
+  .ex-sets { font-size: 12px; color: var(--ember-light); font-family: 'Helvetica Neue', sans-serif; font-weight: 600; flex-shrink: 0; }
+  .ex-note { font-size: 11px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; margin-top: 2px; }
+  .ex-content { flex: 1; }
+
+  .steps-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .steps-list li { font-size: 13px; color: #A0A0B0; font-family: 'Helvetica Neue', sans-serif; padding-left: 14px; position: relative; }
+  .steps-list li::before { content: '·'; position: absolute; left: 0; color: var(--ember); }
+
+  .therapy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  @media (max-width: 500px) { .therapy-grid { grid-template-columns: 1fr; } }
+  .therapy-card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 16px; }
+  .therapy-card.hot { border-top: 2px solid #E06B2A; }
+  .therapy-card.cold { border-top: 2px solid #2A6AE0; }
+  .therapy-icon { font-size: 24px; margin-bottom: 8px; }
+  .therapy-title { font-size: 14px; font-family: 'Helvetica Neue', sans-serif; font-weight: 600; margin-bottom: 6px; }
+  .therapy-card.hot .therapy-title { color: #E8A070; }
+  .therapy-card.cold .therapy-title { color: #70A8E8; }
+  .therapy-detail { font-size: 12px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; line-height: 1.6; }
+
+  .therapy-protocol { background: var(--raised); border: 1px solid var(--border-dark); border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
+  .phase-mini { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; margin-bottom: 8px; }
+  .protocol-steps { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .protocol-step { display: flex; align-items: center; gap: 12px; font-size: 13px; font-family: 'Helvetica Neue', sans-serif; color: #B8B4AC; }
+  .step-badge { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .step-badge.h { background: rgba(224,107,42,0.2); color: #E08050; }
+  .step-badge.c { background: rgba(42,106,224,0.2); color: #70A8E8; }
+
+  .diet-plate { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+  .plate-segment { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 14px; flex: 1; min-width: 140px; }
+  .seg-pct { font-size: 28px; font-weight: 700; line-height: 1; font-family: 'Helvetica Neue', sans-serif; }
+  .plate-segment.protein .seg-pct { color: var(--ember); }
+  .plate-segment.veggie .seg-pct { color: var(--teal); }
+  .plate-segment.carb .seg-pct { color: var(--gold); }
+  .seg-label { font-size: 12px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; margin-top: 4px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .seg-examples { font-size: 12px; color: #A0A0B0; font-family: 'Helvetica Neue', sans-serif; line-height: 1.5; }
+
+  .track-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  @media (max-width: 500px) { .track-grid { grid-template-columns: 1fr; } }
+  .track-card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 16px; }
+  .track-title { font-size: 13px; color: #FDFCFA; font-family: 'Helvetica Neue', sans-serif; font-weight: 600; margin-bottom: 10px; }
+  .track-field { border-bottom: 1px dashed var(--border-dark); padding: 6px 0; font-size: 12px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; display: flex; justify-content: space-between; }
+  .field-blank { width: 80px; border-bottom: 1px solid rgba(255,255,255,0.1); display: inline-block; }
+
+  .role-card { background: linear-gradient(135deg, var(--surface) 0%, rgba(196,80,42,0.05) 100%); border: 1px solid rgba(196,80,42,0.2); border-radius: 10px; padding: 20px; margin: 12px 0; }
+  .role-header { font-size: 16px; color: #FDFCFA; margin-bottom: 12px; font-family: 'Helvetica Neue', sans-serif; font-weight: 600; }
+  .role-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .role-item { display: flex; gap: 12px; align-items: flex-start; }
+  .role-dot { width: 6px; height: 6px; background: var(--ember); border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+  .role-text { font-size: 13px; color: #B8B4AC; font-family: 'Helvetica Neue', sans-serif; line-height: 1.6; }
+  .role-text strong { color: #DDDAD2; }
+
+  .info-box { background: rgba(42,122,110,0.1); border: 1px solid rgba(42,122,110,0.25); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: #80C8BE; font-family: 'Helvetica Neue', sans-serif; line-height: 1.7; margin: 12px 0; }
+  .info-box strong { color: #3DB8A8; }
+
+  .footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border-dark); font-size: 12px; color: var(--mist); font-family: 'Helvetica Neue', sans-serif; }
+  .footer span { color: var(--ember); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">MUSEON × GOKU</div>
+  <h1>訓練手冊 <span>v1.0</span></h1>
+  <p class="hero-sub">李小龍體型計畫 — 纖細有力，不肥大</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="hero-stat-num">3</span><div class="hero-stat-label">演化階段</div></div>
+    <div class="hero-stat"><span class="hero-stat-num">4</span><div class="hero-stat-label">訓練日/週</div></div>
+    <div class="hero-stat"><span class="hero-stat-num">3</span><div class="hero-stat-label">恢復日/週</div></div>
+    <div class="hero-stat"><span class="hero-stat-num">∞</span><div class="hero-stat-label">溫冷泉療法</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-label">訓練哲學</div>
+    <div class="philosophy">
+      <p>李小龍的身材邏輯是<strong>「體脂低 + 功能性肌肉密度高」</strong>。肌肉肥大需要「高重量 + 熱量盈餘」，你不做這兩件事，肌肉就不會變粗。我們做的組合：<strong>高次數徒手訓練 + 有氧燃脂 + 溫冷泉加速恢復</strong>。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">三個演化階段</div>
+    <div class="phases">
+      <div class="phase-card p1">
+        <div class="phase-num">階段 1</div>
+        <div class="phase-name">降代謝脂肪</div>
+        <div class="phase-duration">第 1–8 週</div>
+        <div class="phase-desc">先把內臟脂肪和慢性發炎清掉。這是地基，跳過這步後面兩個都沒意義。</div>
+      </div>
+      <div class="phase-card p2">
+        <div class="phase-num">階段 2</div>
+        <div class="phase-name">建立肌肉密度</div>
+        <div class="phase-duration">第 9–20 週</div>
+        <div class="phase-desc">高次數徒手訓練建立功能性肌肉。感受收縮，不衝重量，不追求體積。</div>
+      </div>
+      <div class="phase-card p3">
+        <div class="phase-num">階段 3</div>
+        <div class="phase-name">體型收斂</div>
+        <div class="phase-duration">第 21 週起</div>
+        <div class="phase-desc">前兩個階段做對的副產品。體脂繼續降，線條自然浮現，不用單獨追。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">每週行程表</div>
+    <div class="week-grid">
+      <div class="day-card strength"><div class="day-name">週一</div><div class="day-theme">全身力量</div><div class="day-detail">45 min<br>徒手訓練</div></div>
+      <div class="day-card recovery"><div class="day-name">週二</div><div class="day-theme">主動恢復</div><div class="day-detail">溫冷泡<br>+ 拉伸</div></div>
+      <div class="day-card cardio"><div class="day-name">週三</div><div class="day-theme">有氧燃脂</div><div class="day-detail">30 min<br>間歇有氧</div></div>
+      <div class="day-card strength"><div class="day-name">週四</div><div class="day-theme">全身力量</div><div class="day-detail">45 min<br>漸進強度</div></div>
+      <div class="day-card recovery"><div class="day-name">週五</div><div class="day-theme">主動恢復</div><div class="day-detail">溫冷泡<br>+ 拉伸</div></div>
+      <div class="day-card cardio"><div class="day-name">週六</div><div class="day-theme">複合爆發</div><div class="day-detail">45 min<br>全身爆發</div></div>
+      <div class="day-card rest"><div class="day-name">週日</div><div class="day-theme">完全休息</div><div class="day-detail">不動<br>身體修復</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">訓練細節</div>
+    <div class="section-title">週一 / 週四｜全身力量 45 分鐘</div>
+
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-strength">熱身</span>
+        <div class="workout-title">啟動身體</div>
+        <div class="workout-duration">5 min</div>
+      </div>
+      <div class="workout-body">
+        <ul class="steps-list">
+          <li>原地踏步 1 分鐘</li>
+          <li>髖關節繞圈各 10 下</li>
+          <li>手臂繞圈各 10 下</li>
+          <li>深蹲蹲到底停 3 秒 × 5 下</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-strength">主訓練</span>
+        <div class="workout-title">3 組，組間休 60 秒</div>
+        <div class="workout-duration">35 min</div>
+      </div>
+      <div class="workout-body">
+        <ul class="exercise-list">
+          <li class="exercise-item">
+            <div class="ex-num">1</div>
+            <div class="ex-content">
+              <div class="ex-name">深蹲（徒手，高次數）</div>
+              <div class="ex-note">感受股四頭肌收縮，不追速度，蹲到大腿平行地面。</div>
+            </div>
+            <div class="ex-sets">20–25 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">2</div>
+            <div class="ex-content">
+              <div class="ex-name">伏地挺身（標準或寬距）</div>
+              <div class="ex-note">胸肌感受擠壓，慢降快推，不用速度換次數。</div>
+            </div>
+            <div class="ex-sets">12–15 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">3</div>
+            <div class="ex-content">
+              <div class="ex-name">弓箭步（分腿蹲）</div>
+              <div class="ex-note">每腳各做，臀部感受為主，膝蓋不超過腳尖。</div>
+            </div>
+            <div class="ex-sets">每腳 12 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">4</div>
+            <div class="ex-content">
+              <div class="ex-name">反向伏地挺身（桌面撐體）</div>
+              <div class="ex-note">練背部，補前後失衡，維持肩膀健康。</div>
+            </div>
+            <div class="ex-sets">12 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">5</div>
+            <div class="ex-content">
+              <div class="ex-name">棒式支撐</div>
+              <div class="ex-note">等長收縮，練肌肉密度不練體積，李小龍式核心。</div>
+            </div>
+            <div class="ex-sets">45 秒</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">6</div>
+            <div class="ex-content">
+              <div class="ex-name">側棒式（左右各一）</div>
+              <div class="ex-note">側腹和臀中肌，讓腰線收緊的關鍵動作。</div>
+            </div>
+            <div class="ex-sets">各 30 秒</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-recovery">收操</span>
+        <div class="workout-title">拉伸</div>
+        <div class="workout-duration">5 min</div>
+      </div>
+      <div class="workout-body">
+        <ul class="steps-list">
+          <li>股四頭肌拉伸各 30 秒</li>
+          <li>胸椎旋轉各 10 下</li>
+          <li>髖屈肌拉伸各 30 秒</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">週三｜有氧燃脂 30 分鐘</div>
+    <div class="info-box">
+      <strong>目標心率</strong>：最大心率的 65–75%<br>
+      粗算：(220 - 你的年齡) × 0.7 = 目標心跳/分鐘<br>
+      感受：有點喘，還能說話。
+    </div>
+
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-cardio">選項 A</span>
+        <div class="workout-title">高抬腿間歇（室內首選）</div>
+      </div>
+      <div class="workout-body">
+        <ul class="steps-list">
+          <li>高抬腿 30 秒（快速）+ 休息 30 秒</li>
+          <li>重複 15 輪 → 共 15 分鐘</li>
+          <li>最後 5 分鐘輕鬆踏步降心率</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-cardio">選項 B</span>
+        <div class="workout-title">跳繩間歇（時間效率最高）</div>
+      </div>
+      <div class="workout-body">
+        <ul class="steps-list">
+          <li>跳繩 1 分鐘 + 休息 1 分鐘，重複 10 輪</li>
+          <li>10 分鐘跳繩 ≈ 30 分鐘快走的卡路里消耗</li>
+          <li>體重較重時先用慢速跳，保護膝蓋</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">週六｜複合爆發 45 分鐘（4 輪，輪間休 2 分鐘）</div>
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-strength">4 輪</span>
+        <div class="workout-title">強度高於週一/四</div>
+      </div>
+      <div class="workout-body">
+        <ul class="exercise-list">
+          <li class="exercise-item">
+            <div class="ex-num">1</div>
+            <div class="ex-content">
+              <div class="ex-name">深蹲跳</div>
+              <div class="ex-note">蹲下慢，起跳爆發，落地膝蓋微彎緩衝。</div>
+            </div>
+            <div class="ex-sets">10 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">2</div>
+            <div class="ex-content">
+              <div class="ex-name">寬距伏地挺身</div>
+              <div class="ex-note">胸肌外側拉伸感受更強，有助線條展開。</div>
+            </div>
+            <div class="ex-sets">12 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">3</div>
+            <div class="ex-content">
+              <div class="ex-name">登山者式（快速）</div>
+              <div class="ex-note">有氧 + 核心同步加速燃脂。</div>
+            </div>
+            <div class="ex-sets">20 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">4</div>
+            <div class="ex-content">
+              <div class="ex-name">單腳硬舉</div>
+              <div class="ex-note">臀部 + 平衡，練臀線和核心穩定。</div>
+            </div>
+            <div class="ex-sets">每腳 8 下</div>
+          </li>
+          <li class="exercise-item">
+            <div class="ex-num">5</div>
+            <div class="ex-content">
+              <div class="ex-name">捲腹</div>
+              <div class="ex-note">起到感受腹肌即可，不傷頸椎。</div>
+            </div>
+            <div class="ex-sets">15 下</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">你的秘密武器</div>
+    <div class="section-title">週二 / 週五｜溫冷泉療法 30–40 分鐘</div>
+    <div class="info-box">
+      <strong>為什麼這是你的優勢</strong>：對比療法加速肌肉修復、降低發炎、提升睡眠。正確使用恢復速度縮短接近兩倍，等於間接讓訓練效果加倍。
+    </div>
+    <div class="therapy-grid">
+      <div class="therapy-card hot">
+        <div class="therapy-icon">♨️</div>
+        <div class="therapy-title">溫泉 — 擴張</div>
+        <div class="therapy-detail">溫度：38–42°C｜每次：8–10 分鐘<br>效果：肌肉放鬆、血流加速、廢物排除</div>
+      </div>
+      <div class="therapy-card cold">
+        <div class="therapy-icon">❄️</div>
+        <div class="therapy-title">冷泉 — 收縮</div>
+        <div class="therapy-detail">溫度：15–20°C｜每次：1–2 分鐘<br>效果：血管收縮、發炎物質清除、提神</div>
+      </div>
+    </div>
+    <div class="therapy-protocol">
+      <div class="phase-mini">完整療程（共 3 輪）</div>
+      <ul class="protocol-steps">
+        <li class="protocol-step"><span class="step-badge h">H</span>溫泉 8–10 分鐘</li>
+        <li class="protocol-step"><span class="step-badge c">C</span>冷泉 1–2 分鐘（第一次從 30 秒開始）</li>
+        <li class="protocol-step"><span class="step-badge h">H</span>溫泉 8 分鐘</li>
+        <li class="protocol-step"><span class="step-badge c">C</span>冷泉 1–2 分鐘</li>
+        <li class="protocol-step"><span class="step-badge h">H</span>溫泉 8 分鐘（同時做拉伸）</li>
+        <li class="protocol-step"><span class="step-badge c">C</span><strong>冷泉結束</strong> — 最後用冷，鎖住恢復效果</li>
+      </ul>
+    </div>
+    <div class="workout-block">
+      <div class="workout-header">
+        <span class="workout-tag tag-recovery">泡後拉伸</span>
+        <div class="workout-title">肌肉最軟，效果 3 倍</div>
+      </div>
+      <div class="workout-body">
+        <ul class="steps-list">
+          <li>大腿後側拉伸各 30 秒</li>
+          <li>胸肌拉伸 30 秒</li>
+          <li>腰方肌拉伸各 30 秒</li>
+          <li>肩頸拉伸各 20 秒</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">飲食策略</div>
+    <div class="section-title">不節食，調結構</div>
+    <div class="diet-plate">
+      <div class="plate-segment protein">
+        <div class="seg-pct">40%</div>
+        <div class="seg-label">蛋白質</div>
+        <div class="seg-examples">雞蛋、雞胸、豬里肌、豆腐、海鮮<br><em>先吃，飽足感高</em></div>
+      </div>
+      <div class="plate-segment veggie">
+        <div class="seg-pct">40%</div>
+        <div class="seg-label">蔬菜</div>
+        <div class="seg-examples">深綠色蔬菜、番茄、菇類<br><em>降發炎，第一階段關鍵</em></div>
+      </div>
+      <div class="plate-segment carb">
+        <div class="seg-pct">20%</div>
+        <div class="seg-label">澱粉（減半）</div>
+        <div class="seg-examples">糙米、地瓜優先<br><em>從盤子一半降到四分之一</em></div>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>訓練後 1 小時</strong>：蛋白質 + 少量澱粉，肌肉修復效率最高。<br>
+      <strong>外出時</strong>：點餐選蛋白質為主，白飯換蔬菜，肉類不減量。<br>
+      <strong>不需要蛋白粉</strong>：你的目標是功能性肌肉，正常飲食已足夠。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">追蹤系統</div>
+    <div class="section-title">每週回報給我</div>
+    <div class="track-grid">
+      <div class="track-card">
+        <div class="track-title">訓練完成度</div>
+        <div class="track-field"><span>週一完成</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>週三完成</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>週四完成</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>週六完成</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>溫冷泡次數</span><span class="field-blank"></span></div>
+      </div>
+      <div class="track-card">
+        <div class="track-title">身體感受（1–5）</div>
+        <div class="track-field"><span>整體精力</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>肌肉痠痛度</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>睡眠品質</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>訓練強度感受</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>體重（選填）</span><span class="field-blank"></span></div>
+      </div>
+      <div class="track-card">
+        <div class="track-title">飲食遵守</div>
+        <div class="track-field"><span>蛋白質先吃的天數</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>澱粉減半的天數</span><span class="field-blank"></span></div>
+        <div class="track-field"><span>外食挑戰次數</span><span class="field-blank"></span></div>
+      </div>
+      <div class="track-card">
+        <div class="track-title">本週卡點</div>
+        <div class="track-field" style="height:60px;align-items:flex-start;padding-top:8px;">
+          <span style="color:var(--mist);font-size:12px;">哪個動作做不好 / 哪天跳過 / 什麼原因</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">我的角色</div>
+    <div class="section-title">MUSEON 在這個計畫裡做什麼</div>
+    <div class="role-card">
+      <div class="role-header">你的訓練教練 + 計畫調整者</div>
+      <ul class="role-list">
+        <li class="role-item">
+          <div class="role-dot"></div>
+          <div class="role-text"><strong>每週回報後調整計畫</strong>——你告訴我哪裡卡、哪裡太輕鬆，我調整動作、組數或強度。計畫不是固定的，你的身體才是標準。</div>
+        </li>
+        <li class="role-item">
+          <div class="role-dot"></div>
+          <div class="role-text"><strong>動作疑問即時解答</strong>——某個動作哪裡感覺怪，tag 我描述，我給你修正方向。</div>
+        </li>
+        <li class="role-item">
+          <div class="role-dot"></div>
+          <div class="role-text"><strong>幫你判斷進度是否正常</strong>——4 週後告訴我感受，我評估你是否進入下一階段。不是時間到就升級，是身體準備好才升。</div>
+        </li>
+        <li class="role-item">
+          <div class="role-dot"></div>
+          <div class="role-text"><strong>我做不到的</strong>——沒辦法在你不 tag 我的情況下主動提醒你做訓練。你需要自己建立習慣觸發，我負責優化路徑。</div>
+        </li>
+      </ul>
+    </div>
+    <div class="info-box">
+      <strong>你的第一個行動</strong>：這週選一天跑週一的計畫，再泡一次溫冷泉。不用等全部準備好，先動起來——下週告訴我感受，我根據你的反饋更新這份手冊。
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  由 <span>MUSEON</span> 為 Goku 量身製作 · 2026-06-06 · v1.0
+</div>
+
+</body>
+</html>
