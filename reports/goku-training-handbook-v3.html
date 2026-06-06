@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goku 訓練手冊 v3.0 — 無腦版</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, '微軟正黑體', sans-serif;
+    background: #F7F5F0;
+    color: #12121A;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #C4502A 0%, #9A3A1C 100%);
+    color: white;
+    text-align: center;
+    padding: 50px 24px 40px;
+  }
+  .hero h1 { font-size: 2.2em; font-weight: 900; margin-bottom: 8px; }
+  .hero p { font-size: 1.1em; opacity: 0.9; }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 32px 20px; }
+
+  /* 大卡片 */
+  .big-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+  .big-card h2 {
+    font-size: 1.4em;
+    font-weight: 800;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* 三階段 */
+  .stage {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .stage-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+  .s1 .stage-num { background: #FEE2D5; color: #C4502A; }
+  .s2 .stage-num { background: #D1FAE5; color: #059669; }
+  .s3 .stage-num { background: #FEF3C7; color: #D97706; }
+  .stage-content h3 { font-size: 1.1em; font-weight: 800; margin-bottom: 4px; }
+  .stage-content p { color: #5A5A6E; font-size: 0.95em; }
+
+  /* 週計畫 */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .day-box {
+    border-radius: 12px;
+    padding: 12px 6px;
+    text-align: center;
+  }
+  .day-box .day-name { font-size: 0.75em; font-weight: 700; margin-bottom: 6px; }
+  .day-box .day-icon { font-size: 1.8em; margin-bottom: 4px; }
+  .day-box .day-label { font-size: 0.7em; color: #5A5A6E; }
+  .type-power { background: #FEE2D5; }
+  .type-recover { background: #D1FAE5; }
+  .type-cardio { background: #DBEAFE; }
+  .type-rest { background: #F3F4F6; }
+
+  /* 動作卡片 */
+  .move-list { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+  .move-card {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #F7F5F0;
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .move-fig {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .move-info h4 { font-size: 1em; font-weight: 800; margin-bottom: 4px; }
+  .move-info p { font-size: 0.88em; color: #5A5A6E; margin-bottom: 4px; }
+  .move-info .reps {
+    display: inline-block;
+    background: #C4502A;
+    color: white;
+    border-radius: 8px;
+    padding: 2px 10px;
+    font-size: 0.82em;
+    font-weight: 700;
+  }
+
+  /* 溫冷泉 */
+  .spa-steps { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .spa-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #F7F5F0;
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .spa-step .sp-icon { font-size: 2em; }
+  .spa-step .sp-text h4 { font-weight: 800; font-size: 0.95em; }
+  .spa-step .sp-text p { font-size: 0.85em; color: #5A5A6E; }
+  .spa-step .sp-time {
+    margin-left: auto;
+    background: #2A7A6E;
+    color: white;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.8em;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* 飲食 */
+  .plate {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .plate-item {
+    flex: 1;
+    min-width: 120px;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .plate-item .p-icon { font-size: 2em; margin-bottom: 6px; }
+  .plate-item .p-pct { font-size: 1.5em; font-weight: 900; }
+  .plate-item .p-name { font-size: 0.82em; color: #5A5A6E; }
+  .pi-protein { background: #FEE2D5; }
+  .pi-veg { background: #D1FAE5; }
+  .pi-carb { background: #FEF3C7; }
+
+  /* 追蹤 */
+  .track-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .track-table th, .track-table td {
+    border: 1px solid #E2E0DA;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.9em;
+  }
+  .track-table th { background: #F7F5F0; font-weight: 700; }
+
+  /* 規則 callout */
+  .rule-box {
+    border-left: 4px solid #C4502A;
+    background: #FEF9F7;
+    border-radius: 0 12px 12px 0;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .rule-box .rule-q { font-size: 0.85em; color: #C4502A; font-weight: 700; margin-bottom: 6px; }
+  .rule-box .rule-a { font-size: 0.95em; font-weight: 600; }
+
+  /* QA 區 */
+  .qa-box {
+    background: #DBEAFE;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+  .qa-box .q { font-weight: 800; font-size: 1em; margin-bottom: 8px; }
+  .qa-box .a { color: #1e40af; font-size: 0.93em; }
+
+  footer {
+    text-align: center;
+    color: #9898A8;
+    font-size: 0.82em;
+    padding: 40px 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Goku 訓練手冊</h1>
+  <p>無腦版 v3.0 · 養生 → 強身 → 好看體型</p>
+</div>
+
+<div class="container">
+
+  <!-- Q&A 先回答問題 -->
+  <div class="big-card">
+    <h2>❓ 你問的三個問題</h2>
+
+    <div class="qa-box">
+      <div class="q">溫冷泉可以每天泡嗎？</div>
+      <div class="a">✅ 可以，沒有限制。每天泡只有好處。唯一注意：心臟不好的人冷泉每次控制在 2 分鐘內。</div>
+    </div>
+
+    <div class="qa-box">
+      <div class="q">運動可以每天做嗎？</div>
+      <div class="a">看什麼運動：<br>
+      ✅ 走路、踏步、輕有氧 → 每天都可以<br>
+      ⚠️ 深蹲、伏地挺身等力量訓練 → 每兩天一次，中間要休息讓肌肉修復<br>
+      ✅ 溫冷泡 + 拉伸 → 每天都可以</div>
+    </div>
+
+    <div class="qa-box">
+      <div class="q">為什麼不用照片？</div>
+      <div class="a">照片有版權問題，我沒有合法的真實動作圖片可以用。要看真實動作，直接 YouTube 搜尋動作名稱（如「深蹲教學」「弓箭步示範」），有人做得比圖更清楚。</div>
+    </div>
+  </div>
+
+  <!-- 三階段 -->
+  <div class="big-card">
+    <h2>🗺️ 你的三個階段</h2>
+
+    <div class="stage s1">
+      <div class="stage-num">1</div>
+      <div class="stage-content">
+        <h3>養生（現在開始）</h3>
+        <p>讓身體不壞掉。睡好、吃對、讓代謝動起來。<br>這是地基，沒有這個，練再多都沒用。</p>
+      </div>
+    </div>
+
+    <div class="stage s2">
+      <div class="stage-num">2</div>
+      <div class="stage-content">
+        <h3>強身（3-4 個月後）</h3>
+        <p>開始讓身體有力量。不是長大塊肌肉，是讓每塊肌肉更有密度、更能用。</p>
+      </div>
+    </div>
+
+    <div class="stage s3">
+      <div class="stage-num">3</div>
+      <div class="stage-content">
+        <h3>好看體型（6 個月後自然出現）</h3>
+        <p>這個不用特別追。前兩個做對了，李小龍那種纖細有力的樣子自然就來。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 週計畫 -->
+  <div class="big-card">
+    <h2>📅 每週計畫一覽</h2>
+    <div class="week-grid">
+      <div class="day-box type-power">
+        <div class="day-name">週一</div>
+        <div class="day-icon">💪</div>
+        <div class="day-label">力量</div>
+      </div>
+      <div class="day-box type-recover">
+        <div class="day-name">週二</div>
+        <div class="day-icon">🛁</div>
+        <div class="day-label">溫冷泉</div>
+      </div>
+      <div class="day-box type-cardio">
+        <div class="day-name">週三</div>
+        <div class="day-icon">🏃</div>
+        <div class="day-label">有氧</div>
+      </div>
+      <div class="day-box type-power">
+        <div class="day-name">週四</div>
+        <div class="day-icon">💪</div>
+        <div class="day-label">力量</div>
+      </div>
+      <div class="day-box type-recover">
+        <div class="day-name">週五</div>
+        <div class="day-icon">🛁</div>
+        <div class="day-label">溫冷泉</div>
+      </div>
+      <div class="day-box type-cardio">
+        <div class="day-name">週六</div>
+        <div class="day-icon">🏃</div>
+        <div class="day-label">有氧</div>
+      </div>
+      <div class="day-box type-rest">
+        <div class="day-name">週日</div>
+        <div class="day-icon">😴</div>
+        <div class="day-label">休息</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 週一/四 力量 -->
+  <div class="big-card">
+    <h2>💪 週一 / 週四 — 力量訓練（45 分鐘）</h2>
+
+    <div class="rule-box">
+      <div class="rule-q">規則</div>
+      <div class="rule-a">每個動作做 3 輪，每輪之間休息 60 秒。感受肌肉，不是拚速度。</div>
+    </div>
+
+    <div class="move-list">
+
+      <div class="move-card">
+        <div class="move-fig">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <!-- 深蹲示意 -->
+            <circle cx="32" cy="10" r="7" fill="#C4502A"/>
+            <rect x="28" y="17" width="8" height="16" rx="4" fill="#9A3A1C"/>
+            <!-- 大腿 往兩側彎曲 -->
+            <line x1="32" y1="33" x2="18" y2="50" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="32" y1="33" x2="46" y2="50" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <!-- 小腿 垂直 -->
+            <line x1="18" y1="50" x2="18" y2="60" stroke="#9A3A1C" stroke-width="5" stroke-linecap="round"/>
+            <line x1="46" y1="50" x2="46" y2="60" stroke="#9A3A1C" stroke-width="5" stroke-linecap="round"/>
+            <!-- 手臂平伸 -->
+            <line x1="28" y1="25" x2="12" y2="35" stroke="#C4502A" stroke-width="4" stroke-linecap="round"/>
+            <line x1="36" y1="25" x2="52" y2="35" stroke="#C4502A" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="move-info">
+          <h4>深蹲</h4>
+          <p>雙腳打開與肩同寬，屁股往後坐下去，膝蓋不超過腳尖，然後站起來。</p>
+          <span class="reps">每輪 20 下</span>
+        </div>
+      </div>
+
+      <div class="move-card">
+        <div class="move-fig">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <!-- 伏地挺身 -->
+            <circle cx="12" cy="14" r="6" fill="#C4502A"/>
+            <rect x="8" y="20" width="48" height="7" rx="3.5" fill="#9A3A1C"/>
+            <line x1="10" y1="27" x2="6" y2="46" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="54" y1="27" x2="58" y2="46" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="6" y1="46" x2="6" y2="52" stroke="#9A3A1C" stroke-width="4" stroke-linecap="round"/>
+            <line x1="58" y1="46" x2="58" y2="52" stroke="#9A3A1C" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="move-info">
+          <h4>伏地挺身</h4>
+          <p>身體打直，雙手推地。第一次可以用膝蓋跪地的方式做，沒關係。</p>
+          <span class="reps">每輪 10 下</span>
+        </div>
+      </div>
+
+      <div class="move-card">
+        <div class="move-fig">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <!-- 弓箭步 -->
+            <circle cx="32" cy="8" r="6" fill="#C4502A"/>
+            <rect x="28" y="14" width="8" height="14" rx="4" fill="#9A3A1C"/>
+            <!-- 前腳 彎曲 -->
+            <line x1="32" y1="28" x2="20" y2="44" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="20" y1="44" x2="16" y2="58" stroke="#9A3A1C" stroke-width="4" stroke-linecap="round"/>
+            <!-- 後腳 往後伸 -->
+            <line x1="32" y1="28" x2="50" y2="44" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="50" y1="44" x2="54" y2="58" stroke="#9A3A1C" stroke-width="4" stroke-linecap="round"/>
+            <!-- 手 -->
+            <line x1="30" y1="22" x2="18" y2="30" stroke="#C4502A" stroke-width="3" stroke-linecap="round"/>
+            <line x1="34" y1="22" x2="46" y2="30" stroke="#C4502A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="move-info">
+          <h4>弓箭步（分腿蹲）</h4>
+          <p>一腳往前跨一大步，前膝彎曲蹲下，後膝快碰地，再站起來換腳。</p>
+          <span class="reps">每腳 10 下</span>
+        </div>
+      </div>
+
+      <div class="move-card">
+        <div class="move-fig">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <!-- 棒式 -->
+            <circle cx="8" cy="18" r="6" fill="#C4502A"/>
+            <rect x="8" y="24" width="48" height="7" rx="3.5" fill="#9A3A1C"/>
+            <line x1="10" y1="31" x2="10" y2="50" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="54" y1="31" x2="54" y2="50" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <!-- 腳趾 -->
+            <ellipse cx="10" cy="52" rx="5" ry="3" fill="#9A3A1C"/>
+            <ellipse cx="54" cy="52" rx="5" ry="3" fill="#9A3A1C"/>
+          </svg>
+        </div>
+        <div class="move-info">
+          <h4>棒式（平板支撐）</h4>
+          <p>用手肘和腳尖撐地，身體像一塊木板，維持這個姿勢不動。</p>
+          <span class="reps">每輪 30 秒</span>
+        </div>
+      </div>
+
+      <div class="move-card">
+        <div class="move-fig">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <!-- 捲腹 -->
+            <circle cx="32" cy="10" r="6" fill="#C4502A"/>
+            <!-- 上半身彎起來 -->
+            <path d="M 32 16 Q 32 30 32 36" stroke="#9A3A1C" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <!-- 腿 水平 -->
+            <line x1="32" y1="36" x2="12" y2="48" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="32" y1="36" x2="52" y2="48" stroke="#C4502A" stroke-width="5" stroke-linecap="round"/>
+            <line x1="12" y1="48" x2="8" y2="58" stroke="#9A3A1C" stroke-width="4" stroke-linecap="round"/>
+            <line x1="52" y1="48" x2="56" y2="58" stroke="#9A3A1C" stroke-width="4" stroke-linecap="round"/>
+            <!-- 手 -->
+            <line x1="30" y1="22" x2="20" y2="18" stroke="#C4502A" stroke-width="3" stroke-linecap="round"/>
+            <line x1="34" y1="22" x2="44" y2="18" stroke="#C4502A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="move-info">
+          <h4>捲腹</h4>
+          <p>躺下，膝蓋彎曲，用肚子的力量把肩膀抬離地面，不是拉脖子。</p>
+          <span class="reps">每輪 15 下</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 週三/六 有氧 -->
+  <div class="big-card">
+    <h2>🏃 週三 / 週六 — 有氧（30 分鐘）</h2>
+
+    <div class="rule-box">
+      <div class="rule-q">規則</div>
+      <div class="rule-a">選一個，做 30 分鐘。可以邊看影片邊做，不需要很喘，微微出汗就對了。</div>
+    </div>
+
+    <div class="move-list">
+      <div class="move-card">
+        <div class="move-fig" style="font-size:2.5em; background:#DBEAFE;">🦵</div>
+        <div class="move-info">
+          <h4>原地高抬腿</h4>
+          <p>站著，原地跑步，膝蓋抬到腰部高度。速度不用快，維持節奏就好。</p>
+          <span class="reps">30秒動 / 30秒休 × 15輪</span>
+        </div>
+      </div>
+      <div class="move-card">
+        <div class="move-fig" style="font-size:2.5em; background:#DBEAFE;">🪢</div>
+        <div class="move-info">
+          <h4>跳繩（有空間的話）</h4>
+          <p>跳 1 分鐘，休 1 分鐘，共 15 輪。10 分鐘效果等於走路 30 分鐘。</p>
+          <span class="reps">1分跳 / 1分休 × 15輪</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 溫冷泉 -->
+  <div class="big-card">
+    <h2>🛁 週二 / 週五 — 溫冷泉療程</h2>
+
+    <div class="rule-box">
+      <div class="rule-q">為什麼做這個？</div>
+      <div class="rule-a">溫泉讓肌肉放鬆，冷泉讓身體排掉訓練產生的廢物。兩個交替，恢復速度快兩倍。</div>
+    </div>
+
+    <div class="spa-steps">
+      <div class="spa-step">
+        <div class="sp-icon">🌡️</div>
+        <div class="sp-text">
+          <h4>泡溫泉</h4>
+          <p>讓肌肉完全放鬆，血液循環加快</p>
+        </div>
+        <div class="sp-time">10 分鐘</div>
+      </div>
+      <div class="spa-step">
+        <div class="sp-icon">❄️</div>
+        <div class="sp-text">
+          <h4>進冷泉</h4>
+          <p>血管收縮，把發炎物質沖走。會不舒服，正常的。</p>
+        </div>
+        <div class="sp-time">1-2 分鐘</div>
+      </div>
+      <div class="spa-step">
+        <div class="sp-icon">🔄</div>
+        <div class="sp-text">
+          <h4>重複 2-3 輪</h4>
+          <p>溫 → 冷 → 溫 → 冷，最後用冷泉結束</p>
+        </div>
+        <div class="sp-time">共 30-40 分鐘</div>
+      </div>
+      <div class="spa-step">
+        <div class="sp-icon">🧘</div>
+        <div class="sp-text">
+          <h4>泡完做拉伸</h4>
+          <p>身體還熱的時候拉伸效果最好，比平常好 3 倍</p>
+        </div>
+        <div class="sp-time">10 分鐘</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 飲食 -->
+  <div class="big-card">
+    <h2>🍽️ 每餐怎麼吃（不節食，調比例）</h2>
+
+    <div class="plate">
+      <div class="plate-item pi-protein">
+        <div class="p-icon">🥩</div>
+        <div class="p-pct">40%</div>
+        <div class="p-name">蛋白質<br>雞蛋、肉、豆腐</div>
+      </div>
+      <div class="plate-item pi-veg">
+        <div class="p-icon">🥦</div>
+        <div class="p-pct">40%</div>
+        <div class="p-name">蔬菜<br>任何都行</div>
+      </div>
+      <div class="plate-item pi-carb">
+        <div class="p-icon">🍚</div>
+        <div class="p-pct">20%</div>
+        <div class="p-name">澱粉<br>少一點，不是不吃</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="rule-box">
+        <div class="rule-q">最重要的一件事</div>
+        <div class="rule-a">訓練完 1 小時內吃東西。這個時間點吃，身體優先拿去修肌肉，不是存脂肪。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 追蹤 -->
+  <div class="big-card">
+    <h2>📊 每週追蹤（tag 我回報就好）</h2>
+    <table class="track-table">
+      <tr>
+        <th>項目</th>
+        <th>第 1 週</th>
+        <th>第 2 週</th>
+        <th>第 3 週</th>
+        <th>第 4 週</th>
+      </tr>
+      <tr>
+        <td>深蹲幾下不累</td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td>棒式撐幾秒</td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td>有氧做完的感覺（輕鬆/OK/很喘）</td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td>這週最難堅持的是什麼</td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+    </table>
+    <p style="font-size:0.85em; color:#5A5A6E; margin-top:12px;">每週 tag 我告訴我這四個，我根據你的狀況調整下週計畫。</p>
+  </div>
+
+</div>
+
+<footer>
+  Goku 專屬訓練手冊 v3.0 · 由 MUSEON 製作 · 2026-06-06
+</footer>
+
+</body>
+</html>
