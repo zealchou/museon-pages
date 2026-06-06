@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goku 訓練手冊 v12.0</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', Arial, 'PingFang TC', sans-serif;
+    background: #F8F8F8;
+    color: #222;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #FF5722;
+    color: #fff;
+    text-align: center;
+    padding: 32px 20px 24px;
+  }
+  .header h1 { font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+  .header p { font-size: 13px; opacity: 0.85; margin-top: 5px; }
+
+  /* ── TAB SWITCHER ── */
+  .tab-bar {
+    display: flex;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px 16px 0;
+    gap: 8px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: 2px solid #E0E0E0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    border-color: #FF5722;
+    background: #FF5722;
+    color: #fff;
+  }
+
+  /* ── WEEK GRID ── */
+  .week-section {
+    padding: 24px 16px 8px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #FF5722;
+    margin-bottom: 14px;
+  }
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+  .day-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+  .day-box .day-name { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .day-box .day-icon { font-size: 22px; margin: 4px 0; }
+  .day-box .day-label { font-size: 11px; font-weight: 700; }
+  .day-strength { border-color: #FF5722; background: #FFF5F2; }
+  .day-strength .day-label { color: #FF5722; }
+  .day-recover { border-color: #4CAF50; background: #F2FFF2; }
+  .day-recover .day-label { color: #2E7D32; }
+  .day-cardio { border-color: #2196F3; background: #F0F8FF; }
+  .day-cardio .day-label { color: #1565C0; }
+  .day-stretch { border-color: #9C27B0; background: #F9F0FF; }
+  .day-stretch .day-label { color: #6A1B9A; }
+  .day-rest { border-color: #E0E0E0; background: #FAFAFA; }
+  .day-rest .day-label { color: #999; }
+
+  /* ── EXERCISES ── */
+  .exercises-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  .ex-group-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 28px 0 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .group-strength { background: #FFF0EB; color: #D84315; }
+  .group-cardio   { background: #E3F2FD; color: #0D47A1; }
+  .group-recover  { background: #E8F5E9; color: #1B5E20; }
+  .group-stretch  { background: #F3E5F5; color: #4A148C; }
+
+  .exercise-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: stretch;
+  }
+  .ex-illustration {
+    width: 120px;
+    min-width: 120px;
+    background: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .ex-illustration svg { width: 90px; height: 90px; flex-shrink: 0; }
+
+  .svg-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+  }
+  .photo-view {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  /* photo mode */
+  body.photo-mode .svg-view { display: none; }
+  body.photo-mode .photo-view { display: block; }
+
+  .ex-content {
+    flex: 1;
+    padding: 14px 16px;
+  }
+  .ex-name { font-size: 16px; font-weight: 800; color: #222; margin-bottom: 4px; }
+  .ex-sets { display: inline-block; background: #FF5722; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-bottom: 8px; }
+  .ex-sets.cardio-badge { background: #1976D2; }
+  .ex-sets.recover-badge { background: #388E3C; }
+  .ex-sets.stretch-badge { background: #7B1FA2; }
+  .ex-sets.dynamic-badge { background: #E65100; }
+  .ex-tip { font-size: 13px; color: #555; }
+  .ex-tip span { font-weight: 700; color: #FF5722; }
+  .ex-tip span.purple { color: #7B1FA2; }
+
+  /* ── SPRING ── */
+  .spring-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .spring-steps {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .spring-step {
+    text-align: center;
+    background: #F5F5F5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    min-width: 80px;
+  }
+  .spring-step .step-icon { font-size: 26px; }
+  .spring-step .step-time { font-size: 14px; font-weight: 800; color: #FF5722; margin: 4px 0 2px; }
+  .spring-step .step-time.purple { color: #7B1FA2; }
+  .spring-step .step-label { font-size: 11px; color: #666; }
+  .spring-arrow { font-size: 20px; color: #ccc; }
+  .spring-note { font-size: 12px; color: #888; text-align: center; margin-top: 10px; }
+
+  /* ── FLOW PROTOCOL ── */
+  .flow-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .flow-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #222;
+    margin-bottom: 6px;
+  }
+  .flow-subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 16px;
+  }
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .num-hot { background: #FF5722; color: #fff; }
+  .num-purple { background: #7B1FA2; color: #fff; }
+  .num-cold { background: #1976D2; color: #fff; }
+  .num-alt { background: #E65100; color: #fff; }
+  .num-end { background: #388E3C; color: #fff; }
+  .flow-desc { flex: 1; }
+  .flow-desc strong { font-size: 14px; font-weight: 800; color: #222; display: block; margin-bottom: 2px; }
+  .flow-desc span { font-size: 12px; color: #666; }
+  .flow-desc .window-tag {
+    display: inline-block;
+    background: #FFF3E0;
+    border: 1px solid #FFB300;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #E65100;
+    margin-top: 4px;
+  }
+  .flow-duration {
+    font-size: 13px;
+    font-weight: 700;
+    color: #FF5722;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+
+  /* Plan B box */
+  .plan-b-box {
+    background: #E8F5E9;
+    border: 1.5px dashed #4CAF50;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: #1B5E20;
+  }
+  .plan-b-box strong { font-size: 13px; display: block; margin-bottom: 4px; color: #2E7D32; }
+
+  /* Recovery indicator */
+  .recovery-check {
+    background: #E3F2FD;
+    border-left: 4px solid #1976D2;
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: #0D47A1;
+  }
+  .recovery-check strong { display: block; margin-bottom: 6px; font-size: 14px; }
+
+  .info-box {
+    background: #F3E5F5;
+    border-left: 4px solid #7B1FA2;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #4A148C;
+    line-height: 1.6;
+  }
+  .info-box strong { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  .dynamic-list {
+    background: #FFF8E1;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .dynamic-list .list-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #E65100;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .dynamic-list .list-note {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #FFE082;
+  }
+  .dynamic-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  .dynamic-list ul li {
+    font-size: 13px;
+    color: #555;
+    padding: 4px 0;
+    border-bottom: 1px solid #FFE082;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .dynamic-list ul li:last-child { border-bottom: none; }
+  .dynamic-list ul li::before { content: "▶"; font-size: 9px; color: #E65100; flex-shrink: 0; }
+
+  /* ── DIET ── */
+  .diet-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8px 16px 24px;
+  }
+  .diet-principle {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .diet-principle .prin-title {
+    font-size: 14px; font-weight: 800; color: #222; margin-bottom: 8px;
+  }
+  .diet-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #F5F5F5;
+    font-size: 13px;
+    color: #444;
+  }
+  .diet-rule:last-child { border-bottom: none; }
+  .diet-rule .rule-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #FF5722; flex-shrink: 0; margin-top: 4px;
+  }
+  .diet-rule .rule-dot.green { background: #388E3C; }
+  .diet-rule .rule-dot.blue { background: #1976D2; }
+  .diet-rule .rule-dot.red { background: #C62828; }
+  .meal-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    overflow: hidden;
+  }
+  .meal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #FFF5F2;
+    border-bottom: 1px solid #FFE0D8;
+  }
+  .meal-icon { font-size: 24px; }
+  .meal-time { font-size: 12px; color: #888; }
+  .meal-name { font-size: 15px; font-weight: 800; color: #D84315; }
+  .meal-body { padding: 12px 16px; font-size: 13px; color: #555; line-height: 1.7; }
+  .meal-body strong { color: #D84315; }
+  .meal-note {
+    font-size: 12px; color: #888; background: #F5F5F5;
+    padding: 8px 16px; border-top: 1px solid #EEEEEE;
+  }
+
+  /* ── SCHEDULE ── */
+  .schedule-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8px 16px 24px;
+  }
+  .sched-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    overflow: hidden;
+  }
+  .sched-header {
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .sched-header.strength-day { background: #FF5722; }
+  .sched-header.stretch-day { background: #7B1FA2; }
+  .sched-header.cardio-day { background: #1976D2; }
+  .sched-header.rest-day { background: #546E7A; }
+  .sched-header .day-sub { font-size: 12px; opacity: 0.85; font-weight: 400; margin-top: 2px; }
+  .sched-timeline {
+    padding: 8px 16px 16px;
+  }
+  .sched-item {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F5F5F5;
+    align-items: flex-start;
+  }
+  .sched-item:last-child { border-bottom: none; }
+  .sched-time {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FF5722;
+    min-width: 64px;
+    padding-top: 2px;
+  }
+  .sched-time.purple { color: #7B1FA2; }
+  .sched-time.blue { color: #1976D2; }
+  .sched-time.gray { color: #888; }
+  .sched-desc strong { font-size: 13px; font-weight: 800; color: #222; display: block; margin-bottom: 2px; }
+  .sched-desc span { font-size: 12px; color: #666; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 28px 16px;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  @media (max-width: 480px) {
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+    .ex-illustration { width: 90px; min-width: 90px; }
+    .flow-step { gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Goku 訓練手冊</h1>
+  <p>李小龍體型計畫 · 階段一：降脂強身 · 含飲食 + 全週日程規劃 v11</p>
+</div>
+
+<!-- TAB SWITCHER -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="setMode('svg', this)">✏️ 手繪版</button>
+  <button class="tab-btn" onclick="setMode('photo', this)">📷 照片版</button>
+</div>
+
+<!-- WEEK OVERVIEW -->
+<div class="week-section">
+  <div class="section-title">每週計畫</div>
+  <div class="week-grid">
+    <div class="day-box day-strength">
+      <div class="day-name">週一</div>
+      <div class="day-icon">💪</div>
+      <div class="day-label">力量訓練</div>
+    </div>
+    <div class="day-box day-stretch">
+      <div class="day-name">週二</div>
+      <div class="day-icon">🧘</div>
+      <div class="day-label">拉伸+溫冷泉</div>
+    </div>
+    <div class="day-box day-cardio">
+      <div class="day-name">週三</div>
+      <div class="day-icon">🔥</div>
+      <div class="day-label">有氧燃脂</div>
+    </div>
+    <div class="day-box day-strength">
+      <div class="day-name">週四</div>
+      <div class="day-icon">💪</div>
+      <div class="day-label">力量訓練</div>
+    </div>
+    <div class="day-box day-stretch">
+      <div class="day-name">週五</div>
+      <div class="day-icon">🧘</div>
+      <div class="day-label">拉伸+溫冷泉</div>
+    </div>
+    <div class="day-box day-cardio">
+      <div class="day-name">週六</div>
+      <div class="day-icon">🔥</div>
+      <div class="day-label">有氧燃脂</div>
+    </div>
+    <div class="day-box day-rest">
+      <div class="day-name">週日</div>
+      <div class="day-icon">😴</div>
+      <div class="day-label">完全休息</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXERCISES -->
+<div class="exercises-section">
+
+  <!-- ──────────── DYNAMIC STRETCH (every training day) ──────────── -->
+  <div class="ex-group-title group-stretch">🔆 每次訓練前｜動態暖身拉伸</div>
+
+  <div class="info-box">
+    <strong>動態 vs 靜態：做錯時間等於沒做</strong>
+    訓練前做動態拉伸（流動、不停留）→ 暖身、預防受傷。<br>
+    訓練後做靜態拉伸（停留 30–60 秒）→ 恢復、增加柔韌度。<br>
+    順序反過來效果減半。
+  </div>
+
+  <div class="dynamic-list">
+    <div class="list-title">動態暖身清單（整組最少 8 分鐘，每個做 10 下）</div>
+    <div class="list-note">⏱️ 最低標準：整組 8 分鐘——90 秒做完就繼續下一組，算作弊。慢慢做，讓關節真正暖開。</div>
+    <ul>
+      <li>腿擺動（前後）×10 下，每腳 — 鬆開髖屈肌</li>
+      <li>腿擺動（左右）×10 下，每腳 — 鬆開內收肌</li>
+      <li>髖關節繞圈 ×10 圈，每側 — 暖開骨盆</li>
+      <li>手臂大繞圈 ×10 下 — 暖肩膀</li>
+      <li>貓牛式 ×10 下 — 活動脊椎、腰不緊</li>
+      <li>深蹲蹲到底停 3 秒再起 ×8 下 — 打開髖關節深層</li>
+    </ul>
+  </div>
+
+  <!-- ──────────── STRENGTH ──────────── -->
+  <div class="ex-group-title group-strength">💪 週一 / 週四｜力量訓練（45 分鐘）</div>
+
+  <!-- SQUAT -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="12" r="7" fill="#555"/>
+          <line x1="45" y1="19" x2="45" y2="42" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="26" x2="25" y2="34" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="26" x2="65" y2="34" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="42" x2="30" y2="62" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="42" x2="60" y2="62" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="30" y1="62" x2="22" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="62" x2="68" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="45" y="50" text-anchor="middle" fill="#FF5722" font-size="13" font-weight="bold">↓</text>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/5327530/pexels-photo-5327530.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="深蹲" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">深蹲</div>
+      <div class="ex-sets">3 組 × 20 下</div>
+      <div class="ex-tip">雙腳與肩同寬，蹲到大腿平行地面。<span>感受大腿前側用力</span>，不要駝背。</div>
+    </div>
+  </div>
+
+  <!-- PUSH UP -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="72" cy="26" r="7" fill="#555"/>
+          <line x1="65" y1="31" x2="18" y2="50" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="55" y1="36" x2="52" y2="55" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="52" y1="55" x2="44" y2="60" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="22" y1="50" x2="16" y2="66" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="66" x2="10" y2="72" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="78" y="20" fill="#FF5722" font-size="11" font-weight="bold">↑</text>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/4162491/pexels-photo-4162491.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="伏地挺身" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">伏地挺身</div>
+      <div class="ex-sets">3 組 × 12 下</div>
+      <div class="ex-tip">撐起時手臂不要鎖死，維持<span>身體一直線</span>。做不了就跪姿開始。</div>
+    </div>
+  </div>
+
+  <!-- LUNGE -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="10" r="7" fill="#555"/>
+          <line x1="50" y1="17" x2="50" y2="40" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="28" x2="35" y2="36" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="50" y1="28" x2="65" y2="36" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="50" y1="40" x2="64" y2="56" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="64" y1="56" x2="70" y2="76" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="40" x2="36" y2="52" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="36" y1="52" x2="28" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="36" cy="78" r="3" fill="#FF5722" opacity="0.5"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/7500320/pexels-photo-7500320.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="弓箭步" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">弓箭步</div>
+      <div class="ex-sets">3 組 × 每腳 10 下</div>
+      <div class="ex-tip">前腳踩穩，後膝輕碰地面。<span>上身保持直立</span>，不要前傾。</div>
+    </div>
+  </div>
+
+  <!-- PLANK -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="74" cy="34" r="7" fill="#555"/>
+          <line x1="67" y1="39" x2="14" y2="52" stroke="#555" stroke-width="4" stroke-linecap="round"/>
+          <line x1="60" y1="42" x2="56" y2="57" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="56" y1="57" x2="46" y2="60" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="14" y1="52" x2="10" y2="62" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="73" y1="32" x2="12" y2="47" stroke="#FF5722" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/14074802/pexels-photo-14074802.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="棒式" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">棒式支撐</div>
+      <div class="ex-sets">3 組 × 30 秒</div>
+      <div class="ex-tip">手肘在肩膀正下方，<span>臀部不能翹起也不能下沉</span>，像一塊木板。</div>
+    </div>
+  </div>
+
+  <!-- REVERSE ROW -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="28" width="80" height="5" rx="2" fill="#CCC"/>
+          <circle cx="28" cy="30" r="5" fill="#FF5722"/>
+          <circle cx="62" cy="30" r="5" fill="#FF5722"/>
+          <circle cx="45" cy="50" r="7" fill="#555"/>
+          <line x1="28" y1="30" x2="36" y2="46" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="62" y1="30" x2="54" y2="46" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="57" x2="45" y2="74" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="74" x2="35" y2="85" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="74" x2="55" y2="85" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/1865131/pexels-photo-1865131.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="反向划船" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">反向划船（練背）</div>
+      <div class="ex-sets">3 組 × 10 下</div>
+      <div class="ex-tip">抓住桌邊或門框，身體斜掛，<span>把胸口拉向桌面</span>。感受背部夾緊。</div>
+    </div>
+  </div>
+
+  <!-- ──────────── CARDIO ──────────── -->
+  <div class="ex-group-title group-cardio">🔥 週三 / 週六｜有氧燃脂（30 分鐘）</div>
+
+  <!-- JUMP ROPE -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="10" r="7" fill="#555"/>
+          <line x1="45" y1="17" x2="45" y2="40" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="26" x2="20" y2="34" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="26" x2="70" y2="34" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <path d="M20 38 Q45 70 70 38" stroke="#FF5722" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <line x1="45" y1="40" x2="36" y2="56" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="40" x2="54" y2="56" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="36" y1="56" x2="33" y2="68" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="54" y1="56" x2="57" y2="68" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/8691690/pexels-photo-8691690.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="跳繩" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">跳繩間歇</div>
+      <div class="ex-sets cardio-badge">跳 1 分鐘 × 15 輪</div>
+      <div class="ex-tip">跳 1 分鐘→休 1 分鐘，共 30 分鐘。沒有跳繩→改<span>原地高抬腿</span>。</div>
+    </div>
+  </div>
+
+  <!-- HIGH KNEES -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="10" r="7" fill="#555"/>
+          <line x1="45" y1="17" x2="45" y2="42" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="26" x2="25" y2="20" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="26" x2="65" y2="34" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="42" x2="36" y2="58" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="36" y1="58" x2="32" y2="50" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="42" x2="52" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="52" y1="60" x2="56" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="36" cy="58" r="6" fill="none" stroke="#1976D2" stroke-width="2"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/7298411/pexels-photo-7298411.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="高抬腿" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">原地高抬腿</div>
+      <div class="ex-sets cardio-badge">30 秒動 / 30 秒休 × 20 輪</div>
+      <div class="ex-tip">膝蓋<span>抬到腰部高度</span>，手臂配合擺動。不需要很快，節奏穩定就好。</div>
+    </div>
+  </div>
+
+  <!-- MOUNTAIN CLIMBER -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="74" cy="22" r="7" fill="#555"/>
+          <line x1="67" y1="27" x2="18" y2="44" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="58" y1="32" x2="55" y2="50" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="55" y1="50" x2="46" y2="54" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="28" y1="43" x2="38" y2="52" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="38" y1="52" x2="46" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="22" y1="45" x2="16" y2="62" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="62" x2="10" y2="70" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M46 62 Q52 54 54 48" stroke="#FF5722" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/6516165/pexels-photo-6516165.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="登山者式" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">登山者式</div>
+      <div class="ex-sets cardio-badge">3 組 × 20 下（快速）</div>
+      <div class="ex-tip">伏地挺身姿勢，快速<span>交替把膝蓋往胸口拉</span>。核心夾緊，腰不能翹。</div>
+    </div>
+  </div>
+
+  <!-- SQUAT JUMP -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="8" r="7" fill="#555"/>
+          <line x1="45" y1="15" x2="45" y2="36" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="22" x2="30" y2="14" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="22" x2="60" y2="14" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="36" x2="35" y2="52" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="36" x2="55" y2="52" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="35" y1="52" x2="30" y2="64" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="55" y1="52" x2="60" y2="64" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="35" y="78" fill="#FF5722" font-size="11" font-weight="bold">↑</text>
+          <text x="55" y="78" fill="#FF5722" font-size="11" font-weight="bold">↑</text>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://images.pexels.com/photos/7688862/pexels-photo-7688862.jpeg?auto=compress&cs=tinysrgb&w=200&h=150&fit=crop" alt="深蹲跳" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">深蹲跳（週六加入）</div>
+      <div class="ex-sets">4 組 × 10 下</div>
+      <div class="ex-tip">蹲下→爆發跳起→落地時<span>膝蓋微彎緩衝</span>，不要硬著陸。</div>
+    </div>
+  </div>
+
+  <!-- ──────────── STRETCH + RECOVER ──────────── -->
+  <div class="ex-group-title group-stretch">🧘 週二 / 週五｜拉伸 + 溫冷泉完整恢復日（60 分鐘）</div>
+
+  <!-- COMPLETE FLOW PROTOCOL -->
+  <div class="flow-card">
+    <div class="flow-title">🔑 完整恢復流程（熱伸展冷 × 冷熱交替 疊加版）</div>
+    <div class="flow-subtitle">兩個協議不競爭——先拉伸最大化柔韌度，再交替最大化恢復速度</div>
+    <div class="flow-steps">
+
+      <div class="flow-step">
+        <div class="flow-num num-hot">1</div>
+        <div class="flow-desc">
+          <strong>溫泉浸泡</strong>
+          <span>38–42°C，肌肉開始放鬆，膠原蛋白可塑性提高。這是拉伸的最佳視窗。</span>
+        </div>
+        <div class="flow-duration">10 分鐘</div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num num-purple">2</div>
+        <div class="flow-desc">
+          <strong>靜態拉伸（趁熱拉）</strong>
+          <span>每個姿勢停留 30–60 秒，效果是平時的 1.5–2 倍。見下方清單。</span>
+          <span class="window-tag">⚠️ 離開溫泉後 10–15 分鐘內必須開始——超過就錯過最佳視窗，效果打折</span>
+        </div>
+        <div class="flow-duration">20 分鐘</div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num num-alt">3</div>
+        <div class="flow-desc">
+          <strong>冷熱交替（清除代謝廢物）</strong>
+          <span>溫→冷→溫→冷，每輪 1–2 分鐘。血管反覆擴張收縮，像幫浦排出乳酸，減少痠痛。</span>
+        </div>
+        <div class="flow-duration">3–5 輪</div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-num num-cold">4</div>
+        <div class="flow-desc">
+          <strong>冷泉收尾（鎖定延展成果）</strong>
+          <span>15–20°C 冷泉讓肌肉快速收縮，「記住」剛才拉出的新長度。神經系統也會清醒。</span>
+        </div>
+        <div class="flow-duration">1–2 分鐘</div>
+      </div>
+
+    </div>
+    <div class="spring-note">💡 單選的話：熱伸展冷 ＞ 純冷熱交替——你要的是增加柔韌度，不只是消除疲勞</div>
+
+    <!-- Plan B -->
+    <div class="plan-b-box">
+      <strong>🔄 Plan B — 沒有溫泉的日子（出差、臨時計畫取消）</strong>
+      熱水澡 15 分鐘（水溫 40°C 左右）→ 靜態拉伸 20 分鐘（趁身體還熱）→ 冷水沖 1 分鐘收尾。<br>
+      效果約原版的 70%，但遠勝什麼都不做。有這個 Plan B，恢復日執行率就不會掉到 0。
+    </div>
+
+    <!-- Recovery quality indicator -->
+    <div class="recovery-check">
+      <strong>📊 怎麼知道你恢復夠了？（隔天早上 30 秒量一次脈搏）</strong>
+      靜息心率比平時高 5–7 bpm 以上 → 身體還沒恢復好，當天降低訓練強度或改做拉伸。<br>
+      <span style="color:#555;font-size:12px;">做法：起床前躺著不動，數 15 秒脈搏 × 4 = 靜息心率。連續幾週後你會知道自己的正常值。不用買裝備，手放胸口就可以。</span>
+    </div>
+  </div>
+
+  <!-- STATIC STRETCH LIST -->
+  <div class="ex-group-title group-stretch" style="margin-top:8px;">靜態拉伸清單（靜止停留 30–60 秒，在步驟 2 做）</div>
+
+  <!-- HAMSTRING -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="20" r="7" fill="#555"/>
+          <line x1="45" y1="27" x2="45" y2="50" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="50" x2="20" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="50" x2="70" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="20" y1="60" x2="20" y2="72" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="70" y1="60" x2="70" y2="72" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="20" y1="72" x2="70" y2="72" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="45" y1="36" x2="30" y2="64" stroke="#555" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3,3"/>
+          <line x1="45" y1="36" x2="60" y2="64" stroke="#555" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3,3"/>
+          <text x="45" y="85" text-anchor="middle" fill="#7B1FA2" font-size="10" font-weight="bold">→</text>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Paschimottanasana.jpg/330px-Paschimottanasana.jpg" alt="大腿後側拉伸-坐姿前彎" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">大腿後側（坐姿前彎）</div>
+      <div class="ex-sets stretch-badge">30–60 秒 × 每腳</div>
+      <div class="ex-tip">坐地上，腿打直，身體向腳尖趴。<span class="purple">不要低頭</span>，胸口往前帶。鬆開大腿後側緊繃。</div>
+    </div>
+  </div>
+
+  <!-- QUAD -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="10" r="7" fill="#555"/>
+          <line x1="50" y1="17" x2="50" y2="42" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="30" x2="35" y2="22" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="50" y1="30" x2="65" y2="22" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="50" y1="42" x2="62" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="62" y1="60" x2="68" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="42" x2="38" y2="58" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="38" y1="58" x2="32" y2="48" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="35" y1="22" x2="30" y2="48" stroke="#555" stroke-width="2.5" stroke-dasharray="3,3" stroke-linecap="round"/>
+          <circle cx="32" cy="48" r="3" fill="#7B1FA2" opacity="0.6"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/USMC-09294.jpg/330px-USMC-09294.jpg" alt="大腿前側拉伸-站姿四頭肌" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">大腿前側（跪姿拉股四頭）</div>
+      <div class="ex-sets stretch-badge">30–60 秒 × 每腳</div>
+      <div class="ex-tip">單腳跪地，後腳腳背用同側手往臀部拉。<span class="purple">骨盆收緊不翹腰</span>。感受大腿前側被拉開。</div>
+    </div>
+  </div>
+
+  <!-- HIP FLEXOR -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="10" r="7" fill="#555"/>
+          <line x1="50" y1="17" x2="50" y2="42" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="28" x2="35" y2="22" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="50" y1="28" x2="65" y2="22" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="50" y1="42" x2="64" y2="56" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="64" y1="56" x2="70" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="42" x2="34" y2="56" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="34" y1="56" x2="26" y2="72" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="26" cy="76" r="3.5" fill="#7B1FA2" opacity="0.5"/>
+          <text x="45" y="52" fill="#7B1FA2" font-size="11" font-weight="bold">→</text>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/J%C3%B3ga_Anjaneyasana.jpg/330px-J%C3%B3ga_Anjaneyasana.jpg" alt="髖屈肌拉伸-低弓步" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">髖屈肌（弓箭步後腳跪地）</div>
+      <div class="ex-sets stretch-badge">30–60 秒 × 每腳</div>
+      <div class="ex-tip">前腳 90 度，後膝跪地，<span class="purple">骨盆往前推</span>。感受後腿根部被拉伸。久坐最緊就這裡。</div>
+    </div>
+  </div>
+
+  <!-- GLUTE / PIGEON -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="14" r="7" fill="#555"/>
+          <line x1="45" y1="21" x2="45" y2="44" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="30" x2="28" y2="38" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="30" x2="62" y2="38" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="44" x2="60" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="60" x2="52" y2="72" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="44" x2="30" y2="60" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="30" y1="60" x2="36" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="60" x2="32" y2="60" stroke="#7B1FA2" stroke-width="2" stroke-dasharray="3,3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Mr-yoga-tiptoe-pigeon_%28cropped%29.jpg/330px-Mr-yoga-tiptoe-pigeon_%28cropped%29.jpg" alt="臀部拉伸-鴿式" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">臀部（四字形拉伸）</div>
+      <div class="ex-sets stretch-badge">30–60 秒 × 每腳</div>
+      <div class="ex-tip">躺下，一腳踝架在另一腳膝蓋上，把大腿往胸口拉。<span class="purple">感受屁股深層</span>被打開，跑跳後必做。</div>
+    </div>
+  </div>
+
+  <!-- CHEST STRETCH -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="6" height="70" rx="2" fill="#DDD"/>
+          <rect x="76" y="10" width="6" height="70" rx="2" fill="#DDD"/>
+          <circle cx="45" cy="26" r="7" fill="#555"/>
+          <line x1="45" y1="33" x2="45" y2="58" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="40" x2="14" y2="44" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="40" x2="76" y2="44" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="14" cy="44" r="3.5" fill="#7B1FA2" opacity="0.6"/>
+          <circle cx="76" cy="44" r="3.5" fill="#7B1FA2" opacity="0.6"/>
+          <line x1="45" y1="58" x2="36" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="58" x2="54" y2="78" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="45" y="54" text-anchor="middle" fill="#7B1FA2" font-size="14" font-weight="bold">↑</text>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://upload.wikimedia.org/wikipedia/commons/2/21/Bhujangasana.jpg" alt="胸部拉伸-眼鏡蛇式" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">胸部（門框擴胸）</div>
+      <div class="ex-sets stretch-badge">30–60 秒</div>
+      <div class="ex-tip">站在門框，雙手撐在兩側，<span class="purple">身體微微往前傾</span>。久坐駝背者最需要。胸肌打開呼吸更順。</div>
+    </div>
+  </div>
+
+  <!-- THORACIC ROTATION -->
+  <div class="exercise-card">
+    <div class="ex-illustration">
+      <div class="svg-view">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="18" r="7" fill="#555"/>
+          <line x1="45" y1="25" x2="45" y2="50" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="35" x2="68" y2="28" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <line x1="45" y1="35" x2="20" y2="48" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+          <path d="M52 24 Q66 32 60 44" stroke="#7B1FA2" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="3,3"/>
+          <polygon points="60,44 56,38 64,40" fill="#7B1FA2" opacity="0.8"/>
+          <line x1="45" y1="50" x2="28" y2="65" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="50" x2="62" y2="65" stroke="#555" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="28" y1="65" x2="24" y2="78" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="62" y1="65" x2="66" y2="78" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <img class="photo-view" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Ardha-Matsyendrasana_Yoga-Asana_Nina-Mel.jpg/330px-Ardha-Matsyendrasana_Yoga-Asana_Nina-Mel.jpg" alt="胸椎旋轉-脊椎扭轉" onerror="this.style.display='none'">
+    </div>
+    <div class="ex-content">
+      <div class="ex-name">胸椎旋轉</div>
+      <div class="ex-sets stretch-badge">10 下 × 每側，緩慢</div>
+      <div class="ex-tip">坐或躺，一手放胸口，另一手帶著<span class="purple">上背往側邊旋轉</span>。腰不動，只動胸椎。改善旋轉動作品質。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DIET SECTION -->
+<div class="diet-section">
+  <div class="section-title" style="padding: 0 0 14px 0;">🥗 飲食計畫（李小龍體型原則）</div>
+
+  <div class="diet-principle">
+    <div class="prin-title">三個核心原則（不需要算卡路里）</div>
+    <div class="diet-rule">
+      <div class="rule-dot green"></div>
+      <div><strong>蛋白質每餐都要有</strong>：雞蛋、雞胸、豆腐、魚、豆漿——不是因為要增肌，是因為保住現有肌肉才能讓體脂比例好看</div>
+    </div>
+    <div class="diet-rule">
+      <div class="rule-dot blue"></div>
+      <div><strong>澱粉不戒，控制份量</strong>：飯減半碗、地瓜取代白飯、避免精緻糕點。李小龍有吃碳水——他靠訓練量燒掉，不是戒掉</div>
+    </div>
+    <div class="diet-rule">
+      <div class="rule-dot red"></div>
+      <div><strong>三個少碰</strong>：含糖飲料（液體熱量最難覺察）、油炸食物（熱量密度太高）、消夜（睡前 3 小時停止進食）</div>
+    </div>
+    <div class="diet-rule">
+      <div class="rule-dot"></div>
+      <div><strong>訓練後 30 分鐘補蛋白質</strong>：一杯豆漿 + 兩顆蛋，或一份雞胸。這個時間窗口肌肉最會吸收</div>
+    </div>
+  </div>
+
+  <div class="meal-card">
+    <div class="meal-header">
+      <div class="meal-icon">🌅</div>
+      <div>
+        <div class="meal-time">07:00–07:30</div>
+        <div class="meal-name">早餐</div>
+      </div>
+    </div>
+    <div class="meal-body">
+      <strong>首選：</strong>兩顆水煮蛋 + 無糖豆漿 350ml + 地瓜一條（拳頭大）<br>
+      <strong>替代：</strong>希臘優格 + 燕麥 + 一顆水果<br>
+      重點：<strong>蛋白質先吃</strong>，讓血糖緩慢上升，工作專注力撐更久
+    </div>
+    <div class="meal-note">💡 訓練日可以在早餐後訓練（空腹 1.5 小時），脂肪燃燒效率更高</div>
+  </div>
+
+  <div class="meal-card">
+    <div class="meal-header">
+      <div class="meal-icon">☀️</div>
+      <div>
+        <div class="meal-time">12:00–13:00</div>
+        <div class="meal-name">午餐（最大份量）</div>
+      </div>
+    </div>
+    <div class="meal-body">
+      <strong>公式：</strong>蛋白質（雞腿/魚/豆腐）+ 蔬菜大量 + 飯半碗<br>
+      <strong>自助餐選法：</strong>避開油炸區，蒸煮區先挑，蔬菜兩份比一份肉重要<br>
+      午餐吃飽沒問題——下午活動量可以消化
+    </div>
+    <div class="meal-note">💡 便當族選擇：去滷肉選蒸雞，多加一份燙青菜，拒絕加飯</div>
+  </div>
+
+  <div class="meal-card">
+    <div class="meal-header">
+      <div class="meal-icon">🍌</div>
+      <div>
+        <div class="meal-time">15:00–16:00</div>
+        <div class="meal-name">下午點心（選做）</div>
+      </div>
+    </div>
+    <div class="meal-body">
+      <strong>可以吃：</strong>一根香蕉、一把無調味堅果、茶葉蛋一顆<br>
+      <strong>目的：</strong>讓晚餐不會過度飢餓亂吃，不是為了享受<br>
+      訓練日如果下午練：訓練前 1 小時這個點心有意義；休息日可跳過
+    </div>
+    <div class="meal-note">💡 不餓就不吃，身體信號優先於時間表</div>
+  </div>
+
+  <div class="meal-card">
+    <div class="meal-header">
+      <div class="meal-icon">🌙</div>
+      <div>
+        <div class="meal-time">18:00–19:30</div>
+        <div class="meal-name">晚餐（輕量）</div>
+      </div>
+    </div>
+    <div class="meal-body">
+      <strong>公式：</strong>蛋白質 + 蔬菜大量，<strong>減少或去掉澱粉</strong><br>
+      <strong>首選：</strong>清蒸魚或雞胸 + 燙高麗菜 + 少量冬粉或豆腐<br>
+      晚上靜止代謝低，澱粉吃進去容易囤積
+    </div>
+    <div class="meal-note">💡 訓練後晚餐：可加回半碗飯，補充消耗的糖原</div>
+  </div>
+
+  <div class="diet-principle">
+    <div class="prin-title">💧 水分（最容易被忽略的脂肪燃燒因子）</div>
+    <div class="diet-rule">
+      <div class="rule-dot blue"></div>
+      <div>每天最少 2,000ml 白開水。體脂燃燒需要水，脫水時代謝率下降 3–5%</div>
+    </div>
+    <div class="diet-rule">
+      <div class="rule-dot blue"></div>
+      <div>溫冷泉日補到 2,500ml——排汗加速水分流失</div>
+    </div>
+    <div class="diet-rule">
+      <div class="rule-dot red"></div>
+      <div>運動飲料 / 果汁 / 手搖飲算液體熱量，不算補水</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE SECTION -->
+<div class="schedule-section">
+  <div class="section-title" style="padding: 0 0 14px 0;">📅 全週工作日程規劃</div>
+
+  <div class="sched-card">
+    <div class="sched-header strength-day">
+      💪 週一 / 週四｜力量訓練日
+      <div class="day-sub">工作 + 訓練 45 分鐘，早起練或午休練都行</div>
+    </div>
+    <div class="sched-timeline">
+      <div class="sched-item">
+        <div class="sched-time">06:30</div>
+        <div class="sched-desc"><strong>起床 + 早餐</strong><span>兩顆蛋 + 豆漿，不要空腹直接訓練</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time">07:30–08:15</div>
+        <div class="sched-desc"><strong>力量訓練（45 分鐘）</strong><span>動態暖身 8–10 分鐘（不能少）→ 深蹲/伏地挺身/弓箭步/棒式/划船 → 靜態拉伸 5 分鐘</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time">08:15–08:30</div>
+        <div class="sched-desc"><strong>訓練後補充</strong><span>一杯豆漿或雞蛋，補蛋白質</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">09:00–18:00</div>
+        <div class="sched-desc"><strong>工作時間</strong><span>每 90 分鐘站起來動一下，避免久坐把髖屈肌鎖死</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">18:30</div>
+        <div class="sched-desc"><strong>輕量晚餐</strong><span>蛋白質 + 蔬菜，今天有訓練可加半碗飯</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">22:30</div>
+        <div class="sched-desc"><strong>睡前拉伸 5 分鐘（選做）</strong><span>躺在床上做大腿後側 + 臀部拉伸，幫助入睡</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sched-card">
+    <div class="sched-header stretch-day">
+      🧘 週二 / 週五｜拉伸恢復日
+      <div class="day-sub">配合溫冷泉，是訓練的一部分，不是休息。無溫泉日走 Plan B（熱水澡）</div>
+    </div>
+    <div class="sched-timeline">
+      <div class="sched-item">
+        <div class="sched-time purple">07:00</div>
+        <div class="sched-desc"><strong>正常起床 + 早餐</strong><span>恢復日不需要早起加練</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">起床後</div>
+        <div class="sched-desc"><strong>📊 量靜息心率（30 秒）</strong><span>躺著數 15 秒脈搏 × 4。比平時高 5+ bpm → 今天完全恢復模式，拉伸輕力道</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">09:00–18:00</div>
+        <div class="sched-desc"><strong>工作時間</strong><span>今天沒有強度訓練，精神充沛，適合處理需要高度專注的工作</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time purple">19:00–20:00</div>
+        <div class="sched-desc"><strong>完整恢復流程（60 分鐘）</strong><span>溫泉 10 分鐘 → 10–15 分鐘內開始靜態拉伸 20 分鐘 → 冷熱交替 15 分鐘 → 冷泉收尾</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">20:00</div>
+        <div class="sched-desc"><strong>輕量晚餐</strong><span>恢復日不需要補蛋白質，照常吃即可</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sched-card">
+    <div class="sched-header cardio-day">
+      🔥 週三 / 週六｜有氧燃脂日
+      <div class="day-sub">30 分鐘間歇，任何時段都可以做</div>
+    </div>
+    <div class="sched-timeline">
+      <div class="sched-item">
+        <div class="sched-time blue">07:00–07:30</div>
+        <div class="sched-desc"><strong>有氧訓練（30 分鐘）</strong><span>空腹或輕食後：跳繩間歇 1 分動 1 分休 × 15 輪，或高抬腿 + 登山者式</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">07:30</div>
+        <div class="sched-desc"><strong>早餐</strong><span>有氧後喝豆漿補水 + 兩顆蛋</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">09:00–18:00</div>
+        <div class="sched-desc"><strong>工作時間</strong><span>週六工作時間彈性，但有氧最好維持早上做完</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">晚上</div>
+        <div class="sched-desc"><strong>輕鬆散步 20–30 分鐘（選做）</strong><span>飯後散步幫助消化 + 額外燃脂，不算訓練，不會讓你長肌肉</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sched-card">
+    <div class="sched-header rest-day">
+      😴 週日｜完全休息日
+      <div class="day-sub">不訓練、不強迫自己動，是讓身體真正修復的一天</div>
+    </div>
+    <div class="sched-timeline">
+      <div class="sched-item">
+        <div class="sched-time gray">全天</div>
+        <div class="sched-desc"><strong>無訓練任務</strong><span>正常生活節奏，飲食照常，補充水分</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">任何時段</div>
+        <div class="sched-desc"><strong>走路 / 散步（不強迫）</strong><span>如果出門自然走個 30 分鐘很好，但不要為了「做點什麼」硬加</span></div>
+      </div>
+      <div class="sched-item">
+        <div class="sched-time gray">睡前</div>
+        <div class="sched-desc"><strong>回顧本週＋準備下週</strong><span>確認週一裝備（瑜伽墊、跳繩、訓練服），週日晚上準備好，週一不找藉口</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin: 0 0 14px 0;">
+    <strong>⚡ 沒辦法早起？下班後練也行，但有兩個注意事項：</strong>
+    1. 訓練後 1 小時內不要睡覺（皮質醇還高，睡不好）<br>
+    2. 訓練後晚餐控制在 8 點前吃完，否則消化沒完就睡，脂肪更容易囤積
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Goku 訓練手冊 v12.0 · 修正：暖身最低 8 分鐘 / 拉伸視窗 10–15 分 / Plan B 無溫泉方案 / 靜息心率恢復指標 / 拉伸照片版 · 每週 tag 我回報感受
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    if (mode === 'photo') {
+      document.body.classList.add('photo-mode');
+    } else {
+      document.body.classList.remove('photo-mode');
+    }
+  }
+</script>
+</body>
+</html>
