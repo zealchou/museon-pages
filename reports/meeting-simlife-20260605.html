@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>會議記錄 — SIM LIFE 商模架構討論 | 2026-06-05</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>會議記錄 — SIM LIFE × AI 身心靈流派 策略討論</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --ember: #C4502A;
     --ember-light: #E0714D;
@@ -20,530 +17,462 @@
     --parchment: #F7F5F0;
     --snow: #FDFCFA;
   }
-
-  body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: var(--parchment);
-    color: var(--ink);
-    line-height: 1.7;
-    font-size: 15px;
-  }
-
-  .header {
-    background: linear-gradient(135deg, #12121A 0%, #1e1e2a 100%);
-    color: #fff;
-    padding: 56px 40px 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 280px; height: 280px;
-    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header-tag {
-    display: inline-block;
-    background: rgba(196,80,42,0.25);
-    color: #E0714D;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-  }
-  .header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.25;
-    margin-bottom: 8px;
-    color: #FDFCFA;
-  }
-  .header h1 em { font-style: normal; color: #E0714D; }
-  .header-meta { display: flex; gap: 28px; margin-top: 20px; flex-wrap: wrap; }
-  .meta-item { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.65); font-size: 13px; }
-  .meta-dot { width: 6px; height: 6px; background: #C4502A; border-radius: 50%; flex-shrink: 0; }
-
-  .container { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
-
-  .summary-card {
-    background: var(--snow);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px 32px;
-    margin: 32px 0;
-    border-left: 4px solid var(--ember);
-  }
-  .summary-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 12px; }
-  .summary-card p { color: var(--slate); line-height: 1.8; font-size: 14.5px; }
-
-  .participants { display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; }
-  .participant { display: flex; align-items: center; gap: 10px; background: var(--snow); border: 1px solid var(--border); border-radius: 40px; padding: 8px 16px 8px 8px; }
-  .participant-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, #C4502A, #E0714D); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
-  .participant-avatar.teal { background: linear-gradient(135deg, #2A7A6E, #3A9080); }
-  .participant-avatar.gold { background: linear-gradient(135deg, #B8923A, #D4A84A); }
-  .participant-name { font-size: 13px; font-weight: 500; }
-  .participant-role { font-size: 11px; color: var(--mist); }
-
-  .section { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; margin: 20px 0; overflow: hidden; }
-  .section-header { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
-  .section-icon { width: 36px; height: 36px; background: rgba(196,80,42,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--ink); }
-  .section-subtitle { font-size: 12px; color: var(--mist); margin-top: 2px; }
-  .section-body { padding: 24px 28px; }
-
-  .stakeholder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 8px 0; }
-  .stakeholder-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: var(--parchment); }
-  .stakeholder-card .s-role { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ember); margin-bottom: 6px; }
-  .stakeholder-card .s-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-  .stakeholder-card .s-want { font-size: 12px; color: var(--slate); line-height: 1.6; }
-  .stakeholder-card .s-want span { display: inline-block; background: rgba(42,122,110,0.1); color: var(--teal); font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-right: 4px; margin-top: 4px; }
-
-  .revenue-flow { display: flex; flex-direction: column; gap: 12px; }
-  .revenue-stage { display: flex; align-items: flex-start; gap: 16px; }
-  .stage-badge { width: 28px; height: 28px; background: var(--ember); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-  .stage-content h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-  .stage-content p { font-size: 13px; color: var(--slate); line-height: 1.6; }
-  .connector { width: 2px; height: 20px; background: var(--border); margin-left: 13px; }
-
-  .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 8px 0; }
-  .product-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; overflow: hidden; }
-  .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-  .product-card.free::before { background: var(--teal); }
-  .product-card.entry::before { background: var(--gold); }
-  .product-card.premium::before { background: var(--ember); }
-  .product-tier { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-  .product-card.free .product-tier { color: var(--teal); }
-  .product-card.entry .product-tier { color: var(--gold); }
-  .product-card.premium .product-tier { color: var(--ember); }
-  .product-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .product-price { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
-  .product-price span { font-size: 12px; font-weight: 400; color: var(--mist); }
-  .product-desc { font-size: 12px; color: var(--slate); line-height: 1.6; }
-
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .timeline-item { display: flex; gap: 20px; }
-  .timeline-left { display: flex; flex-direction: column; align-items: center; width: 60px; flex-shrink: 0; }
-  .timeline-date { font-size: 11px; font-weight: 700; color: var(--ember); text-align: center; white-space: nowrap; }
-  .timeline-dot { width: 12px; height: 12px; background: var(--ember); border-radius: 50%; margin: 6px 0; flex-shrink: 0; }
-  .timeline-line { width: 2px; flex: 1; background: var(--border); min-height: 20px; }
-  .timeline-content { padding-bottom: 24px; flex: 1; }
-  .timeline-content h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .timeline-content p { font-size: 13px; color: var(--slate); line-height: 1.6; }
-
-  .action-list { display: flex; flex-direction: column; gap: 10px; }
-  .action-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; background: var(--parchment); border-radius: 8px; border: 1px solid var(--border); }
-  .action-owner { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
-  .owner-zeal { background: rgba(196,80,42,0.1); color: var(--ember); }
-  .owner-yunik { background: rgba(42,122,110,0.1); color: var(--teal); }
-  .owner-both { background: rgba(184,146,58,0.1); color: var(--gold); }
-  .action-text { font-size: 13px; color: var(--ink); line-height: 1.6; flex: 1; }
-  .action-priority { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; padding: 2px 7px; border-radius: 8px; flex-shrink: 0; align-self: flex-start; }
-  .p1 { background: rgba(196,80,42,0.12); color: var(--ember); }
-  .p2 { background: rgba(184,146,58,0.12); color: var(--gold); }
-
-  .insight-box { background: linear-gradient(135deg, rgba(196,80,42,0.06), rgba(42,122,110,0.04)); border: 1px solid rgba(196,80,42,0.2); border-radius: 10px; padding: 20px 24px; margin: 16px 0; }
-  .insight-box .quote { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--ink); line-height: 1.6; margin-bottom: 8px; }
-  .insight-box .quote-attr { font-size: 12px; color: var(--mist); }
-
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  .tag { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--slate); background: var(--parchment); }
-
-  .footer { text-align: center; padding: 40px 24px; color: var(--mist); font-size: 12px; border-top: 1px solid var(--border); margin-top: 48px; }
-  .footer strong { color: var(--slate); }
-
-  h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin: 16px 0 10px; }
-  ul, ol { padding-left: 18px; color: var(--slate); font-size: 13.5px; line-height: 1.9; }
-  li { margin-bottom: 2px; }
-  li strong { color: var(--ink); }
-
-  @media (max-width: 640px) {
-    .header { padding: 36px 20px 32px; }
-    .header h1 { font-size: 26px; }
-    .container { padding: 0 16px 60px; }
-    .section-body, .section-header { padding-left: 20px; padding-right: 20px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia','Noto Serif TC',serif; background: var(--parchment); color: var(--ink); line-height: 1.8; font-size: 15px; }
+  .doc-header { background: linear-gradient(135deg, #12121A 0%, #1E1E2A 100%); color: #fff; padding: 48px 40px 40px; position: relative; overflow: hidden; }
+  .doc-header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(196,80,42,0.15) 0%, transparent 70%); border-radius: 50%; }
+  .tag { display: inline-block; background: rgba(196,80,42,0.25); border: 1px solid rgba(196,80,42,0.5); color: #E0714D; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }
+  .doc-header h1 { font-size: 28px; font-weight: normal; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .doc-header h1 span { color: #E0714D; }
+  .subtitle { color: rgba(255,255,255,0.55); font-size: 14px; font-family: 'Helvetica Neue',Arial,sans-serif; margin-bottom: 28px; }
+  .meta-grid { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 20px; }
+  .meta-item { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; }
+  .meta-item .label { color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px; }
+  .meta-item .value { color: rgba(255,255,255,0.85); font-weight: 500; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  .quick-summary { background: #fff; border-left: 4px solid var(--ember); margin: 32px 0 0; padding: 24px 28px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 12px rgba(18,18,26,0.06); }
+  .quick-summary h2 { font-size: 13px; font-family: 'Helvetica Neue',Arial,sans-serif; text-transform: uppercase; letter-spacing: 2px; color: var(--ember); margin-bottom: 12px; }
+  .quick-summary p { color: var(--slate); font-size: 14px; line-height: 1.7; }
+  .participants-bar { background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 24px 0; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+  .participant-chip { display: flex; align-items: center; gap: 10px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; }
+  .avatar-z { background: linear-gradient(135deg, #C4502A, #9A3A1C); }
+  .avatar-y { background: linear-gradient(135deg, #2A7A6E, #1a5248); }
+  .avatar-d { background: linear-gradient(135deg, #B8923A, #8a6a25); }
+  .info .name { font-weight: 600; color: var(--ink); }
+  .info .role { color: var(--mist); font-size: 11px; }
+  .section { margin: 32px 0; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+  .section-num { width: 32px; height: 32px; background: var(--ember); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .section-title { font-size: 18px; font-weight: normal; color: var(--ink); }
+  .card { background: var(--snow); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px; margin-bottom: 16px; }
+  .card h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .card p, .card li { color: #2a2a3a; font-size: 14.5px; line-height: 1.75; }
+  .card ul { padding-left: 20px; }
+  .card ul li { margin-bottom: 6px; }
+  .role-matrix { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .role-card { background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .role-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .role-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--ink); }
+  .role-need { font-size: 12px; color: var(--slate); font-family: 'Helvetica Neue',Arial,sans-serif; }
+  .role-ember .role-label { color: var(--ember); }
+  .role-teal .role-label { color: var(--teal); }
+  .role-gold .role-label { color: var(--gold); }
+  .role-slate .role-label { color: var(--slate); }
+  .revenue-flow { display: flex; align-items: stretch; gap: 0; margin: 16px 0; overflow-x: auto; }
+  .rev-stage { flex: 1; min-width: 130px; background: var(--snow); border: 1px solid var(--border); padding: 16px 14px; text-align: center; }
+  .rev-stage:first-child { border-radius: 8px 0 0 8px; }
+  .rev-stage:last-child { border-radius: 0 8px 8px 0; }
+  .rev-stage + .rev-stage { border-left: none; }
+  .stage-tag { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .stage-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .stage-price { font-size: 18px; font-weight: 700; color: var(--ember); font-family: 'Helvetica Neue',Arial,sans-serif; }
+  .stage-desc { font-size: 11px; color: var(--slate); font-family: 'Helvetica Neue',Arial,sans-serif; margin-top: 4px; }
+  .highlight { background: linear-gradient(135deg, rgba(196,80,42,0.06), rgba(196,80,42,0.02)); border: 1px solid rgba(196,80,42,0.2); border-radius: 8px; padding: 18px 20px; margin: 16px 0; }
+  .hi-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ember); margin-bottom: 8px; }
+  .highlight p { font-size: 14.5px; color: var(--ink); line-height: 1.7; }
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--ember), var(--border)); border-radius: 2px; }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--ember); border: 2px solid var(--parchment); }
+  .tl-item.dim::before { background: var(--mist); }
+  .tl-date { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; font-weight: 600; color: var(--ember); margin-bottom: 4px; }
+  .tl-item.dim .tl-date { color: var(--mist); }
+  .tl-content { font-size: 14.5px; color: var(--ink); line-height: 1.65; }
+  .action-table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: 'Helvetica Neue',Arial,sans-serif; }
+  .action-table thead tr { background: #12121A; color: rgba(255,255,255,0.7); font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; }
+  .action-table th { padding: 12px 16px; text-align: left; font-weight: 600; }
+  .action-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--ink); }
+  .action-table tbody tr:hover { background: rgba(196,80,42,0.03); }
+  .priority-high { display: inline-block; background: rgba(196,80,42,0.12); color: var(--ember); font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; }
+  .priority-med { display: inline-block; background: rgba(184,146,58,0.12); color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; }
+  .owner-z { color: var(--ember); font-weight: 600; }
+  .owner-y { color: var(--teal); font-weight: 600; }
+  .owner-d { color: var(--gold); font-weight: 600; }
+  .collab-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .collab-side { background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+  .cs-label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .cs-zeal .cs-label { color: var(--ember); }
+  .cs-yunik .cs-label { color: var(--teal); }
+  .collab-side ul { padding-left: 16px; font-size: 13.5px; color: var(--slate); line-height: 1.8; }
+  .doc-footer { background: #12121A; color: rgba(255,255,255,0.4); text-align: center; padding: 24px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; margin-top: 48px; }
+  .doc-footer span { color: var(--ember); }
+  @media (max-width: 600px) {
+    .doc-header { padding: 32px 20px; }
+    .collab-split { grid-template-columns: 1fr; }
+    .role-matrix { grid-template-columns: 1fr 1fr; }
+    .revenue-flow { flex-direction: column; }
+    .rev-stage { border-radius: 8px !important; border: 1px solid var(--border) !important; margin-bottom: 4px; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-tag">Meeting Notes</div>
-  <h1><em>SIM LIFE</em> 商模架構討論</h1>
-  <div class="header-meta">
-    <div class="meta-item"><div class="meta-dot"></div>2026年6月5日</div>
-    <div class="meta-item"><div class="meta-dot"></div>約 57 分鐘（6-5-1 + 6-5-2 + 6-5-3）</div>
-    <div class="meta-item"><div class="meta-dot"></div>人生市集 × AI 身心靈流派</div>
+<div class="doc-header">
+  <div class="container">
+    <div class="tag">Meeting Record · Confidential</div>
+    <h1><span>SIM LIFE</span> × AI 身心靈流派<br>策略合作討論</h1>
+    <div class="subtitle">人生市集商模架構 × AI 命理教練系統 × 雙方分工策略</div>
+    <div class="meta-grid">
+      <div class="meta-item"><div class="label">日期</div><div class="value">2026 年 6 月 5 日</div></div>
+      <div class="meta-item"><div class="label">總時長</div><div class="value">約 57 分鐘（三段音訊）</div></div>
+      <div class="meta-item"><div class="label">地點</div><div class="value">台中（面談）</div></div>
+      <div class="meta-item"><div class="label">記錄產出</div><div class="value">MUSEON AI · 2026-06-06</div></div>
+    </div>
   </div>
 </div>
 
 <div class="container">
 
-  <div class="summary-card">
-    <h2>核心摘要</h2>
-    <p>本次會議圍繞「<strong>人生市集 / SIM LIFE</strong>」商模架構展開深度討論，確立了「<strong>B端串聯 C端體驗，AI教練為後端獲利主軸</strong>」的核心模式，並整合 Zeal 的 AI 身心靈流派計畫、達哥的人脈開發資源，形成三方互補的合作框架。同期確認品牌定位策略、數位記錄 AI 化路徑，以及八月、十月兩場活動的推進節奏。</p>
+  <div class="quick-summary">
+    <h2>核心結論摘要</h2>
+    <p>本次討論確立了「SIM LIFE 模擬人生」活動的完整商模閉環：以現場體驗活動為流量入口（打平成本），後端接 AI 命理教練系統（$990/月）與真人陪跑服務（轉介抽成）實現主要營收。同時，Zeal 正在開發全新 AI 身心靈融合流派（兩個月內上線），其 AI 紀錄系統將在 10 月前整合進 SIM LIFE 現場記錄，形成「活動紀錄 → AI 教練 → 企業 HR → 內訓」完整商業飛輪。雙方確認分工：達哥 / 祐妮負責 C 端活動執行，Zeal 負責 B 端企業開發與 AI 系統後台。</p>
   </div>
 
-  <div class="participants">
-    <div class="participant">
-      <div class="participant-avatar">Z</div>
-      <div>
-        <div class="participant-name">Zeal（周逸達）</div>
-        <div class="participant-role">MUSEON 創辦人 · AI 研發方</div>
-      </div>
+  <div class="participants-bar">
+    <div class="participant-chip">
+      <div class="avatar avatar-z">Z</div>
+      <div class="info"><div class="name">Zeal（周逸達）</div><div class="role">MUSEON 創辦人 · AI 系統 / B 端策略</div></div>
     </div>
-    <div class="participant">
-      <div class="participant-avatar teal">佑</div>
-      <div>
-        <div class="participant-name">佑妮</div>
-        <div class="participant-role">SIM LIFE 活動主辦 · 木星時空</div>
-      </div>
+    <div class="participant-chip">
+      <div class="avatar avatar-y">佑</div>
+      <div class="info"><div class="name">祐妮（Yunik）</div><div class="role">SIM LIFE 活動主辦 · C 端執行 / 人類圖</div></div>
     </div>
-    <div class="participant">
-      <div class="participant-avatar gold">達</div>
-      <div>
-        <div class="participant-name">達哥</div>
-        <div class="participant-role">B端人脈開發 · 顧問方</div>
-      </div>
+    <div class="participant-chip">
+      <div class="avatar avatar-d">達</div>
+      <div class="info"><div class="name">達哥</div><div class="role">協作夥伴 · C 端活動執行</div></div>
     </div>
   </div>
 
-  <!-- 1. 利害關係人 -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🗺️</div>
-      <div>
-        <div class="section-title">利害關係人圖譜</div>
-        <div class="section-subtitle">SIM LIFE 四大角色，各取所需</div>
-      </div>
+      <div class="section-num">1</div>
+      <div class="section-title">SIM LIFE 人生市集——商模架構與角色設計</div>
     </div>
-    <div class="section-body">
-      <div class="stakeholder-grid">
-        <div class="stakeholder-card">
-          <div class="s-role">大 B / 小 B</div>
-          <div class="s-name">企業廠商</div>
-          <div class="s-want">提供攤位，活動中曝光企業文化與品牌。<span>品牌流量</span><span>形象曝光</span><span>人才招募</span></div>
-        </div>
-        <div class="stakeholder-card">
-          <div class="s-role">C 端</div>
-          <div class="s-name">參與者</div>
-          <div class="s-want">求職換跑道、探索自我、體驗工作實況。<span>自我認識</span><span>求職</span><span>成長學習</span></div>
-        </div>
-        <div class="stakeholder-card">
-          <div class="s-role">志工</div>
-          <div class="s-name">志願協助者</div>
-          <div class="s-want">來自公家單位推薦、三階段/能量學學員。<span>時間銀行時數</span><span>意義感</span></div>
-        </div>
-        <div class="stakeholder-card">
-          <div class="s-role">教練 / 老師 / 專家</div>
-          <div class="s-name">知識提供者</div>
-          <div class="s-want">現場收費為輔，後端課程與陪跑服務為主要收入。<span>現場收費</span><span>後端課程</span></div>
-        </div>
-      </div>
-      <div class="insight-box" style="margin-top:20px;">
-        <div class="quote">「你在做的事情，就是把大家的商模弄在你的商模裡面。這場活動基本上不會出現我——這才叫做商模。」</div>
-        <div class="quote-attr">— Zeal，音檔 6-5-1</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 2. 獲利結構 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">💰</div>
-      <div>
-        <div class="section-title">獲利結構</div>
-        <div class="section-subtitle">現場打平，後端才是真正的金流</div>
-      </div>
+    <div class="highlight">
+      <div class="hi-label">核心定位</div>
+      <p>SIM LIFE 是一個以「體驗即記錄」為核心的商模平台。活動本身不以盈利為目標（打平成本），真正的商業價值在活動後端：AI 教練系統、企業 HR 服務、真人陪跑轉介。</p>
     </div>
-    <div class="section-body">
-      <div class="revenue-flow">
-        <div class="revenue-stage">
-          <div class="stage-badge">1</div>
-          <div class="stage-content">
-            <h4>活動現場（打平目標）</h4>
-            <p>攤位費 + 老師席費 + 個人報名費。目標打平成本即可，現場活動體驗品質為重。</p>
-          </div>
-        </div>
-        <div class="connector"></div>
-        <div class="revenue-stage">
-          <div class="stage-badge">2</div>
-          <div class="stage-content">
-            <h4>活動後續：陪跑 & AI 教練</h4>
-            <p>參與者看見自己 → 想行動 → 遇到阻礙 → 需要陪跑。<strong>後端陪跑與 AI 教練系統才是主要獲利點</strong>，老師抽成分潤。</p>
-          </div>
-        </div>
-        <div class="connector"></div>
-        <div class="revenue-stage">
-          <div class="stage-badge">3</div>
-          <div class="stage-content">
-            <h4>B 端延伸服務</h4>
-            <p>數位化個人記錄 → 人才資料庫 → 對 HR 提供精準媒合 + 企業內訓。品牌冠名贊助 → 企業形象活動 → ESG 加分。</p>
-          </div>
-        </div>
-        <div class="connector"></div>
-        <div class="revenue-stage">
-          <div class="stage-badge">4</div>
-          <div class="stage-content">
-            <h4>分會服務包（BNI / 社群）</h4>
-            <p>為 BNI 分會、讀書會辦 Power Day / 來賓日。協助會長掌握分會成員狀態，整包服務。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 3. AI 身心靈流派 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">🔮</div>
-      <div>
-        <div class="section-title">AI 身心靈流派計畫</div>
-        <div class="section-subtitle">全新融合，兩個月上線</div>
+    <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);margin:20px 0 12px;">四大參與角色及需求</div>
+    <div class="role-matrix">
+      <div class="role-card role-ember">
+        <div class="role-label">C 端參與者</div>
+        <div class="role-name">求職者 / 探索者</div>
+        <div class="role-need">需求：求職、換跑道、自我認識</div>
+      </div>
+      <div class="role-card role-teal">
+        <div class="role-label">B 端廠商</div>
+        <div class="role-name">大 B（聯盟企業）/ 小 B</div>
+        <div class="role-need">需求：流量曝光、品牌形象、ESG、人才招募</div>
+      </div>
+      <div class="role-card role-gold">
+        <div class="role-label">服務端</div>
+        <div class="role-name">教練 / 老師 / 專家</div>
+        <div class="role-need">需求：賺錢（現場收入 + 後續陪跑轉介）</div>
+      </div>
+      <div class="role-card role-slate">
+        <div class="role-label">支援端</div>
+        <div class="role-name">志工</div>
+        <div class="role-need">需求：志工時數（政府時間銀行）/ 旅遊景點折扣</div>
       </div>
     </div>
-    <div class="section-body">
-      <p style="font-size:13.5px; color:var(--slate); margin-bottom:16px;">已爬完默克二三十年資材（Wiki 化完成）及全球人類圖大師資料。版權問題下採取「全新融合」策略——取所有「只需生日 + 出生地點」流派的底層共同邏輯，疊加成全新 AI 身心靈流派。</p>
-      <div class="product-grid">
-        <div class="product-card free">
-          <div class="product-tier">引流</div>
-          <div class="product-name">免費心理測驗</div>
-          <div class="product-price">$0</div>
-          <div class="product-desc">類「你是什麼顏色」簡易分析，引流進產品漏斗</div>
-        </div>
-        <div class="product-card entry">
-          <div class="product-tier">入門</div>
-          <div class="product-name">詳細命盤報告</div>
-          <div class="product-price">$990 <span>/ 份</span></div>
-          <div class="product-desc">依生日生成完整個人分析，具備分享裂變機制（分享後分成）</div>
-        </div>
-        <div class="product-card premium">
-          <div class="product-tier">訂閱</div>
-          <div class="product-name">AI 線上教練</div>
-          <div class="product-price">$990 <span>/ 月</span></div>
-          <div class="product-desc">輸入目標 → AI 依命盤討論 → 行動計畫 → 每日覺察日記 → 分享卡裂變</div>
-        </div>
-      </div>
-      <h3>與 SIM LIFE 整合</h3>
+
+    <div class="card">
+      <h4>活動 IP 定位——躲在企業後的 IP</h4>
       <ul>
-        <li>現場活動紀錄 → 直接綁進 AI 教練系統</li>
-        <li>活動結束後參與者進入 AI 教練持續更新</li>
-        <li>人類圖 / 命盤分析 → 嵌入個人成長記錄</li>
+        <li>活動不露出主辦人，以企業品牌冠名主導形象</li>
+        <li>定位為「企業形象活動承辦方」，同時協助企業 ESG 指標</li>
+        <li>HR 跟進後端 → 安排內訓 → 引入合作講師體系</li>
+        <li>品牌命名建議：獨立於「木星時空」，單立「SIM LIFE」或「團建公司」品牌更易切入企業市場</li>
       </ul>
     </div>
   </div>
 
-  <!-- 4. 三方分工 -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🤝</div>
-      <div>
-        <div class="section-title">三方分工</div>
-        <div class="section-subtitle">陽脈 × 陰脈，互補不競爭</div>
-      </div>
+      <div class="section-num">2</div>
+      <div class="section-title">後端商業飛輪——真正的盈利在活動之後</div>
     </div>
-    <div class="section-body">
-      <div class="stakeholder-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-        <div class="stakeholder-card">
-          <div class="s-role">佑妮（陽脈）</div>
-          <div class="s-name">現場執行 × 人脈開發</div>
-          <div class="s-want">負責活動現場帶領、BNI/讀書會等 B 端人脈串聯、與企業主洽談活動合作</div>
-        </div>
-        <div class="stakeholder-card">
-          <div class="s-role">Zeal（陰脈）</div>
-          <div class="s-name">AI 系統 × 後端架構</div>
-          <div class="s-want">MUSEON AI 系統研發、數位記錄 AI 化、AI 教練 & 命理流派平台（約兩個月完成迷你系統）</div>
-        </div>
-        <div class="stakeholder-card">
-          <div class="s-role">達哥</div>
-          <div class="s-name">顧問 × B 端說服</div>
-          <div class="s-want">以「期管顧問」身份向 HR & 企業主說明方案，協助佑妮開發不擅長的 B 端人脈</div>
-        </div>
-      </div>
-      <div class="insight-box" style="margin-top:20px;">
-        <div class="quote">「你就負責陽脈，我負責陰脈。你最擅長現場，我最擅長在電腦後面當軍師。」</div>
-        <div class="quote-attr">— Zeal，音檔 6-5-3</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 5. 數位記錄 AI 化 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">📋</div>
-      <div>
-        <div class="section-title">數位記錄 AI 化路徑</div>
-        <div class="section-subtitle">紙本 → 掃描 → Agent 建檔 → AI 分析</div>
-      </div>
+    <div class="card">
+      <h4>現場收費邏輯（打平設計）</h4>
+      <p style="color:var(--slate);font-size:14px;">攤位費 + 個人票 + 品牌贊助 → <strong style="color:var(--ink);">頂多打平</strong>，這是策略選擇，不是失敗。現場目的是大量累積有紀錄的參與者數據。</p>
     </div>
-    <div class="section-body">
-      <ol>
-        <li>設計<strong>有格子的紙本表單</strong>（含蓋章格，統一綠色），搭配人類圖九大類結構調整</li>
-        <li>掃描後上傳給 Agent，第一步建立個人資料，第二步記錄首次參加狀態</li>
-        <li>後續對比看出成長變化；資料傳給企業 HR → 數位化依據 → 內訓規劃</li>
-        <li>Zeal 系統介接：迷你系統與表格資料對齊，確認 AI 能讀後再二次優化</li>
-        <li>人格分析嵌入（人類圖 / OneMuse / MUSEON 系統）</li>
-      </ol>
-      <div class="tags">
-        <span class="tag">8月先試跑紙本表格</span>
-        <span class="tag">10月 AI 系統正式介接</span>
-        <span class="tag">Zeal 迷你系統兩週內完成</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- 6. 品牌策略 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">🏷️</div>
-      <div>
-        <div class="section-title">品牌策略</div>
-        <div class="section-subtitle">木星時空 × SIM LIFE 定位釐清</div>
+    <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);margin:20px 0 12px;">五層後端營收引擎</div>
+    <div class="revenue-flow">
+      <div class="rev-stage">
+        <div class="stage-tag" style="color:var(--teal);">引流款</div>
+        <div class="stage-name">免費心理測驗</div>
+        <div class="stage-price" style="color:var(--teal);font-size:16px;">免費</div>
+        <div class="stage-desc">「你是什麼顏色？」裂變分享卡</div>
+      </div>
+      <div class="rev-stage">
+        <div class="stage-tag" style="color:var(--ember);">主力轉換</div>
+        <div class="stage-name">AI 命盤報告</div>
+        <div class="stage-price">$990</div>
+        <div class="stage-desc">生日 → 20 頁詳細分析報告</div>
+      </div>
+      <div class="rev-stage">
+        <div class="stage-tag" style="color:var(--gold);">留存包月</div>
+        <div class="stage-name">AI 教練系統</div>
+        <div class="stage-price">$990<span style="font-size:12px;">/月</span></div>
+        <div class="stage-desc">覺察日記 + AI 互動 + 行動計畫</div>
+      </div>
+      <div class="rev-stage">
+        <div class="stage-tag" style="color:var(--gold);">高單值</div>
+        <div class="stage-name">真人陪跑服務</div>
+        <div class="stage-price" style="font-size:14px;">轉介抽成</div>
+        <div class="stage-desc">接入合作教練 / 心理諮商 / 職能規劃</div>
+      </div>
+      <div class="rev-stage">
+        <div class="stage-tag" style="color:var(--teal);">企業端</div>
+        <div class="stage-name">HR 企業服務</div>
+        <div class="stage-price" style="font-size:14px;">B2B</div>
+        <div class="stage-desc">員工數據 → 內訓規劃 → ESG</div>
       </div>
     </div>
-    <div class="section-body">
-      <h3>問題</h3>
+
+    <div class="highlight">
+      <div class="hi-label">裂變機制（核心增長引擎）</div>
+      <p>① 買 $990 報告 → 收到分享卡（含 QR Code）→ 朋友掃碼付 $990 → 原用戶分潤<br>
+      ② 30 天覺察日記完成 → AI 整理成分享卡 → 帶入新用戶 → 進入 $990 漏斗<br>
+      → <strong>兩個裂變閉環自動運轉，不需主動推廣</strong></p>
+    </div>
+
+    <div class="card">
+      <h4>企業端擴展路徑</h4>
       <ul>
-        <li>「木星時空」目前同時涵蓋人類圖企業內訓 + SIM LIFE 活動，屬性差異過大</li>
-        <li>SIM LIFE 服務 B 端（企業員工團建），木星時空屬 C 端個人品牌</li>
+        <li>活動現場紀錄（每人有編號）→ 企業 HR 可依技能 / 特質搜尋人才</li>
+        <li>HR 買企業版（員工數據歸公司）→ 職能表對齊 → 內訓規劃</li>
+        <li>AI 日記情緒分析 → 偵測員工狀態異常 → 轉介心理諮商</li>
+        <li>目標鎖定：BNI 分會、人資小週末、泰衣國際現有企業脈絡、台積電等</li>
       </ul>
-      <h3>建議</h3>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">全新 AI 身心靈流派——避版權、重融合、做全新</div>
+    </div>
+
+    <div class="card">
+      <h4>背景與策略轉向</h4>
       <ul>
-        <li><strong>SIM LIFE 獨立品牌</strong>，定位「團建活動公司」</li>
-        <li>聚焦：<strong>全台灣想到企業團建就找這個品牌</strong></li>
-        <li>只要 HR 滿意度高 → HR 介紹 HR → 口碑擴散極快</li>
-        <li>進 BNI 時機：十月活動 + AI 系統跑順後，以強案例敲門</li>
+        <li>原計畫：直接出售人類圖報告書（$990）→ <strong style="color:var(--ember);">版權風險（台灣授權方可索償）</strong></li>
+        <li>轉向：爬完全球所有人類圖大師、人類圖中心資料 → 取底層邏輯共同點 → 全新融合流派</li>
+        <li>範疇：東方（易經、五行、九宮麥倫）+ 西方（占星十二宮）+ 南美命理 + 心理學 + 教練方法論</li>
+        <li>版權安全：融合後產出是全新流派，非任何既有系統的直接翻版</li>
       </ul>
-      <div class="insight-box">
-        <div class="quote">「你只要接一兩家大公司，口碑做出來，HR 跟老闆講，你生意接不完。」</div>
-        <div class="quote-attr">— Zeal，音檔 6-5-3</div>
+    </div>
+
+    <div class="card">
+      <h4>技術實作進度（截至 2026-06-05）</h4>
+      <ul>
+        <li>✅ 默克（人類圖）二三十年資材 → Wiki 化完成（約 2.5 小時完成爬取）</li>
+        <li>✅ 全球人類圖大師 + 所有人類圖中心資料 → 爬取完成</li>
+        <li>🔄 其他流派（東西方全系列）爬取中 → 預計當日完成</li>
+        <li>⏳ 底層邏輯融合 + 新流派建構 → <strong>預計 2 個月內上線</strong></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>白老師機構合作進展</h4>
+      <p>同日 Zeal 與白老師機構負責人完成洽談，目標為「白老師機構全 AI 化」。此合作為命理 AI 教練系統提供第一個大型機構落地案。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">現場數位記錄系統——打通活動與 AI 教練的關鍵</div>
+    </div>
+
+    <div class="card">
+      <h4>紙本 → 數位化方案</h4>
+      <ul>
+        <li>設計有格子的紙本表單（類似考試填格，蓋章方式，統一綠色）</li>
+        <li>參與者填完 → 掃描上傳 → Agent 解析</li>
+        <li>Agent 第一步：個人資料建檔（編號化）</li>
+        <li>Agent 第二步：記錄「第一次玩的樣子」</li>
+        <li>第二次活動：對比看見改變，形成個人成長軌跡</li>
+      </ul>
+    </div>
+
+    <div class="highlight">
+      <div class="hi-label">整合路徑（10 月目標）</div>
+      <p>現場紀錄卡（掃描）→ AI Agent 建檔 → 綁入 AI 教練系統 → 活動結束即自動進入教練模式 → 企業 HR 數位化依據 → 內訓規劃</p>
+    </div>
+
+    <div class="card">
+      <h4>人格分析整合（系統設計方向）</h4>
+      <ul>
+        <li>祐妮：先出空白表單，讓 Agent 測試識別率（先讓它能讀）</li>
+        <li>Zeal：兩週內建立迷你 AI 命理系統 → 與表單對齊測試 → 回饋缺漏欄位</li>
+        <li>可整合：OneMuse（Zeal）、人類圖（祐妮）、MUSEON 人格體系</li>
+        <li>轉譯設計：AI 產出底層分析 → 轉譯成人類圖 / 星座 / 易經等用戶熟悉語言</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">雙方分工策略——陽脈 vs 陰脈</div>
+    </div>
+
+    <div class="collab-split">
+      <div class="collab-side cs-yunik">
+        <div class="cs-label">祐妮 / 達哥（C 端 · 陽脈）</div>
+        <ul>
+          <li>現場活動執行與體驗設計</li>
+          <li>8 月場次活動籌備（無 AI 系統）</li>
+          <li>BNI 分會服務與來賓日擴大</li>
+          <li>企業 HR 人脈開發（人資小週末）</li>
+          <li>紙本記錄表設計與優化</li>
+          <li>木星時空 / SIM LIFE 品牌定位調整</li>
+        </ul>
+      </div>
+      <div class="collab-side cs-zeal">
+        <div class="cs-label">Zeal（B 端 · 陰脈）</div>
+        <ul>
+          <li>AI 身心靈融合流派開發（2 個月）</li>
+          <li>AI 教練系統建構（迷你版 2 週）</li>
+          <li>10 月 AI 系統整合進活動</li>
+          <li>企業主 / 大 B 說明（HR 背景增加說服力）</li>
+          <li>泰衣國際 → 台積電等大型企業開發</li>
+          <li>MUSEON ADGEN 工具導入 / 試用</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <div class="hi-label">分工哲學</div>
+      <p>「你負責陽脈（現場、人脈），我負責陰脈（系統、後台）。力道要夠快，B 端先弄起來就可以跟 C 端串。」——Zeal</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">關鍵里程碑</div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">即時（2026-06-05 後）</div>
+        <div class="tl-content">祐妮提供空白紀錄表（有格子設計）給 Zeal 測試 Agent 識別率</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2 週內</div>
+        <div class="tl-content">Zeal 完成迷你 AI 命理系統 → 與祐妮紀錄表對齊測試 → 回饋缺漏欄位</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2 個月內（約 2026-08）</div>
+        <div class="tl-content">全新 AI 身心靈融合流派上線（封測）→ $990 命盤報告 + AI 教練系統</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026 年 8 月</div>
+        <div class="tl-content">SIM LIFE 第二場活動（無 AI 系統，測試新版紀錄表流程）</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026 年 10 月</div>
+        <div class="tl-content">SIM LIFE 第三場活動 + AI 系統全整合（紀錄卡 → AI 建檔 → 教練系統自動接入）</div>
+      </div>
+      <div class="tl-item dim">
+        <div class="tl-date">10 月後</div>
+        <div class="tl-content">系統驗證無 bug + HR 滿意度確認 → 祐妮進 BNI → 大規模 B 端推廣</div>
       </div>
     </div>
   </div>
 
-  <!-- 7. 時程 -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">📅</div>
-      <div>
-        <div class="section-title">推進時程</div>
-        <div class="section-subtitle">近兩場活動節點</div>
-      </div>
+      <div class="section-num">7</div>
+      <div class="section-title">後續行動清單</div>
     </div>
-    <div class="section-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-left">
-            <div class="timeline-date">即刻</div>
-            <div class="timeline-dot"></div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-content">
-            <h4>品牌定位確認（約 1 週）</h4>
-            <p>SIM LIFE 品牌命名、獨立定位文案、網站架構規劃</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-left">
-            <div class="timeline-date">兩週內</div>
-            <div class="timeline-dot"></div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-content">
-            <h4>Zeal 迷你 AI 系統完成</h4>
-            <p>數位記錄 Agent 接通，可讀取掃描表格並建立個人資料庫</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-left">
-            <div class="timeline-date">八月</div>
-            <div class="timeline-dot"></div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-content">
-            <h4>第二場活動（無 AI 系統）</h4>
-            <p>使用新版紙本表格實測；目標：驗證表格設計流暢度、收集真實案例用於 B 端開發</p>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-left">
-            <div class="timeline-date">十月</div>
-            <div class="timeline-dot"></div>
-          </div>
-          <div class="timeline-content">
-            <h4>第三場活動（AI 系統正式介接）</h4>
-            <p>AI 記錄系統上線 + AI 教練串聯。若滿意度高且無 bug → 準備進 BNI。泰衣國際管道洽談台積電等大廠。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 8. 行動項目 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">✅</div>
-      <div>
-        <div class="section-title">行動項目</div>
-        <div class="section-subtitle">責任人 × 優先級</div>
-      </div>
-    </div>
-    <div class="section-body">
-      <div class="action-list">
-        <div class="action-item">
-          <span class="action-owner owner-yunik">佑妮</span>
-          <span class="action-text">設計新版記錄表格（有格子 + 綠色蓋章格），先給 Zeal AI Agent 測讀</span>
-          <span class="action-priority p1">P1</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-zeal">Zeal</span>
-          <span class="action-text">完成迷你 AI 系統，讓 Agent 能讀取掃描表格並建檔</span>
-          <span class="action-priority p1">P1</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-both">雙方</span>
-          <span class="action-text">確認 SIM LIFE 品牌命名，完成品牌定位文件</span>
-          <span class="action-priority p1">P1</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-yunik">佑妮</span>
-          <span class="action-text">洽談 BNI 分會長（董顧等）合作辦活動，強調品牌而非金流</span>
-          <span class="action-priority p2">P2</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-yunik">佑妮</span>
-          <span class="action-text">邀請「人資小週末」創辦人體驗下一場，提前佈局 HR 口碑</span>
-          <span class="action-priority p2">P2</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-zeal">Zeal</span>
-          <span class="action-text">AI 身心靈流派（全新融合版）開發，目標兩個月上線；990 命盤報告 + AI 教練訂閱</span>
-          <span class="action-priority p2">P2</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-yunik">佑妮</span>
-          <span class="action-text">透過泰衣國際管道，接洽台積電等大型企業 HR 合作</span>
-          <span class="action-priority p2">P2</span>
-        </div>
-        <div class="action-item">
-          <span class="action-owner owner-both">雙方</span>
-          <span class="action-text">八月活動辦完後對接 Zeal 系統，確認記錄表與 AI 系統相容性</span>
-          <span class="action-priority p2">P2</span>
-        </div>
-      </div>
-    </div>
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th>行動事項</th>
+          <th>負責人</th>
+          <th>時限</th>
+          <th>優先</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>提供空白紀錄表（有格子設計）給 Zeal 測試 Agent 識別</td>
+          <td class="owner-y">祐妮</td>
+          <td>本週</td>
+          <td><span class="priority-high">High</span></td>
+        </tr>
+        <tr>
+          <td>測試 Agent 能否識別紙本表單格子 + 回饋需補的欄位</td>
+          <td class="owner-z">Zeal</td>
+          <td>收到表單後 3 天</td>
+          <td><span class="priority-high">High</span></td>
+        </tr>
+        <tr>
+          <td>AI 身心靈融合流派：其餘流派爬取完成 → 底層邏輯萃取</td>
+          <td class="owner-z">Zeal</td>
+          <td>2026-06-05 當日</td>
+          <td><span class="priority-high">High</span></td>
+        </tr>
+        <tr>
+          <td>討論 SIM LIFE 品牌命名（獨立於木星時空）</td>
+          <td class="owner-y">祐妮</td>
+          <td>1 週內</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+        <tr>
+          <td>網站架構調整 + 新版品牌定位（分開 SIM LIFE / 木星時空）</td>
+          <td class="owner-y">祐妮</td>
+          <td>1 週內</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+        <tr>
+          <td>8 月活動籌備：志工招募 + 攤位確認 + 新版紀錄表測試</td>
+          <td class="owner-y">祐妮</td>
+          <td>2026-07</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+        <tr>
+          <td>企業主開發：人資小週末脈絡 + BNI 分會 power day 洽談</td>
+          <td class="owner-y">祐妮</td>
+          <td>持續進行</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+        <tr>
+          <td>大 B 說明材料準備（Zeal 以 HR 顧問身份協助企業簡報）</td>
+          <td class="owner-z">Zeal</td>
+          <td>系統封測後</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+        <tr>
+          <td>達哥：MUSEON ADGEN 工具試用 + 回饋</td>
+          <td class="owner-d">達哥</td>
+          <td>本週</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+        <tr>
+          <td>10 月活動：AI 系統整合測試 → HR 滿意度調查 → 後續 BNI 進場</td>
+          <td class="owner-z">Zeal</td>
+          <td>2026-10</td>
+          <td><span class="priority-med">Med</span></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
 
-<div class="footer">
-  <strong>MUSEON</strong> · AI 會議記錄系統自動生成<br>
-  本文件依據音檔 6-5-1、6-5-2、6-5-3 逐字稿整理，2026-06-06
+<div class="doc-footer">
+  由 <span>MUSEON AI</span> 根據三段音訊逐字稿（6-5-1、6-5-2、6-5-3）自動整理 · 2026-06-06 · 機密文件，僅供內部使用
 </div>
 
 </body>
