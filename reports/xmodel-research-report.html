@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X-Model 研究分析報告 — MUSEON</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .hero {
+    background: var(--deep-ink);
+    color: #fff;
+    padding: 80px 48px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(196,80,42,0.2);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .hero-meta-item .label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .hero-meta-item .value {
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+
+  .section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    display: inline-block;
+    width: 16px; height: 2px;
+    background: var(--ember);
+    border-radius: 1px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .section-lead {
+    font-size: 17px;
+    color: var(--slate);
+    line-height: 1.8;
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(18,18,26,0.06); }
+  .card-icon { font-size: 24px; margin-bottom: 12px; }
+  .card-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .card-body { font-size: 14px; color: var(--slate); line-height: 1.7; }
+
+  .card-dark { background: var(--surface); border-color: var(--border-dark); color: #fff; }
+  .card-dark .card-title { color: #fff; }
+  .card-dark .card-body { color: rgba(255,255,255,0.6); }
+
+  .highlight-block {
+    background: var(--snow);
+    border-left: 3px solid var(--ember);
+    border-radius: 0 8px 8px 0;
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .highlight-block p { font-size: 16px; color: var(--ink); line-height: 1.8; }
+  .highlight-block strong { color: var(--ember); }
+
+  .quote-block {
+    background: var(--deep-ink);
+    color: #fff;
+    border-radius: 10px;
+    padding: 36px 40px;
+    margin: 40px 0;
+    position: relative;
+  }
+  .quote-block::before {
+    content: '\201C';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    color: rgba(196,80,42,0.3);
+    position: absolute;
+    top: 8px; left: 28px;
+    line-height: 1;
+  }
+  .quote-block p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    padding-left: 16px;
+  }
+  .quote-source {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 16px;
+    padding-left: 16px;
+    font-style: normal;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 32px 0;
+  }
+  .flow-step {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+  }
+  .flow-step .step-num {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ember);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .flow-step .step-label { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .flow-step .step-desc { font-size: 12px; color: var(--slate); line-height: 1.5; }
+  .flow-arrow { color: var(--ember); font-size: 18px; font-weight: 300; flex-shrink: 0; }
+
+  .num-list {
+    counter-reset: item;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .num-list li { counter-increment: item; display: flex; gap: 16px; align-items: flex-start; }
+  .num-list li::before {
+    content: counter(item, decimal-leading-zero);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ember);
+    min-width: 28px;
+    padding-top: 2px;
+  }
+  .num-list li .li-content { flex: 1; }
+  .num-list li .li-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .num-list li .li-desc { font-size: 14px; color: var(--slate); line-height: 1.7; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .data-table { width: 100%; border-collapse: collapse; margin: 32px 0; font-size: 14px; }
+  .data-table th {
+    background: var(--deep-ink);
+    color: rgba(255,255,255,0.85);
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--slate);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .data-table tr:hover td { background: rgba(196,80,42,0.03); }
+  .data-table td:first-child { font-weight: 500; color: var(--ink); }
+
+  .tag {
+    display: inline-block;
+    background: rgba(196,80,42,0.1);
+    color: var(--ember-dark);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 10px;
+    margin: 2px;
+  }
+  .tag-teal { background: rgba(42,122,110,0.1); color: var(--teal); }
+  .tag-gold { background: rgba(184,146,58,0.1); color: #8A6A18; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  .insight-block {
+    background: linear-gradient(135deg, rgba(184,146,58,0.06) 0%, rgba(42,122,110,0.06) 100%);
+    border: 1px solid rgba(184,146,58,0.2);
+    border-radius: 10px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+  .insight-block .insight-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .insight-block p { font-size: 15px; color: var(--ink); line-height: 1.8; }
+
+  .toc {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 40px 0;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 16px;
+  }
+  .toc ol { counter-reset: toc; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .toc li { counter-increment: toc; font-size: 14px; }
+  .toc li::before { content: counter(toc) ". "; color: var(--ember); font-weight: 600; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc a:hover { color: var(--ember); }
+
+  .footer {
+    background: var(--deep-ink);
+    color: rgba(255,255,255,0.4);
+    padding: 40px 48px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 48px 24px 40px; }
+    .hero h1 { font-size: 34px; }
+    .container { padding: 0 20px; }
+    .section { padding: 48px 0; }
+    .flow-arrow { display: none; }
+    .flow-row { flex-direction: column; }
+    .flow-step { min-width: auto; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260609_010142_65015bdd.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+
+<div class="hero">
+  <div class="hero-tag">MUSEON × X-Model 研究分析</div>
+  <h1>X-Model：<em>讓人看見</em><br>自己真正問題的引擎</h1>
+  <p class="hero-sub">
+    從六大荒謬到品牌飛輪——X-Model 不是一套方法，而是一個讓決策者重新看見自己的系統性框架。
+    適用於企業經營、個人發展、人際關係、健康管理、職涯設計。
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">知識來源</span>
+      <span class="value">Zeal × MUSEON 對話結晶</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">版本</span>
+      <span class="value">v1.0 — 2026.06.09</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">應用層級</span>
+      <span class="value">顧問實務 · 企業經營 · 人生各面向</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="toc">
+    <div class="toc-title">目錄</div>
+    <ol>
+      <li><a href="#s1">核心問題意識：為什麼努力方向是錯的</a></li>
+      <li><a href="#s2">GAP 診斷：把問題還原到第一層</a></li>
+      <li><a href="#s3">三大根因：達克效應 × 名權利 × 芒忙盲</a></li>
+      <li><a href="#s4">策略生成：逆熵階梯 × 八大槓桿</a></li>
+      <li><a href="#s5">品牌聚焦：不做什麼比做什麼重要</a></li>
+      <li><a href="#s6">五大人生面向應用</a></li>
+      <li><a href="#s7">教練失敗五原因 × 六大盲點對照</a></li>
+      <li><a href="#s8">X-Model 在 MUSEON 中的位置</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- S1 -->
+<div class="container">
+  <div class="section" id="s1">
+    <div class="section-tag">核心問題意識</div>
+    <h2 class="section-title">為什麼努力方向是錯的</h2>
+    <p class="section-lead">大部分人卡住，不是因為不努力，而是因為他們在用一個錯的框架努力。X-Model 的出發點，就是要先把這個框架拆掉。</p>
+
+    <div class="highlight-block">
+      <p>老闆帶來的不是問題，是他<strong>腦補完之後的答案</strong>。他說「我需要解決 A」，但 A 只是他對「我真正想要的結果」的解法假設，兩者之間從未被驗證。</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">使用者說出的是第二層</div>
+        <div class="card-body">「我認為能達到結果的手段」——這是已經跳過思考的輸出，而不是真正的需求。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">顧問照單全收的後果</div>
+        <div class="card-body">解得再漂亮，第一層的真需求沒動，老闆感覺「有做事但不對」，然後把責任歸因給顧問。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧩</div>
+        <div class="card-title">兩層疊加的問題表述</div>
+        <div class="card-body">Layer 1 = 真需求（想要什麼結果）<br>Layer 2 = 解法假設（認為要怎麼做）<br>說出來的是 Layer 2，顧問必須往回走到 Layer 1。</div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>X-Model GAP 診斷的本質，是在做一件顧問很難開口做的事：把老闆的解法假設拆掉，讓他重新看見自己的真需求。</p>
+      <div class="quote-source">— X-Model 核心設計哲學</div>
+    </div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="container">
+  <div class="section" id="s2">
+    <div class="section-tag">GAP 診斷</div>
+    <h2 class="section-title">把問題還原到第一層</h2>
+    <p class="section-lead">GAP 診斷是 X-Model 的起點：從使用者的「現況」和「口頭目標」的落差中，抓出真正的問題本質。</p>
+
+    <div class="flow-row">
+      <div class="flow-step">
+        <div class="step-num">Step 01</div>
+        <div class="step-label">現況確認</div>
+        <div class="step-desc">使用者真實狀態，不是自我陳述，而是可觀察的數據</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 02</div>
+        <div class="step-label">目標還原</div>
+        <div class="step-desc">問「你真正想要的結果是什麼」，拆解解法假設</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 03</div>
+        <div class="step-label">GAP 顯現</div>
+        <div class="step-desc">現況 vs. 真需求的落差才是真正的問題</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">Step 04</div>
+        <div class="step-label">策略設計</div>
+        <div class="step-desc">針對真正的 GAP，不是針對解法假設</div>
+      </div>
+    </div>
+
+    <div class="insight-block">
+      <div class="insight-title">💡 GAP 診斷的兩個訊號</div>
+      <p>
+        <strong>左腦訊號（落後指標）</strong>：復盤結果——看到好消息放大，看到壞消息調整。大部分人知道要復盤，但觀察過程本身太有威脅性，因為看到壞消息很難承受。<br><br>
+        <strong>右腦訊號（領先指標）</strong>：創造結果的過程中，身旁的人的體驗和回應。這比最終數字更早告訴你方向對不對。<br><br>
+        兩個訊號都沒有主動探尋，目標設定出來的結果就是充滿壓力，甚至根本不是自己真正想要的。
+      </p>
+    </div>
+
+    <div class="highlight-block">
+      <p>GAP 診斷最難的不是技術，而是<strong>時機和方式</strong>——太早拆他的假設，他會覺得你在否定他；太晚拆，已經走歪了。X-Model 是讓老闆「自己看見」的工具，不是顧問站出來說「你想的是錯的」。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="container">
+  <div class="section" id="s3">
+    <div class="section-tag">三大根因</div>
+    <h2 class="section-title">達克效應 × 名權利 × 芒忙盲</h2>
+    <p class="section-lead">企業主為什麼沒辦法「看清問題本質」？不是能力問題，而是三個系統性機制在作用。</p>
+
+    <ul class="num-list">
+      <li>
+        <div class="li-content">
+          <div class="li-title">達克效應：愚者之巔的神經慣性</div>
+          <div class="li-desc">愚者之巔的人不是不聰明，他是「成功過」。過去的成功讓他建立了「這個框架有效」的強化學習記憶，反而讓他更難看見框架以外的問題。腦補解法不是懶惰，是既有神經路徑的慣性。</div>
+        </div>
+      </li>
+      <li>
+        <div class="li-content">
+          <div class="li-title">名權利：被別人的局吸走了方向</div>
+          <div class="li-desc">「名」（地位認可）、「權」（影響力）、「利」（金錢）是三個最強的方向劫持器。老闆在沒有想清楚自己方向的狀態下，被這三個勾走，入了別人設計的局。結果忙了，但方向不是自己的。</div>
+        </div>
+      </li>
+      <li>
+        <div class="li-content">
+          <div class="li-title">芒忙盲：三個同音字，一個根源</div>
+          <div class="li-desc"><strong>芒</strong>（茫然無方向）、<strong>忙</strong>（過勞無思考時間）、<strong>盲</strong>（看不見真實狀況）——三字同音但困境不同，卻都指向同一個根源：沒有靜下來觀察左腦訊號（復盤結果）和右腦訊號（他人體驗）。</div>
+        </div>
+      </li>
+    </ul>
+
+    <table class="data-table" style="margin-top:40px">
+      <tr>
+        <th>根因</th>
+        <th>表面症狀</th>
+        <th>深層機制</th>
+        <th>X-Model 介入點</th>
+      </tr>
+      <tr>
+        <td>達克效應</td>
+        <td>腦補解法、拒絕外部框架</td>
+        <td>成功神經路徑形成慣性</td>
+        <td>GAP 診斷第一問：「你怎麼確認這是真需求？」</td>
+      </tr>
+      <tr>
+        <td>名權利</td>
+        <td>到處入局、方向失焦</td>
+        <td>外部驅動取代內部方向</td>
+        <td>目標重塑：強烈正向情緒的 SMART 目標</td>
+      </tr>
+      <tr>
+        <td>芒忙盲</td>
+        <td>過勞、茫然、看不清狀況</td>
+        <td>兩個訊號長期空白</td>
+        <td>建立左腦復盤 + 右腦探詢機制</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="container">
+  <div class="section" id="s4">
+    <div class="section-tag">策略生成</div>
+    <h2 class="section-title">逆熵階梯 × 八大槓桿</h2>
+    <p class="section-lead">看清問題之後，才有資格談策略。X-Model 的策略邏輯是：先讓目標可以走，再用槓桿讓它走得快。</p>
+
+    <div class="two-col">
+      <div>
+        <div class="section-tag">逆熵設計</div>
+        <br>
+        <ul class="num-list">
+          <li>
+            <div class="li-content">
+              <div class="li-title">SMART 目標重塑</div>
+              <div class="li-desc">目標必須有主語（針對你自己的資源）、可量測、可達成、有時限。GPT 給的是無主語的通用策略，X-Model 給的是「你手裡有什麼可以打」。</div>
+            </div>
+          </li>
+          <li>
+            <div class="li-content">
+              <div class="li-title">逆熵階梯切分</div>
+              <div class="li-desc">10 年 → 5 年 → 3 年 → 1 年 → 半年 → 3 個月。目標切小不是退縮，是讓累積產生正向回饋，從壓力感轉成喜悅感。</div>
+            </div>
+          </li>
+          <li>
+            <div class="li-content">
+              <div class="li-title">複利熟練度效應</div>
+              <div class="li-desc">每一層累積帶來熟練度提升，同樣的事越來越輕鬆，效率飛輪自然轉動。原本的累積不停止，但相對變輕鬆，才去做下一階段的事。</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-tag">八大槓桿</div>
+        <br>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="card" style="padding:14px 18px">
+            <div class="card-title" style="font-size:14px">品牌</div>
+            <div class="card-body" style="font-size:13px">可識別的信任資產——理念的持續一致性</div>
+          </div>
+          <div class="card" style="padding:14px 18px">
+            <div class="card-title" style="font-size:14px">人脈</div>
+            <div class="card-body" style="font-size:13px">有籌碼才有交換，有累積才有資格談合作</div>
+          </div>
+          <div class="card" style="padding:14px 18px">
+            <div class="card-title" style="font-size:14px">平台 · 知識 · 研發</div>
+            <div class="card-body" style="font-size:13px">可複用的基礎設施，每用一次邊際成本遞減</div>
+          </div>
+          <div class="card" style="padding:14px 18px">
+            <div class="card-title" style="font-size:14px">時間 · 信用 · 金錢</div>
+            <div class="card-body" style="font-size:13px">有限資源的最佳化配置，先累積再交換</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>有主語的策略 vs. GPT 的無主語策略：差距在於「你知道自己手裡有什麼可以打，而不只是通用路徑」。</p>
+      <div class="quote-source">— 結晶 KL-HYP-0008 · 核心洞見</div>
+    </div>
+
+    <div class="highlight-block">
+      <p>逆熵的最終效果：<strong>築夢踏實</strong>——從小的地方開始累積，反而因為步步都走到了，壓力消失、喜悅取代。OKR 的紀律 + MECE 的不重疊不遺漏，確保階梯切得精準。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="container">
+  <div class="section" id="s5">
+    <div class="section-tag">品牌聚焦</div>
+    <h2 class="section-title">不做什麼，比做什麼重要</h2>
+    <p class="section-lead">策略的核心是聚焦，聚焦的核心是取捨。品牌不是「做了什麼」的累積，而是「選擇不做什麼」之後留下來的清晰輪廓。</p>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">🏛️</div>
+        <div class="card-title">品牌的 SSA 定義</div>
+        <div class="card-body">品牌是一致性的累積：<strong>理念 → 視覺 → 行為 → 記憶點</strong>。不是 logo，不是顏色，而是這四層的連貫性。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">鐵粉裂變飛輪</div>
+        <div class="card-body">老闆理念 ≡ 使用者口碑 → 鐵粉自然形成 → 鐵粉擴散 → 更多同頻者加入。這個飛輪一旦轉起來，不需要靠廣告推動。</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">✈️</div>
+        <div class="card-title">空軍的前提</div>
+        <div class="card-body">社群、自媒體、廣告是空軍。空軍有效的前提是地面口碑先到位——沒有地面，空軍只是燒錢。</div>
+      </div>
+    </div>
+
+    <div class="insight-block">
+      <div class="insight-title">💡 聚焦阻力的根本原因</div>
+      <p>忙盲茫困境中的老闆，對聚焦總是擔心「犧牲營業額」。但這個擔心本身就是盲點——沒有特色的品牌做不起來，沒有特色就沒有超額利潤，沒有超額利潤就沒有多餘的資源回饋給認同自己理念的員工和廠商，也就沒辦法做到孔子大學提到的「有財必有用」——投資在同頻的人身上以進一步擴大事業版圖。<br><br>
+      <strong>聚焦的勇氣，本質上是對自己判斷力的信任。</strong></p>
+    </div>
+
+    <div class="highlight-block">
+      <p>個人品牌和企業品牌遵循同一邏輯：<strong>到處尋求認同 = 無辨識度 = 無法建立真正的連結</strong>。聚焦不是排他，是讓真正同頻的人能夠找到你。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="container">
+  <div class="section" id="s6">
+    <div class="section-tag">多面向應用</div>
+    <h2 class="section-title">五大人生面向應用</h2>
+    <p class="section-lead">X-Model 不是商業工具，而是人生決策框架。同一套診斷邏輯，可應用在任何有「GAP」的地方。</p>
+
+    <table class="data-table">
+      <tr>
+        <th>面向</th>
+        <th>典型「解法假設」陷阱</th>
+        <th>X-Model 介入：還原真需求</th>
+        <th>正向飛輪</th>
+      </tr>
+      <tr>
+        <td>🏢 企業經營</td>
+        <td>「我需要找行銷顧問」（假設流量不足）</td>
+        <td>先問「你真正想要的結果是什麼」，可能是利潤率，不是流量</td>
+        <td>口碑飛輪：老闆理念 ≡ 客戶體驗</td>
+      </tr>
+      <tr>
+        <td>🤝 人際關係</td>
+        <td>「我需要多認識人」（假設數量不足）</td>
+        <td>先問「你想建立什麼樣的關係」，可能是深度連結，不是廣泛人脈</td>
+        <td>信任資產：真誠一致行為 ≡ 他人口碑</td>
+      </tr>
+      <tr>
+        <td>💪 健康管理</td>
+        <td>「我要開始健身」（假設運動量不足）</td>
+        <td>先問「你真正想要的身體狀態是什麼」，可能是精力，不是體型</td>
+        <td>習慣飛輪：小的累積 → 熟練度 → 輕鬆持續</td>
+      </tr>
+      <tr>
+        <td>💼 職涯設計</td>
+        <td>「我要換工作」（假設環境問題）</td>
+        <td>先問「讓你不滿的根本是什麼」，可能是自主性，不是公司</td>
+        <td>能力飛輪：核心優勢 ≡ 市場口碑</td>
+      </tr>
+      <tr>
+        <td>👨‍👩‍👧 家庭關係</td>
+        <td>「我要花更多時間陪家人」（假設時間不足）</td>
+        <td>先問「家人真正的期待是什麼」，可能是品質，不是時間長度</td>
+        <td>情感飛輪：理念一致 ≡ 家人真實感受</td>
+      </tr>
+    </table>
+
+    <div class="insight-block">
+      <div class="insight-title">💡 跨面向的共同根源</div>
+      <p>品牌飛輪、個人修煉、人際槓桿三者，共用同一個根因（盲點一：不認識自己）和同一個解法路徑（聚焦取捨 → 有主語 → 正向飛輪）。<br><br>
+      這不是三個不同的工具，而是<strong>同一個工具在三個面向的投影</strong>。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S7 -->
+<div class="container">
+  <div class="section" id="s7">
+    <div class="section-tag">教練思維</div>
+    <h2 class="section-title">失敗五原因 × 六大盲點對照</h2>
+    <p class="section-lead">從教練思維中失敗的五種原因，可以清晰看到六大盲點在真實場景中如何作用。</p>
+
+    <table class="data-table">
+      <tr>
+        <th>#</th>
+        <th>失敗原因</th>
+        <th>命中的盲點</th>
+        <th>X-Model 介入</th>
+      </tr>
+      <tr>
+        <td>a</td>
+        <td>企圖心 / 擁有感不足</td>
+        <td>盲點 2（沒方向目標）+ 盲點 1（不認識自己）</td>
+        <td>目標重塑：讓目標帶來強烈正向情緒，不是壓力</td>
+      </tr>
+      <tr>
+        <td>b</td>
+        <td>行動量不足</td>
+        <td>盲點 3（不掌握 GAP）</td>
+        <td>逆熵階梯：把難度切小，每一步都能做到，行動自然發生</td>
+      </tr>
+      <tr>
+        <td>c</td>
+        <td>知識 / 能力不足</td>
+        <td>盲點 4（未盤點累積）</td>
+        <td>籌碼盤點 + 能力累積設計：知道自己擁有什麼再談 GAP</td>
+      </tr>
+      <tr>
+        <td>d</td>
+        <td>沒有善用工具（如 MUSEON Agent）</td>
+        <td>盲點 5（不懂槓桿）</td>
+        <td>八大槓桿框架：從「自己努力」到「用系統放大」</td>
+      </tr>
+      <tr>
+        <td>e</td>
+        <td>人脈不足 / 有人脈不會槓桿</td>
+        <td>盲點 5（不懂槓桿）+ 盲點 6（缺整合佈局）</td>
+        <td>價值交換邏輯：先有籌碼，才能透過交換取得資源</td>
+      </tr>
+    </table>
+
+    <div class="highlight-block">
+      <p>六大盲點不是隨機的清單，它們有順序——前面的沒清，後面的方法論就是空的。<strong>自我認識（盲點 1）是所有後續盲點的基礎</strong>。不認識自己，方向就容易被名權利劫走，GAP 就診斷不準，槓桿也不知道從哪裡施力。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S8 -->
+<div class="container">
+  <div class="section" id="s8">
+    <div class="section-tag">MUSEON 定位</div>
+    <h2 class="section-title">X-Model 在 MUSEON 中的位置</h2>
+    <p class="section-lead">X-Model 不只是顧問工具，它是 MUSEON 服務使用者和自我演化的共同底層框架。</p>
+
+    <div class="two-col">
+      <div class="card card-dark">
+        <div class="card-icon">🔭</div>
+        <div class="card-title">對使用者</div>
+        <div class="card-body">六大盲點守望者：MUSEON 透過 X-Model 幫助使用者從「不知道自己不知道」到「可以看清自己的問題」，再到「有系統地向前走」。</div>
+      </div>
+      <div class="card card-dark">
+        <div class="card-icon">🧬</div>
+        <div class="card-title">對自身</div>
+        <div class="card-body">MUSEON 也用同一套邏輯檢視自己：七武海七維度是 MUSEON 的「GAP 診斷報告」——現況、目標、逆熵路徑都在裡面。</div>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:32px">
+      <p>X-Model 不給答案。它給的是「讓你自己看見問題在哪」的方法。先修內部，再談工具。先有自我認識，目標才有意義。</p>
+      <div class="quote-source">— MUSEON × X-Model 核心哲學</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="text-align:center;padding:24px 0 8px">
+      <div style="font-size:13px;color:var(--slate);margin-bottom:12px">本報告覆蓋的核心結晶</div>
+      <div class="pill-row" style="justify-content:center">
+        <span class="tag">KL-HYP-0007</span>
+        <span class="tag">KL-HYP-0008</span>
+        <span class="tag-teal tag">X-Model GAP 診斷</span>
+        <span class="tag-teal tag">逆熵階梯</span>
+        <span class="tag-teal tag">八大槓桿</span>
+        <span class="tag-gold tag">品牌飛輪</span>
+        <span class="tag-gold tag">六大盲點</span>
+        <span class="tag-gold tag">達克效應</span>
+        <span class="tag-gold tag">芒忙盲</span>
+        <span class="tag">KL-ATM-0001～0013</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-brand">MUSEON</div>
+  <div>X-Model 研究分析報告 v1.0 &nbsp;·&nbsp; 2026.06.09 &nbsp;·&nbsp; Zeal × MUSEON 對話結晶</div>
+</div>
+
+</body>
+</html>
