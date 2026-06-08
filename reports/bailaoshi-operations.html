@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>白老師國際語言中心 — 智慧營運系統規劃</title>
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #12121A 0%, #1e2840 60%, #2A3A5A 100%);
+    color: #fff;
+    padding: 64px 40px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(196,80,42,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse at 70% 50%, rgba(42,122,110,0.12) 0%, transparent 70%);
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(196,80,42,0.25);
+    border: 1px solid rgba(196,80,42,0.5);
+    color: #E0714D;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: #E0714D; }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto 36px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .hero-meta-num { font-size: 30px; font-weight: 700; color: #E0714D; }
+  .hero-meta-label { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+
+  /* LAYOUT */
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 60px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--ember); font-weight: 600; margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: clamp(21px, 3vw, 29px); font-weight: 700;
+    color: var(--ink); margin-bottom: 10px; line-height: 1.3;
+  }
+  .section-desc {
+    color: var(--slate); font-size: 15px; max-width: 600px; margin-bottom: 40px;
+  }
+
+  /* PAIN POINTS */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .pain-card {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: box-shadow 0.2s;
+  }
+  .pain-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+  .pain-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .pi-red { background: #FEF0EC; }
+  .pi-orange { background: #FFF5E6; }
+  .pi-blue { background: #EBF4F8; }
+  .pain-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--ink); }
+  .pain-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+  /* FLOW */
+  .flow-wrapper {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px 28px; overflow-x: auto;
+  }
+  .flow-row {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: nowrap; min-width: 720px;
+  }
+  .flow-step {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; flex: 1; min-width: 76px;
+  }
+  .flow-circle {
+    width: 50px; height: 50px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; flex-shrink: 0;
+  }
+  .flow-step-label { font-size: 11px; font-weight: 600; color: var(--ink); text-align: center; line-height: 1.4; }
+  .flow-arrow { color: var(--mist); font-size: 16px; flex-shrink: 0; padding: 0 2px; margin-bottom: 22px; }
+
+  .bg-blue { background: #EBF4F8; }
+  .bg-teal { background: #E6F4F2; }
+  .bg-green { background: #E8F5F0; }
+  .bg-gold { background: #FBF4E6; }
+  .bg-ember { background: #FEF0EC; }
+  .bg-purple { background: #F0EBF8; }
+
+  /* PHASES */
+  .phase-block { margin-bottom: 44px; }
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .phase-badge {
+    padding: 4px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  }
+  .pb-1 { background: #E8F5F0; color: #2D8A6E; border: 1px solid #b2ddd4; }
+  .pb-2 { background: #EBF4F8; color: #2A6A8A; border: 1px solid #b2d0df; }
+  .pb-3 { background: #FBF4E6; color: #B8923A; border: 1px solid #dfc990; }
+  .phase-title { font-size: 17px; font-weight: 700; color: var(--ink); }
+  .phase-subtitle { font-size: 13px; color: var(--mist); margin-left: auto; }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .module-card {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px;
+  }
+  .module-num { font-size: 10px; font-weight: 700; color: var(--mist); margin-bottom: 5px; letter-spacing: 1px; }
+  .module-name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .module-desc { font-size: 12px; color: var(--slate); line-height: 1.6; }
+  .module-tag {
+    display: inline-block; font-size: 10px; padding: 2px 8px;
+    border-radius: 10px; margin-top: 10px; font-weight: 600;
+  }
+  .t-core { background: #E8F5F0; color: #2D8A6E; }
+  .t-fin { background: #FBF4E6; color: #B8923A; }
+  .t-hr { background: #EBF4F8; color: #2A6A8A; }
+  .t-ai { background: #F0EBF8; color: #6A4A9A; }
+  .t-svc { background: #FEF0EC; color: #C4502A; }
+
+  /* DATA LAYER */
+  .data-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+  }
+  .data-category {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 16px;
+  }
+  .data-cat-title {
+    font-size: 11px; font-weight: 700; color: var(--ember);
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .data-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--slate); padding: 3px 0;
+  }
+  .data-item::before {
+    content: ''; width: 5px; height: 5px;
+    border-radius: 50%; background: var(--mist); flex-shrink: 0;
+  }
+
+  /* ROADMAP */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+  }
+  .roadmap-phase { padding: 28px 22px; border-right: 1px solid var(--border); }
+  .roadmap-phase:last-child { border-right: none; }
+  .rp-active { background: linear-gradient(135deg, #E8F5F0 0%, #F4FAF8 100%); }
+  .rp-upcoming { background: var(--snow); }
+  .rp-future { background: var(--parchment); }
+  .roadmap-phase-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+  .rp-active .roadmap-phase-num { color: #2D8A6E; }
+  .rp-upcoming .roadmap-phase-num { color: #2A6A8A; }
+  .rp-future .roadmap-phase-num { color: var(--gold); }
+  .roadmap-phase-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .roadmap-period { font-size: 12px; color: var(--mist); margin-bottom: 16px; }
+  .roadmap-items { list-style: none; }
+  .roadmap-items li {
+    font-size: 13px; color: var(--slate); padding: 4px 0;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .roadmap-items li::before { content: '✓'; color: #2D8A6E; font-weight: 700; flex-shrink: 0; }
+  .rp-upcoming .roadmap-items li::before { content: '○'; color: #2A6A8A; }
+  .rp-future .roadmap-items li::before { content: '◇'; color: var(--gold); }
+
+  /* VALUE */
+  .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .value-card {
+    background: var(--snow); border: 1px solid var(--border);
+    border-radius: 12px; padding: 26px 20px; text-align: center;
+  }
+  .value-icon { font-size: 26px; margin-bottom: 10px; }
+  .value-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .value-text { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--ink); color: rgba(255,255,255,0.45);
+    text-align: center; padding: 32px 24px; font-size: 13px;
+  }
+  .footer strong { color: rgba(255,255,255,0.75); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px; }
+    section { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260608_135444_eeadcbae.png" alt="an aged map with brass compass and ink quill on parchment, contemplative warm light, editorial still life" width="1024" height="576" loading="lazy" />
+
+<img class="museon-image museon-image--hero" src="museon_images/20260608_135427_31945514.png" alt="an aged map with brass compass and ink quill on parchment, contemplative warm light, editorial still life" width="1024" height="576" loading="lazy" />
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">系統規劃文件 v0.4</div>
+  <h1>白老師國際語言中心<br><span>智慧營運系統</span>規劃</h1>
+  <p class="hero-sub">從諮詢到結業，打造一套整合補習班全流程的內部管理系統</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">19</span>
+      <span class="hero-meta-label">核心模組</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">14</span>
+      <span class="hero-meta-label">主資料實體</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">3</span>
+      <span class="hero-meta-label">導入階段</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">3</span>
+      <span class="hero-meta-label">使用端入口</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<section>
+  <div class="container">
+    <div class="section-label">現況痛點</div>
+    <h2 class="section-title">目前遭遇的六大問題</h2>
+    <p class="section-desc">這套系統針對白老師中心日常營運中最耗時、最容易出錯的流程，進行系統性解決。</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon pi-red">📋</div>
+        <div>
+          <div class="pain-title">三段式建檔繁瑣</div>
+          <div class="pain-desc">同一個學生的資料要在不同系統重複輸入，新生報名流程費時費力。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-red">💸</div>
+        <div>
+          <div class="pain-title">帳單不直覺</div>
+          <div class="pain-desc">插班費計算複雜、欠款追蹤困難，每期對帳耗費大量人力且容易有漏收。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-orange">⏰</div>
+        <div>
+          <div class="pain-title">薪資打卡人工</div>
+          <div class="pain-desc">老師鐘點費與員工出勤全靠手動計算，容易出錯且每月耗費大量時間。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-orange">🗂️</div>
+        <div>
+          <div class="pain-title">資料孤島</div>
+          <div class="pain-desc">學生、帳務、課程資料分散多處，跨部門查詢困難，無法一眼掌握全貌。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-blue">💬</div>
+        <div>
+          <div class="pain-title">LINE 群混亂</div>
+          <div class="pain-desc">通知、聯絡、請假全靠 LINE 群，訊息容易漏接，溝通管理效率低落。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-blue">📣</div>
+        <div>
+          <div class="pain-title">行銷缺乏數據</div>
+          <div class="pain-desc">缺乏試聽轉換率追蹤、招生來源分析，招生策略決策只能靠直覺。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">完整業務流程</div>
+    <h2 class="section-title">從第一通電話到結業，全程數位化</h2>
+    <p class="section-desc">系統串接補習班完整的學生生命週期，每個環節的資料自動流轉，不再重複輸入。</p>
+    <div class="flow-wrapper">
+      <div class="flow-row">
+        <div class="flow-step">
+          <div class="flow-circle bg-blue">📞</div>
+          <div class="flow-step-label">家長<br>諮詢</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-teal">🎓</div>
+          <div class="flow-step-label">安排<br>試聽</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-green">✅</div>
+          <div class="flow-step-label">成交<br>建檔</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-gold">📚</div>
+          <div class="flow-step-label">報名<br>入班</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-ember">🗓️</div>
+          <div class="flow-step-label">排課<br>分班</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-purple">📝</div>
+          <div class="flow-step-label">出缺席<br>管理</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-blue">🔄</div>
+          <div class="flow-step-label">補課<br>安排</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-teal">💳</div>
+          <div class="flow-step-label">帳單<br>繳費</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-green">🔔</div>
+          <div class="flow-step-label">通知<br>推送</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-circle bg-gold">📊</div>
+          <div class="flow-step-label">學習<br>紀錄</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section>
+  <div class="container">
+    <div class="section-label">系統模組架構</div>
+    <h2 class="section-title">19 個核心模組，分三階段導入</h2>
+    <p class="section-desc">依據白老師中心的實際業務需求，優先建置每天都在使用的核心功能，確保上線即可解決痛點。</p>
+
+    <!-- Phase 1 -->
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-badge pb-1">第一階段</span>
+        <span class="phase-title">核心營運基礎</span>
+        <span class="phase-subtitle">建議優先導入 · 13 個模組</span>
+      </div>
+      <div class="module-grid">
+        <div class="module-card">
+          <div class="module-num">MOD 01</div>
+          <div class="module-name">人員資料管理</div>
+          <div class="module-desc">學生、家長、老師、員工一次建檔，全系統共用，不再重複輸入。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 02</div>
+          <div class="module-name">分校與教室管理</div>
+          <div class="module-desc">管理各分校場地與教室容量設備，支援排課衝突自動偵測。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 03</div>
+          <div class="module-name">課程與班級管理</div>
+          <div class="module-desc">課程（賣什麼）與班級（實際開課單位）分層管理，支援多分校多老師。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 04</div>
+          <div class="module-name">期別與行事曆</div>
+          <div class="module-desc">管理學期週期、國定假日、停補課日，自動影響費用計算與排課邏輯。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 05</div>
+          <div class="module-name">試聽／諮詢管理</div>
+          <div class="module-desc">追蹤試聽來源、接待紀錄、結果與未成交原因，掌握招生轉換率。</div>
+          <span class="module-tag t-svc">招生服務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 06</div>
+          <div class="module-name">報名／就讀管理</div>
+          <div class="module-desc">完整記錄學生入班、轉班、停課、退班、復學等狀態變化與歷程。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 07</div>
+          <div class="module-name">排課管理</div>
+          <div class="module-desc">自動檢查老師與教室時段衝突，建立班級課表，支援補課課表安排。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 08</div>
+          <div class="module-name">出缺席管理</div>
+          <div class="module-desc">每次上課到課狀態記錄（到課、缺席、請假、遲到），連動補課與家長通知。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 09</div>
+          <div class="module-name">補課管理</div>
+          <div class="module-desc">管理缺席後補課流程，包含可補課堂、班級時段安排與完成狀態追蹤。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 10</div>
+          <div class="module-name">定價／費用規則</div>
+          <div class="module-desc">設定學期費、月費、插班計算規則、折扣方案，為帳單模組提供規則引擎。</div>
+          <span class="module-tag t-fin">財務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 11</div>
+          <div class="module-name">帳單／繳費</div>
+          <div class="module-desc">自動產生帳單、追蹤繳費狀態、欠費提醒、開具收據與匯出會計資料。</div>
+          <span class="module-tag t-fin">財務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 12</div>
+          <div class="module-name">通知模組</div>
+          <div class="module-desc">繳費提醒、缺席通知、補課安排、停補課公告，預留 LINE、Email、App 推播串接。</div>
+          <span class="module-tag t-svc">溝通服務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 14</div>
+          <div class="module-name">帳號／權限管理</div>
+          <div class="module-desc">分角色設定操作權限（主管、行政、老師、家長），資料可見範圍精細控管，操作留痕。</div>
+          <span class="module-tag t-core">核心基礎</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-badge pb-2">第二階段</span>
+        <span class="phase-title">業務延伸功能</span>
+        <span class="phase-subtitle">核心穩定後擴充 · 5 個模組</span>
+      </div>
+      <div class="module-grid">
+        <div class="module-card">
+          <div class="module-num">MOD 13</div>
+          <div class="module-name">餐點代訂</div>
+          <div class="module-desc">管理餐點品項、每日訂單彙整、供應商對接、配送領取狀態與付款追蹤。獨立模組不混入帳單。</div>
+          <span class="module-tag t-svc">加值服務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 15</div>
+          <div class="module-name">對帳／財務報表</div>
+          <div class="module-desc">月結報表、欠款清單、分校與課程收入統計、會計匯出，管理用報表非完整會計總帳。</div>
+          <span class="module-tag t-fin">財務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 16</div>
+          <div class="module-name">薪資與打卡排班</div>
+          <div class="module-desc">員工打卡出勤紀錄、老師鐘點費自動計算、月薪基礎資料、請假紀錄管理。</div>
+          <span class="module-tag t-hr">人資</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 17</div>
+          <div class="module-name">學習歷程／成績</div>
+          <div class="module-desc">學生學習紀錄、老師評語與考試成績管理，家長查詢時一目了然。</div>
+          <span class="module-tag t-svc">教學服務</span>
+        </div>
+        <div class="module-card">
+          <div class="module-num">MOD 18</div>
+          <div class="module-name">招生／行銷追蹤</div>
+          <div class="module-desc">試聽來源分析、轉介紀錄、各管道成交率追蹤，讓招生策略有數據支撐。</div>
+          <span class="module-tag t-svc">行銷</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-badge pb-3">第三階段</span>
+        <span class="phase-title">AI 智慧輔助</span>
+        <span class="phase-subtitle">資料積累後串接 · 1 個模組</span>
+      </div>
+      <div class="module-grid">
+        <div class="module-card">
+          <div class="module-num">MOD 19</div>
+          <div class="module-name">AI 工具串接</div>
+          <div class="module-desc">學習歷程摘要 AI、行政資料檢查 AI、家長查詢輔助 AI。初期設計為「只讀不改」，確保核心資料安全。</div>
+          <span class="module-tag t-ai">AI 輔助</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA LAYER -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">資料架構</div>
+    <h2 class="section-title">14 個核心主資料實體</h2>
+    <p class="section-desc">這是整套系統的數據地基。資料一次建立後，所有模組共用同一份，不再有資料孤島、不再重複輸入。</p>
+    <div class="data-group">
+      <div class="data-category">
+        <div class="data-cat-title">👥 人員資料</div>
+        <div class="data-item">學生</div>
+        <div class="data-item">家長</div>
+        <div class="data-item">老師</div>
+        <div class="data-item">員工</div>
+      </div>
+      <div class="data-category">
+        <div class="data-cat-title">🏫 場域資料</div>
+        <div class="data-item">分校</div>
+        <div class="data-item">教室</div>
+      </div>
+      <div class="data-category">
+        <div class="data-cat-title">📚 教學營運</div>
+        <div class="data-item">課程</div>
+        <div class="data-item">班級</div>
+        <div class="data-item">期別</div>
+      </div>
+      <div class="data-category">
+        <div class="data-cat-title">📐 營運規則</div>
+        <div class="data-item">定價費用結構</div>
+        <div class="data-item">行事曆例外日</div>
+      </div>
+      <div class="data-category">
+        <div class="data-cat-title">🔗 流程關聯</div>
+        <div class="data-item">試聽諮詢紀錄</div>
+        <div class="data-item">報名就讀紀錄</div>
+        <div class="data-item">帳號權限角色</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section>
+  <div class="container">
+    <div class="section-label">導入規劃</div>
+    <h2 class="section-title">三階段漸進式導入</h2>
+    <p class="section-desc">先建地基，再擴功能，確保每個階段上線後都能立刻解決現有的業務問題。</p>
+    <div class="roadmap">
+      <div class="roadmap-phase rp-active">
+        <div class="roadmap-phase-num">Phase 1</div>
+        <div class="roadmap-phase-title">核心營運基礎</div>
+        <div class="roadmap-period">建議第一期上線</div>
+        <ul class="roadmap-items">
+          <li>人員資料統一建檔管理</li>
+          <li>課程班級期別建立</li>
+          <li>試聽諮詢流程追蹤</li>
+          <li>排課衝突自動偵測</li>
+          <li>出缺席與補課管理</li>
+          <li>帳單繳費欠款追蹤</li>
+          <li>基礎通知推送</li>
+          <li>帳號權限分層控管</li>
+        </ul>
+      </div>
+      <div class="roadmap-phase rp-upcoming">
+        <div class="roadmap-phase-num">Phase 2</div>
+        <div class="roadmap-phase-title">業務延伸功能</div>
+        <div class="roadmap-period">核心穩定後導入</div>
+        <ul class="roadmap-items">
+          <li>餐點代訂完整流程</li>
+          <li>財務對帳報表</li>
+          <li>薪資打卡排班計算</li>
+          <li>學習歷程成績管理</li>
+          <li>招生行銷來源分析</li>
+          <li>老師端入口上線</li>
+          <li>家長端查詢功能</li>
+        </ul>
+      </div>
+      <div class="roadmap-phase rp-future">
+        <div class="roadmap-phase-num">Phase 3</div>
+        <div class="roadmap-phase-title">AI 智慧輔助</div>
+        <div class="roadmap-period">資料積累後串接</div>
+        <ul class="roadmap-items">
+          <li>學習歷程摘要 AI</li>
+          <li>行政資料檢查 AI</li>
+          <li>家長查詢 AI 助理</li>
+          <li>AI 作業批改（預留）</li>
+          <li>AI 口說練習（預留）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section style="background: var(--snow);">
+  <div class="container">
+    <div class="section-label">系統價值</div>
+    <h2 class="section-title">這套系統帶來的六個核心改變</h2>
+    <p class="section-desc">不只是工具的更換，而是讓行政團隊從繁瑣事務中解放，把時間還給學生服務。</p>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="value-icon">⏱️</div>
+        <div class="value-title">行政時間大幅縮減</div>
+        <div class="value-text">建檔、帳單、通知全部系統化，每期報名行政耗時預估縮減 60% 以上。</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🗂️</div>
+        <div class="value-title">資料一次建立多處使用</div>
+        <div class="value-text">學生建檔後全系統共用，不再重複輸入，不再資料不同步。</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">💰</div>
+        <div class="value-title">帳務清晰不漏收</div>
+        <div class="value-text">自動計算插班費、追蹤欠款、提醒繳費，財務狀況隨時掌握不遺漏。</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">📊</div>
+        <div class="value-title">招生決策有數據支撐</div>
+        <div class="value-text">試聽來源、轉換率、未成交原因都有紀錄，招生策略不再只靠直覺。</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔔</div>
+        <div class="value-title">通知不再依賴 LINE 群</div>
+        <div class="value-text">繳費提醒、缺席通知、補課安排全部系統化發送，不再怕訊息漏接。</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤖</div>
+        <div class="value-title">未來接 AI，資料已就位</div>
+        <div class="value-text">系統設計預留 AI 串接能力，等資料積累後，AI 輔助功能可隨時擴充。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN PRINCIPLES -->
+<section>
+  <div class="container">
+    <div class="section-label">設計原則</div>
+    <h2 class="section-title">系統設計的四個核心思維</h2>
+    <p class="section-desc">這四個原則確保系統不只是功能清單，而是真正能長期使用、隨業務成長的營運工具。</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon pi-red">🏗️</div>
+        <div>
+          <div class="pain-title">資料一次建檔，多處共用</div>
+          <div class="pain-desc">學生、家長、老師建好後，所有模組都用同一份資料，沒有資料孤島。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-orange">📐</div>
+        <div>
+          <div class="pain-title">費用規則與帳單分開</div>
+          <div class="pain-desc">「怎麼算」與「怎麼收」是兩件事，分開管理才能彈性應對各種收費情境。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-blue">🤝</div>
+        <div>
+          <div class="pain-title">AI 初期只讀、不改</div>
+          <div class="pain-desc">先把資料做穩，AI 只用來摘要與輔助，不直接修改核心業務資料，確保安全。</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon pi-red">🗺️</div>
+        <div>
+          <div class="pain-title">分期做，但全貌先看</div>
+          <div class="pain-desc">先看三年整體規劃圖，再按期分步導入，費用透明、每期都有具體成果。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p><strong>白老師國際語言中心 × MUSEON</strong> — 智慧營運系統規劃 v0.4</p>
+  <p style="margin-top: 8px;">本文件為系統規劃說明文件，供雙方確認業務範疇與導入方向。</p>
+</div>
+
+</body>
+</html>
