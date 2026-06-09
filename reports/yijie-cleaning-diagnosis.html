@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易睫清潔坊 · 營運診斷報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8;
+    --border:#E2E0DA; --parchment:#F7F5F0; --snow:#FDFCFA;
+    --success:#2D8A6E; --warning:#C9943A; --error:#C4402A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans TC',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  .display{font-family:'Cormorant Garamond',serif}
+  .mono{font-family:'IBM Plex Mono',monospace}
+
+  .hero{background:linear-gradient(135deg,#16161F 0%,#23202b 60%,#2d2018 100%);color:#FDFCFA;padding:88px 0 72px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-80px;top:-80px;width:340px;height:340px;background:radial-gradient(circle,rgba(196,80,42,.35),transparent 70%);filter:blur(8px)}
+  .hero .wrap{position:relative;z-index:1}
+  .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:4px;background:rgba(196,80,42,.18);color:var(--ember-light);border:1px solid rgba(196,80,42,.35);margin-bottom:24px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:600;line-height:1.12;margin-bottom:18px}
+  .hero h1 .accent{color:var(--ember-light);font-style:italic}
+  .hero .sub{font-size:18px;color:#C9C7CF;max-width:600px;line-height:1.8}
+  .hero .meta{margin-top:32px;display:flex;gap:28px;flex-wrap:wrap;font-size:13px;color:#9898A8}
+  .hero .meta b{color:#E0E0E6;font-weight:500}
+
+  section{padding:56px 0}
+  section + section{border-top:1px solid var(--border)}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-bottom:10px}
+  h2.sec{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;line-height:1.2;margin-bottom:8px}
+  .lead{font-size:18px;color:var(--slate);margin-bottom:32px;max-width:680px}
+  h3{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;margin:32px 0 12px}
+  p{margin-bottom:16px}
+  .narr{max-width:680px}
+
+  .snap{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:28px 0}
+  .snap .card{background:var(--snow);border:1px solid var(--border);border-radius:8px;padding:22px}
+  .snap .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mist);margin-bottom:8px}
+  .snap .v{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--ember-dark);line-height:1.1}
+  .snap .d{font-size:13px;color:var(--slate);margin-top:6px}
+
+  .pain{background:var(--snow);border:1px solid var(--border);border-left:4px solid var(--ember);border-radius:8px;padding:24px 26px;margin-bottom:18px}
+  .pain .num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--ember);letter-spacing:.05em}
+  .pain h4{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;margin:6px 0 10px}
+  .pain p{font-size:15.5px;color:#33333f;margin-bottom:10px}
+  .pain .quote{background:#F0EDE8;border-radius:6px;padding:12px 16px;font-size:14.5px;color:var(--slate);font-style:italic;margin-top:8px}
+  .pain .quote::before{content:"\201C";color:var(--ember-light);font-size:22px;font-family:'Cormorant Garamond',serif;margin-right:2px}
+  .impact{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:3px 9px;border-radius:4px;margin-top:6px}
+  .impact.high{background:rgba(196,64,42,.12);color:var(--error)}
+  .impact.mid{background:rgba(201,148,58,.15);color:var(--warning)}
+
+  table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14.5px;background:var(--snow);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:#F0EDE8;font-weight:700;font-size:13px;color:var(--ink)}
+  td:first-child{font-weight:500}
+  tr:last-child td{border-bottom:none}
+  .yes{color:var(--success);font-weight:700}
+  .no{color:var(--error);font-weight:700}
+  .mid2{color:var(--warning);font-weight:700}
+
+  .sol{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0}
+  .sol .card{background:var(--snow);border:1px solid var(--border);border-radius:8px;padding:24px;border-top:3px solid var(--teal)}
+  .sol .card h4{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:8px;color:var(--teal)}
+  .sol .card p{font-size:15px;color:#33333f;margin-bottom:0}
+  .sol .card ul{margin:10px 0 0 0;padding-left:18px}
+  .sol .card li{font-size:14.5px;color:var(--slate);margin-bottom:5px}
+
+  .callout{background:linear-gradient(135deg,rgba(42,122,110,.08),rgba(184,146,58,.06));border:1px solid var(--border);border-radius:10px;padding:28px 30px;margin:28px 0}
+  .callout .eyebrow{color:var(--teal)}
+  .callout p{font-size:16.5px;color:#2a2a36;margin-bottom:0}
+  .callout p b{color:var(--ink)}
+
+  ul.clean{list-style:none;padding:0;margin:16px 0}
+  ul.clean li{padding-left:26px;position:relative;margin-bottom:10px;font-size:15.5px;color:#33333f}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--ember)}
+
+  .footer{background:#16161F;color:#9898A8;padding:44px 0;text-align:center;font-size:13px}
+  .footer .display{font-size:24px;color:#FDFCFA;margin-bottom:8px}
+  .footer .ember{color:var(--ember-light)}
+
+  @media(max-width:680px){
+    .hero h1{font-size:38px}.hero{padding:60px 0 48px}
+    h2.sec{font-size:30px}.sol{grid-template-columns:1fr}
+    section{padding:40px 0}
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260609_124232_e2b19d28.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">營運診斷報告 · Operations Diagnosis</span>
+    <h1>易睫清潔坊<br><span class="accent">把老闆腦中的判斷，<br>變成團隊能複製的資產</span></h1>
+    <p class="sub">兩次深度訪談後的整合診斷——現況、市場定位、六大痛點與解方方向。這不是一份賣系統的提案，而是先把問題看清楚。</p>
+    <div class="meta">
+      <span>訪談對象 · <b>Peggy（業主）</b></span>
+      <span>訪談 · <b>Feng（MUSEON 顧問）</b></span>
+      <span>整合日期 · <b>2026/06/09</b></span>
+      <span class="mono">v1.0</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap narr">
+    <div class="eyebrow">Executive Summary</div>
+    <h2 class="sec">一句話的診斷</h2>
+    <p class="lead">易睫清潔坊的瓶頸，不是缺一套排班軟體，而是<b>整間公司的營運判斷都裝在 Peggy 一個人的腦袋裡</b>。</p>
+    <p>過去一到三年，營業額與人數都在成長——這是好消息，代表市場與口碑都站得住。但成長同時把一個結構性問題放大了：報價要 Peggy 報、難案場要 Peggy 帶、臨時缺人要 Peggy 自己下場補位、收款對帳要 Peggy 一筆筆核。團隊夥伴最常問她的一句話是：「你怎麼還在第一線？」</p>
+    <p>答案藏在這個產業的本質裡。清潔服務賣的不是標準化商品，而是<b>信任</b>——客戶買的是「易睫派誰來，水準都一樣」這件事。Peggy 很清楚這一點，所以她拒絕走同業那種「接單轉發、中間抽成」的配合制路線，堅持自建固定團隊、統一 SOP。這是她最強的護城河，卻也是她最重的枷鎖：因為品質綁在她身上，所以她離不開第一線。</p>
+    <div class="callout">
+      <div class="eyebrow">顧問核心判斷</div>
+      <p>真正要解的，是把 Peggy 的隱性判斷——<b>哪個員工適合哪種案場、哪個客戶要固定時間、哪個案場要老手帶隊、哪些價格能成交但毛利不夠</b>——一步步「資料化」。系統 v1 的角色是<b>輔助決策，不是取代決策</b>。先建資料中心，再談自動化。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Current State</div>
+    <h2 class="sec">營運現況快照</h2>
+    <p class="lead">先看清楚這間公司現在站在哪裡。</p>
+    <div class="snap">
+      <div class="card"><div class="k">區域</div><div class="v">台南</div><div class="d">安平 / 南區為核心，評估拓點高雄</div></div>
+      <div class="card"><div class="k">營運趨勢</div><div class="v">成長中</div><div class="d">近 1–3 年營業額與人數同步上升</div></div>
+      <div class="card"><div class="k">客戶來源</div><div class="v">口碑</div><div class="d">LINE／電話／既有客戶轉介為主</div></div>
+      <div class="card"><div class="k">核心瓶頸</div><div class="v">人治</div><div class="d">關鍵判斷集中在業主一人</div></div>
+    </div>
+    <h3>三大服務線</h3>
+    <ul class="clean">
+      <li><b>居家清潔</b>（定期 / 單次 / 老客戶維護）——需求彈性，排班可調整空間大。</li>
+      <li><b>大掃除</b>——範圍大、毛利表現相對好，但工時與成本較難精算。</li>
+      <li><b>裝潢細清</b>（新屋 / 裝修後 / 設計師案場）——技能門檻最高，<b>一定要有老手帶隊</b>，不能交給純新人。</li>
+    </ul>
+    <h3>顧問現場觀察到的三項優勢</h3>
+    <p class="narr">訪談中 Feng 對 Peggy 的直接回饋，點出了這間公司真正的價值所在：</p>
+    <div class="pain" style="border-left-color:var(--teal)">
+      <p style="margin-bottom:0;font-size:15.5px"><b>「你會帶團隊、有師傅帶徒弟的心情；你的口碑是一個非常棒的防火牆；財務正在成長中。」</b></p>
+      <div class="quote" style="margin-top:14px">帶教文化、口碑護城河、成長中的財務——這三項是系統要去「放大」而不是「取代」的東西。</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Market Positioning</div>
+    <h2 class="sec">市場與競品定位</h2>
+    <p class="lead">台南清潔市場有兩種玩法，易睫選了難走但護城河更深的那一條。</p>
+    <p class="narr">同業常見的是「配合制」——老闆手上有一批不固定的配合人員，接到單就轉發出去、中間抽成，每個人的打掃方法、SOP 都不一樣。這種模式輕資產、好擴張，但品質浮動、客戶體驗不一致，本質上是「中間丟單的人」。</p>
+    <p class="narr">易睫走的是相反路線：<b>自建固定團隊 + 統一 SOP + 帶教制度</b>。Peggy 對客戶的承諾是「我們所有人的水平都一樣，派誰去都沒關係」。這條路訓練成本高、擴張慢，但換來的是可被信任、可被轉介的品牌。</p>
+    <table>
+      <tr><th>維度</th><th>同業「配合制」模式</th><th>易睫「自建團隊」模式</th></tr>
+      <tr><td>人員結構</td><td>不固定配合人員</td><td class="yes">固定自有員工</td></tr>
+      <tr><td>SOP 一致性</td><td class="no">各做各的，落差大</td><td class="yes">統一標準，水平一致</td></tr>
+      <tr><td>品質可控度</td><td class="no">浮動、看人</td><td class="yes">可控、可帶教</td></tr>
+      <tr><td>客戶信任與轉介</td><td class="mid2">難累積</td><td class="yes">口碑護城河</td></tr>
+      <tr><td>擴張速度</td><td class="yes">快（輕資產）</td><td class="mid2">慢（要訓練人）</td></tr>
+      <tr><td>對老闆的依賴</td><td class="mid2">中（只丟單）</td><td class="no">高（品質綁在老闆身上）</td></tr>
+    </table>
+    <div class="callout">
+      <div class="eyebrow">策略意涵</div>
+      <p>易睫的模式「品質贏、依賴輸」。系統的使命就是<b>補上唯一的弱項——把對老闆的高度依賴，轉成對制度的依賴</b>，讓統一 SOP 不再只活在 Peggy 腦中，而是長在一套可查、可教、可複製的資料系統裡。這樣護城河才能在拓點高雄時跟著複製過去。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Pain Points</div>
+    <h2 class="sec">六大營運痛點</h2>
+    <p class="lead">每一個痛點，都是 Peggy 現在用「人腦 + 經驗 + 時間」硬扛的地方。</p>
+
+    <div class="pain">
+      <div class="num">PAIN 01</div>
+      <h4>報價綁在老闆身上，且難以標準化</h4>
+      <p>報價牽涉現場狀況、難度、人力與經驗判斷，員工無法獨立完成；即使員工先報，最後還是要 Peggy 看過。更麻煩的是——單純用坪數公式會失準。</p>
+      <div class="quote">假設室內 25 坪，用每坪 800～1000 算就要 2 萬至 2 萬 5，透天案件這樣抓會太高……我的做法是先給一個 range，再加耗材費跟運車費。</div>
+      <span class="impact high">影響：成交效率 · 毛利失準 · 老闆時間</span>
+    </div>
+
+    <div class="pain">
+      <div class="num">PAIN 02</div>
+      <h4>派工與排班是高維度的人腦運算</h4>
+      <p>派工不是「誰有空派誰」，而是同時權衡員工技能、案場難度、客戶週期（週/雙週/三週/月）、地區路線、客戶是否在家、員工家庭收入需求。Peggy 特別在意雙週與三週客戶——「週期一亂，後面整個排程跟著亂」。</p>
+      <span class="impact high">影響：排程穩定度 · 人力利用率 · 老闆精力</span>
+    </div>
+
+    <div class="pain">
+      <div class="num">PAIN 03</div>
+      <h4>缺人就老闆下場，沒有備援機制</h4>
+      <p>員工臨時請假，Peggy 通常親自補位；人力不足時只能延長工時或跟客戶協調改期，優先保大案場、犧牲小案場。整個備援邏輯沒有被記錄下來，全靠臨場反應。</p>
+      <span class="impact mid">影響：老闆過勞 · 服務韌性</span>
+    </div>
+
+    <div class="pain">
+      <div class="num">PAIN 04</div>
+      <h4>收款與薪資混流，對帳有風險</h4>
+      <p>付款方式有現金、LINE Pay、轉帳三種；現場現金多由員工代收，再與 Peggy 對帳，有時直接從薪資倒扣。現金流與薪資混在一起，曾發生收款金額與回報金額對不上的情況。</p>
+      <div class="quote">他們在現場一定會碰錢，這個勢必要改，只是短期內我先這樣……年長客戶也不習慣轉帳。</div>
+      <span class="impact high">影響：財務安全 · 信任成本 · 法遵風險</span>
+    </div>
+
+    <div class="pain">
+      <div class="num">PAIN 05</div>
+      <h4>毛利靠經驗抓，沒有真實數字</h4>
+      <p>每場毛利多以經驗估個大概，沒有精算過。成本含人力、耗材（清潔劑/抹布/工具）、交通、外縣市支援、額外加給；耗材常由 Peggy 補貨，員工自購不一定回報。結果是——可能有些案子「能成交但其實毛利不足」而不自知。</p>
+      <span class="impact mid">影響：定價決策 · 獲利能見度</span>
+    </div>
+
+    <div class="pain">
+      <div class="num">PAIN 06</div>
+      <h4>客戶記憶與服務紀錄沒有沉澱</h4>
+      <p>客戶的偏好、注意事項、上次哪裡特別處理過、哪裡下次要補——這些都在服務當下的人腦裡。換一個員工服務同一客戶，就要重新摸索。客訴多是局部沒清完，靠 Peggy 個別判斷溝通。特殊案件（如火災現場清理）更需要明確的承接判斷。</p>
+      <div class="quote">火災現場的處理模式跟清潔模式完全不一樣……這種我硬著頭皮接，未來應該更明確判斷要不要承接。</div>
+      <span class="impact mid">影響：服務一致性 · 客訴處理 · 風險控管</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Solution Direction</div>
+    <h2 class="sec">解決方案方向</h2>
+    <p class="lead">解法的原則只有一句：先讓判斷「有紀錄、可追蹤」，再談「給建議、做自動」。</p>
+    <div class="sol">
+      <div class="card">
+        <h4>① 建客戶資料中心</h4>
+        <p>對應痛點 01、06。把詢問→報價→成交→服務→回饋串成一條客戶歷史線。</p>
+        <ul><li>客戶來源 / 詢問 / 報價 / 成交狀態</li><li>歷次服務紀錄與注意事項</li><li>換人服務也能秒懂客戶偏好</li></ul>
+      </div>
+      <div class="card">
+        <h4>② 報價輔助（非全自動）</h4>
+        <p>對應痛點 01、05。給 Peggy 一張「估價收集表 + 參考區間 + 相似案件查詢」，她做最終確認。</p>
+        <ul><li>室內外坪數 / 櫃體 / 透天大樓 / 難度</li><li>耗材費 + 運車費納入</li><li>歷史相似案件比對</li></ul>
+      </div>
+      <div class="card">
+        <h4>③ 員工技能標籤 + 排班</h4>
+        <p>對應痛點 02、03。把員工能力與案場需求都標籤化，系統推薦、Peggy 拍板。</p>
+        <ul><li>居家 / 細清 / 可帶新人 / 可獨立 / 可開車</li><li>固定週期 + 地區標籤 + 衝突提醒</li><li>「報價成交後自動抓人填洞」的願景起點</li></ul>
+      </div>
+      <div class="card">
+        <h4>④ 收款對帳 + 成本毛利</h4>
+        <p>對應痛點 04、05。短期目標不是禁止員工收款，而是讓每一筆「有紀錄、可對帳」。</p>
+        <ul><li>應收 / 實收 / 收款人 / 是否繳回 / 扣抵</li><li>基礎成本欄位 → 粗估毛利</li><li>逐步把現金流與薪資拆開</li></ul>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="eyebrow">明確的邊界——v1 不做什麼</div>
+      <p>完全自動報價、完全自動排班、自動毛利精算、複雜耗材庫存、全自動路線最佳化——這些<b>第一階段都不做</b>。因為 Peggy 的判斷裡有大量人情、員工家庭狀況、客戶彈性與現場難度。系統一開始做得太硬，反而不符合真實營運。<b>先輔助，後自動。</b></p>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="wrap">
+    <div class="display">MUSEON<span class="ember">.</span></div>
+    <p>本報告由 MUSEON 顧問系統整合自 2026/06/02 與 2026/06/08 兩次訪談</p>
+    <p style="margin-top:6px;color:#6a6a78">把老闆腦中的判斷，變成團隊能複製的資產</p>
+  </div>
+</div>
+
+</body>
+</html>

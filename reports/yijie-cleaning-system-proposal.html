@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易睫清潔坊 · 營運系統提案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --teal-light:#3a9c8d; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8;
+    --border:#E2E0DA; --parchment:#F7F5F0; --snow:#FDFCFA;
+    --success:#2D8A6E; --warning:#C9943A; --error:#C4402A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans TC',sans-serif;background:var(--parchment);color:var(--ink);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  .display{font-family:'Cormorant Garamond',serif}
+  .mono{font-family:'IBM Plex Mono',monospace}
+
+  .hero{background:linear-gradient(135deg,#0E1614 0%,#13231f 55%,#1c2d20 100%);color:#FDFCFA;padding:88px 0 72px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-80px;top:-60px;width:340px;height:340px;background:radial-gradient(circle,rgba(42,122,110,.4),transparent 70%);filter:blur(8px)}
+  .hero .wrap{position:relative;z-index:1}
+  .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:4px;background:rgba(42,122,110,.2);color:#5cc4b3;border:1px solid rgba(42,122,110,.4);margin-bottom:24px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:600;line-height:1.12;margin-bottom:18px}
+  .hero h1 .accent{color:#5cc4b3;font-style:italic}
+  .hero .sub{font-size:18px;color:#C5CFCC;max-width:620px;line-height:1.8}
+  .hero .meta{margin-top:32px;display:flex;gap:28px;flex-wrap:wrap;font-size:13px;color:#8a9a96}
+  .hero .meta b{color:#DDE6E3;font-weight:500}
+
+  section{padding:56px 0}
+  section + section{border-top:1px solid var(--border)}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+  h2.sec{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;line-height:1.2;margin-bottom:8px}
+  .lead{font-size:18px;color:var(--slate);margin-bottom:32px;max-width:680px}
+  h3{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;margin:32px 0 12px}
+  p{margin-bottom:16px}
+  .narr{max-width:680px}
+
+  .purpose{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:28px 0}
+  .purpose .card{background:var(--snow);border:1px solid var(--border);border-radius:8px;padding:24px;text-align:center}
+  .purpose .icon{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--teal);font-weight:600;margin-bottom:6px}
+  .purpose h4{font-size:16px;font-weight:700;margin-bottom:6px}
+  .purpose p{font-size:14px;color:var(--slate);margin-bottom:0}
+
+  .mod{background:var(--snow);border:1px solid var(--border);border-radius:8px;padding:0;margin-bottom:14px;overflow:hidden}
+  .mod .head{display:flex;align-items:center;gap:14px;padding:18px 22px;background:linear-gradient(90deg,rgba(42,122,110,.06),transparent)}
+  .mod .no{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#FFF;background:var(--teal);width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .mod .title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600}
+  .mod .body{padding:6px 22px 20px 22px}
+  .mod .solves{font-size:14px;color:var(--ember-dark);margin-bottom:10px;font-weight:500}
+  .mod .fields{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+  .mod .chip{font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:#F0EDE8;color:#4a4a58;padding:4px 10px;border-radius:4px;border:1px solid var(--border)}
+
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px;background:var(--snow);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:#F0EDE8;font-weight:700;font-size:13px;color:var(--ink)}
+  tr:last-child td{border-bottom:none}
+  td:first-child{font-weight:500;white-space:nowrap}
+
+  .phase{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:24px 0}
+  .phase .card{background:var(--snow);border:1px solid var(--border);border-radius:8px;padding:22px;border-top:3px solid var(--teal)}
+  .phase .card.p2{border-top-color:var(--gold)}
+  .phase .card.p3{border-top-color:var(--mist)}
+  .phase .ph{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mist);margin-bottom:6px}
+  .phase h4{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:8px}
+  .phase ul{list-style:none;padding:0;margin:0}
+  .phase li{font-size:14px;color:#3a3a46;padding-left:18px;position:relative;margin-bottom:6px}
+  .phase li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--teal)}
+
+  .callout{background:linear-gradient(135deg,rgba(196,80,42,.07),rgba(184,146,58,.06));border:1px solid var(--border);border-radius:10px;padding:28px 30px;margin:28px 0}
+  .callout.warn{background:linear-gradient(135deg,rgba(201,148,58,.1),rgba(196,64,42,.06))}
+  .callout .eyebrow{color:var(--ember)}
+  .callout p{font-size:16.5px;color:#2a2a36;margin-bottom:0}
+  .callout p b{color:var(--ink)}
+
+  .dont{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+  .dont .item{background:var(--snow);border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-size:14.5px}
+  .dont .item .x{color:var(--error);font-weight:700;margin-right:6px}
+  .dont .item .why{display:block;color:var(--slate);font-size:13px;margin-top:4px}
+
+  .cta{background:#0E1614;color:#DDE6E3;border-radius:12px;padding:36px 40px;margin:30px 0;text-align:center}
+  .cta h3{font-family:'Cormorant Garamond',serif;font-size:28px;color:#FDFCFA;margin-bottom:10px}
+  .cta p{color:#A5B2AE;margin-bottom:0;font-size:15.5px}
+  .cta .q{display:inline-block;margin-top:16px;font-size:15px;color:#5cc4b3;font-weight:500}
+
+  .footer{background:#0E1614;color:#8a9a96;padding:44px 0;text-align:center;font-size:13px}
+  .footer .display{font-size:24px;color:#FDFCFA;margin-bottom:8px}
+  .footer .ember{color:var(--ember-light)}
+
+  @media(max-width:680px){
+    .hero h1{font-size:38px}.hero{padding:60px 0 48px}
+    h2.sec{font-size:30px}
+    .purpose,.phase,.dont{grid-template-columns:1fr}
+    section{padding:40px 0}
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260609_124321_0526bbb5.png" alt="a single ember of flame on dark velvet, symbolic transformation, warm golden glow, minimalist composition" width="1024" height="576" loading="lazy" />
+
+
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">營運系統提案 · System Proposal v1</span>
+    <h1>易睫清潔坊<br><span class="accent">營運系統提案</span></h1>
+    <p class="sub">這份提案的目的，是讓 Peggy 看完後能直接判斷「這套系統要不要做」。我們把要解決的問題、第一階段做什麼、不做什麼、怎麼導入，全部攤開講清楚。</p>
+    <div class="meta">
+      <span>對象 · <b>易睫清潔坊 Peggy</b></span>
+      <span>提出 · <b>MUSEON × Feng</b></span>
+      <span>日期 · <b>2026/06/09</b></span>
+      <span class="mono">v1 規劃版</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap narr">
+    <div class="eyebrow">Purpose · 系統目的</div>
+    <h2 class="sec">這套系統要達成什麼</h2>
+    <p class="lead">一句話：<b>把易睫的營運從「靠 Peggy 的腦袋」轉成「靠一套可查、可教、可複製的資料系統」。</b></p>
+    <p>它不是要取代 Peggy 的判斷，而是把她每天在做的判斷「記下來、接起來」。當客戶、員工、案場、排班、收款、服務紀錄都進到同一個地方，Peggy 就能慢慢從第一線抽身，團隊也能在她不在場時維持同樣的服務水準——這正是拓點高雄、規模化的前提。</p>
+    <div class="purpose">
+      <div class="card"><div class="icon">①</div><h4>讓老闆脫身</h4><p>把報價、排班、補位等判斷資料化，降低對 Peggy 一人的依賴</p></div>
+      <div class="card"><div class="icon">②</div><h4>讓品質可複製</h4><p>統一 SOP 與客戶記憶沉澱成系統，換誰服務水準都一樣</p></div>
+      <div class="card"><div class="icon">③</div><h4>讓財務看得見</h4><p>收款有紀錄可對帳、成本毛利有數字，定價不再憑感覺</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Problem → Value · 解決什麼</div>
+    <h2 class="sec">它幫易睫解掉哪些痛</h2>
+    <p class="lead">每一條痛點，對應系統帶來的具體改變。</p>
+    <table>
+      <tr><th>現在的痛</th><th>系統介入後</th></tr>
+      <tr><td>報價只能 Peggy 報，坪數公式又會失準</td><td>估價收集表＋參考區間＋相似案件查詢，員工先填、Peggy 確認，報價更快也更準</td></tr>
+      <tr><td>派工是高維度人腦運算，靠記憶硬扛</td><td>員工技能標籤 ＋ 案場需求比對，系統給建議、Peggy 拍板</td></tr>
+      <tr><td>缺人就老闆下場，沒有備援邏輯</td><td>備援人員清單 ＋ 案場重要性／可改期標記，缺人時系統提示替代方案</td></tr>
+      <tr><td>現金與薪資混流，帳會對不上</td><td>每筆收款有應收／實收／收款人／是否繳回紀錄，可逐筆對帳</td></tr>
+      <tr><td>毛利靠經驗抓，不知道哪些案子虧</td><td>基礎成本欄位算出粗估毛利，看得出哪些「能成交但毛利不足」</td></tr>
+      <tr><td>客戶偏好在人腦裡，換人就重來</td><td>客戶服務紀錄＋注意事項沉澱，任何員工接手都能秒懂</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Scope · 第一階段需求</div>
+    <h2 class="sec">v1 要做的九大模組</h2>
+    <p class="lead">第一版聚焦「資料中心」——先把營運的六種核心資料接起來，再逐步加上輔助建議。</p>
+
+    <div class="mod">
+      <div class="head"><div class="no">1</div><div class="title">客戶資料管理</div></div>
+      <div class="body"><div class="solves">解決：客戶分散在 LINE／電話／記憶裡，沒有單一檔案</div>
+        <div class="fields"><span class="chip">客戶來源</span><span class="chip">聯絡方式</span><span class="chip">詢問紀錄</span><span class="chip">成交狀態</span><span class="chip">固定/彈性客戶</span><span class="chip">指定星期</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">2</div><div class="title">客戶服務紀錄</div></div>
+      <div class="body"><div class="solves">解決：客戶偏好換人服務就重來，客訴難追溯</div>
+        <div class="fields"><span class="chip">本次服務內容</span><span class="chip">特殊注意事項</span><span class="chip">下次要補</span><span class="chip">客戶在意重點</span><span class="chip">員工備註</span><span class="chip">異常/客訴</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">3</div><div class="title">報價紀錄與輔助</div></div>
+      <div class="body"><div class="solves">解決：報價綁老闆、坪數公式失準</div>
+        <div class="fields"><span class="chip">室內外坪數</span><span class="chip">櫃體多寡</span><span class="chip">透天/大樓</span><span class="chip">案場難度</span><span class="chip">耗材費</span><span class="chip">運車費</span><span class="chip">參考區間</span><span class="chip">成交/未成交</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">4</div><div class="title">員工技能標籤</div></div>
+      <div class="body"><div class="solves">解決：派工靠記憶誰適合什麼案場</div>
+        <div class="fields"><span class="chip">居家清潔</span><span class="chip">裝潢細清</span><span class="chip">可帶新人</span><span class="chip">可獨立作業</span><span class="chip">可開車/外縣市</span><span class="chip">偏好區域</span><span class="chip">可上班時段</span><span class="chip">經驗等級</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">5</div><div class="title">排班與派工</div></div>
+      <div class="body"><div class="solves">解決：週期客戶一亂、整體排程跟著亂</div>
+        <div class="fields"><span class="chip">固定週期(週/雙週/三週/月)</span><span class="chip">客戶指定星期</span><span class="chip">地區標籤</span><span class="chip">預估工時</span><span class="chip">手動拖拉調班</span><span class="chip">衝突提醒</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">6</div><div class="title">工時與出勤紀錄</div></div>
+      <div class="body"><div class="solves">解決：打卡、上下班、月累積工時手動記</div>
+        <div class="fields"><span class="chip">上下班打卡</span><span class="chip">月累積工時</span><span class="chip">本月案場數</span><span class="chip">臨時請假紀錄</span><span class="chip">改期紀錄</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">7</div><div class="title">收款與對帳</div></div>
+      <div class="body"><div class="solves">解決：現金與薪資混流、帳對不上</div>
+        <div class="fields"><span class="chip">應收金額</span><span class="chip">實收金額</span><span class="chip">收款方式</span><span class="chip">收款人</span><span class="chip">是否繳回</span><span class="chip">是否薪資扣抵</span><span class="chip">對帳狀態</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">8</div><div class="title">基礎成本與毛利</div></div>
+      <div class="body"><div class="solves">解決：毛利只能憑感覺抓大概</div>
+        <div class="fields"><span class="chip">案場收入</span><span class="chip">員工工時</span><span class="chip">員工成本</span><span class="chip">耗材預估</span><span class="chip">額外支出</span><span class="chip">粗估毛利</span></div></div>
+    </div>
+
+    <div class="mod">
+      <div class="head"><div class="no">9</div><div class="title">客戶回饋與客訴</div></div>
+      <div class="body"><div class="solves">解決：回饋沒系統化、客訴靠個別記</div>
+        <div class="fields"><span class="chip">回饋連結/表單</span><span class="chip">滿意度</span><span class="chip">LINE 定期推播</span><span class="chip">客訴紀錄</span><span class="chip">改善追蹤</span><span class="chip">案件風險標記</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Boundary · 邊界</div>
+    <h2 class="sec">v1 刻意「不做」的事</h2>
+    <p class="lead">這部分跟做什麼一樣重要——因為 Peggy 的判斷裡有大量人情與現場彈性，做得太硬反而不能用。</p>
+    <div class="dont">
+      <div class="item"><span class="x">✕</span>完全自動報價<span class="why">透天/櫃體/難度差異大，須由 Peggy 最終確認</span></div>
+      <div class="item"><span class="x">✕</span>完全自動排班<span class="why">牽涉員工家庭收入、客戶彈性，系統只給建議</span></div>
+      <div class="item"><span class="x">✕</span>自動毛利精算<span class="why">先做粗估，精算待資料累積後再上</span></div>
+      <div class="item"><span class="x">✕</span>複雜耗材庫存管理<span class="why">v1 只記預估成本，不做完整進銷存</span></div>
+      <div class="item"><span class="x">✕</span>全自動路線最佳化<span class="why">地圖路線屬進階版，v2 再評估</span></div>
+      <div class="item"><span class="x">✕</span>強制禁止員工收現<span class="why">短期先「有紀錄可對帳」，再逐步轉型</span></div>
+    </div>
+    <div class="callout warn">
+      <div class="eyebrow">為什麼這樣設計</div>
+      <p>目前 Peggy 的判斷包含經驗、人情、員工家庭狀況、客戶彈性與現場難度。<b>系統 v1 的定位是「輔助決策」而不是「取代決策」</b>——先把資料接起來，讓判斷有依據；等資料累積夠了，再一步步把報價輔助、排班建議、毛利分析、AI 總管疊上去。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Roadmap · 導入路徑</div>
+    <h2 class="sec">分三階段，不一次到位</h2>
+    <p class="lead">先把地基打穩，再加智慧。每階段都能獨立產生價值。</p>
+    <div class="phase">
+      <div class="card">
+        <div class="ph">Phase 1 · 資料中心</div>
+        <h4>把營運接起來</h4>
+        <ul><li>客戶／員工／案場建檔</li><li>排班、收款、服務紀錄</li><li>基礎成本與粗估毛利</li><li>取代手動記帳與分散資訊</li></ul>
+      </div>
+      <div class="card p2">
+        <div class="ph">Phase 2 · 輔助建議</div>
+        <h4>讓系統開始幫忙</h4>
+        <ul><li>報價參考區間＋相似案件</li><li>技能比對的派工建議</li><li>缺人時的備援提示</li><li>每類服務毛利分析</li></ul>
+      </div>
+      <div class="card p3">
+        <div class="ph">Phase 3 · AI 總管</div>
+        <h4>從輔助到半自動</h4>
+        <ul><li>成交後自動推薦補位人選</li><li>區域排程／路線輔助</li><li>客戶回饋自動推播追蹤</li><li>耗材庫存與效率分析</li></ul>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="eyebrow">Peggy 的願景，已經在路徑上</div>
+      <p>訪談中 Peggy 問：「能不能做到——報價單客戶確定要做之後，系統主動去抓人過來填洞？」這正是 <b>Phase 3 的 AI 總管功能</b>。但它要能成立，前提是 Phase 1 先把員工技能、可上班時段、排班資料都建起來。所以路徑必須從資料中心開始走。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <h3>給 Peggy 的一個決定</h3>
+      <p>這套系統不是要你一次砸大錢做全自動，而是先用 Phase 1 把「易睫的營運記憶」建起來——這一步本身就能讓你少對一次帳、少跑一趟第一線、少漏一個客戶偏好。</p>
+      <span class="q">下一步：確認 Phase 1 模組範圍，我們就能排規格與報價。</span>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="wrap">
+    <div class="display">MUSEON<span class="ember">.</span></div>
+    <p>本提案依據 2026/06/02 與 2026/06/08 兩次易睫清潔坊營運訪談整理</p>
+    <p style="margin-top:6px;color:#5a6a66">先輔助，後自動 · 把營運記憶交給系統，把判斷留給人</p>
+  </div>
+</div>
+
+</body>
+</html>
