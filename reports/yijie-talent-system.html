@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易睫清潔坊｜人才系統方案</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+TC:wght@300;400;700&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #e8836a;
+    --parchment: #F5F0E8;
+    --ink: #2C2416;
+    --gold: #b6853d;
+    --navy: #181737;
+    --mist: #EAE4D8;
+    --border: #D4C8B0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  .cover {
+    background: var(--navy);
+    color: #fff;
+    padding: 60px 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(196,80,42,0.15) 0%, transparent 60%);
+  }
+  .cover-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .cover h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.3;
+    position: relative;
+  }
+  .cover h1 span { color: var(--ember-light); }
+  .cover-sub {
+    margin-top: 16px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    position: relative;
+    max-width: 560px;
+  }
+  .cover-meta {
+    margin-top: 32px;
+    display: flex; gap: 32px;
+    position: relative;
+  }
+  .cover-meta-item { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .cover-meta-item strong { display: block; color: var(--gold); font-size: 14px; }
+
+  .container { max-width: 780px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  .intro-box {
+    background: #fff;
+    border-left: 4px solid var(--ember);
+    padding: 24px 28px;
+    margin-bottom: 48px;
+    border-radius: 0 8px 8px 0;
+  }
+  .intro-box p { font-size: 15px; line-height: 1.9; }
+  .intro-box strong { color: var(--ember); }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  h2 .icon {
+    width: 36px; height: 36px;
+    background: var(--ember);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 28px 0 12px;
+  }
+
+  .section { margin-bottom: 56px; }
+
+  .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 600px) { .phase-grid { grid-template-columns: 1fr; } }
+
+  .phase-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .phase-card .phase-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .phase-card h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .phase-card ul { padding-left: 16px; }
+  .phase-card li { font-size: 13px; line-height: 1.8; margin-bottom: 4px; }
+
+  .quote-box {
+    background: var(--mist);
+    border-left: 3px solid var(--gold);
+    padding: 18px 22px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    font-size: 14px;
+    color: #555;
+  }
+  .quote-box cite { display: block; margin-top: 8px; font-style: normal; font-size: 12px; color: var(--gold); }
+
+  .matrix-table {
+    width: 100%; border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+  .matrix-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .matrix-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .matrix-table tr:nth-child(even) td { background: var(--mist); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .tag-red { background: #fde8e3; color: #b03a20; }
+  .tag-yellow { background: #fef5e3; color: #9a6d00; }
+  .tag-green { background: #e8f5e8; color: #2d7a2d; }
+
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 10px 14px 10px 44px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .checklist li::before {
+    content: '□';
+    position: absolute; left: 14px;
+    color: var(--ember);
+    font-size: 16px;
+  }
+  .checklist li:last-child { border-bottom: none; }
+
+  .contract-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .contract-card .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .contract-card h4 { font-size: 15px; font-weight: 700; }
+  .contract-card p { font-size: 13px; line-height: 1.8; color: #555; }
+  .contract-card .fields {
+    margin-top: 12px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .contract-card .field {
+    background: var(--mist);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .roadmap {
+    position: relative;
+    padding-left: 32px;
+  }
+  .roadmap::before {
+    content: '';
+    position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .roadmap-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .roadmap-item::before {
+    content: '';
+    position: absolute; left: -28px; top: 6px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--ember);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--ember);
+  }
+  .roadmap-item .period {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .roadmap-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .roadmap-item p { font-size: 13px; color: #666; line-height: 1.8; }
+
+  .footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    margin-top: 60px;
+  }
+  .footer strong { color: var(--gold); }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260609_155526_6ba1d999.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+
+<div class="cover">
+  <div class="cover-label">易睫清潔坊 × MUSEON 顧問</div>
+  <h1>人才系統方案<br><span>從 Peggy 的腦到組織的腦</span></h1>
+  <p class="cover-sub">師傅帶新人機制 · 品質稽核標準 · 合約標準化 · 人才培育路徑</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>產出日期</strong>2026-06-09</div>
+    <div class="cover-meta-item"><strong>訪談依據</strong>第一次（06/02）+ 第二次（06/08）</div>
+    <div class="cover-meta-item"><strong>適用場景</strong>Feng 與 Peggy 確認系統方向</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="intro-box">
+    <p>
+      兩次訪談裡有一句話說出了核心：<strong>「不管怎樣，老手一定要帶隊。」</strong><br>
+      這不是壞事——這是易睫最強的護城河，也是目前最重的枷鎖。<br>
+      以下四套機制，目的只有一個：<strong>把 Peggy 腦袋裡的判斷標準，變成組織可以獨立運作的系統。</strong>
+    </p>
+  </div>
+
+  <!-- ① 師徒制 -->
+  <div class="section">
+    <h2><span class="icon">①</span>師徒制帶新人機制</h2>
+
+    <div class="quote-box">
+      「新人從無到有，大概真的要兩三個月，甚至更久……如果真的不行，三天我就讓他拜拜，不要浪費我時間。」
+      <cite>— Peggy（第二次訪談）</cite>
+    </div>
+
+    <h3>現況問題</h3>
+    <p style="margin-bottom:16px; font-size:14px; line-height:1.9;">
+      帶新人的標準在 Peggy 的眼睛裡，沒有外顯化。員工被調整了也不一定知道自己哪裡不夠格，「刁」的感覺雙向都有。
+    </p>
+
+    <h3>師徒制三階段</h3>
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-label">第一階段 · 1–7天</div>
+        <h4>觀摩期</h4>
+        <ul>
+          <li>只跟不做，全程觀察</li>
+          <li>跟老手跑 3 場以上（含居家 + 裝潢各至少 1 場）</li>
+          <li>第 3 天末：師傅填寫「初印象表」（見下方）</li>
+          <li><strong>關卡</strong>：第 7 天師傅評估「繼續 / 建議拜拜」</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">第二階段 · 2–8週</div>
+        <h4>跟班期</h4>
+        <ul>
+          <li>老手同場，新人負責指定區塊</li>
+          <li>每場後師傅口頭回饋（3 分鐘，不省）</li>
+          <li>每週末師傅填「週評表」（1 張 A4）</li>
+          <li><strong>關卡</strong>：第 4 週 Peggy 親自抽查 1 場</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">第三階段 · 第 2–3個月</div>
+        <h4>副手期</h4>
+        <ul>
+          <li>可擔任居家場副手角色</li>
+          <li>裝潢場仍須老手帶隊</li>
+          <li>開始建立個人技能檔案</li>
+          <li><strong>關卡</strong>：第 12 週 Peggy 確認升格獨立</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">升格後</div>
+        <h4>獨立手 / 帶隊資格</h4>
+        <ul>
+          <li>居家獨立場：可單獨帶 1 個新人</li>
+          <li>裝潢帶隊資格：需 Peggy 授權</li>
+          <li>薪資結構可對應調整</li>
+          <li><strong>條件</strong>：連續 4 週 0 客訴</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>師傅初印象表（第 3 天）</h3>
+    <table class="matrix-table">
+      <tr><th>觀察項目</th><th>說明</th><th>評分</th></tr>
+      <tr><td>手速 / 體力</td><td>能否跟上場次節奏</td><td>1–3 分</td></tr>
+      <tr><td>眼力（主動注意髒點）</td><td>不等指示就看見問題</td><td>1–3 分</td></tr>
+      <tr><td>耗材使用習慣</td><td>節省 / 浪費 / 適當</td><td>1–3 分</td></tr>
+      <tr><td>溝通態度</td><td>問問題的方式、被糾正的反應</td><td>1–3 分</td></tr>
+      <tr><td>整體直覺</td><td>「這個人我敢帶出門嗎？」</td><td>Y / N</td></tr>
+    </table>
+    <p style="font-size:12px; color:#888; margin-top:-12px; margin-bottom:24px;">滿分 12 分。9 分以上繼續觀察；6 分以下當週告知。最後一題 N 可直接結束試用。</p>
+  </div>
+
+  <!-- ② 品質稽核 -->
+  <div class="section">
+    <h2><span class="icon">②</span>品質稽核標準</h2>
+
+    <div class="quote-box">
+      「到現在任何一個人都還會被我調……我自己做的標準真的超高，但不可能每次都我去。」
+      <cite>— Peggy（第二次訪談）</cite>
+    </div>
+
+    <h3>品質稽核的三層機制</h3>
+
+    <div class="contract-card">
+      <div class="card-head">
+        <h4>第一層：現場自查（每場必做）</h4>
+        <span class="tag tag-green">執行者：帶隊老手</span>
+      </div>
+      <p>離場前帶隊老手完成 5 分鐘「離場確認清單」，拍照存證（3 張固定角度：廁所、廚房、主臥）。確認後才能向 Peggy 回報完成。</p>
+      <div class="fields">
+        <span class="field">廁所無水漬</span>
+        <span class="field">廚房瓦斯台擦淨</span>
+        <span class="field">地板無毛髮</span>
+        <span class="field">耗材補回</span>
+        <span class="field">客戶指定項目確認</span>
+      </div>
+    </div>
+
+    <div class="contract-card">
+      <div class="card-head">
+        <h4>第二層：客戶回饋（每場後 2 小時內）</h4>
+        <span class="tag tag-yellow">執行者：系統自動發送</span>
+      </div>
+      <p>完工後自動發送 LINE 回饋連結（1 題必填：滿意度 1–5，2 題選填：哪裡做好 / 哪裡做不夠）。低於 3 分立即通知 Peggy。</p>
+      <div class="fields">
+        <span class="field">整體滿意度</span>
+        <span class="field">哪裡特別滿意</span>
+        <span class="field">哪裡還可以加強</span>
+      </div>
+    </div>
+
+    <div class="contract-card">
+      <div class="card-head">
+        <h4>第三層：抽查（每月 2 次）</h4>
+        <span class="tag tag-red">執行者：Peggy 本人</span>
+      </div>
+      <p>隨機抽查 2 場（不提前告知），重點看：老手是否確實帶隊、新人是否在正確崗位、客戶回饋和現場是否一致。發現落差立即面談，不累積。</p>
+      <div class="fields">
+        <span class="field">帶隊執行狀況</span>
+        <span class="field">耗材使用量核對</span>
+        <span class="field">新人表現比對上週評表</span>
+      </div>
+    </div>
+
+    <h3>員工技能檔案（建議從現有人開始）</h3>
+    <table class="matrix-table">
+      <tr><th>技能項目</th><th>新人</th><th>副手</th><th>獨立手</th><th>帶隊資格</th></tr>
+      <tr><td>居家清潔（一般）</td><td>跟班</td><td>負責部分區塊</td><td>可獨立</td><td>可帶 1 名新人</td></tr>
+      <tr><td>居家清潔（精緻）</td><td>觀摩</td><td>輔助</td><td>需評估</td><td>Peggy 授權</td></tr>
+      <tr><td>裝潢後清潔</td><td>觀摩</td><td>輔助老手</td><td>可做部分</td><td>Peggy 授權</td></tr>
+      <tr><td>特殊清潔（火災/油煙）</td><td>❌</td><td>❌</td><td>需專訓</td><td>Peggy 親帶</td></tr>
+    </table>
+  </div>
+
+  <!-- ③ 合約標準化 -->
+  <div class="section">
+    <h2><span class="icon">③</span>合約標準化</h2>
+
+    <div class="quote-box">
+      「那個火災我連三天都在趕……我都是掉外包的人力，但是那個合約、保險，當時都沒有……」
+      <cite>— Peggy（第二次訪談）</cite>
+    </div>
+
+    <h3>三份必要合約（優先順序）</h3>
+
+    <div class="contract-card">
+      <div class="card-head">
+        <h4>1. 客戶服務合約</h4>
+        <span class="tag tag-red">最優先</span>
+      </div>
+      <p>每個新客戶開案前簽訂，明確定義：服務範圍、耗材責任歸屬、意外損壞處理方式（火災案例的根本缺口）、取消條款。</p>
+      <div class="fields">
+        <span class="field">服務項目清單</span>
+        <span class="field">損壞賠償上限</span>
+        <span class="field">意外事故免責條款</span>
+        <span class="field">取消 / 改期規則</span>
+        <span class="field">收款方式與時間</span>
+      </div>
+    </div>
+
+    <div class="contract-card">
+      <div class="card-head">
+        <h4>2. 員工聘用合約 + 保密協議</h4>
+        <span class="tag tag-yellow">第二優先</span>
+      </div>
+      <p>解決「員工進入客戶家」的法律風險，以及「帶走客戶」的商業保護。包含試用期條款、薪資計算方式、客戶保密義務。</p>
+      <div class="fields">
+        <span class="field">試用期天數與條件</span>
+        <span class="field">薪資結構</span>
+        <span class="field">客戶保密條款</span>
+        <span class="field">私接客戶禁止條款</span>
+        <span class="field">工傷 / 意外保障</span>
+      </div>
+    </div>
+
+    <div class="contract-card">
+      <div class="card-head">
+        <h4>3. 特殊場次授權書</h4>
+        <span class="tag tag-yellow">火災/裝潢等高風險場次</span>
+      </div>
+      <p>客戶對特殊清潔項目（火災、裝潢、大型搬家後）簽署授權，明確說明：現場狀況確認、施工範圍、如有疑義的申訴方式。</p>
+      <div class="fields">
+        <span class="field">現場現況確認拍照</span>
+        <span class="field">施工前簽字</span>
+        <span class="field">施工後確認簽字</span>
+      </div>
+    </div>
+
+    <div class="intro-box" style="margin-top:24px; margin-bottom:0;">
+      <p>
+        <strong>給 Feng 的建議</strong>：第 1 份合約模板可以用現成的服務業合約改一下，1–2 天內可以有可用版本。第 2 份建議先請一個熟悉勞動法的律師朋友快速過目（不用完整顧問費，1–2 小時諮詢即可）。先有、再優化。沒有合約的風險，遠大於合約不完美的風險。
+      </p>
+    </div>
+  </div>
+
+  <!-- ④ 人才培育路徑 -->
+  <div class="section">
+    <h2><span class="icon">④</span>人才培育機制（整體路徑）</h2>
+
+    <div class="quote-box">
+      「先有雞還是先有蛋？你要先有人還是要先有客量……這個我到現在都還在迷思。」
+      <cite>— Peggy（第二次訪談）</cite>
+    </div>
+
+    <h3>這個迷思的真正答案</h3>
+    <p style="font-size:14px; line-height:1.9; margin-bottom:24px;">
+      不是先有雞或先有蛋——是先有<strong>師傅</strong>。<br>
+      只要師傅的標準外顯化了，新人可以被複製；客量進來的速度就不再受「Peggy 只有一個」的天花板限制。
+    </p>
+
+    <h3>人才培育路線圖</h3>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="period">現在 → 1 個月</div>
+        <h4>師傅盤點 + 標準外顯化</h4>
+        <p>把現有 6 名員工做技能分級（居家型 / 裝潢型 / 兩者），確認誰有帶隊資格。師傅帶新人評估表完成第一版。</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="period">第 2 個月</div>
+        <h4>現有新人跑完師徒制三階段</h4>
+        <p>目前在帶的兩位新人（妹妹 + 媽媽組合）用新框架重新確認進度。第 4 週 Peggy 親自抽查 1 場。</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="period">第 3 個月</div>
+        <h4>第一位「合格師傅」升格</h4>
+        <p>最資深員工正式取得「師傅帶隊授權」——意味著 Peggy 首次可以不下去。這是里程碑，不是理所當然。</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="period">第 4 個月起</div>
+        <h4>師傅自帶徒弟，Peggy 管師傅</h4>
+        <p>每位師傅可帶最多 2 名新人。Peggy 的工作從「帶人做事」轉為「品質稽核 + 師傅管理 + 拓點評估」。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 決策確認點 -->
+  <div class="section">
+    <h2><span class="icon" style="background:var(--gold)">✓</span>和 Peggy 確認的關鍵問題</h2>
+    <p style="font-size:14px; line-height:1.9; margin-bottom:20px;">
+      以下是 Feng 拿這份方案去和 Peggy 確認時，建議直接問的問題（不要給她看完整文件，用談的）：
+    </p>
+    <ul class="checklist">
+      <li><strong>師傅帶新人</strong>：「你現在怎麼判斷一個新人有沒有過關？有沒有一個你自己明確知道的標準？」（讓她說出來，再對照我們這份）</li>
+      <li><strong>品質稽核</strong>：「現在做完一場，你靠什麼確認品質 OK？除了你親自去，還有沒有其他方法？」</li>
+      <li><strong>合約</strong>：「火災那場如果再來一次，你現在有沒有辦法保護自己？」（用情境問，不要直接問「有沒有合約」）</li>
+      <li><strong>整體方向</strong>：「如果有一天你不用每場都去，你最想先解決的是哪個問題？」（讓她排優先順序，不要我們幫她排）</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>易睫清潔坊 人才系統方案</strong> · 依據兩次訪談（2026-06-02 + 2026-06-08）產出 · MUSEON × Feng
+</div>
+
+</body>
+</html>
