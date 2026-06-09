@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>昀姿優雅空間 × 身心靈合作提案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8; --border:#E2E0DA;
+    --parchment:#F7F5F0; --snow:#FDFCFA;
+    --rose:#C77B6B; --rose-soft:#F3E4DE;
+    --deep:#0E0E16;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Outfit','Noto Sans TC',sans-serif;
+    background:var(--parchment); color:var(--ink);
+    line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .deck{max-width:880px;margin:0 auto;padding:0 24px}
+  .slide{
+    min-height:auto; padding:64px 0; border-bottom:1px solid var(--border);
+    opacity:0; transform:translateY(16px);
+    animation:rise .5s ease-out forwards;
+  }
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  .slide:last-child{border-bottom:none}
+
+  .sno{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ember-dark);
+    background:rgba(196,80,42,.1); padding:4px 12px; border-radius:100px;
+    display:inline-block; margin-bottom:24px;
+  }
+
+  h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:54px;line-height:1.12;letter-spacing:-.01em}
+  h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:38px;line-height:1.2;margin-bottom:8px}
+  h3{font-family:'Outfit','Noto Sans TC',sans-serif;font-weight:600;font-size:21px;line-height:1.4;color:var(--ink)}
+  .lead{font-size:18px;color:var(--slate);line-height:1.8;max-width:62ch}
+  p{font-size:16px;color:var(--ink);line-height:1.75}
+  .muted{color:var(--slate)}
+
+  .cover{
+    background:linear-gradient(155deg,#16161F 0%,#0E0E16 55%,#1d1410 100%);
+    color:var(--snow); border-radius:18px; padding:72px 48px;
+    margin:48px 0; text-align:center; position:relative; overflow:hidden;
+  }
+  .cover::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 20%,rgba(196,80,42,.22),transparent 45%),
+               radial-gradient(circle at 80% 80%,rgba(184,146,58,.16),transparent 50%);
+  }
+  .cover>*{position:relative;z-index:1}
+  .cover h1{color:var(--snow);font-size:50px;margin:18px 0}
+  .cover .sub{font-size:18px;color:rgba(253,252,250,.78);letter-spacing:.02em}
+  .cover .kicker{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);
+  }
+  .cover .meta{
+    margin-top:32px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+    color:rgba(253,252,250,.5);letter-spacing:.1em;
+  }
+
+  .gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+  .gap-col{background:var(--snow);border:1px solid var(--border);border-radius:10px;padding:24px}
+  .gap-col.have{border-top:3px solid var(--teal)}
+  .gap-col.need{border-top:3px solid var(--ember)}
+  .gap-col .label{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+  .gap-col.have .label{color:var(--teal)}
+  .gap-col.need .label{color:var(--ember-dark)}
+  .gap-col ul{list-style:none}
+  .gap-col li{padding:8px 0;border-bottom:1px dashed var(--border);font-size:15px}
+  .gap-col li:last-child{border-bottom:none}
+
+  .plan{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:28px; margin-bottom:20px; position:relative;
+    box-shadow:0 1px 3px rgba(18,18,26,.06),0 4px 12px rgba(18,18,26,.04);
+    transition:transform .2s ease;
+  }
+  .plan:hover{transform:translateY(-2px)}
+  .plan .ptag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.1em;text-transform:uppercase;color:#fff;
+    padding:4px 12px;border-radius:100px;display:inline-block;margin-bottom:14px;
+  }
+  .plan.a .ptag{background:var(--teal)}
+  .plan.b .ptag{background:var(--ember)}
+  .plan.c .ptag{background:var(--gold)}
+  .plan h3{margin-bottom:6px}
+  .plan .role{font-size:14px;color:var(--slate);margin-bottom:18px}
+  .plan dl{display:grid;grid-template-columns:96px 1fr;gap:10px 16px;font-size:15px}
+  .plan dt{color:var(--slate);font-weight:500}
+  .plan dd{color:var(--ink)}
+
+  .adv{display:grid;gap:14px;margin-top:24px}
+  .adv-item{display:flex;gap:18px;align-items:flex-start;background:var(--snow);border:1px solid var(--border);border-radius:10px;padding:20px 24px}
+  .adv-num{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--ember);line-height:1;min-width:36px}
+  .adv-item h3{font-size:17px;margin-bottom:2px}
+  .adv-item p{font-size:14px;color:var(--slate)}
+
+  table{width:100%;border-collapse:collapse;margin-top:24px;background:var(--snow);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+  th{background:var(--rose-soft);color:var(--ember-dark);font-size:13px;font-weight:600;text-align:left;padding:14px 18px;font-family:'Noto Sans TC',sans-serif}
+  td{padding:14px 18px;border-top:1px solid var(--border);font-size:15px;vertical-align:top}
+  td:first-child{font-weight:600;white-space:nowrap;color:var(--ember-dark)}
+
+  .timeline{margin-top:28px;position:relative;padding-left:28px}
+  .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--teal),var(--ember),var(--gold))}
+  .tl-item{position:relative;padding-bottom:26px}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-28px;top:4px;width:16px;height:16px;border-radius:50%;background:var(--snow);border:3px solid var(--ember)}
+  .tl-item .m{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--ember-dark);text-transform:uppercase}
+  .tl-item h3{font-size:17px;margin:4px 0}
+  .tl-item p{font-size:14px;color:var(--slate)}
+
+  .quote{
+    background:linear-gradient(135deg,var(--rose-soft),#FBF6F2);
+    border-left:4px solid var(--rose); border-radius:0 12px 12px 0;
+    padding:28px 32px; margin:28px 0;
+  }
+  .quote p{font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;color:var(--ember-dark);line-height:1.5}
+
+  .fill{
+    background:rgba(184,146,58,.16); color:var(--gold); border-radius:4px;
+    padding:1px 8px; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+  }
+  .note{font-size:13px;color:var(--mist);margin-top:18px;font-style:italic}
+
+  .next{background:var(--deep);color:var(--snow);border-radius:16px;padding:48px;margin:24px 0;text-align:center}
+  .next h2{color:var(--snow)}
+  .next .steps{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .next .step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:10px 22px;font-size:14px}
+  .next .step b{color:var(--gold)}
+
+  .foot{text-align:center;padding:40px 0 60px;color:var(--mist);font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+
+  @media(max-width:640px){
+    h1{font-size:38px} .cover h1{font-size:36px} h2{font-size:30px}
+    .cover{padding:56px 28px} .next{padding:36px 24px}
+    .gap-grid{grid-template-columns:1fr}
+    .plan dl{grid-template-columns:80px 1fr}
+    .slide{padding:48px 0}
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260609_230942_60a5874e.png" alt="a single ember of flame on dark velvet, symbolic transformation, warm golden glow, minimalist composition" width="1024" height="576" loading="lazy" />
+
+<div class="deck">
+
+  <section class="slide" style="border:none;padding-bottom:0">
+    <div class="cover">
+      <div class="kicker">身心靈課程合作提案 · 2026</div>
+      <h1>讓妳的學員<br>從管身體，到愛自己</h1>
+      <div class="sub">為昀姿優雅空間量身打造的身心靈體驗合作</div>
+      <div class="meta">PROPOSAL · 昀姿優雅空間 × <span class="fill">機構名稱</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <span class="sno">02 · 關於我們</span>
+    <h2>我們是誰</h2>
+    <p class="lead">專注女性自我成長與身心照顧的課程整合平台，把分散的療癒專業，整合成可被信任的完整體驗。</p>
+    <div class="adv" style="margin-top:28px">
+      <div class="adv-item"><div class="adv-num">·</div><div><h3>機構定位</h3><p>專注 <span class="fill">療癒／身心靈／女性成長</span> 的課程整合平台</p></div></div>
+      <div class="adv-item"><div class="adv-num">·</div><div><h3>合作師資</h3><p><span class="fill">N</span> 位認證療癒師／講師（Savina、姚黛瑋、花精與精油療癒師等）</p></div></div>
+      <div class="adv-item"><div class="adv-num">·</div><div><h3>服務族群</h3><p>都會女性的身心照顧與自我覺察</p></div></div>
+      <div class="adv-item"><div class="adv-num">·</div><div><h3>服務累積</h3><p>已服務 <span class="fill">N</span> 人次（若有數據再填）</p></div></div>
+    </div>
+    <p class="note">※ 黃色標記處請填入你的機構實際資料，數字越具體越有說服力。</p>
+  </section>
+
+  <section class="slide">
+    <span class="sno">03 · 我們看見的機會</span>
+    <h2>昀姿學員的現況</h2>
+    <div class="quote"><p>「妳的學員為身體投資了，<br>但身體變好之後，反而開始問『然後呢？』」</p></div>
+    <div class="gap-grid">
+      <div class="gap-col have">
+        <div class="label">她們已經擁有</div>
+        <ul><li>穩定的運動習慣</li><li>體態管理的動力</li><li>精品消費的意願</li></ul>
+      </div>
+      <div class="gap-col need">
+        <div class="label">她們還缺的</div>
+        <ul><li>情緒與內在的出口</li><li>自我照顧的儀式感</li><li>深度體驗的連結感</li></ul>
+      </div>
+    </div>
+    <p style="margin-top:24px;font-size:17px"><b>這個缺口，就是我們的切入點。</b></p>
+  </section>
+
+  <section class="slide">
+    <span class="sno">04 · 三個合作方案</span>
+    <h2>從低門檻到深合作</h2>
+    <p class="lead" style="margin-bottom:28px">三個方案可分階段進行，先讓學員有感受，再逐步深化。</p>
+
+    <div class="plan a">
+      <span class="ptag">A 方案</span>
+      <h3>體驗植入 · 最低門檻</h3>
+      <div class="role">讓學員在熟悉的場域，零負擔接觸身心靈</div>
+      <dl>
+        <dt>內容</dt><dd>課後 30 分鐘頌缽／正念呼吸冥想</dd>
+        <dt>師資</dt><dd>Savina／姚黛瑋</dd>
+        <dt>昀姿付出</dt><dd>提供場地 ＋ 推播給現有學員</dd>
+        <dt>合作方式</dt><dd>無費用，純換宣傳曝光（降低決策阻力）</dd>
+      </dl>
+    </div>
+
+    <div class="plan b">
+      <span class="ptag">B 方案</span>
+      <h3>月度工作坊 · 留客深化</h3>
+      <div class="role">把單次運動，延伸成持續回館的自我照顧旅程</div>
+      <dl>
+        <dt>內容</dt><dd>每月 1 場：精油自我照顧／花晶身體照顧</dd>
+        <dt>師資</dt><dd>花精療癒師／精油療癒師帶體驗</dd>
+        <dt>昀姿付出</dt><dd>提供場地</dd>
+        <dt>合作方式</dt><dd>學員自付費用，師資與場地按比例拆分（建議 7:3）</dd>
+      </dl>
+    </div>
+
+    <div class="plan c">
+      <span class="ptag">C 方案</span>
+      <h3>聯合主題活動 · 話題製造</h3>
+      <div class="role">讓整個組合包有傳播點，帶動口碑擴散</div>
+      <dl>
+        <dt>女神之夜</dt><dd>每季 1 次：塔羅人格十秒識人術 ＋ 保養品 ＋ 輕珠寶</dd>
+        <dt>放鬆 Party</dt><dd>每季 1 次：財富流桌遊 ＋ 馬雅曆桌遊（新生破冰）</dd>
+        <dt>昀姿付出</dt><dd>場地 ＋ 共同宣傳</dd>
+        <dt>合作方式</dt><dd>門票收入雙方分潤 <span class="fill">各 %</span></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="slide">
+    <span class="sno">05 · 合作五大優勢</span>
+    <h2>為什麼這個合作對昀姿有利</h2>
+    <div class="adv">
+      <div class="adv-item"><div class="adv-num">1</div><div><h3>零衝突</h3><p>身心靈課程補位、不搶昀姿本業學員，只增加價值。</p></div></div>
+      <div class="adv-item"><div class="adv-num">2</div><div><h3>即插即用</h3><p>A 方案接在現有課程後面，不增加館長的管理負擔。</p></div></div>
+      <div class="adv-item"><div class="adv-num">3</div><div><h3>可複製</h3><p>合作模式標準化，每一間新館直接套用，不需重新談。</p></div></div>
+      <div class="adv-item"><div class="adv-num">4</div><div><h3>留客工具</h3><p>學員從運動延伸到身心照顧，提高每月回館頻率與黏著度。</p></div></div>
+      <div class="adv-item"><div class="adv-num">5</div><div><h3>共同曝光</h3><p>每次活動聯合宣傳，雙方受眾互相導流。</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <span class="sno">06 · 效益預估</span>
+    <h2>對昀姿的預期效益</h2>
+    <table>
+      <tr><th style="width:90px">方案</th><th>預估效益</th></tr>
+      <tr><td>A 方案</td><td>課後體驗增加學員停留約 30 分鐘，體感滿足提升回購率。</td></tr>
+      <tr><td>B 方案</td><td>每月工作坊可帶動 <span class="fill">10–30</span> 人次額外到館，導入非原有學員。</td></tr>
+      <tr><td>C 方案</td><td>季度活動預估觸及 <span class="fill">N</span> 人，話題可持續發酵。</td></tr>
+    </table>
+    <p class="note">※ 效益數字建議提案當天，依昀姿提供的學員規模再填，避免過度承諾。</p>
+  </section>
+
+  <section class="slide">
+    <span class="sno">07 · 我們建議這樣開始</span>
+    <h2>三個月試跑期</h2>
+    <p class="lead">讓雙方都有「先看成效、再深化」的空間，降低承諾門檻。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="m">Month 1</div><h3>A 方案試跑</h3><p>選 1 館，安排 2 場課後體驗，測試學員反應。</p></div>
+      <div class="tl-item"><div class="m">Month 2</div><h3>收集回饋</h3><p>整理學員體驗反饋，決定是否擴大到 B 方案。</p></div>
+      <div class="tl-item"><div class="m">Month 3</div><h3>規劃聯合活動</h3><p>籌備第一次 C 方案「女神之夜」，串起整個組合包。</p></div>
+    </div>
+  </section>
+
+  <section class="slide" style="border:none">
+    <span class="sno">08 · 下一步</span>
+    <div class="next">
+      <h2>讓我們從一場體驗開始</h2>
+      <p style="color:rgba(253,252,250,.8);margin-top:10px">不需要一次承諾全部，先讓學員感受到改變。</p>
+      <div class="steps">
+        <div class="step"><b>01</b> 確認合作意願</div>
+        <div class="step"><b>02</b> 選定第一間試跑館</div>
+        <div class="step"><b>03</b> 排定 A 方案首場時間</div>
+      </div>
+      <p style="margin-top:32px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:rgba(253,252,250,.5);letter-spacing:.1em">聯絡方式 · <span class="fill">Ginny 填入</span></p>
+    </div>
+  </section>
+
+  <div class="foot">昀姿優雅空間 × 身心靈合作提案 · 2026</div>
+
+</div>
+</body>
+</html>
