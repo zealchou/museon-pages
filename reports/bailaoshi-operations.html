@@ -586,6 +586,30 @@
           <span class="module-tag t-api">API 對接</span>
         </div>
       </div>
+
+      <!-- 權限與安全架構 -->
+      <div style="margin-top:22px; background:var(--snow); border:1px solid var(--border); border-radius:12px; padding:22px 24px;">
+        <div style="font-size:14px; font-weight:700; color:var(--ink); margin-bottom:6px;">🔐 權限與安全架構</div>
+        <p style="font-size:12px; color:var(--mist); margin:0 0 16px;">MUSEON 會操作系統（新增／修改／查詢／軟刪除），權限邊界由應運系統的角色設定物理控管，不靠 AI 自律。</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:16px;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#6A4A9A; margin-bottom:5px;">獨立服務帳號</div>
+            <div style="font-size:12px; color:var(--slate); line-height:1.6;">MUSEON 以專屬帳號 <strong>MUSEON_SVC</strong> 連接，不借用任何員工帳號。日誌格式「MUSEON_SVC 執行 ◯◯，觸發者：某員工」，責任清楚，憑證外洩不波及真人帳號。</div>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#6A4A9A; margin-bottom:5px;">權限取最小值 + 身份綁定</div>
+            <div style="font-size:12px; color:var(--slate); line-height:1.6;">員工經 MUSEON 操作時，<strong>生效權限 = min（MUSEON 權限, 員工權限）</strong>，低權限員工借不到 AI 的高權限。身份以員工編號綁定，<strong>密碼留在應運系統，不交給 AI</strong>。</div>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#6A4A9A; margin-bottom:5px;">高風險操作人工確認</div>
+            <div style="font-size:12px; color:var(--slate); line-height:1.6;">改費率、軟刪除等動作，MUSEON 先推播「我打算做 ◯◯，是否確認？」，經人員回覆確認才執行；低風險動作（補課、產帳單、發通知）可自動執行。</div>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#6A4A9A; margin-bottom:5px;">自動排程例外</div>
+            <div style="font-size:12px; color:var(--slate); line-height:1.6;">無人觸發的自動任務（半夜批次產帳單、自動排補課）用 MUSEON_SVC 自身權限，但<strong>鎖定在事先白名單的低風險操作</strong>內，杜絕自動執行變成沒有權限檢查的後門。</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Phase 5 -->
@@ -595,30 +619,33 @@
         <span class="phase-title">AI 智慧輔助</span>
         <span class="phase-subtitle">資料積累後啟動 · 4 個模組</span>
       </div>
+      <p style="font-size:13px; color:var(--slate); margin-bottom:18px;">
+        分工原則：<span style="color:#2A6A8A; font-weight:700;">應運系統內建</span>＝直接寫在系統裡的功能（作業批改、口說練習）；<span style="color:#C4502A; font-weight:700;">MUSEON 負責</span>＝讀取 API 資料後做智能分析與主動推播（學習助理、行政檢查）。
+      </p>
       <div class="module-grid">
         <div class="module-card">
           <div class="module-num">MOD 19</div>
           <div class="module-name">AI 學習助理</div>
           <div class="module-desc">學習歷程摘要、家長查詢輔助 AI。初期「只讀不改」，確保核心資料安全，讓 AI 成為老師的幫手。</div>
-          <span class="module-tag t-ai">AI 輔助</span>
+          <span class="module-tag t-svc">MUSEON 負責</span>
         </div>
         <div class="module-card">
           <div class="module-num">MOD 20</div>
           <div class="module-name">AI 作業批改</div>
           <div class="module-desc">學生提交作業後，AI 自動評分並給出改善建議，老師最終審核確認。大幅減少批改時間，提升回饋速度。</div>
-          <span class="module-tag t-ai">AI 輔助</span>
+          <span class="module-tag t-hr">應運系統內建</span>
         </div>
         <div class="module-card">
           <div class="module-num">MOD 21</div>
           <div class="module-name">AI 口說練習</div>
           <div class="module-desc">學生與 AI 進行英文口說對話練習，系統評估發音、流暢度並記錄進步軌跡，補充課堂外的練習時間。</div>
-          <span class="module-tag t-ai">AI 輔助</span>
+          <span class="module-tag t-hr">應運系統內建</span>
         </div>
         <div class="module-card">
           <div class="module-num">MOD 22</div>
           <div class="module-name">AI 行政檢查</div>
           <div class="module-desc">每日自動掃描資料異常（欠費未通知、出缺席異常、補課逾期），主動提醒行政人員處理。</div>
-          <span class="module-tag t-ai">AI 輔助</span>
+          <span class="module-tag t-svc">MUSEON 負責</span>
         </div>
       </div>
     </div>
