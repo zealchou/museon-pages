@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HE 人格分析與談判策略 — MUSEON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+  }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Noto Sans TC', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ─── Header ─── */
+  .site-header {
+    background: var(--ink);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #FDFCFA;
+    letter-spacing: 0.08em;
+  }
+  .brand-logo span { color: var(--ember-light); }
+  .report-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    background: linear-gradient(135deg, #1a1016 0%, #1e160e 60%, #0e1018 100%);
+    padding: 64px 32px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(196,80,42,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 600;
+    color: #FDFCFA;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .hero h1 em { font-style: italic; color: var(--ember-light); }
+  .hero-sub {
+    color: #9898a8;
+    font-size: 14px;
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+  .hero-tags {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .tag-ember { background: rgba(196,80,42,0.22); color: var(--ember-light); border: 1px solid rgba(196,80,42,0.35); }
+  .tag-teal  { background: rgba(42,122,110,0.20); color: #5CC0B0; border: 1px solid rgba(42,122,110,0.35); }
+  .tag-gold  { background: rgba(184,146,58,0.20); color: #D4AA58; border: 1px solid rgba(184,146,58,0.35); }
+
+  /* ─── Layout ─── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .section { padding: 48px 0 32px; }
+  .section + .section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 28px;
+  }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 18px;
+  }
+  .card-sm { padding: 20px 24px; }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  /* ─── Brief Grid ─── */
+  .brief-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 640px) { .brief-grid { grid-template-columns: 1fr; } }
+
+  .persona-type-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #f9f4ef 0%, #fdfcfa 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--ember);
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .persona-icon {
+    width: 52px; height: 52px;
+    background: var(--ember);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .persona-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .persona-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .persona-desc {
+    font-size: 13px;
+    color: var(--slate);
+    margin-top: 4px;
+    line-height: 1.65;
+  }
+
+  .key-point {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .key-num {
+    width: 28px; height: 28px;
+    background: var(--ember);
+    color: white;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .key-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .key-text span { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+  /* ─── Score ─── */
+  .score-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding: 18px 22px;
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .score-light {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 4px rgba(45,138,110,0.25), 0 0 12px rgba(45,138,110,0.4);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .score-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .score-sub { font-size: 13px; color: var(--slate); }
+
+  /* ─── Radar Chart ─── */
+  .radar-wrap {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .radar-svg-wrap {
+    flex: 0 0 270px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @media (max-width: 600px) { .radar-svg-wrap { flex: 0 0 100%; } }
+  .radar-legend {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 4px;
+  }
+  .radar-bar-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .radar-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+  .radar-bar-label span:first-child { font-weight: 600; color: var(--ink); }
+  .radar-bar-label span:last-child { color: var(--mist); }
+  .radar-bar-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .radar-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--ember);
+  }
+  .radar-bar-fill.up   { background: var(--teal); }
+  .radar-bar-fill.down { background: var(--mist); }
+  .bar-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bar-desc { font-size: 11px; color: var(--slate); }
+  .radar-trend {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .trend-up   { background: rgba(42,122,110,0.15); color: var(--teal); }
+  .trend-down { background: rgba(152,152,168,0.15); color: var(--slate); }
+  .trend-flat { background: rgba(152,152,168,0.10); color: var(--mist); }
+
+  /* ─── Trait Cards ─── */
+  .trait-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 22px;
+  }
+  @media (max-width: 580px) { .trait-grid { grid-template-columns: 1fr; } }
+  .trait-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .trait-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .trait-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .trait-score-badge {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .score-low { background: rgba(152,152,168,0.12); color: var(--slate); }
+  .score-mid { background: rgba(184,146,58,0.15);  color: var(--gold); }
+  .score-hi  { background: rgba(42,122,110,0.15);  color: var(--teal); }
+  .trait-body { font-size: 13px; color: var(--slate); line-height: 1.65; }
+
+  /* ─── Constellation ─── */
+  .constellation-box {
+    background: linear-gradient(135deg, #f2ede5, #fdfcfa);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .const-icon { font-size: 36px; flex-shrink: 0; }
+  .const-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .const-desc { font-size: 13px; color: var(--slate); line-height: 1.7; }
+
+  /* ─── Highlight Banner ─── */
+  .highlight-banner {
+    background: linear-gradient(135deg, rgba(196,80,42,0.07) 0%, rgba(184,146,58,0.07) 100%);
+    border: 1px solid rgba(196,80,42,0.18);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-top: 20px;
+  }
+  .highlight-banner p {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.85;
+  }
+  .highlight-banner strong { color: var(--ember); }
+
+  /* ─── Blindspot ─── */
+  .blindspot-list { display: flex; flex-direction: column; gap: 14px; }
+  .blindspot-item {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 500px) {
+    .blindspot-item { grid-template-columns: 36px 1fr; }
+    .blind-hit { grid-column: 2; }
+  }
+  .blind-num {
+    width: 32px; height: 32px;
+    background: var(--parchment);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ember);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .blind-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+  .blind-desc  { font-size: 13px; color: var(--slate); line-height: 1.65; }
+  .blind-hit {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    white-space: nowrap;
+    align-self: flex-start;
+  }
+  .hit-high { background: rgba(196,80,42,0.13); color: var(--ember);  border: 1px solid rgba(196,80,42,0.24); }
+  .hit-mid  { background: rgba(184,146,58,0.13); color: var(--gold);   border: 1px solid rgba(184,146,58,0.24); }
+
+  /* ─── Phase List ─── */
+  .phase-list { position: relative; }
+  .phase-list::before {
+    content: '';
+    position: absolute;
+    left: 22px; top: 30px; bottom: 30px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--ember), var(--teal));
+    opacity: 0.25;
+  }
+  .phase-item {
+    display: flex;
+    gap: 20px;
+    padding: 18px 0;
+    position: relative;
+  }
+  .phase-dot {
+    width: 46px; height: 46px;
+    background: var(--snow);
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ember);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .phase-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .phase-body  { font-size: 13px; color: var(--slate); line-height: 1.75; }
+
+  /* ─── Script Cards ─── */
+  .script-list { display: flex; flex-direction: column; gap: 18px; }
+  .script-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .script-header {
+    padding: 14px 20px;
+    background: linear-gradient(to right, rgba(196,80,42,0.06), transparent);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .script-num {
+    width: 24px; height: 24px;
+    background: var(--ember);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .script-heading { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .script-body    { padding: 16px 20px; }
+  .script-quote {
+    background: #f4efe8;
+    border-left: 3px solid var(--ember);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--ink);
+    font-style: italic;
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+  .script-why {
+    font-size: 12px;
+    color: var(--slate);
+    display: flex;
+    gap: 6px;
+    line-height: 1.65;
+  }
+  .script-why-label {
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ─── Landmines ─── */
+  .mine-list { display: flex; flex-direction: column; gap: 12px; }
+  .mine-item {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ember-dark);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .mine-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .mine-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .mine-text span   { font-size: 13px; color: var(--slate); line-height: 1.65; }
+
+  /* ─── Action ─── */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) { .action-grid { grid-template-columns: 1fr; } }
+  .action-col-title {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .action-col-title.primary   { color: var(--ember); }
+  .action-col-title.secondary { color: var(--teal); }
+  .action-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .action-item:last-child { border-bottom: none; }
+  .action-cb {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .action-text { font-size: 13px; color: var(--slate); line-height: 1.6; }
+  .action-text strong { color: var(--ink); }
+
+  /* ─── Pricing Table ─── */
+  .pricing-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .pricing-table th {
+    text-align: left;
+    padding: 10px 14px;
+    color: var(--slate);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    background: var(--parchment);
+  }
+  .pricing-table th:last-child { text-align: left; }
+  .pricing-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .pricing-table tr:last-child td { border-bottom: none; }
+  .pricing-table td:nth-child(3) { font-weight: 700; white-space: nowrap; }
+
+  /* ─── Footer ─── */
+  footer {
+    background: var(--ink);
+    padding: 28px 32px;
+    text-align: center;
+    margin-top: 60px;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: #FDFCFA;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .footer-brand span { color: var(--ember-light); }
+  .footer-meta { font-size: 11px; color: var(--mist); letter-spacing: 0.08em; }
+
+  .mt-20 { margin-top: 20px; }
+  .mt-16 { margin-top: 16px; }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260609_114328_06a232fb.png" alt="a mentor at a study desk with books and a warm cup of tea, soft window light, editorial portrait composition" width="1024" height="576" loading="lazy" />
+
+<img class="museon-image museon-image--hero" src="museon_images/20260609_114313_fe6b4102.png" alt="a mentor at a study desk with books and a warm cup of tea, soft window light, editorial portrait composition" width="1024" height="576" loading="lazy" />
+
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <div class="brand-logo">M<span>U</span>SEON</div>
+  <div class="report-badge">Confidential · Internal Strategy</div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-eyebrow">HE 人格分析與談判策略報告</div>
+  <h1>從 PM 夥伴到<em>準顧問</em>的轉化路徑</h1>
+  <div class="hero-sub">基於 19 筆訊息系統實測 · P-Trait 六維特質分析 · 精準話術腳本</div>
+  <div class="hero-tags">
+    <span class="tag tag-ember">高轉化潛力</span>
+    <span class="tag tag-gold">準顧問路徑</span>
+    <span class="tag tag-teal">深度反思雙升</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ SECTION 01: EXECUTIVE BRIEF ══ -->
+  <section class="section">
+    <div class="section-label">Section 01</div>
+    <h2 class="section-title">執行摘要 Executive Brief</h2>
+
+    <div class="brief-grid">
+      <div class="persona-type-card">
+        <div class="persona-icon">🌱</div>
+        <div>
+          <div class="persona-label">核心人格定位</div>
+          <div class="persona-name">低調野心型 · 觀察先行者</div>
+          <div class="persona-desc">溫暖但謹慎、跟隨中暗中布局、用分潤問題暴露業務野心。她在找一個能讓她「安全升級」的機會，不是在找一個工具。</div>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <div class="key-num">1</div>
+        <div class="key-text">
+          <strong>她不是普通用戶，是準顧問</strong>
+          <span>問分潤機制不等於好奇，而是探路。她在評估「加入 MUSEON 生態系」的可能性。用顧問路徑框定她，不要用用戶訂閱框定。</span>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <div class="key-num">2</div>
+        <div class="key-text">
+          <strong>她已有 1 個潛在客戶，這是最強槓桿</strong>
+          <span>主動介紹客戶說明她已進入業務思維。把這個訊號放大，讓她看到自己已具備顧問的初始條件，降低「我還沒準備好」的自我懷疑。</span>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <div class="key-num">3</div>
+        <div class="key-text">
+          <strong>給方向不給壓力，她是跟隨型</strong>
+          <span>直接度（P2）和主動度（P3）偏低，喜歡「好的！」式跟隨。不要推銷，要召喚——先定位她的身份，讓她主動詢問細節。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-row">
+      <div class="score-light"></div>
+      <div>
+        <div class="score-text">整體機會評分 ── <span style="color:var(--teal)">綠燈 · 高潛力</span></div>
+        <div class="score-sub">她已具備進入顧問路徑的三個先決條件：真實業務動機、現有客戶資源、跟隨型執行力。主要風險：需要建立安全感，不能急。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 02: PERSONALITY ANALYSIS ══ -->
+  <section class="section">
+    <div class="section-label">Section 02</div>
+    <h2 class="section-title">HE 人格深度分析</h2>
+
+    <div class="card">
+      <div class="card-title">P-Trait 六維雷達圖（19 筆訊息系統實測）</div>
+      <div class="radar-wrap">
+        <!-- SVG Radar -->
+        <div class="radar-svg-wrap">
+          <svg viewBox="0 0 290 290" width="270" height="270" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="rg1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stop-color="#C4502A" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#C4502A" stop-opacity="0.07"/>
+              </radialGradient>
+            </defs>
+            <g transform="translate(145,145)">
+              <!-- Grid rings (25/50/75/100%) at radius 28/56/84/112 -->
+              <polygon points="0,-28 24.2,-14 24.2,14 0,28 -24.2,14 -24.2,-14"
+                fill="none" stroke="#E2E0DA" stroke-width="0.8" opacity="0.8"/>
+              <polygon points="0,-56 48.5,-28 48.5,28 0,56 -48.5,28 -48.5,-28"
+                fill="none" stroke="#E2E0DA" stroke-width="0.8" opacity="0.8"/>
+              <polygon points="0,-84 72.7,-42 72.7,42 0,84 -72.7,42 -72.7,-42"
+                fill="none" stroke="#E2E0DA" stroke-width="0.8" opacity="0.8"/>
+              <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56"
+                fill="none" stroke="#E2E0DA" stroke-width="1.2"/>
+              <!-- Axes -->
+              <line x1="0" y1="0" x2="0"    y2="-112" stroke="#E2E0DA" stroke-width="0.8"/>
+              <line x1="0" y1="0" x2="97"   y2="-56"  stroke="#E2E0DA" stroke-width="0.8"/>
+              <line x1="0" y1="0" x2="97"   y2="56"   stroke="#E2E0DA" stroke-width="0.8"/>
+              <line x1="0" y1="0" x2="0"    y2="112"  stroke="#E2E0DA" stroke-width="0.8"/>
+              <line x1="0" y1="0" x2="-97"  y2="56"   stroke="#E2E0DA" stroke-width="0.8"/>
+              <line x1="0" y1="0" x2="-97"  y2="-56"  stroke="#E2E0DA" stroke-width="0.8"/>
+              <!--
+                P1 warmth=0.40    top        (0, -44.8)
+                P2 direct=0.29    top-right  (97*0.29*cos30=24.4, -56*0.29=-16.2) → (28.1,-16.2)
+                P3 init=0.24      bot-right  (97*0.24*cos30=20.2,  56*0.24=13.4)  → (23.3,13.4)
+                P4 depth=0.38     bottom     (0, 42.6)
+                P5 auto=0.29      bot-left   (-28.1, 16.2)
+                P6 reflect=0.36   top-left   (-97*0.36*cos30=-31.2, -56*0.36=-20.2) → (-34.9,-20.2)
+
+                For a regular hexagon with 6 axes:
+                top:       angle=90°  → (0, -r)
+                top-right: angle=30°  → (r*cos30, -r*sin30) = (r*0.866, -r*0.5)
+                bot-right: angle=-30° → (r*0.866, r*0.5)
+                bottom:    angle=-90° → (0, r)
+                bot-left:  angle=-150°→ (-r*0.866, r*0.5)
+                top-left:  angle=150° → (-r*0.866, -r*0.5)
+
+                P1 r=112*0.40=44.8 → (0, -44.8)
+                P2 r=112*0.29=32.5 → (32.5*0.866, -32.5*0.5) = (28.1, -16.2)
+                P3 r=112*0.24=26.9 → (26.9*0.866, 26.9*0.5)  = (23.3, 13.4)
+                P4 r=112*0.38=42.6 → (0, 42.6)
+                P5 r=112*0.29=32.5 → (-28.1, 16.2)
+                P6 r=112*0.36=40.3 → (-40.3*0.866, -40.3*0.5) = (-34.9, -20.2)
+              -->
+              <polygon
+                points="0,-44.8  28.1,-16.2  23.3,13.4  0,42.6  -28.1,16.2  -34.9,-20.2"
+                fill="url(#rg1)"
+                stroke="#C4502A"
+                stroke-width="2"
+                stroke-linejoin="round"/>
+              <!-- Dots -->
+              <circle cx="0"     cy="-44.8" r="4.5" fill="#C4502A"/>
+              <circle cx="28.1"  cy="-16.2" r="4"   fill="#9898A8"/>
+              <circle cx="23.3"  cy="13.4"  r="4"   fill="#9898A8"/>
+              <circle cx="0"     cy="42.6"  r="4.5" fill="#2A7A6E"/>
+              <circle cx="-28.1" cy="16.2"  r="4"   fill="#9898A8"/>
+              <circle cx="-34.9" cy="-20.2" r="4.5" fill="#2A7A6E"/>
+              <!-- Labels -->
+              <text x="0"   y="-120" text-anchor="middle" font-size="10" fill="#5A5A6E" font-family="sans-serif">P1 溫暖</text>
+              <text x="104" y="-60"  text-anchor="start"  font-size="10" fill="#9898A8" font-family="sans-serif">P2 直接</text>
+              <text x="104" y="65"   text-anchor="start"  font-size="10" fill="#9898A8" font-family="sans-serif">P3 主動</text>
+              <text x="0"   y="126"  text-anchor="middle" font-size="10" fill="#2A7A6E" font-family="sans-serif">P4 深度 ↑</text>
+              <text x="-104" y="65"  text-anchor="end"    font-size="10" fill="#9898A8" font-family="sans-serif">P5 自主</text>
+              <text x="-104" y="-60" text-anchor="end"    font-size="10" fill="#2A7A6E" font-family="sans-serif">P6 反思 ↑</text>
+              <!-- Ring labels -->
+              <text x="3" y="-28" font-size="7.5" fill="#C8C4BC" font-family="sans-serif">25%</text>
+              <text x="3" y="-56" font-size="7.5" fill="#C8C4BC" font-family="sans-serif">50%</text>
+              <text x="3" y="-84" font-size="7.5" fill="#C8C4BC" font-family="sans-serif">75%</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Legend bars -->
+        <div class="radar-legend">
+          <div class="radar-bar-wrap">
+            <div class="radar-bar-label">
+              <span>P1 溫暖度 Warmth</span><span>0.40 · 79%</span>
+            </div>
+            <div class="radar-bar-track"><div class="radar-bar-fill" style="width:40%"></div></div>
+            <div class="bar-meta">
+              <span class="bar-desc">中偏暖，禮貌有保留</span>
+              <span class="radar-trend trend-flat">→ 穩定</span>
+            </div>
+          </div>
+          <div class="radar-bar-wrap">
+            <div class="radar-bar-label">
+              <span>P2 直接度 Directness</span><span>0.29 · 49%</span>
+            </div>
+            <div class="radar-bar-track"><div class="radar-bar-fill down" style="width:29%"></div></div>
+            <div class="bar-meta">
+              <span class="bar-desc">低直接，習慣繞圈探路</span>
+              <span class="radar-trend trend-down">↓ 下降</span>
+            </div>
+          </div>
+          <div class="radar-bar-wrap">
+            <div class="radar-bar-label">
+              <span>P3 主動度 Initiative</span><span>0.24 · 78%</span>
+            </div>
+            <div class="radar-bar-track"><div class="radar-bar-fill down" style="width:24%"></div></div>
+            <div class="bar-meta">
+              <span class="bar-desc">偏被動，需要引導</span>
+              <span class="radar-trend trend-down">↓ 持續下降</span>
+            </div>
+          </div>
+          <div class="radar-bar-wrap">
+            <div class="radar-bar-label">
+              <span>P4 深度 Depth</span><span>0.38 · 79%</span>
+            </div>
+            <div class="radar-bar-track"><div class="radar-bar-fill up" style="width:38%"></div></div>
+            <div class="bar-meta">
+              <span class="bar-desc">評估模式已開啟</span>
+              <span class="radar-trend trend-up">↑ 上升</span>
+            </div>
+          </div>
+          <div class="radar-bar-wrap">
+            <div class="radar-bar-label">
+              <span>P5 自主度 Autonomy</span><span>0.29 · 79%</span>
+            </div>
+            <div class="radar-bar-track"><div class="radar-bar-fill down" style="width:29%"></div></div>
+            <div class="bar-meta">
+              <span class="bar-desc">傾向等待指令</span>
+              <span class="radar-trend trend-down">↓ 下降</span>
+            </div>
+          </div>
+          <div class="radar-bar-wrap">
+            <div class="radar-bar-label">
+              <span>P6 反思度 Reflectivity</span><span>0.36 · 79%</span>
+            </div>
+            <div class="radar-bar-track"><div class="radar-bar-fill up" style="width:36%"></div></div>
+            <div class="bar-meta">
+              <span class="bar-desc">自我覺察提升中</span>
+              <span class="radar-trend trend-up">↑ 上升</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trait Meanings -->
+    <div class="trait-grid">
+      <div class="trait-card">
+        <div class="trait-header">
+          <span class="trait-name">溫暖但保留（P1）</span>
+          <span class="trait-score-badge score-mid">0.40</span>
+        </div>
+        <div class="trait-body">用 emoji 和「哈哈哈」展現親切，但真實想法藏在輕鬆語氣下。她不直接說「我想做業務」，而是問「分潤機制怎麼設計」——間接探路是溝通習慣，不是猶豫。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-header">
+          <span class="trait-name">低直接（P2）</span>
+          <span class="trait-score-badge score-low">0.29 ↓</span>
+        </div>
+        <div class="trait-body">不會正面提需求或反對。「好的！」式跟隨是主要反應。她不會說「我要買」也不說「我不想買」——需要你給出明確框架讓她選「好」，不要讓她自己決定。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-header">
+          <span class="trait-name">深度增長（P4）</span>
+          <span class="trait-score-badge score-hi">0.38 ↑</span>
+        </div>
+        <div class="trait-body">分析十年交易資料；說「等一下我會錄音」——有備而來，在認真評估。深度上升代表她從「了解」進入「評估」模式，這是轉化窗口開啟的最清晰信號。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-header">
+          <span class="trait-name">反思增長（P6）</span>
+          <span class="trait-score-badge score-hi">0.36 ↑</span>
+        </div>
+        <div class="trait-body">接受「想太多」的幽默並自我代入（「這是好事，思考多多益善 🤣」）。反思度增長意味著她在用 MUSEON 框架重新審視自身——這是最強的預購信號。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-header">
+          <span class="trait-name">低主動（P3）</span>
+          <span class="trait-score-badge score-low">0.24 ↓</span>
+        </div>
+        <div class="trait-body">雖有介紹客戶（高價值行為），整體仍傾向被動等待。需要清晰的「下一步指令」才能行動——不要讓她自己想「接下來怎麼辦」，她會卡住，最後什麼都不做。</div>
+      </div>
+      <div class="trait-card">
+        <div class="trait-header">
+          <span class="trait-name">低自主（P5）</span>
+          <span class="trait-score-badge score-low">0.29 ↓</span>
+        </div>
+        <div class="trait-body">自主度低 + 主動度低 = 她在等一個她信任的人給她方向。這不是軟弱，是策略性等待。你的角色不是賣她產品，而是成為她信任的指引者——她接到才會付費跟進。</div>
+      </div>
+    </div>
+
+    <!-- Constellation -->
+    <div class="constellation-box">
+      <div class="const-icon">♉</div>
+      <div>
+        <div class="const-title">金牛（5/21 前）／邊界雙子 — 星座特質疊加</div>
+        <div class="const-desc">
+          <strong>金牛特質：</strong>決策謹慎、看重穩定與實際回報、需要確定感才行動、對「值不值得」極敏感。她問分潤不是衝動，是在計算投資回報。<br><br>
+          <strong>雙子邊界疊加：</strong>好奇心強、喜歡接收資訊、表面輕鬆但腦子在轉。「哈哈哈 🤣」背後是在評估你。<br><br>
+          <strong>談判啟示：</strong>先讓她看到「具體的數字和路徑」（金牛需要確定性），再讓她「有趣地探索可能性」（雙子喜歡選項感）。
+        </div>
+      </div>
+    </div>
+
+    <!-- Psychological State -->
+    <div class="highlight-banner">
+      <p>
+        <strong>她現在的心理狀態推測：新角色過渡期的「低調定位焦慮」</strong><br><br>
+        從舊身份過渡到 PM 角色，她在問自己：「我能在這個生態系裡扮演什麼角色？」——
+        WEN 案給她信心（我能串接資源），介紹潛在客戶是試探（我也可以做業務），問分潤是佈局（如果做了，我能得到什麼）。<br><br>
+        <strong>她最需要的不是一個產品，而是一個「身份確認」：你告訴她「你這樣的人，適合走顧問路徑」。</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 03: BLINDSPOTS ══ -->
+  <section class="section">
+    <div class="section-label">Section 03</div>
+    <h2 class="section-title">六大盲點 × HE 處境命中分析</h2>
+
+    <div class="blindspot-list">
+      <div class="blindspot-item">
+        <div class="blind-num">1</div>
+        <div>
+          <div class="blind-title">盲點一：不知自己是誰</div>
+          <div class="blind-desc">剛從舊身份轉型為 PM 角色，專業標籤仍在重建中。她知道自己「有人脈、能串接」，但缺少外部認可的身份錨點。MUSEON 顧問資格可以成為她第一個「被系統認可的專業身份」。</div>
+        </div>
+        <span class="blind-hit hit-high">高度命中</span>
+      </div>
+      <div class="blindspot-item">
+        <div class="blind-num">2</div>
+        <div>
+          <div class="blind-title">盲點二：沒有方向目標</div>
+          <div class="blind-desc">她知道要「做業務、賺分潤」，但沒有一條具體可操作的升級路徑。Course 2 顧問班 → Stage 1 資格 → 月分潤這條路，直接給她一個 12 個月可執行的成長地圖。</div>
+        </div>
+        <span class="blind-hit hit-high">高度命中</span>
+      </div>
+      <div class="blindspot-item">
+        <div class="blind-num">3</div>
+        <div>
+          <div class="blind-title">盲點三：不掌握自己的 GAP</div>
+          <div class="blind-desc">她有潛在客戶、有分析需求（十年交易資料照片），但不清楚自己缺什麼框架才能把資源轉化為收入。這是 MUSEON 顧問導入服務最直接的價值切入點。</div>
+        </div>
+        <span class="blind-hit hit-mid">中度命中</span>
+      </div>
+      <div class="blindspot-item">
+        <div class="blind-num">4</div>
+        <div>
+          <div class="blind-title">盲點四：未盤點累積</div>
+          <div class="blind-desc">她已有 1 個潛在客戶，但沒有系統化整理人脈庫。月訂閱的顧問輔導可以幫她建立客戶管理 SOP，讓每次接觸都成為可複製的資產，而不是一次性的人情消耗。</div>
+        </div>
+        <span class="blind-hit hit-mid">中度命中</span>
+      </div>
+      <div class="blindspot-item">
+        <div class="blind-num">5</div>
+        <div>
+          <div class="blind-title">盲點五：不懂槓桿</div>
+          <div class="blind-desc">目前靠個人接觸，還沒有用工具放大影響力的概念。她介紹的潛在客戶是靠手工操作——但成為顧問後，每導入一個客戶等於每月多 $2,000 被動收入。這才是真正的槓桿思維示範。</div>
+        </div>
+        <span class="blind-hit hit-high">高度命中</span>
+      </div>
+      <div class="blindspot-item">
+        <div class="blind-num">6</div>
+        <div>
+          <div class="blind-title">盲點六：缺整合佈局</div>
+          <div class="blind-desc">她看到的是「WEN 需要 PM」「這個客戶需要廣告」等獨立的點，還沒有能力把這些串成一個業務模式。MUSEON 的 Business-12 / SSA 方法論，正是幫她把散點整合為系統佈局的核心工具。</div>
+        </div>
+        <span class="blind-hit hit-mid">中度命中</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 04: STRATEGY ══ -->
+  <section class="section">
+    <div class="section-label">Section 04</div>
+    <h2 class="section-title">談判策略 — 精準可執行</h2>
+
+    <div class="highlight-banner" style="margin-top:0;margin-bottom:28px;">
+      <p>
+        <strong>核心定位原則：不要把 HE 說服成「用戶」——把她召喚成「夥伴」。</strong><br><br>
+        她的分潤問題已說明她的思維框架是「業務」而不是「買家」。若你用產品說明的方式跟她談，她會禮貌地說「我再想想」然後消失。但若你以「我在找合適的人選一起做這件事」的方式開場，她的金牛特質會讓她認真評估「這個機會我能否抓住」。
+      </p>
+    </div>
+
+    <!-- Three Phases -->
+    <div class="card">
+      <div class="card-title">談判三階段框架</div>
+      <div class="phase-list">
+        <div class="phase-item">
+          <div class="phase-dot">一</div>
+          <div>
+            <div class="phase-title">觸發痛點 ── 用 WEN 案做場景鏡像</div>
+            <div class="phase-body">從她最熟悉的現場說起：「你現在在 WEN 那邊看到的，其實就是最典型的中小企業主狀況——有資源、有意願，但沒有方向和工具，所以卡住了。」讓她代入 WEN 的位置，感受到「如果當時有 MUSEON 的框架，我能幫 WEN 更多」的痛點。目的不是說 MUSEON 多好，而是讓她感受到「沒有這個工具，我的能力被打了折扣」。</div>
+          </div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-dot">二</div>
+          <div>
+            <div class="phase-title">展示她已有的條件 ── 你已經在路上了</div>
+            <div class="phase-body">放大她主動介紹客戶的行為：「你知道嗎，你已經做了一件很多人做不到的事——你主動帶來了一個潛在客戶。大多數人只是說說，你已經在做了。」然後拿出顧問路徑：「你有這個能力，下一步不是繼續靠人情帶，而是有一套系統讓你複製這件事，讓每次成功都有收入回報你。」</div>
+          </div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-dot">三</div>
+          <div>
+            <div class="phase-title">給選擇不給壓力 ── 月訂閱為入口，顧問為升級</div>
+            <div class="phase-body">不要一開口就說 $90,000。先讓她安全進入：「可以先從月訂閱開始，跟著顧問走一個月，親自確認這個工具適不適合你。六千一個月，如果感覺有用再談下一步。」然後自然帶出升級：「等你手邊有客戶要導入，我們再聊顧問資格，那時你的分潤可以把月費抵掉，甚至開始賺錢。」讓她感受到「這是一個我能控制節奏的決定」。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <div class="mt-20">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:18px;">五個精準話術腳本</div>
+      <div class="script-list">
+
+        <div class="script-card">
+          <div class="script-header">
+            <div class="script-num">1</div>
+            <div class="script-heading">開場定位 ── 召喚她的業務身份</div>
+          </div>
+          <div class="script-body">
+            <div class="script-quote">「HE，你知道嗎，你問分潤機制這個問題，讓我覺得你不只是在了解 MUSEON 當用戶——你在想的是怎麼把這個工具變成你自己的業務。我說得對嗎？」</div>
+            <div class="script-why">
+              <span class="script-why-label">理由：</span>
+              讓她確認自己的意圖。說「對」就是打開業務框架；說「只是好奇」也 OK，種子已埋下。金牛不喜歡被猜測，直接問確認讓她感謝你的坦率。
+            </div>
+          </div>
+        </div>
+
+        <div class="script-card">
+          <div class="script-header">
+            <div class="script-num">2</div>
+            <div class="script-heading">放大現有資源 ── 她不是零起點</div>
+          </div>
+          <div class="script-body">
+            <div class="script-quote">「你介紹的那個對社群經營有興趣的朋友，其實已經是一個完整的客戶需求了。很多人花三個月都找不到一個這樣的潛在客戶，你花了多久？這就是你的核心資產。」</div>
+            <div class="script-why">
+              <span class="script-why-label">理由：</span>
+              放大現有成功讓金牛感到「我是有東西的」，降低「我不夠格」的自我懷疑。為後面的顧問路徑鋪墊「她有條件」的心理基礎。
+            </div>
+          </div>
+        </div>
+
+        <div class="script-card">
+          <div class="script-header">
+            <div class="script-num">3</div>
+            <div class="script-heading">分潤具體化 ── 幫她算清楚</div>
+          </div>
+          <div class="script-body">
+            <div class="script-quote">「我直接跟你說清楚。拿到顧問資格之後，只要你導入的客戶每個月付 $6,000，你拿 $2,000。你介紹來的客戶再做一個，再加 $1,000。你手上那個潛在客戶如果成交，第一個月你就回收了顧問班的一半學費。」</div>
+            <div class="script-why">
+              <span class="script-why-label">理由：</span>
+              金牛需要具體數字才能決策，不要讓她自己算——算到一半她會放棄。幫她把數字擺清楚，讓「哦，原來這樣」的感受出現。數字對了，她就不再猶豫。
+            </div>
+          </div>
+        </div>
+
+        <div class="script-card">
+          <div class="script-header">
+            <div class="script-num">4</div>
+            <div class="script-heading">降低風險感 ── 給她安全入口</div>
+          </div>
+          <div class="script-body">
+            <div class="script-quote">「你不用一開始就決定走顧問路徑。先付月費，跟著我們的顧問輔導一個月，你就知道這個工具到底能不能幫你現在做的事。一個月如果感覺對，我們再聊下一步。」</div>
+            <div class="script-why">
+              <span class="script-why-label">理由：</span>
+              低自主度 + 低主動度的人最怕「一次賭大的」。把入口縮小到月費層級，讓她感受到「這是試用，不是終身綁定」——金牛最怕後悔，試用降低了後悔的可能性，她就敢動。
+            </div>
+          </div>
+        </div>
+
+        <div class="script-card">
+          <div class="script-header">
+            <div class="script-num">5</div>
+            <div class="script-heading">製造被選中感 ── 非壓迫型稀缺</div>
+          </div>
+          <div class="script-body">
+            <div class="script-quote">「我們顧問夥伴的名額是有規劃的，不是每個人我都會直接說『你可以走這條路』。你有人脈、有執行力、而且已經主動帶過客戶——這是我跟你說這個的原因。你可以先思考，不急。」</div>
+            <div class="script-why">
+              <span class="script-why-label">理由：</span>
+              不用限時優惠製造壓力，用「我特別跟你說」製造被選中感。雙子的好奇心會想「為什麼特別選我」；金牛的謹慎會認真評估而不衝動。這句話讓她自己說服自己。
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 05: LANDMINES ══ -->
+  <section class="section">
+    <div class="section-label">Section 05</div>
+    <h2 class="section-title">雷區清單 Landmines</h2>
+
+    <div class="mine-list">
+      <div class="mine-item">
+        <div class="mine-icon">💣</div>
+        <div class="mine-text">
+          <strong>不能一開口就報 $90,000 導入費</strong>
+          <span>金牛聽到大數字的第一反應是「我考慮一下」，然後再也不回。必須先建立她對工具的信任和對自己條件的信心，才能談導入費。導入費是結尾，不是開場。</span>
+        </div>
+      </div>
+      <div class="mine-item">
+        <div class="mine-icon">💣</div>
+        <div class="mine-text">
+          <strong>不能催促她做決定</strong>
+          <span>「你現在決定嗎」「今天優惠」「名額快滿了」等硬催促觸發金牛防禦機制。她的低直接度讓她不會正面拒絕，但她會消失。用「被選中感」取代「時限壓迫」。</span>
+        </div>
+      </div>
+      <div class="mine-item">
+        <div class="mine-icon">💣</div>
+        <div class="mine-text">
+          <strong>不能讓她自己想「下一步」</strong>
+          <span>低主動度 + 低自主度意味著「你再想想」等於永遠失聯。每次對話結束前必須給她一個明確的下一步指令：例如「你先跟那個客戶朋友約個初步了解，回來告訴我他的需求是什麼。」</span>
+        </div>
+      </div>
+      <div class="mine-item">
+        <div class="mine-icon">💣</div>
+        <div class="mine-text">
+          <strong>不能只講功能，要講她的故事</strong>
+          <span>「MUSEON 有什麼功能」「這個工具可以做到什麼」對她無效。她不是在買工具，她是在找身份和路徑。話術必須圍繞「你這樣的人，在做這樣的事，可以有這樣的結果」這個框架。</span>
+        </div>
+      </div>
+      <div class="mine-item">
+        <div class="mine-icon">⚠️</div>
+        <div class="mine-text">
+          <strong>不能跳過 WEN 案這個信任錨</strong>
+          <span>HE 進入生態系的鏈條是 WEN → Zeal → Feng → HE。WEN 是她的信任背書。談判中要讓她感受到 WEN 案上的合作是評估 MUSEON 的核心依據——不提這個脈絡等於讓她從零建立信任。</span>
+        </div>
+      </div>
+      <div class="mine-item">
+        <div class="mine-icon">⚠️</div>
+        <div class="mine-text">
+          <strong>不要在正式談判前就拋出 MUSEON 框架術語</strong>
+          <span>「等一下我會錄音」表示她帶著認真學習的心態來。但「六大盲點」「七武海」等術語太早拋出，金牛會感覺「我在被框住」。先從她的具體處境談，框架在後面自然帶出。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 06: ACTION ══ -->
+  <section class="section">
+    <div class="section-label">Section 06</div>
+    <h2 class="section-title">追蹤行動清單</h2>
+
+    <div class="action-grid">
+      <div class="card card-sm">
+        <div class="action-col-title primary">本週最高優先行動</div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>確認她的潛在客戶具體情況</strong> — 問那個對社群+廣告有興趣的朋友，行業、規模、卡點在哪，這是後續所有動作的資訊基礎。</div>
+        </div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>製作分潤試算圖</strong> — 一張簡單試算：帶幾個客戶、每月收多少、幾個月回本。讓金牛自己看到數字，不要讓她自己推算。</div>
+        </div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>問她對 WEN 案的第一手觀察</strong> — 她在現場看到什麼？這是確認「她哪個盲點被觸發」的最佳切入，也是建立共同語言的機會。</div>
+        </div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>給她一個具體的「稱呼」</strong> — 稱她為「夥伴」或「第一線 PM 顧問」，讓她感受到身份被確認，不只是「朋友介紹來了解的人」。</div>
+        </div>
+      </div>
+      <div class="card card-sm">
+        <div class="action-col-title secondary">下一步跟進時機</div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>WEN 案有具體進展後</strong> — 她完成一件具體 PM 任務後，信心最高的時刻，此時談升級路徑效果最好。</div>
+        </div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>潛在客戶願意見面後</strong> — 約她一起去初訪，讓她親眼看 MUSEON 如何處理客戶需求，勝過所有產品說明。</div>
+        </div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>她再主動問業務機會</strong> — 只要她再提分潤或顧問，立即約線下談。她自己開的門，不要錯過。</div>
+        </div>
+        <div class="action-item">
+          <div class="action-cb"></div>
+          <div class="action-text"><strong>每次對話後 48 小時內</strong> — 輕鬆回應一個後續問題或資訊，維持接觸頻率，不讓她「冷掉」後需要重新建立信任。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Path Table -->
+    <div class="card mt-16">
+      <div class="card-title">定價路徑 — 建議呈現順序</div>
+      <div style="overflow-x:auto;">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>談判階段</th>
+              <th>產品</th>
+              <th style="text-align:right;">金額</th>
+              <th>切入說法重點</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:700;color:var(--teal);">安全入口</td>
+              <td>月訂閱</td>
+              <td style="text-align:right;color:var(--teal);">$6,000／月</td>
+              <td style="color:var(--slate);">「先試一個月，跟著顧問走一輪確認有用再談」</td>
+            </tr>
+            <tr>
+              <td style="font-weight:700;color:var(--gold);">身份升級</td>
+              <td>Course 2 顧問班</td>
+              <td style="text-align:right;color:var(--gold);">$29,800</td>
+              <td style="color:var(--slate);">「拿資格，開始每月拿分潤，約 15 個月回本」</td>
+            </tr>
+            <tr>
+              <td style="font-weight:700;color:var(--ember);">深度導入</td>
+              <td>顧問導入服務</td>
+              <td style="text-align:right;color:var(--ember);">$90,000</td>
+              <td style="color:var(--slate);">「你的客戶要系統導入，讓我們陪跑三個月」</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:14px;padding:12px 16px;background:rgba(42,122,110,0.07);border-radius:8px;font-size:12px;color:var(--slate);border:1px solid rgba(42,122,110,0.15);line-height:1.7;">
+        <strong style="color:var(--teal);">分潤試算：</strong>每導入一客戶 → $2,000／月；再下一層介紹 → $1,000／月。若手上潛在客戶成交，約 15 個月可回收顧問班學費（$29,800 ÷ $2,000 = 14.9 個月）。若同時介紹第二個客戶，縮短至約 10 個月。
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-brand">M<span>U</span>SEON · Intelligence for Decision Makers</div>
+  <div class="footer-meta">Internal Strategy Report · Generated 2026-06-09 · Confidential — For Zeal Only</div>
+</footer>
+
+</body>
+</html>
