@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>白老師 MUSEON Agent 智能導入方案 — 服務報價單</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ember:       #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark:  #9A3A1C;
+      --teal:        #2A7A6E;
+      --gold:        #B8923A;
+      --ink:         #12121A;
+      --slate:       #5A5A6E;
+      --mist:        #9898A8;
+      --border:      #E2E0DA;
+      --parchment:   #F7F5F0;
+      --snow:        #FDFCFA;
+      --deep-ink:    #0E0E16;
+      --surface:     #16161F;
+      --raised:      #1E1E2A;
+      --border-dark: #2A2A38;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Document wrapper ── */
+    .document {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--parchment);
+    }
+
+    /* ── Typography ── */
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--deep-ink);
+      color: #fff;
+      padding: 48px 48px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(196, 80, 42, 0.12);
+      pointer-events: none;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 36px; height: 36px;
+      border: 2px solid var(--ember);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--ember);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.08em;
+    }
+
+    .doc-tag {
+      color: var(--ember-light);
+      padding: 4px 12px;
+      border: 1px solid rgba(196, 80, 42, 0.4);
+      border-radius: 4px;
+    }
+
+    .header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.15;
+    }
+
+    .header-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 4px;
+    }
+
+    .meta-item {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .meta-item strong {
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+    }
+
+    .validity-badge {
+      display: inline-block;
+      background: rgba(196, 80, 42, 0.2);
+      border: 1px solid rgba(196, 80, 42, 0.5);
+      color: var(--ember-light);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Intro Block ── */
+    .intro-block {
+      background: var(--snow);
+      border-bottom: 2px solid var(--border);
+      padding: 24px 48px;
+    }
+
+    .intro-block p {
+      font-size: 0.92rem;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+
+    .intro-block p strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── Main Content ── */
+    .content {
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* ── Section ── */
+    .section-title {
+      font-size: 1.35rem;
+      color: var(--ink);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--ember);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title .part-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--ember);
+      background: rgba(196, 80, 42, 0.08);
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18, 18, 26, 0.06);
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 14px;
+    }
+
+    /* ── Transport card ── */
+    .transport-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) auto;
+      gap: 0;
+    }
+
+    .transport-item {
+      padding: 12px 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .transport-item:last-child {
+      border-right: none;
+    }
+
+    .transport-label {
+      font-size: 0.75rem;
+      color: var(--mist);
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .transport-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ink);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .transport-total {
+      background: rgba(196, 80, 42, 0.06);
+      border-radius: 6px;
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .transport-total .transport-label { color: var(--ember-dark); }
+    .transport-total .transport-value { color: var(--ember); font-size: 1.25rem; }
+
+    /* ── Tables ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(18, 18, 26, 0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      background: var(--snow);
+    }
+
+    thead {
+      background: var(--deep-ink);
+      color: #fff;
+    }
+
+    thead th {
+      padding: 12px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    thead th.right { text-align: right; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:hover {
+      background: rgba(247, 245, 240, 0.6);
+    }
+
+    tbody td {
+      padding: 11px 14px;
+      color: var(--ink);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    tbody td.right {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    tbody td.muted {
+      color: var(--slate);
+      font-size: 0.82rem;
+    }
+
+    tbody td.center {
+      text-align: center;
+    }
+
+    /* Total row */
+    tr.total-row {
+      background: var(--ember) !important;
+    }
+
+    tr.total-row td {
+      color: #fff !important;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    tr.total-row td.right {
+      color: #fff !important;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    /* Sub-total row */
+    tr.subtotal-row {
+      background: rgba(196, 80, 42, 0.06) !important;
+    }
+
+    tr.subtotal-row td {
+      font-weight: 600;
+      color: var(--ember-dark) !important;
+    }
+
+    tr.subtotal-row td.right {
+      color: var(--ember-dark) !important;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* ── Summary Box ── */
+    .summary-box {
+      background: var(--ember);
+      border-radius: 12px;
+      padding: 36px 40px;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(196, 80, 42, 0.3);
+    }
+
+    .summary-box-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 24px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .summary-line:last-child { border-bottom: none; }
+
+    .summary-label {
+      font-size: 0.92rem;
+      font-family: 'Outfit', sans-serif;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .summary-amount {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .summary-line.grand {
+      padding-top: 16px;
+      margin-top: 6px;
+    }
+
+    .summary-line.grand .summary-label {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .summary-line.grand .summary-amount {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .summary-bonus {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .summary-bonus-label {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .summary-bonus-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.95rem;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* ── Terms card ── */
+    .terms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+    }
+
+    .terms-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .terms-key {
+      font-size: 0.72rem;
+      color: var(--mist);
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .terms-val {
+      font-size: 0.9rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .terms-val.highlight {
+      color: var(--ember);
+      font-weight: 700;
+    }
+
+    /* ── Rate card ── */
+    .rate-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+    }
+
+    .rate-row:last-child { border-bottom: none; }
+
+    .rate-row-label { color: var(--slate); }
+    .rate-row-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ── Payment ── */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .payment-step {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .payment-step-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--ember);
+      margin-bottom: 6px;
+    }
+
+    .payment-step-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .payment-step-amount {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ember);
+    }
+
+    .payment-step-note {
+      font-size: 0.73rem;
+      color: var(--mist);
+      margin-top: 3px;
+    }
+
+    /* ── Notice ── */
+    .notice-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notice-list li {
+      display: flex;
+      gap: 12px;
+      font-size: 0.875rem;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    .notice-num {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      background: var(--ember);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--deep-ink);
+      color: rgba(255,255,255,0.55);
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-left { display: flex; flex-direction: column; gap: 3px; }
+    .footer-brand { color: rgba(255,255,255,0.75); font-weight: 500; }
+    .footer-right {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.35);
+      text-align: right;
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 -48px;
+      display: none;
+    }
+
+    /* ── Utility ── */
+    .ember { color: var(--ember); }
+    .text-sm { font-size: 0.82rem; color: var(--slate); }
+    .mt-4 { margin-top: 16px; }
+    .mt-2 { margin-top: 8px; }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff; }
+      .document { max-width: 100%; }
+
+      .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .summary-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      thead { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      tr.total-row { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      tr.subtotal-row { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      .content { padding: 32px 40px; }
+      .header { padding: 36px 40px 32px; }
+      .footer { padding: 16px 40px; }
+
+      @page {
+        margin: 0;
+        size: A4;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header { padding: 32px 24px 28px; }
+      .content { padding: 28px 24px; gap: 28px; }
+      .intro-block { padding: 18px 24px; }
+      .footer { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; }
+      .header h1 { font-size: 1.8rem; }
+      .transport-grid { grid-template-columns: 1fr 1fr; }
+      .payment-grid { grid-template-columns: 1fr; }
+      .terms-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260610_234357_7b0e4b29.png" alt="abstract organic neural pattern in warm ember tones with teal accent threads, conceptual depth, soft glow" width="1024" height="576" loading="lazy" />
+
+<div class="document">
+
+  <!-- ══ HEADER ══ -->
+  <header class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-mark">M</div>
+        <span class="logo-text">MUSEON</span>
+      </div>
+      <span class="mono doc-tag">SERVICE QUOTATION · 服務報價單</span>
+    </div>
+    <h1>白老師 MUSEON Agent<br>智能導入方案</h1>
+    <div class="header-meta">
+      <div class="meta-item"><strong>日期</strong>&ensp;2026 年 6 月</div>
+      <div class="meta-item"><strong>提案方</strong>&ensp;MUSEON · Zeal Chou</div>
+      <div class="meta-item"><strong>收件方</strong>&ensp;白老師（教育機構負責人）</div>
+      <div class="meta-item"><span class="validity-badge">有效期 30 天 · 2026/07/10 截止</span></div>
+    </div>
+  </header>
+
+  <!-- ══ INTRO ══ -->
+  <div class="intro-block">
+    <p>本報價涵蓋 <strong>6 階段完整導入服務</strong>（Phase 1–6）、<strong>4 台 MUSEON Agent 授權</strong>（行政財務、教學、客服、行銷）及 <strong>12 個月月費維護</strong>，並附贈 <strong>2 個月月租優惠</strong>，實際享有 14 個月完整服務。所有費用分項透明，包含服務費與交通費。</p>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <main class="content">
+
+    <!-- ── 交通費基準 ── -->
+    <section>
+      <div class="card">
+        <div class="card-title">交通費基準說明 · 台北 ↔ 台中</div>
+        <div class="transport-grid">
+          <div class="transport-item">
+            <div class="transport-label">高鐵來回（對號座）</div>
+            <div class="transport-value">$1,580</div>
+          </div>
+          <div class="transport-item">
+            <div class="transport-label">台中端計程車來回</div>
+            <div class="transport-value">$700</div>
+          </div>
+          <div class="transport-item">
+            <div class="transport-label">台北端捷運</div>
+            <div class="transport-value">$160</div>
+          </div>
+          <div class="transport-total">
+            <div class="transport-label">單趟小計（取整）</div>
+            <div class="transport-value">$2,500</div>
+          </div>
+        </div>
+        <p class="text-sm mt-4">實際交通費 $2,440，取整計算每趟 $2,500。如需調整（如商務艙或包車），可另行討論。</p>
+      </div>
+    </section>
+
+    <!-- ── PART 1：一次性導入費用 ── -->
+    <section>
+      <h2 class="section-title">
+        <span class="part-label">Part 1</span>
+        一次性導入費用
+      </h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:110px">階段</th>
+              <th>工作內容</th>
+              <th class="right" style="width:70px">工時</th>
+              <th class="right" style="width:60px">趟數</th>
+              <th class="right" style="width:85px">服務費</th>
+              <th class="right" style="width:80px">交通費</th>
+              <th class="right" style="width:85px">小計</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Phase 1</strong><br><span class="muted" style="font-size:0.75rem">需求診斷</span></td>
+              <td>深度訪談・需求診斷<br><span style="font-size:0.78rem;color:var(--mist)">4 趟 × 2hr，現場深訪摸底</span></td>
+              <td class="right muted">8 hr</td>
+              <td class="right muted">4 趟</td>
+              <td class="right">$20,000</td>
+              <td class="right">$10,000</td>
+              <td class="right"><strong>$30,000</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 2</strong><br><span class="muted" style="font-size:0.75rem">知識建置</span></td>
+              <td>資料盤點・清洗・結晶・Wiki 建置<br><span style="font-size:0.78rem;color:var(--mist)">既有文件整理、知識庫上線</span></td>
+              <td class="right muted">6 hr</td>
+              <td class="right muted">2 趟</td>
+              <td class="right">$15,000</td>
+              <td class="right">$5,000</td>
+              <td class="right"><strong>$20,000</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 3</strong><br><span class="muted" style="font-size:0.75rem">Agent 安裝</span></td>
+              <td>4 台 Agent 安裝・落地設定<br><span style="font-size:0.78rem;color:var(--mist)">行政財務、教學、客服、行銷</span></td>
+              <td class="right muted">3 hr</td>
+              <td class="right muted">1 趟</td>
+              <td class="right">$7,500</td>
+              <td class="right">$2,500</td>
+              <td class="right"><strong>$10,000</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 4</strong><br><span class="muted" style="font-size:0.75rem">Skills 鍛造</span></td>
+              <td>工作流示範・Skills 鍛造<br><span style="font-size:0.78rem;color:var(--mist)">團隊實操示範、自定義工作流</span></td>
+              <td class="right muted">4 hr</td>
+              <td class="right muted">1 趟</td>
+              <td class="right">$10,000</td>
+              <td class="right">$2,500</td>
+              <td class="right"><strong>$12,500</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 5–6</strong><br><span class="muted" style="font-size:0.75rem">落地輔導</span></td>
+              <td>落地輔導・內訓（2 個月）<br><span style="font-size:0.78rem;color:var(--mist)">每月 4 次，共 8 趟現場支援</span></td>
+              <td class="right muted">月制</td>
+              <td class="right muted">8 趟</td>
+              <td class="right">$90,000</td>
+              <td class="right">$20,000</td>
+              <td class="right"><strong>$110,000</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Agent 授權</strong><br><span class="muted" style="font-size:0.75rem">4 台</span></td>
+              <td>MUSEON Agent 授權費用<br><span style="font-size:0.78rem;color:var(--mist)">行政財務 + 教學 + 客服 + 行銷，永久授權</span></td>
+              <td class="right muted">—</td>
+              <td class="right muted">—</td>
+              <td class="right">$240,000</td>
+              <td class="right">—</td>
+              <td class="right"><strong>$240,000</strong></td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="2"><strong>一次性費用合計</strong></td>
+              <td class="right">—</td>
+              <td class="right"><strong>16 趟</strong></td>
+              <td class="right"><strong>$382,500</strong></td>
+              <td class="right"><strong>$40,000</strong></td>
+              <td class="right"><strong>$422,500</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── PART 2：月費方案 ── -->
+    <section>
+      <h2 class="section-title">
+        <span class="part-label">Part 2</span>
+        月費方案
+      </h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:160px">項目</th>
+              <th>內容說明</th>
+              <th class="right" style="width:120px">月費</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>4 台 Agent 月租</strong></td>
+              <td>行政財務 + 教學 + 客服 + 行銷，持續服務授權與系統維護</td>
+              <td class="right">$24,000</td>
+            </tr>
+            <tr>
+              <td><strong>月度維護服務</strong></td>
+              <td>每月到場 1 次，2 小時諮詢、調整與問題排查</td>
+              <td class="right">$5,000</td>
+            </tr>
+            <tr>
+              <td><strong>月度交通費</strong></td>
+              <td>台北 ↔ 台中 來回交通（單趟 $2,500）</td>
+              <td class="right">$2,500</td>
+            </tr>
+            <tr class="subtotal-row">
+              <td colspan="2"><strong>月費小計</strong></td>
+              <td class="right"><strong>$31,500 / 月</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-title">月費合約條款</div>
+        <div class="terms-grid">
+          <div class="terms-item">
+            <span class="terms-key">合約期限</span>
+            <span class="terms-val">12 個月</span>
+          </div>
+          <div class="terms-item">
+            <span class="terms-key">簽約優惠</span>
+            <span class="terms-val highlight">贈送 2 個月月租（價值 $48,000）</span>
+          </div>
+          <div class="terms-item">
+            <span class="terms-key">實際享有服務</span>
+            <span class="terms-val">14 個月完整服務</span>
+          </div>
+          <div class="terms-item">
+            <span class="terms-key">12 個月月費合計</span>
+            <span class="terms-val">$378,000（含服務費 + 交通費）</span>
+          </div>
+          <div class="terms-item">
+            <span class="terms-key">贈送月租價值</span>
+            <span class="terms-val highlight">$48,000（14 個月服務，僅計 12 個月費用）</span>
+          </div>
+          <div class="terms-item">
+            <span class="terms-key">實際服務總價值</span>
+            <span class="terms-val">$848,500（14 個月完整服務）</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PART 3：合約總覽 ── -->
+    <section>
+      <h2 class="section-title">
+        <span class="part-label">Part 3</span>
+        合約總覽
+      </h2>
+
+      <div class="summary-box">
+        <div class="summary-box-title">CONTRACT SUMMARY · 合約金額總覽</div>
+
+        <div class="summary-line">
+          <span class="summary-label">一次性導入費用</span>
+          <span class="summary-amount">$422,500</span>
+        </div>
+        <div class="summary-line">
+          <span class="summary-label">12 個月月費合計</span>
+          <span class="summary-amount">$378,000</span>
+        </div>
+        <div class="summary-line grand">
+          <span class="summary-label">合約總金額</span>
+          <span class="summary-amount">$800,500</span>
+        </div>
+
+        <div class="summary-bonus">
+          <div>
+            <div class="summary-bonus-label">簽約贈送價值（2 個月月租）</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.55);margin-top:2px;">14 個月月租 vs 12 個月計費，差額退讓</div>
+          </div>
+          <div class="summary-bonus-value">$48,000</div>
+        </div>
+        <div class="summary-bonus" style="margin-top:10px;">
+          <div>
+            <div class="summary-bonus-label">14 個月實際享有服務總價值</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.55);margin-top:2px;">含一次性導入 + 14 個月月費</div>
+          </div>
+          <div class="summary-bonus-value">$848,500</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 費率基準 ── -->
+    <section>
+      <div class="card">
+        <div class="card-title">服務費計費基準說明</div>
+        <div class="rate-list">
+          <div class="rate-row">
+            <span class="rate-row-label">諮詢／顧問服務</span>
+            <span class="rate-row-value">$2,500 / hr</span>
+          </div>
+          <div class="rate-row">
+            <span class="rate-row-label">交通費（台北 ↔ 台中 單趟來回）</span>
+            <span class="rate-row-value">$2,500 / 趟（取整）</span>
+          </div>
+          <div class="rate-row">
+            <span class="rate-row-label">MUSEON Agent 授權</span>
+            <span class="rate-row-value">$60,000 / 台（4 台 $240,000）</span>
+          </div>
+          <div class="rate-row">
+            <span class="rate-row-label">報價結構</span>
+            <span class="rate-row-value">服務費 + 交通費 + 授權，分項透明</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 付款建議 ── -->
+    <section>
+      <h2 class="section-title">付款建議</h2>
+      <div class="card">
+        <div class="card-title">推薦分期里程碑付款</div>
+        <div class="payment-grid">
+          <div class="payment-step">
+            <div class="payment-step-num">MILESTONE 01</div>
+            <div class="payment-step-title">第一期·簽約後</div>
+            <div class="payment-step-amount">$211,250</div>
+            <div class="payment-step-note">一次性費用 50%</div>
+          </div>
+          <div class="payment-step">
+            <div class="payment-step-num">MILESTONE 02</div>
+            <div class="payment-step-title">第二期·Phase 3 完成驗收</div>
+            <div class="payment-step-amount">$211,250</div>
+            <div class="payment-step-note">一次性費用 50%</div>
+          </div>
+          <div class="payment-step">
+            <div class="payment-step-num">MONTHLY</div>
+            <div class="payment-step-title">月費·導入完成日起</div>
+            <div class="payment-step-amount">$31,500 / 月</div>
+            <div class="payment-step-note">按月支付，共 12 個月</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 注意事項 ── -->
+    <section>
+      <h2 class="section-title">注意事項</h2>
+      <div class="card">
+        <ul class="notice-list">
+          <li>
+            <span class="notice-num">1</span>
+            <span>本報價有效期 <strong>30 天</strong>，截止日期為 <strong>2026 年 7 月 10 日</strong>，請於期限前確認。</span>
+          </li>
+          <li>
+            <span class="notice-num">2</span>
+            <span><strong>APP 系統對接</strong>及<strong>進階客製化功能</strong>不含於本報價範圍內，如有需求可另行提案報價。</span>
+          </li>
+          <li>
+            <span class="notice-num">3</span>
+            <span>交通費以<strong>高鐵對號座</strong>計算，如需調整（商務艙或包車等），請提前告知，費用差異將另計。</span>
+          </li>
+          <li>
+            <span class="notice-num">4</span>
+            <span>月費合約自<strong>導入完成日</strong>（Phase 6 驗收通過日）起開始計算，不自簽約日起算。</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="footer-left">
+      <span class="footer-brand">MUSEON · Zeal Chou</span>
+      <span>zeal.chou@gmail.com</span>
+    </div>
+    <div class="footer-right">
+      本報價單為商業機密，請勿對外流傳<br>
+      CONFIDENTIAL · DO NOT DISTRIBUTE
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
