@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>白老師專屬方案 · MUSEON Agent 智能導入計劃</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --parchment:#F7F5F0;
+  --ember:#C4502A;
+  --ember-light:#D4613B;
+  --ember-dark:#A33D1F;
+  --deep-ink:#0E0E16;
+  --deep-ink-2:#16161F;
+  --teal:#2A8C7A;
+  --teal-light:#3AA891;
+  --gray-100:#F0EDE8;
+  --gray-200:#E2DDD6;
+  --gray-400:#9A948B;
+  --gray-600:#6B6560;
+  --gray-800:#2D2A26;
+  --white:#FFFFFF;
+  --max-w:1000px;
+  --radius:12px;
+  --radius-lg:20px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--parchment);
+  color:var(--gray-800);
+  font-family:'Outfit','Noto Sans TC',sans-serif;
+  font-size:16px;
+  line-height:1.65;
+}
+h1,h2,h3{font-family:'Cormorant Garamond','Noto Sans TC',serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(247,245,240,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--gray-200);
+  padding:0 24px;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-inner{width:100%;max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;letter-spacing:.04em;color:var(--deep-ink)}
+.nav-logo span{color:var(--ember)}
+.nav-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;font-weight:500;
+  background:var(--deep-ink);color:var(--white);
+  padding:5px 12px;border-radius:4px;
+  letter-spacing:.06em;white-space:nowrap;
+}
+
+/* WRAPPER */
+.page-wrap{padding-top:60px}
+section{padding:72px 24px}
+.inner{max-width:var(--max-w);margin:0 auto}
+
+/* TAGS */
+.tag{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ember);
+  background:rgba(196,80,42,.1);
+  border:1px solid rgba(196,80,42,.25);
+  padding:4px 12px;border-radius:4px;
+  margin-bottom:20px;
+}
+.tag.light{color:rgba(247,245,240,.7);background:rgba(247,245,240,.08);border-color:rgba(247,245,240,.15)}
+
+/* HERO */
+.hero{
+  background:var(--deep-ink);
+  padding:100px 24px 80px;
+  color:var(--white);
+  text-align:center;
+}
+.hero h1{
+  font-size:clamp(2.2rem,5vw,3.6rem);
+  font-weight:600;
+  line-height:1.25;
+  margin-bottom:20px;
+  color:var(--white);
+  letter-spacing:.01em;
+}
+.hero h1 em{
+  font-style:italic;
+  color:var(--ember);
+}
+.hero-sub{
+  font-size:1.05rem;
+  color:rgba(247,245,240,.7);
+  max-width:680px;margin:0 auto 48px;
+  line-height:1.8;
+}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  max-width:780px;margin:0 auto 48px;
+}
+.stat-card{
+  background:rgba(247,245,240,.06);
+  border:1px solid rgba(247,245,240,.12);
+  border-radius:var(--radius);
+  padding:24px 16px;
+  transition:background .3s;
+}
+.stat-card:hover{background:rgba(247,245,240,.1)}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.4rem;font-weight:700;
+  color:var(--ember);
+  line-height:1;
+  margin-bottom:8px;
+}
+.stat-label{font-size:.8rem;color:rgba(247,245,240,.6);font-weight:400;letter-spacing:.02em}
+.btn{
+  display:inline-block;
+  padding:14px 36px;
+  border-radius:6px;
+  font-size:1rem;font-weight:600;
+  text-decoration:none;
+  transition:all .3s;
+  cursor:pointer;border:none;
+}
+.btn-primary{background:var(--ember);color:var(--white)}
+.btn-primary:hover{background:var(--ember-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,80,42,.4)}
+.btn-secondary{background:transparent;color:var(--white);border:1.5px solid rgba(247,245,240,.4)}
+.btn-secondary:hover{border-color:var(--white);background:rgba(247,245,240,.08);transform:translateY(-2px)}
+
+/* CONCLUSION */
+.conclusion{background:var(--white);padding:72px 24px}
+.conclusion h2{
+  font-size:clamp(1.8rem,3.5vw,2.6rem);
+  font-weight:600;color:var(--deep-ink);
+  margin-bottom:40px;
+  text-align:center;
+}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{
+  background:var(--parchment);
+  border:1px solid var(--gray-200);
+  border-radius:var(--radius);
+  padding:32px 28px;
+  transition:transform .35s,box-shadow .35s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.1)}
+.card-icon{font-size:2rem;margin-bottom:16px}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--deep-ink);margin-bottom:8px}
+.card-desc{font-size:.9rem;color:var(--gray-600);line-height:1.7}
+.card-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.8rem;font-weight:700;
+  color:var(--ember);
+  line-height:1;
+  margin-bottom:10px;
+}
+
+/* WHY */
+.why{background:var(--parchment);padding:72px 24px}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{
+  font-size:clamp(1.8rem,3.5vw,2.6rem);
+  font-weight:600;color:var(--deep-ink);
+  margin-top:8px;
+}
+.why .card{background:var(--white)}
+.why .card-icon{
+  width:48px;height:48px;
+  background:rgba(196,80,42,.1);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  margin-bottom:16px;
+}
+
+/* AGENTS */
+.agents{background:var(--gray-100);padding:72px 24px}
+.agents h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;color:var(--deep-ink);margin-top:8px;text-align:center}
+.cards-2x2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.agent-card{
+  background:var(--white);
+  border:1px solid var(--gray-200);
+  border-left:3px solid var(--ember);
+  border-radius:var(--radius);
+  padding:28px 28px;
+  transition:transform .35s,box-shadow .35s;
+}
+.agent-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.1)}
+.agent-icon{font-size:1.8rem;margin-bottom:12px}
+.agent-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--deep-ink);margin-bottom:10px}
+.agent-items{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.agent-item{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.68rem;
+  background:rgba(196,80,42,.08);
+  color:var(--ember-dark);
+  border:1px solid rgba(196,80,42,.2);
+  padding:3px 10px;border-radius:4px;
+}
+
+/* FLOW */
+.flow{
+  background:var(--deep-ink);
+  padding:80px 24px;
+  color:var(--white);
+}
+.flow h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;color:var(--white);margin-top:8px;margin-bottom:48px;text-align:center}
+.timeline{position:relative;max-width:780px;margin:0 auto}
+.timeline-line{
+  position:absolute;left:24px;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,var(--ember),rgba(196,80,42,.2));
+}
+.timeline-step{
+  position:relative;
+  padding-left:72px;
+  padding-bottom:36px;
+}
+.timeline-step:last-child{padding-bottom:0}
+.step-dot{
+  position:absolute;left:16px;top:4px;
+  width:18px;height:18px;
+  background:var(--ember);
+  border:3px solid var(--deep-ink);
+  border-radius:50%;
+  box-shadow:0 0 0 3px rgba(196,80,42,.3);
+}
+.step-meta{display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.step-phase{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.68rem;font-weight:600;
+  color:var(--ember);letter-spacing:.08em;
+}
+.step-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.65rem;font-weight:500;
+  background:rgba(196,80,42,.15);
+  border:1px solid rgba(196,80,42,.3);
+  color:rgba(247,245,240,.8);
+  padding:2px 10px;border-radius:4px;
+}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--white);margin-bottom:4px}
+.step-desc{font-size:.88rem;color:rgba(247,245,240,.55);line-height:1.6}
+
+/* ROI */
+.roi{background:var(--deep-ink-2);padding:72px 24px;color:var(--white)}
+.roi h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;color:var(--white);margin-top:8px;margin-bottom:36px;text-align:center}
+.roi-table{
+  width:100%;
+  border-collapse:separate;border-spacing:0;
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:rgba(247,245,240,.04);
+  border:1px solid rgba(247,245,240,.1);
+}
+.roi-table th{
+  background:rgba(247,245,240,.08);
+  color:rgba(247,245,240,.5);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  padding:14px 20px;text-align:left;
+}
+.roi-table td{
+  padding:16px 20px;
+  border-top:1px solid rgba(247,245,240,.06);
+  font-size:.92rem;color:rgba(247,245,240,.8);
+}
+.roi-table tr:hover td{background:rgba(247,245,240,.03)}
+.savings{color:var(--teal-light);font-weight:600}
+.roi-note{
+  text-align:center;margin-top:24px;
+  font-size:.9rem;color:rgba(247,245,240,.5);
+}
+.roi-note strong{color:var(--teal-light)}
+
+/* INVESTMENT */
+.investment{background:var(--parchment);padding:72px 24px}
+.investment h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;color:var(--deep-ink);margin-top:8px;margin-bottom:36px;text-align:center}
+.inv-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.inv-card{border-radius:var(--radius-lg);padding:36px 32px}
+.inv-card.light{background:var(--white);border:1px solid var(--gray-200)}
+.inv-card.dark{background:var(--deep-ink);border:2px solid var(--ember)}
+.inv-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ember);
+  margin-bottom:12px;
+}
+.inv-card.dark .inv-label{color:rgba(196,80,42,.9)}
+.inv-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.6rem;font-weight:700;
+  color:var(--deep-ink);
+  margin-bottom:24px;
+  line-height:1;
+}
+.inv-card.dark .inv-price{color:var(--white)}
+.inv-items{list-style:none}
+.inv-items li{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;
+  border-bottom:1px solid var(--gray-200);
+  font-size:.88rem;
+}
+.inv-card.dark .inv-items li{border-color:rgba(247,245,240,.1);color:rgba(247,245,240,.8)}
+.inv-items li:last-child{border-bottom:none}
+.inv-items .amount{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.82rem;font-weight:600;
+  color:var(--gray-600);
+  white-space:nowrap;
+}
+.inv-card.dark .inv-items .amount{color:var(--ember)}
+.inv-meta{
+  margin-top:16px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;color:var(--gray-400);
+  letter-spacing:.04em;
+}
+.inv-card.dark .inv-meta{color:rgba(247,245,240,.35)}
+.total-box{
+  background:var(--ember);
+  border-radius:var(--radius-lg);
+  padding:32px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:20px;
+}
+.total-left .total-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;font-weight:500;letter-spacing:.1em;
+  color:rgba(247,245,240,.7);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.total-left .total-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-weight:700;color:var(--white);
+  line-height:1;
+}
+.total-right{
+  background:rgba(247,245,240,.15);
+  border:1px solid rgba(247,245,240,.25);
+  border-radius:var(--radius);
+  padding:16px 24px;
+  text-align:center;
+  min-width:180px;
+}
+.gift-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.65rem;color:rgba(247,245,240,.7);
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.gift-value{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:700;color:var(--white);
+  margin-bottom:4px;
+}
+.gift-desc{font-size:.78rem;color:rgba(247,245,240,.75)}
+
+/* CTA */
+.cta-section{
+  background:var(--white);
+  padding:80px 24px;
+  text-align:center;
+}
+.cta-section h2{
+  font-size:clamp(1.8rem,3.5vw,2.8rem);
+  font-weight:600;color:var(--deep-ink);
+  margin-bottom:12px;max-width:560px;margin-left:auto;margin-right:auto;
+}
+.cta-sub{color:var(--gray-600);margin-bottom:36px;font-size:1rem}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-secondary-dark{
+  display:inline-block;padding:14px 36px;border-radius:6px;
+  font-size:1rem;font-weight:600;text-decoration:none;
+  background:transparent;color:var(--deep-ink);
+  border:1.5px solid var(--gray-200);
+  transition:all .3s;
+}
+.btn-secondary-dark:hover{border-color:var(--ember);color:var(--ember);transform:translateY(-2px)}
+
+/* FOOTER */
+footer{
+  background:var(--deep-ink);
+  padding:36px 24px;
+  text-align:center;
+  color:rgba(247,245,240,.35);
+}
+.footer-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:rgba(247,245,240,.7)}
+.footer-brand span{color:var(--ember)}
+.footer-note{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.06em}
+
+/* DIVIDER */
+.divider-ember{height:3px;background:linear-gradient(to right,var(--ember),transparent)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  section{padding:56px 16px}
+  .hero{padding:80px 16px 64px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .cards-3{grid-template-columns:1fr}
+  .cards-2x2{grid-template-columns:1fr}
+  .inv-grid{grid-template-columns:1fr}
+  .total-box{flex-direction:column;align-items:flex-start}
+  .total-right{width:100%}
+  .roi-table th:nth-child(2),.roi-table td:nth-child(2){display:none}
+}
+@media(max-width:480px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .nav-badge{font-size:.6rem;padding:4px 8px}
+}
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260610_234335_14d5a6e8.png" alt="abstract organic neural pattern in warm ember tones with teal accent threads, conceptual depth, soft glow" width="1024" height="576" loading="lazy" />
+
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">MUS<span>E</span>ON</div>
+    <div class="nav-badge mono">白老師 專屬方案</div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="inner">
+    <div class="tag light">MUSEON Agent · 智能導入計劃</div>
+    <h1>讓 20 年教學精華，成為<br><em>永不離職的</em>智慧助理</h1>
+    <p class="hero-sub">4 台 AI 助理同時上線，覆蓋行政財務、教學知識庫、客服招生、行銷內容四大核心業務——您的知識資本，從現在起 24 小時不間斷為您運作。</p>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-num">4</div>
+        <div class="stat-label">台 AI 助理</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4TB</div>
+        <div class="stat-label">知識結晶</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">不停歇</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">14</div>
+        <div class="stat-label">個月保障</div>
+      </div>
+    </div>
+    <a href="#investment" class="btn btn-primary">查看完整方案</a>
+  </div>
+</section>
+
+<div class="divider-ember"></div>
+
+<!-- CONCLUSION -->
+<section class="conclusion">
+  <div class="inner">
+    <div style="text-align:center"><div class="tag">結論先行</div></div>
+    <h2>導入後，您將獲得什麼？</h2>
+    <div class="cards-3">
+      <div class="card">
+        <div class="card-num">70%+</div>
+        <div class="card-title">行政重複工作自動化</div>
+        <p class="card-desc">合約整理、費用核銷、報表彙整等日常行政工作，交由 AI 處理——讓您的團隊專注真正有價值的事。</p>
+      </div>
+      <div class="card">
+        <div class="card-num">4TB</div>
+        <div class="card-title">知識庫永久運作</div>
+        <p class="card-desc">20 年教學積累的課程素材、FAQ、教案全數結晶化，學員任何時間查詢都能即時獲得準確答案。</p>
+      </div>
+      <div class="card">
+        <div class="card-num">2月</div>
+        <div class="card-title">Eric 自主運維達標</div>
+        <p class="card-desc">透過系統化技能鍛造，2 個月後 Eric 可獨立維護所有 AI 助理，不再依賴外部支援。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why">
+  <div class="inner">
+    <div class="section-header">
+      <div class="tag">為何選擇 MUSEON</div>
+      <h2>與眾不同的三個理由</h2>
+    </div>
+    <div class="cards-3">
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">本機端安全部署</div>
+        <p class="card-desc">所有資料留在您的伺服器，不上雲端第三方。學生個資、課程內容、商業機密完全自主掌控。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">深度客製化</div>
+        <p class="card-desc">不是套裝工具，是依白老師機構的真實流程與語言風格量身打造，每一台助理都帶有您的教學 DNA。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <div class="card-title">持續陪伴維護</div>
+        <p class="card-desc">導入後每月一趟健診，主動偵測問題、訓練優化。我們不是做完就走，是長期數位夥伴。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section class="agents">
+  <div class="inner">
+    <div class="section-header">
+      <div class="tag">四台智能助理</div>
+      <h2>覆蓋核心業務四大面向</h2>
+    </div>
+    <div class="cards-2x2">
+      <div class="agent-card">
+        <div class="agent-icon">🗂</div>
+        <div class="agent-title">行政財務助理</div>
+        <p class="card-desc">處理日常行政繁瑣事務，讓管理層從重複勞動中解放。</p>
+        <ul class="agent-items">
+          <li class="agent-item">合約整理</li>
+          <li class="agent-item">費用核銷</li>
+          <li class="agent-item">報表彙整</li>
+          <li class="agent-item">財務查詢</li>
+        </ul>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🎓</div>
+        <div class="agent-title">教學知識庫助理</div>
+        <p class="card-desc">將 20 年課程精華數位化，學員查詢不再耗費師資時間。</p>
+        <ul class="agent-items">
+          <li class="agent-item">課程檢索</li>
+          <li class="agent-item">進度查詢</li>
+          <li class="agent-item">FAQ 解答</li>
+          <li class="agent-item">教材推薦</li>
+        </ul>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">💬</div>
+        <div class="agent-title">客服招生助理</div>
+        <p class="card-desc">24 小時即時回應招生諮詢，提升轉換率、降低人力成本。</p>
+        <ul class="agent-items">
+          <li class="agent-item">招生諮詢</li>
+          <li class="agent-item">課程說明</li>
+          <li class="agent-item">學員服務</li>
+          <li class="agent-item">溝通紀錄</li>
+        </ul>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📣</div>
+        <div class="agent-title">行銷內容助理</div>
+        <p class="card-desc">持續產出符合機構調性的優質內容，降低外包費用。</p>
+        <ul class="agent-items">
+          <li class="agent-item">課程文案</li>
+          <li class="agent-item">素材整理</li>
+          <li class="agent-item">社群貼文</li>
+          <li class="agent-item">活動企劃</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="flow">
+  <div class="inner">
+    <div style="text-align:center"><div class="tag light">導入流程</div></div>
+    <h2>從訪談到自主運維，全程陪伴</h2>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-meta">
+          <span class="step-phase">P1 · 4 趟</span>
+          <span class="step-badge">效益假設框架</span>
+        </div>
+        <div class="step-title">深度訪談 · 需求診斷</div>
+        <p class="step-desc">拜訪各部門負責人，盤點現有流程、痛點、資料狀態，建立效益假設框架，確認導入優先序。</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-meta">
+          <span class="step-phase">P2 · 2 趟</span>
+          <span class="step-badge">知識庫上線</span>
+        </div>
+        <div class="step-title">知識資料 · 盤點清洗結晶</div>
+        <p class="step-desc">協助整理 20 年累積的課程素材、文件、FAQ，完成清洗與結構化，建立 4TB 知識庫基礎。</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-meta">
+          <span class="step-phase">P3 · 1 趟</span>
+          <span class="step-badge">4 台上線驗收</span>
+        </div>
+        <div class="step-title">4 台 Agent · 安裝落地</div>
+        <p class="step-desc">本機端部署 4 台智能助理，完成系統整合測試，逐一驗收功能達標後正式上線。</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-meta">
+          <span class="step-phase">P4 · 1 趟</span>
+          <span class="step-badge">Eric 實操通過</span>
+        </div>
+        <div class="step-title">工作流示範 · 技能鍛造</div>
+        <p class="step-desc">手把手帶領 Eric 完成所有 Agent 的操作訓練，確保內部人員具備日常維護能力。</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-meta">
+          <span class="step-phase">P5+6 · 2 個月 · 8 趟</span>
+          <span class="step-badge">組織自主化達標</span>
+        </div>
+        <div class="step-title">落地輔導 · 持續訓練</div>
+        <p class="step-desc">密集陪跑 2 個月，解決真實使用情境中遇到的問題，持續優化助理表現，達成組織自主運維目標。</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-meta">
+          <span class="step-phase">月度維護 · 每月 1 趟</span>
+          <span class="step-badge">長期夥伴關係</span>
+        </div>
+        <div class="step-title">持續陪伴 · 月度健診</div>
+        <p class="step-desc">每月定期健診，主動偵測系統異常、優化知識庫內容、回應新業務需求，確保長期穩定運作。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section class="roi">
+  <div class="inner">
+    <div style="text-align:center"><div class="tag light">投資回報試算</div></div>
+    <h2>數字說話——導入前後的改變</h2>
+    <table class="roi-table">
+      <thead>
+        <tr>
+          <th>業務領域</th>
+          <th>現況月成本</th>
+          <th>AI 覆蓋比例</th>
+          <th>預期月節省</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🗂 行政財務</td>
+          <td>≈ $40,000</td>
+          <td>60–70%</td>
+          <td class="savings">$24,000–28,000</td>
+        </tr>
+        <tr>
+          <td>💬 客服招生</td>
+          <td>≈ $30,000</td>
+          <td>50–65%</td>
+          <td class="savings">$15,000–20,000</td>
+        </tr>
+        <tr>
+          <td>🎓 教學查詢</td>
+          <td>≈ $20,000</td>
+          <td>40–60%</td>
+          <td class="savings">$8,000–12,000</td>
+        </tr>
+        <tr>
+          <td>📣 行銷製作</td>
+          <td>≈ $15,000</td>
+          <td>50–70%</td>
+          <td class="savings">$7,500–10,500</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="roi-note">每月預期節省 <strong>$54,500–$70,500</strong>，預計 <strong>6–8 個月</strong>回本，之後純屬獲益。</p>
+  </div>
+</section>
+
+<!-- INVESTMENT -->
+<section class="investment" id="investment">
+  <div class="inner">
+    <div style="text-align:center"><div class="tag">投資方案</div></div>
+    <h2>完整方案，透明報價</h2>
+    <div class="inv-grid">
+      <div class="inv-card light">
+        <div class="inv-label">一次性導入費</div>
+        <div class="inv-price">$422,500</div>
+        <ul class="inv-items">
+          <li><span>P1–4 服務費</span><span class="amount">$52,500</span></li>
+          <li><span>P1–4 交通費</span><span class="amount">$20,000</span></li>
+          <li><span>P5+6 落地輔導費</span><span class="amount">$90,000</span></li>
+          <li><span>P5+6 交通費</span><span class="amount">$20,000</span></li>
+          <li><span>4 台 Agent 年度授權</span><span class="amount">$240,000</span></li>
+        </ul>
+      </div>
+      <div class="inv-card dark">
+        <div class="inv-label">月費方案</div>
+        <div class="inv-price">$31,500<span style="font-size:1.2rem;font-weight:400;color:rgba(247,245,240,.5)"> / 月</span></div>
+        <ul class="inv-items">
+          <li><span>4 台 Agent 月租</span><span class="amount">$24,000</span></li>
+          <li><span>維護服務費</span><span class="amount">$5,000</span></li>
+          <li><span>月度訪問交通費</span><span class="amount">$2,500</span></li>
+        </ul>
+        <p class="inv-meta">合約期 12 個月 · 贈 2 個月月租</p>
+      </div>
+    </div>
+    <div class="total-box">
+      <div class="total-left">
+        <div class="total-label">合約總金額</div>
+        <div class="total-price">$800,500</div>
+      </div>
+      <div class="total-right">
+        <div class="gift-label">🎁 贈送價值</div>
+        <div class="gift-value">$48,000</div>
+        <div class="gift-desc">2 個月月租免費贈送</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="inner">
+    <h2>準備好讓知識開始<br>為你工作了嗎？</h2>
+    <p class="cta-sub">首次訪談完全免費，30 分鐘了解您的現況，我們提供客製化評估報告。</p>
+    <div class="cta-btns">
+      <a href="mailto:zeal.chou@gmail.com?subject=白老師 MUSEON 導入初次訪談申請" class="btn btn-primary">預約初次訪談</a>
+      <a href="#investment" class="btn-secondary-dark">查看完整報價單</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">MUS<span>E</span>ON</div>
+    <div class="footer-note mono">白老師專屬導入方案 · 2026</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
