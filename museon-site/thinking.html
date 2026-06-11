@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提高思考精度 — MUSEON</title>
+  <meta name="description" content="做決定前先看清楚問題在哪，不靠直覺，靠系統分析，少走三年彎路。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Outfit','Noto Sans TC',sans-serif; background: #F7F5F0; color: #12121A; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+    :root { --ember:#C4502A; --ember-dark:#9A3A1C; --ember-light:#E0714D; --teal:#2A7A6E; --gold:#B8923A; --ink:#12121A; --slate:#5A5A6E; --border:#E2E0DA; --parchment:#F7F5F0; --snow:#FDFCFA; --deep-ink:#0E0E16; }
+    .container { max-width:1200px; margin:0 auto; padding:0 40px; }
+    @media(max-width:768px){.container{padding:0 24px;}}
+    @media(max-width:480px){.container{padding:0 16px;}}
+    .display-1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,58px); font-weight:600; line-height:1.18; letter-spacing:-0.02em; }
+    .display-2 { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,3.5vw,42px); font-weight:600; line-height:1.22; }
+    .caption { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+    nav { position:sticky; top:0; background:rgba(247,245,240,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); z-index:100; padding:14px 0; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 40px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:600; color:var(--ink); text-decoration:none; }
+    .nav-logo span { color:var(--ember); }
+    .nav-links { display:flex; gap:24px; list-style:none; }
+    .nav-links a { font-size:13px; font-weight:500; color:var(--slate); text-decoration:none; transition:color 200ms; }
+    .nav-links a:hover, .nav-links a.active { color:var(--ember); }
+    .nav-cta { background:var(--ember); color:white; padding:9px 18px; border-radius:6px; font-size:13.5px; font-weight:600; text-decoration:none; white-space:nowrap; transition:background 200ms; }
+    .nav-cta:hover { background:var(--ember-dark); }
+    @media(max-width:900px){ .nav-links{display:none;} .nav-inner{padding:0 24px;} }
+    .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--ember); color:white; padding:14px 28px; border-radius:6px; font-size:15px; font-weight:600; text-decoration:none; transition:all 200ms; }
+    .btn-primary:hover { background:var(--ember-dark); transform:translateY(-1px); box-shadow:0 4px 18px rgba(196,80,42,0.3); }
+    .btn-secondary { display:inline-flex; align-items:center; background:transparent; color:var(--ink); padding:13px 24px; border:1.5px solid var(--border); border-radius:6px; font-size:15px; font-weight:500; text-decoration:none; transition:all 200ms; }
+    .btn-secondary:hover { border-color:var(--ember); color:var(--ember); }
+    .breadcrumb { padding:20px 0 0; }
+    .breadcrumb a { font-size:13px; color:var(--slate); text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:color 200ms; }
+    .breadcrumb a:hover { color:var(--ember); }
+    .hero { padding:64px 0 84px; background:linear-gradient(155deg,#F7F5F0 0%,#EEE9E0 100%); }
+    .hero-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(196,80,42,0.1); color:var(--ember-dark); border-radius:100px; padding:4px 14px; margin-bottom:24px; }
+    .hero-tag .dot { width:6px; height:6px; background:var(--ember); border-radius:50%; }
+    .hero h1 { max-width:680px; margin-bottom:22px; }
+    .hero h1 em { font-style:italic; color:var(--ember); }
+    .hero-sub { font-size:17px; color:var(--slate); max-width:520px; margin-bottom:40px; line-height:1.85; }
+    .hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
+    .section { padding:84px 0; }
+    .section.alt { background:var(--snow); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .section-top { margin-bottom:48px; }
+    .section-top .caption { color:var(--ember); display:block; margin-bottom:10px; }
+    .pain-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:20px; }
+    .pain-card { background:var(--parchment); border:1px solid var(--border); border-radius:10px; padding:28px; position:relative; overflow:hidden; }
+    .pain-card::after { content:attr(data-num); position:absolute; top:16px; right:20px; font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; color:rgba(196,80,42,0.08); line-height:1; pointer-events:none; }
+    .pain-card h3 { font-size:16.5px; font-weight:600; margin-bottom:10px; line-height:1.45; }
+    .pain-card p { font-size:14px; color:var(--slate); line-height:1.75; }
+    .blindspot-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:48px; }
+    .blindspot-card { background:var(--snow); border:1px solid var(--border); border-radius:10px; padding:24px; }
+    .bs-num { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; color:var(--gold); display:block; margin-bottom:10px; }
+    .blindspot-card h3 { font-size:15.5px; font-weight:600; margin-bottom:8px; }
+    .blindspot-card p { font-size:13.5px; color:var(--slate); line-height:1.7; }
+    .steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:28px; margin-top:48px; }
+    .step-card { background:var(--snow); border:1px solid var(--border); border-radius:10px; padding:32px; }
+    .step-num { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; color:var(--ember); display:block; margin-bottom:12px; }
+    .step-icon { font-size:28px; margin-bottom:16px; }
+    .step-card h3 { font-size:17px; font-weight:600; margin-bottom:10px; line-height:1.4; }
+    .step-card p { font-size:14px; color:var(--slate); line-height:1.75; }
+    .quote-block { background:linear-gradient(140deg,var(--deep-ink) 0%,#1A1018 100%); border-radius:14px; padding:40px; color:white; margin-top:48px; text-align:center; }
+    .quote-mark { font-family:'Cormorant Garamond',serif; font-size:80px; color:var(--ember); line-height:0.8; margin-bottom:16px; opacity:0.5; }
+    .quote-text { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,3vw,28px); font-weight:400; font-style:italic; line-height:1.5; margin-bottom:20px; }
+    .quote-source { font-size:13px; opacity:0.5; }
+    .cta-section { padding:84px 0; text-align:center; }
+    .cta-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(42,122,110,0.1); color:var(--teal); border-radius:100px; padding:5px 16px; font-size:13px; font-weight:500; margin-bottom:22px; }
+    .cta-section h2 { margin-bottom:14px; }
+    .cta-section p { font-size:16px; color:var(--slate); max-width:440px; margin:0 auto 36px; line-height:1.85; }
+    footer { background:var(--deep-ink); color:rgba(255,255,255,0.4); padding:40px 0; text-align:center; }
+    .footer-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:white; margin-bottom:12px; }
+    .footer-logo span { color:var(--ember-light); }
+    .footer-links { display:flex; justify-content:center; gap:20px; list-style:none; margin-bottom:12px; flex-wrap:wrap; }
+    .footer-links a { font-size:12px; color:rgba(255,255,255,0.38); text-decoration:none; transition:color 200ms; }
+    .footer-links a:hover { color:rgba(255,255,255,0.7); }
+    footer p { font-size:12.5px; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up { animation:fadeUp 0.5s ease-out both; }
+    .d1{animation-delay:0.05s} .d2{animation-delay:0.15s} .d3{animation-delay:0.25s}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">MU<span>S</span>EON</a>
+    <ul class="nav-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html" class="active">思考精度</a></li>
+    </ul>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="nav-cta">免費診斷 →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="./index.html">← 回首頁</a></div>
+    <div style="height:28px"></div>
+    <div class="hero-tag fade-up d1"><span class="dot"></span><span class="caption">思考精度</span></div>
+    <h1 class="display-1 fade-up d2">
+      做決定前，<br>先<em>看清楚問題在哪</em>
+    </h1>
+    <p class="hero-sub fade-up d3">
+      很多老闆的問題不是不努力，<br>
+      是努力的方向需要校準。<br>
+      MUSEON 幫你先診斷，再行動——少走三年彎路。
+    </p>
+    <div class="hero-actions fade-up d3">
+      <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">預約免費診斷 →</a>
+      <a href="#blindspots" class="btn-secondary">看六大思維盲點</a>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">你有沒有遇過</span>
+      <h2 class="display-2" style="margin-top:10px">努力了很久，<br>卻感覺沒有往前進</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card" data-num="01">
+        <h3>做了很多事，但不確定哪些真的有效</h3>
+        <p>公司一直在動、一直在忙，但回頭看，不確定哪些投入帶來了真正的結果。資源和精力放了，但沒有系統的方式去評估對錯。</p>
+      </div>
+      <div class="pain-card" data-num="02">
+        <h3>重要決策靠直覺，事後才發現方向偏了</h3>
+        <p>要擴張還是深耕？要招人還是先優化流程？要投廣告還是先鞏固現有客戶？這些決策靠直覺，賭對了就好，賭錯了就是資源的浪費。</p>
+      </div>
+      <div class="pain-card" data-num="03">
+        <h3>明明很努力，卻感覺公司沒有在進化</h3>
+        <p>老闆和員工都很認真，但公司好像停在同一個地方。不是沒有做事，而是做的事情可能不是最關鍵的那個。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="blindspots">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">MUSEON 六大盲點診斷</span>
+      <h2 class="display-2" style="margin-top:10px">每個老闆都有盲點，<br>問題是你知道自己的在哪嗎？</h2>
+    </div>
+    <div class="blindspot-grid">
+      <div class="blindspot-card">
+        <span class="bs-num">盲點 01</span>
+        <h3>不清楚自己現在在哪</h3>
+        <p>公司的優勢是什麼？現在最大的弱點是什麼？沒有這個認知，任何改善都是瞎猜。</p>
+      </div>
+      <div class="blindspot-card">
+        <span class="bs-num">盲點 02</span>
+        <h3>沒有清晰的方向目標</h3>
+        <p>「想要公司更好」不是目標。目標需要具體、有時間點、可以衡量。沒有這個，每天的決策都是隨機的。</p>
+      </div>
+      <div class="blindspot-card">
+        <span class="bs-num">盲點 03</span>
+        <h3>不知道現在在哪裡卡住</h3>
+        <p>從現在到目標，中間的 GAP 是什麼？很多老闆說不清楚，只知道「就是不夠好」。說不清楚 = 沒辦法解決。</p>
+      </div>
+      <div class="blindspot-card">
+        <span class="bs-num">盲點 04</span>
+        <h3>沒有盤點自己的累積</h3>
+        <p>你過去的經驗、人脈、資源，有哪些可以在現在放大用？很多老闆低估了自己手上已經有的籌碼。</p>
+      </div>
+      <div class="blindspot-card">
+        <span class="bs-num">盲點 05</span>
+        <h3>不知道怎麼找槓桿</h3>
+        <p>同樣的投入，有些行動的回報是 1，有些是 10 倍。找到高槓桿點，是讓公司快速推進的關鍵。</p>
+      </div>
+      <div class="blindspot-card">
+        <span class="bs-num">盲點 06</span>
+        <h3>缺乏整合的佈局思考</h3>
+        <p>一個個決策都對，但加在一起卻不一致。策略需要整合，不是每件事單獨對就夠了。</p>
+      </div>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon">🔬</div>
+        <span class="step-num">STEP 01</span>
+        <h3>先診斷，找出你的盲點在哪</h3>
+        <p>MUSEON 透過系統化的問卷和對話，幫你找出六大盲點中你最大的缺口在哪——不是感覺，是有依據的判斷。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon">🗺️</div>
+        <span class="step-num">STEP 02</span>
+        <h3>看清楚現在和目標之間的 GAP</h3>
+        <p>現在的狀態 → 想去的地方 → 中間缺什麼。MUSEON 幫你把這個 GAP 說清楚，才有辦法設計行動計畫。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon">🎯</div>
+        <span class="step-num">STEP 03</span>
+        <h3>找到最高槓桿的行動，先做那個</h3>
+        <p>不是列出 20 件事讓你去做，是找出現在做哪一件事效果最大。先做最重要的，不要分散資源。</p>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <p class="quote-text">很多人問我：MUSEON 比 ChatGPT 強在哪裡？<br>ChatGPT 問什麼答什麼——你問了 A，它給你 A 的答案。<br>MUSEON 問的是：你確定你的問題是 A 嗎？</p>
+      <p class="quote-source">—— MUSEON 核心理念</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#2A7A6E" stroke-width="1.5"/><path d="M4.5 7l1.8 1.8L9.5 5" stroke="#2A7A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      免費業務診斷
+    </div>
+    <h2 class="display-2">先找到問題在哪，<br>再決定怎麼行動</h2>
+    <p>30 分鐘，我們幫你做一次六大盲點初診，看你現在最大的卡點在哪，從哪裡開始最有效。</p>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">加入 LINE，預約免費診斷 →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-logo">MU<span>S</span>EON</div>
+    <ul class="footer-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <p>© 2026 MUSEON. All rights reserved.</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUSEON — 把老闆的腦袋變成公司永不離職的數位大腦</title>
+  <meta name="description" content="MUSEON 幫中小企業主把 10 年心法、SOP、判斷力數位化，讓公司不靠記憶靠系統，知識傳承、工作流規劃、縮短教育訓練時間。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      background-color: #F7F5F0;
+      color: #12121A;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    :root {
+      --ember: #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark: #9A3A1C;
+      --teal: #2A7A6E;
+      --gold: #B8923A;
+      --ink: #12121A;
+      --slate: #5A5A6E;
+      --mist: #9898A8;
+      --border: #E2E0DA;
+      --parchment: #F7F5F0;
+      --snow: #FDFCFA;
+      --deep-ink: #0E0E16;
+    }
+
+    /* Typography */
+    .display-1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(34px, 5.5vw, 60px);
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+    }
+    .display-2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 600;
+      line-height: 1.22;
+    }
+    .caption {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Layout */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 768px) { .container { padding: 0 24px; } }
+    @media (max-width: 480px) { .container { padding: 0 16px; } }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0;
+      background: rgba(247, 245, 240, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100; padding: 14px 0;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 0 40px;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px; font-weight: 600;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-logo span { color: var(--ember); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 13.5px; font-weight: 500;
+      color: var(--slate); text-decoration: none;
+      transition: color 200ms;
+    }
+    .nav-links a:hover { color: var(--ember); }
+    .nav-cta {
+      background: var(--ember); color: white;
+      padding: 9px 18px; border-radius: 6px;
+      font-size: 13.5px; font-weight: 600;
+      text-decoration: none; transition: background 200ms;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--ember-dark); }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-inner { padding: 0 24px; }
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ember); color: white;
+      padding: 14px 28px; border-radius: 6px;
+      font-size: 15.5px; font-weight: 600;
+      text-decoration: none; transition: all 200ms;
+    }
+    .btn-primary:hover {
+      background: var(--ember-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(196, 80, 42, 0.3);
+    }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--ink);
+      padding: 13px 24px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px; font-size: 15px; font-weight: 500;
+      text-decoration: none; transition: all 200ms;
+    }
+    .btn-secondary:hover { border-color: var(--ember); color: var(--ember); }
+
+    /* Hero */
+    .hero {
+      padding: 100px 0 84px;
+      background: linear-gradient(155deg, #F7F5F0 0%, #EEE9E0 100%);
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(196, 80, 42, 0.1);
+      color: var(--ember-dark);
+      border-radius: 100px; padding: 4px 14px;
+      margin-bottom: 32px;
+    }
+    .hero-tag .dot {
+      width: 6px; height: 6px;
+      background: var(--ember); border-radius: 50%;
+    }
+    .hero h1 { max-width: 680px; margin-bottom: 24px; }
+    .hero h1 em { font-style: italic; color: var(--ember); }
+    .hero-sub {
+      font-size: 17.5px; color: var(--slate);
+      max-width: 520px; margin-bottom: 44px; line-height: 1.85;
+    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-proof {
+      margin-top: 56px;
+      display: flex; align-items: center; gap: 32px;
+      flex-wrap: wrap;
+    }
+    .proof-item { display: flex; align-items: center; gap: 10px; }
+    .proof-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 600;
+      color: var(--ember);
+    }
+    .proof-label { font-size: 13px; color: var(--slate); line-height: 1.4; }
+    .proof-sep {
+      width: 1px; height: 36px;
+      background: var(--border);
+    }
+
+    /* Pain */
+    .pain-section {
+      padding: 84px 0;
+      background: var(--snow);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .section-top { margin-bottom: 48px; }
+    .section-top .caption { color: var(--ember); display: block; margin-bottom: 10px; }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 20px;
+    }
+    .pain-card {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px;
+      position: relative; overflow: hidden;
+    }
+    .pain-card::after {
+      content: attr(data-num);
+      position: absolute; top: 16px; right: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px; font-weight: 600;
+      color: rgba(196,80,42,0.08); line-height: 1;
+      pointer-events: none;
+    }
+    .pain-card h3 {
+      font-size: 17px; font-weight: 600;
+      margin-bottom: 12px; line-height: 1.45;
+    }
+    .pain-card p { font-size: 14.5px; color: var(--slate); line-height: 1.75; }
+
+    /* Story */
+    .story-section { padding: 100px 0; }
+    .story-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    @media (max-width: 820px) {
+      .story-inner { grid-template-columns: 1fr; gap: 44px; }
+    }
+    .story-text .caption { color: var(--teal); display: block; margin-bottom: 10px; }
+    .story-text h2 { margin-bottom: 22px; }
+    .story-text p {
+      color: var(--slate); margin-bottom: 15px;
+      font-size: 15.5px; line-height: 1.85;
+    }
+    .story-text p strong { color: var(--ink); }
+    .story-text .highlight {
+      display: block; margin-top: 6px;
+      font-size: 16px; font-weight: 600;
+      color: var(--ink); line-height: 1.6;
+    }
+    .story-result {
+      background: linear-gradient(140deg, var(--ember) 0%, var(--ember-dark) 100%);
+      border-radius: 14px; padding: 36px; color: white;
+    }
+    .story-result h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 600; margin-bottom: 8px;
+    }
+    .story-result .subtitle {
+      font-size: 13px; opacity: 0.7; margin-bottom: 24px;
+    }
+    .result-items { list-style: none; }
+    .result-items li {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-bottom: 14px; font-size: 14.5px; line-height: 1.6;
+    }
+    .result-items li .check {
+      width: 20px; height: 20px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* Features */
+    .features-section { padding: 100px 0; background: var(--snow); }
+    .features-header { text-align: center; margin-bottom: 56px; }
+    .features-header .caption { color: var(--ember); display: block; margin-bottom: 10px; }
+    .features-header h2 { margin-bottom: 14px; }
+    .features-header p {
+      font-size: 16.5px; color: var(--slate);
+      max-width: 480px; margin: 0 auto;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+    .feature-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px;
+      text-decoration: none; color: inherit;
+      transition: all 200ms ease; display: block;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(18,18,26,0.09);
+      border-color: var(--ember);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: rgba(196,80,42,0.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; font-size: 22px;
+    }
+    .feature-card h3 {
+      font-size: 16px; font-weight: 600;
+      margin-bottom: 10px; line-height: 1.45;
+    }
+    .feature-card p {
+      font-size: 13.5px; color: var(--slate);
+      line-height: 1.75; margin-bottom: 18px;
+    }
+    .feature-link {
+      font-size: 12.5px; font-weight: 600;
+      color: var(--ember);
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Diagnosis */
+    .diag-section {
+      padding: 100px 0;
+      background: linear-gradient(155deg, #0E0E16 0%, #15100E 100%);
+      color: white;
+    }
+    .diag-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    @media (max-width: 820px) {
+      .diag-inner { grid-template-columns: 1fr; gap: 44px; }
+    }
+    .diag-text .caption { color: rgba(255,255,255,0.35); display: block; margin-bottom: 10px; }
+    .diag-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 600; line-height: 1.22;
+      margin-bottom: 18px;
+    }
+    .diag-text p {
+      color: rgba(255,255,255,0.6);
+      font-size: 15.5px; line-height: 1.85;
+      margin-bottom: 14px;
+    }
+    .quiz-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 32px;
+    }
+    .quiz-qnum {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--ember-light);
+      display: block; margin-bottom: 8px;
+    }
+    .quiz-q {
+      font-size: 15.5px; font-weight: 500;
+      line-height: 1.65; margin-bottom: 20px; color: white;
+    }
+    .quiz-opts { display: flex; flex-direction: column; gap: 9px; }
+    .quiz-opt {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 12px 16px;
+      cursor: pointer; font-size: 13.5px;
+      color: rgba(255,255,255,0.78);
+      transition: all 180ms; text-align: left; width: 100%;
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    }
+    .quiz-opt:hover {
+      background: rgba(196,80,42,0.18);
+      border-color: var(--ember); color: white;
+    }
+    .quiz-opt.selected {
+      background: rgba(196,80,42,0.24);
+      border-color: var(--ember); color: white;
+    }
+    .quiz-bottom {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-top: 22px;
+    }
+    .quiz-prog {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.3);
+    }
+    .btn-next {
+      background: var(--ember); color: white;
+      border: none; padding: 10px 20px;
+      border-radius: 6px; font-size: 13.5px;
+      font-weight: 600; cursor: pointer;
+      transition: background 180ms;
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    }
+    .btn-next:hover { background: var(--ember-dark); }
+    .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+    .quiz-result { display: none; }
+    .quiz-result h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600;
+      margin-bottom: 12px; color: white;
+    }
+    .quiz-result p {
+      color: rgba(255,255,255,0.65);
+      font-size: 14px; line-height: 1.8;
+      margin-bottom: 22px;
+    }
+    .result-more {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600;
+      color: var(--ember-light); text-decoration: none;
+      margin-bottom: 16px; transition: gap 180ms;
+    }
+    .result-more:hover { gap: 10px; }
+
+    /* CTA Section */
+    .cta-section { padding: 100px 0; text-align: center; }
+    .cta-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(42,122,110,0.1);
+      color: var(--teal); border-radius: 100px;
+      padding: 5px 16px; font-size: 13px; font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .cta-section h2 { margin-bottom: 16px; }
+    .cta-section p {
+      font-size: 16.5px; color: var(--slate);
+      max-width: 460px; margin: 0 auto 40px;
+      line-height: 1.85;
+    }
+    .cta-note {
+      margin-top: 16px; font-size: 13px;
+      color: var(--mist);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--deep-ink); color: rgba(255,255,255,0.45);
+      padding: 44px 0; text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600;
+      color: white; margin-bottom: 8px;
+    }
+    .footer-logo span { color: var(--ember-light); }
+    footer p { font-size: 13px; }
+    .footer-links {
+      display: flex; justify-content: center;
+      gap: 24px; list-style: none;
+      margin: 16px 0 4px;
+    }
+    .footer-links a {
+      font-size: 12.5px; color: rgba(255,255,255,0.4);
+      text-decoration: none; transition: color 200ms;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.5s ease-out both; }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.15s; }
+    .d3 { animation-delay: 0.25s; }
+    .d4 { animation-delay: 0.35s; }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">MU<span>S</span>EON</a>
+    <ul class="nav-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="nav-cta">免費診斷 →</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag fade-up d1">
+      <span class="dot"></span>
+      <span class="caption">為台灣中小企業主打造</span>
+    </div>
+    <h1 class="display-1 fade-up d2">
+      10 年的心法，<br>不能靠<em>你一個人的嘴巴</em>傳下去
+    </h1>
+    <p class="hero-sub fade-up d3">
+      MUSEON 把老闆腦袋裡的判斷力、SOP、隱性知識，<br>
+      轉化成公司永不離職的數位大腦——<br>
+      新人也能做出老手的水準，公司才能真正複製。
+    </p>
+    <div class="hero-actions fade-up d4">
+      <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">預約免費業務診斷 →</a>
+      <a href="#diagnosis" class="btn-secondary">先做 2 分鐘自診</a>
+    </div>
+    <div class="hero-proof fade-up d4">
+      <div class="proof-item">
+        <span class="proof-num">2 週</span>
+        <span class="proof-label">新人上手時間<br>（原本 6 週）</span>
+      </div>
+      <div class="proof-sep"></div>
+      <div class="proof-item">
+        <span class="proof-num">10 年</span>
+        <span class="proof-label">歷史資料<br>全部可搜尋</span>
+      </div>
+      <div class="proof-sep"></div>
+      <div class="proof-item">
+        <span class="proof-num">200+</span>
+        <span class="proof-label">自動生成<br>工作模板 SOP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pain Points -->
+<section class="pain-section">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">你有沒有遇過這些狀況</span>
+      <h2 class="display-2" style="margin-top:10px">每個老闆都碰過，<br>但很少人認真解決</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card" data-num="01">
+        <h3>核心員工離職，10 年心法跟著消失</h3>
+        <p>培養了三年的主管走了，客戶應對方式、報價邏輯、內部眉角，全都帶走了。下一個人從零開始，老闆又要花三年。</p>
+      </div>
+      <div class="pain-card" data-num="02">
+        <h3>每件事都要老闆盯，公司複製不了</h3>
+        <p>員工做事沒有標準，品質每次都不一樣。老闆一離開就出問題，想開分店、想授權，卻沒有一套能複製的方法。</p>
+      </div>
+      <div class="pain-card" data-num="03">
+        <h3>新人培訓三個月，還是做不對</h3>
+        <p>教了又教，老手帶到累，新人還是搞不清楚。教育成本高、時間長，公司成長永遠卡在「人的瓶頸」。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Story -->
+<section class="story-section">
+  <div class="container">
+    <div class="story-inner">
+      <div class="story-text">
+        <span class="caption">真實案例</span>
+        <h2 class="display-2">一個月，5 個員工同時離職</h2>
+        <p>
+          羅臻的活動公關公司遇到了每個老闆最怕的事：
+          一個月內，7 位員工有 <strong>5 位同時離職</strong>。
+        </p>
+        <p>
+          公司 10 年的接案經驗、客戶應對 SOP、場地布置規範——
+          全都只在那些離職員工的腦袋裡。
+        </p>
+        <p>
+          幸好，NAS 裡面還有 <strong>10 年的歷史檔案</strong>。
+        </p>
+        <p>
+          MUSEON 把這些檔案清洗、整理、轉化成公司的知識庫，讓新進員工可以直接「問公司的大腦」：
+        </p>
+        <p style="font-style:italic;color:var(--ink);border-left:3px solid var(--ember);padding-left:14px;margin:16px 0">
+          「這種場地布置要幾個人手？」<br>
+          「這類客戶的報價邏輯是什麼？」<br>
+          「之前遇過這種緊急狀況是怎麼處理的？」
+        </p>
+        <span class="highlight">三週後，新員工的工作品質，比部分離職員工還要好。</span>
+      </div>
+      <div>
+        <div class="story-result">
+          <h3>三週後的具體變化</h3>
+          <p class="subtitle">羅臻活動公關公司 × MUSEON</p>
+          <ul class="result-items">
+            <li><span class="check">✓</span>新人上手時間從 6 週縮短到 2 週</li>
+            <li><span class="check">✓</span>10 年歷史文件全部變成可搜尋的知識庫</li>
+            <li><span class="check">✓</span>自動生成 200+ 份工作模板與 SOP</li>
+            <li><span class="check">✓</span>客戶應對規範轉成標準化審計清單</li>
+            <li><span class="check">✓</span>老闆每週省下 12 小時的重複說明時間</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-header">
+      <span class="caption">MUSEON 六大能力</span>
+      <h2 class="display-2">從哪裡開始都可以，<br>每個能力都是一個解法</h2>
+      <p>點進去看你最需要的那個</p>
+    </div>
+    <div class="features-grid">
+      <a href="./knowledge.html" class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>把老闆的腦袋變成公司資產</h3>
+        <p>10 年的心法、判斷力、隱性知識，全部數位化存起來，讓全公司都能查、都能用。</p>
+        <div class="feature-link">了解知識傳承 →</div>
+      </a>
+      <a href="./workflow.html" class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3>流程不靠記憶，靠系統</h3>
+        <p>把公司的做事方法整理成可複製的 SOP，任何人按著跑都能做出一定水準。</p>
+        <div class="feature-link">了解工作流程 →</div>
+      </a>
+      <a href="./training.html" class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h3>新人上手從幾週縮到幾天</h3>
+        <p>不靠老手帶，不靠一直讀 SOP。讓新人直接問公司的大腦，自己找到答案。</p>
+        <div class="feature-link">了解教育訓練 →</div>
+      </a>
+      <a href="./quality.html" class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>每次輸出都有標準，不靠人盯</h3>
+        <p>建立可量化的品質標準，讓每個人都知道「做到什麼程度才叫做好」。</p>
+        <div class="feature-link">了解品質管控 →</div>
+      </a>
+      <a href="./time.html" class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>重複的事讓 AI 做，人做有價值的</h3>
+        <p>報告、摘要、整理、分類——這些交給 AI，人的時間留給決策和服務客戶。</p>
+        <div class="feature-link">了解時間解放 →</div>
+      </a>
+      <a href="./thinking.html" class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>做決定前先看清楚問題在哪</h3>
+        <p>很多老闆的問題不是不努力，是努力的方向需要校準。先診斷再行動，少走三年彎路。</p>
+        <div class="feature-link">了解思考精度 →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Diagnosis -->
+<section class="diag-section" id="diagnosis">
+  <div class="container">
+    <div class="diag-inner">
+      <div class="diag-text">
+        <span class="caption">2 分鐘自診</span>
+        <h2>你的公司，<br>現在最大的缺口在哪？</h2>
+        <p>
+          很多老闆感覺公司有問題，但說不清楚是哪裡。
+          做完這個快速自診，馬上知道 MUSEON 從哪裡幫你最快見效。
+        </p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.3)">
+          共 3 題，無需填個人資料
+        </p>
+      </div>
+      <div class="quiz-card">
+        <!-- Q1 -->
+        <div id="q1" class="quiz-question">
+          <span class="quiz-qnum">題目 01 / 03</span>
+          <div class="quiz-q">如果你最重要的員工明天離職，你最擔心的是什麼？</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-q="1" data-val="knowledge" onclick="pick(this)">
+              他腦袋裡有太多方法和知識，別人根本不知道怎麼做
+            </button>
+            <button class="quiz-opt" data-q="1" data-val="workflow" onclick="pick(this)">
+              很多流程只有他才知道怎麼跑，他不在的話會大亂
+            </button>
+            <button class="quiz-opt" data-q="1" data-val="quality" onclick="pick(this)">
+              他對品質的要求和標準，沒辦法教給下一個人
+            </button>
+          </div>
+        </div>
+        <!-- Q2 -->
+        <div id="q2" class="quiz-question" style="display:none">
+          <span class="quiz-qnum">題目 02 / 03</span>
+          <div class="quiz-q">新人進來，你最頭痛的是什麼？</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-q="2" data-val="training" onclick="pick(this)">
+              老手要花很多時間帶，但新人還是搞不清楚狀況
+            </button>
+            <button class="quiz-opt" data-q="2" data-val="time" onclick="pick(this)">
+              一直問一樣的問題，害我每天花很多時間在重複解釋
+            </button>
+            <button class="quiz-opt" data-q="2" data-val="thinking" onclick="pick(this)">
+              只會照表操課，沒有獨立判斷能力，事事需要確認
+            </button>
+          </div>
+        </div>
+        <!-- Q3 -->
+        <div id="q3" class="quiz-question" style="display:none">
+          <span class="quiz-qnum">題目 03 / 03</span>
+          <div class="quiz-q">你最想在半年內解決的一件事是什麼？</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-q="3" data-val="scale" onclick="pick(this)">
+              公司可以複製和擴張，不用靠我一個人撐
+            </button>
+            <button class="quiz-opt" data-q="3" data-val="efficiency" onclick="pick(this)">
+              員工效率提升，我從日常雜事中解放出來
+            </button>
+            <button class="quiz-opt" data-q="3" data-val="decision" onclick="pick(this)">
+              重要決策更有把握，做之前能先看清楚問題在哪
+            </button>
+          </div>
+        </div>
+        <!-- Result -->
+        <div id="quiz-result" class="quiz-result">
+          <h3 id="r-title">你最需要補位的是：知識傳承</h3>
+          <p id="r-desc">你公司現在最大的風險是「人走知識走」。MUSEON 先幫你把核心人員腦袋裡的東西萃取出來，建成公司知識庫，讓任何人都能查、都能用。</p>
+          <a id="r-link" href="./knowledge.html" class="result-more">深入了解這個解法 →</a>
+          <br>
+          <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary" style="font-size:14px;padding:12px 22px">
+            預約免費業務診斷，看適合哪個方案 →
+          </a>
+        </div>
+        <div class="quiz-bottom" id="quiz-bottom">
+          <span class="quiz-prog" id="qprog">第 1 步，共 3 步</span>
+          <button class="btn-next" id="btn-next" disabled onclick="nextQ()">下一題 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#2A7A6E" stroke-width="1.5"/><path d="M4.5 7l1.8 1.8L9.5 5" stroke="#2A7A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      現在預約，免費進行業務診斷
+    </div>
+    <h2 class="display-2">不需要懂 AI，<br>我們從你的問題開始</h2>
+    <p>30 分鐘，我們幫你看清楚公司現在卡在哪裡、從哪裡開始最快見效。不賣工具，只解決問題。</p>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">加入 LINE，預約免費診斷 →</a>
+    <p class="cta-note">不需要準備任何資料，聊一聊就知道從哪裡開始</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-logo">MU<span>S</span>EON</div>
+    <ul class="footer-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <p>台灣中小企業的 AI 知識傳承夥伴 &nbsp;|&nbsp; © 2026 MUSEON. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  const ans = {};
+  let cur = 1;
+
+  function pick(el) {
+    const q = el.dataset.q;
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    ans[q] = el.dataset.val;
+    document.getElementById('btn-next').disabled = false;
+  }
+
+  function nextQ() {
+    if (cur < 3) {
+      document.getElementById(`q${cur}`).style.display = 'none';
+      cur++;
+      document.getElementById(`q${cur}`).style.display = 'block';
+      document.getElementById('qprog').textContent = `第 ${cur} 步，共 3 步`;
+      document.getElementById('btn-next').disabled = true;
+      if (cur === 3) document.getElementById('btn-next').textContent = '看結果 →';
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    document.querySelectorAll('.quiz-question').forEach(q => q.style.display = 'none');
+    document.getElementById('quiz-bottom').style.display = 'none';
+    document.getElementById('quiz-result').style.display = 'block';
+
+    const a1 = ans['1'], a2 = ans['2'], a3 = ans['3'];
+    let title, desc, link;
+
+    if (a1 === 'knowledge' || a3 === 'scale') {
+      title = '你最需要補位的是：知識傳承';
+      desc = '你公司現在最大的風險是「人走知識走」。MUSEON 先幫你把核心人員腦袋裡的東西萃取出來，建成公司的知識庫——任何人都能查、都能用，公司才能真正複製和擴張。';
+      link = './knowledge.html';
+    } else if (a1 === 'workflow' || a3 === 'efficiency') {
+      title = '你最需要補位的是：工作流程標準化';
+      desc = '你公司的問題是流程靠人記、靠嘴傳，沒有系統就會亂。MUSEON 幫你把每個人的做事方法整理成可複製的 SOP，讓任何人按著跑都能做出水準，老闆才能真正解放。';
+      link = './workflow.html';
+    } else if (a2 === 'training') {
+      title = '你最需要補位的是：教育訓練效率';
+      desc = '你公司的新人培訓成本太高，靠老手帶是最慢最貴的方式。MUSEON 幫你建立知識庫，讓新人直接問公司的大腦，自己找答案，上手時間從幾週縮到幾天。';
+      link = './training.html';
+    } else {
+      title = '你最需要補位的是：思考精度與決策品質';
+      desc = '你公司的問題不是執行力不夠，是決策時缺少系統化的分析工具。MUSEON 幫你建立診斷框架，讓每次重要決策都有依據，不靠直覺，少走三年彎路。';
+      link = './thinking.html';
+    }
+
+    document.getElementById('r-title').textContent = title;
+    document.getElementById('r-desc').textContent = desc;
+    document.getElementById('r-link').href = link;
+  }
+</script>
+</body>
+</html>

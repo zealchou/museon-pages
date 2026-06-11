@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>品質管控 — MUSEON</title>
+  <meta name="description" content="每次的輸出都有標準，不靠老手盯，讓品質不再靠運氣。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Outfit','Noto Sans TC',sans-serif; background: #F7F5F0; color: #12121A; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+    :root { --ember:#C4502A; --ember-dark:#9A3A1C; --ember-light:#E0714D; --teal:#2A7A6E; --ink:#12121A; --slate:#5A5A6E; --border:#E2E0DA; --parchment:#F7F5F0; --snow:#FDFCFA; --deep-ink:#0E0E16; }
+    .container { max-width:1200px; margin:0 auto; padding:0 40px; }
+    @media(max-width:768px){.container{padding:0 24px;}}
+    @media(max-width:480px){.container{padding:0 16px;}}
+    .display-1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,58px); font-weight:600; line-height:1.18; letter-spacing:-0.02em; }
+    .display-2 { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,3.5vw,42px); font-weight:600; line-height:1.22; }
+    .caption { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+    nav { position:sticky; top:0; background:rgba(247,245,240,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); z-index:100; padding:14px 0; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 40px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:600; color:var(--ink); text-decoration:none; }
+    .nav-logo span { color:var(--ember); }
+    .nav-links { display:flex; gap:24px; list-style:none; }
+    .nav-links a { font-size:13px; font-weight:500; color:var(--slate); text-decoration:none; transition:color 200ms; }
+    .nav-links a:hover, .nav-links a.active { color:var(--ember); }
+    .nav-cta { background:var(--ember); color:white; padding:9px 18px; border-radius:6px; font-size:13.5px; font-weight:600; text-decoration:none; white-space:nowrap; transition:background 200ms; }
+    .nav-cta:hover { background:var(--ember-dark); }
+    @media(max-width:900px){ .nav-links{display:none;} .nav-inner{padding:0 24px;} }
+    .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--ember); color:white; padding:14px 28px; border-radius:6px; font-size:15px; font-weight:600; text-decoration:none; transition:all 200ms; }
+    .btn-primary:hover { background:var(--ember-dark); transform:translateY(-1px); box-shadow:0 4px 18px rgba(196,80,42,0.3); }
+    .btn-secondary { display:inline-flex; align-items:center; background:transparent; color:var(--ink); padding:13px 24px; border:1.5px solid var(--border); border-radius:6px; font-size:15px; font-weight:500; text-decoration:none; transition:all 200ms; }
+    .btn-secondary:hover { border-color:var(--ember); color:var(--ember); }
+    .breadcrumb { padding:20px 0 0; }
+    .breadcrumb a { font-size:13px; color:var(--slate); text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:color 200ms; }
+    .breadcrumb a:hover { color:var(--ember); }
+    .hero { padding:64px 0 84px; background:linear-gradient(155deg,#F7F5F0 0%,#EEE9E0 100%); }
+    .hero-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(196,80,42,0.1); color:var(--ember-dark); border-radius:100px; padding:4px 14px; margin-bottom:24px; }
+    .hero-tag .dot { width:6px; height:6px; background:var(--ember); border-radius:50%; }
+    .hero h1 { max-width:680px; margin-bottom:22px; }
+    .hero h1 em { font-style:italic; color:var(--ember); }
+    .hero-sub { font-size:17px; color:var(--slate); max-width:520px; margin-bottom:40px; line-height:1.85; }
+    .hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
+    .section { padding:84px 0; }
+    .section.alt { background:var(--snow); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .section-top { margin-bottom:48px; }
+    .section-top .caption { color:var(--ember); display:block; margin-bottom:10px; }
+    .pain-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:20px; }
+    .pain-card { background:var(--parchment); border:1px solid var(--border); border-radius:10px; padding:28px; position:relative; overflow:hidden; }
+    .pain-card::after { content:attr(data-num); position:absolute; top:16px; right:20px; font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; color:rgba(196,80,42,0.08); line-height:1; pointer-events:none; }
+    .pain-card h3 { font-size:16.5px; font-weight:600; margin-bottom:10px; line-height:1.45; }
+    .pain-card p { font-size:14px; color:var(--slate); line-height:1.75; }
+    .steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:28px; margin-top:48px; }
+    .step-card { background:var(--snow); border:1px solid var(--border); border-radius:10px; padding:32px; }
+    .step-num { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; color:var(--ember); display:block; margin-bottom:12px; }
+    .step-icon { font-size:28px; margin-bottom:16px; }
+    .step-card h3 { font-size:17px; font-weight:600; margin-bottom:10px; line-height:1.4; }
+    .step-card p { font-size:14px; color:var(--slate); line-height:1.75; }
+    .result-dark { background:linear-gradient(140deg,var(--ember) 0%,var(--ember-dark) 100%); border-radius:14px; padding:40px; color:white; margin-top:48px; }
+    .result-dark h3 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; margin-bottom:8px; }
+    .result-dark .sub { font-size:13px; opacity:0.65; margin-bottom:28px; }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:24px; }
+    .stat-item .num { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:600; line-height:1.1; }
+    .stat-item .label { font-size:13px; opacity:0.75; margin-top:4px; line-height:1.5; }
+    .cta-section { padding:84px 0; text-align:center; }
+    .cta-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(42,122,110,0.1); color:var(--teal); border-radius:100px; padding:5px 16px; font-size:13px; font-weight:500; margin-bottom:22px; }
+    .cta-section h2 { margin-bottom:14px; }
+    .cta-section p { font-size:16px; color:var(--slate); max-width:440px; margin:0 auto 36px; line-height:1.85; }
+    footer { background:var(--deep-ink); color:rgba(255,255,255,0.4); padding:40px 0; text-align:center; }
+    .footer-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:white; margin-bottom:12px; }
+    .footer-logo span { color:var(--ember-light); }
+    .footer-links { display:flex; justify-content:center; gap:20px; list-style:none; margin-bottom:12px; flex-wrap:wrap; }
+    .footer-links a { font-size:12px; color:rgba(255,255,255,0.38); text-decoration:none; transition:color 200ms; }
+    .footer-links a:hover { color:rgba(255,255,255,0.7); }
+    footer p { font-size:12.5px; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up { animation:fadeUp 0.5s ease-out both; }
+    .d1{animation-delay:0.05s} .d2{animation-delay:0.15s} .d3{animation-delay:0.25s}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">MU<span>S</span>EON</a>
+    <ul class="nav-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html" class="active">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="nav-cta">免費診斷 →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="./index.html">← 回首頁</a></div>
+    <div style="height:28px"></div>
+    <div class="hero-tag fade-up d1"><span class="dot"></span><span class="caption">品質管控</span></div>
+    <h1 class="display-1 fade-up d2">
+      每次的輸出，都有標準——<br><em>不靠老手盯，靠系統把關</em>
+    </h1>
+    <p class="hero-sub fade-up d3">
+      品質不穩定的根本原因，是每個人心裡的標準不一樣。<br>
+      MUSEON 讓「什麼叫做好」有一個所有人<br>
+      都能對照的明確答案。
+    </p>
+    <div class="hero-actions fade-up d3">
+      <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">預約免費診斷 →</a>
+      <a href="#steps" class="btn-secondary">看 MUSEON 怎麼做</a>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">你有沒有遇過</span>
+      <h2 class="display-2" style="margin-top:10px">品質好不好，<br>不應該靠運氣決定</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card" data-num="01">
+        <h3>同樣一件事，每個員工做出來的結果都不一樣</h3>
+        <p>有人做得精準，有人做得粗糙。差別不是態度，是心裡的標準不一樣。而你沒有一套統一的對照基準讓大家參考。</p>
+      </div>
+      <div class="pain-card" data-num="02">
+        <h3>要確認品質，就要老闆親自看每一份東西</h3>
+        <p>你知道什麼叫好，但沒有辦法把這個判斷力外包出去。每件事都要你看過才放心，你就永遠解放不了。</p>
+      </div>
+      <div class="pain-card" data-num="03">
+        <h3>客戶抱怨，才發現員工根本不知道標準在哪</h3>
+        <p>員工不是不認真，是真的不知道「這樣做」和「那樣做」的差別在哪。等客戶抱怨才知道，代價太大了。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="steps">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">MUSEON 的做法</span>
+      <h2 class="display-2" style="margin-top:10px">三個步驟，<br>讓品質有標準可對照</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon">📋</div>
+        <span class="step-num">STEP 01</span>
+        <h3>把「什麼叫做好」明確定義出來</h3>
+        <p>MUSEON 幫你把老闆腦袋裡的品質判斷，翻譯成具體可對照的標準清單。不是靠感覺說「差不多就好」，是有條目、有定義、員工能自己核對的清單。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon">✅</div>
+        <span class="step-num">STEP 02</span>
+        <h3>工作完成前自動跑品質確認</h3>
+        <p>每次員工交出一份工作，系統自動對照品質清單：這份報告有沒有涵蓋客戶最關心的點？這個流程有沒有漏掉關鍵步驟？自動提醒，不用等到老闆看到才發現。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon">📈</div>
+        <span class="step-num">STEP 03</span>
+        <h3>主管看到每個人的品質分佈</h3>
+        <p>MUSEON 自動彙整每個人的工作品質記錄，讓主管知道哪個環節反覆出問題、哪個員工需要加強哪個面向——從系統面解決，不是靠責罵。</p>
+      </div>
+    </div>
+    <div class="result-dark">
+      <h3>引入品質標準系統後的變化</h3>
+      <p class="sub">服務型企業，3 個月追蹤</p>
+      <div class="stats-grid">
+        <div class="stat-item"><div class="num">60%</div><div class="label">客戶抱怨率<br>下降</div></div>
+        <div class="stat-item"><div class="num">45%</div><div class="label">返工次數<br>減少</div></div>
+        <div class="stat-item"><div class="num">80%</div><div class="label">老闆品質確認<br>時間縮短</div></div>
+        <div class="stat-item"><div class="num">↑</div><div class="label">員工知道標準<br>工作信心提升</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#2A7A6E" stroke-width="1.5"/><path d="M4.5 7l1.8 1.8L9.5 5" stroke="#2A7A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      免費業務診斷
+    </div>
+    <h2 class="display-2">讓品質不再靠運氣</h2>
+    <p>30 分鐘，我們聊聊你現在的品質狀況，告訴你從哪裡開始最快建立標準。</p>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">加入 LINE，預約免費診斷 →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-logo">MU<span>S</span>EON</div>
+    <ul class="footer-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <p>© 2026 MUSEON. All rights reserved.</p>
+  </div>
+</footer>
+</body>
+</html>

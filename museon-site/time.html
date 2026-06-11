@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>時間解放 — MUSEON</title>
+  <meta name="description" content="重複的事讓 AI 做，人的時間留給有價值的工作。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Outfit','Noto Sans TC',sans-serif; background: #F7F5F0; color: #12121A; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+    :root { --ember:#C4502A; --ember-dark:#9A3A1C; --ember-light:#E0714D; --teal:#2A7A6E; --ink:#12121A; --slate:#5A5A6E; --border:#E2E0DA; --parchment:#F7F5F0; --snow:#FDFCFA; --deep-ink:#0E0E16; }
+    .container { max-width:1200px; margin:0 auto; padding:0 40px; }
+    @media(max-width:768px){.container{padding:0 24px;}}
+    @media(max-width:480px){.container{padding:0 16px;}}
+    .display-1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,58px); font-weight:600; line-height:1.18; letter-spacing:-0.02em; }
+    .display-2 { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,3.5vw,42px); font-weight:600; line-height:1.22; }
+    .caption { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+    nav { position:sticky; top:0; background:rgba(247,245,240,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); z-index:100; padding:14px 0; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 40px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:600; color:var(--ink); text-decoration:none; }
+    .nav-logo span { color:var(--ember); }
+    .nav-links { display:flex; gap:24px; list-style:none; }
+    .nav-links a { font-size:13px; font-weight:500; color:var(--slate); text-decoration:none; transition:color 200ms; }
+    .nav-links a:hover, .nav-links a.active { color:var(--ember); }
+    .nav-cta { background:var(--ember); color:white; padding:9px 18px; border-radius:6px; font-size:13.5px; font-weight:600; text-decoration:none; white-space:nowrap; transition:background 200ms; }
+    .nav-cta:hover { background:var(--ember-dark); }
+    @media(max-width:900px){ .nav-links{display:none;} .nav-inner{padding:0 24px;} }
+    .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--ember); color:white; padding:14px 28px; border-radius:6px; font-size:15px; font-weight:600; text-decoration:none; transition:all 200ms; }
+    .btn-primary:hover { background:var(--ember-dark); transform:translateY(-1px); box-shadow:0 4px 18px rgba(196,80,42,0.3); }
+    .btn-secondary { display:inline-flex; align-items:center; background:transparent; color:var(--ink); padding:13px 24px; border:1.5px solid var(--border); border-radius:6px; font-size:15px; font-weight:500; text-decoration:none; transition:all 200ms; }
+    .btn-secondary:hover { border-color:var(--ember); color:var(--ember); }
+    .breadcrumb { padding:20px 0 0; }
+    .breadcrumb a { font-size:13px; color:var(--slate); text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:color 200ms; }
+    .breadcrumb a:hover { color:var(--ember); }
+    .hero { padding:64px 0 84px; background:linear-gradient(155deg,#F7F5F0 0%,#EEE9E0 100%); }
+    .hero-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(196,80,42,0.1); color:var(--ember-dark); border-radius:100px; padding:4px 14px; margin-bottom:24px; }
+    .hero-tag .dot { width:6px; height:6px; background:var(--ember); border-radius:50%; }
+    .hero h1 { max-width:680px; margin-bottom:22px; }
+    .hero h1 em { font-style:italic; color:var(--ember); }
+    .hero-sub { font-size:17px; color:var(--slate); max-width:520px; margin-bottom:40px; line-height:1.85; }
+    .hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
+    .section { padding:84px 0; }
+    .section.alt { background:var(--snow); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .section-top { margin-bottom:48px; }
+    .section-top .caption { color:var(--ember); display:block; margin-bottom:10px; }
+    .pain-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:20px; }
+    .pain-card { background:var(--parchment); border:1px solid var(--border); border-radius:10px; padding:28px; position:relative; overflow:hidden; }
+    .pain-card::after { content:attr(data-num); position:absolute; top:16px; right:20px; font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; color:rgba(196,80,42,0.08); line-height:1; pointer-events:none; }
+    .pain-card h3 { font-size:16.5px; font-weight:600; margin-bottom:10px; line-height:1.45; }
+    .pain-card p { font-size:14px; color:var(--slate); line-height:1.75; }
+    .tasks-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:48px; }
+    .task-card { background:var(--snow); border:1px solid var(--border); border-radius:10px; padding:24px; }
+    .task-icon { font-size:24px; margin-bottom:12px; }
+    .task-card h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
+    .task-card .before { font-size:13px; color:var(--slate); margin-bottom:6px; }
+    .task-card .after { font-size:13px; color:var(--ember); font-weight:600; }
+    .result-dark { background:linear-gradient(140deg,var(--ember) 0%,var(--ember-dark) 100%); border-radius:14px; padding:40px; color:white; margin-top:48px; }
+    .result-dark h3 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; margin-bottom:8px; }
+    .result-dark .sub { font-size:13px; opacity:0.65; margin-bottom:28px; }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:24px; }
+    .stat-item .num { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:600; line-height:1.1; }
+    .stat-item .label { font-size:13px; opacity:0.75; margin-top:4px; line-height:1.5; }
+    .cta-section { padding:84px 0; text-align:center; }
+    .cta-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(42,122,110,0.1); color:var(--teal); border-radius:100px; padding:5px 16px; font-size:13px; font-weight:500; margin-bottom:22px; }
+    .cta-section h2 { margin-bottom:14px; }
+    .cta-section p { font-size:16px; color:var(--slate); max-width:440px; margin:0 auto 36px; line-height:1.85; }
+    footer { background:var(--deep-ink); color:rgba(255,255,255,0.4); padding:40px 0; text-align:center; }
+    .footer-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:white; margin-bottom:12px; }
+    .footer-logo span { color:var(--ember-light); }
+    .footer-links { display:flex; justify-content:center; gap:20px; list-style:none; margin-bottom:12px; flex-wrap:wrap; }
+    .footer-links a { font-size:12px; color:rgba(255,255,255,0.38); text-decoration:none; transition:color 200ms; }
+    .footer-links a:hover { color:rgba(255,255,255,0.7); }
+    footer p { font-size:12.5px; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up { animation:fadeUp 0.5s ease-out both; }
+    .d1{animation-delay:0.05s} .d2{animation-delay:0.15s} .d3{animation-delay:0.25s}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="./index.html" class="nav-logo">MU<span>S</span>EON</a>
+    <ul class="nav-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html" class="active">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="nav-cta">免費診斷 →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="./index.html">← 回首頁</a></div>
+    <div style="height:28px"></div>
+    <div class="hero-tag fade-up d1"><span class="dot"></span><span class="caption">時間解放</span></div>
+    <h1 class="display-1 fade-up d2">
+      重複的事讓 AI 做，<br><em>人的時間留給有價值的</em>
+    </h1>
+    <p class="hero-sub fade-up d3">
+      報告、摘要、整理、分類、查資料——<br>
+      這些事每天悄悄吃掉員工 40% 的時間。<br>
+      MUSEON 把這些都接走，人只做需要判斷的事。
+    </p>
+    <div class="hero-actions fade-up d3">
+      <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">預約免費診斷 →</a>
+      <a href="#tasks" class="btn-secondary">看哪些事可以交給 AI</a>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">你有沒有遇過</span>
+      <h2 class="display-2" style="margin-top:10px">員工很忙，<br>但忙的不是最有價值的事</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card" data-num="01">
+        <h3>員工每天有大半時間在做重複性的整理工作</h3>
+        <p>開會記錄、報告撰寫、資料分類、查舊資料——這些事情重要但不需要太多腦力。員工花在這裡的時間，就是沒辦法花在客戶服務和創造價值的時間。</p>
+      </div>
+      <div class="pain-card" data-num="02">
+        <h3>老闆每天有一堆瑣事纏身，抽不出時間想策略</h3>
+        <p>確認各種進度、回答重複問題、整理各種報告——老闆每天把自己的時間填滿這些事，卻沒有時間想「下一步要去哪」。</p>
+      </div>
+      <div class="pain-card" data-num="03">
+        <h3>一樣的事做了很多次，卻沒有辦法讓它「只做一次」</h3>
+        <p>每次都要重頭整理，每次都要重新查資料，每次都要重新說明。沒有人想過把這些事情系統化，因為好像也沒有別的辦法。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tasks">
+  <div class="container">
+    <div class="section-top">
+      <span class="caption">MUSEON 接走哪些事</span>
+      <h2 class="display-2" style="margin-top:10px">這些事每天都在發生，<br>都可以讓 AI 做</h2>
+    </div>
+    <div class="tasks-grid">
+      <div class="task-card">
+        <div class="task-icon">📝</div>
+        <h3>會議記錄與摘要</h3>
+        <div class="before">以前：每次開完會要花 30-60 分鐘整理</div>
+        <div class="after">現在：MUSEON 自動生成會議摘要和行動清單</div>
+      </div>
+      <div class="task-card">
+        <div class="task-icon">📊</div>
+        <h3>週報與進度報告</h3>
+        <div class="before">以前：每週花 2-3 小時整理各部門進度</div>
+        <div class="after">現在：自動彙整，10 分鐘審核就完成</div>
+      </div>
+      <div class="task-card">
+        <div class="task-icon">🔍</div>
+        <h3>查找歷史資料</h3>
+        <div class="before">以前：翻半天的舊檔案找不到</div>
+        <div class="after">現在：直接問 MUSEON，秒找到</div>
+      </div>
+      <div class="task-card">
+        <div class="task-icon">📬</div>
+        <h3>客戶回覆與 FAQ</h3>
+        <div class="before">以前：重複回答同樣的客戶問題</div>
+        <div class="after">現在：MUSEON 提供回覆草稿，員工微調發送</div>
+      </div>
+      <div class="task-card">
+        <div class="task-icon">📁</div>
+        <h3>文件分類與整理</h3>
+        <div class="before">以前：新進資料要人工分類整理</div>
+        <div class="after">現在：自動分類，自動加到知識庫</div>
+      </div>
+      <div class="task-card">
+        <div class="task-icon">📋</div>
+        <h3>提案與報價輔助</h3>
+        <div class="before">以前：每次提案都要從頭想結構</div>
+        <div class="after">現在：MUSEON 根據過去案例生成初稿</div>
+      </div>
+    </div>
+    <div class="result-dark" style="margin-top:48px">
+      <h3>某業務團隊引入 MUSEON 後</h3>
+      <p class="sub">10 人業務團隊，2 個月追蹤</p>
+      <div class="stats-grid">
+        <div class="stat-item"><div class="num">40%</div><div class="label">每日重複性工作<br>時間減少</div></div>
+        <div class="stat-item"><div class="num">2 小時</div><div class="label">每人每天<br>省出來的時間</div></div>
+        <div class="stat-item"><div class="num">3 倍</div><div class="label">客戶提案速度<br>提升</div></div>
+        <div class="stat-item"><div class="num">8 小時</div><div class="label">老闆每週<br>從雜事中解放</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#2A7A6E" stroke-width="1.5"/><path d="M4.5 7l1.8 1.8L9.5 5" stroke="#2A7A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      免費業務診斷
+    </div>
+    <h2 class="display-2">把時間留給<br>真正重要的事</h2>
+    <p>30 分鐘，我們盤點你現在哪些事在消耗時間，告訴你哪些最快可以讓 AI 接走。</p>
+    <a href="https://lin.ee/7PppZ0t" target="_blank" class="btn-primary">加入 LINE，預約免費診斷 →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-logo">MU<span>S</span>EON</div>
+    <ul class="footer-links">
+      <li><a href="./knowledge.html">知識傳承</a></li>
+      <li><a href="./workflow.html">工作流程</a></li>
+      <li><a href="./training.html">教育訓練</a></li>
+      <li><a href="./quality.html">品質管控</a></li>
+      <li><a href="./time.html">時間解放</a></li>
+      <li><a href="./thinking.html">思考精度</a></li>
+    </ul>
+    <p>© 2026 MUSEON. All rights reserved.</p>
+  </div>
+</footer>
+</body>
+</html>
