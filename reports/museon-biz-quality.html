@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>提升員工工作品質 — MUSEON</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--parchment);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Utility ── */
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 0 16px; }
+    }
+
+    /* ── Fade-in animation ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 400ms ease-out both;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--snow);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav__inner {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .nav__inner { padding: 0 24px; }
+    }
+
+    .nav__logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+
+    .nav__back {
+      font-size: 14px;
+      color: var(--slate);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 200ms ease;
+    }
+
+    .nav__back:hover { color: var(--ember); }
+
+    .nav__spacer { flex: 1; }
+
+    .btn {
+      display: inline-block;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--ember);
+      color: #fff;
+      border: none;
+    }
+
+    .btn--primary:hover {
+      background: var(--ember-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(196, 80, 42, 0.3);
+    }
+
+    .btn--primary:active {
+      background: var(--ember-dark);
+      transform: translateY(0);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 0 72px;
+      animation: fadeUp 400ms ease-out both;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember-dark);
+      background: rgba(196, 80, 42, 0.1);
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .hero__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .hero__title { font-size: 34px; }
+    }
+
+    .hero__subtitle {
+      font-size: 18px;
+      color: var(--slate);
+      line-height: 1.8;
+      max-width: 640px;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--slate);
+      margin-bottom: 40px;
+    }
+
+    /* ── PAIN POINTS ── */
+    .pain-section {
+      padding: 64px 0;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .pain-grid { grid-template-columns: 1fr; }
+    }
+
+    .pain-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .pain-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(18,18,26,0.1);
+    }
+
+    .pain-card__icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .pain-card__text {
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    /* ── HOW MUSEON SOLVES ── */
+    .solution-section {
+      background: var(--deep-ink);
+      padding: 72px 0;
+    }
+
+    .solution-section .section-title {
+      color: #fff;
+      font-size: 34px;
+    }
+
+    .solution-section .section-subtitle {
+      color: rgba(255,255,255,0.55);
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 48px;
+    }
+
+    .step {
+      display: flex;
+      gap: 24px;
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    .step:last-child {
+      padding-bottom: 0;
+    }
+
+    .step__left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .step__num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step__line {
+      width: 1px;
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      margin-top: 8px;
+    }
+
+    .step:last-child .step__line {
+      display: none;
+    }
+
+    .step__content {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .step__title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .step__desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+    }
+
+    /* ── CASE STUDY ── */
+    .case-section {
+      padding: 72px 0;
+    }
+
+    .case-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal);
+      border-radius: 10px;
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      margin-top: 32px;
+    }
+
+    .case-card__topic {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .case-card__story {
+      font-size: 16px;
+      color: var(--slate);
+      line-height: 1.85;
+      margin-bottom: 28px;
+      white-space: pre-line;
+    }
+
+    .case-card__story strong {
+      color: var(--ink);
+    }
+
+    .case-results {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    .case-result {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .case-result__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+    }
+
+    .case-result__text {
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ── BENEFITS ── */
+    .benefits-section {
+      padding: 72px 0;
+      background: var(--snow);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .benefits-grid { grid-template-columns: 1fr; }
+    }
+
+    .benefit-card {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(18,18,26,0.1);
+    }
+
+    .benefit-card__headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ember);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .benefit-card__desc {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: #7A2C14;
+      padding: 72px 0;
+      text-align: center;
+    }
+
+    .cta-section .section-title {
+      color: #fff;
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .cta-section .section-subtitle {
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+
+    .btn--light {
+      background: #fff;
+      color: var(--ember-dark);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 6px;
+    }
+
+    .btn--light:hover {
+      background: var(--parchment);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--deep-ink);
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .footer__logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .footer__tagline {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+    }
+
+    .footer__links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer__link {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 200ms ease;
+    }
+
+    .footer__link:hover { color: rgba(255,255,255,0.8); }
+
+    .footer__copy {
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+      margin-top: 24px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260611_220840_5c672352.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+<img class="museon-image museon-image--hero" src="museon_images/20260611_220625_01a6f0b0.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+
+  <!-- ── NAV ── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="museon-biz-index.html" class="nav__logo">MUSEON</a>
+      <a href="museon-biz-index.html" class="nav__back">
+        ← 返回首頁
+      </a>
+      <div class="nav__spacer"></div>
+      <a href="https://lin.ee/OYwE0KA" class="btn btn--primary" target="_blank" rel="noopener noreferrer">立即聯繫</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="container fade-up">
+      <div class="badge">員工工作品質</div>
+      <h1 class="hero__title">同一份報告，<br />十個人寫出十種樣子</h1>
+      <p class="hero__subtitle">
+        不是員工不夠用心，是他們不知道「好的樣子」長什麼樣。<br />
+        MUSEON 讓每個人的輸出，都有你想要的水準。
+      </p>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ── PAIN POINTS ── -->
+  <section class="pain-section">
+    <div class="container">
+      <h2 class="section-title">你是不是也遇過這些？</h2>
+      <p class="section-subtitle">台灣中小企業最常見的品質管理困境</p>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <div class="pain-card__icon">📝</div>
+          <p class="pain-card__text">交給員工的報告，總要改三四遍才能用</p>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">🎯</div>
+          <p class="pain-card__text">提案給客戶，每次有沒有抓到重點全靠運氣</p>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">📏</div>
+          <p class="pain-card__text">評核員工品質時，說不清楚標準，員工也不服氣</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW MUSEON SOLVES ── -->
+  <section class="solution-section">
+    <div class="container">
+      <h2 class="section-title">MUSEON 把你的品質標準，<br />變成每個人都能對照的尺</h2>
+      <p class="section-subtitle">不是叫員工「多用心」，而是讓他們有清楚的方向可以對照</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__left">
+            <div class="step__num">1</div>
+            <div class="step__line"></div>
+          </div>
+          <div class="step__content">
+            <h3 class="step__title">定義你要的標準</h3>
+            <p class="step__desc">透過對話，把你對「好」的定義說出來。什麼叫夠清楚、什麼叫抓到重點、什麼叫客戶看得懂——你說，MUSEON 記下來。</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step__left">
+            <div class="step__num">2</div>
+            <div class="step__line"></div>
+          </div>
+          <div class="step__content">
+            <h3 class="step__title">員工提交工作前，先讓 MUSEON 審核</h3>
+            <p class="step__desc">對照你設定的標準給出具體建議——哪裡不夠清楚、哪段論述跳太快、哪個結論沒說完整。讓問題在你看到之前就先被找到。</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step__left">
+            <div class="step__num">3</div>
+            <div class="step__line"></div>
+          </div>
+          <div class="step__content">
+            <h3 class="step__title">反覆幾次後，員工自己就知道標準在哪裡了</h3>
+            <p class="step__desc">不是靠 AI 永遠幫員工改稿，而是讓員工在一次次反饋中，把你的標準內化成自己的習慣。最終，你不需要再每次盯著。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CASE STUDY ── -->
+  <section class="case-section">
+    <div class="container">
+      <h2 class="section-title">實際案例</h2>
+      <p class="section-subtitle">一家行銷公司如何讓提案品質全面提升</p>
+
+      <div class="case-card">
+        <div class="case-card__topic">情境案例 — 提案品質的提升</div>
+        <div class="case-card__story">一家行銷公司有五個企劃，但只有一個人每次提案客戶都滿意。其他人寫的東西，不是太長太學術，就是太簡陋抓不到重點。
+
+老闆試著解釋了很多次，但大家聽完還是各做各的。
+
+透過 MUSEON，他們把那個最厲害企劃的提案思路問出來，整理成評審標準：<strong>這份提案有沒有用一句話說清楚客戶的問題？有沒有說為什麼這個方案比其他方案好？有沒有附上預估效果和原因？</strong>
+
+現在企劃提交作品前，MUSEON 先依這個標準審一遍，哪裡不夠清楚直接點出來。一個月後，老闆幾乎不用再大改提案了。</div>
+
+        <div class="case-results">
+          <div class="case-result">
+            <div class="case-result__dot"></div>
+            <span class="case-result__text">提案修改次數：從平均 3.5 次降到 1.2 次</span>
+          </div>
+          <div class="case-result">
+            <div class="case-result__dot"></div>
+            <span class="case-result__text">客戶提案通過率提升約 40%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BENEFITS ── -->
+  <section class="benefits-section">
+    <div class="container">
+      <h2 class="section-title">這個功能你得到的是什麼</h2>
+      <p class="section-subtitle">不是工具，是一套讓品質可以複製的機制</p>
+
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-card__headline">品質標準不再是「感覺」</div>
+          <p class="benefit-card__desc">說得出來的標準，員工才能真的照做。把你多年的判斷力，轉成人人可對照的具體條件。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-card__headline">老闆不用天天改稿</div>
+          <p class="benefit-card__desc">MUSEON 先幫你把關，剩下的才到你手裡。你的時間花在最值得的判斷上，不是在反覆修稿。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-card__headline">員工知道自己在進步</div>
+          <p class="benefit-card__desc">有標準就有方向，員工不是瞎猜「老闆喜歡什麼」，而是知道哪裡做到了、哪裡還差一點，學習比以前快。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 class="section-title">想讓你的員工輸出更穩定？</h2>
+      <p class="section-subtitle">跟我們聊聊你的狀況，看看 MUSEON 適不適合你的團隊</p>
+      <a href="https://lin.ee/OYwE0KA" class="btn btn--light" target="_blank" rel="noopener noreferrer">
+        加 LINE 免費諮詢
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__logo">MUSEON</div>
+      <p class="footer__tagline">思維品質引擎 — 讓好的判斷可以被複製</p>
+      <div class="footer__links">
+        <a href="museon-biz-index.html" class="footer__link">回首頁</a>
+        <a href="https://lin.ee/OYwE0KA" class="footer__link" target="_blank" rel="noopener noreferrer">LINE 聯繫</a>
+      </div>
+      <p class="footer__copy">© 2026 MUSEON. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

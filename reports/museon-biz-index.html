@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEON — 讓你的公司變聰明</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ember: #C4502A;
+            --ember-light: #E0714D;
+            --ember-dark: #9A3A1C;
+            --teal: #2A7A6E;
+            --gold: #B8923A;
+            --ink: #12121A;
+            --slate: #5A5A6E;
+            --mist: #9898A8;
+            --border: #E2E0DA;
+            --parchment: #F7F5F0;
+            --snow: #FDFCFA;
+            --deep-ink: #0E0E16;
+            --surface: #16161F;
+            --raised: #1E1E2A;
+            --border-dark: #2A2A38;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            background: var(--parchment);
+            color: var(--ink);
+            line-height: 1.75;
+            font-size: 16px;
+        }
+
+        /* NAV */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(247, 245, 240, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--ember);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            color: var(--slate);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 120ms ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover { color: var(--ember); background: rgba(196,80,42,0.06); }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--ember);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 120ms ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover { background: var(--ember-light); transform: translateY(-1px); }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: var(--ink);
+            border: 1.5px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 120ms ease;
+            white-space: nowrap;
+        }
+
+        .btn-secondary:hover { border-color: var(--ember); color: var(--ember); }
+
+        /* HERO */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 40px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(196,80,42,0.10);
+            color: var(--ember-dark);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--ink);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--ember);
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--slate);
+            line-height: 1.8;
+            margin-bottom: 36px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            background: var(--deep-ink);
+            border-radius: 16px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(196,80,42,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .chat-bubble {
+            background: var(--surface);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .chat-bubble.user {
+            background: rgba(196,80,42,0.15);
+            border-color: rgba(196,80,42,0.3);
+            margin-left: 24px;
+        }
+
+        .chat-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            color: var(--mist);
+        }
+
+        .chat-bubble.user .chat-label { color: rgba(196,80,42,0.8); }
+
+        .chat-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.65;
+        }
+
+        /* PAIN SECTION */
+        .pain-section {
+            background: var(--deep-ink);
+            padding: 80px 40px;
+        }
+
+        .pain-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(196,80,42,0.20);
+            color: #E0714D;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        .pain-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .pain-section .section-sub {
+            font-size: 17px;
+            color: rgba(255,255,255,0.55);
+            margin-bottom: 48px;
+        }
+
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .pain-card {
+            background: var(--surface);
+            border: 1px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 28px 24px;
+        }
+
+        .pain-icon {
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .pain-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .pain-card p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.7;
+        }
+
+        /* WHAT IS MUSEON */
+        .what-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 40px;
+        }
+
+        .what-section .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .what-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 16px;
+        }
+
+        .what-section .section-sub {
+            font-size: 17px;
+            color: var(--slate);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .compare-card {
+            background: var(--snow);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 32px;
+        }
+
+        .compare-card.bad {
+            border-color: #E2E0DA;
+            opacity: 0.7;
+        }
+
+        .compare-card.good {
+            border-color: var(--ember);
+            border-width: 2px;
+        }
+
+        .compare-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compare-card.bad h3 { color: var(--slate); }
+        .compare-card.good h3 { color: var(--ember); }
+
+        .compare-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            color: var(--ink);
+            line-height: 1.65;
+        }
+
+        .compare-item .icon { flex-shrink: 0; margin-top: 2px; }
+
+        /* CASE STUDY */
+        .case-section {
+            background: #F0EDE8;
+            padding: 80px 40px;
+        }
+
+        .case-inner {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .case-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .case-section .case-sub {
+            font-size: 15px;
+            color: var(--slate);
+            margin-bottom: 36px;
+        }
+
+        .case-story {
+            background: var(--snow);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 10px 10px 0;
+            padding: 32px 36px;
+            margin-bottom: 32px;
+        }
+
+        .case-story p {
+            font-size: 16px;
+            color: var(--ink);
+            line-height: 1.85;
+            margin-bottom: 16px;
+        }
+
+        .case-story p:last-child { margin-bottom: 0; }
+
+        .case-story strong { color: var(--ember); }
+
+        .case-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .metric-item {
+            background: var(--snow);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--teal);
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--slate);
+            line-height: 1.5;
+        }
+
+        /* FEATURES SECTION */
+        .features-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 40px;
+        }
+
+        .features-section .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .features-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--snow);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px 24px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: all 200ms ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(18,18,26,0.08);
+            border-color: var(--ember);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(196,80,42,0.10);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--slate);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .feature-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ember);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* DIAGNOSTIC SECTION */
+        .diagnostic-section {
+            background: var(--deep-ink);
+            padding: 80px 40px;
+        }
+
+        .diagnostic-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .diagnostic-section .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .diagnostic-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .diagnostic-section .section-sub {
+            font-size: 16px;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .diag-progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 36px;
+            justify-content: center;
+        }
+
+        .diag-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-dark);
+            transition: background 200ms;
+        }
+
+        .diag-dot.active { background: var(--ember); }
+        .diag-dot.done { background: var(--teal); }
+
+        .diag-question {
+            background: var(--surface);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .diag-question.visible { display: block; }
+
+        .diag-q-num {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ember-light);
+            margin-bottom: 12px;
+        }
+
+        .diag-q-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .diag-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .diag-opt {
+            background: var(--raised);
+            border: 1.5px solid var(--border-dark);
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 15px;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+            transition: all 150ms ease;
+            text-align: left;
+        }
+
+        .diag-opt:hover {
+            border-color: var(--ember-light);
+            color: #fff;
+            background: rgba(196,80,42,0.12);
+        }
+
+        .diag-opt.selected {
+            border-color: var(--ember);
+            background: rgba(196,80,42,0.2);
+            color: #fff;
+        }
+
+        .diag-result {
+            background: var(--surface);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 36px;
+            text-align: center;
+            display: none;
+        }
+
+        .diag-result.visible { display: block; }
+
+        .result-icon { font-size: 48px; margin-bottom: 16px; }
+
+        .result-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .result-desc {
+            font-size: 16px;
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 28px;
+            line-height: 1.75;
+        }
+
+        .result-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .result-tag {
+            background: rgba(196,80,42,0.2);
+            color: var(--ember-light);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 1px solid rgba(196,80,42,0.3);
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            background: var(--ember-dark);
+            padding: 96px 40px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 40px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: #fff;
+            color: var(--ember-dark);
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 120ms ease;
+        }
+
+        .cta-btn:hover { background: var(--parchment); transform: translateY(-2px); }
+
+        /* FOOTER */
+        footer {
+            background: var(--deep-ink);
+            padding: 40px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.35);
+        }
+
+        /* ANIMATIONS */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 400ms ease, transform 400ms ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            nav { padding: 16px 24px; }
+            .nav-links { display: none; }
+            .hero { grid-template-columns: 1fr; padding: 64px 24px; }
+            .hero-visual { display: none; }
+            .pain-grid { grid-template-columns: 1fr; gap: 16px; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .case-metrics { grid-template-columns: 1fr; }
+            .what-section, .features-section { padding: 64px 24px; }
+            .case-section, .diagnostic-section, .cta-section { padding: 64px 24px; }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 40px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .case-metrics { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260611_220654_068ccffb.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+<img class="museon-image museon-image--hero" src="museon_images/20260611_220443_bcc0c955.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo">MUSEON</a>
+    <ul class="nav-links">
+        <li><a href="museon-biz-knowledge.html">知識傳承</a></li>
+        <li><a href="museon-biz-workflow.html">工作流</a></li>
+        <li><a href="museon-biz-quality.html">工作品質</a></li>
+        <li><a href="museon-biz-efficiency.html">縮短工時</a></li>
+        <li><a href="museon-biz-onboarding.html">教育訓練</a></li>
+        <li><a href="museon-biz-thinking.html">思考精度</a></li>
+    </ul>
+    <a href="https://lin.ee/OYwE0KA" target="_blank" class="btn-primary">立即聯繫</a>
+</nav>
+
+<!-- HERO -->
+<section style="background: var(--parchment);">
+    <div class="hero">
+        <div class="hero-content fade-in">
+            <span class="hero-badge">台灣中小企業 AI 解決方案</span>
+            <h1>讓你的公司<br><em>變聰明</em></h1>
+            <p class="hero-sub">你用了十年積累的知識、方法、判斷方式——MUSEON 幫你把這些東西留下來，讓每個員工都能站在你的肩膀上工作。</p>
+            <div class="hero-cta">
+                <a href="https://lin.ee/OYwE0KA" target="_blank" class="btn-primary">加 LINE 免費諮詢</a>
+                <a href="#features" class="btn-secondary">看我們能做什麼</a>
+            </div>
+        </div>
+        <div class="hero-visual fade-in" style="animation-delay: 0.15s;">
+            <div class="chat-bubble">
+                <div class="chat-label">員工問 MUSEON</div>
+                <div class="chat-text">「這個客戶上次活動的預算是多少？他有哪些特別要求？」</div>
+            </div>
+            <div class="chat-bubble user">
+                <div class="chat-label">MUSEON 用公司的記憶回答</div>
+                <div class="chat-text">「李太太的 2024 年尾牙預算是 85 萬，她特別在意：① 場地要有投影大屏 ② 餐點不能有海鮮（她先生過敏）③ 開始時間要嚴格控制在晚上 7 點...」</div>
+            </div>
+            <div class="chat-bubble">
+                <div class="chat-label">不靠老員工記憶，公司的知識永遠在</div>
+                <div class="chat-text" style="color: rgba(255,255,255,0.5); font-size: 12px; font-style: italic;">這個答案來自整理進 MUSEON 的 10 年客戶資料</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PAIN SECTION -->
+<section class="pain-section">
+    <div class="pain-inner">
+        <span class="section-badge">你是不是也遇過</span>
+        <h2 class="fade-in">老闆每天面對的問題</h2>
+        <p class="section-sub fade-in">這些不是個別的倒楣事——這是沒有系統的公司每天都在發生的事。</p>
+        <div class="pain-grid fade-in">
+            <div class="pain-card">
+                <div class="pain-icon">📤</div>
+                <h3>老員工一走，什麼都沒了</h3>
+                <p>他的客戶關係、他的判斷方式、他的解決問題的方法——都只在他的腦袋裡，走了就帶走了。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">🔁</div>
+                <h3>同樣的事解釋了一百遍</h3>
+                <p>新人進來問，老人進來也問。沒有地方可以查，只能靠老闆或老員工一直回答。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">⏰</div>
+                <h3>老闆的時間花在不應該的事</h3>
+                <p>改員工的稿、回答重複的問題、處理可以有 SOP 的狀況——這些把老闆的時間全吃掉了。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">📉</div>
+                <h3>品質全靠員工個人</h3>
+                <p>厲害的員工做出好的成果，普通的員工做出普通的成果——公司沒有辦法讓每個人都有基本水準。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">🤔</div>
+                <h3>決策靠感覺，踩坑後才知道</h3>
+                <p>做了一個決定，事後才發現有個地方根本沒想到。要是當初有人幫你把問題多問幾層就好了。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">📚</div>
+                <h3>帶新人慢，老員工累</h3>
+                <p>一個新人要六週才能獨立，那六週要貼身帶——老員工的工作進度整個慢下來。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHAT IS MUSEON -->
+<section class="what-section">
+    <div class="section-header fade-in">
+        <span class="hero-badge">MUSEON 是什麼</span>
+        <h2>不是 ChatGPT，是懂你公司的 AI</h2>
+        <p class="section-sub">一般的 AI 回答的是全世界的「通用答案」。MUSEON 回答的是你公司的答案。</p>
+    </div>
+    <div class="compare-grid fade-in">
+        <div class="compare-card bad">
+            <h3>❌ 一般 AI（ChatGPT 等）</h3>
+            <div class="compare-item">
+                <span class="icon">—</span>
+                <span>回答全世界的通用知識，不了解你的公司</span>
+            </div>
+            <div class="compare-item">
+                <span class="icon">—</span>
+                <span>每次要你重新解釋背景，不記得上次說的</span>
+            </div>
+            <div class="compare-item">
+                <span class="icon">—</span>
+                <span>給的建議聽起來有道理，但套不進你的公司</span>
+            </div>
+            <div class="compare-item">
+                <span class="icon">—</span>
+                <span>十個公司用同一個 AI，得到幾乎一樣的回答</span>
+            </div>
+        </div>
+        <div class="compare-card good">
+            <h3>✅ MUSEON</h3>
+            <div class="compare-item">
+                <span class="icon">→</span>
+                <span>學習你公司過去十年的資料、知識、做法</span>
+            </div>
+            <div class="compare-item">
+                <span class="icon">→</span>
+                <span>記得每個客戶、每個流程、你的判斷標準</span>
+            </div>
+            <div class="compare-item">
+                <span class="icon">→</span>
+                <span>用你公司的方式回答問題，不是教科書的方式</span>
+            </div>
+            <div class="compare-item">
+                <span class="icon">→</span>
+                <span>越用越聰明——你的公司給它的資料越多，它越懂你</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CASE STUDY -->
+<section class="case-section">
+    <div class="case-inner">
+        <span class="hero-badge">真實案例</span>
+        <h2 class="fade-in">羅臻活動公關公司</h2>
+        <p class="case-sub fade-in">十年老公司，一個月五人離職，十年資料差點就這樣消失</p>
+        <div class="case-story fade-in">
+            <p>羅臻的公司做活動公關做了十年，七個員工——但一個月內，<strong>五個人離職了</strong>。</p>
+            <p>辦公室裡只剩下兩個人，面對十年來累積的客戶資料、場地聯絡人、標案模板，全部壓縮在一個 NAS 硬碟裡，沒有人知道從哪裡找起。</p>
+            <p>他們把這十年的資料帶進 MUSEON。資料清洗整理、知識結晶化，變成公司自己的知識庫。</p>
+            <p>現在，新進員工問「這個場地的主任有什麼特別要求？」——MUSEON 秒回，帶著十年的記憶。問「這個客戶上次活動的預算，他最在意哪些細節？」——MUSEON 還記得。</p>
+            <p><strong>羅臻不再擔心下一個員工離職會帶走什麼了。</strong></p>
+        </div>
+        <div class="case-metrics fade-in">
+            <div class="metric-item">
+                <div class="metric-num">2週</div>
+                <div class="metric-label">新人獨立作業時間<br>（過去需要 6 週）</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-num">0</div>
+                <div class="metric-label">十年資料損失量<br>（5 人離職後仍完整保留）</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-num">即時</div>
+                <div class="metric-label">客戶問題回覆速度<br>（過去需等老員工）</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+    <div class="section-header fade-in">
+        <span class="hero-badge">六大功能</span>
+        <h2>MUSEON 幫你的公司做到這六件事</h2>
+    </div>
+    <div class="features-grid">
+        <a href="museon-biz-knowledge.html" class="feature-card fade-in">
+            <div class="feature-icon">🧠</div>
+            <h3>知識傳承管理</h3>
+            <p>把老員工腦袋裡的東西留下來，讓公司的智慧不會跟著人走。</p>
+            <span class="feature-link">了解更多 →</span>
+        </a>
+        <a href="museon-biz-workflow.html" class="feature-card fade-in">
+            <div class="feature-icon">🔄</div>
+            <h3>工作流規劃</h3>
+            <p>把你的做法變成可以讓別人複製的標準流程，不再靠人治撐著。</p>
+            <span class="feature-link">了解更多 →</span>
+        </a>
+        <a href="museon-biz-quality.html" class="feature-card fade-in">
+            <div class="feature-icon">✅</div>
+            <h3>提升工作品質</h3>
+            <p>把你對「好」的標準說出來，讓每個人的輸出都有你要的水準。</p>
+            <span class="feature-link">了解更多 →</span>
+        </a>
+        <a href="museon-biz-efficiency.html" class="feature-card fade-in">
+            <div class="feature-icon">⚡</div>
+            <h3>縮短工作時間</h3>
+            <p>重複的工作讓 AI 來，把員工的時間還給真正需要人判斷的事。</p>
+            <span class="feature-link">了解更多 →</span>
+        </a>
+        <a href="museon-biz-onboarding.html" class="feature-card fade-in">
+            <div class="feature-icon">🚀</div>
+            <h3>縮短教育訓練</h3>
+            <p>新人從第一天就有全天候的導師，兩週上手不再是夢想。</p>
+            <span class="feature-link">了解更多 →</span>
+        </a>
+        <a href="museon-biz-thinking.html" class="feature-card fade-in">
+            <div class="feature-icon">🎯</div>
+            <h3>提高思考精度</h3>
+            <p>決策前先把問題想清楚，讓你的直覺有邏輯支撐，少踩幾個坑。</p>
+            <span class="feature-link">了解更多 →</span>
+        </a>
+    </div>
+</section>
+
+<!-- DIAGNOSTIC -->
+<section class="diagnostic-section">
+    <div class="diagnostic-inner">
+        <div class="section-header fade-in">
+            <span class="section-badge">3 分鐘診斷</span>
+            <h2>你的公司現在卡在哪裡？</h2>
+            <p class="section-sub">回答 4 個問題，我們告訴你 MUSEON 從哪裡幫你最快</p>
+        </div>
+
+        <div class="diag-progress" id="diagProgress">
+            <div class="diag-dot" id="dot0"></div>
+            <div class="diag-dot" id="dot1"></div>
+            <div class="diag-dot" id="dot2"></div>
+            <div class="diag-dot" id="dot3"></div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="diag-question visible" id="q0">
+            <div class="diag-q-num">問題 01 / 04</div>
+            <div class="diag-q-text">你現在最讓你頭痛的，是哪一件事？</div>
+            <div class="diag-options">
+                <button class="diag-opt" onclick="nextQ(0,'A')">老員工離職，帶走了很多東西</button>
+                <button class="diag-opt" onclick="nextQ(0,'B')">員工品質不穩，老闆要一直盯</button>
+                <button class="diag-opt" onclick="nextQ(0,'C')">效率太低，感覺大家都很忙但沒什麼產出</button>
+                <button class="diag-opt" onclick="nextQ(0,'D')">帶新人太花時間，老員工也很累</button>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="diag-question" id="q1">
+            <div class="diag-q-num">問題 02 / 04</div>
+            <div class="diag-q-text">你公司現在有沒有讓員工可以查的 SOP 或知識庫？</div>
+            <div class="diag-options">
+                <button class="diag-opt" onclick="nextQ(1,'A')">幾乎沒有，全靠老員工口傳</button>
+                <button class="diag-opt" onclick="nextQ(1,'B')">有一些文件，但散在各處、版本也不一定是最新的</button>
+                <button class="diag-opt" onclick="nextQ(1,'C')">有 SOP，但很少人看，也很少更新</button>
+                <button class="diag-opt" onclick="nextQ(1,'D')">相對完整，但操作起來不方便</button>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="diag-question" id="q2">
+            <div class="diag-q-num">問題 03 / 04</div>
+            <div class="diag-q-text">你公司現在最缺的是哪種類型的員工？</div>
+            <div class="diag-options">
+                <button class="diag-opt" onclick="nextQ(2,'A')">有經驗的、不用帶的</button>
+                <button class="diag-opt" onclick="nextQ(2,'B')">執行力強的、不用一直催的</button>
+                <button class="diag-opt" onclick="nextQ(2,'C')">品質穩定的、不用每次改稿的</button>
+                <button class="diag-opt" onclick="nextQ(2,'D')">思維清晰的、遇到問題自己想得到</button>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="diag-question" id="q3">
+            <div class="diag-q-num">問題 04 / 04</div>
+            <div class="diag-q-text">你有沒有試過用 AI 工具幫公司做事？</div>
+            <div class="diag-options">
+                <button class="diag-opt" onclick="showResult()">試過 ChatGPT，但感覺只是通用答案，沒什麼用</button>
+                <button class="diag-opt" onclick="showResult()">試過一些工具，但整合起來太複雜，放棄了</button>
+                <button class="diag-opt" onclick="showResult()">沒有認真試過，不知道從哪裡開始</button>
+                <button class="diag-opt" onclick="showResult()">有在用一些，但還沒解決根本問題</button>
+            </div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="diag-result" id="diagResult">
+            <div class="result-icon">🎯</div>
+            <div class="result-title">你最需要的是：知識系統化</div>
+            <p class="result-desc">根據你的回答，你公司最大的痛點是「知識和做法都在人的腦袋裡，沒有系統」。這個問題不解決，擴張和授權永遠是障礙。MUSEON 的知識傳承 + 工作流功能最適合你現在的狀況。</p>
+            <div class="result-features">
+                <span class="result-tag">知識傳承管理</span>
+                <span class="result-tag">工作流規劃</span>
+                <span class="result-tag">縮短教育訓練</span>
+            </div>
+            <a href="https://lin.ee/OYwE0KA" target="_blank" class="btn-primary">加 LINE 聊聊怎麼開始</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+    <h2 class="fade-in">你的公司，值得一個<br>更聰明的系統</h2>
+    <p class="fade-in">留下 LINE，我們花 30 分鐘了解你的公司狀況，告訴你 MUSEON 從哪裡幫你最有效。不賣你你不需要的東西。</p>
+    <a href="https://lin.ee/OYwE0KA" target="_blank" class="cta-btn fade-in">加 LINE 免費諮詢</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 MUSEON &nbsp;·&nbsp; 讓你的公司變聰明 &nbsp;·&nbsp; <a href="https://lin.ee/OYwE0KA" target="_blank" style="color: rgba(255,255,255,0.4); text-decoration: none;">聯絡我們</a></p>
+</footer>
+
+<script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                observer.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Diagnostic
+    const answers = [];
+
+    function nextQ(current, answer) {
+        answers.push(answer);
+
+        // Update dots
+        const dot = document.getElementById('dot' + current);
+        dot.classList.remove('active');
+        dot.classList.add('done');
+
+        // Hide current
+        document.getElementById('q' + current).classList.remove('visible');
+
+        // Show next or result
+        const next = current + 1;
+        if (next <= 3) {
+            const nextDot = document.getElementById('dot' + next);
+            nextDot.classList.add('active');
+            document.getElementById('q' + next).classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('q' + next).classList.add('visible');
+            }, 10);
+        }
+    }
+
+    function showResult() {
+        answers.push('D');
+        document.querySelectorAll('.diag-dot').forEach(d => {
+            d.classList.remove('active');
+            d.classList.add('done');
+        });
+        document.getElementById('q3').classList.remove('visible');
+
+        // Customize result based on answers
+        const result = document.getElementById('diagResult');
+        const resultTitle = result.querySelector('.result-title');
+        const resultDesc = result.querySelector('.result-desc');
+        const resultFeatures = result.querySelector('.result-features');
+
+        const firstAns = answers[0];
+        if (firstAns === 'A') {
+            resultTitle.textContent = '你最需要的是：知識保存系統';
+            resultDesc.textContent = '員工離職帶走知識——這個問題每發生一次，你就要重新花時間補。MUSEON 的知識傳承功能讓你公司的經驗成為可以傳承的資產，不是靠記憶力。';
+            resultFeatures.innerHTML = '<span class="result-tag">知識傳承管理</span><span class="result-tag">縮短教育訓練</span><span class="result-tag">工作流規劃</span>';
+        } else if (firstAns === 'B') {
+            resultTitle.textContent = '你最需要的是：品質管控系統';
+            resultDesc.textContent = '員工品質不穩，老闆就要一直當「最後防線」——這個循環會一直消耗你。MUSEON 幫你把品質標準說清楚，讓員工有尺可以對照。';
+            resultFeatures.innerHTML = '<span class="result-tag">提升工作品質</span><span class="result-tag">工作流規劃</span><span class="result-tag">知識傳承管理</span>';
+        } else if (firstAns === 'C') {
+            resultTitle.textContent = '你最需要的是：效率自動化';
+            resultDesc.textContent = '大家都很忙但沒產出，通常是重複的事佔了太多時間。MUSEON 把那些重複的工作接過去，讓員工的時間用在真正有價值的事情上。';
+            resultFeatures.innerHTML = '<span class="result-tag">縮短工作時間</span><span class="result-tag">工作流規劃</span><span class="result-tag">提升工作品質</span>';
+        } else {
+            resultTitle.textContent = '你最需要的是：快速上手系統';
+            resultDesc.textContent = '帶新人太花時間，根本原因是沒有一個新人可以自己查的系統。MUSEON 把公司的知識整理好，讓新人有了全天候的導師，不靠老員工帶也能快速上手。';
+            resultFeatures.innerHTML = '<span class="result-tag">縮短教育訓練</span><span class="result-tag">知識傳承管理</span><span class="result-tag">工作流規劃</span>';
+        }
+
+        setTimeout(() => {
+            result.classList.add('visible');
+            result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+
+    // Init first dot
+    document.getElementById('dot0').classList.add('active');
+</script>
+</body>
+</html>
