@@ -4,928 +4,1004 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>提高思考精度 — MUSEON</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ─── Reset ─────────────────────────────────────────── */
+    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-    /* ─── Tokens ─────────────────────────────────────────── */
+    /* ── Tokens ── */
     :root {
-      --ember:       #C4502A;
-      --ember-light: #E0714D;
-      --ember-dark:  #9A3A1C;
-      --teal:        #2A7A6E;
-      --teal-light:  #3A9A8E;
-      --gold:        #B8923A;
-      --ink:         #12121A;
-      --slate:       #5A5A6E;
-      --mist:        #9898A8;
-      --border:      #E2E0DA;
-      --parchment:   #F7F5F0;
-      --snow:        #FDFCFA;
-      --deep-ink:    #0E0E16;
-      --surface:     #16161F;
-      --raised:      #1E1E2A;
-      --border-dark: #2A2A38;
-
-      --font-display: 'Cormorant Garamond', 'Noto Sans TC', serif;
-      --font-body:    'Outfit', 'Noto Sans TC', sans-serif;
-      --font-mono:    'IBM Plex Mono', monospace;
-
-      --max-w: 820px;
-      --pad-x: 40px;
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+      --raised:       #1E1E2A;
+      --border-dark:  #2A2A38;
+      --max-w:        820px;
+      --transition:   400ms ease;
     }
 
-    @media (max-width: 768px)  { :root { --pad-x: 24px; } }
-    @media (max-width: 639px)  { :root { --pad-x: 16px; } }
-
-    /* ─── Base ─────────────────────────────────────────── */
     body {
       background: var(--parchment);
       color: var(--ink);
-      font-family: var(--font-body);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
       font-size: 16px;
       line-height: 1.75;
-      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    /* ─── Layout wrapper ─────────────────────────────────── */
-    .container {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding-left: var(--pad-x);
-      padding-right: var(--pad-x);
-    }
-
-    /* ─── Page fade-in ───────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
+    /* ── Scroll Reveal ── */
+    .reveal {
       opacity: 0;
-      animation: fadeUp 400ms ease-out forwards;
+      transform: translateY(24px);
+      transition: opacity var(--transition), transform var(--transition);
     }
-    .fade-in:nth-child(1) { animation-delay: 0ms; }
-    .fade-in:nth-child(2) { animation-delay: 60ms; }
-    .fade-in:nth-child(3) { animation-delay: 120ms; }
-    .fade-in:nth-child(4) { animation-delay: 180ms; }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-    /* ─── NAV ─────────────────────────────────────────────── */
+    /* ── Nav ── */
     .nav {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(247,245,240,0.92);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(247, 245, 240, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-
     .nav-inner {
       max-width: var(--max-w);
       margin: 0 auto;
-      padding: 14px var(--pad-x);
+      padding: 0 40px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (max-width: 640px) { .nav-inner { padding: 0 16px; } }
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ember);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-right {
       display: flex;
       align-items: center;
       gap: 16px;
     }
-
-    .nav-logo {
-      font-family: var(--font-mono);
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--ember);
-      text-transform: uppercase;
-      flex: 1;
-    }
-
     .nav-back {
-      font-family: var(--font-body);
       font-size: 13px;
       font-weight: 500;
       color: var(--slate);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: color 120ms ease;
+      text-decoration: none;
+      transition: color 300ms;
     }
-
-    .nav-back:hover { color: var(--ink); }
-
-    .nav-back svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    .btn-primary {
+    .nav-back:hover { color: var(--ember); }
+    .nav-line-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 7px 16px;
       background: var(--ember);
       color: #fff;
-      font-family: var(--font-body);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      transition: background 120ms ease, transform 120ms ease;
-      white-space: nowrap;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 300ms;
+    }
+    .nav-line-btn:hover { background: var(--ember-dark); }
+    @media (max-width: 480px) {
+      .nav-back { display: none; }
+      .nav-line-btn { padding: 7px 12px; font-size: 12px; }
     }
 
-    .btn-primary:hover {
-      background: var(--ember-light);
-      transform: translateY(-1px);
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ember);
+      background: rgba(196, 80, 42, 0.08);
+      border: 1px solid rgba(196, 80, 42, 0.25);
+      padding: 5px 12px;
+      border-radius: 3px;
     }
 
-    .btn-primary:active {
-      background: var(--ember-dark);
-      transform: translateY(0);
-    }
-
-    /* ─── HERO ─────────────────────────────────────────────── */
+    /* ── Hero ── */
     .hero {
-      padding: 80px 0 64px;
+      background: var(--snow);
+      border-bottom: 1px solid var(--border);
+      padding: 100px 40px 88px;
     }
-
-    .hero-container {
+    .hero-inner {
       max-width: var(--max-w);
       margin: 0 auto;
-      padding: 0 var(--pad-x);
+      text-align: center;
     }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(196,80,42,0.1);
-      color: var(--ember-dark);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-
+    .hero-badge { margin-bottom: 28px; }
     .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(36px, 6vw, 52px);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 5.5vw, 54px);
       font-weight: 600;
-      line-height: 1.15;
+      line-height: 1.18;
       color: var(--ink);
       margin-bottom: 24px;
       letter-spacing: -0.01em;
     }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--ember);
-    }
-
+    .hero-title em { font-style: italic; color: var(--ember); }
     .hero-sub {
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1.8;
+      font-size: 17px;
       color: var(--slate);
-      max-width: 640px;
+      line-height: 1.85;
+      max-width: 580px;
+      margin: 0 auto;
     }
 
-    /* ─── SECTION titles ─────────────────────────────────── */
-    .section {
-      padding: 64px 0;
+    /* ── Shared Layout ── */
+    .section-wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 80px 40px;
     }
+    @media (max-width: 768px) { .section-wrap { padding: 60px 24px; } }
+    @media (max-width: 640px) { .section-wrap { padding: 56px 16px; } }
 
     .section-label {
-      font-family: var(--font-mono);
+      font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-weight: 500;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--mist);
       margin-bottom: 12px;
     }
-
     .section-title {
-      font-family: var(--font-display);
+      font-family: 'Cormorant Garamond', serif;
       font-size: clamp(26px, 4vw, 36px);
       font-weight: 600;
       line-height: 1.25;
       color: var(--ink);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
-
-    .section-sub {
+    .section-desc {
       font-size: 16px;
-      line-height: 1.75;
       color: var(--slate);
+      line-height: 1.8;
       max-width: 600px;
-      margin-bottom: 40px;
     }
 
-    /* ─── DIVIDER ─────────────────────────────────────────── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0;
-    }
-
-    /* ─── PAIN POINTS ─────────────────────────────────────── */
+    /* ── Pain Points ── */
+    .pain-bg { background: var(--parchment); }
     .pain-grid {
       display: grid;
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 48px;
     }
-
+    @media (max-width: 640px) { .pain-grid { grid-template-columns: 1fr; } }
     .pain-card {
       background: var(--snow);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-      transition: transform 200ms ease, box-shadow 200ms ease;
-    }
-
-    .pain-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(18,18,26,0.08), 0 8px 20px rgba(18,18,26,0.06);
-    }
-
-    .pain-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(196,80,42,0.08);
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      padding: 28px 28px 32px;
+      transition: box-shadow var(--transition), transform var(--transition);
     }
-
-    .pain-icon svg {
-      width: 20px;
-      height: 20px;
-      stroke: var(--ember);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .pain-card:hover {
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      transform: translateY(-2px);
     }
-
-    .pain-text {
-      font-size: 16px;
-      line-height: 1.7;
-      color: var(--ink);
-      font-weight: 500;
-    }
-
-    /* ─── HOW WE SOLVE (dark) ────────────────────────────── */
-    .dark-section {
-      background: var(--deep-ink);
-      color: #fff;
-      padding: 72px 0;
-    }
-
-    .dark-section .section-label { color: rgba(255,255,255,0.35); }
-    .dark-section .section-title { color: #fff; }
-    .dark-section .section-sub   { color: rgba(255,255,255,0.6); }
-
-    .steps-grid {
-      display: grid;
-      gap: 24px;
-    }
-
-    .step-card {
-      background: var(--surface);
-      border: 1px solid var(--border-dark);
-      border-radius: 10px;
-      padding: 28px;
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      transition: background 200ms ease;
-    }
-
-    .step-card:hover { background: var(--raised); }
-
-    .step-num {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ember);
-      background: rgba(196,80,42,0.15);
-      border: 1px solid rgba(196,80,42,0.3);
-      border-radius: 6px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .step-body {}
-
-    .step-title {
-      font-family: var(--font-body);
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-
-    .step-desc {
-      font-size: 15px;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.6);
-    }
-
-    /* ─── CASE STUDY ─────────────────────────────────────── */
-    .case-card {
-      background: var(--snow);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--teal);
-      border-radius: 10px;
-      padding: 36px;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-    }
-
-    .case-tag {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(42,122,110,0.1);
-      color: var(--teal);
-      font-family: var(--font-mono);
+    .pain-num {
+      font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 100px;
-      margin-bottom: 20px;
+      letter-spacing: 0.1em;
+      color: var(--ember);
+      margin-bottom: 14px;
     }
-
-    .case-headline {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 20px;
-      line-height: 1.3;
-    }
-
-    .case-body {
-      font-size: 16px;
-      line-height: 1.85;
-      color: var(--ink);
-    }
-
-    .case-body p { margin-bottom: 1.1em; }
-    .case-body p:last-child { margin-bottom: 0; }
-
-    .case-body .dialogue {
-      margin: 20px 0;
-      padding: 20px 24px;
-      background: rgba(42,122,110,0.06);
-      border-radius: 8px;
-      border-left: 3px solid var(--teal);
+    .pain-text {
       font-size: 15px;
-      line-height: 1.8;
-      color: var(--slate);
+      color: var(--ink);
+      line-height: 1.75;
+    }
+    .pain-line {
+      width: 28px;
+      height: 2px;
+      background: var(--ember);
+      margin-bottom: 14px;
     }
 
-    .case-body .dialogue strong {
-      color: var(--teal);
-      font-weight: 600;
-    }
-
-    .case-body .silence {
-      font-style: italic;
-      color: var(--mist);
-    }
-
-    .case-outcomes {
-      margin-top: 28px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
+    /* ── Why (3 paragraphs) ── */
+    .why-bg { background: var(--snow); }
+    .why-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .why-item {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    @media (max-width: 560px) {
+      .why-item { flex-direction: column; gap: 12px; }
+    }
+    .why-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 600;
+      color: rgba(196, 80, 42, 0.15);
+      line-height: 1;
+      min-width: 64px;
+      padding-top: 2px;
+    }
+    .why-body { flex: 1; }
+    .why-title {
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .why-desc {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.85;
     }
 
-    .outcome-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(42,122,110,0.08);
-      border: 1px solid rgba(42,122,110,0.2);
-      color: var(--teal);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 14px;
-      border-radius: 100px;
+    /* ── Solution (dark) ── */
+    .solution-bg {
+      background: var(--deep-ink);
+      color: #fff;
     }
-
-    .outcome-chip::before {
-      content: '';
-      display: block;
-      width: 6px;
-      height: 6px;
-      background: var(--teal);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* ─── BENEFITS ─────────────────────────────────────────── */
-    .benefits-grid {
+    .solution-bg .section-title { color: #fff; }
+    .solution-bg .section-label { color: var(--mist); }
+    .solution-bg .section-desc { color: rgba(255,255,255,0.6); }
+    .solution-steps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 48px;
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    @media (max-width: 600px) {
+      .solution-steps { grid-template-columns: 1fr; }
+    }
+    .solution-step {
+      background: var(--surface);
+      padding: 36px 32px;
+      transition: background var(--transition);
+      border-right: 1px solid var(--border-dark);
+      border-bottom: 1px solid var(--border-dark);
+    }
+    .solution-step:nth-child(even) { border-right: none; }
+    .solution-step:nth-child(3), .solution-step:nth-child(4) { border-bottom: none; }
+    @media (max-width: 600px) {
+      .solution-step { border-right: none; }
+      .solution-step:nth-child(3) { border-bottom: 1px solid var(--border-dark); }
+      .solution-step:nth-child(4) { border-bottom: none; }
+    }
+    .solution-step:hover { background: var(--raised); }
+    .solution-step-idx {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--ember);
+      margin-bottom: 14px;
+    }
+    .solution-step-title {
+      font-weight: 600;
+      font-size: 17px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .solution-step-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.8;
+    }
+    .solution-step-bar {
+      width: 24px;
+      height: 2px;
+      background: var(--teal);
+      margin-bottom: 16px;
     }
 
-    .benefit-card {
+    /* ── Mechanisms ── */
+    .mech-bg { background: var(--parchment); }
+    .mech-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    @media (max-width: 640px) { .mech-grid { grid-template-columns: 1fr; } }
+    .mech-card {
       background: var(--snow);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 28px;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-      transition: transform 200ms ease, box-shadow 200ms ease;
+      padding: 32px;
+      transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
     }
-
-    .benefit-card:hover {
+    .mech-card:hover {
+      box-shadow: 0 6px 28px rgba(0,0,0,0.07);
+      border-color: rgba(196,80,42,0.2);
       transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(18,18,26,0.08), 0 8px 20px rgba(18,18,26,0.06);
     }
-
-    .benefit-icon {
+    .mech-icon {
       width: 44px;
       height: 44px;
       background: rgba(196,80,42,0.08);
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 20px;
       margin-bottom: 16px;
     }
-
-    .benefit-icon svg {
-      width: 22px;
-      height: 22px;
-      stroke: var(--ember);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .benefit-title {
-      font-family: var(--font-body);
-      font-size: 17px;
-      font-weight: 700;
+    .mech-title {
+      font-weight: 600;
+      font-size: 16px;
       color: var(--ink);
-      margin-bottom: 8px;
-      line-height: 1.4;
+      margin-bottom: 10px;
     }
-
-    .benefit-desc {
+    .mech-desc {
       font-size: 14px;
-      line-height: 1.7;
       color: var(--slate);
+      line-height: 1.8;
     }
 
-    /* ─── CTA ───────────────────────────────────────────────── */
-    .cta-section {
-      background: linear-gradient(135deg, var(--ember-dark) 0%, var(--ember) 60%, var(--ember-light) 100%);
-      padding: 80px 0;
-      text-align: center;
-      position: relative;
+    /* ── Scenarios ── */
+    .scenarios-bg { background: var(--snow); }
+    .scenario-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 48px;
+    }
+    .scenario-card {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       overflow: hidden;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .scenario-card:hover {
+      box-shadow: 0 6px 28px rgba(0,0,0,0.07);
+      transform: translateY(-2px);
+    }
+    .scenario-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 32px;
+      background: var(--snow);
+      border-bottom: 1px solid var(--border);
+    }
+    .scenario-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+      background: rgba(42,122,110,0.08);
+      border: 1px solid rgba(42,122,110,0.2);
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+    .scenario-subtitle {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+    }
+    .scenario-body { padding: 28px 32px; }
+    .scenario-desc {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.85;
+    }
+    .scenario-insight {
+      margin-top: 18px;
+      padding: 14px 18px;
+      background: rgba(196,80,42,0.04);
+      border-left: 3px solid var(--ember);
+      border-radius: 0 6px 6px 0;
+    }
+    .scenario-insight-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 6px;
+    }
+    .scenario-insight-text {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.75;
     }
 
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
-      pointer-events: none;
+    /* ── Case Study ── */
+    .case-bg { background: var(--parchment); }
+    .case-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 48px;
     }
-
-    .cta-inner {
-      position: relative;
-      z-index: 1;
+    .case-header {
+      padding: 24px 36px;
+      background: var(--deep-ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
     }
-
-    .cta-title {
-      font-family: var(--font-display);
-      font-size: clamp(28px, 5vw, 42px);
+    .case-co-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--mist);
+      text-transform: uppercase;
+    }
+    .case-co-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
       font-weight: 600;
       color: #fff;
-      margin-bottom: 16px;
+    }
+    .case-label-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(184,146,58,0.12);
+      border: 1px solid rgba(184,146,58,0.3);
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+    .case-body { padding: 36px; }
+    .case-text {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.9;
+    }
+
+    /* ── Before / After ── */
+    .ba-bg { background: var(--snow); }
+    .ba-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 48px;
+    }
+    @media (max-width: 600px) { .ba-grid { grid-template-columns: 1fr; } }
+    .ba-card { border-radius: 10px; padding: 32px; }
+    .ba-before {
+      background: rgba(196,80,42,0.05);
+      border: 1px solid rgba(196,80,42,0.15);
+    }
+    .ba-after {
+      background: rgba(42,122,110,0.05);
+      border: 1px solid rgba(42,122,110,0.2);
+    }
+    .ba-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .ba-before .ba-label { color: var(--ember); }
+    .ba-after .ba-label { color: var(--teal); }
+    .ba-list { list-style: none; }
+    .ba-list li {
+      font-size: 14px;
+      color: var(--slate);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.7;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .ba-list li:last-child { border-bottom: none; }
+    .ba-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .ba-before .ba-dot { background: rgba(196,80,42,0.5); }
+    .ba-after .ba-dot { background: var(--teal); }
+
+    /* ── FAQ ── */
+    .faq-bg { background: var(--parchment); }
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 48px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .faq-item {
+      background: var(--snow);
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item:hover { background: #fff; }
+    .faq-q {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .faq-q-mark {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ember);
+      background: rgba(196,80,42,0.08);
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .faq-a {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.85;
+      padding-left: 38px;
+    }
+
+    /* ── CTA ── */
+    .cta-bg {
+      background: var(--deep-ink);
+      color: #fff;
+    }
+    .cta-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 100px 40px;
+      text-align: center;
+    }
+    @media (max-width: 640px) { .cta-inner { padding: 72px 16px; } }
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 600;
+      color: #fff;
       line-height: 1.2;
+      margin-bottom: 20px;
     }
-
-    .cta-sub {
+    .cta-title em { font-style: italic; color: var(--ember-light); }
+    .cta-desc {
       font-size: 17px;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.8);
-      max-width: 480px;
-      margin: 0 auto 36px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      max-width: 500px;
+      margin: 0 auto 40px;
     }
-
     .btn-cta {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: #fff;
-      color: var(--ember-dark);
-      font-family: var(--font-body);
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--ember);
+      color: #fff;
       font-size: 16px;
-      font-weight: 700;
-      padding: 14px 32px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 300ms, transform 200ms;
     }
+    .btn-cta:hover { background: var(--ember-dark); transform: translateY(-2px); }
 
-    .btn-cta:hover {
-      background: rgba(255,255,255,0.95);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    }
-
-    .btn-cta:active {
-      transform: translateY(0);
-    }
-
-    /* ─── FOOTER ─────────────────────────────────────────────── */
+    /* ── Footer ── */
     .footer {
       background: var(--deep-ink);
-      padding: 40px 0;
+      border-top: 1px solid var(--border-dark);
+      padding: 36px 40px;
     }
-
     .footer-inner {
       max-width: var(--max-w);
       margin: 0 auto;
-      padding: 0 var(--pad-x);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 16px;
     }
-
-    .footer-logo {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--ember);
-      text-transform: uppercase;
-    }
-
     .footer-copy {
       font-size: 13px;
-      color: rgba(255,255,255,0.3);
+      color: var(--mist);
     }
-
     .footer-links {
       display: flex;
-      gap: 20px;
+      gap: 24px;
     }
-
     .footer-links a {
       font-size: 13px;
-      color: rgba(255,255,255,0.45);
-      transition: color 120ms ease;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 300ms;
     }
-
-    .footer-links a:hover { color: rgba(255,255,255,0.8); }
-
-    /* ─── Scroll-reveal ──────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 400ms ease-out, transform 400ms ease-out;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* ─── Mobile adjustments ────────────────────────────── */
-    @media (max-width: 639px) {
-      .nav-back span { display: none; }
-      .benefits-grid { grid-template-columns: 1fr; }
-      .case-card { padding: 24px; }
-      .case-outcomes { flex-direction: column; }
+    .footer-links a:hover { color: var(--ember-light); }
+    @media (max-width: 480px) {
+      .footer-inner { flex-direction: column; gap: 10px; }
     }
   </style>
 </head>
 <body>
-<img class="museon-image museon-image--hero" src="museon_images/20260611_220850_d0454f51.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
 
-<img class="museon-image museon-image--hero" src="museon_images/20260611_220636_26fdea1a.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
-
-
-  <!-- ── NAV ─────────────────────────────────────────────────── -->
-  <nav class="nav" role="navigation" aria-label="主要導航">
+  <!-- NAV -->
+  <nav class="nav">
     <div class="nav-inner">
-      <span class="nav-logo">MUSEON</span>
-
-      <a href="museon-biz-index.html" class="nav-back" aria-label="返回首頁">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-        <span>返回首頁</span>
-      </a>
-
-      <a href="https://lin.ee/OYwE0KA" class="btn-primary" target="_blank" rel="noopener">
-        立即聯繫
-      </a>
+      <a href="museon-biz-index.html" class="nav-brand">MUSEON</a>
+      <div class="nav-right">
+        <a href="museon-biz-index.html" class="nav-back">← 返回首頁</a>
+        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="nav-line-btn">加 LINE 諮詢</a>
+      </div>
     </div>
   </nav>
 
-
-  <!-- ── HERO ────────────────────────────────────────────────── -->
+  <!-- HERO -->
   <section class="hero">
-    <div class="hero-container">
-      <div class="badge fade-in">提高思考精度</div>
-
-      <h1 class="hero-title fade-in">
-        決策靠直覺，<br>
-        但直覺<em>可能是錯的</em>
-      </h1>
-
-      <p class="hero-sub fade-in">
-        老闆做了十年，靠直覺做了很多對的決定。但公司越大，每個決策影響越多人——這時候只靠直覺，風險也越來越高。MUSEON 幫你把直覺變成可以說清楚的邏輯。
-      </p>
+    <div class="hero-inner reveal">
+      <div class="hero-badge">
+        <span class="badge">THINKING QUALITY</span>
+      </div>
+      <h1 class="hero-title">你的決策品質，<em>決定公司的上限</em></h1>
+      <p class="hero-sub">不是每個問題都能 Google 到答案。面對複雜決策，思路打轉是常態。MUSEON 幫你把複雜的問題拆開來看，讓決策有依據、有記錄、可以改進。</p>
     </div>
   </section>
 
-  <hr class="divider" />
-
-
-  <!-- ── PAIN POINTS ──────────────────────────────────────────── -->
-  <section class="section" aria-labelledby="pain-heading">
-    <div class="container">
-      <p class="section-label reveal">你是否有這些狀況？</p>
-      <h2 class="section-title reveal" id="pain-heading">很多決策，事後才發現有坑</h2>
-      <p class="section-sub reveal">不是你不夠用心——是思考的角度被卡住了，沒有人幫你問到關鍵的那個問題。</p>
-
-      <div class="pain-grid reveal">
-
-        <div class="pain-card">
-          <div class="pain-icon" aria-hidden="true">
-            <!-- 三角警示 icon -->
-            <svg viewBox="0 0 24 24">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-          </div>
-          <p class="pain-text">做了一個決定，事後才發現沒有考慮到某個關鍵因素</p>
+  <!-- PAIN POINTS -->
+  <div class="pain-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">痛點識別</div>
+        <h2 class="section-title">你是否也碰過這些情況</h2>
+        <p class="section-desc">這些不是個人能力問題，而是思考過程缺乏結構支撐的結果。</p>
+      </div>
+      <div class="pain-grid">
+        <div class="pain-card reveal">
+          <div class="pain-num">PAIN / 01</div>
+          <div class="pain-line"></div>
+          <p class="pain-text">會議開了兩小時，結論是「再討論」——問題沒有被真正定義清楚，所以沒辦法討論</p>
         </div>
-
-        <div class="pain-card">
-          <div class="pain-icon" aria-hidden="true">
-            <!-- 說話泡泡 icon -->
-            <svg viewBox="0 0 24 24">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </div>
-          <p class="pain-text">開會討論了很久，最後還是沒有結論，因為大家說的不在同一個層面</p>
+        <div class="pain-card reveal">
+          <div class="pain-num">PAIN / 02</div>
+          <div class="pain-line"></div>
+          <p class="pain-text">做了一個決定，三個月後才發現當初的邏輯有漏洞，但已經回不去了</p>
         </div>
-
-        <div class="pain-card">
-          <div class="pain-icon" aria-hidden="true">
-            <!-- 問號 icon -->
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-          </div>
-          <p class="pain-text">這個機會看起來不錯，但說不清楚為什麼不對勁——然後做了，真的踩坑</p>
+        <div class="pain-card reveal">
+          <div class="pain-num">PAIN / 03</div>
+          <div class="pain-line"></div>
+          <p class="pain-text">同樣的問題反覆出現，因為沒有記錄當初怎麼處理的，下次還是重新想</p>
         </div>
-
+        <div class="pain-card reveal">
+          <div class="pain-num">PAIN / 04</div>
+          <div class="pain-line"></div>
+          <p class="pain-text">面對多個選項，不知道用什麼標準來選，最後靠感覺做決定，心裡沒有底</p>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-
-  <!-- ── HOW WE SOLVE (dark) ──────────────────────────────────── -->
-  <section class="dark-section" aria-labelledby="solve-heading">
-    <div class="container">
-      <p class="section-label reveal">MUSEON 怎麼解</p>
-      <h2 class="section-title reveal" id="solve-heading">
-        在你做決策前，<br>幫你把問題想清楚
-      </h2>
-      <p class="section-sub reveal">不是幫你決定答案——是問你那些你沒想到的問題，讓你自己看清楚。</p>
-
-      <div class="steps-grid reveal">
-
-        <div class="step-card">
-          <div class="step-num">01</div>
-          <div class="step-body">
-            <p class="step-title">把你要決定的事告訴 MUSEON</p>
-            <p class="step-desc">想做什麼、現在的情況、你擔心什麼——不需要準備，就像跟顧問說話一樣。</p>
+  <!-- WHY -->
+  <div class="why-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">問題根源</div>
+        <h2 class="section-title">為什麼思考精度不只是個人能力問題</h2>
+      </div>
+      <div class="why-list">
+        <div class="why-item reveal">
+          <div class="why-num">01</div>
+          <div class="why-body">
+            <div class="why-title">思考精度是可以被系統支援的</div>
+            <p class="why-desc">有沒有對的問題框架、有沒有足夠的視角、有沒有足夠的資訊——這些都可以被工具補足。把「想得清楚」完全歸因於個人天賦，是放棄了可以被系統解決的問題。</p>
           </div>
         </div>
-
-        <div class="step-card">
-          <div class="step-num">02</div>
-          <div class="step-body">
-            <p class="step-title">MUSEON 問你一連串問題</p>
-            <p class="step-desc">讓你說出你沒想到的部分——那些問題通常是你自己不會問自己的角度。</p>
+        <div class="why-item reveal">
+          <div class="why-num">02</div>
+          <div class="why-body">
+            <div class="why-title">組織的思考問題比個人更複雜</div>
+            <p class="why-desc">一個人思考，可能有盲點。一群人思考，有時候反而更混亂，因為每個人的框架不同。當討論沒有共同的問題定義，開越多會越分散。需要一個中立的思考輔助拉齊大家的理解起點。</p>
           </div>
         </div>
-
-        <div class="step-card">
-          <div class="step-num">03</div>
-          <div class="step-body">
-            <p class="step-title">整理你的思考，看到邏輯漏洞</p>
-            <p class="step-desc">把你說的整理成結構，讓你清楚看到哪裡站得住腳、哪裡還有缺口。</p>
+        <div class="why-item reveal">
+          <div class="why-num">03</div>
+          <div class="why-body">
+            <div class="why-title">決策沒有記錄，成長就很慢</div>
+            <p class="why-desc">你做了一千個決定，但沒有系統性記錄哪些對了、哪些錯了、為什麼，你的決策能力就很難快速提升。每次都從頭摸索，是一種很昂貴的學習方式。</p>
           </div>
         </div>
-
       </div>
     </div>
-  </section>
+  </div>
 
+  <!-- SOLUTION -->
+  <div class="solution-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">MUSEON 解法</div>
+        <h2 class="section-title" style="color:#fff;">四個步驟讓決策有跡可循</h2>
+        <p class="section-desc">從問題拆解到定期回顧，建立一套讓思考品質持續提升的閉環機制。</p>
+      </div>
+      <div class="solution-steps reveal">
+        <div class="solution-step">
+          <div class="solution-step-idx">STEP 01</div>
+          <div class="solution-step-bar"></div>
+          <div class="solution-step-title">問題拆解</div>
+          <p class="solution-step-desc">把模糊的「我需要決定 X」轉化成具體的「我需要解決的核心問題是 Y，限制條件是 Z」——問題想清楚了，答案往往自然浮出來</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step-idx">STEP 02</div>
+          <div class="solution-step-bar"></div>
+          <div class="solution-step-title">視角補充</div>
+          <p class="solution-step-desc">提供你可能沒有考慮到的維度——競爭者角度、客戶角度、長期 vs 短期的衝突點，讓你的判斷有更完整的依據</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step-idx">STEP 03</div>
+          <div class="solution-step-bar"></div>
+          <div class="solution-step-title">決策記錄</div>
+          <p class="solution-step-desc">把這個決策的過程記下來，包含考慮了哪些選項、最後怎麼選、選的理由是什麼，建立可以回頭看的知識資產</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step-idx">STEP 04</div>
+          <div class="solution-step-bar"></div>
+          <div class="solution-step-title">定期回顧</div>
+          <p class="solution-step-desc">週期性回顧過去的決策，看哪些判斷是對的、哪些需要修正，讓下次決策更精準，讓組織的判斷力真正累積</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- ── CASE STUDY ───────────────────────────────────────────── -->
-  <section class="section" aria-labelledby="case-heading">
-    <div class="container">
-      <p class="section-label reveal">真實情境</p>
-      <h2 class="section-title reveal" id="case-heading">一個決定，在開口之前就想清楚了</h2>
-      <p class="section-sub reveal">不是每個機會都該追。但你不問清楚，你不會知道。</p>
+  <!-- MECHANISMS -->
+  <div class="mech-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">機制說明</div>
+        <h2 class="section-title">背後的四個機制</h2>
+        <p class="section-desc">每個功能都針對特定的思考盲點設計，組合起來形成完整的決策支援系統。</p>
+      </div>
+      <div class="mech-grid">
+        <div class="mech-card reveal">
+          <div class="mech-icon">🔍</div>
+          <div class="mech-title">問題結構化引擎</div>
+          <p class="mech-desc">把一個模糊的問題拆解成「核心問題是什麼」「相關假設有哪些」「需要什麼資訊才能回答」——讓討論有可以出發的共同起點</p>
+        </div>
+        <div class="mech-card reveal">
+          <div class="mech-icon">🧭</div>
+          <div class="mech-title">多維視角分析</div>
+          <p class="mech-desc">從不同角色和時間維度看同一個問題，補充你在單一視角下可能看不到的部分，讓判斷更立體</p>
+        </div>
+        <div class="mech-card reveal">
+          <div class="mech-icon">📋</div>
+          <div class="mech-title">決策記錄系統</div>
+          <p class="mech-desc">每次做決定都有完整記錄，包含情境、選項、選擇理由、預期結果，供日後回顧和知識傳承</p>
+        </div>
+        <div class="mech-card reveal">
+          <div class="mech-icon">⚡</div>
+          <div class="mech-title">思維盲點偵測</div>
+          <p class="mech-desc">根據你的決策記錄，找出你反覆出現的判斷模式和盲點，提前預警，讓你的決策品質螺旋式提升</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- SCENARIOS -->
+  <div class="scenarios-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">使用情境</div>
+        <h2 class="section-title">從真實場景看 MUSEON 怎麼運作</h2>
+        <p class="section-desc">兩個不同行業的實際情境，說明思考輔助在複雜決策中如何發揮作用。</p>
+      </div>
+      <div class="scenario-list">
+        <div class="scenario-card reveal">
+          <div class="scenario-header">
+            <span class="scenario-tag">SCENARIO A</span>
+            <span class="scenario-subtitle">餐飲業開新分店決策</span>
+          </div>
+          <div class="scenario-body">
+            <p class="scenario-desc">一家餐飲業老闆要決定是否在某個商圈開新分店，直覺說可以，但說不清楚依據是什麼。用 MUSEON 把問題拆開：核心問題是「這個商圈的客流量和消費力是否足夠支撐分店？」限制條件是「開店成本、管理人力、現有品牌認知度」。</p>
+            <div class="scenario-insight">
+              <div class="scenario-insight-label">關鍵發現</div>
+              <p class="scenario-insight-text">拆完後才發現，管理人力才是最大的限制，不是資金。決策從「要不要開」變成「現在開還是找到管理人才後開」——問題本身改變了，思路也通了。</p>
+            </div>
+          </div>
+        </div>
+        <div class="scenario-card reveal">
+          <div class="scenario-header">
+            <span class="scenario-tag">SCENARIO B</span>
+            <span class="scenario-subtitle">顧問公司服務擴展評估</span>
+          </div>
+          <div class="scenario-body">
+            <p class="scenario-desc">一家顧問公司在選擇是否要擴展服務到某個新領域。主管直覺傾向「不要」，但說不清楚為什麼。MUSEON 幫他列出考慮的維度和各維度的現有資訊，逐一審視。</p>
+            <div class="scenario-insight">
+              <div class="scenario-insight-label">關鍵發現</div>
+              <p class="scenario-insight-text">最後發現真正的疑慮是「進入新領域後品牌定位會模糊」，這個擔憂是有道理的。有了清楚的理由，決策品質因此提升——不是「感覺不對」，而是「品牌一致性是我們的核心資產，不能輕易稀釋」。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE STUDY -->
+  <div class="case-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">去敏案例</div>
+        <h2 class="section-title">一家活動公關公司的決策轉型</h2>
+      </div>
       <div class="case-card reveal">
-        <span class="case-tag">情境案例</span>
-
-        <h3 class="case-headline">要不要開第二個據點？</h3>
-
+        <div class="case-header">
+          <div>
+            <div class="case-co-tag">去敏案例 · 台灣</div>
+            <div class="case-co-label">活動公關公司 · 7 人規模</div>
+          </div>
+          <span class="case-label-tag">DECISION QUALITY</span>
+        </div>
         <div class="case-body">
-          <p>一個美業老闆，生意好到滿檔，客人一直問什麼時候開第二家。</p>
-          <p>感覺時機到了，但說不清楚到底準備好了沒。她把這個問題跟 MUSEON 說了。</p>
-
-          <div class="dialogue">
-            <p><strong>MUSEON</strong>：「現在第一家店的流程，如果你不在，員工可以完全自己跑嗎？」</p>
-          </div>
-
-          <p>她停頓了很久。<span class="silence">答案是：不行。</span></p>
-
-          <div class="dialogue">
-            <p><strong>MUSEON</strong>：「如果你人在第二家店，第一家出問題，你有辦法遠端處理嗎？」</p>
-          </div>
-
-          <p>又是一個很長的停頓。</p>
-
-          <p>她發現，她想要的不是「開第二家」，而是「讓生意擴大」——但這兩件事需要的準備完全不同。她先把第一家的系統建好，六個月後再去想第二家的事。</p>
-
-          <p>後來開第二家的時候，比她想像的順很多。</p>
-        </div>
-
-        <div class="case-outcomes" aria-label="這個過程帶來的效果">
-          <span class="outcome-chip">在做決定之前先發現盲點</span>
-          <span class="outcome-chip">把「感覺」變成「可以解釋的邏輯」</span>
-          <span class="outcome-chip">少走了幾條彎路</span>
+          <p class="case-text">這家公司在業務成長期面臨多個關鍵決策——要不要擴編、要不要接某個大案、要不要調整服務定價。每次討論都耗時很長，但討論品質不穩定，有時候很快有結論，有時候轉了一圈還是回到原點。</p>
+          <p class="case-text" style="margin-top:16px;">透過 MUSEON 的決策輔助，他們開始把每個決定的考量記錄下來，包含考慮了哪些選項、最後怎麼選、選的理由是什麼。幾個月後回顧發現，其中有兩個決定的判斷邏輯在當時就有值得質疑的地方，在看到實際結果之前就及時調整了方向，避免了後續的資源浪費。</p>
+          <p class="case-text" style="margin-top:16px;">更大的改變是團隊討論品質的提升：問題先被清楚定義，大家才開始討論解法。原本「再討論」的結局出現頻率大幅降低。</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <hr class="divider" />
-
-
-  <!-- ── BENEFITS ─────────────────────────────────────────────── -->
-  <section class="section" aria-labelledby="benefits-heading">
-    <div class="container">
-      <p class="section-label reveal">你得到的是什麼</p>
-      <h2 class="section-title reveal" id="benefits-heading">不是更多資訊，是更清楚的判斷</h2>
-      <p class="section-sub reveal">MUSEON 不是 Google，也不是計算機——它是讓你的思考變得更精準的過程。</p>
-
-      <div class="benefits-grid reveal">
-
-        <div class="benefit-card">
-          <div class="benefit-icon" aria-hidden="true">
-            <!-- 放大鏡 icon -->
-            <svg viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </div>
-          <h3 class="benefit-title">在行動前看到漏洞</h3>
-          <p class="benefit-desc">不是 MUSEON 幫你決定，而是讓你看到你沒想到的地方——在真正的代價出現之前。</p>
+  <!-- BEFORE / AFTER -->
+  <div class="ba-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">前後對比</div>
+        <h2 class="section-title">思考有支撐，和沒有支撐的差距</h2>
+      </div>
+      <div class="ba-grid">
+        <div class="ba-card ba-before reveal">
+          <div class="ba-label">導入前</div>
+          <ul class="ba-list">
+            <li><span class="ba-dot"></span>決定靠感覺，理由說不清楚</li>
+            <li><span class="ba-dot"></span>會議結論模糊，常常要再開一次</li>
+            <li><span class="ba-dot"></span>決策過程沒有記錄，無法回顧</li>
+            <li><span class="ba-dot"></span>同樣的問題反覆出現，重蹈覆轍</li>
+            <li><span class="ba-dot"></span>判斷盲點在事後才被發現</li>
+          </ul>
         </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon" aria-hidden="true">
-            <!-- 圓形對話 icon -->
-            <svg viewBox="0 0 24 24">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          </div>
-          <h3 class="benefit-title">開會更有結論</h3>
-          <p class="benefit-desc">討論前先把問題想清楚，開會就不再是「說了半天沒結論」——大家在同一個層面討論。</p>
+        <div class="ba-card ba-after reveal">
+          <div class="ba-label">導入後</div>
+          <ul class="ba-list">
+            <li><span class="ba-dot"></span>決定有依據，考量記錄清楚</li>
+            <li><span class="ba-dot"></span>問題先定義再討論，會議有結論</li>
+            <li><span class="ba-dot"></span>定期回顧過去決策，持續修正</li>
+            <li><span class="ba-dot"></span>解法被記錄，不用每次重新想</li>
+            <li><span class="ba-dot"></span>反覆盲點被系統提前預警</li>
+          </ul>
         </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon" aria-hidden="true">
-            <!-- 盾牌 icon -->
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-          </div>
-          <h3 class="benefit-title">直覺＋邏輯，雙重保險</h3>
-          <p class="benefit-desc">你的直覺是資產，MUSEON 幫你驗證直覺的合理性——讓你走得更穩，不用抛掉直覺。</p>
-        </div>
-
       </div>
     </div>
-  </section>
+  </div>
 
-
-  <!-- ── CTA ──────────────────────────────────────────────────── -->
-  <section class="cta-section" aria-labelledby="cta-heading">
-    <div class="container">
-      <div class="cta-inner">
-        <h2 class="cta-title" id="cta-heading">
-          你現在有哪個決定<br>還在糾結？
-        </h2>
-        <p class="cta-sub">
-          說給 MUSEON 聽，試試看三十分鐘能讓你想清楚什麼
-        </p>
-        <a href="https://lin.ee/OYwE0KA" class="btn-cta" target="_blank" rel="noopener" aria-label="加 LINE 免費諮詢">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          加 LINE 免費諮詢
-        </a>
+  <!-- FAQ -->
+  <div class="faq-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">常見問題</div>
+        <h2 class="section-title">你可能想知道的事</h2>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-mark">Q</span>
+            <span>思考精度的提升有辦法量化嗎？</span>
+          </div>
+          <p class="faq-a">不完全能量化，但可以觀察到的指標包括：會議決議率（開了會有沒有做出決定）、決策修正率（決定了之後改變的頻率）、問題重複率（同一類問題反覆出現的頻率）。這些指標通常在導入 2-3 個月後開始有明顯改善。</p>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-mark">Q</span>
+            <span>MUSEON 會替我做決定嗎？</span>
+          </div>
+          <p class="faq-a">不會，而且不應該。MUSEON 的角色是幫你把問題想清楚，提供你可能遺漏的視角，但最終的判斷和決定一定是你的。工具的目的是讓你的決定更有依據，不是取代你的判斷。</p>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-mark">Q</span>
+            <span>這個功能適合什麼規模的公司？</span>
+          </div>
+          <p class="faq-a">從個人老闆到百人企業都適用。規模越大，決策的複雜度越高，輔助的價值也越大。對於小型公司，最常見的效益是減少「開了會沒結論」的情況；對於中型公司，更大的價值是讓跨部門決策品質趨於一致。</p>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-mark">Q</span>
+            <span>員工層級也可以使用嗎？</span>
+          </div>
+          <p class="faq-a">可以，而且很有價值。讓員工養成「問題先拆解再討論」的習慣，會議品質會顯著提升，主管花在澄清問題上的時間也會減少。這個改變通常從少數員工開始，自然擴散到整個團隊。</p>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
+  <!-- CTA -->
+  <div class="cta-bg">
+    <div class="cta-inner">
+      <h2 class="cta-title reveal">好的決策，<em>是可以被系統支援的</em></h2>
+      <p class="cta-desc reveal">先從一個你最近一直想不清楚的問題開始，讓 MUSEON 幫你拆開看看。</p>
+      <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="btn-cta reveal">加 LINE 免費諮詢 →</a>
+    </div>
+  </div>
 
-  <!-- ── FOOTER ───────────────────────────────────────────────── -->
-  <footer class="footer" role="contentinfo">
+  <!-- FOOTER -->
+  <footer class="footer">
     <div class="footer-inner">
-      <span class="footer-logo">MUSEON</span>
-
-      <nav class="footer-links" aria-label="頁腳連結">
-        <a href="museon-biz-index.html">首頁</a>
-        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener">聯繫我們</a>
-      </nav>
-
-      <p class="footer-copy">© 2026 MUSEON. All rights reserved.</p>
+      <span class="footer-copy">© 2024 MUSEON</span>
+      <div class="footer-links">
+        <a href="museon-biz-index.html">返回首頁</a>
+        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener">加 LINE 聯繫</a>
+      </div>
     </div>
   </footer>
 
-
-  <!-- ── Scroll reveal JS ─────────────────────────────────────── -->
   <script>
-    (function () {
-      'use strict';
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-      document.querySelectorAll('.reveal').forEach(function (el) {
-        observer.observe(el);
+    // IntersectionObserver scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
       });
-    })();
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   </script>
 
 </body>

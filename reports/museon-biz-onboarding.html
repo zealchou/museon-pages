@@ -1,293 +1,192 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>縮短教育訓練時間 — MUSEON</title>
+  <title>縮短教育訓練 — MUSEON</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    /* ─── Reset ─────────────────────────────── */
+    :root {
+      --ember: #C4502A;
+      --ember-light: #E0714D;
+      --ember-dark: #9A3A1C;
+      --teal: #2A7A6E;
+      --gold: #B8923A;
+      --ink: #12121A;
+      --slate: #5A5A6E;
+      --mist: #9898A8;
+      --border: #E2E0DA;
+      --parchment: #F7F5F0;
+      --snow: #FDFCFA;
+      --deep-ink: #0E0E16;
+      --surface: #16161F;
+      --raised: #1E1E2A;
+      --border-dark: #2A2A38;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
-    /* ─── Tokens ─────────────────────────────── */
-    :root {
-      --ember:        #C4502A;
-      --ember-light:  #E0714D;
-      --ember-dark:   #9A3A1C;
-      --teal:         #2A7A6E;
-      --gold:         #B8923A;
-      --ink:          #12121A;
-      --slate:        #5A5A6E;
-      --mist:         #9898A8;
-      --border:       #E2E0DA;
-      --parchment:    #F7F5F0;
-      --snow:         #FDFCFA;
-      --deep-ink:     #0E0E16;
-      --surface:      #16161F;
-      --raised:       #1E1E2A;
-      --border-dark:  #2A2A38;
-    }
-
-    /* ─── Base ─────────────────────────────── */
     body {
       font-family: 'Outfit', 'Noto Sans TC', sans-serif;
       background: var(--parchment);
       color: var(--ink);
+      line-height: 1.7;
       font-size: 16px;
-      line-height: 1.75;
-      -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── Utility ─────────────────────────────── */
-    .container {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
-    @media (max-width: 768px)  { .container { padding: 0 24px; } }
-    @media (max-width: 640px)  { .container { padding: 0 16px; } }
+    a { color: inherit; text-decoration: none; }
 
-    /* ─── Animate on load ─────────────────────── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(12px);
-      animation: fadeUp 400ms ease-out forwards;
-    }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in:nth-child(1) { animation-delay: 0ms; }
-    .fade-in:nth-child(2) { animation-delay: 80ms; }
-    .fade-in:nth-child(3) { animation-delay: 160ms; }
-    .fade-in:nth-child(4) { animation-delay: 240ms; }
-
-    /* ─── Nav ─────────────────────────────── */
+    /* NAV */
     .nav {
-      background: var(--snow);
-      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 100;
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
     }
     .nav-inner {
       max-width: 820px;
       margin: 0 auto;
-      padding: 0 40px;
-      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      height: 60px;
     }
-    @media (max-width: 768px)  { .nav-inner { padding: 0 24px; } }
-    @media (max-width: 640px)  { .nav-inner { padding: 0 16px; height: 56px; } }
-
     .nav-logo {
       font-family: 'Cormorant Garamond', serif;
       font-size: 22px;
       font-weight: 600;
-      color: var(--ink);
-      text-decoration: none;
-      letter-spacing: 0.02em;
+      color: var(--ember);
+      letter-spacing: 0.04em;
     }
-    .nav-logo span { color: var(--ember); }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .nav-back {
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--slate);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: color 120ms ease;
-    }
-    .nav-back:hover { color: var(--ink); }
-    .nav-back svg { width: 16px; height: 16px; }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-back { font-size: 14px; color: var(--slate); transition: color 200ms; }
+    .nav-back:hover { color: var(--ember); }
+    .btn-nav {
       background: var(--ember);
       color: #fff;
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      padding: 12px 24px;
+      padding: 8px 18px;
       border-radius: 6px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 120ms ease, transform 120ms ease;
+      transition: background 200ms, transform 150ms;
     }
-    .btn-primary:hover { background: var(--ember-light); transform: translateY(-1px); }
-    .btn-primary:active { background: var(--ember-dark); transform: translateY(0); }
+    .btn-nav:hover { background: var(--ember-light); transform: translateY(-1px); }
 
-    @media (max-width: 480px) {
-      .nav-back-label { display: none; }
-    }
+    /* LAYOUT */
+    .page-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
 
-    /* ─── Hero ─────────────────────────────── */
-    .hero {
-      padding: 80px 0 64px;
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 400ms ease, transform 400ms ease;
     }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* HERO */
+    .hero { padding: 80px 0 72px; text-align: center; }
     .badge {
       display: inline-block;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ember-dark);
-      background: rgba(196, 80, 42, 0.10);
-      padding: 3px 10px;
+      letter-spacing: 0.12em;
+      color: var(--ember);
+      background: rgba(196, 80, 42, 0.08);
+      border: 1px solid rgba(196, 80, 42, 0.22);
+      padding: 5px 14px;
       border-radius: 100px;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
-    .hero-title {
+    .hero h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(32px, 5vw, 48px);
+      font-size: clamp(30px, 5vw, 46px);
       font-weight: 600;
+      line-height: 1.25;
       color: var(--ink);
-      line-height: 1.2;
-      margin-bottom: 24px;
-      max-width: 65ch;
+      margin-bottom: 20px;
     }
+    .hero h1 em { font-style: italic; color: var(--ember); }
     .hero-sub {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--slate);
-      line-height: 1.8;
-      max-width: 62ch;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.78;
     }
 
-    /* ─── Section titles ─────────────────────── */
+    /* SECTION COMMON */
     .section-label {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.1em;
       color: var(--mist);
+      text-transform: uppercase;
       margin-bottom: 12px;
     }
     .section-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(26px, 4vw, 36px);
+      font-size: clamp(22px, 3.5vw, 32px);
       font-weight: 600;
       color: var(--ink);
-      line-height: 1.25;
-      margin-bottom: 40px;
+      line-height: 1.3;
+      margin-bottom: 14px;
     }
+    .section-desc { font-size: 16px; color: var(--slate); max-width: 560px; line-height: 1.78; }
+    .section { padding: 72px 0; }
+    .divider { height: 1px; background: var(--border); }
 
-    /* ─── Divider ─────────────────────────────── */
-    .section-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0;
-    }
-
-    /* ─── Pain Points ─────────────────────────── */
-    .pain-section {
-      padding: 64px 0;
-    }
+    /* PAIN CARDS */
     .pain-grid {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
+      margin-top: 40px;
     }
     .pain-card {
       background: var(--snow);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 24px;
-      display: flex;
-      gap: 18px;
-      align-items: flex-start;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-      transition: transform 200ms ease, box-shadow 200ms ease;
+      transition: transform 300ms, box-shadow 300ms;
     }
-    .pain-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(18,18,26,0.10);
-    }
-    .pain-icon {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: rgba(196, 80, 42, 0.10);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-    .pain-card-body h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px;
+    .pain-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,18,26,0.08); }
+    .pain-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--ember);
       font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 6px;
-      line-height: 1.4;
+      margin-bottom: 10px;
     }
-    .pain-card-body p {
-      font-size: 15px;
-      color: var(--slate);
-      line-height: 1.7;
-    }
+    .pain-card p { font-size: 15px; color: var(--ink); line-height: 1.72; }
 
-    /* ─── Solution (dark) ────────────────────── */
-    .solution-section {
-      background: var(--deep-ink);
-      padding: 72px 0;
-    }
-    .solution-section .section-label { color: rgba(255,255,255,0.35); }
-    .solution-section .section-title { color: #fff; }
-    .solution-sub {
-      font-size: 17px;
-      color: rgba(255,255,255,0.60);
-      line-height: 1.8;
-      margin-bottom: 48px;
-      max-width: 58ch;
-    }
-
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      position: relative;
-    }
-    .steps::before {
-      content: '';
-      position: absolute;
-      left: 19px;
-      top: 40px;
-      bottom: 40px;
-      width: 2px;
-      background: var(--border-dark);
-    }
-    .step {
+    /* WHY LIST */
+    .why-list { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+    .why-item {
       display: flex;
       gap: 20px;
       align-items: flex-start;
-      padding: 24px 0;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 300ms, box-shadow 300ms;
     }
-    .step-number {
+    .why-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,18,26,0.07); }
+    .why-idx {
       flex-shrink: 0;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      background: var(--raised);
-      border: 2px solid var(--ember);
+      background: rgba(196,80,42,0.1);
       color: var(--ember);
       font-family: 'IBM Plex Mono', monospace;
       font-size: 13px;
@@ -295,422 +194,777 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      z-index: 1;
     }
-    .step-body h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 17px;
-      font-weight: 600;
+    .why-item p { font-size: 15px; color: var(--ink); line-height: 1.78; padding-top: 6px; }
+
+    /* DARK SECTION */
+    .dark-section { background: var(--deep-ink); padding: 72px 0; }
+    .dark-section .section-label { color: rgba(152,152,168,0.55); }
+    .dark-section .section-title { color: #FDFCFA; }
+    .dark-section .section-desc { color: rgba(253,252,250,0.58); }
+
+    .steps-list { margin-top: 40px; }
+    .step-item {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border-dark);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--ember);
       color: #fff;
-      margin-bottom: 6px;
-      padding-top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .step-body p {
+    .step-content h3 { font-size: 17px; font-weight: 600; color: #FDFCFA; margin-bottom: 8px; }
+    .step-content p { font-size: 15px; color: rgba(253,252,250,0.62); line-height: 1.78; }
+
+    /* MECHANISM */
+    .mech-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .mech-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .mech-cards-wrap { margin-top: 40px; }
+    .mech-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      transition: transform 300ms, box-shadow 300ms;
+    }
+    .mech-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,18,26,0.08); }
+    .mech-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(42,122,110,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 17px;
+    }
+    .mech-card h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .mech-card p { font-size: 13px; color: var(--slate); line-height: 1.7; }
+
+    /* QUIZ SECTION */
+    .quiz-section {
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 16px;
+      padding: 40px;
+      margin-top: 40px;
+    }
+    .quiz-section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .quiz-section h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 600;
+      color: #FDFCFA;
+      line-height: 1.35;
+      margin-bottom: 14px;
+    }
+    .quiz-section > p {
       font-size: 15px;
-      color: rgba(255,255,255,0.55);
-      line-height: 1.7;
+      color: rgba(253,252,250,0.62);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .quiz-method-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .quiz-method-item {
+      background: var(--raised);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .quiz-method-item h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #FDFCFA;
+      margin-bottom: 6px;
+    }
+    .quiz-method-item p {
+      font-size: 12px;
+      color: rgba(253,252,250,0.5);
+      line-height: 1.6;
     }
 
-    /* ─── Case Study ─────────────────────────── */
-    .case-section {
-      padding: 64px 0;
+    /* QUIZ CARDS */
+    .quiz-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
     }
+    .quiz-card {
+      background: var(--raised);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 20px;
+      transition: transform 300ms, box-shadow 300ms;
+    }
+    .quiz-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .quiz-card-type {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .quiz-card-q {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: rgba(253,252,250,0.85);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .quiz-card-q .q-num {
+      color: var(--ember-light);
+      font-weight: 600;
+    }
+    .quiz-options { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+    .quiz-option {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: rgba(253,252,250,0.45);
+      line-height: 1.55;
+    }
+    .quiz-option.highlight {
+      color: rgba(196, 80, 42, 0.9);
+    }
+    .quiz-progress {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-dark);
+    }
+    .quiz-progress-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(152,152,168,0.7);
+      margin-bottom: 8px;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 4px;
+      background: var(--teal);
+      border-radius: 2px;
+    }
+    .progress-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(42,122,110,0.9);
+      margin-top: 6px;
+    }
+
+    /* SCENARIOS */
+    .scenario-list { margin-top: 40px; display: flex; flex-direction: column; gap: 18px; }
+    .scenario-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: transform 300ms, box-shadow 300ms;
+    }
+    .scenario-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,18,26,0.07); }
+    .scenario-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .scenario-card p { font-size: 15px; color: var(--ink); line-height: 1.8; }
+    .scenario-card strong { color: var(--ember); }
+
+    /* CASE */
     .case-card {
       background: var(--snow);
       border: 1px solid var(--border);
       border-left: 4px solid var(--teal);
-      border-radius: 10px;
+      border-radius: 0 12px 12px 0;
       padding: 32px;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-    }
-    .case-meta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+      margin-top: 40px;
     }
     .case-tag {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.1em;
       color: var(--teal);
-      background: rgba(42, 122, 110, 0.10);
-      padding: 3px 10px;
-      border-radius: 100px;
+      margin-bottom: 12px;
     }
-    .case-company {
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink);
+    .case-card h3 { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+    .case-card > p { font-size: 15px; color: var(--slate); line-height: 1.8; }
+    .case-card strong { color: var(--ink); font-weight: 700; }
+    .case-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .case-stat {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      background: rgba(42,122,110,0.08);
+      border: 1px solid rgba(42,122,110,0.18);
+      border-radius: 8px;
+      padding: 10px 18px;
     }
-    .case-card h3 {
+    .case-stat-num {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 20px;
-      line-height: 1.3;
+      color: var(--teal);
     }
-    .case-story {
-      font-size: 16px;
-      color: var(--slate);
-      line-height: 1.85;
-      margin-bottom: 28px;
-    }
-    .case-story p + p { margin-top: 1em; }
+    .case-stat-label { font-size: 13px; color: var(--slate); }
 
-    .case-results {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 28px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
+    /* BEFORE / AFTER */
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+    .ba-card { border-radius: 12px; padding: 28px; }
+    .ba-card.before {
+      background: rgba(90,90,110,0.05);
+      border: 1px solid rgba(90,90,110,0.14);
     }
-    .result-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
+    .ba-card.after {
+      background: rgba(42,122,110,0.05);
+      border: 1px solid rgba(42,122,110,0.18);
     }
-    .result-dot {
-      flex-shrink: 0;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--teal);
-      margin-top: 7px;
+    .ba-card-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      margin-bottom: 18px;
     }
-    .result-item p {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--ink);
-      line-height: 1.5;
-    }
+    .before .ba-card-label { color: var(--mist); }
+    .after .ba-card-label { color: var(--teal); }
+    .ba-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .ba-item:last-child { margin-bottom: 0; }
+    .ba-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 8px; }
+    .before .ba-dot { background: var(--mist); }
+    .after .ba-dot { background: var(--teal); }
+    .ba-item span { font-size: 14px; line-height: 1.65; }
+    .before .ba-item span { color: var(--slate); }
+    .after .ba-item span { color: var(--ink); }
 
-    /* ─── Benefits ─────────────────────────── */
-    .benefits-section {
-      padding: 64px 0;
-    }
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-    .benefit-card {
+    /* FAQ */
+    .faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 10px; }
+    .faq-item {
       background: var(--snow);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px 24px;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-      transition: transform 200ms ease, box-shadow 200ms ease;
+      border-radius: 12px;
+      overflow: hidden;
     }
-    .benefit-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(18,18,26,0.10);
-    }
-    .benefit-icon {
-      font-size: 24px;
-      margin-bottom: 14px;
-    }
-    .benefit-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px;
+    .faq-q {
+      padding: 20px 24px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--ink);
-      margin-bottom: 10px;
-      line-height: 1.4;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: background 200ms;
+      user-select: none;
     }
-    .benefit-card p {
-      font-size: 14px;
+    .faq-q:hover { background: rgba(196,80,42,0.03); }
+    .faq-arrow { font-size: 18px; color: var(--mist); flex-shrink: 0; transition: transform 300ms; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 350ms ease, padding-bottom 350ms ease; }
+    .faq-item.open .faq-a { max-height: 320px; padding-bottom: 20px; }
+    .faq-a p {
+      font-size: 15px;
       color: var(--slate);
-      line-height: 1.7;
+      line-height: 1.8;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
     }
 
-    /* ─── CTA ─────────────────────────────── */
-    .cta-section {
-      background: linear-gradient(135deg, #1a1015 0%, var(--deep-ink) 60%);
-      padding: 80px 0;
-      text-align: center;
-    }
-    .cta-section .section-label { color: rgba(255,255,255,0.35); text-align: center; }
-    .cta-title {
+    /* CTA */
+    .cta-section { background: var(--deep-ink); padding: 80px 0; text-align: center; }
+    .cta-section h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(26px, 4vw, 38px);
+      font-size: clamp(24px, 4vw, 38px);
       font-weight: 600;
-      color: #fff;
+      color: #FDFCFA;
+      line-height: 1.3;
       margin-bottom: 16px;
-      line-height: 1.25;
     }
-    .cta-sub {
-      font-size: 17px;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 36px;
-      max-width: 46ch;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.7;
+    .cta-section p { font-size: 16px; color: rgba(253,252,250,0.58); max-width: 460px; margin: 0 auto 32px; line-height: 1.78; }
+    .btn-cta {
+      display: inline-block;
+      background: var(--ember);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 14px 34px;
+      border-radius: 8px;
+      transition: background 250ms, transform 200ms, box-shadow 250ms;
     }
-    .cta-disclaimer {
-      margin-top: 18px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.30);
+    .btn-cta:hover {
+      background: var(--ember-light);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(196,80,42,0.35);
     }
 
-    /* ─── Footer ─────────────────────────────── */
-    .footer {
-      background: var(--deep-ink);
-      border-top: 1px solid var(--border-dark);
-      padding: 40px 0;
-    }
+    /* FOOTER */
+    .footer { background: var(--deep-ink); padding: 28px 24px; border-top: 1px solid var(--border-dark); }
     .footer-inner {
       max-width: 820px;
       margin: 0 auto;
-      padding: 0 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
       flex-wrap: wrap;
+      gap: 12px;
     }
-    @media (max-width: 768px)  { .footer-inner { padding: 0 24px; } }
-    @media (max-width: 640px)  { .footer-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; } }
+    .footer-copy { font-size: 13px; color: rgba(152,152,168,0.65); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: rgba(152,152,168,0.65); transition: color 200ms; }
+    .footer-links a:hover { color: var(--ember-light); }
 
-    .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.80);
-      text-decoration: none;
-    }
-    .footer-logo span { color: var(--ember); }
-    .footer-copy {
-      font-size: 13px;
-      color: rgba(255,255,255,0.30);
-    }
-    .footer-links {
-      display: flex;
-      gap: 20px;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: rgba(255,255,255,0.40);
-      text-decoration: none;
-      transition: color 120ms ease;
-    }
-    .footer-links a:hover { color: rgba(255,255,255,0.70); }
-
-    /* ─── Responsive ────────────────────────── */
-    @media (max-width: 640px) {
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .pain-grid, .ba-grid { grid-template-columns: 1fr; }
+      .mech-grid-3, .mech-grid-2 { grid-template-columns: 1fr; }
+      .quiz-method-grid { grid-template-columns: 1fr; }
+      .quiz-cards-grid { grid-template-columns: 1fr; }
+      .nav-back { display: none; }
       .hero { padding: 56px 0 48px; }
-      .pain-section, .case-section, .benefits-section { padding: 48px 0; }
-      .solution-section { padding: 56px 0; }
-      .cta-section { padding: 64px 0; }
-      .steps::before { display: none; }
+      .section { padding: 52px 0; }
+      .dark-section { padding: 52px 0; }
+      .quiz-section { padding: 28px 20px; }
     }
   </style>
 </head>
 <body>
-<img class="museon-image museon-image--hero" src="museon_images/20260611_220847_25991a41.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
 
-<img class="museon-image museon-image--hero" src="museon_images/20260611_220632_cd91e8f1.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
-
-
-  <!-- ── Nav ──────────────────────────────── -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="museon-biz-index.html" class="nav-logo">M<span>·</span>USEON</a>
-      <div class="nav-actions">
-        <a href="museon-biz-index.html" class="nav-back">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M10 3L5 8l5 5"/>
-          </svg>
-          <span class="nav-back-label">返回首頁</span>
-        </a>
-        <a href="https://lin.ee/OYwE0KA" class="btn-primary" target="_blank" rel="noopener">
-          立即聯繫
-        </a>
-      </div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="museon-biz-index.html" class="nav-logo">MUSEON</a>
+    <div class="nav-right">
+      <a href="museon-biz-index.html" class="nav-back">← 返回首頁</a>
+      <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="btn-nav">加 LINE 諮詢</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- ── Hero ──────────────────────────────── -->
-  <section class="hero">
-    <div class="container">
-      <div class="fade-in">
-        <div class="badge">縮短教育訓練時間</div>
+<!-- HERO -->
+<div class="page-wrap">
+  <section class="hero reveal">
+    <div class="badge">ONBOARDING &amp; TRAINING</div>
+    <h1>新人培訓花 6 週，<em>你有幾個老員工能帶？</em></h1>
+    <p class="hero-sub">每個老員工帶新人，自己的工作也耽誤了。更麻煩的是，每個人帶的方式不一樣，新人學到的東西也不一樣。MUSEON 讓培訓標準化、系統化，新人快速上手，老員工不被綁住。</p>
+  </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- PAIN POINTS -->
+<div class="page-wrap">
+  <section class="section">
+    <div class="reveal">
+      <div class="section-label">PAIN POINTS</div>
+      <h2 class="section-title">你的培訓現場，是不是這樣？</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <div class="pain-num">01</div>
+        <p>老員工帶新人，變成老員工效率下降一半，同時還要擔心帶的夠不夠好。</p>
       </div>
-      <div class="fade-in">
-        <h1 class="hero-title">新人帶了兩個月，還是不能獨立作業</h1>
+      <div class="pain-card reveal">
+        <div class="pain-num">02</div>
+        <p>不同老員工帶出來的新人能力不一樣，因為每個人教的重點不同。</p>
       </div>
-      <div class="fade-in">
-        <p class="hero-sub">
-          帶新人是每個公司最消耗資源的事。老員工要分心教，新人問不完的問題，一個動作要解釋十遍。MUSEON 讓新人有個全天候的導師，隨時問隨時答。
-        </p>
+      <div class="pain-card reveal">
+        <div class="pain-num">03</div>
+        <p>新人不敢一直問問題，怕麻煩人，但搞不清楚的地方越來越多。</p>
+      </div>
+      <div class="pain-card reveal">
+        <div class="pain-num">04</div>
+        <p>教了一遍不代表學會了，但沒有驗收機制，不知道新人真正掌握了多少。</p>
       </div>
     </div>
   </section>
+</div>
 
-  <hr class="section-divider" />
+<div class="divider"></div>
 
-  <!-- ── Pain Points ─────────────────────── -->
-  <section class="pain-section">
-    <div class="container">
-      <p class="section-label">你是不是也這樣</p>
-      <h2 class="section-title">帶新人的代價，比你想的還大</h2>
-
-      <div class="pain-grid">
-        <div class="pain-card">
-          <div class="pain-icon">⏳</div>
-          <div class="pain-card-body">
-            <h3>老員工帶新人，自己的工作就慢下來</h3>
-            <p>要反覆解釋同一件事，手上的案子跟著延誤——等新人上手，老員工的績效早就受影響了。</p>
-          </div>
-        </div>
-        <div class="pain-card">
-          <div class="pain-icon">📂</div>
-          <div class="pain-card-body">
-            <h3>SOP 手冊找不到，或是版本已經過時</h3>
-            <p>花了時間整理的文件，每次要用的時候都不知道在哪，就算找到了，也不確定是不是最新版。</p>
-          </div>
-        </div>
-        <div class="pain-card">
-          <div class="pain-icon">🔁</div>
-          <div class="pain-card-body">
-            <h3>新人不敢問，問完了又忘，下週再問一遍</h3>
-            <p>教了等於沒教。新人怕打擾，憋著不問；好不容易問了，沒有地方複習，下週又回到原點。</p>
-          </div>
-        </div>
+<!-- WHY SYSTEM -->
+<div class="page-wrap">
+  <section class="section">
+    <div class="reveal">
+      <div class="section-label">ROOT CAUSE</div>
+      <h2 class="section-title">為什麼傳統培訓方式有結構性問題</h2>
+    </div>
+    <div class="why-list">
+      <div class="why-item reveal">
+        <div class="why-idx">1</div>
+        <p>「人帶人」的模式依賴帶人者的時間和意願，這兩樣東西都不穩定。業務忙的時候，帶新人自然排在後面。</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-idx">2</div>
+        <p>培訓內容的完整性取決於帶人者的記憶力——重要的事情有沒有講，取決於帶人者當下有沒有想到。</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-idx">3</div>
+        <p>驗收往往是「試用期結束看表現」，等到發現問題，已經過了一個月。早期的知識缺口沒有被及時補上。</p>
       </div>
     </div>
   </section>
+</div>
 
-  <!-- ── Solution (dark) ───────────────────── -->
-  <section class="solution-section">
-    <div class="container">
-      <p class="section-label">MUSEON 怎麼解</p>
-      <h2 class="section-title">MUSEON 變成新人的第一個老師</h2>
-      <p class="solution-sub">三個步驟，讓公司的知識變成隨時可用的答案——不用靠老員工傳承，也不用靠新人死記。</p>
-
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">01</div>
-          <div class="step-body">
-            <h3>把公司的知識、流程、規則整理進 MUSEON</h3>
-            <p>一次做完，長期有效。從 SOP 到客戶偏好，從供應商特性到突發狀況處理——全部進系統，不再散落各處。</p>
-          </div>
+<!-- MUSEON SOLUTION - DARK -->
+<div class="dark-section">
+  <div class="page-wrap">
+    <div class="reveal">
+      <div class="section-label">MUSEON SOLUTION</div>
+      <h2 class="section-title">MUSEON 的解法，四步驟</h2>
+      <p class="section-desc">從知識庫建立到個人化培訓，再到即時驗收，整個流程系統化。</p>
+    </div>
+    <div class="steps-list">
+      <div class="step-item reveal">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>建立崗位知識庫</h3>
+          <p>把每個職位需要知道的知識整理進系統，新人上任第一天就有完整的學習清單，不靠帶人者記憶。</p>
         </div>
-        <div class="step">
-          <div class="step-number">02</div>
-          <div class="step-body">
-            <h3>新人從第一天就可以問 MUSEON</h3>
-            <p>隨時問、不怕笨問題、不怕打擾別人。公司的每一條經驗，都在那裡等新人去問。</p>
-          </div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>個人化培訓路徑</h3>
+          <p>根據新人的背景和職位，自動生成最適合的學習順序，不是一體適用的培訓手冊，是量身訂做的路徑。</p>
         </div>
-        <div class="step">
-          <div class="step-number">03</div>
-          <div class="step-body">
-            <h3>老員工只需要確認新人做對了沒</h3>
-            <p>不用花時間解釋基礎，只在新人要做決定的時候出現——確認方向，剩下的交給 MUSEON。</p>
-          </div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>即時問答支援</h3>
+          <p>新人遇到問題直接問系統，24 小時有回答，問幾次都沒關係，不需要等老員工有空。</p>
+        </div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>即時考題驗收</h3>
+          <p>每個知識點學完後，系統自動出針對這個知識點的考題，馬上知道有沒有真的學進去，第一週就能找到缺口。</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- ── Case Study ─────────────────────── -->
-  <section class="case-section">
-    <div class="container">
-      <p class="section-label">真實案例</p>
-      <h2 class="section-title">不只是承諾，是可以驗證的結果</h2>
-
-      <div class="case-card">
-        <div class="case-meta">
-          <span class="case-tag">情境案例</span>
-          <span class="case-company">羅臻活動公關</span>
+<!-- MECHANISM -->
+<div class="page-wrap">
+  <section class="section">
+    <div class="reveal">
+      <div class="section-label">HOW IT WORKS</div>
+      <h2 class="section-title">五個核心機制</h2>
+      <p class="section-desc">每個機制對應培訓流程中一個具體的斷點。</p>
+    </div>
+    <div class="mech-cards-wrap">
+      <div class="mech-grid-3">
+        <div class="mech-card reveal">
+          <div class="mech-icon">🗺️</div>
+          <h3>崗位知識地圖</h3>
+          <p>把每個職位需要掌握的知識點系統化，視覺化呈現學習路徑，新人看得到自己在哪裡。</p>
         </div>
-        <h3>新人一週上手，六週縮到兩週</h3>
-        <div class="case-story">
-          <p>羅臻公司的活動協調工作複雜——場地、供應商、客戶要求、突發狀況，每件事都需要經驗判斷。以前帶一個新人至少要六週，整個過程老員工要貼身陪。</p>
-          <p>導入 MUSEON 後，十年的公司知識都整理進去了——常見的場地資訊、各供應商的特性、歷年客戶的偏好、突發狀況的處理方式。</p>
-          <p>新人進來，問題直接問 MUSEON。「這個場地停車場夠不夠用？」「這個供應商有沒有準時的紀錄？」「這個客戶上次對哪個細節特別在意？」MUSEON 都有答案。</p>
-          <p>老員工不用全程陪——他們只要在新人準備要做決定的時候出現，確認方向就好。新人兩週後就能獨立處理基本工作了。</p>
+        <div class="mech-card reveal">
+          <div class="mech-icon">🎯</div>
+          <h3>動態培訓規劃引擎</h3>
+          <p>根據職位描述和現有知識庫，自動生成個人化的培訓清單和推薦學習順序。</p>
         </div>
-
-        <div class="case-results">
-          <div class="result-item">
-            <div class="result-dot"></div>
-            <p>新人獨立作業時間：從 6 週縮到 2 週</p>
-          </div>
-          <div class="result-item">
-            <div class="result-dot"></div>
-            <p>老員工帶人負擔降低約 60%</p>
-          </div>
-          <div class="result-item">
-            <div class="result-dot"></div>
-            <p>新人犯錯率明顯下降</p>
-          </div>
+        <div class="mech-card reveal">
+          <div class="mech-icon">💬</div>
+          <h3>24/7 問答系統</h3>
+          <p>新人提問，系統從知識庫找出最相關的答案，包含背景脈絡和注意事項。</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <hr class="section-divider" />
-
-  <!-- ── Benefits ───────────────────────── -->
-  <section class="benefits-section">
-    <div class="container">
-      <p class="section-label">你得到的是什麼</p>
-      <h2 class="section-title">不只是省時間，是整個擴張邏輯變了</h2>
-
-      <div class="benefits-grid">
-        <div class="benefit-card">
-          <div class="benefit-icon">🧑‍🏫</div>
-          <h3>新人有了全天候的導師</h3>
-          <p>隨時問、不怕打擾老員工、不怕問笨問題。學習的阻力消失，上手速度自然快。</p>
+      <div class="mech-grid-2" style="margin-top:16px">
+        <div class="mech-card reveal">
+          <div class="mech-icon">📝</div>
+          <h3>自動出題系統</h3>
+          <p>根據知識點自動生成考題，題型包含選擇、填空、情境判斷，難度根據掌握程度動態調整。</p>
         </div>
-        <div class="benefit-card">
-          <div class="benefit-icon">🎯</div>
-          <h3>老員工可以繼續做自己的工作</h3>
-          <p>不用因為帶新人就讓自己的效率下滑。把時間還給真正需要判斷力的地方。</p>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon">📈</div>
-          <h3>公司擴張的成本降低了</h3>
-          <p>帶一個人從六週縮到兩週，招人不再是噩夢。規模化不再受限於老員工的精力。</p>
+        <div class="mech-card reveal">
+          <div class="mech-icon">📈</div>
+          <h3>學習進度儀表板</h3>
+          <p>讓主管即時看到每個新人的學習進度、掌握程度、還有哪些知識點需要加強。</p>
         </div>
       </div>
     </div>
   </section>
+</div>
 
-  <!-- ── CTA ───────────────────────────── -->
-  <section class="cta-section">
-    <div class="container">
-      <p class="section-label">下一步</p>
-      <h2 class="cta-title">你的公司在用什麼方式帶新人？</h2>
-      <p class="cta-sub">跟我們聊聊你現在的狀況，我們幫你評估 MUSEON 適不適合、可以怎麼用。</p>
-      <a href="https://lin.ee/OYwE0KA" class="btn-primary" target="_blank" rel="noopener">
-        加 LINE 免費諮詢
-      </a>
-      <p class="cta-disclaimer">免費、不強迫成交、聊完有幫助就繼續</p>
+<div class="divider"></div>
+
+<!-- QUIZ FEATURE SPOTLIGHT -->
+<div class="page-wrap">
+  <section class="section">
+    <div class="reveal">
+      <div class="section-label">FEATURE SPOTLIGHT</div>
+      <h2 class="section-title">即時考題驗收：讓缺口在第一週浮現</h2>
+    </div>
+
+    <div class="quiz-section reveal">
+      <div class="quiz-section-label">QUIZ ENGINE</div>
+      <h3>考題不是為了給壓力，是為了及時補缺口</h3>
+      <p>傳統培訓的問題是「以為教了就學會了」。MUSEON 的考題系統在新人完成每個知識模組後立刻出題，讓知識缺口在第一週就被發現，而不是在第一個月的試用期結束時。</p>
+
+      <div class="quiz-method-grid">
+        <div class="quiz-method-item">
+          <h4>系統自動出題</h4>
+          <p>根據你的知識庫自動生成，不需要主管手動出題，降低管理者的負擔。</p>
+        </div>
+        <div class="quiz-method-item">
+          <h4>多種題型覆蓋</h4>
+          <p>選擇題確認記憶、情境題確認應用、開放題確認理解深度，三層驗收。</p>
+        </div>
+        <div class="quiz-method-item">
+          <h4>難度動態調整</h4>
+          <p>答對率高的模組出更難的題目，答對率低的補充基礎題目，精準補強。</p>
+        </div>
+      </div>
+
+      <div class="quiz-cards-grid">
+        <!-- Card 1: 選擇題 -->
+        <div class="quiz-card reveal">
+          <div class="quiz-card-type">MULTIPLE CHOICE</div>
+          <div class="quiz-card-q">
+            <span class="q-num">Q.1</span> 以下哪一種情況下，應優先通知主管而不是直接回覆客戶？
+          </div>
+          <div class="quiz-options">
+            <div class="quiz-option">A. 客戶詢問常規問題</div>
+            <div class="quiz-option highlight">B. 客戶提出特殊要求 ✓</div>
+            <div class="quiz-option">C. 客戶確認細節</div>
+            <div class="quiz-option">D. 客戶感謝回覆</div>
+          </div>
+        </div>
+
+        <!-- Card 2: 情境題 -->
+        <div class="quiz-card reveal">
+          <div class="quiz-card-type">SCENARIO</div>
+          <div class="quiz-card-q">
+            <span class="q-num">Q.2</span> 你接到一個客戶的抱怨，說上次活動的某個環節讓他們不滿意。按照公司的處理流程，你的第一步應該是？
+          </div>
+          <div class="quiz-options">
+            <div class="quiz-option">開放式回答——</div>
+            <div class="quiz-option" style="color:rgba(253,252,250,0.35); font-style:italic">系統將評估回答是否涵蓋：道歉確認、記錄問題、升級通知主管三個要點。</div>
+          </div>
+        </div>
+
+        <!-- Card 3: 進度卡 -->
+        <div class="quiz-card reveal">
+          <div class="quiz-card-type">PROGRESS TRACKER</div>
+          <div class="quiz-card-q" style="margin-bottom:8px">
+            <span class="q-num">學習狀況</span> 第 2 週第 3 天
+          </div>
+          <div class="quiz-progress">
+            <div class="quiz-progress-label">模組完成度 8 / 12</div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width:66.6%"></div>
+            </div>
+            <div class="progress-note" style="margin-top:6px">本週考題通過率 85%</div>
+          </div>
+          <div style="margin-top:14px; padding: 10px 12px; background: rgba(196,80,42,0.12); border-radius: 8px; border: 1px solid rgba(196,80,42,0.2);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ember-light); margin-bottom:4px;">建議加強</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(253,252,250,0.7);">客戶投訴處理流程</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+</div>
 
-  <!-- ── Footer ─────────────────────────── -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <a href="museon-biz-index.html" class="footer-logo">M<span>·</span>USEON</a>
-      <div class="footer-links">
-        <a href="museon-biz-index.html">功能總覽</a>
-        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener">聯繫我們</a>
-      </div>
-      <p class="footer-copy">© 2026 MUSEON. 臥龍崗管理顧問有限公司</p>
+<!-- SCENARIOS -->
+<div class="page-wrap">
+  <section class="section" style="padding-top:0">
+    <div class="reveal">
+      <div class="section-label">USE CASES</div>
+      <h2 class="section-title">真實使用情境</h2>
     </div>
-  </footer>
+    <div class="scenario-list">
+      <div class="scenario-card reveal">
+        <div class="scenario-label">SCENARIO A — 業務公司</div>
+        <p>一家業務公司新進了 3 個業務員，傳統做法是派一個資深業務帶，但資深業務最近業績壓力大，帶得很勉強。導入 MUSEON 後，三個新人各自按照個人化培訓路徑學習，遇到問題問系統，每個知識點學完後立刻測驗。資深業務從「全程帶人」變成「<strong>每週一次答疑</strong>」，兩人的效率都提升了。</p>
+      </div>
+      <div class="scenario-card reveal">
+        <div class="scenario-label">SCENARIO B — 服務業大量招募</div>
+        <p>一家服務業公司每年都有季節性大量招募。原本培訓期 4 週，但人員流動快，培訓時間長是成本痛點。透過 MUSEON 建立標準化培訓知識庫加上即時考題驗收，培訓期縮短到 <strong>10 天</strong>，品質還比原來更穩定。</p>
+      </div>
+    </div>
+  </section>
+</div>
 
+<!-- CASE STUDY -->
+<div class="page-wrap">
+  <section class="section" style="padding-top:0">
+    <div class="reveal">
+      <div class="section-label">CASE STUDY</div>
+      <h2 class="section-title">真實案例</h2>
+    </div>
+    <div class="case-card reveal">
+      <div class="case-tag">CASE — 活動公關業</div>
+      <h3>深耕業界十年的 7 人規模公關公司</h3>
+      <p>台灣某家深耕業界超過十年的活動公關公司，7 人規模。業務成長期間核心員工陸續離職，一個月走了 5 人。NAS 保有十年完整資料。透過 MUSEON 整理知識庫、建立標準化培訓流程後，生成 <strong>200+ 份模板</strong>，新人上手時間從 <strong>6 週縮短到 1.5 週</strong>。新人有系統可問、有路徑可跟，老員工也從「隨時待命帶人」回到專注自己的業務。</p>
+      <div class="case-stats">
+        <div class="case-stat">
+          <span class="case-stat-num">6w → 1.5w</span>
+          <span class="case-stat-label">新人上手時間</span>
+        </div>
+        <div class="case-stat">
+          <span class="case-stat-num">200+</span>
+          <span class="case-stat-label">標準化模板生成</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- BEFORE / AFTER -->
+<div class="page-wrap">
+  <section class="section" style="padding-top:0">
+    <div class="reveal">
+      <div class="section-label">TRANSFORMATION</div>
+      <h2 class="section-title">導入前 vs 導入後</h2>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-card before reveal">
+        <div class="ba-card-label">BEFORE</div>
+        <div class="ba-item"><div class="ba-dot"></div><span>老員工帶新人，帶人品質參差</span></div>
+        <div class="ba-item"><div class="ba-dot"></div><span>新人問問題靠人情</span></div>
+        <div class="ba-item"><div class="ba-dot"></div><span>培訓標準因人而異</span></div>
+        <div class="ba-item"><div class="ba-dot"></div><span>驗收靠感覺和試用期表現</span></div>
+      </div>
+      <div class="ba-card after reveal">
+        <div class="ba-card-label">AFTER</div>
+        <div class="ba-item"><div class="ba-dot"></div><span>系統帶新人，培訓標準一致</span></div>
+        <div class="ba-item"><div class="ba-dot"></div><span>24/7 都有答案，問幾次都 OK</span></div>
+        <div class="ba-item"><div class="ba-dot"></div><span>路徑個人化，進度一目了然</span></div>
+        <div class="ba-item"><div class="ba-dot"></div><span>知識掌握有數字，缺口即時補</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<div class="page-wrap">
+  <section class="section">
+    <div class="reveal">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">常見問題</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>每個新人學習速度不一樣，系統可以適應嗎？</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>可以。MUSEON 的培訓節奏根據考題通過率動態調整，學得快的可以跳過基礎模組，學得慢的系統會加強薄弱環節。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>如果新人問的問題知識庫裡沒有答案怎麼辦？</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>系統會標記這個問題為「知識庫缺口」，通知管理者補充。這是主動發現知識庫不完整的機制，讓知識庫越來越全面。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>考題是主管出還是系統出？</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>系統根據你的知識庫自動出題，不需要主管手動出題。但主管可以審閱和修改題目，確保符合實際情況。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>老員工也可以用這個系統更新自己的知識嗎？</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><p>可以，而且建議這樣做。公司有流程更新時，老員工也可以透過系統快速補充學習，取代傳統的全員培訓會議。</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="page-wrap">
+    <h2 class="reveal">下一個新人，可以用更好的方式上手</h2>
+    <p class="reveal">讓我們先看看你現有的培訓流程，找出最耗時的部分，從那裡開始改起。</p>
+    <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="btn-cta reveal">加 LINE 免費諮詢</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">© 2024 MUSEON</span>
+    <div class="footer-links">
+      <a href="museon-biz-index.html">返回首頁</a>
+      <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener">加 LINE 聯繫</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+  revealEls.forEach(el => io.observe(el));
+
+  // FAQ accordion
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
 </body>
 </html>

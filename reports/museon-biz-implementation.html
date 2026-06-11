@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSEON 導入流程 — 從諮詢到上線</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    /* ── Tokens ── */
+    :root {
+      --ember:        #C4502A;
+      --ember-light:  #E0714D;
+      --ember-dark:   #9A3A1C;
+      --teal:         #2A7A6E;
+      --gold:         #B8923A;
+      --ink:          #12121A;
+      --slate:        #5A5A6E;
+      --mist:         #9898A8;
+      --border:       #E2E0DA;
+      --parchment:    #F7F5F0;
+      --snow:         #FDFCFA;
+      --deep-ink:     #0E0E16;
+      --surface:      #16161F;
+      --raised:       #1E1E2A;
+      --border-dark:  #2A2A38;
+      --max-w:        820px;
+      --transition:   400ms ease;
+    }
+
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scroll Reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247, 245, 240, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (max-width: 640px) { .nav-inner { padding: 0 16px; } }
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ember);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-back {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate);
+      text-decoration: none;
+      transition: color 300ms;
+    }
+    .nav-back:hover { color: var(--ember); }
+    .nav-line-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      background: var(--ember);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 300ms;
+    }
+    .nav-line-btn:hover { background: var(--ember-dark); }
+    @media (max-width: 480px) {
+      .nav-back { display: none; }
+      .nav-line-btn { padding: 7px 12px; font-size: 12px; }
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: rgba(42, 122, 110, 0.08);
+      border: 1px solid rgba(42, 122, 110, 0.25);
+      padding: 5px 12px;
+      border-radius: 3px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--snow);
+      border-bottom: 1px solid var(--border);
+      padding: 100px 40px 88px;
+    }
+    .hero-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-badge { margin-bottom: 28px; }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5.5vw, 52px);
+      font-weight: 600;
+      line-height: 1.18;
+      color: var(--ink);
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+    .hero-title em { font-style: italic; color: var(--teal); }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--slate);
+      line-height: 1.85;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ── Shared Layout ── */
+    .section-wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    @media (max-width: 768px) { .section-wrap { padding: 60px 24px; } }
+    @media (max-width: 640px) { .section-wrap { padding: 56px 16px; } }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 16px;
+      color: var(--slate);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    /* ── Phase Timeline ── */
+    .phases-bg { background: var(--parchment); }
+    .phases-track {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 56px;
+      position: relative;
+    }
+
+    /* Vertical connector line */
+    .phases-track::before {
+      content: '';
+      position: absolute;
+      left: 40px;
+      top: 64px;
+      bottom: 64px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--teal), rgba(42,122,110,0.1));
+    }
+    @media (max-width: 600px) {
+      .phases-track::before { display: none; }
+    }
+
+    .phase-card {
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+      position: relative;
+    }
+    .phase-card:last-child { margin-bottom: 0; }
+    .phase-card:hover {
+      box-shadow: 0 8px 36px rgba(0,0,0,0.08);
+      border-color: rgba(42,122,110,0.25);
+      transform: translateY(-2px);
+    }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 36px;
+      border-bottom: 1px solid var(--border);
+      background: var(--parchment);
+    }
+    @media (max-width: 560px) {
+      .phase-header { padding: 20px 20px; gap: 16px; }
+    }
+    .phase-num-wrap {
+      position: relative;
+      z-index: 1;
+    }
+    .phase-num {
+      width: 72px;
+      height: 72px;
+      min-width: 72px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .phase-num-digit {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1;
+    }
+    .phase-num-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    @media (max-width: 560px) {
+      .phase-num { width: 56px; height: 56px; min-width: 56px; }
+      .phase-num-digit { font-size: 24px; }
+    }
+    .phase-header-text { flex: 1; }
+    .phase-timing {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+    .phase-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .phase-title em { font-style: italic; color: var(--teal); }
+    .phase-body { padding: 32px 36px; }
+    @media (max-width: 560px) { .phase-body { padding: 24px 20px; } }
+    .phase-desc {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.9;
+      margin-bottom: 24px;
+    }
+    .phase-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 560px) {
+      .phase-details { grid-template-columns: 1fr; }
+    }
+    .phase-detail-box {
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+    .phase-detail-need {
+      background: rgba(196,80,42,0.04);
+      border: 1px solid rgba(196,80,42,0.12);
+    }
+    .phase-detail-output {
+      background: rgba(42,122,110,0.04);
+      border: 1px solid rgba(42,122,110,0.15);
+    }
+    .phase-detail-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .phase-detail-need .phase-detail-label { color: var(--ember); }
+    .phase-detail-output .phase-detail-label { color: var(--teal); }
+    .phase-detail-text {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.75;
+    }
+
+    /* ── Concerns ── */
+    .concerns-bg { background: var(--deep-ink); }
+    .concerns-bg .section-title { color: #fff; }
+    .concerns-bg .section-label { color: var(--mist); }
+    .concerns-bg .section-desc { color: rgba(255,255,255,0.6); }
+    .concerns-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 48px;
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    @media (max-width: 640px) {
+      .concerns-grid { grid-template-columns: 1fr; }
+    }
+    .concern-item {
+      background: var(--surface);
+      padding: 32px 30px;
+      border-right: 1px solid var(--border-dark);
+      border-bottom: 1px solid var(--border-dark);
+      transition: background var(--transition);
+    }
+    .concern-item:hover { background: var(--raised); }
+    /* Remove right border for even items in 2-col */
+    .concern-item:nth-child(even) { border-right: none; }
+    /* Remove bottom border for last 2 items in 2-col */
+    .concern-item:nth-last-child(-n+2) { border-bottom: none; }
+    @media (max-width: 640px) {
+      .concern-item { border-right: none; }
+      .concern-item:last-child { border-bottom: none; }
+      .concern-item:nth-last-child(2) { border-bottom: 1px solid var(--border-dark); }
+    }
+    .concern-q {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .concern-q-icon {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal);
+      background: rgba(42,122,110,0.12);
+      border: 1px solid rgba(42,122,110,0.25);
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .concern-q-text {
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+      line-height: 1.4;
+    }
+    .concern-a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.85;
+      padding-left: 36px;
+    }
+
+    /* ── Next Steps ── */
+    .steps-bg { background: var(--snow); }
+    .next-steps-track {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-top: 48px;
+      position: relative;
+    }
+    @media (max-width: 640px) {
+      .next-steps-track { flex-direction: column; }
+    }
+    /* Horizontal connector */
+    .next-steps-track::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 56px;
+      right: 56px;
+      height: 2px;
+      background: var(--border);
+    }
+    @media (max-width: 640px) {
+      .next-steps-track::before {
+        top: 28px;
+        left: 24px;
+        right: auto;
+        bottom: 28px;
+        width: 2px;
+        height: auto;
+      }
+    }
+    .next-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 12px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 640px) {
+      .next-step {
+        flex-direction: row;
+        text-align: left;
+        gap: 16px;
+        padding: 8px 0;
+      }
+    }
+    .next-step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .next-step:nth-child(1) .next-step-num {
+      background: var(--ember);
+      color: #fff;
+    }
+    .next-step:nth-child(2) .next-step-num {
+      background: var(--snow);
+      color: var(--ember);
+      border: 2px solid var(--ember);
+    }
+    .next-step:nth-child(3) .next-step-num {
+      background: var(--snow);
+      color: var(--teal);
+      border: 2px solid var(--teal);
+    }
+    .next-step:nth-child(4) .next-step-num {
+      background: var(--teal);
+      color: #fff;
+    }
+    @media (max-width: 640px) {
+      .next-step-num { margin-bottom: 0; }
+    }
+    .next-step-content { flex: 1; }
+    .next-step-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .next-step-detail {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--mist);
+      letter-spacing: 0.06em;
+    }
+
+    .next-cta-block {
+      margin-top: 56px;
+      text-align: center;
+      padding: 48px;
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    @media (max-width: 560px) { .next-cta-block { padding: 32px 20px; } }
+    .btn-primary-lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: var(--ember);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 300ms, transform 200ms;
+    }
+    .btn-primary-lg:hover { background: var(--ember-dark); transform: translateY(-2px); }
+    .next-cta-note {
+      font-size: 13px;
+      color: var(--mist);
+      margin-top: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Final CTA ── */
+    .final-cta-bg {
+      background: var(--deep-ink);
+      color: #fff;
+    }
+    .final-cta-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 100px 40px;
+      text-align: center;
+    }
+    @media (max-width: 640px) { .final-cta-inner { padding: 72px 16px; } }
+    .final-cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .final-cta-title em { font-style: italic; color: var(--ember-light); }
+    .final-cta-desc {
+      font-size: 17px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      max-width: 500px;
+      margin: 0 auto 40px;
+    }
+    .btn-cta-final {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--ember);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 300ms, transform 200ms;
+    }
+    .btn-cta-final:hover { background: var(--ember-dark); transform: translateY(-2px); }
+
+    /* ── Timeline Progress Bar ── */
+    .timeline-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 40px;
+      margin-bottom: 56px;
+      background: var(--snow);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .timeline-seg {
+      flex: 1;
+      padding: 14px 16px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .timeline-seg:last-child { border-right: none; }
+    .timeline-seg:hover { background: var(--parchment); }
+    .timeline-seg-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+    .timeline-seg-time {
+      font-size: 12px;
+      color: var(--mist);
+    }
+    @media (max-width: 560px) {
+      .timeline-bar { display: none; }
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--deep-ink);
+      border-top: 1px solid var(--border-dark);
+      padding: 36px 40px;
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-copy { font-size: 13px; color: var(--mist); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 300ms;
+    }
+    .footer-links a:hover { color: var(--ember-light); }
+    @media (max-width: 480px) {
+      .footer-inner { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="museon-biz-index.html" class="nav-brand">MUSEON</a>
+      <div class="nav-right">
+        <a href="museon-biz-index.html" class="nav-back">← 返回首頁</a>
+        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="nav-line-btn">加 LINE 諮詢</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner reveal">
+      <div class="hero-badge">
+        <span class="badge">IMPLEMENTATION GUIDE</span>
+      </div>
+      <h1 class="hero-title">知道自己需要，<em>不知道怎麼開始</em>——這是最常見的卡點</h1>
+      <p class="hero-sub">很多企業主理解了 MUSEON 能做什麼，但擔心導入很複雜、要配合很多東西、會打擾到現有工作。這個頁面說明整個過程是什麼樣子的。</p>
+    </div>
+  </section>
+
+  <!-- PHASES -->
+  <div class="phases-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">導入流程</div>
+        <h2 class="section-title">四個階段，最快 2.5 週完成</h2>
+        <p class="section-desc">每個階段的目標清楚，你需要配合的時間比你想像的少。</p>
+      </div>
+
+      <!-- Timeline overview bar -->
+      <div class="timeline-bar reveal">
+        <div class="timeline-seg">
+          <div class="timeline-seg-name">盤點</div>
+          <div class="timeline-seg-time">2-3 天</div>
+        </div>
+        <div class="timeline-seg">
+          <div class="timeline-seg-name">建置</div>
+          <div class="timeline-seg-time">1-2 週</div>
+        </div>
+        <div class="timeline-seg">
+          <div class="timeline-seg-name">試跑</div>
+          <div class="timeline-seg-time">1 週</div>
+        </div>
+        <div class="timeline-seg">
+          <div class="timeline-seg-name">上線優化</div>
+          <div class="timeline-seg-time">持續</div>
+        </div>
+      </div>
+
+      <div class="phases-track">
+        <!-- Phase 1 -->
+        <div class="phase-card reveal">
+          <div class="phase-header">
+            <div class="phase-num-wrap">
+              <div class="phase-num">
+                <span class="phase-num-digit">1</span>
+                <span class="phase-num-label">PHASE</span>
+              </div>
+            </div>
+            <div class="phase-header-text">
+              <div class="phase-timing">2-3 天</div>
+              <h3 class="phase-title">盤點 — <em>先搞清楚你現在在哪裡</em></h3>
+            </div>
+          </div>
+          <div class="phase-body">
+            <p class="phase-desc">我們不急著動工。先花 2-3 天了解你的公司現況：知識在哪裡、流程怎麼跑、員工的工作習慣、最大的痛點是什麼。盤點結果會告訴你，哪一個功能對你的投資報酬率最高，從那裡開始做起。</p>
+            <div class="phase-details">
+              <div class="phase-detail-box phase-detail-need">
+                <div class="phase-detail-label">你需要配合的</div>
+                <p class="phase-detail-text">1-2 小時的諮詢對話，開放 NAS 或文件資料夾讓我們了解現有資料</p>
+              </div>
+              <div class="phase-detail-box phase-detail-output">
+                <div class="phase-detail-label">預期產出</div>
+                <p class="phase-detail-text">一份「現況分析報告」，說明最優先導入的功能和預期效益</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="phase-card reveal">
+          <div class="phase-header">
+            <div class="phase-num-wrap">
+              <div class="phase-num">
+                <span class="phase-num-digit">2</span>
+                <span class="phase-num-label">PHASE</span>
+              </div>
+            </div>
+            <div class="phase-header-text">
+              <div class="phase-timing">1-2 週</div>
+              <h3 class="phase-title">建置 — <em>把你的知識搬進系統</em></h3>
+            </div>
+          </div>
+          <div class="phase-body">
+            <p class="phase-desc">根據盤點結果，我們開始建置核心功能。這個階段你的員工不需要做任何改變，只需要讓我們接觸現有資料。知識庫建置、流程梳理、標準制定，這些全部由我們來主導。</p>
+            <div class="phase-details">
+              <div class="phase-detail-box phase-detail-need">
+                <div class="phase-detail-label">你需要配合的</div>
+                <p class="phase-detail-text">指定一個聯絡窗口（可以是老闆或主管），每天大約 30 分鐘的確認</p>
+              </div>
+              <div class="phase-detail-box phase-detail-output">
+                <div class="phase-detail-label">預期產出</div>
+                <p class="phase-detail-text">可以開始使用的初版知識庫和核心功能</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="phase-card reveal">
+          <div class="phase-header">
+            <div class="phase-num-wrap">
+              <div class="phase-num">
+                <span class="phase-num-digit">3</span>
+                <span class="phase-num-label">PHASE</span>
+              </div>
+            </div>
+            <div class="phase-header-text">
+              <div class="phase-timing">1 週</div>
+              <h3 class="phase-title">試跑 — <em>讓員工開始用，觀察哪裡卡</em></h3>
+            </div>
+          </div>
+          <div class="phase-body">
+            <p class="phase-desc">初版上線後，讓 2-3 個員工開始實際使用。這個階段的目的是找出系統和你們實際工作流之間的落差，做快速調整。試跑範圍小、時間短，就算有問題也容易修正。</p>
+            <div class="phase-details">
+              <div class="phase-detail-box phase-detail-need">
+                <div class="phase-detail-label">你需要配合的</div>
+                <p class="phase-detail-text">2-3 個意願參與的員工，每天使用並提供簡單的反饋</p>
+              </div>
+              <div class="phase-detail-box phase-detail-output">
+                <div class="phase-detail-label">預期產出</div>
+                <p class="phase-detail-text">調整好的正式版本，準備全員上線</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="phase-card reveal">
+          <div class="phase-header">
+            <div class="phase-num-wrap">
+              <div class="phase-num">
+                <span class="phase-num-digit">4</span>
+                <span class="phase-num-label">PHASE</span>
+              </div>
+            </div>
+            <div class="phase-header-text">
+              <div class="phase-timing">持續進行</div>
+              <h3 class="phase-title">上線與持續優化 — <em>越用越精準</em></h3>
+            </div>
+          </div>
+          <div class="phase-body">
+            <p class="phase-desc">全員上線後，系統進入自動累積模式。員工每次使用，系統自動學習和更新。我們每個月會做一次優化確認，看哪些地方可以進一步提升效率。這不是配置一次就結束的工具，而是隨你的公司一起成長的系統。</p>
+            <div class="phase-details">
+              <div class="phase-detail-box phase-detail-need">
+                <div class="phase-detail-label">你需要配合的</div>
+                <p class="phase-detail-text">正常使用就好。遇到不夠好的地方，直接告訴我們</p>
+              </div>
+              <div class="phase-detail-box phase-detail-output">
+                <div class="phase-detail-label">預期產出</div>
+                <p class="phase-detail-text">一個持續進化的 AI 團隊支援系統，效益隨時間加深</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCERNS -->
+  <div class="concerns-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">常見顧慮</div>
+        <h2 class="section-title" style="color:#fff;">你可能在想的事</h2>
+        <p class="section-desc">導入新工具的擔憂是正常的。這裡直接回答最常見的六個問題。</p>
+      </div>
+      <div class="concerns-grid reveal">
+        <div class="concern-item">
+          <div class="concern-q">
+            <span class="concern-q-icon">Q</span>
+            <span class="concern-q-text">導入期間會影響員工的正常工作嗎？</span>
+          </div>
+          <p class="concern-a">不會。前兩個階段（盤點和建置）主要是我們在做，你的員工繼續正常工作。試跑階段只有 2-3 個員工用，不影響其他人。</p>
+        </div>
+        <div class="concern-item">
+          <div class="concern-q">
+            <span class="concern-q-icon">Q</span>
+            <span class="concern-q-text">我的資料放進去安全嗎？</span>
+          </div>
+          <p class="concern-a">你的資料存在你自己的系統裡，不會上傳到 MUSEON 的伺服器。整個系統是在你的環境內部署的，資料主權完全在你這邊。</p>
+        </div>
+        <div class="concern-item">
+          <div class="concern-q">
+            <span class="concern-q-icon">Q</span>
+            <span class="concern-q-text">需要買特別的硬體嗎？</span>
+          </div>
+          <p class="concern-a">不需要。大部分情況下，現有的電腦和網路環境就夠了。我們在評估階段會確認你的環境是否需要任何調整。</p>
+        </div>
+        <div class="concern-item">
+          <div class="concern-q">
+            <span class="concern-q-icon">Q</span>
+            <span class="concern-q-text">導入後如果員工不習慣怎麼辦？</span>
+          </div>
+          <p class="concern-a">習慣期是正常的，通常 1-2 週後員工會開始覺得順手。我們有培訓支援，幫員工快速熟悉使用方式，並在試跑階段就把這個問題解決。</p>
+        </div>
+        <div class="concern-item">
+          <div class="concern-q">
+            <span class="concern-q-icon">Q</span>
+            <span class="concern-q-text">整個導入過程要多少費用？</span>
+          </div>
+          <p class="concern-a">根據公司規模和導入的功能範圍，費用不同。我們在第一次諮詢後會提供明確的報價。LINE 聯繫我們免費評估，不需要事先準備任何東西。</p>
+        </div>
+        <div class="concern-item">
+          <div class="concern-q">
+            <span class="concern-q-icon">Q</span>
+            <span class="concern-q-text">如果導入後效果不好怎麼辦？</span>
+          </div>
+          <p class="concern-a">我們在第一次諮詢時會明確說明「在你的情況下，這個功能可以帶來什麼改變」。如果評估後我們認為效益不明顯，我們會直接告訴你，不會為了成交而誇大。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div class="steps-bg">
+    <div class="section-wrap">
+      <div class="reveal">
+        <div class="section-label">你的下一步</div>
+        <h2 class="section-title">從這裡開始，四個動作就夠了</h2>
+        <p class="section-desc">不需要先準備什麼，也不需要等一個完美的時間點。</p>
+      </div>
+
+      <div class="next-steps-track reveal">
+        <div class="next-step">
+          <div class="next-step-num">1</div>
+          <div class="next-step-content">
+            <div class="next-step-title">加 LINE 聯繫我們</div>
+            <div class="next-step-detail">今天</div>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="next-step-num">2</div>
+          <div class="next-step-content">
+            <div class="next-step-title">免費諮詢 60 分鐘</div>
+            <div class="next-step-detail">了解是否適合 · 不收費</div>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="next-step-num">3</div>
+          <div class="next-step-content">
+            <div class="next-step-title">盤點分析</div>
+            <div class="next-step-detail">找出最值得的切入點</div>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="next-step-num">4</div>
+          <div class="next-step-content">
+            <div class="next-step-title">開始建置</div>
+            <div class="next-step-detail">最快 1 週可用</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="next-cta-block reveal">
+        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="btn-primary-lg">加 LINE 開始第一步 →</a>
+        <p class="next-cta-note">第一次諮詢完全免費，不需要先準備任何資料</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL CTA -->
+  <div class="final-cta-bg">
+    <div class="final-cta-inner">
+      <h2 class="final-cta-title reveal">大部分公司<em>兩週內就能看到變化</em></h2>
+      <p class="final-cta-desc reveal">從諮詢到初版上線，最快 2.5 週。你不需要等一個完美的時間點，現在就可以開始評估。</p>
+      <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener" class="btn-cta-final reveal">加 LINE 免費諮詢 →</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-copy">© 2024 MUSEON</span>
+      <div class="footer-links">
+        <a href="museon-biz-index.html">返回首頁</a>
+        <a href="https://lin.ee/OYwE0KA" target="_blank" rel="noopener">加 LINE 聯繫</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // IntersectionObserver scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+
+</body>
+</html>
