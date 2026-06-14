@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HE — SSA 顧問評估報告</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    background: #0E0E16;
+    padding: 60px 40px 48px;
+    text-align: center;
+  }
+  .header-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 500;
+    color: #F7F5F0;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .header-sub {
+    font-size: 14px;
+    color: #9898A8;
+    margin-bottom: 32px;
+  }
+  .header-tags {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .tag-amber { color: var(--gold); border-color: var(--gold); background: rgba(184,146,58,0.08); }
+  .tag-teal  { color: #4ABEAE; border-color: #4ABEAE; background: rgba(74,190,174,0.08); }
+  .tag-ember { color: var(--ember-light); border-color: var(--ember); background: rgba(196,80,42,0.1); }
+
+  /* ─── Layout ─── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ─── Section Title ─── */
+  .section {
+    margin-top: 56px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 24px;
+    line-height: 1.25;
+  }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .card p {
+    color: var(--ink);
+    font-size: 14.5px;
+    line-height: 1.75;
+  }
+
+  /* ─── Profile Row ─── */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
+
+  .profile-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .profile-card .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mist);
+    margin-bottom: 6px;
+  }
+  .profile-card .metric-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .profile-card .metric-note {
+    font-size: 12.5px;
+    color: var(--slate);
+    line-height: 1.5;
+  }
+
+  /* ─── Trait Bars ─── */
+  .trait-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .trait-label { font-size: 13px; color: var(--ink); width: 90px; flex-shrink: 0; }
+  .trait-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 6px; }
+  .trait-bar { height: 6px; border-radius: 4px; }
+  .trait-val { font-size: 12px; font-weight: 600; color: var(--slate); width: 36px; text-align: right; }
+  .bar-high { background: var(--teal); }
+  .bar-mid  { background: var(--gold); }
+  .bar-low  { background: #E2977A; }
+
+  /* ─── Failure Modes ─── */
+  .failure-list { list-style: none; }
+  .failure-item {
+    display: flex;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .failure-item:last-child { border-bottom: none; }
+  .failure-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 40px;
+  }
+  .failure-content {}
+  .failure-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .failure-desc { font-size: 13.5px; color: var(--slate); line-height: 1.65; }
+  .failure-signal {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ember);
+    background: rgba(196,80,42,0.07);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  /* ─── Pro/Con ─── */
+  .pro-con-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .pro-con-grid { grid-template-columns: 1fr; } }
+
+  .pro-con-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .pro-con-card h4 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+  .pro-h4 { color: var(--teal); }
+  .con-h4 { color: var(--ember); }
+  .pro-con-list { list-style: none; }
+  .pro-con-list li {
+    font-size: 13.5px;
+    color: var(--ink);
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .pro-con-list li:last-child { border-bottom: none; }
+  .li-dot { font-size: 16px; line-height: 1.4; flex-shrink: 0; }
+  .pro-dot { color: var(--teal); }
+  .con-dot { color: var(--ember); }
+
+  /* ─── Blindspot Grid ─── */
+  .blindspot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 700px) { .blindspot-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 440px) { .blindspot-grid { grid-template-columns: 1fr; } }
+
+  .bs-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .bs-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .bs-high .bs-num { color: var(--ember); }
+  .bs-mid .bs-num  { color: var(--gold); }
+  .bs-low .bs-num  { color: var(--mist); }
+
+  .bs-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .bs-level {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .level-high { color: var(--ember); }
+  .level-mid  { color: var(--gold); }
+  .level-low  { color: var(--mist); }
+  .bs-desc { font-size: 12.5px; color: var(--slate); line-height: 1.55; }
+
+  /* ─── SSA Fit ─── */
+  .ssa-modules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) { .ssa-modules { grid-template-columns: 1fr; } }
+
+  .ssa-mod {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    display: flex;
+    gap: 14px;
+  }
+  .ssa-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+  }
+  .ssa-mod-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .ssa-mod-before {
+    font-size: 12px;
+    color: var(--mist);
+    margin-bottom: 2px;
+    text-decoration: line-through;
+  }
+  .ssa-mod-after { font-size: 12.5px; color: var(--teal); font-weight: 500; }
+
+  /* ─── Sales Script ─── */
+  .script-block {
+    background: #0E0E16;
+    border-radius: 12px;
+    padding: 32px 36px;
+    margin-bottom: 16px;
+  }
+  .script-step {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    margin-bottom: 10px;
+  }
+  .script-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #F7F5F0;
+    margin-bottom: 14px;
+  }
+  .script-text {
+    font-size: 14px;
+    color: #9898A8;
+    line-height: 1.75;
+    font-style: italic;
+    border-left: 2px solid var(--ember);
+    padding-left: 16px;
+    margin-bottom: 14px;
+  }
+  .script-note {
+    font-size: 12.5px;
+    color: #5A5A6E;
+    line-height: 1.6;
+  }
+
+  /* ─── Pricing ─── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 680px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+  .price-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .price-card.recommended {
+    border-color: var(--ember);
+    position: relative;
+  }
+  .recommended-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ember);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .price-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--mist); margin-bottom: 10px; }
+  .price-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .price-unit { font-size: 12px; color: var(--mist); margin-bottom: 14px; }
+  .price-desc { font-size: 12.5px; color: var(--slate); line-height: 1.6; }
+
+  /* ─── Red Lines ─── */
+  .red-lines {
+    background: #FEF4F0;
+    border: 1px solid #F5C9BB;
+    border-radius: 10px;
+    padding: 24px 28px;
+  }
+  .red-lines h4 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ember-dark);
+    margin-bottom: 14px;
+  }
+  .red-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+    color: #7A3020;
+    line-height: 1.6;
+  }
+  .red-item:last-child { margin-bottom: 0; }
+  .red-x { color: var(--ember); font-weight: 700; flex-shrink: 0; }
+
+  /* ─── Quote ─── */
+  .quote-block {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 24px 28px;
+    margin: 24px 0;
+  }
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .quote-source { font-size: 12px; color: var(--mist); }
+
+  /* ─── Divider ─── */
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    background: #0E0E16;
+    padding: 36px 40px;
+    text-align: center;
+  }
+  .footer p {
+    font-size: 12px;
+    color: #5A5A6E;
+    line-height: 1.8;
+  }
+  .footer strong { color: #9898A8; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-label">顧問式銷售評估報告 · 機密</div>
+  <h1>HE 的 SSA 轉型路徑<br>為什麼現在是對的時間</h1>
+  <div class="header-sub">2026 年 6 月 14 日 · 基於 78 次互動記錄 + 三份深度分析</div>
+  <div class="header-tags">
+    <span class="tag tag-amber">整合型顧問候選</span>
+    <span class="tag tag-teal">六大盲點 4/6 命中</span>
+    <span class="tag tag-ember">職涯轉型黃金期</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Section 1: 鏡像現狀 -->
+  <div class="section">
+    <div class="section-label">01 — 現況鏡像</div>
+    <h2 class="section-title">HE 現在在哪裡</h2>
+
+    <div class="profile-grid">
+      <div class="profile-card">
+        <div class="metric-label">互動記錄</div>
+        <div class="metric-val">78 次</div>
+        <div class="metric-note">2026-03-29 至 2026-06-09<br>信任等級：Established（已建立）</div>
+      </div>
+      <div class="profile-card">
+        <div class="metric-label">生命靈數</div>
+        <div class="metric-val">33/6</div>
+        <div class="metric-note">大師數 — 療癒師與傳遞者<br>雙子座 × 甲戌年柱</div>
+      </div>
+      <div class="profile-card">
+        <div class="metric-label">當前身份</div>
+        <div class="metric-val">轉職中</div>
+        <div class="metric-note">從行銷執行者 → 整合型顧問<br>管過千萬等級案子</div>
+      </div>
+      <div class="profile-card">
+        <div class="metric-label">核心困境</div>
+        <div class="metric-val">錨點缺失</div>
+        <div class="metric-note">能力已到顧問等級<br>缺乏可複製的方法論支撐</div>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top: 24px;">
+      <div class="quote-text">「我喜歡的應該是跟人連結、認識新朋友，去思考我能幫上什麼忙。管理千萬等級的案子，我也幾乎不用執行，只要把每個項目都找到信任的人或廠商交付，並確認進度就好。」</div>
+      <div class="quote-source">— HE 本人，2026-06-09 與 MUSEON 的對話</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ANIMA 八原語能量雷達</div>
+      <div style="margin-top: 8px;">
+        <div class="trait-row">
+          <span class="trait-label">好奇心</span>
+          <div class="trait-bar-wrap"><div class="trait-bar bar-high" style="width: 100%;"></div></div>
+          <span class="trait-val">100</span>
+        </div>
+        <div class="trait-row">
+          <span class="trait-label">行動力</span>
+          <div class="trait-bar-wrap"><div class="trait-bar bar-high" style="width: 81%;"></div></div>
+          <span class="trait-val">81</span>
+        </div>
+        <div class="trait-row">
+          <span class="trait-label">積累力</span>
+          <div class="trait-bar-wrap"><div class="trait-bar bar-high" style="width: 80%;"></div></div>
+          <span class="trait-val">80</span>
+        </div>
+        <div class="trait-row">
+          <span class="trait-label">盲點</span>
+          <div class="trait-bar-wrap"><div class="trait-bar bar-mid" style="width: 37%;"></div></div>
+          <span class="trait-val">37</span>
+        </div>
+        <div class="trait-row">
+          <span class="trait-label">嚮往感</span>
+          <div class="trait-bar-wrap"><div class="trait-bar bar-low" style="width: 27%;"></div></div>
+          <span class="trait-val">27</span>
+        </div>
+        <div class="trait-row">
+          <span class="trait-label">情緒模式</span>
+          <div class="trait-bar-wrap"><div class="trait-bar bar-low" style="width: 16%;"></div></div>
+          <span class="trait-val">16</span>
+        </div>
+      </div>
+      <p style="margin-top: 12px; font-size: 13px; color: var(--slate);">好奇心 100 + 行動力 81 是頂尖執行者的雷達。但嚮往感 27、情緒模式 16 揭示一個核心問題：她知道怎麼動，卻還不確定為什麼要往那個方向動。</p>
+    </div>
+  </div>
+
+  <!-- Section 2: 五種失敗模式 -->
+  <div class="section">
+    <div class="section-label">02 — 觀察</div>
+    <h2 class="section-title">HE 使用 MUSEON 的<br>五種失敗模式</h2>
+    <p style="color: var(--slate); margin-bottom: 28px; font-size: 14px;">這不是 MUSEON 的問題，這是她當前思維框架的真實樣本。每一個失敗模式，都是她需要 SSA 的具體原因。</p>
+
+    <ul class="failure-list card">
+      <li class="failure-item">
+        <span class="failure-num">01</span>
+        <div class="failure-content">
+          <div class="failure-title">需求表述不清 → 反覆返工</div>
+          <div class="failure-desc">製作 PPT 時缺少日期標註，完成後才發現需要修改。來回確認多次，資源消耗在執行而非思考。根因：沒有「需求框架」，靠直覺描述，不靠結構拆解。</div>
+          <span class="failure-signal">SSA 對應：需求結構化思維</span>
+        </div>
+      </li>
+      <li class="failure-item">
+        <span class="failure-num">02</span>
+        <div class="failure-content">
+          <div class="failure-title">工具期望與現實不符</div>
+          <div class="failure-desc">要求分析股市交易記錄，但上傳的圖片模糊無法識別。沒有事先驗證工具邊界，導致時間浪費。根因：缺乏系統性的「資源盤點」思維。</div>
+          <span class="failure-signal">SSA 對應：槓桿選擇 × 工具評估</span>
+        </div>
+      </li>
+      <li class="failure-item">
+        <span class="failure-num">03</span>
+        <div class="failure-content">
+          <div class="failure-title">沒有框架詢問客戶 → 問題散點化</div>
+          <div class="failure-desc">在幫農業客戶設計分潤機制時，是逐一詢問個別問題（月成交件數？客單價？），而非用系統框架一次拿到完整資訊。這在客戶面前顯得像是摸索，而非顧問。</div>
+          <span class="failure-signal">SSA 對應：顧問式提問結構</span>
+        </div>
+      </li>
+      <li class="failure-item">
+        <span class="failure-num">04</span>
+        <div class="failure-content">
+          <div class="failure-title">身份搖擺 → 能量消耗在「定位」上</div>
+          <div class="failure-desc">在「社群代操執行者」「整合顧問」「NLP教練」之間沒有清晰主軸。與不同人說話時，調整自己的「版本」，而非用統一身份去吸引對的客戶。</div>
+          <span class="failure-signal">SSA 對應：品牌身份建立</span>
+        </div>
+      </li>
+      <li class="failure-item">
+        <span class="failure-num">05</span>
+        <div class="failure-content">
+          <div class="failure-title">33號人陷阱：無限承接 → 沒有定價</div>
+          <div class="failure-desc">靈魂藍圖揭示的 33 號陰暗面——說不出「不」、把別人的問題當自己的問題解。在沒有 SSA 框架的狀況下，她的「連結能力」會被免費消耗，而非轉化為商業價值。</div>
+          <span class="failure-signal">SSA 對應：價值定價 × 邊界設計</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Section 3: 社群顧問優缺點 -->
+  <div class="section">
+    <div class="section-label">03 — 顧問能力評估</div>
+    <h2 class="section-title">身為社群顧問<br>HE 的真實優勢與缺口</h2>
+
+    <div class="pro-con-grid">
+      <div class="pro-con-card">
+        <h4 class="pro-h4">核心優勢</h4>
+        <ul class="pro-con-list">
+          <li><span class="li-dot pro-dot">+</span>「第一次見面都能聊滿一小時」—— 天生信任感建立能力</li>
+          <li><span class="li-dot pro-dot">+</span>管過千萬等級案子，懂項目協調而非個人執行</li>
+          <li><span class="li-dot pro-dot">+</span>好奇心 100 —— 願意深挖客戶需求，不停在表面</li>
+          <li><span class="li-dot pro-dot">+</span>已有主動帶入客戶的行為（農業行銷案）</li>
+          <li><span class="li-dot pro-dot">+</span>33/6 語言轉化天賦 —— 能讓複雜事變得容易理解</li>
+          <li><span class="li-dot pro-dot">+</span>跟隨型執行力強，給方向就能動</li>
+        </ul>
+      </div>
+      <div class="pro-con-card">
+        <h4 class="con-h4">當前缺口</h4>
+        <ul class="pro-con-list">
+          <li><span class="li-dot con-dot">−</span>缺乏可複製的顧問方法論，靠直覺而非框架</li>
+          <li><span class="li-dot con-dot">−</span>不知道如何把「判斷力」計價，常低估自己</li>
+          <li><span class="li-dot con-dot">−</span>嚮往感 27 —— 沒有強烈的方向驅動力，容易被動漂移</li>
+          <li><span class="li-dot con-dot">−</span>情緒模式 16 —— 在需要深度情感共鳴的場景中力道不足</li>
+          <li><span class="li-dot con-dot">−</span>關係深度 23 —— 廣而不深，難建立高價值長期合作</li>
+          <li><span class="li-dot con-dot">−</span>身份錨點缺失，無法讓客戶用一句話介紹她是誰</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title">核心矛盾</div>
+      <p>HE 已有顧問等級的能力，但沒有顧問等級的框架。她用「執行者」的身份在市場上定價，卻用「整合者」的智慧在真正解決客戶問題。這中間的落差，正是她現在被低估、被低價的根本原因。</p>
+    </div>
+  </div>
+
+  <!-- Section 4: 六大盲點命中 -->
+  <div class="section">
+    <div class="section-label">04 — 盲點分析</div>
+    <h2 class="section-title">六大盲點<br>HE 的命中地圖</h2>
+
+    <div class="blindspot-grid">
+      <div class="bs-card bs-high">
+        <div class="bs-num">#1</div>
+        <div class="bs-name">不知自己是誰</div>
+        <div class="bs-level level-high">高度命中</div>
+        <div class="bs-desc">轉職中、身份搖擺於執行者/顧問/教練三角，缺乏清晰的核心身份錨點</div>
+      </div>
+      <div class="bs-card bs-high">
+        <div class="bs-num">#2</div>
+        <div class="bs-name">沒有方向目標</div>
+        <div class="bs-level level-high">高度命中</div>
+        <div class="bs-desc">嚮往感僅 27，知道「想做業務」但缺乏具體可操作的 5 年轉型路徑</div>
+      </div>
+      <div class="bs-card bs-mid">
+        <div class="bs-num">#3</div>
+        <div class="bs-name">不掌握 GAP</div>
+        <div class="bs-level level-mid">中度命中</div>
+        <div class="bs-desc">知道自己有潛力，但不清楚能力到顧問等級的具體缺口是什麼</div>
+      </div>
+      <div class="bs-card bs-mid">
+        <div class="bs-num">#4</div>
+        <div class="bs-name">未盤點累積</div>
+        <div class="bs-level level-mid">中度命中</div>
+        <div class="bs-desc">有豐富人脈和千萬等級案子經驗，但沒有系統化整理成可展示的資產</div>
+      </div>
+      <div class="bs-card bs-high">
+        <div class="bs-num">#5</div>
+        <div class="bs-name">不懂槓桿</div>
+        <div class="bs-level level-high">高度命中</div>
+        <div class="bs-desc">靠個人接觸和關係帶客戶，沒有可複製的系統讓影響力放大</div>
+      </div>
+      <div class="bs-card bs-mid">
+        <div class="bs-num">#6</div>
+        <div class="bs-name">缺整合佈局</div>
+        <div class="bs-level level-mid">中度命中</div>
+        <div class="bs-desc">看到個別的機會點，還沒串成完整的業務模式和收入飛輪</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: SSA 如何對應 -->
+  <div class="section">
+    <div class="section-label">05 — 解方評估</div>
+    <h2 class="section-title">SSA 對 HE 的<br>精準價值主張</h2>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-title">為什麼是 SSA，不是其他課程</div>
+      <p>HE 的問題不是「技能不夠」——她已經有足夠的技能。她的問題是沒有一套框架讓她把技能轉化為可定價、可複製、可擴張的事業體。SSA（策略性自我架構）正是這個框架。</p>
+    </div>
+
+    <div class="ssa-modules">
+      <div class="ssa-mod">
+        <div class="ssa-icon">🪞</div>
+        <div>
+          <div class="ssa-mod-title">六大盲點系統</div>
+          <div class="ssa-mod-before">身份搖擺 → 每次見客戶重新介紹自己</div>
+          <div class="ssa-mod-after">→ 有一句話精準說明她能解決什麼問題</div>
+        </div>
+      </div>
+      <div class="ssa-mod">
+        <div class="ssa-icon">🎯</div>
+        <div>
+          <div class="ssa-mod-title">方向目標建立</div>
+          <div class="ssa-mod-before">知道想做業務 → 不知道往哪個業務走</div>
+          <div class="ssa-mod-after">→ 3 個月、1 年、3 年具體可執行路徑圖</div>
+        </div>
+      </div>
+      <div class="ssa-mod">
+        <div class="ssa-icon">⚖️</div>
+        <div>
+          <div class="ssa-mod-title">價值定價框架</div>
+          <div class="ssa-mod-before">賣工時 → 比價格、比執行速度</div>
+          <div class="ssa-mod-after">→ 賣判斷 + 賣連結，整合顧問計價</div>
+        </div>
+      </div>
+      <div class="ssa-mod">
+        <div class="ssa-icon">🔗</div>
+        <div>
+          <div class="ssa-mod-title">人脈槓桿化</div>
+          <div class="ssa-mod-before">靠個人關係 → 帶一個算一個</div>
+          <div class="ssa-mod-after">→ 轉介紹飛輪 × 媒合費系統</div>
+        </div>
+      </div>
+      <div class="ssa-mod">
+        <div class="ssa-icon">📋</div>
+        <div>
+          <div class="ssa-mod-title">顧問式提問</div>
+          <div class="ssa-mod-before">逐問摸索 → 在客戶面前像學生</div>
+          <div class="ssa-mod-after">→ 結構化診斷，讓客戶感受被專業看見</div>
+        </div>
+      </div>
+      <div class="ssa-mod">
+        <div class="ssa-icon">📐</div>
+        <div>
+          <div class="ssa-mod-title">業務模式整合</div>
+          <div class="ssa-mod-before">看到個別機會 → 散點無系統</div>
+          <div class="ssa-mod-after">→ 三層收入結構（現金流/主力/志向）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 6: 顧問式銷售腳本 -->
+  <div class="section">
+    <div class="section-label">06 — 顧問式銷售腳本</div>
+    <h2 class="section-title">如何邀請 HE<br>付費上 SSA 課程</h2>
+
+    <div class="script-block">
+      <div class="script-step">Step 1 — 開場鏡像</div>
+      <div class="script-title">讓她看見自己，不要讓她感覺被推銷</div>
+      <div class="script-text">「我一直在觀察你用 MUSEON 的方式。你問的問題都不像一般用戶——你在問分潤機制、怎麼設計服務、怎麼帶客戶進來。這讓我覺得，你其實已經在做顧問的工作，只是你自己可能還沒用那個身份去定義自己。」</div>
+      <div class="script-note">說話的姿態是「觀察者」而非「推銷員」。她會感覺被看見，而非被說服。</div>
+    </div>
+
+    <div class="script-block">
+      <div class="script-step">Step 2 — 揭示 GAP</div>
+      <div class="script-title">用她的真實案例當鏡子</div>
+      <div class="script-text">「你之前幫農業客戶那個案子——你帶進來、你分析、你設計分潤。那個過程你是怎麼收費的？只收執行費？還是連前面的分析也獨立計價了？」
+      <br><br>（等她回答）
+      <br><br>「這就是我想跟你聊的。你花在想清楚這個架構的腦力，跟你花在發文的手力，其實根本不是同一個等級的東西。但大多數人把這兩件事混在一起收，結果是最值錢的那部分被免費送出去了。」</div>
+      <div class="script-note">用她親身的案例，不用假設情境。她會感覺「你真的理解我的狀況」。</div>
+    </div>
+
+    <div class="script-block">
+      <div class="script-step">Step 3 — 框架價值展示</div>
+      <div class="script-title">SSA 不是課，是架構</div>
+      <div class="script-text">「SSA 不是教你怎麼發文或做廣告。它是幫你釐清三件事：你是誰（身份錨點）、你在解決誰的什麼問題（GAP 定位）、你怎麼讓這件事可以複製（業務飛輪）。這三件事想清楚之後，你的人脈、你的執行力、你的連結能力才會開始有槓桿。不然再努力也是靠個人時間換錢。」</div>
+      <div class="script-note">說 SSA 是「框架」而非「知識」，對重視實用的她更有說服力。</div>
+    </div>
+
+    <div class="script-block">
+      <div class="script-step">Step 4 — 被選中感</div>
+      <div class="script-title">邀請，不是推銷</div>
+      <div class="script-text">「我不是跟所有人說這個的。你有人脈、有帶客戶的本能、有專案管理的底，這三樣同時具備的人其實不多。SSA 不是幫你從零開始，是幫你把已經有的東西，架得更穩、走得更快。」</div>
+      <div class="script-note">不催促，不給壓力。她是跟隨型，需要「被召喚的感覺」，而非「被推動的感覺」。</div>
+    </div>
+
+    <div class="script-block">
+      <div class="script-step">Step 5 — 降低入場門檻</div>
+      <div class="script-title">讓下一步很輕鬆</div>
+      <div class="script-text">「你不用今天決定。我的建議是先把自己的三層服務寫下來——執行、整合、連結，各自對應什麼價格。這個動作做一次，你就會清楚你現在最應該把時間放在哪裡。有興趣的話，我們可以一起看。」</div>
+      <div class="script-note">給她一個小行動，而非大決策。成交往往在後續跟進，不在當下一刻。</div>
+    </div>
+  </div>
+
+  <!-- Section 7: 定價路徑 -->
+  <div class="section">
+    <div class="section-label">07 — 定價路徑</div>
+    <h2 class="section-title">建議的切入策略</h2>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-label">安全入口</div>
+        <div class="price-amount">$6,000</div>
+        <div class="price-unit">/ 月訂閱</div>
+        <div class="price-desc">先確認 MUSEON 能幫她做什麼，建立信任基礎。讓她感受到工具的價值再談升級。</div>
+      </div>
+      <div class="price-card recommended">
+        <div class="recommended-badge">推薦首選</div>
+        <div class="price-label">身份升級</div>
+        <div class="price-amount">$29,800</div>
+        <div class="price-unit">SSA 顧問班</div>
+        <div class="price-desc">取得顧問資格 + 月分潤資格。帶入一個客戶（$2,000/月）約 15 個月回收學費。</div>
+      </div>
+      <div class="price-card">
+        <div class="price-label">深度導入</div>
+        <div class="price-amount">$90,000</div>
+        <div class="price-unit">顧問服務</div>
+        <div class="price-desc">適合 HE 的客戶，而非 HE 本人現階段。可作為 HE 未來自己接案的參考定價。</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-title">分潤試算（說服邏輯）</div>
+      <p>「你帶入一個客戶 → 你每月分 $2,000。那個客戶再介紹一個 → 再加 $1,000。你目前已有一個潛在客戶，如果成交，學費約 15 個月回收。如果同步介紹第二個，縮短到 10 個月。」</p>
+    </div>
+  </div>
+
+  <!-- Section 8: 紅線 -->
+  <div class="section">
+    <div class="section-label">08 — 紅線警示</div>
+    <h2 class="section-title">絕對不要做的事</h2>
+
+    <div class="red-lines">
+      <h4>以下行為會觸發 HE 的防禦機制，直接影響成交</h4>
+      <div class="red-item"><span class="red-x">✗</span>一開口就報 $90,000 或 $29,800 —— 她會立刻進入「評估風險」模式關閉</div>
+      <div class="red-item"><span class="red-x">✗</span>催促她做決定或給時間壓力 —— 她是觀察者，壓力會讓她消失</div>
+      <div class="red-item"><span class="red-x">✗</span>讓她自己想「下一步要做什麼」—— 她主動性弱，沒有明確引導會失聯</div>
+      <div class="red-item"><span class="red-x">✗</span>只講系統功能，不講她自己的故事 —— 她對抽象功能沒感覺</div>
+      <div class="red-item"><span class="red-x">✗</span>在她還沒信任你判斷之前拋 SSA 專業術語</div>
+      <div class="red-item"><span class="red-x">✗</span>定義她「你就是要做顧問」—— 讓她自己說出來，不要幫她說</div>
+    </div>
+  </div>
+
+  <!-- Section 9: 行動清單 -->
+  <div class="section">
+    <div class="section-label">09 — 行動清單</div>
+    <h2 class="section-title">接下來的跟進節奏</h2>
+
+    <div class="card">
+      <div class="card-title">本週最高優先（3 件）</div>
+      <p style="margin-bottom: 10px;">① 確認農業客戶案子的最新進展，作為對話開場的素材</p>
+      <p style="margin-bottom: 10px;">② 製作分潤試算簡圖（$2,000/月 × N個月 = 學費回收），具體數字讓她感受真實</p>
+      <p>③ 給她一個「稱呼」：「第一線整合顧問」或「MUSEON 夥伴」，身份定義優先於產品介紹</p>
+    </div>
+
+    <div class="card" style="margin-top: 12px;">
+      <div class="card-title">最佳跟進時機</div>
+      <p style="margin-bottom: 8px;">• 農業客戶案有具體進展後（她會主動回報）</p>
+      <p style="margin-bottom: 8px;">• 潛在客戶願意見面後（趁熱打鐵）</p>
+      <p style="margin-bottom: 8px;">• 她再主動問業務或分潤相關問題時</p>
+      <p>• 每次對話後 48 小時內輕鬆回應（維持存在感）</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Core Insight -->
+  <div class="quote-block">
+    <div class="quote-text">「你最值錢的，從來不是你會做多少事，而是有多少人，願意因為信任你，把事情交給你。而 SSA 要解決的，就是讓更多對的人，更快地信任你。」</div>
+    <div class="quote-source">— 顧問式銷售核心論點</div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p><strong>MUSEON 顧問銷售評估報告</strong> · 2026-06-14</p>
+  <p>基於 78 次互動記錄 · Soul Blueprint · Positioning Architecture · Negotiation Strategy</p>
+  <p style="margin-top: 8px;">此報告為 Zeal 內部使用，請勿對外分享</p>
+</div>
+
+</body>
+</html>
