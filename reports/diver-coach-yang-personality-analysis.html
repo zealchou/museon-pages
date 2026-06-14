@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>楊教練人格分析 — 潛水教練訪談深度剖析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8; --border:#E2E0DA;
+    --parchment:#F7F5F0; --snow:#FDFCFA;
+    --deep-ink:#0E0E16; --surface:#16161F;
+    --success:#2D8A6E; --warning:#C9943A; --error:#C4402A; --info:#2A6A8A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Outfit','Noto Sans TC',sans-serif;
+    background:var(--parchment); color:var(--ink);
+    line-height:1.75; font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:40px 24px}
+  .display{font-family:'Cormorant Garamond',serif}
+  .mono{font-family:'IBM Plex Mono',monospace}
+
+  /* Hero */
+  .hero{
+    background:var(--deep-ink); color:#fff;
+    border-radius:16px; padding:48px 40px; margin-bottom:32px;
+    position:relative; overflow:hidden;
+  }
+  .hero::after{
+    content:""; position:absolute; right:-80px; top:-80px;
+    width:320px; height:320px; border-radius:50%;
+    background:radial-gradient(circle,rgba(196,80,42,0.32),transparent 68%);
+  }
+  .hero .badge-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; position:relative; z-index:1}
+  .hero h1{
+    font-family:'Cormorant Garamond',serif; font-weight:600;
+    font-size:46px; line-height:1.15; margin-bottom:14px; position:relative; z-index:1;
+  }
+  .hero .sub{color:#C9C9D4; font-size:16px; max-width:62ch; position:relative; z-index:1}
+
+  .meta-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border);
+    border-radius:10px; overflow:hidden; margin-bottom:32px;
+  }
+  .meta-grid .cell{background:var(--snow); padding:16px 18px}
+  .meta-grid .k{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--mist); font-family:'IBM Plex Mono',monospace; margin-bottom:4px}
+  .meta-grid .v{font-size:15px; font-weight:600; color:var(--ink)}
+
+  /* Badge */
+  .badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;
+    padding:3px 10px; border-radius:100px;
+    background:rgba(196,80,42,0.1); color:var(--ember-dark);
+  }
+  .badge.teal{background:rgba(42,122,110,0.12); color:var(--teal)}
+  .badge.gold{background:rgba(184,146,58,0.14); color:var(--gold)}
+  .badge.warning{background:rgba(201,148,58,0.14); color:var(--warning)}
+
+  /* Section */
+  section{margin-bottom:48px}
+  .sec-label{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.1em; color:var(--ember);
+    margin-bottom:8px;
+  }
+  h2.display{font-size:32px; font-weight:600; line-height:1.2; margin-bottom:18px; color:var(--ink)}
+  h3{font-size:19px; font-weight:600; margin:24px 0 10px; color:var(--ink)}
+
+  .card{
+    background:var(--snow); border:1px solid var(--border); border-radius:10px;
+    padding:24px; box-shadow:0 1px 3px rgba(18,18,26,0.06),0 4px 12px rgba(18,18,26,0.04);
+    margin-bottom:16px;
+  }
+  .lead{font-size:18px; line-height:1.8}
+  .lead strong{color:var(--ember-dark)}
+
+  p{margin-bottom:14px}
+  ul{margin:0 0 14px 20px}
+  li{margin-bottom:7px}
+
+  .quote{
+    border-left:3px solid var(--ember); background:rgba(196,80,42,0.04);
+    padding:12px 18px; border-radius:0 8px 8px 0; margin:14px 0;
+    font-size:15px; color:var(--slate);
+  }
+  .quote .who{display:block; margin-top:6px; font-size:13px; color:var(--ember-dark); font-weight:600}
+
+  .trait{border-left:3px solid var(--border); padding-left:20px; margin-bottom:26px}
+  .trait .label{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--mist); font-weight:600}
+  .trait h3{margin-top:2px}
+
+  .evidence{
+    background:rgba(42,122,110,0.06); border:1px solid rgba(42,122,110,0.15);
+    border-radius:8px; padding:14px 16px; margin:10px 0;
+    font-size:14px; color:var(--slate);
+  }
+  .evidence strong{color:var(--teal)}
+
+  .spectrum{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:16px 0;
+  }
+  .spectrum-item{
+    text-align:center; padding:12px 8px;
+    border-radius:8px; border:1.5px solid var(--border);
+    font-size:12px; font-weight:600;
+    background:var(--snow);
+  }
+  .spectrum-item.active{
+    background:var(--teal); color:#fff; border-color:var(--teal);
+  }
+
+  .insight-box{
+    background:rgba(184,146,58,0.08); border-left:3px solid var(--gold);
+    padding:16px; border-radius:0 8px 8px 0; margin:16px 0;
+  }
+  .insight-box .label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--gold); font-weight:600; margin-bottom:6px;
+  }
+
+  .matrix{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;
+  }
+  .matrix-cell{
+    background:var(--snow); border:1px solid var(--border);
+    border-radius:10px; padding:16px;
+  }
+  .matrix-cell .title{font-weight:600; font-size:14px; color:var(--ink); margin-bottom:8px}
+  .matrix-cell .content{font-size:14px; color:var(--slate); line-height:1.6}
+
+  footer{
+    background:var(--surface); color:#C9C9D4;
+    padding:24px; border-radius:10px; margin-top:48px;
+    font-size:13px; line-height:1.7;
+  }
+  footer strong{color:#E0E0EA}
+
+  @media(max-width:640px){
+    .wrap{padding:24px 16px}
+    .hero{padding:32px 24px}
+    .meta-grid{grid-template-columns:repeat(2,1fr)}
+    .matrix{grid-template-columns:1fr}
+    h2.display{font-size:28px}
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260615_021028_90b61fc2.png" alt="an open notebook with handwritten ink notes on a worn wooden desk, soft morning window light, editorial photography" width="1024" height="576" loading="lazy" />
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="badge-row">
+      <span class="badge teal">PERSONALITY PROFILE</span>
+      <span class="badge gold">DEEP ANALYSIS</span>
+    </div>
+    <h1>楊教練<br/>深層人格診斷報告</h1>
+    <p class="sub">15 年潛水教練 × 業務轉型臨界點 — 從專業技師到品牌建構者的自我認知缺口</p>
+  </div>
+
+  <div class="meta-grid">
+    <div class="cell">
+      <div class="k">背景</div>
+      <div class="v">15+ 年潛水教練</div>
+    </div>
+    <div class="cell">
+      <div class="k">現況</div>
+      <div class="v">2 年+ 休息期</div>
+    </div>
+    <div class="cell">
+      <div class="k">轉折點</div>
+      <div class="v">網路行銷 MVP</div>
+    </div>
+    <div class="cell">
+      <div class="k">客群</div>
+      <div class="v">25–40 歲</div>
+    </div>
+  </div>
+
+  <!-- 核心人格維度 -->
+  <section>
+    <div class="sec-label">CORE DIMENSIONS</div>
+    <h2 class="display">五大人格構成</h2>
+
+    <div class="trait">
+      <div class="label">① 深度專業者 — 縱向維度</div>
+      <h3>教學典範的沉默建構者</h3>
+      <p>楊教練擁有系統化的知識體系。他不只會教，而是理解「為什麼學生會害怕」的根本原因。</p>
+
+      <div class="evidence">
+        <strong>核心論述：</strong>「恐懼是來自於未知啊。不曉得說你碰到狀況，你要怎麼去排除，怎麼去解決。所以說你下去之前，你就會覺得哎，很緊張」
+      </div>
+
+      <p>他的教學方法是<strong>認知系統建構</strong>：把學生未知的問題逐一解答（鯊魚怎麼辦、裝備故障怎麼辦）→ 練習動作 → 變熟練 → 消除恐懼。這是從恐懼的認知根源出發的教學設計，遠超過「按 SOP 教課」的層次。</p>
+
+      <h4 style="font-size:16px; font-weight:600; margin:12px 0 8px">特徵信號</h4>
+      <ul>
+        <li>能夠舉例說明「交叉鯊」的真實行為（大概都在兩米以內）而非網路謠言</li>
+        <li>主動解釋為什麼台灣潛水市場是小眾（裝備 5-6 萬、持續成本高）</li>
+        <li>區分「海邊教練」vs「市區教練」的商業模式差異</li>
+        <li>知道初級→進階→國外潛水的客戶學習階梯</li>
+      </ul>
+
+      <div class="spectrum">
+        <div class="spectrum-item">淺嘗</div>
+        <div class="spectrum-item">熟悉</div>
+        <div class="spectrum-item">掌握</div>
+        <div class="spectrum-item active">系統化</div>
+        <div class="spectrum-item">思想家</div>
+      </div>
+    </div>
+
+    <div class="trait">
+      <div class="label">② 同理深化者 — 感性維度</div>
+      <h3>觀察客戶內心的細節專家</h3>
+      <p>楊教練非常了解「人為什麼學潛水」和「人在過程中的心態變化」。他的客戶理解是<strong>動態的</strong>，不是靜態的市場分類。</p>
+
+      <div class="evidence">
+        <strong>動態客戶觀察：</strong>「他們這對夫妻就是來上課的時候，還沒有小孩之前都是會持續的三峽活動，可是有小孩之後，可能就是會暫時的離開，大概離開了十年左右」
+      </div>
+
+      <p>這不只是統計數據，而是對人生周期與選擇的洞察：</p>
+      <ul>
+        <li>為什麼人想學潛水？→ 認證、看海底、挑戰、興趣、親友社交</li>
+        <li>為什麼人會一起報名？→ 單獨上課會無聊、有伙伴信心大增、有人「推一把」</li>
+        <li>為什麼人會回頭？→ 要升進階、參加潛水旅遊、把潛水變成家族活動</li>
+        <li>為什麼人會消失？→ 生小孩、臺灣小家庭結構無人幫帶、太忙</li>
+      </ul>
+
+      <div class="spectrum">
+        <div class="spectrum-item">機械式</div>
+        <div class="spectrum-item">觀察型</div>
+        <div class="spectrum-item active">同理型</div>
+        <div class="spectrum-item">預測型</div>
+        <div class="spectrum-item">教練型</div>
+      </div>
+    </div>
+
+    <div class="trait">
+      <div class="label">③ 務實主義者 — 商業維度</div>
+      <h3>成本意識清晰，但缺乏主動營銷意願</h3>
+      <p>楊教練對潛水市場的經濟現實有清醒認知。他知道這不是大眾市場，用戶有限，成本高。</p>
+
+      <div class="evidence">
+        <strong>市場現實認知：</strong>「潛水，它不是一個非常便宜的一個休閒活動…全套全身的裝備來講的話，大概就在五六萬起跳…所以說他就是漸漸的，就是不是沒辦法就是像很大衆的這樣子去推廣」
+      </div>
+
+      <p>但有一個落差：</p>
+      <ul>
+        <li><strong>他知道「比價」是客戶決策流程</strong>：「大部分的客人他還是會去做個比價的動作…不是每個人都會比較那種的差異」</li>
+        <li><strong>他知道「口碑介紹」會跳過比價</strong>：「慕名而來…對，對，對…就是，或者是你是一個很資深的教練，怎樣啊？你的教學怎樣怎樣好」</li>
+        <li><strong>但他似乎沒有主動積累口碑的計劃</strong>：缺乏「我要如何從零建構品牌」的戰略思考</li>
+      </ul>
+
+      <div class="spectrum">
+        <div class="spectrum-item">理想型</div>
+        <div class="spectrum-item">樂觀型</div>
+        <div class="spectrum-item active">務實型</div>
+        <div class="spectrum-item">悲觀型</div>
+        <div class="spectrum-item">防禦型</div>
+      </div>
+    </div>
+
+    <div class="trait">
+      <div class="label">④ 內向設計師 — 溝通維度</div>
+      <h3>一對一深度會比舞台展示</h3>
+      <p>楊教練在訪談中<strong>反應式而非主動式</strong>。他回答問題很深度，但不會主動「推銷」自己的想法。</p>
+
+      <div class="evidence">
+        <strong>被問到內容創作時：</strong>他提出了「低成本方案」（寫好腳本、一口氣拍 10 集），但這是在被問「有無素材」之後，而非主動提案。
+      </div>
+
+      <ul>
+        <li>談到「如何判斷教練專不專業」時，他給出了實用標準（問裝備細節、看談吐），但<strong>沒有反問「那你想怎麼向客戶展現你的專業」</strong></li>
+        <li>談到「內容創作會不會願意」時，他答「可以啦」，但缺乏「這樣做我覺得怎樣」的主動評價</li>
+      </ul>
+
+      <p>這是<strong>被動專業者</strong>的典型特徵：非常有能力，但等待別人激活。</p>
+
+      <div class="spectrum">
+        <div class="spectrum-item">極端內向</div>
+        <div class="spectrum-item active">內向傾向</div>
+        <div class="spectrum-item">平衡</div>
+        <div class="spectrum-item">外向傾向</div>
+        <div class="spectrum-item">極端外向</div>
+      </div>
+    </div>
+
+    <div class="trait">
+      <div class="label">⑤ 重啟者的焦慮 — 心理維度</div>
+      <h3>休息 2+ 年後的隱性不安</h3>
+      <p>楊教練說「今年想要重新開始做網路行銷」，但在整個對話中，缺乏<strong>為什麼「現在」、為什麼「非得做網路」</strong>的自我說服。</p>
+
+      <div class="evidence">
+        <strong>轉折的軟弱點：</strong>他陳述了事實（兩三年沒教、客户從零開始），但沒有展現「我已經想好怎麼做」的確定感。反而是<strong>等著別人告訴他應該怎麼做</strong>。
+      </div>
+
+      <p>這可能反映的是：</p>
+      <ul>
+        <li>業界發生了變化（潛水市場、行銷方式），他對「新遊戲規則」不確定</li>
+        <li>15 年的專業優勢在休息期可能有所消退（知識會變、學生代際會變）</li>
+        <li>「網路行銷」對他是陌生領域，他可能對自己能否成功沒有信心</li>
+      </ul>
+
+      <div class="insight-box">
+        <div class="label">⚠ 轉折焦慮信號</div>
+        <p>「因為變成我現在就是從零開始啊」— 15 年資深教練卻用「從零開始」來形容自己的重啟，暗示他對過去 2 年的空白期有某種自我懷疑。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 內核矛盾 -->
+  <section>
+    <div class="sec-label">CORE PARADOX</div>
+    <h2 class="display">楊教練的結構性張力</h2>
+
+    <div class="matrix">
+      <div class="matrix-cell">
+        <div class="title">他擁有</div>
+        <div class="content">
+          ✓ 15 年系統化知識<br/>
+          ✓ 深度的客戶洞察<br/>
+          ✓ 對市場現實的清醒<br/>
+          ✓ 認知式教學能力<br/>
+          ✓ 低成本內容設計思維
+        </div>
+      </div>
+      <div class="matrix-cell">
+        <div class="title">他缺乏</div>
+        <div class="content">
+          ✗ 主動營銷的執行慾<br/>
+          ✗ 對「品牌建構」的想像<br/>
+          ✗ 「我為何應該做」的內驅<br/>
+          ✗ 公開展現專業的習慣<br/>
+          ✗ 決策主動權（在對話中等待指引）
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="lead"><strong>核心張力：</strong>他是「有形的專家」但「無形的品牌」</p>
+      <p>潛水教學是無法線上化的服務。他的專業本質是「一對一的現場教學」。但恰恰因為這個特性，他的專業對陌生客戶是「不可見的」。</p>
+      <p>沒有人知道他 15 年有多深、知道多少、為什麼值得相信。他需要把<strong>內隱知識外化</strong>，但他習慣於在水底教課，不習慣在鏡頭前展現自己。</p>
+    </div>
+  </section>
+
+  <!-- 三層客戶認知 -->
+  <section>
+    <div class="sec-label">CUSTOMER INTELLIGENCE</div>
+    <h2 class="display">楊教練的客戶三層模型</h2>
+
+    <div class="card">
+      <h3>1️⃣ 決策層 — 誰會報名</h3>
+      <p><strong>目標客群年齡：25–40 歲（主要），10–50 歲（邊界）</strong></p>
+      <p>他清晰地識別了為什麼是這個年齡段：出社會 2–3 年有經濟能力，才能負擔 5–6 萬裝備 + 持續活動成本。不像上班族或退休族，他們有穩定經濟但生活流動性。</p>
+    </div>
+
+    <div class="card">
+      <h3>2️⃣ 動機層 — 為什麼想學</h3>
+      <ul>
+        <li><strong>認證動機</strong>：「拿個潛水證照」（收集成就感）</li>
+        <li><strong>體驗動機</strong>：看海底世界、不同生態、觀察生物</li>
+        <li><strong>自由感動機</strong>：「水中自由自在的一種感覺」</li>
+        <li><strong>社交動機</strong>：朋友介紹、一起報名（團體安全感）</li>
+        <li><strong>家族動機</strong>：帶小孩一起（10 歲+可學）</li>
+      </ul>
+      <p>這不是簡單的「我想學潛水」，而是多層動機交織。同一個人可能既想挑戰自己、又想社交、又想證明自己。</p>
+    </div>
+
+    <div class="card">
+      <h3>3️⃣ 生命周期層 — 客戶會如何流失</h3>
+      <p><strong>高風險警訊：生小孩</strong></p>
+      <p>楊教練發現了一個被業界忽視的現象：「我碰到一個就是…這對夫妻…有小孩之後…可能就是會暫時的離開，大概離開了十年左右」</p>
+      <p>這不是產品問題，而是<strong>人生結構變化</strong>。小家庭制度下，沒人幫帶小孩，所有休閒活動都被吞掉。10 年是一個整個「小孩成長周期」。</p>
+      <p>反推意義：<strong>小孩 10+ 歲、夫妻才可能重新回到潛水</strong>。楊教練可能需要「帶著小孩一起學」的家族套餐設計，而不只是成人課程。</p>
+    </div>
+  </section>
+
+  <!-- 決策特徵 -->
+  <section>
+    <div class="sec-label">DECISION PATTERNS</div>
+    <h2 class="display">楊教練的四大決策模式</h2>
+
+    <div class="card">
+      <h3>模式 ① — 從經驗歸納，但缺乏前瞻</h3>
+      <p>他的判斷都基於「15 年我看過什麼客戶」，而不是「未來 1 年市場會如何」。</p>
+      <div class="quote">
+        「因爲我之前的客羣都是來自就是…都是店裏面的客羣啊」
+        <span class="who">— 楊教練，面對「新客群是誰」的問題</span>
+      </div>
+      <p>這是務實的，但也是<strong>回溯型</strong>的。他沒有主動探索「網路帶來的新客群會是誰」。</p>
+    </div>
+
+    <div class="card">
+      <h3>模式 ② — 直接回答問題，不主動反問</h3>
+      <p>在整個訪談中，楊教練<strong>沒有主動反問過任何問題</strong>。所有的深度洞察都是被問出來的。</p>
+      <div class="quote">
+        「那我再問一下，那你這些學員啊…就是他是會有地域性的嗎？」（Zeal 問）
+        <br/>「比較希望就是以中部爲主啦」（楊教練直接答）
+        <span class="who">— 沒有「你想怎麼幫我行銷」的反問</span>
+      </div>
+      <p>這顯示他在「被服務者」心態，而非「合作者」心態。</p>
+    </div>
+
+    <div class="card">
+      <h3>模式 ③ — 認可低成本方案，但無主見</h3>
+      <p>當被提到「不用花 10–20 萬做專業影片，寫好腳本一口氣拍」時，他說「可以啦、也可以、也是一種方式」，但<strong>沒有說「我更喜歡這種方式因為…」</strong></p>
+      <p>他在點頭，但沒有帶著自己的想法前進。</p>
+    </div>
+
+    <div class="card">
+      <h3>模式 ④ — 評估成本，但不評估收益</h3>
+      <p>他會說「裝備 5–6 萬、每次費用…交通、住宿」，但<strong>不會主動講「一個初級認證課能帶來多少商業價值」或「怎樣的客戶能帶來最高回報」</strong></p>
+      <p>這可能反映他過去的商業模式是「被動接受店裡的客戶」，而非「主動選擇高價值客戶」。</p>
+    </div>
+  </section>
+
+  <!-- 營銷就緒度評估 -->
+  <section>
+    <div class="sec-label">READINESS ASSESSMENT</div>
+    <h2 class="display">楊教練的網路行銷準備度評分</h2>
+
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:16px 0">
+      <div class="card">
+        <div style="font-weight:600; color:var(--ember); font-size:14px; margin-bottom:8px">✅ 已準備</div>
+        <ul style="margin:0; padding-left:20px">
+          <li>專業知識系統</li>
+          <li>客戶洞察深度</li>
+          <li>低成本內容設計</li>
+          <li>市場現實認知</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div style="font-weight:600; color:var(--warning); font-size:14px; margin-bottom:8px">⚠️ 待發展</div>
+        <ul style="margin:0; padding-left:20px">
+          <li>品牌敘事能力</li>
+          <li>主動營銷意願</li>
+          <li>決策主動性</li>
+          <li>公開展現習慣</li>
+          <li>客戶獲取策略</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="background:rgba(196,80,42,0.08); border:1px solid rgba(196,80,42,0.2); border-radius:10px; padding:16px; margin:16px 0">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ember-dark); font-weight:600; margin-bottom:8px">就緒度評分</div>
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px">
+        <div style="text-align:center; padding:10px; background:var(--success); color:#fff; border-radius:6px; font-weight:600; font-size:14px">✓ 知識</div>
+        <div style="text-align:center; padding:10px; background:var(--success); color:#fff; border-radius:6px; font-weight:600; font-size:14px">✓ 洞察</div>
+        <div style="text-align:center; padding:10px; background:var(--warning); color:#fff; border-radius:6px; font-weight:600; font-size:14px">△ 內容</div>
+        <div style="text-align:center; padding:10px; background:var(--error); color:#fff; border-radius:6px; font-weight:600; font-size:14px">✗ 品牌</div>
+        <div style="text-align:center; padding:10px; background:var(--error); color:#fff; border-radius:6px; font-weight:600; font-size:14px">✗ 驅動</div>
+      </div>
+      <p style="margin-top:12px; font-size:13px; color:var(--slate)">總體準備度：<strong style="color:var(--ink)">60%</strong> — 專業基礎穩固，但營銷心態缺口明顯</p>
+    </div>
+  </section>
+
+  <!-- 建議 -->
+  <section>
+    <div class="sec-label">IMPLICATIONS</div>
+    <h2 class="display">三大合作啟示</h2>
+
+    <div class="card">
+      <h3>1. 他需要的不是「告訴他怎麼做」，而是「給他做決定的權利」</h3>
+      <p>楊教練在訪談中的被動性不是無能，而是他習慣被「指派」而非「合作」。營銷合作的前提是讓他從「執行者」升級到「共創者」。</p>
+      <div class="evidence">
+        <strong>具體做法：</strong>不是「我們幫你拍影片」，而是「我們一起設計你想要什麼樣的品牌形象」。給他決定權，他會貢獻深層洞察。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>2. 他的品牌核心是「安心感教練」，不是「專業教練」</h3>
+      <p>他在對話中強調：「害怕的人來講，你可以讓大家安心…會教的人都會教啊，可是要讓人安心才能安撫人的教練可能不多」</p>
+      <p>這是他的差異化。但他沒有主動把這句話變成「品牌承諾」。</p>
+      <div class="evidence">
+        <strong>營銷角度：</strong>不強調「15 年資深」（客戶不在乎），而強調「我會讓你一步步放心進水」。內容創作應該全部圍繞「恐懼→理解→信任」的故事線。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>3. 他遺漏的客群策略是「帶著小孩回歸的家族」</h3>
+      <p>他發現了「生小孩→離開 10 年→小孩長大→有可能回歸」的生命周期，但沒有設計「家族潛水套餐」來捕捉這個失落的 10 年回歸客。</p>
+      <div class="evidence">
+        <strong>機會點：</strong>40–50 歲、小孩已 10+ 歲的客群，他們重新找教練時會優先考慮「能帶小孩」的教練。這是他的隱藏優勢市場。
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <strong>報告生成時間：</strong>2026-06-15<br/>
+    <strong>分析基礎：</strong>2026-05-29 會議逐字稿完整分析<br/>
+    <strong>範圍說明：</strong>排除外部引導（Zeal、士維的提問）後的獨立發言分析。基於明面言語的深層人格推斷，而非假設。<br/>
+    <strong>報告性質：</strong>洞察而非評判。楊教練的「被動性」是角色適配問題，不是能力問題。正確的營銷框架能激發他的主動性。
+  </footer>
+
+</div>
+</body>
+</html>
