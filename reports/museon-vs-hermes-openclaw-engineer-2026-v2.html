@@ -578,6 +578,50 @@
     .dive-block { padding: 24px; }
     .three-col { grid-template-columns: 1fr; }
     .conclusion { padding: 32px 20px; }
+    .metric-row { flex-wrap: wrap; }
+    .metric-label { width: 100%; flex-shrink: 1; }
+    .metric-source { width: 100%; text-align: left; margin-top: 2px; }
+  }
+
+  /* ── Table scrollable wrapper ── */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    margin-bottom: 48px;
+  }
+  .table-wrapper .compare-table {
+    margin-bottom: 0;
+    min-width: 560px;
+  }
+
+  /* ── E1-E5 steps grid ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 860px) {
+    .steps-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── MuseMEM layer rows ── */
+  .memlayer-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .memlayer-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  @media (max-width: 700px) {
+    .memlayer-row { grid-template-columns: 60px 1fr; }
+    .memlayer-row > *:nth-child(3) { grid-column: 1 / -1; }
   }
 </style>
 </head>
@@ -622,6 +666,7 @@
     <div class="section-title">先看懂三張地圖</div>
     <p class="section-sub">相同的地方不多說，差在哪才是重點。</p>
 
+    <div class="table-wrapper">
     <table class="compare-table">
       <thead>
         <tr>
@@ -682,6 +727,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
   </div>
 </div>
@@ -1054,7 +1100,7 @@
         <small>foresight_engine.py · shadow_self_model.py</small>
       </div>
     </div>
-    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px;">
+    <div class="steps-grid">
       <div style="background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center;">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold); font-weight: 600; margin-bottom: 6px;">E1</div>
         <div style="font-size: 12px; font-weight: 600; color: var(--ink);">訊號提取</div>
@@ -1102,28 +1148,28 @@
         <small>memory_v3/ · vector_bridge.py · Qdrant + SQLite</small>
       </div>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
-      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--slate);">
+    <div class="memlayer-stack">
+      <div class="memlayer-row" style="background: var(--parchment); border: 1px solid var(--border); border-left: 3px solid var(--slate);">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--slate);">L1<br>事件層</div>
         <div style="font-size: 13px;"><strong>原始訊號</strong><br><span style="color:var(--slate);">你說了什麼、何時說、情緒強度</span></div>
         <div style="font-size: 12px; color: var(--slate);">Hermes/OpenClaw 也有這層 — 這是記憶的起點，不是終點</div>
       </div>
-      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--teal);">
+      <div class="memlayer-row" style="background: var(--parchment); border: 1px solid var(--border); border-left: 3px solid var(--teal);">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--teal);">L2<br>行為層</div>
         <div style="font-size: 13px;"><strong>模式提取</strong><br><span style="color:var(--slate);">「每次談錢都轉移話題」「週一問的問題比週五深」</span></div>
         <div style="font-size: 12px; color: var(--slate);">Foresight E2 在這層做比對；DNA路由讀這層</div>
       </div>
-      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--gold);">
+      <div class="memlayer-row" style="background: var(--parchment); border: 1px solid var(--border); border-left: 3px solid var(--gold);">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--gold);">L3<br>信念層</div>
         <div style="font-size: 13px;"><strong>深層假設推算</strong><br><span style="color:var(--slate);">「你相信努力=結果，但你的行動模式不一致」</span></div>
         <div style="font-size: 13px; color: var(--slate);">六大盲點守望從這層喂資料；ANIMA 向量在這層更新</div>
       </div>
-      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--ember);">
+      <div class="memlayer-row" style="background: var(--parchment); border: 1px solid var(--border); border-left: 3px solid var(--ember);">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--ember);">L4<br>關係圖層</div>
         <div style="font-size: 13px;"><strong>信念網絡</strong><br><span style="color:var(--slate);">信念 A 和信念 B 互相矛盾？有哪些相互強化的假設？</span></div>
         <div style="font-size: 12px; color: var(--slate);">Decision Atlas 圖譜在這層運作</div>
       </div>
-      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: rgba(196,80,42,0.04); border: 1px solid rgba(196,80,42,0.25); border-radius: 8px; border-left: 3px solid var(--ember-dark);">
+      <div class="memlayer-row" style="background: rgba(196,80,42,0.04); border: 1px solid rgba(196,80,42,0.25); border-left: 3px solid var(--ember-dark);">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--ember-dark);">L5<br>預測層</div>
         <div style="font-size: 13px;"><strong>未來行動建模</strong><br><span style="color:var(--slate);">根據 L1-L4 推算你接下來最可能做的事</span></div>
         <div style="font-size: 12px; color: var(--ember-dark);">Foresight E4-E5 在這層輸出；唯一 MUSEON 獨有的記憶層</div>
