@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON vs Hermes vs OpenClaw — 工程師視角</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+    --deep-ink: #0E0E16;
+    --surface: #16161F;
+    --raised: #1E1E2A;
+    --border-dark: #2A2A38;
+    --success: #2D8A6E;
+    --warning: #C9943A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--deep-ink);
+    color: #fff;
+    padding: 96px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196,80,42,0.18) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.15);
+    border: 1px solid rgba(196,80,42,0.4);
+    color: var(--ember-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--ember-light);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.65);
+    max-width: 600px;
+    margin: 0 auto 48px;
+    position: relative;
+  }
+  .hero-kicker {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-kicker-item {
+    text-align: center;
+  }
+  .hero-kicker-item .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--ember-light);
+    display: block;
+  }
+  .hero-kicker-item .label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .section {
+    padding: 64px 0;
+  }
+  .section + .section {
+    border-top: 1px solid var(--border);
+  }
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .section-sub {
+    font-size: 16px;
+    color: var(--slate);
+    max-width: 600px;
+    margin-bottom: 48px;
+  }
+
+  /* ── One-line TL;DR ── */
+  .tldr-bar {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--ember);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .tldr-bar .icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .tldr-bar p {
+    font-size: 16px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .tldr-bar p span { color: var(--ember); font-weight: 600; }
+
+  /* ── Comparison Table ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--snow);
+    margin-bottom: 48px;
+  }
+  .compare-table thead tr {
+    background: var(--deep-ink);
+  }
+  .compare-table thead th {
+    padding: 16px 20px;
+    text-align: left;
+    color: rgba(255,255,255,0.9);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .compare-table thead th.museon {
+    color: var(--ember-light);
+  }
+  .compare-table thead th:first-child { padding-left: 24px; }
+  .compare-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 150ms;
+  }
+  .compare-table tbody tr:last-child { border-bottom: none; }
+  .compare-table tbody tr:hover { background: rgba(196,80,42,0.03); }
+  .compare-table tbody td {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--ink);
+    vertical-align: top;
+  }
+  .compare-table tbody td:first-child {
+    padding-left: 24px;
+    font-weight: 600;
+    color: var(--slate);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    width: 22%;
+  }
+  .compare-table tbody td.museon-col {
+    background: rgba(196,80,42,0.04);
+    border-left: 2px solid rgba(196,80,42,0.2);
+    font-weight: 500;
+    color: #1a0e08;
+  }
+  .compare-table tbody td.neutral { color: var(--slate); }
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-top: 4px;
+  }
+  .tag-yes { background: rgba(45,138,110,0.12); color: #1a6050; }
+  .tag-no { background: rgba(196,64,42,0.1); color: #8a2018; }
+  .tag-partial { background: rgba(201,148,58,0.12); color: #7a5010; }
+
+  /* ── Mechanism Cards ── */
+  .mechanism-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .mcard {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .mcard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(18,18,26,0.08);
+  }
+  .mcard::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--ember);
+  }
+  .mcard.teal::before { background: var(--teal); }
+  .mcard.gold::before { background: var(--gold); }
+  .mcard-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: rgba(196,80,42,0.12);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .mcard.teal .mcard-num { color: rgba(42,122,110,0.12); }
+  .mcard.gold .mcard-num { color: rgba(184,146,58,0.15); }
+  .mcard-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .mcard-sub {
+    font-size: 13px;
+    color: var(--slate);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .mcard-desc {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* ── Deep Dive Blocks ── */
+  .dive-block {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px;
+    margin-bottom: 32px;
+    animation: fadeUp 400ms ease-out both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .dive-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .dive-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    background: rgba(196,80,42,0.1);
+  }
+  .dive-icon.teal { background: rgba(42,122,110,0.1); }
+  .dive-icon.gold { background: rgba(184,146,58,0.1); }
+  .dive-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .dive-title small {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--slate);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 2px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) {
+    .three-col { grid-template-columns: 1fr; }
+  }
+  .agent-col {
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    background: var(--parchment);
+  }
+  .agent-col.museon-col {
+    background: rgba(196,80,42,0.04);
+    border-color: rgba(196,80,42,0.25);
+  }
+  .agent-col .agent-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--mist);
+  }
+  .agent-col.museon-col .agent-name { color: var(--ember); }
+  .agent-col p {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* ── Scenario ── */
+  .scenario-block {
+    margin-bottom: 40px;
+  }
+  .scenario-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .scenario-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--deep-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .scenario-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .scenario-label span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--slate);
+    margin-left: 8px;
+  }
+  .user-msg {
+    background: rgba(18,18,26,0.05);
+    border-left: 3px solid var(--border);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: var(--deep-ink);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .code-block pre {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+  }
+  .code-block .c { color: rgba(255,255,255,0.35); }
+  .code-block .k { color: #E0714D; }
+  .code-block .s { color: #5DAFB0; }
+  .code-block .n { color: #B8923A; }
+
+  /* ── Metric Bar ── */
+  .metric-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .metric-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    width: 160px;
+    flex-shrink: 0;
+  }
+  .metric-bar-wrap {
+    flex: 1;
+    background: var(--border);
+    height: 8px;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .metric-bar {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--ember);
+    transition: width 800ms ease;
+  }
+  .metric-bar.teal { background: var(--teal); }
+  .metric-bar.gold { background: var(--gold); }
+  .metric-source {
+    font-size: 12px;
+    color: var(--mist);
+    width: 200px;
+    font-family: 'IBM Plex Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  /* ── Conclusion ── */
+  .conclusion {
+    background: var(--deep-ink);
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    color: #fff;
+    margin-top: 32px;
+  }
+  .conclusion h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+  .conclusion p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    margin: 0 auto 32px;
+    line-height: 1.75;
+  }
+  .conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  @media (max-width: 700px) { .conclusion-grid { grid-template-columns: 1fr; } }
+  .conclusion-item {
+    background: var(--raised);
+    border: 1px solid var(--border-dark);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: left;
+  }
+  .conclusion-item .ci-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+  .conclusion-item .ci-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  .conclusion-item .ci-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+  }
+  .conclusion-item.museon .ci-name { color: var(--ember-light); }
+
+  /* ── Footer ── */
+  .page-footer {
+    padding: 32px 24px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--mist);
+  }
+
+  /* ── Highlight inline ── */
+  .hl { color: var(--ember); font-weight: 600; }
+  .hl-teal { color: var(--teal); font-weight: 600; }
+
+  /* ── Divider ── */
+  hr.light {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── Warning note ── */
+  .note {
+    background: rgba(201,148,58,0.08);
+    border: 1px solid rgba(201,148,58,0.25);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #5a3a0a;
+    line-height: 1.65;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 700px) {
+    .hero { padding: 64px 20px; }
+    .hero-kicker { gap: 20px; }
+    .mechanism-grid { grid-template-columns: 1fr; }
+    .dive-block { padding: 24px; }
+    .three-col { grid-template-columns: 1fr; }
+    .conclusion { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260614_142441_b0609721.png" alt="abstract organic neural pattern in warm ember tones with teal accent threads, conceptual depth, soft glow" width="1024" height="576" loading="lazy" />
+
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">工程師視角 · 10 min Brief</div>
+  <h1>手腳 vs. <em>副大腦</em><br>三個 AI Agent 的本質差異</h1>
+  <p class="hero-sub">OpenClaw、Hermes Agent、MUSEON——都能跑工具、有記憶、會演化。<br>但優化的目標函數不同，帶來的系統行為截然不同。</p>
+  <div class="hero-kicker">
+    <div class="hero-kicker-item">
+      <span class="num">3</span>
+      <span class="label">核心差異點</span>
+    </div>
+    <div class="hero-kicker-item">
+      <span class="num">6D</span>
+      <span class="label">ANIMA 向量維度</span>
+    </div>
+    <div class="hero-kicker-item">
+      <span class="num">&lt;10ms</span>
+      <span class="label">CPU Observer 零 LLM token</span>
+    </div>
+    <div class="hero-kicker-item">
+      <span class="num">7</span>
+      <span class="label">七武海自演化維度</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── TL;DR ── -->
+<div class="container">
+  <div class="section">
+    <div class="tldr-bar">
+      <div class="icon">⚡</div>
+      <p>三句話定位：OpenClaw = <span>擴充任務通道</span>，Hermes = <span>任務效能優化</span>，MUSEON = <span>判斷品質強化</span>。前兩者放大執行力，MUSEON 強化「問題本身對不對」的能力——這是設計哲學的分叉點，不是功能強弱的比較。</p>
+    </div>
+
+    <!-- ── Overview Table ── -->
+    <div class="section-label">全局對照</div>
+    <div class="section-title">先看懂三張地圖</div>
+    <p class="section-sub">相同的地方不多說，差在哪才是重點。</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>維度</th>
+          <th>OpenClaw</th>
+          <th>Hermes Agent</th>
+          <th class="museon">MUSEON</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>設計意圖</td>
+          <td class="neutral">多平台任務自動化</td>
+          <td class="neutral">推理代理 + 開發框架底層</td>
+          <td class="museon-col">判斷力強化 + 個人認知陪伴</td>
+        </tr>
+        <tr>
+          <td>記憶架構</td>
+          <td class="neutral">SOUL.md / IDENTITY.md（靜態 Markdown）</td>
+          <td class="neutral">SQLite + 向量外掛（Mem0 等）</td>
+          <td class="museon-col">Qdrant 原生向量語意 + 6D ANIMA trait_dimensions</td>
+        </tr>
+        <tr>
+          <td>記憶更新</td>
+          <td class="neutral">手動維護或 heartbeat 覆寫</td>
+          <td class="neutral">被動記錄</td>
+          <td class="museon-col">CPU Observer &lt;10ms 主動寫入，零 LLM token</td>
+        </tr>
+        <tr>
+          <td>Skill 鍛造</td>
+          <td class="neutral">手動定義</td>
+          <td class="neutral">✅ 5+ tool call 自動觸發，DSPy+GEPA benchmark 優化</td>
+          <td class="museon-col">✅ ACSF 觸發，北極星 + 六大盲點親和對照</td>
+        </tr>
+        <tr>
+          <td>優化 metric</td>
+          <td class="neutral">任務完成率</td>
+          <td class="neutral">任務效能（步數/速度）</td>
+          <td class="museon-col">使用者判斷品質（七武海七維度 DB count）</td>
+        </tr>
+        <tr>
+          <td>自我驗證</td>
+          <td class="neutral"><span class="tag tag-no">無</span></td>
+          <td class="neutral"><span class="tag tag-partial">benchmark 測試</span></td>
+          <td class="museon-col"><span class="tag tag-yes">DB count 閉環</span>（surgery_log 行數等）</td>
+        </tr>
+        <tr>
+          <td>問題挑戰</td>
+          <td class="neutral"><span class="tag tag-no">執行為主</span></td>
+          <td class="neutral"><span class="tag tag-partial">context aware 推斷</span></td>
+          <td class="museon-col"><span class="tag tag-yes">六大盲點守望強制</span>（先質疑問題本身）</td>
+        </tr>
+        <tr>
+          <td>適合場景</td>
+          <td class="neutral">批量重複 + 多平台接入</td>
+          <td class="neutral">開發者工具、已定義任務</td>
+          <td class="museon-col">決策品質 &gt; 執行速度的場景</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ── 三大機制 ── -->
+<div style="background: var(--parchment);">
+  <div class="container">
+    <div class="section">
+      <div class="section-label">三個核心差異點</div>
+      <div class="section-title">機制說明</div>
+      <p class="section-sub">每個差異點都有白話例子 + 技術實作說明</p>
+
+      <!-- ── 差異 1：記憶維度 ── -->
+      <div class="dive-block">
+        <div class="dive-header">
+          <div class="dive-icon">🧠</div>
+          <div class="dive-title">
+            差異一：記憶的維度不同
+            <small>靜態 persona 文件 vs. 六維動態向量</small>
+          </div>
+        </div>
+
+        <div class="three-col">
+          <div class="agent-col">
+            <div class="agent-name">OpenClaw</div>
+            <p>SOUL.md、IDENTITY.md 是靜態文件。heartbeat 覆寫式更新——每次覆寫而不是累積演化。知道「你是什麼人」，但不記「你怎麼做決定」。</p>
+          </div>
+          <div class="agent-col">
+            <div class="agent-name">Hermes Agent</div>
+            <p>USER.md + SQLite 記錄偏好，可掛 Mem0 等向量服務。記「你喜歡什麼格式」，但偏好是外掛的，不是系統內生的。</p>
+          </div>
+          <div class="agent-col museon-col">
+            <div class="agent-name">MUSEON</div>
+            <p>ANIMA 裡的 <strong>trait_dimensions</strong> 是六個 0–1 連續值的向量（溫度、直接度、主動度、深度、自主度、反思度），每次互動後梯度更新——不是「記下你說了什麼」，是「更新你是誰的模型」。</p>
+          </div>
+        </div>
+
+        <hr class="light">
+
+        <p style="font-size:14px;color:var(--slate);margin-bottom:16px;font-weight:600;">白話例子 — 「你今天為什麼心情不好」</p>
+        <div class="three-col">
+          <div class="agent-col">
+            <div class="agent-name">OpenClaw</div>
+            <p style="font-size:13px;">「根據 SOUL.md，你偏好直接溝通，我直接問：是工作還是家庭？」（靜態模板套用）</p>
+          </div>
+          <div class="agent-col">
+            <div class="agent-name">Hermes</div>
+            <p style="font-size:13px;">「上次你說過工作壓力大，是不是又回來了？」（記錄式回憶，不理解原因）</p>
+          </div>
+          <div class="agent-col museon-col">
+            <div class="agent-name">MUSEON</div>
+            <p style="font-size:13px;">注意到本輪 trait_dimensions 顯示溫度高、主動度低——說明你想被接住不想被解決。先共鳴，再問。</p>
+          </div>
+        </div>
+
+        <hr class="light">
+
+        <p style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;">技術實作（給工程師）</p>
+        <div class="code-block">
+          <pre><span class="c"># CPU Observer — 每次互動後，&lt;10ms 寫入，零 LLM token</span>
+<span class="k">class</span> <span class="n">L4CpuObserver</span>:
+    <span class="k">def</span> observe(self, session_id, chat_id, user_id, user_message, museon_reply):
+        <span class="c"># 1. 記憶寫入：訊息 &gt; 20 字 + 非問候 → 直接寫 memory_manager</span>
+        <span class="c"># 2. 訊號更新：quick_signal_scan → 更新 signal_cache</span>
+        <span class="c"># 3. 偏好偵測：keyword diff → 寫 pending_preference_updates</span>
+        <span class="c"># 4. 品質調整：規則引擎 → 更新 trait_dimensions (六維梯度)</span>
+        <span class="k">pass</span>  <span class="c"># 全部 CPU，不 spawn LLM agent</span>
+
+<span class="c"># trait_dimensions 示例（動態值，跨 session 持續更新）</span>
+<span class="n">trait_dimensions</span> = {
+    <span class="s">"warmth"</span>: <span class="n">0.48</span>,    <span class="c"># 溫暖但有邊界</span>
+    <span class="s">"directness"</span>: <span class="n">0.17</span>, <span class="c"># 委婉鋪陳</span>
+    <span class="s">"initiative"</span>: <span class="n">0.27</span>, <span class="c"># 等明確問才答</span>
+    <span class="s">"depth"</span>: <span class="n">0.47</span>,      <span class="c"># 適度展開</span>
+    <span class="s">"autonomy"</span>: <span class="n">0.14</span>,   <span class="c"># 對齊對方意圖</span>
+    <span class="s">"reflection"</span>: <span class="n">0.26</span>  <span class="c"># 即時回應節奏</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- ── 差異 2：優化 metric ── -->
+      <div class="dive-block">
+        <div class="dive-header">
+          <div class="dive-icon teal">🎯</div>
+          <div class="dive-title">
+            差異二：優化的目標函數不同
+            <small>任務效能 vs. 判斷品質</small>
+          </div>
+        </div>
+
+        <div class="three-col">
+          <div class="agent-col">
+            <div class="agent-name">OpenClaw</div>
+            <p>Skill 鍛造由開發者手動寫，SOUL.md 靜態維護。系統不「學習」——只執行被告知的事。</p>
+          </div>
+          <div class="agent-col">
+            <div class="agent-name">Hermes Agent（ICLR 2026）</div>
+            <p>自動鍛造 Skill：5+ tool call → 寫 SKILL.md。DSPy + GEPA 對 metric 優化：<strong>「同樣的任務，幾步完成」</strong>——更少步驟 = 更好。</p>
+          </div>
+          <div class="agent-col museon-col">
+            <div class="agent-name">MUSEON</div>
+            <p>ACSF 自動鍛造 Skill 後，強制跑 <strong>DNA 親和對照</strong>：「這個 skill 對這個使用者的判斷模型有沒有對齊？六大盲點有沒有覆蓋？」——不是步數少，而是判斷對。</p>
+          </div>
+        </div>
+
+        <hr class="light">
+
+        <p style="font-size:14px;color:var(--slate);margin-bottom:16px;font-weight:600;">白話例子 — 「幫我草擬一封拒絕信」</p>
+        <div class="three-col">
+          <div class="agent-col">
+            <div class="agent-name">OpenClaw / Hermes</div>
+            <p style="font-size:13px;">立刻寫信，三步完成（優化步數）。下次同樣任務更快。</p>
+          </div>
+          <div class="agent-col museon-col" style="grid-column: span 2;">
+            <div class="agent-name">MUSEON</div>
+            <p style="font-size:13px;">先問：「拒絕誰？你們關係是什麼？你希望對方離開時的感受是？」——因為 <span class="hl">六大盲點#1</span> 守望要先確認問題本身對不對。草擬完之後，ACSF 會把「拒絕信前置問題診斷」鍛造成你個人化的 Skill，下次自動帶前置問題，而不是直接寫信。</p>
+          </div>
+        </div>
+
+        <hr class="light">
+        <p style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;">技術實作（ACSF 觸發判斷）</p>
+        <div class="code-block">
+          <pre><span class="c"># ACSF（Automated Cognitive Skill Forging）觸發條件</span>
+<span class="n">FORGE_TRIGGERS</span> = {
+    <span class="s">"complex_task"</span>: <span class="s">"≥5 次工具呼叫後找到解法"</span>,
+    <span class="s">"trial_error"</span>: <span class="s">"第 2 次或更後才成功（前幾次方向錯誤）"</span>,
+    <span class="s">"correction"</span>: <span class="s">"使用者糾正後找到正確路徑"</span>,
+    <span class="s">"novel_workflow"</span>: <span class="s">"可重複的非平凡工作流（現有 Skill 未覆蓋）"</span>
+}
+
+<span class="c"># Hermes：優化 benchmark = 任務步數/時間</span>
+<span class="c"># MUSEON：優化 benchmark = 北極星對齊 + DNA 親和對照 + 六大盲點覆蓋率</span>
+<span class="k">def</span> <span class="n">acsf_quality_gate</span>(skill_draft):
+    checks = [
+        dna_affinity_check(skill_draft),    <span class="c"># DNA 親和對照</span>
+        north_star_alignment(skill_draft),   <span class="c"># 北極星七武海對齊</span>
+        six_blindspot_coverage(skill_draft)  <span class="c"># 六大盲點守望覆蓋</span>
+    ]
+    <span class="k">return</span> all(checks)  <span class="c"># 全過才安裝</span></pre>
+        </div>
+      </div>
+
+      <!-- ── 差異 3：自我驗證閉環 ── -->
+      <div class="dive-block">
+        <div class="dive-header">
+          <div class="dive-icon gold">📊</div>
+          <div class="dive-title">
+            差異三：自我驗證閉環——DB count 不是 LLM 自報
+            <small>七武海七維度 = 真實可量測的演化儀表板</small>
+          </div>
+        </div>
+
+        <p style="font-size:15px;color:var(--ink);margin-bottom:20px;">自我演化系統最難的問題是：<strong>你怎麼知道自己真的變好了？</strong></p>
+
+        <div class="three-col">
+          <div class="agent-col">
+            <div class="agent-name">OpenClaw / Hermes</div>
+            <p>「我學到了 X 個 Skill」「本週完成率 95%」——這是 agent 的自報，或者任務層面的 metric。<br><br>但「你有沒有對這個人的判斷更準」這件事，無法用任務完成率量測。</p>
+          </div>
+          <div class="agent-col museon-col" style="grid-column: span 2;">
+            <div class="agent-name">MUSEON — 七武海七維度（真實 DB count）</div>
+            <p style="margin-bottom:12px;">每個維度背後是一個真實 DB/文件計數，不是 LLM 宣稱：</p>
+            <div class="metric-row"><span class="metric-label">自我察覺</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:83%"></div></div><span class="metric-source">triage_queue.jsonl 行數</span></div>
+            <div class="metric-row"><span class="metric-label">自我修復</span><div class="metric-bar-wrap"><div class="metric-bar teal" style="width:21%"></div></div><span class="metric-source">surgery_log/*.jsonl 7天 fixed 比例</span></div>
+            <div class="metric-row"><span class="metric-label">自我迭代</span><div class="metric-bar-wrap"><div class="metric-bar gold" style="width:39%"></div></div><span class="metric-source">velocity_log.jsonl composite</span></div>
+            <div class="metric-row"><span class="metric-label">自我演化</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:55%"></div></div><span class="metric-source">threshold_evolution_log.jsonl 行數</span></div>
+            <div class="metric-row"><span class="metric-label">自我意識</span><div class="metric-bar-wrap"><div class="metric-bar teal" style="width:72%"></div></div><span class="metric-source">self_summary.json 新鮮度</span></div>
+          </div>
+        </div>
+
+        <hr class="light">
+
+        <p style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;">Morphenix 閉環（提案 → 執行 → 量測 → 再提案）</p>
+        <div class="code-block">
+          <pre><span class="c"># nightly pipeline 閉環，不依賴 LLM 宣稱</span>
+<span class="k">def</span> <span class="n">morphenix_cycle</span>():
+    <span class="c"># Phase 1：量測七武海即時值（真實 DB count）</span>
+    current = warlords_reader.get_current_warlords()
+
+    <span class="c"># Phase 2：Morphenix 提案（針對低分維度）</span>
+    proposals = morphenix.propose_evolutions(current, threshold=0.5)
+
+    <span class="c"># Phase 3：自動執行綠區提案</span>
+    <span class="k">for</span> p <span class="k">in</span> proposals:
+        <span class="k">if</span> p.safety_level == <span class="s">"green"</span>:
+            p.execute()
+
+    <span class="c"># Phase 4：再量測，確認 delta &gt; 0</span>
+    after = warlords_reader.get_current_warlords()
+    audit_log.write(before=current, after=after, proposals=proposals)
+    <span class="c"># DB count 驗證，不是 agent 說「我變好了」</span></pre>
+        </div>
+
+        <div class="note">
+          ⚠️ 工程師常見誤解：七武海是 MUSEON 說「自己很好」——實際上幾個維度現在是低分（如自我修復 0.21），這正是因為「真實反映 &gt; 數字好看」——低分代表真實問題等待修復，不是系統粉飾。
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── 場景比較 ── -->
+<div class="container">
+  <div class="section">
+    <div class="section-label">行為差異</div>
+    <div class="section-title">三個場景，看清楚差在哪</div>
+    <p class="section-sub">讓工程師感受「相同輸入，不同設計哲學，不同輸出」</p>
+
+    <!-- 場景 A -->
+    <div class="scenario-block">
+      <div class="scenario-header">
+        <div class="scenario-icon">💬</div>
+        <div class="scenario-label">場景 A <span>使用者帶著隱藏立場問問題</span></div>
+      </div>
+      <div class="user-msg">「這樣做比較好吧？你說是吧。」</div>
+      <div class="three-col">
+        <div class="agent-col">
+          <div class="agent-name">OpenClaw</div>
+          <p style="font-size:13px;">「對，這個方向沒問題！接下來要我執行嗎？」<br><br>→ 執行優先，直接背書。</p>
+        </div>
+        <div class="agent-col">
+          <div class="agent-name">Hermes</div>
+          <p style="font-size:13px;">「根據之前的討論，你傾向 A 方案，所以應該是對的。」<br><br>→ 記憶輔助，但仍確認式回應。</p>
+        </div>
+        <div class="agent-col museon-col">
+          <div class="agent-name">MUSEON</div>
+          <p style="font-size:13px;">「你想確認什麼？這個問法通常帶著預設答案——你是在找驗證，還是真的想知道我的獨立判斷？」<br><br>→ 六大盲點#3 守望：不掌握 GAP 的決策更危險。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 場景 B -->
+    <div class="scenario-block">
+      <div class="scenario-header">
+        <div class="scenario-icon">📋</div>
+        <div class="scenario-label">場景 B <span>任務明確，快速執行</span></div>
+      </div>
+      <div class="user-msg">「幫我把這份報告整理成摘要。」</div>
+      <div class="three-col">
+        <div class="agent-col">
+          <div class="agent-name">OpenClaw</div>
+          <p style="font-size:13px;">3 秒內產出，Telegram 回傳，平台整合流暢。<br><br>→ 這是 OpenClaw 的主場。</p>
+        </div>
+        <div class="agent-col">
+          <div class="agent-name">Hermes</div>
+          <p style="font-size:13px;">產出報告，並把這個任務鍛造成 Skill（下次更快）。<br><br>→ 效能優化：少一步。</p>
+        </div>
+        <div class="agent-col museon-col">
+          <div class="agent-name">MUSEON</div>
+          <p style="font-size:13px;">執行摘要，同時 CPU Observer 更新「你使用報告的頻率 + 傾向哪種摘要格式」——下次根據你的認知模型客製化格式，不是用同一套模板。<br><br>→ MUSEON 適合但不是最快。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 場景 C -->
+    <div class="scenario-block">
+      <div class="scenario-header">
+        <div class="scenario-icon">📅</div>
+        <div class="scenario-label">場景 C <span>使用三個月後的差異</span></div>
+      </div>
+      <div class="three-col">
+        <div class="agent-col">
+          <div class="agent-name">OpenClaw / Hermes</div>
+          <p style="font-size:13px;">記住了你的偏好格式、常用 Skill 更快、任務模板更完整。<br><br>你的工作效率提升了 30%。<br><br><strong>但做錯決策的速度也提升了 30%。</strong></p>
+        </div>
+        <div class="agent-col museon-col" style="grid-column: span 2;">
+          <div class="agent-name">MUSEON</div>
+          <p style="font-size:13px;">ANIMA 六維向量已累積 500+ 次互動梯度，知道：<br>• 你在哪類問題上有盲點（六大盲點記錄）<br>• 哪些 Skill 真的有用（七武海 DB count 驗證）<br>• 你的決策模式（Decision Atlas 圖譜）<br><br>結果：不只是「更快」，而是 <span class="hl">更少做錯決策</span>。<br>Hermes 幫你更快跑——MUSEON 幫你先確認有沒有跑對方向。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 結論 ── -->
+<div class="container" style="padding-bottom:64px;">
+  <div class="conclusion">
+    <h2>一句話總結</h2>
+    <p>OpenClaw 和 Hermes 是在任務層解決問題。MUSEON 是在判斷層確保問題值得解。三者不是競爭關係——<br>在正確的場景用對的工具。</p>
+
+    <div class="conclusion-grid">
+      <div class="conclusion-item">
+        <div class="ci-label">適合場景</div>
+        <div class="ci-name">OpenClaw</div>
+        <div class="ci-desc">批量、重複、多平台、執行速度優先的自動化任務</div>
+      </div>
+      <div class="conclusion-item">
+        <div class="ci-label">適合場景</div>
+        <div class="ci-name">Hermes Agent</div>
+        <div class="ci-desc">開發者工具整合、已定義問題的效能優化、研發框架底層</div>
+      </div>
+      <div class="conclusion-item museon">
+        <div class="ci-label">適合場景</div>
+        <div class="ci-name">MUSEON</div>
+        <div class="ci-desc">決策品質比速度更重要、問題本身未定義、需要長期個人化累積</div>
+      </div>
+    </div>
+
+    <p style="margin-top:32px;margin-bottom:0;font-size:14px;color:rgba(255,255,255,0.4);">
+      MUSEON 可以是 OpenClaw / Hermes 的指揮層——把「問題本身對不對」交給 MUSEON 判斷，把「怎麼執行」交給效能優化的框架。
+    </p>
+  </div>
+</div>
+
+<footer class="page-footer">
+  MUSEON × 工程師簡報 · 2026-06-14 · 7武海七維度實時值來自 warlords_reader.get_current_warlords()
+</footer>
+
+</body>
+</html>
