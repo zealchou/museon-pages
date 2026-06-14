@@ -958,6 +958,199 @@
   </div>
 </div>
 
+<!-- ── 深潛 Part II：四個被省略的核心差異 ── -->
+
+<!-- 創意農場碰撞 -->
+<div class="container section">
+  <div class="section-label">Diff 4 · Creative Collision</div>
+  <div class="section-title">創意農場碰撞層</div>
+  <p class="section-sub">MUSEON 不只是並行執行多個 Skill——它讓不同 Skill 的輸出互相碰撞，產出比任何單一 Skill 更強的答案。</p>
+
+  <div class="dive-block">
+    <div class="dive-header">
+      <div class="dive-icon teal">🌾</div>
+      <div class="dive-title">
+        muse-runner：有意設計的衝突
+        <small>creative_farm_runner.py · inner_muse_runner.py</small>
+      </div>
+    </div>
+    <div class="three-col">
+      <div class="agent-col">
+        <div class="agent-name">OpenClaw / Hermes</div>
+        <p style="font-size:13px;">多 Skill 並行執行，各自回傳結果。輸出 A 不知道輸出 B 存在。<br><br>結果：使用者拿到 3 個獨立建議，自己決定用哪個。</p>
+      </div>
+      <div class="agent-col museon-col" style="grid-column: span 2;">
+        <div class="agent-name">MUSEON — 碰撞機制</div>
+        <p style="font-size:13px;">
+          <strong>步驟 1：</strong>Skill A 說「用定價策略」，Skill B 說「用品牌策略」<br>
+          <strong>步驟 2：</strong>Collision Engine 掃描兩個輸出的交集與矛盾點<br>
+          <strong>步驟 3：</strong>產出「定價+品牌雙軌比單軌穩——因為定價讓你進門，品牌讓你留下」<br><br>
+          → 這個洞察在任何單一 Skill 裡都不存在。它只在碰撞時浮現。
+        </p>
+      </div>
+    </div>
+    <div class="tldr-bar" style="margin-bottom:0;">
+      <div class="icon">⚡</div>
+      <p>Hermes 的多 Skill 是「並行執行」——多條高速公路同時開。MUSEON 的多 Skill 是「有意碰撞」——讓高速公路在交叉口相撞，看撞出什麼。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 六大盲點 + DNA路由 + 思考前置區 -->
+<div class="container section">
+  <div class="section-label">Diff 5 · Pre-Response Judgment Layer</div>
+  <div class="section-title">回應前的判斷三關</div>
+  <p class="section-sub">在 MUSEON 開口之前，三層過濾已經跑完。Hermes 和 OpenClaw 沒有這個環節。</p>
+
+  <div class="mechanism-grid">
+    <div class="mcard">
+      <div class="mcard-num">01</div>
+      <div class="mcard-title">六大盲點守望</div>
+      <div class="mcard-sub">six_blindspot_guardian.py</div>
+      <div class="mcard-desc">
+        回答前先問：「問題本身對不對？」<br><br>
+        六大盲點：不知自己是誰 / 沒方向 / 不掌握 GAP / 未盤點累積 / 不懂槓桿 / 缺整合佈局。<br><br>
+        任一盲點命中 → MUSEON 先說「這問法本身有個假設你可能不知道」，再回答。<br><br>
+        <span class="tag tag-no">OpenClaw/Hermes</span> 沒有這層，直接回答問題本身。
+      </div>
+    </div>
+    <div class="mcard teal">
+      <div class="mcard-num">02</div>
+      <div class="mcard-title">DNA 路由</div>
+      <div class="mcard-sub">skill_dna_router.py · RC 親和值對照</div>
+      <div class="mcard-desc">
+        每個 Skill 自己登記「對哪種使用者偏好有親和」（RC 值 0–1）<br><br>
+        回應前：系統自動跑 RC 對照——<br>
+        親和度 &lt; 0.3 的 Skill → 這次不推薦使用<br><br>
+        結果：同一個問題，對 Zeal 用 A 組 Skill，對另一個客戶用 B 組 Skill。<br><br>
+        <span class="tag tag-partial">Hermes</span> 所有人共用同一套 Skill pool，無個人化路由。
+      </div>
+    </div>
+    <div class="mcard gold">
+      <div class="mcard-num">03</div>
+      <div class="mcard-title">思考前置區</div>
+      <div class="mcard-sub">context_cache / persona_digest</div>
+      <div class="mcard-desc">
+        每次回應前自動讀入 5 個快取文件：<br>
+        人格準則 / 使用者現況 / Top-20 行動規則 / 系統自我狀態 / 當前設計指令<br><br>
+        這些不是 system prompt 裡的靜態文字——它們是 CPU 每天更新的動態快取。<br><br>
+        上週你說的話、昨天的決策、今天的情緒訊號，都已經在前置區裡了。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 影子分身預測 -->
+<div class="container section">
+  <div class="section-label">Diff 6 · Foresight Engine</div>
+  <div class="section-title">影子分身：對話結束前就預測你下一步</div>
+  <p class="section-sub">Foresight 機制讀完對話後，對你接下來最可能的 3 個行動做預測——不等你問。</p>
+
+  <div class="dive-block">
+    <div class="dive-header">
+      <div class="dive-icon gold">🔮</div>
+      <div class="dive-title">
+        E1–E5 五步預測機制
+        <small>foresight_engine.py · shadow_self_model.py</small>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px;">
+      <div style="background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold); font-weight: 600; margin-bottom: 6px;">E1</div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--ink);">訊號提取</div>
+        <div style="font-size: 11px; color: var(--slate); margin-top: 4px;">對話中的情緒變化、重複字眼、迴避模式</div>
+      </div>
+      <div style="background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold); font-weight: 600; margin-bottom: 6px;">E2</div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--ink);">模式比對</div>
+        <div style="font-size: 11px; color: var(--slate); margin-top: 4px;">對照 MuseMEM L2 行為模式層</div>
+      </div>
+      <div style="background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold); font-weight: 600; margin-bottom: 6px;">E3</div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--ink);">信念推算</div>
+        <div style="font-size: 11px; color: var(--slate); margin-top: 4px;">對照 L3 信念層——推算背後假設</div>
+      </div>
+      <div style="background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold); font-weight: 600; margin-bottom: 6px;">E4</div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--ink);">行動候選</div>
+        <div style="font-size: 11px; color: var(--slate); margin-top: 4px;">生成 top-3 可能行動 + 信心區間</div>
+      </div>
+      <div style="background: rgba(184,146,58,0.08); border: 1px solid rgba(184,146,58,0.3); border-radius: 8px; padding: 14px; text-align: center;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold); font-weight: 600; margin-bottom: 6px;">E5</div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--ink);">提前鋪路</div>
+        <div style="font-size: 11px; color: var(--slate); margin-top: 4px;">回應末尾埋下對應的資源 / 提問 / 預警</div>
+      </div>
+    </div>
+    <div class="tldr-bar" style="margin-bottom:0;">
+      <div class="icon">💡</div>
+      <p>Foresight 的本質不是 RAG（把你說過的話搬回來）。它是對<span style="color:var(--ember);font-weight:600;">你的決策過程本身</span>建模——預測的是你會怎麼想，而不是你說過什麼。Hermes 和 OpenClaw 做的是任務層記憶，MUSEON 做的是行為層建模。</p>
+    </div>
+  </div>
+</div>
+
+<!-- MuseMEM 五層架構 -->
+<div class="container section">
+  <div class="section-label">Architecture · MuseMEM</div>
+  <div class="section-title">MuseMEM：讓上面所有機制成立的骨幹</div>
+  <p class="section-sub">創意農場、影子分身、DNA路由、前置區——全部依賴同一個五層記憶系統。</p>
+
+  <div class="dive-block">
+    <div class="dive-header">
+      <div class="dive-icon">🧠</div>
+      <div class="dive-title">
+        五層記憶架構
+        <small>memory_v3/ · vector_bridge.py · Qdrant + SQLite</small>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px;">
+      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--slate);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--slate);">L1<br>事件層</div>
+        <div style="font-size: 13px;"><strong>原始訊號</strong><br><span style="color:var(--slate);">你說了什麼、何時說、情緒強度</span></div>
+        <div style="font-size: 12px; color: var(--slate);">Hermes/OpenClaw 也有這層 — 這是記憶的起點，不是終點</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--teal);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--teal);">L2<br>行為層</div>
+        <div style="font-size: 13px;"><strong>模式提取</strong><br><span style="color:var(--slate);">「每次談錢都轉移話題」「週一問的問題比週五深」</span></div>
+        <div style="font-size: 12px; color: var(--slate);">Foresight E2 在這層做比對；DNA路由讀這層</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--gold);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--gold);">L3<br>信念層</div>
+        <div style="font-size: 13px;"><strong>深層假設推算</strong><br><span style="color:var(--slate);">「你相信努力=結果，但你的行動模式不一致」</span></div>
+        <div style="font-size: 13px; color: var(--slate);">六大盲點守望從這層喂資料；ANIMA 向量在這層更新</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--ember);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--ember);">L4<br>關係圖層</div>
+        <div style="font-size: 13px;"><strong>信念網絡</strong><br><span style="color:var(--slate);">信念 A 和信念 B 互相矛盾？有哪些相互強化的假設？</span></div>
+        <div style="font-size: 12px; color: var(--slate);">Decision Atlas 圖譜在這層運作</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 80px 1fr 1fr; gap: 16px; align-items: start; padding: 16px; background: rgba(196,80,42,0.04); border: 1px solid rgba(196,80,42,0.25); border-radius: 8px; border-left: 3px solid var(--ember-dark);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--ember-dark);">L5<br>預測層</div>
+        <div style="font-size: 13px;"><strong>未來行動建模</strong><br><span style="color:var(--slate);">根據 L1-L4 推算你接下來最可能做的事</span></div>
+        <div style="font-size: 12px; color: var(--ember-dark);">Foresight E4-E5 在這層輸出；唯一 MUSEON 獨有的記憶層</div>
+      </div>
+    </div>
+
+    <div class="three-col">
+      <div class="agent-col">
+        <div class="agent-name">OpenClaw / Hermes</div>
+        <p style="font-size:13px;">記憶通常停在 L1–L2：你說了什麼、偏好什麼格式、用過哪些 Skill。<br><br>這讓它們更快、更符合你的習慣。但沒有 L3 以上，就看不到「你為什麼這樣說」。</p>
+      </div>
+      <div class="agent-col museon-col" style="grid-column: span 2;">
+        <div class="agent-name">MUSEON — L1 到 L5</div>
+        <p style="font-size:13px;">
+          L1-L2 是原料。L3 是第一層理解。L4-L5 是 MUSEON 獨有的能力層。<br><br>
+          有了五層，才能做到：<br>
+          • 創意農場碰撞（L2 行為模式 × L3 信念層驅動碰撞方向）<br>
+          • 六大盲點守望（L3 信念層發現假設錯誤）<br>
+          • DNA路由個人化（L2 行為偏好決定哪個 Skill 適合你）<br>
+          • 影子分身預測（L5 預測層的 E4-E5 輸出）<br><br>
+          <strong>MuseMEM 不是記憶系統。它是 MUSEON 的神經系統。</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── 結論 ── -->
 <div class="container" style="padding-bottom:64px;">
   <div class="conclusion">
