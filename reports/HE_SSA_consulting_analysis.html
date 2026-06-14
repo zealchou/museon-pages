@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HE — 商務策略升級諮詢分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ember: #C4502A;
+            --ember-light: #E0714D;
+            --ember-dark: #9A3A1C;
+            --teal: #2A7A6E;
+            --gold: #B8923A;
+            --ink: #12121A;
+            --slate: #5A5A6E;
+            --mist: #9898A8;
+            --parchment: #F7F5F0;
+            --snow: #FDFCFA;
+            --border: #E2E0DA;
+            --success: #2D8A6E;
+            --warning: #C9943A;
+            --error: #C4402A;
+        }
+
+        html, body {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            color: var(--ink);
+            background: var(--parchment);
+            line-height: 1.75;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--ember-dark) 0%, var(--ember) 100%);
+            color: white;
+            padding: 80px 40px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.15;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .hero .date {
+            font-size: 13px;
+            opacity: 0.75;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ===== SECTION HEADING ===== */
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: var(--ember);
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        /* ===== INSIGHT BOX ===== */
+        .insight {
+            background: var(--snow);
+            border-left: 4px solid var(--ember);
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+        }
+
+        .insight.warning {
+            border-left-color: var(--warning);
+            background: #FFFBF7;
+        }
+
+        .insight.success {
+            border-left-color: var(--success);
+            background: #F5FCFB;
+        }
+
+        .insight strong {
+            color: var(--ink);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .insight p {
+            color: var(--slate);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* ===== GRID ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--snow);
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card.strength h3 {
+            color: var(--success);
+        }
+
+        .card.weakness h3 {
+            color: var(--error);
+        }
+
+        .card .icon {
+            font-size: 24px;
+        }
+
+        .card p {
+            color: var(--slate);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .card ul {
+            margin-left: 20px;
+            margin-top: 12px;
+            color: var(--slate);
+            font-size: 15px;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* ===== FAILURE MODES ===== */
+        .failure-item {
+            background: #FFF5F2;
+            border: 1px solid #E8D5CC;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--error);
+        }
+
+        .failure-item .number {
+            display: inline-block;
+            background: var(--error);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 600;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .failure-item .title {
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .failure-item .desc {
+            color: var(--slate);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .failure-item .signal {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #E8D5CC;
+            font-size: 14px;
+            color: var(--mist);
+            font-style: italic;
+        }
+
+        /* ===== BLINDSPOT MAPPING ===== */
+        .blindspot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .blindspot-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .blindspot {
+            background: var(--snow);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+        }
+
+        .blindspot.active {
+            border-color: var(--ember);
+            background: #FFF8F6;
+        }
+
+        .blindspot .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--mist);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .blindspot .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .blindspot .desc {
+            font-size: 14px;
+            color: var(--slate);
+            line-height: 1.6;
+        }
+
+        .blindspot.active .title {
+            color: var(--ember);
+        }
+
+        /* ===== RECOMMENDATION SECTION ===== */
+        .recommendation {
+            background: linear-gradient(135deg, #FFFBF7 0%, #FFF8F6 100%);
+            padding: 40px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            margin-bottom: 40px;
+        }
+
+        .recommendation h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            color: var(--ember);
+            margin-bottom: 20px;
+        }
+
+        .recommendation .reason {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .recommendation .reason:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .reason .why {
+            font-size: 14px;
+            color: var(--mist);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .reason .content {
+            color: var(--slate);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* ===== CTA ===== */
+        .cta-section {
+            background: var(--ember);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .cta-section h2 {
+            color: white;
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 20px;
+            font-size: 36px;
+        }
+
+        .cta-section .description {
+            font-size: 17px;
+            margin-bottom: 32px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--ember);
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0 12px;
+        }
+
+        .cta-button:hover {
+            background: var(--parchment);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        /* ===== METADATA ===== */
+        .metadata {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .metadata {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .meta-item {
+            background: var(--snow);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            color: var(--mist);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .meta-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--ember);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding-top: 40px;
+            text-align: center;
+            color: var(--mist);
+            font-size: 13px;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 40px 0;
+        }
+
+        /* ===== LIST ===== */
+        ul.feature-list {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        ul.feature-list li {
+            padding-left: 24px;
+            margin-bottom: 12px;
+            position: relative;
+            color: var(--slate);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        ul.feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        /* ===== HIGHLIGHT ===== */
+        .highlight {
+            background: #FFFBF7;
+            padding: 2px 6px;
+            color: var(--ember);
+            font-weight: 600;
+            border-radius: 3px;
+        }
+
+    </style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260614_184715_1c93bc76.png" alt="a mentor at a study desk with books and a warm cup of tea, soft window light, editorial portrait composition" width="1024" height="576" loading="lazy" />
+
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <h1>HE 的商務策略升級</h1>
+            <div class="subtitle">從「逐案應對」到「體系化決策」的轉折點</div>
+            <div class="date">CONFIDENTIAL ANALYSIS | 2026 年 6 月</div>
+        </div>
+
+        <!-- 核心發現 -->
+        <div class="section">
+            <h2>你正面臨的三層困境</h2>
+
+            <div class="insight">
+                <strong>🎯 表層：需求碎片化</strong>
+                <p>你在處理多類型的客戶專案——沐光潔凈、農業行銷、潛水品牌等。每個案子都要單獨思考策略，每個簡報都要多次迭代才定案。感覺像是「左手做這個，右手做那個」，永遠在應急。</p>
+            </div>
+
+            <div class="insight warning">
+                <strong>⚠️ 中層：決策框架不一致</strong>
+                <p>最近農業行銷合作的例子最能說明——新方案工作量升級（從「5 篇文章」變成「策略+審稿+成效評估」），但你沒有一套評估框架來判斷「該接還是該調整」。最後接了，但心裡不踏實。</p>
+            </div>
+
+            <div class="insight warning">
+                <strong>🔴 根層：缺少「體系化槓桿」</strong>
+                <p>十年的股市投資經驗告訴你一個真相：「小賺多次 + 偶爾大賠 = 沒有長線思維」。同樣的模式出現在你的商務決策上——一直在「案件驅動」，沒有「策略驅動」。</p>
+            </div>
+        </div>
+
+        <!-- 失敗的五種方式 -->
+        <div class="section">
+            <h2>觀察到的五種失敗方式</h2>
+
+            <div class="failure-item">
+                <span class="number">1</span>
+                <div>
+                    <div class="title">「先接後想」 — 容量規劃缺陷</div>
+                    <div class="desc">農業行銷案：對方提的新方案（AI 自動化流程）聽起來減少工作，你就接了。後來才發現工作反而升級——從「交付文章」變成「驗證 AI 品質 + 調整策略」。</div>
+                    <div class="signal">信號：「後來他們要做 AI 導入...」→ 沒有提前問清楚成本結構。</div>
+                </div>
+            </div>
+
+            <div class="failure-item">
+                <span class="number">2</span>
+                <div>
+                    <div class="title">「需求漸進式浮現」 — 溝通成本高</div>
+                    <div class="desc">跟 Museon 的簡報來回非常多次——每次看到版本才想到新需求（日期添加、資訊來源驗證等）。最後做出來是對的，但過程中燒了很多溝通資源。</div>
+                    <div class="signal">信號：「我發現你有太多想像，我需要請你依據我提供的資料呈現」→ 一開始沒有完整表述需求。</div>
+                </div>
+            </div>
+
+            <div class="failure-item">
+                <span class="number">3</span>
+                <div>
+                    <div class="title">「借由問題来自我覺察」 — 策略診斷缺失</div>
+                    <div class="desc">關於投資習慣：你主動提出「我分析我十年投資，大都小賺，偶爾大賠，想要改變」。這說明你有自我覺察，但「怎麼改」的路徑不清楚。無法從個案經驗升級到「可複製的決策系統」。</div>
+                    <div class="signal">信號：問題表述清晰，但缺少「為什麼會這樣」的根因診斷。</div>
+                </div>
+            </div>
+
+            <div class="failure-item">
+                <span class="number">4</span>
+                <div>
+                    <div class="title">「客戶關係過度承諾」 — 談判邊界模糊</div>
+                    <div class="desc">農業行銷案：原先「每月 5 篇固定交付」是清晰的邊界。新方案把工作籠統地擴大到「策略+驗證+成效評估」，但沒有明確說「這要多少時間」「超出這個範圍怎麼算」。</div>
+                    <div class="signal">信號：能識別問題（「工作面向變寬」）但沒有反向設計談判結構。</div>
+                </div>
+            </div>
+
+            <div class="failure-item">
+                <span class="number">5</span>
+                <div>
+                    <div class="title">「缺少『組合型槓桿』」 — 單案思維深刻</div>
+                    <div class="desc">你在處理的都是「一對一客戶關係」——每個客戶一個不同的策略。但你沒有找到跨案通用的「方法論」——比如「如何評估新合作」「如何設計漲價」「如何說『不』」。</div>
+                    <div class="signal">信號：案子多樣，但沒有一套通用的決策準則。</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 優缺點分析 -->
+        <div class="section">
+            <h2>你的優勢與對應的弱點</h2>
+
+            <div class="grid-2">
+                <div class="card strength">
+                    <h3><span class="icon">✓</span> 高度的自我覺察</h3>
+                    <p>你能清楚表述自己的困境——投資、客戶談判、需求溝通的每一個環節你都看得見。這是極少數人有的能力。</p>
+                    <p style="margin-top: 12px; color: var(--warning);"><strong>對應的陷阱：</strong>看到問題卻沒有「系統化解法」，容易陷入「自我責備」而不是「結構改善」。</p>
+                </div>
+
+                <div class="card weakness">
+                    <h3><span class="icon">⚠</span> 缺少框架性思維</h3>
+                    <p>你在「應對」（反應型），而不是在「設計」（主動型）。每個案子都重新思考，沒有可複製的決策模板。</p>
+                </div>
+
+                <div class="card strength">
+                    <h3><span class="icon">✓</span> 實戰導向的行動力</h3>
+                    <p>不怕提出陌生的合作（股票質押、農業 AI、潛水品牌），願意嘗試新領域。這種開放性很寶貴。</p>
+                    <p style="margin-top: 12px; color: var(--warning);"><strong>對應的陷阱：</strong>行動快，但前期評估不足，容易被「表面機會」迷惑，後來才發現「結構有問題」。</p>
+                </div>
+
+                <div class="card weakness">
+                    <h3><span class="icon">⚠</span> 容量與成本計算不清</h3>
+                    <p>容易接下「聽起來合理」的提案，但沒有提前量化「成本升級」。農業案是活生生的例子。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 六大盲點診斷 -->
+        <div class="section">
+            <h2>六大盲點映射診斷</h2>
+
+            <p style="color: var(--slate); margin-bottom: 24px;">Museon 的 SSA 課程圍繞「六大盲點」設計。讓我們看看你現在卡在哪幾個：</p>
+
+            <div class="blindspot-grid">
+                <div class="blindspot">
+                    <div class="label">盲點 1</div>
+                    <div class="title">不知自己是誰</div>
+                    <div class="desc">你在「社群顧問」還是「內容運營」還是「策略顧問」？每個案子角色都不同。</div>
+                </div>
+
+                <div class="blindspot">
+                    <div class="label">盲點 2</div>
+                    <div class="title">沒方向目標</div>
+                    <div class="desc">「做好的案子」≠「有明確的 3 年目標」。你在做什麼，但為了什麼？</div>
+                </div>
+
+                <div class="blindspot active">
+                    <div class="label">盲點 3 ⭐</div>
+                    <div class="title">不掌握 GAP</div>
+                    <div class="desc"><strong>最直接相關。</strong> 你能說出「十年投資小賺」，但不能系統化地診斷「為什麼會這樣」「怎麼改」。</div>
+                </div>
+
+                <div class="blindspot">
+                    <div class="label">盲點 4</div>
+                    <div class="title">未盤點累積</div>
+                    <div class="desc">「做過沐光、農業、潛水」但沒有萃取「跨案的通用洞見」。每個案子都是孤島。</div>
+                </div>
+
+                <div class="blindspot active">
+                    <div class="label">盲點 5 ⭐</div>
+                    <div class="title">不懂槓桿</div>
+                    <div class="desc"><strong>關鍵盲點。</strong> 你在用「時間槓桿」（花更多時間 = 接更多案子），但沒有「思維槓桿」（用一套方法論應對所有案子）。</div>
+                </div>
+
+                <div class="blindspot">
+                    <div class="label">盲點 6</div>
+                    <div class="title">缺整合佈局</div>
+                    <div class="desc">沐光、農業、潛水都是獨立的。沒有「品牌」或「方法論」把它們串聯起來。</div>
+                </div>
+            </div>
+
+            <div class="insight">
+                <strong>診斷結論</strong>
+                <p>你最卡在<span class="highlight">盲點 3（不掌握 GAP）和盲點 5（不懂槓桿）</span>。這兩個盲點直接導致了「失敗的五種方式」——你有自我覺察，但缺系統化的診斷和槓桿設計。</p>
+            </div>
+        </div>
+
+        <!-- 為什麼需要 SSA -->
+        <div class="section">
+            <h2>為什麼 SSA 課程對你特別關鍵</h2>
+
+            <div class="recommendation">
+                <h3>SSA 的三層切入點</h3>
+
+                <div class="reason">
+                    <div class="why">Layer 1: 快速診斷框架</div>
+                    <div class="content">
+                        SSA 教的不只是「問題識別」，而是「結構化診斷」——用一套方法論快速看清「這個客戶機會值不值得」「成本升級在哪」。農業案那樣的「後悔接」就不會再發生。
+                    </div>
+                </div>
+
+                <div class="reason">
+                    <div class="why">Layer 2: 八大槓桿應用</div>
+                    <div class="content">
+                        SSA 講的八大槓桿（品牌、人脈、平台、信用、知識、研發、時間、金錢）——你現在只在用「時間」（多接案子 = 多花時間）。但你可以用「品牌」（建立方法論 → 可複製）或「知識」（寫課程 / 拆方法 → 被動收入）。課程會教你怎麼從「單點時間槓桿」升級到「多維度組合槓桿」。
+                    </div>
+                </div>
+
+                <div class="reason">
+                    <div class="why">Layer 3: 從「案件驅動」到「策略驅動」</div>
+                    <div class="content">
+                        你現在是「被動地接案子」→ 然後應對。SSA 會教你「主動地設計商業模式」——怎麼定位自己、怎麼設計漲價、怎麼說「不」、怎麼建立可複製的談判框架。這直接翻轉你的工作模式。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 具體收穫 -->
+        <div class="section">
+            <h2>上完課你會有的改變</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>📊 決策速度 3x</h3>
+                    <p>有框架就有速度。見到新客戶提案，不用「猶豫一週」，30 分鐘內知道「該接還是調整」。</p>
+                </div>
+
+                <div class="card">
+                    <h3>💰 談判能力 2x</h3>
+                    <p>知道自己的成本和價值後，就敢跟客戶談「你需要的工作範圍」「應該要收多少」。農業案那樣的「被動升級」就不會再發生。</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 品牌清晰度</h3>
+                    <p>從「什麼案子都做」變成「有明確定位的顧問」。沐光、農業、潛水——下次你會知道「我為什麼要接這類案子」。</p>
+                </div>
+
+                <div class="card">
+                    <h3>📈 收入彈性</h3>
+                    <p>不靠「多接案子」增收。改成「漲價」「設計課程版本」「引薦」等槓桿。同樣收入，工作量反而減少。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>準備開始轉變？</h2>
+            <div class="description">
+                SSA 課程是為像你這樣「已經有實戰經驗、開始卡在系統化」的社群顧問設計的。<br><br>
+                不是學工具，而是學怎麼讓你的經驗和直覺變成「可複製的框架」。
+            </div>
+            <a href="https://zealchou.github.io/museon-pages/reports/zeal-profile-v6.html" class="cta-button">了解 SSA 課程</a>
+            <a href="mailto:zeal.chou@gmail.com?subject=SSA%20課程%20-%20HE%20的%20商務策略升級" class="cta-button">直接預約討論</a>
+        </div>
+
+        <!-- 最後的視角 -->
+        <div class="section">
+            <h2>最後的一句話</h2>
+
+            <div class="insight success">
+                <strong>你不是「不行」，你是「無框架」。</strong>
+                <p>
+                    你能分析自己十年投資的模式，能主動提出「需要改變」——這說明你已經在「自我覺察」的路上。
+                    但從「看到問題」到「系統化解法」，還有一段路要走。
+                </p>
+                <p style="margin-top: 12px;">
+                    SSA 課程就是在這一段——把你已有的直覺變成框架，把每個案子的經驗變成可複製的方法論。
+                    這樣你才能從「永遠在應急」升級到「主動在設計」。
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>此分析基於 2026 年 4 月-6 月的真實互動記錄生成</p>
+            <p>報告密級：機密 | 發行日期：2026 年 6 月 14 日</p>
+        </div>
+    </div>
+</body>
+</html>
