@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>萬謬一階課程｜服務價值分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'PingFang TC', 'Noto Sans TC', sans-serif;
+            background: #faf8f3;
+            color: #2c2c2c;
+            line-height: 1.8;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .hero-subtitle {
+            font-size: 1.1em;
+            color: #ddd;
+            margin-bottom: 40px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 0 40px -40px;
+            position: relative;
+            z-index: 10;
+        }
+        .kpi-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .kpi-number {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #c4502a;
+            margin-bottom: 10px;
+        }
+        .kpi-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 60px auto 0;
+            padding: 0 40px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #1a1a2e;
+            border-bottom: 3px solid #c4502a;
+            padding-bottom: 15px;
+        }
+
+        .value-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .value-card {
+            background: #fff;
+            border-left: 5px solid #c4502a;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        .value-card.system { border-left-color: #8b6f47; }
+        .value-card.gift { border-left-color: #2ecc71; }
+        .value-card.accompany { border-left-color: #3498db; }
+
+        .value-badge {
+            display: inline-block;
+            font-size: 0.7em;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .value-badge.system { background: #f0e5d0; color: #8b6f47; }
+        .value-badge.gift { background: #d5f4e6; color: #27ae60; }
+        .value-badge.accompany { background: #d6eaf8; color: #2980b9; }
+
+        .value-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #1a1a2e;
+        }
+        .value-card p {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .timeline-section {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 30px 0;
+        }
+        .timeline-item {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 50px;
+            width: 2px;
+            height: 40px;
+            background: #ddd;
+        }
+
+        .timeline-dot {
+            width: 60px;
+            height: 60px;
+            background: #c4502a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9em;
+            flex-shrink: 0;
+            z-index: 2;
+            position: relative;
+        }
+        .timeline-content {
+            margin-left: 30px;
+            flex: 1;
+        }
+        .timeline-content h4 {
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+        .timeline-content p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .three-hour-breakdown {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .breakdown-item {
+            text-align: center;
+            padding: 20px;
+            background: #f9f7f2;
+            border-radius: 6px;
+        }
+        .breakdown-item-percent {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #c4502a;
+            margin-bottom: 10px;
+        }
+        .breakdown-item-time {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .breakdown-item-label {
+            font-size: 0.95em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .fee-comparison {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        .comparison-section h4 {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+        .comparison-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .comparison-item:last-child { border-bottom: none; }
+        .comparison-label {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .comparison-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #c4502a;
+        }
+        .free-tag {
+            display: inline-block;
+            background: #2ecc71;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .total-row {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #c4502a;
+            font-weight: 700;
+            font-size: 1.05em;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 60px 40px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 60px;
+        }
+        .cta-section h2 {
+            color: #fff;
+            border-color: #c4502a;
+        }
+        .cta-section p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #c4502a;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 80, 42, 0.3);
+        }
+
+        .footer {
+            background: #f9f7f2;
+            padding: 30px 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .value-cards-grid { grid-template-columns: 1fr; }
+            .breakdown-grid { grid-template-columns: 1fr; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260616_023245_16acafe8.png" alt="a single ember of flame on dark velvet, symbolic transformation, warm golden glow, minimalist composition" width="1024" height="576" loading="lazy" />
+
+    <div class="hero">
+        <h1>One Muse 萬謬一階課程</h1>
+        <p class="hero-subtitle">從萬謬人生到助人造命的三日轉化旅程</p>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-number">5</div>
+            <div class="kpi-label">整天課程</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-number">14</div>
+            <div class="kpi-label">個月陪伴服務</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-number">4+</div>
+            <div class="kpi-label">次駐點輔導</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-number">3hr</div>
+            <div class="kpi-label">每次時間</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>課程核心價值</h2>
+        <div class="value-cards-grid">
+            <div class="value-card system">
+                <span class="value-badge system">系統架構</span>
+                <h3>六大支持系統</h3>
+                <p>打破慣性需要團隊的力量。課程建立情緒雷達、顯化系統、助人練習、30天支持圈四大核心系統，讓學員不再回到舊人生。</p>
+            </div>
+            <div class="value-card system">
+                <span class="value-badge system">核心方法</span>
+                <h3>情緒 × 顯化 × 助人</h3>
+                <p>情緒不是問題，而是訊號。透過三日課程讓學員看見舊劇本、確認真目標、學會助人。三層遞進確保從認知到行動的完整轉化。</p>
+            </div>
+            <div class="value-card system">
+                <span class="value-badge system">長期陪伴</span>
+                <h3>14個月持續支持</h3>
+                <p>課程不在三天結束。14個月的駐點輔導、小組復盤、證據日誌追蹤，確保新選擇能真正內化成新習慣。</p>
+            </div>
+            <div class="value-card gift">
+                <span class="value-badge gift">免費贈送</span>
+                <h3>30日支持圈</h3>
+                <p>課後30天每日追蹤，包括小行動設定、情緒覺察、舊劇本回頭預警、新選擇見證、助人行動記錄。價值 $12,000</p>
+            </div>
+            <div class="value-card gift">
+                <span class="value-badge gift">免費贈送</span>
+                <h3>工作手冊組 × 3套</h3>
+                <p>三日課程配套工作簿、情緒雷達表、顯化四步驟實作表、助人者練習指南、30天證據日誌。價值 $15,000</p>
+            </div>
+            <div class="value-card accompany">
+                <span class="value-badge accompany">陪伴服務</span>
+                <h3>個別輔導與諮詢</h3>
+                <p>4+ 次駐點輔導期間可預約個別諮詢，由講師協助卡點突破、關係調整、行動確認。每次3小時，彈性排期。</p>
+            </div>
+        </div>
+
+        <h2>課程時間軸</h2>
+        <div class="timeline-section">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot">第1個月</div>
+                    <div class="timeline-content">
+                        <h4>密集課程期</h4>
+                        <p>3日完整課程 + 課後7天微習慣養成 + 第8天第一次駐點輔導</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot">第2-3月</div>
+                    <div class="timeline-content">
+                        <h4>穩定轉化期</h4>
+                        <p>每2週一次駐點輔導（第2、4、6週），協助建立新選擇的深度習慣，預防舊模式回頭</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot">第4-14月</div>
+                    <div class="timeline-content">
+                        <h4>持續驗證期</h4>
+                        <p>每月1次駐點輔導 + 小組線上復盤，見證行動成果、調整策略、深化助人習慣</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>每次駐點輔導 3 小時配置</h2>
+        <div class="three-hour-breakdown">
+            <div class="breakdown-grid">
+                <div class="breakdown-item">
+                    <div class="breakdown-item-percent">⅓</div>
+                    <div class="breakdown-item-time">約60分鐘</div>
+                    <div class="breakdown-item-label">工作場景診斷</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-item-percent">⅓</div>
+                    <div class="breakdown-item-time">約60分鐘</div>
+                    <div class="breakdown-item-label">釋疑與深層對話</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-item-percent">⅓</div>
+                    <div class="breakdown-item-time">約60分鐘</div>
+                    <div class="breakdown-item-label">教練示範與練習</div>
+                </div>
+            </div>
+            <p style="margin-top: 30px; font-size: 0.95em; color: #666;">
+                每次駐點都物超所值：不只問題解決，更重要的是讓你實際體驗「助人場域」的力量——親眼看見別人如何突破，自己也會被喚醒新的可能。
+            </p>
+        </div>
+
+        <h2>費用與價值對比</h2>
+        <div class="fee-comparison">
+            <div class="comparison-grid">
+                <div class="comparison-section">
+                    <h4 style="color: #2ecc71;">✓ 免費贈送價值</h4>
+                    <div class="comparison-item">
+                        <div class="comparison-label">30日支持圈系統</div>
+                        <div class="comparison-value">$12,000</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">工作手冊×3套</div>
+                        <div class="comparison-value">$15,000</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">每月小組線上復盤</div>
+                        <div class="comparison-value">$8,000</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">線上諮詢支持</div>
+                        <div class="comparison-value">$18,000</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">助教全程陪伴</div>
+                        <div class="comparison-value">$22,000</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">證據日誌追蹤系統</div>
+                        <div class="comparison-value">$8,000</div>
+                    </div>
+                    <div class="total-row">
+                        免費贈送總額
+                        <span style="display: block; margin-top: 10px; color: #2ecc71;">$83,000+</span>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <h4 style="color: #c4502a;">你的實際投入</h4>
+                    <div class="comparison-item">
+                        <div class="comparison-label">3日完整課程</div>
+                        <div class="comparison-value">$48,000</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">第1個月駐點</div>
+                        <div class="comparison-value">$5,000 <span class="free-tag">僅此1次</span></div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">第2-3月駐點</div>
+                        <div class="comparison-value">$2,500/次 <span class="free-tag">×2次</span></div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">第4-14月駐點</div>
+                        <div class="comparison-value">$2,500/次 <span class="free-tag">×11次</span></div>
+                    </div>
+                    <div class="total-row">
+                        你的實際投入
+                        <span style="display: block; margin-top: 10px; color: #c4502a;">
+                            $48,000 + $5,000 + ($2,500 × 13次)
+                            <br><strong style="font-size: 1.1em;">= $162,000</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #eee; text-align: center;">
+                <p style="font-size: 1em; color: #333; margin-bottom: 10px;">
+                    <strong>投資報酬率</strong>
+                </p>
+                <p style="font-size: 1.3em; color: #c4502a; font-weight: 700;">
+                    你額外取得 $83,000+ 的價值<br>
+                    <span style="font-size: 0.85em; color: #666;">相當於每月免費贈送 $5,900 以上的服務</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="color: #fff;">適合這個課程的人</h2>
+            <p>✓ 知道自己在重複舊模式，但無法自己打破</p>
+            <p>✓ 想要更清晰的人生方向，但不知道怎麼確認</p>
+            <p>✓ 有願景但執行力落差大，需要支持與見證</p>
+            <p>✓ 願意投資自己，也願意成為別人的支持力量</p>
+
+            <p style="margin-top: 40px; font-size: 0.95em; color: #bbb;">
+                「一個人很難單靠意志力打破慣性。但在團隊支持的場域裡，<br>你會看見自己從未發現的潛能。」
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>One Muse 萬謬一階課程｜3日轉化 + 14月陪伴</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">
+                詳細課程資訊與報名：<strong>聯繫課程組</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
