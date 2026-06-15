@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>士維溝通文字癌分析報告 | MUSEON</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4502A;
+    --ember-light: #E0714D;
+    --ember-dark: #9A3A1C;
+    --teal: #2A7A6E;
+    --gold: #B8923A;
+    --ink: #12121A;
+    --slate: #5A5A6E;
+    --mist: #9898A8;
+    --border: #E2E0DA;
+    --parchment: #F7F5F0;
+    --snow: #FDFCFA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #12121A 0%, #1e1e2e 60%, #2A3A2E 100%);
+    color: white;
+    padding: 72px 40px 60px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(196,80,42,0.25);
+    border: 1px solid rgba(196,80,42,0.5);
+    color: #E0714D;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 99px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto 36px;
+  }
+
+  /* KPI STRIP */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .kpi-item {
+    padding: 20px 16px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .kpi-item:last-child { border-right: none; }
+  .kpi-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #E0714D;
+    line-height: 1;
+  }
+  .kpi-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+  /* MAIN */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  /* SECTION */
+  .section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+
+  .section-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  /* DATA COMPARE */
+  .data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .data-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .data-card-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-row-label { color: var(--slate); }
+  .data-row-val { font-weight: 600; color: var(--ink); }
+  .data-row-val.highlight { color: var(--ember); }
+  .data-row-val.teal { color: var(--teal); }
+
+  /* RANKING TABLE */
+  .rank-table { width: 100%; border-collapse: collapse; }
+  .rank-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .rank-table td {
+    padding: 14px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .rank-table tr:last-child td { border-bottom: none; }
+  .rank-medal { font-size: 18px; }
+  .rank-word {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .rank-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ember);
+  }
+  .rank-hr {
+    color: var(--slate);
+    font-size: 13px;
+  }
+  .overload-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    min-width: 60px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--ember);
+  }
+  .overload-label {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .overload-label.red { color: var(--ember); }
+  .overload-label.teal-c { color: var(--teal); }
+
+  /* PATTERN CARDS */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .pattern-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    border-left: 4px solid var(--ember);
+  }
+  .pattern-card.teal { border-left-color: var(--teal); }
+  .pattern-card.gold { border-left-color: var(--gold); }
+  .pattern-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 8px;
+  }
+  .pattern-card.teal .pattern-label { color: var(--teal); }
+  .pattern-card.gold .pattern-label { color: var(--gold); }
+  .pattern-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .pattern-quote {
+    background: rgba(196,80,42,0.06);
+    border-left: 3px solid var(--ember);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--slate);
+    font-style: italic;
+    margin-bottom: 12px;
+    line-height: 1.8;
+  }
+  .pattern-card.teal .pattern-quote {
+    background: rgba(42,122,110,0.06);
+    border-left-color: var(--teal);
+  }
+  .pattern-card.gold .pattern-quote {
+    background: rgba(184,146,58,0.06);
+    border-left-color: var(--gold);
+  }
+  .pattern-insight {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+  .pattern-insight strong { color: var(--ink); }
+
+  /* MECHANISM CARDS */
+  .mech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .mech-card {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .mech-num {
+    width: 32px;
+    height: 32px;
+    background: var(--ember);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .mech-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .mech-desc {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.7;
+  }
+  .mech-desc strong { color: var(--ink); }
+  .mech-card.full-width { grid-column: 1 / -1; }
+
+  /* PERSONA TABLE */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .persona-row {
+    background: var(--snow);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .persona-dim {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .persona-evidence {
+    font-size: 13px;
+    color: var(--slate);
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  .stars { font-size: 14px; color: var(--gold); letter-spacing: 1px; }
+
+  /* INSIGHT BOX */
+  .insight-box {
+    background: linear-gradient(135deg, #12121A 0%, #1e1e2e 100%);
+    border-radius: 16px;
+    padding: 40px;
+    color: white;
+    margin-top: 32px;
+  }
+  .insight-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #E0714D;
+  }
+  .insight-box p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .insight-box p:last-child { margin-bottom: 0; }
+  .coach-tip {
+    background: rgba(42,122,110,0.2);
+    border: 1px solid rgba(42,122,110,0.4);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+  .coach-tip-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #5ECDB8;
+    margin-bottom: 8px;
+  }
+  .coach-tip p { color: rgba(255,255,255,0.85); font-size: 14px; margin-bottom: 0; }
+
+  /* SPIKE CALLOUT */
+  .spike-callout {
+    background: rgba(196,80,42,0.08);
+    border: 1px solid rgba(196,80,42,0.25);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 28px 0;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .spike-icon { font-size: 32px; flex-shrink: 0; }
+  .spike-title { font-weight: 700; font-size: 16px; color: var(--ember); margin-bottom: 6px; }
+  .spike-desc { font-size: 14px; color: var(--slate); line-height: 1.7; }
+  .spike-desc strong { color: var(--ink); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 28px 24px;
+    font-size: 12px;
+  }
+  footer span { color: var(--ember); }
+
+  @media (max-width: 640px) {
+    .data-grid { grid-template-columns: 1fr; }
+    .mech-grid { grid-template-columns: 1fr; }
+    .persona-grid { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding: 48px 24px 40px; }
+    .section { padding: 40px 0; }
+    .rank-table th:nth-child(5),
+    .rank-table td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260616_025223_bf0bd45b.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+<img class="museon-image museon-image--hero" src="museon_images/20260616_025206_d24aece1.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">MUSEON 溝通分析</div>
+  <h1>士維的文字癌<br>深度解剖報告</h1>
+  <div class="hero-sub">兩場會議逐字稿全量分析 · 贅詞頻率 · 心理機制 · 人格輪廓</div>
+
+  <div class="kpi-strip">
+    <div class="kpi-item">
+      <div class="kpi-num">2</div>
+      <div class="kpi-label">場會議</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-num">17,830</div>
+      <div class="kpi-label">字逐字稿</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-num">131×</div>
+      <div class="kpi-label">「的話」每小時</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-num">130×</div>
+      <div class="kpi-label">正常值超標倍數</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1: 數據基底 -->
+  <div class="section">
+    <div class="section-tag">Section 01</div>
+    <div class="section-title">兩場會議數據基底</div>
+
+    <div class="data-grid">
+      <div class="data-card">
+        <div class="data-card-title">5/26 初次諮詢（低壓場景）</div>
+        <div class="data-row"><span class="data-row-label">會議時長</span><span class="data-row-val">23.5 分鐘</span></div>
+        <div class="data-row"><span class="data-row-label">士維發言字數</span><span class="data-row-val">2,937 字</span></div>
+        <div class="data-row"><span class="data-row-label">角色</span><span class="data-row-val">諮詢 / 提問者</span></div>
+        <div class="data-row"><span class="data-row-label">「的話」頻率</span><span class="data-row-val teal">5次/hr（正常值）</span></div>
+        <div class="data-row"><span class="data-row-label">壓力指數</span><span class="data-row-val teal">低</span></div>
+      </div>
+      <div class="data-card">
+        <div class="data-card-title">6/13 系統導入說明（高壓主場）</div>
+        <div class="data-row"><span class="data-row-label">會議時長</span><span class="data-row-val">約 68 分鐘</span></div>
+        <div class="data-row"><span class="data-row-label">士維發言字數</span><span class="data-row-val">14,893 字</span></div>
+        <div class="data-row"><span class="data-row-label">角色</span><span class="data-row-val">主講人（技術說明）</span></div>
+        <div class="data-row"><span class="data-row-label">「的話」頻率</span><span class="data-row-val highlight">131次/hr（超標 130×）</span></div>
+        <div class="data-row"><span class="data-row-label">壓力指數</span><span class="data-row-val highlight">極高</span></div>
+      </div>
+    </div>
+
+    <div class="spike-callout">
+      <div class="spike-icon">🚨</div>
+      <div>
+        <div class="spike-title">角色切換觸發爆發</div>
+        <div class="spike-desc">士維從「諮詢者」切換到「主講人」，<strong>「的話」頻率暴增 7,300%（5次 → 131次/小時）</strong>。這不是說話習慣的問題，是角色壓力直接作用在語言輸出的生理訊號。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: 贅詞排行 -->
+  <div class="section">
+    <div class="section-tag">Section 02</div>
+    <div class="section-title">6/13 完整贅詞頻率排行</div>
+    <p style="font-size:14px; color:var(--slate); margin-bottom:24px;">以下為 6/13 系統導入說明（68 分鐘，主講場景）完整統計。正常商業會議值為業界標準估算。</p>
+
+    <table class="rank-table">
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>贅詞</th>
+          <th>全場次數</th>
+          <th>每小時</th>
+          <th style="min-width:180px">超標程度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-medal">🥇</span></td>
+          <td><span class="rank-word">那（句首）</span></td>
+          <td><span class="rank-count">230</span></td>
+          <td><span class="rank-hr">203/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="overload-label red">10–20×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="rank-medal">🥈</span></td>
+          <td><span class="rank-word">的話</span></td>
+          <td><span class="rank-count">148</span></td>
+          <td><span class="rank-hr">131/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+              <span class="overload-label red">⚠ 超標 130×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="rank-medal">🥉</span></td>
+          <td><span class="rank-word">然後</span></td>
+          <td><span class="rank-count">107</span></td>
+          <td><span class="rank-hr">94/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div>
+              <span class="overload-label red">6–18×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">4</td>
+          <td><span class="rank-word">的部分</span></td>
+          <td><span class="rank-count">70</span></td>
+          <td><span class="rank-hr">62/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:72%"></div></div>
+              <span class="overload-label red">12–30×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">5</td>
+          <td><span class="rank-word">ok / OK</span></td>
+          <td><span class="rank-count">48</span></td>
+          <td><span class="rank-hr">42/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div>
+              <span class="overload-label red">8–20×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">6</td>
+          <td><span class="rank-word">來說的話</span></td>
+          <td><span class="rank-count">44</span></td>
+          <td><span class="rank-hr">39/hr</span></td>
+          <td><span style="font-size:12px; color:var(--slate)">複合冗詞 · 獨立計</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">7</td>
+          <td><span class="rank-word">這樣子</span></td>
+          <td><span class="rank-count">32</span></td>
+          <td><span class="rank-hr">28/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:40%"></div></div>
+              <span class="overload-label red">10×+</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">8</td>
+          <td><span class="rank-word">就是說</span></td>
+          <td><span class="rank-count">29</span></td>
+          <td><span class="rank-hr">26/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:36%"></div></div>
+              <span class="overload-label red">8–25×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">9</td>
+          <td><span class="rank-word">基本上</span></td>
+          <td><span class="rank-count">27</span></td>
+          <td><span class="rank-hr">24/hr</span></td>
+          <td>
+            <div class="overload-bar">
+              <div class="bar-bg"><div class="bar-fill" style="width:34%"></div></div>
+              <span class="overload-label red">3–12×</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">10</td>
+          <td><span class="rank-word">對對（重複）</span></td>
+          <td><span class="rank-count">20</span></td>
+          <td><span class="rank-hr">18/hr</span></td>
+          <td><span style="font-size:12px; color:var(--gold); font-weight:600;">思考外露訊號</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">11</td>
+          <td><span class="rank-word">對不對？</span></td>
+          <td><span class="rank-count">10</span></td>
+          <td><span class="rank-hr">9/hr</span></td>
+          <td><span style="font-size:12px; color:var(--gold); font-weight:600;">確認索取模式</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--slate)">12</td>
+          <td><span class="rank-word">因為因為（重複）</span></td>
+          <td><span class="rank-count">3</span></td>
+          <td><span class="rank-hr">—</span></td>
+          <td><span style="font-size:12px; color:var(--ember); font-weight:600;">腦袋卡頓訊號</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3: 句型模式 -->
+  <div class="section">
+    <div class="section-tag">Section 03</div>
+    <div class="section-title">五種核心句型模式</div>
+
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <div class="pattern-label">Pattern A · 三明治疊疊樂</div>
+        <div class="pattern-title">「的話」三重冗詞連發</div>
+        <div class="pattern-quote">「然後<strong>這個部分的話</strong>是，上次我們在聊完之後所產出的<strong>1個部分</strong>，那會有缺少一些<strong>部門的部分</strong>，所以一些東西<strong>上來說的話</strong>...」</div>
+        <div class="pattern-insight">三句話塞進兩個「的話」＋三個「的部分」。每一個都是話題懸置裝置——<strong>先丟錨點，確認對方有在跟，再決定後半句怎麼說</strong>。</div>
+      </div>
+
+      <div class="pattern-card teal">
+        <div class="pattern-label">Pattern B · 三聯咒切換段落</div>
+        <div class="pattern-title">「那＋接下來＋的話」</div>
+        <div class="pattern-quote">「那目前來說的話」「那接下來的話」「那這個部分來說的話」「那我跟你說的話」</div>
+        <div class="pattern-insight">每換一個議題就要過這個三聯咒。本質是<strong>沒有「今天主要三件事」的先驗框架</strong>，只能靠連接詞拼出流水敘事，讓自己和對方都跟著走、沒有終點感。</div>
+      </div>
+
+      <div class="pattern-card gold">
+        <div class="pattern-label">Pattern C · 思維洩漏型重複</div>
+        <div class="pattern-title">詞語重複＝腦袋還沒組裝完</div>
+        <div class="pattern-quote">「我我我我我」（1次）・「對對對對對對對」（連說7次）・「他他」（4次）・「因為因為」（3次）</div>
+        <div class="pattern-insight">這不是口誤——是<strong>嘴巴比大腦快</strong>。大腦在組裝下半句，嘴巴的第一個詞先衝出來了，只好重複填補空檔。</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-label">Pattern D · OK 強迫確認閘</div>
+        <div class="pattern-title">每段必關門才能進下一段</div>
+        <div class="pattern-quote">「...所以他會有獨立帳號的服務，每個人都會有，<strong>然後</strong>第2個的話...<strong>ok好</strong>，那接下來...」</div>
+        <div class="pattern-insight">「ok好」幾乎每隔一段就出現，功能是<strong>確認聽眾有收到這段，才給自己許可繼續說下一段</strong>。如果對方沒反應，士維會重複這段直到獲得確認。</div>
+      </div>
+
+      <div class="pattern-card teal">
+        <div class="pattern-label">Pattern E · 段落結尾謝謝</div>
+        <div class="pattern-title">用「謝謝」封印每個話題</div>
+        <div class="pattern-quote">「...那這樣的話就大概是這樣，<strong>謝謝</strong>。那接下來的話我們來看...」</div>
+        <div class="pattern-insight">「謝謝」出現在接受了對方說明、或剛結束一個說明段落之後。功能像<strong>話題封章</strong>——確認結束、表達感謝、然後切換。這是典型的服務型人格語言特徵。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 心理機制 -->
+  <div class="section">
+    <div class="section-tag">Section 04</div>
+    <div class="section-title">贅詞背後的五個心理運作機制</div>
+
+    <div class="mech-grid">
+      <div class="mech-card">
+        <div class="mech-num">1</div>
+        <div class="mech-title">實時思考外化（最核心）</div>
+        <div class="mech-desc">士維的語言是<strong>思維的草稿，不是完成品的輸出</strong>。「因為因為」「我我我我」出現的瞬間，是腦袋還在組裝這句話、嘴巴已先起跑。這類說話者獨處時往往是慢思熟慮型，但社交場合的時間壓力讓他無法等思考完成才開口。</div>
+      </div>
+
+      <div class="mech-card">
+        <div class="mech-num">2</div>
+        <div class="mech-title">確認迴路焦慮</div>
+        <div class="mech-desc">「ok?」「對不對?」「對對對」是在<strong>索取即時情感確認才能繼續說下去</strong>。背後邏輯：「你點頭，我才安心繼續。」如果對方反應平淡，士維會加速填充——更多「的話」試圖補救，形成惡性循環。</div>
+      </div>
+
+      <div class="mech-card">
+        <div class="mech-num">3</div>
+        <div class="mech-title">話題懸置策略</div>
+        <div class="mech-desc">「XXX的話——（停）——」是中文特有的懸置裝置。士維大量使用這個結構，讓他可以<strong>丟出一個話題錨點，先觀察對方反應，再決定後半句要怎麼說</strong>。這不是沒準備，是過度謹慎——不敢在確認安全前直接說完整論點。</div>
+      </div>
+
+      <div class="mech-card">
+        <div class="mech-num">4</div>
+        <div class="mech-title">身份對沖（Identity Hedging）</div>
+        <div class="mech-desc">「基本上」「來說的話」「我個人認知是這樣」出現在<strong>需要下判斷的地方</strong>，說明他在這些場景不確定自己的權威地位。在熟悉的技術說明段，hedge詞少；在業務定價、客戶判斷等「觀點判斷」段，hedge詞飆升。</div>
+      </div>
+
+      <div class="mech-card full-width">
+        <div class="mech-num">5</div>
+        <div class="mech-title">多角色認知超載</div>
+        <div class="mech-desc">6/13 這場會議，士維需要同時擔任<strong>提案者、需求澄清者、業務推進者、技術翻譯者</strong>四個角色。角色切換沒有腳本，語言碎片化是認知負荷過高的直接訊號——不是能力問題，是同一時間承擔太多角色。5/26只是「諮詢+問問題」，壓力低，所有指標接近正常值。這也解釋了為什麼兩場會議數據差距如此懸殊（「的話」頻率差 26 倍）。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: 人格輪廓 -->
+  <div class="section">
+    <div class="section-tag">Section 05</div>
+    <div class="section-title">士維人格輪廓</div>
+
+    <div class="persona-grid">
+      <div class="persona-row">
+        <div class="persona-dim">關係導向</div>
+        <div class="persona-evidence">大量確認型語言、結尾謝謝、每段ok、語氣軟化的「的話」，幾乎每個發言都在確認關係狀態</div>
+        <div class="stars">★★★★★</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">歸納型思維</div>
+        <div class="persona-evidence">從細節堆積到結論，從不先說「今天主要三件事」——只有結果導向沒有框架先行</div>
+        <div class="stars">★★★★☆</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">思考外化者</div>
+        <div class="persona-evidence">重複詞（我我/因為因為）是腦袋組裝時的聲音洩漏，不是口頭禪——壓力越大越明顯</div>
+        <div class="stars">★★★★☆</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">高確認需求</div>
+        <div class="persona-evidence">沒有即時 positive signal 就加速填充，確認迴路是最顯著的語言驅動力</div>
+        <div class="stars">★★★★☆</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">服務型驅動</div>
+        <div class="persona-evidence">反覆換句話說、擔心對方聽不懂、主動澄清、段落結尾謝謝——對方的理解比自己的清晰更重要</div>
+        <div class="stars">★★★★☆</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">角色壓力敏感</div>
+        <div class="persona-evidence">主講 vs 諮詢切換，「的話」頻率差 26 倍——語言直接反映角色壓力，是誠實的壓力晴雨表</div>
+        <div class="stars">★★★★☆</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">對沈默不耐受</div>
+        <div class="persona-evidence">空氣一安靜立刻衝出「那...的話」填補，沈默讓他以為對方「沒有在跟」或「不滿意」</div>
+        <div class="stars">★★★☆☆</div>
+      </div>
+      <div class="persona-row">
+        <div class="persona-dim">責任感強</div>
+        <div class="persona-evidence">主動收尾、銜接、確保每個細節都被聽到，不輕易跳過任何未確認的點</div>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <h3>核心人格動力</h3>
+      <p>「<strong>我要讓對方覺得舒服、理解我、認可我</strong>」——這個驅動力讓士維在服務客戶時非常細心，但也讓語言充滿雜訊，因為他在用說話<strong>同時安撫自己的焦慮 + 傳遞資訊</strong>，兩件事在同一個口腔出口競爭。</p>
+      <p>高風險場景：當客戶沈默或表情平淡，士維的贅詞頻率會飆升，試圖用更多話填補空氣。但過多贅詞反而讓客戶感覺「信息量太大跟不上」或「他是不是不夠篤定」——形成惡性循環。</p>
+      <div class="coach-tip">
+        <div class="coach-tip-label">教練方向</div>
+        <p>核心不是「少說廢話」，是<strong>建立對沈默的耐受度</strong>。說一個結論，停頓，等對方消化，再說細節——打破「邊輸出邊確認」的迴路，清晰度會大幅改善。可操作練習：每說完一段主要論點，強制停頓 <strong>3 秒</strong>再繼續，讓沈默幫你確認而不是用「ok好」去確認。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>MUSEON 溝通分析引擎 · 2026-06-16 · 數據來源：白老師社群 5/26 + 6/13 逐字稿</p>
+  <p style="margin-top:6px">Generated by <span>MUSEON</span></p>
+</footer>
+
+</body>
+</html>
