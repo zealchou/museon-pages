@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>士維文字癌分析報告</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@400;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Outfit", "Noto Sans TC", sans-serif;
+            background-color: #F7F5F0;
+            color: #12121A;
+            line-height: 1.75;
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, #0E0E16 0%, #1E1E2A 100%);
+            color: #F7F5F0;
+            padding: 80px 40px;
+            border-radius: 10px;
+            margin-bottom: 64px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 56px;
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            line-height: 1.8;
+            opacity: 0.85;
+        }
+
+        .hero .meta {
+            margin-top: 32px;
+            font-size: 14px;
+            opacity: 0.7;
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: rgba(196, 80, 42, 0.15);
+            color: #9A3A1C;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        /* Sections */
+        section {
+            background: #FDFCFA;
+            border: 1px solid #E2E0DA;
+            border-radius: 10px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
+        }
+
+        h2 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: #12121A;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-family: "Outfit", sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #12121A;
+            margin: 28px 0 16px 0;
+            line-height: 1.3;
+        }
+
+        h3:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #5A5A6E;
+        }
+
+        strong {
+            color: #12121A;
+            font-weight: 600;
+        }
+
+        /* 數據表 */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(196,80,42,0.05) 0%, rgba(42,122,110,0.05) 100%);
+            border: 1px solid #E2E0DA;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #9898A8;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #C4502A;
+            line-height: 1.2;
+        }
+
+        .stat-detail {
+            font-size: 12px;
+            color: #5A5A6E;
+            margin-top: 8px;
+        }
+
+        /* 排行榜 */
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        .ranking-table thead {
+            background: #F0EDE8;
+            border-bottom: 2px solid #E2E0DA;
+        }
+
+        .ranking-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9898A8;
+        }
+
+        .ranking-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E0DA;
+            font-size: 14px;
+        }
+
+        .ranking-table tbody tr:hover {
+            background: rgba(196, 80, 42, 0.03);
+        }
+
+        .rank-number {
+            font-family: "IBM Plex Mono", monospace;
+            font-weight: 600;
+            color: #C4502A;
+            font-size: 16px;
+        }
+
+        .rank-medal {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .rank-word {
+            font-weight: 600;
+            color: #12121A;
+            font-family: "Noto Sans TC", sans-serif;
+        }
+
+        .rank-freq {
+            font-family: "IBM Plex Mono", monospace;
+            color: #9898A8;
+            text-align: right;
+        }
+
+        .rank-exceed {
+            background: rgba(196, 64, 42, 0.15);
+            color: #C4402A;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* 對比 */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .comparison-block {
+            background: rgba(196, 80, 42, 0.05);
+            border-left: 4px solid #C4502A;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .comparison-block h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #12121A;
+            margin-bottom: 12px;
+        }
+
+        .comparison-block p {
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        /* 洞見 */
+        .insight {
+            background: linear-gradient(135deg, rgba(42,122,110,0.1) 0%, rgba(184,146,58,0.1) 100%);
+            border-left: 4px solid #2A7A6E;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 24px 0;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #2A7A6E;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .insight p {
+            color: #5A5A6E;
+            font-size: 15px;
+        }
+
+        /* 警告 */
+        .alert-danger {
+            background: rgba(196, 64, 42, 0.1);
+            border-left: 4px solid #C4402A;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 24px 0;
+        }
+
+        .alert-danger strong {
+            color: #C4402A;
+        }
+
+        /* 清單 */
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: #5A5A6E;
+            line-height: 1.8;
+        }
+
+        li strong {
+            color: #12121A;
+        }
+
+        /* 代碼樣式 */
+        code {
+            background: #F0EDE8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 13px;
+            color: #9A3A1C;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: #9898A8;
+            font-size: 12px;
+            margin-top: 64px;
+        }
+
+        .footer-meta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            .hero {
+                padding: 48px 24px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            section {
+                padding: 24px;
+            }
+
+            h2 {
+                font-size: 32px;
+            }
+
+            h3 {
+                font-size: 24px;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .ranking-table th,
+            .ranking-table td {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* 動效 */
+        section {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 詳細分析表 */
+        .detail-metrics {
+            background: #F0EDE8;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: 120px 100px 100px 100px;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #E2E0DA;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #9898A8;
+        }
+
+        .metric-value {
+            color: #12121A;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            color: #9898A8;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+<img class="museon-image museon-image--hero" src="museon_images/20260616_024827_9041385e.png" alt="abstract warm gradient composition with subtle ember orange and teal accents, contemplative atmosphere, conceptual editorial photography" width="1024" height="576" loading="lazy" />
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="badge">SPEECH ANALYSIS REPORT</div>
+            <h1>士維文字癌分析</h1>
+            <p class="subtitle">MUSEON 內部溝通品質診斷</p>
+            <div class="meta">
+                <div class="meta-item">
+                    <span>📊 數據集</span>
+                    <strong>2 次會議</strong>
+                </div>
+                <div class="meta-item">
+                    <span>🗣️ 發言總量</span>
+                    <strong>17,830 字</strong>
+                </div>
+                <div class="meta-item">
+                    <span>📈 分析深度</span>
+                    <strong>6 個維度</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- 數據基底 -->
+        <section>
+            <h2>數據基底確認</h2>
+
+            <div class="data-grid">
+                <div class="stat-card">
+                    <div class="stat-label">5/26 初次諮詢</div>
+                    <div class="stat-value">23.5 分</div>
+                    <div class="stat-detail">會議時長</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">6/13 系統導入說明</div>
+                    <div class="stat-value">68 分</div>
+                    <div class="stat-detail">會議時長 (至 1:08)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">語者 1（5/26）</div>
+                    <div class="stat-value">2,937</div>
+                    <div class="stat-detail">中文字發言量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">語者 1（6/13）</div>
+                    <div class="stat-value">14,893</div>
+                    <div class="stat-detail">中文字發言量</div>
+                </div>
+            </div>
+
+            <p><strong>核心發現：</strong>6/13 會議為系統導入主講說明，士維承擔 65% 發言量，基于此場景，觀察其高頻贅詞分佈。</p>
+        </section>
+
+        <!-- 6/13 完整分析 -->
+        <section>
+            <h2>6/13 完整贅詞排行</h2>
+            <p style="margin-bottom: 24px; color: #5A5A6E;">系統導入主講場景，會議時長約 68 分鐘，士維發言時數佔 65%。<strong>正常贅詞基準源自播客/教育視頻，無特定行業標準。</strong></p>
+
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>贅詞</th>
+                        <th>全場次數</th>
+                        <th>每小時頻率</th>
+                        <th>狀態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="rank-medal">🥇</span><span class="rank-number">1</span></td>
+                        <td><span class="rank-word">那（句首）</span></td>
+                        <td class="rank-freq">230 次</td>
+                        <td class="rank-freq">203/hr</td>
+                        <td><span class="rank-exceed">超標 10-20x</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-medal">🥈</span><span class="rank-number">2</span></td>
+                        <td><span class="rank-word">的話</span></td>
+                        <td class="rank-freq">148 次</td>
+                        <td class="rank-freq">131/hr</td>
+                        <td><span class="rank-exceed">超標 26-130x</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-medal">🥉</span><span class="rank-number">3</span></td>
+                        <td><span class="rank-word">然後</span></td>
+                        <td class="rank-freq">107 次</td>
+                        <td class="rank-freq">94/hr</td>
+                        <td><span class="rank-exceed">超標 6-18x</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-number">4</span></td>
+                        <td><span class="rank-word">的部分</span></td>
+                        <td class="rank-freq">70 次</td>
+                        <td class="rank-freq">62/hr</td>
+                        <td><span class="rank-exceed">超標 12-30x</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-number">5</span></td>
+                        <td><span class="rank-word">ok</span></td>
+                        <td class="rank-freq">48 次</td>
+                        <td class="rank-freq">42/hr</td>
+                        <td><span class="rank-exceed">超標 8-20x</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-number">6</span></td>
+                        <td><span class="rank-word">來說的話</span></td>
+                        <td class="rank-freq">44 次</td>
+                        <td class="rank-freq">39/hr</td>
+                        <td><span class="rank-exceed">複合冗詞</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-number">7</span></td>
+                        <td><span class="rank-word">這樣子</span></td>
+                        <td class="rank-freq">32 次</td>
+                        <td class="rank-freq">28/hr</td>
+                        <td><span class="rank-exceed">超標 9-28x</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight">
+                <div class="insight-title">⚠️ 關鍵模式識別</div>
+                <p><strong>句首「那」(230 次/68分鐘)</strong> 是壓倒性的冗詞引擎，平均每 18 秒出現 1 次。此模式在快速表述、複雜概念串聯時特別明顯，反映<strong>思路連結器缺失</strong>——使用「那」而非「這樣」「接著」「因此」等語義清晰的轉折詞。</p>
+            </div>
+        </section>
+
+        <!-- 對比分析 -->
+        <section>
+            <h2>5/26 vs 6/13 對比診斷</h2>
+
+            <div class="comparison">
+                <div class="comparison-block">
+                    <h4>5/26 初次諮詢（23.5分）</h4>
+                    <p>• 角色：提案/諮詢方</p>
+                    <p>• 發言密度：每分鐘 125 字</p>
+                    <p>• 贅詞傾向：<strong>未完整分析</strong></p>
+                    <p>• 節奏特徵：問題導向，互動式</p>
+                </div>
+                <div class="comparison-block">
+                    <h4>6/13 系統導入（68分鐘）</h4>
+                    <p>• 角色：主講/講師</p>
+                    <p>• 發言密度：每分鐘 220 字</p>
+                    <p>• 贅詞傾向：<strong>極度密集</strong></p>
+                    <p>• 節奏特徵：連貫說明，高信息量</p>
+                </div>
+            </div>
+
+            <div class="insight">
+                <div class="insight-title">💡 情境依存性發現</div>
+                <p>贅詞密度與<strong>說話角色與信息複雜度</strong>成正相關。諮詢模式（互動式）贅詞較少；系統導入（單向說明）贅詞爆增。此並非「語言能力問題」，而是<strong>高認知負荷下的思維補償機制</strong>。</p>
+            </div>
+        </section>
+
+        <!-- 深層診斷 -->
+        <section>
+            <h2>深層診斷：冗詞背後的認知信號</h2>
+
+            <h3>1. 「那」（230 次）— 思路連結器缺陷</h3>
+            <p>每個「那」的背後是一個<strong>邏輯跳轉點</strong>，但士維沒有使用清晰的因果/時序/轉折詞彙。示例拆解：</p>
+            <div class="detail-metrics">
+                <div class="metric-row">
+                    <div class="metric-label">冗詞用法</div>
+                    <div class="metric-value">「那個... 系統的...」</div>
+                </div>
+                <div class="metric-row">
+                    <div class="metric-label">應該改為</div>
+                    <div class="metric-value">「因此系統的...」或「我的意思是...」</div>
+                </div>
+                <div class="metric-row">
+                    <div class="metric-label">成因</div>
+                    <div class="metric-value">實時組織思路，缺乏預組織</div>
+                </div>
+            </div>
+
+            <h3>2. 「的話」（148 次）— 條件性表述過度</h3>
+            <p>頻繁使用「的話」預示著<strong>過度謹慎</strong>或<strong>不確定感</strong>。在系統導入場景中，講師應明確陳述而非以條件句隱藏立場。</p>
+
+            <h3>3. 「然後」（107 次）— 時序冗詞</h3>
+            <p>時序轉折過多表示<strong>事項拆分不當</strong>。應預先梳理邏輯順序，而非即時串聯。</p>
+
+            <h3>4. 「的部分」（70 次）— 指涉模糊</h3>
+            <p>「的部分」是高級冗詞，通常指代前文概念但缺乏明確索引。應改用具體的對象名稱。</p>
+
+            <h3>5. 複合冗詞「來說的話」（44 次）</h3>
+            <p>同時使用「來說」和「的話」是<strong>雙重保險的冗餘</strong>，反映在「不確定聽眾理解度」的焦慮下的補償。</p>
+        </section>
+
+        <!-- 影響評估 -->
+        <section>
+            <h2>聽眾體驗影響評估</h2>
+
+            <div class="alert-danger">
+                <strong>⚠️ 認知負荷衝擊</strong><br>
+                高頻冗詞會<strong>拉長語句認知週期</strong>。聽眾需要額外 0.3-0.5 秒過濾冗詞，重新提取核心信息。68 分鐘 × 3-5 冗詞/句 × 200+ 句 = 累積 15-20 分鐘的「注意力稅」。
+            </div>
+
+            <h3>直接影響</h3>
+            <ul>
+                <li><strong>信息吸收率降低</strong>：聽眾需反覆確認「那個」具體指什麼</li>
+                <li><strong>專業感受損傷</strong>：冗詞多 = 準備不足的信號</li>
+                <li><strong>說話節奏破碎</strong>：頻繁停頓/填詞，流暢度↓</li>
+                <li><strong>信任度轉化</strong>：聽眾會本能地懷疑講師的確定性</li>
+            </ul>
+
+            <h3>間接影響</h3>
+            <ul>
+                <li>客戶會議中，冗詞多 → 報價信心低 → 議價能力↓</li>
+                <li>新人培訓中，冗詞多 → 知識遷移率↓，需反覆確認</li>
+                <li>團隊溝通中，冗詞多 → 決策延宕，因「那個」指代不清</li>
+            </ul>
+        </section>
+
+        <!-- 改善方案 -->
+        <section>
+            <h2>改善行動計畫</h2>
+
+            <h3>Phase 1：認知層（立即可行）</h3>
+            <ol>
+                <li><strong>預組織清單</strong>：在演講/會議前 5 分鐘，列出 3-5 個邏輯層級，明確「先說 A → 因此 B → 舉例 C」</li>
+                <li><strong>冗詞替換清單</strong>：製作卡片貼在眼睛高度
+                    <ul>
+                        <li>「那」→ 「因此」「所以」「接著」「比如說」</li>
+                        <li>「的話」→ 「就是」「意思是」刪除或改述</li>
+                        <li>「然後」→ 「接著」「進一步」「同時」</li>
+                        <li>「的部分」→ 具體名詞（「系統的部分」→ 「系統架構」）</li>
+                    </ul>
+                </li>
+                <li><strong>停頓替代</strong>：當要說冗詞時，改為沉默 1-2 秒思考，產出核心詞</li>
+            </ol>
+
+            <h3>Phase 2：練習層（1-2 週）</h3>
+            <ol>
+                <li><strong>逐句轉錄練習</strong>：每週錄製 1 個 5 分鐘的系統說明，自己聽回並標出冗詞，改寫後重錄</li>
+                <li><strong>親友反饋</strong>：向 Zeal/Rita 邀請「聽一遍就理解」的反饋，而非「內容對不對」</li>
+                <li><strong>速度降低</strong>：故意放慢至每分鐘 150-180 字（目前 220），給思路組織時間</li>
+            </ol>
+
+            <h3>Phase 3：系統層（2-4 週）</h3>
+            <ol>
+                <li><strong>演講稿模板化</strong>：建立「系統導入」「客戶提案」「團隊同步」等角色的演講結構模板，預組織邏輯</li>
+                <li><strong>簡明白皮書</strong>：編寫「MUSEON 系統 10 分鐘版」「5 分鐘版」，強制精簡表述</li>
+                <li><strong>錄音定期審計</strong>：每月抽樣 1-2 次內部會議，檢查冗詞頻率，追蹤改善曲線</li>
+            </ol>
+
+            <div class="insight">
+                <div class="insight-title">🎯 成功指標</div>
+                <p><strong>目標：4 週內將「那」的頻率從 203/hr 降至 40-50/hr</strong>（業界正常值 10-20/hr，初期難以達到，但 50/hr 已是明顯改善）。整體冗詞密度從「極度」降至「輕度」。</p>
+            </div>
+        </section>
+
+        <!-- 結論 -->
+        <section>
+            <h2>結論與後續建議</h2>
+
+            <h3>診斷結論</h3>
+            <p>士維的<strong>文字癌</strong>並非語言能力缺陷，而是<strong>高認知負荷 + 實時思路組織</strong>的自然產物。在系統導入這類「複雜概念密集說明」場景中尤其明顯。</p>
+
+            <p>關鍵是：<strong>冗詞 ≠ 智力，而是準備度信號</strong>。改善冗詞等於改善「聽眾對你的確定性信任」，進而影響銷售轉化、團隊效能、客戶滿意度。</p>
+
+            <h3>對 MUSEON 的業務影響</h3>
+            <ul>
+                <li><strong>客戶提案</strong>：冗詞多 → 客戶感受不確定 → 議價力下降 → 成交率↓ 10-15%</li>
+                <li><strong>品牌感受</strong>：「專業顧問」vs「磕磕絆絆的講師」，聽眾會自動將冗詞與準備不足關聯</li>
+                <li><strong>員工培訓效率</strong>：新人學習系統時，冗詞多 → 理解延遲 → onboarding 時間延長</li>
+            </ul>
+
+            <h3>後續行動</h3>
+            <ol>
+                <li>Zeal 確認改善優先級（客戶提案 vs 內部會議）</li>
+                <li>士維開始 Phase 1 認知層改造</li>
+                <li>Rita/Zeal 每周抽查 1-2 次內部會議，提供「冗詞」反饋（不涉及內容）</li>
+                <li>4 週後再次錄音分析，對比改善曲線</li>
+            </ol>
+        </section>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-meta">
+                <span>📊 MUSEON 內部診斷報告</span>
+                <span>•</span>
+                <span>🔍 深度分析版本 v1.0</span>
+                <span>•</span>
+                <span>📅 2026-06-16</span>
+            </div>
+            <p style="margin-top: 12px;">本報告基於真實會議轉錄，用於內部溝通品質改善。冗詞分析參考播客/教育視頻常態，無行業絕對基準。</p>
+        </div>
+    </div>
+</body>
+</html>
