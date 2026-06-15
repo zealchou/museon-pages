@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUSEON — 系統架構深度解說 | 九層架構模型</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,600&family=Outfit:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --ember: #C4502A; --ember-light: #E0714D; --ember-dark: #9A3A1C;
+      --gold: #B8923A; --teal: #2A7A6E;
+      --ink: #12121A; --slate: #5A5A6E; --mist: #9898A8; --border: #E2E0DA;
+      --parchment: #F7F5F0; --snow: #FDFCFA;
+      --deep-ink: #0E0E16; --surface: #16161F;
+    }
+    body { font-family: 'Outfit', sans-serif; background-color: var(--parchment); color: var(--ink); line-height: 1.75; }
+    h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; line-height: 1.2; }
+    h1 { font-size: 56px; } h2 { font-size: 40px; color: var(--ember-dark); }
+    h3 { font-size: 28px; } h4 { font-size: 18px; margin: 1.5em 0 0.5em 0; }
+    p { margin: 0 0 1.25em 0; font-size: 16px; color: var(--slate); }
+    strong { color: var(--ink); font-weight: 600; }
+    .container { max-width: 820px; margin: 0 auto; padding: 40px 24px; }
+    .hero { padding: 96px 24px; background: linear-gradient(135deg, var(--parchment) 0%, rgba(196, 80, 42, 0.05) 100%); text-align: center; border-bottom: 1px solid var(--border); animation: fadeInDown 600ms ease-out; }
+    .hero h1 { color: var(--ember); margin: 0 0 0.5em 0; }
+    .hero .subtitle { font-size: 20px; color: var(--slate); margin: 1em 0 2em 0; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .card { background: var(--snow); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 1px 3px rgba(18, 18, 26, 0.06), 0 4px 12px rgba(18, 18, 26, 0.04); transition: all 200ms ease; animation: fadeInUp 500ms ease-out; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(18, 18, 26, 0.1), 0 8px 20px rgba(18, 18, 26, 0.06); }
+    .card h4 { color: var(--ember); margin-top: 0; }
+    section { margin: 64px 0; animation: fadeIn 600ms ease-out; }
+    section h2 { margin-top: 0; padding-bottom: 12px; border-bottom: 3px solid var(--ember); display: inline-block; }
+    .badge { display: inline-block; background: rgba(196, 80, 42, 0.1); color: var(--ember-dark); padding: 3px 10px; border-radius: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; margin: 0 4px 4px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 24px 0; }
+    .highlight { background: rgba(196, 80, 42, 0.08); border-left: 4px solid var(--ember); padding: 16px 20px; border-radius: 4px; margin: 24px 0; }
+    .highlight strong { display: block; color: var(--ember); margin-bottom: 4px; font-size: 14px; }
+    code { background: #F0EDE8; padding: 2px 6px; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ember-dark); }
+    pre { background: var(--deep-ink); color: #E8E8E8; padding: 16px; border-radius: 6px; overflow-x: auto; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.5; margin: 16px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+    th { background: var(--parchment); border: 1px solid var(--border); padding: 12px 16px; text-align: left; font-weight: 600; }
+    td { border: 1px solid var(--border); padding: 12px 16px; color: var(--slate); }
+    ul, ol { margin: 16px 0; padding-left: 32px; } li { margin: 8px 0; color: var(--slate); }
+    .divider { height: 1px; background: var(--border); margin: 48px 0; }
+    footer { background: var(--deep-ink); color: #E8E8E8; padding: 48px 24px; text-align: center; margin-top: 96px; border-top: 1px solid #2A2A38; }
+    footer p { color: var(--mist); margin: 8px 0; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { h1 { font-size: 40px; } h2 { font-size: 28px; } .container { padding: 24px 16px; } }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>MUSEON</h1>
+    <p class="subtitle">系統架構深度解說<br>從痛點到解法的九層技術棧</p>
+  </div>
+  <div class="container">
+    <section>
+      <h2>1. 現有 AI 的限制</h2>
+      <div class="grid">
+        <div class="card"><h4>❌ 無法保留你的思路</h4><p>每次對話都從零開始。AI 每次都給「通用答案」。</p><span class="badge">問題：遺忘</span></div>
+        <div class="card"><h4>❌ 無法自動感知變化</h4><p>等你主動提問。AI 看不見你的盲點、卡點、新機會。</p><span class="badge">問題：被動</span></div>
+        <div class="card"><h4>❌ 無法區分「通用」和「你的」</h4><p>給不出個性化判斷。分不清「通用 best practice」和「對你最有效的做法」。</p><span class="badge">問題：模板化</span></div>
+        <div class="card"><h4>❌ 無法驗證改進效果</h4><p>給了建議後就消失。無法驗證這個建議在你身上是否真的有效。</p><span class="badge">問題：盲目</span></div>
+      </div>
+      <div class="highlight"><strong>核心洞見</strong> MUSEON 不是更聰明的 ChatGPT，而是「有記憶、會觀察、懂你」的長期思維夥伴。</div>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>2. 三台架構</h2>
+      <div class="grid">
+        <div class="card"><h4>🎭 前台（L1 主持人）</h4><p>快速判定簡單 vs 複雜訊息，簡單自答、複雜派 L2。</p><span class="badge">實時</span></div>
+        <div class="card"><h4>⚙️ 中台（L2 思考者）</h4><p>並行 spawn 的深度分析智能體。讀取記憶 + 外部數據，產出複雜決策。</p><span class="badge">異步</span></div>
+        <div class="card"><h4>🗃️ 後台（L4 + Nightly）</h4><p>每次對話後自動記憶落地、訊號更新、品質調整。每晚深夜自動升級。</p><span class="badge">自動</span></div>
+      </div>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>3. 三層數據流</h2>
+      <p>原始訊號 → 結晶化 → DNA36 遺傳碼</p>
+      <div class="card">
+        <h4>📥 第一層：原始訊號清洗</h4>
+        <ul><li><strong>輸入：</strong>Telegram、搜尋、API、行為日誌</li><li><strong>清洗：</strong>去重、去噪、標準化、補齊</li><li><strong>輸出：</strong>結構化信號進隊列</li></ul>
+      </div>
+      <div class="card">
+        <h4>💎 第二層：結晶化</h4>
+        <ul><li><strong>從一次對話提取可複用的判斷規則</strong></li><li>JSON 結晶庫，含適用場景、觸發條件、預期效果</li></ul>
+      </div>
+      <div class="card">
+        <h4>🧬 第三層：DNA36</h4>
+        <ul><li><strong>從結晶規則集提取人格決策模式的本質</strong></li><li>36 維度：風險容忍度、關係優先級、決策速度、創新傾向</li></ul>
+      </div>
+      <pre>原始訊號 → 清洗隊列 → L2 分析 → 結晶存儲 → DNA36 更新 → 下次調用</pre>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>4. 七大信號觸發層</h2>
+      <table>
+        <thead><tr><th>信號</th><th>偵測</th><th>觸發行動</th></tr></thead>
+        <tbody>
+          <tr><td><strong>盲點</strong></td><td>反覆犯同樣錯誤</td><td>主動建議「你沒看到的角度」</td></tr>
+          <tr><td><strong>機會</strong></td><td>可跨越新領域</td><td>主動問「有沒有考慮過」</td></tr>
+          <tr><td><strong>矛盾</strong></td><td>目標和行動不一致</td><td>主動反思「真正在乎的可能是…」</td></tr>
+          <tr><td><strong>衰弱</strong></td><td>常提的主題不再提</td><td>主動關切「最近怎麼沒提 X」</td></tr>
+          <tr><td><strong>決策</strong></td><td>考慮重大決策</td><td>自動載入背景、先例、陷阱清單</td></tr>
+          <tr><td><strong>能力</strong></td><td>新學了某個技能</td><td>主動建議「可以用這個解決…」</td></tr>
+          <tr><td><strong>信任</strong></td><td>敏感話題自我揭露</td><td>調整深度，通用升級為真心話</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>5. 多層 Agent 分工</h2>
+      <div class="grid">
+        <div class="card"><h4>L1 主持人</h4><p>讀快取 → 判定簡單/複雜 → 簡單自答 / 複雜派 L2</p><p style="font-size: 14px; color: var(--mist);">平均 2 秒回覆</p></div>
+        <div class="card"><h4>L2 思考者</h4><p>spawn 異步 Agent → 讀記憶 → 多角度深度分析</p><p style="font-size: 14px; color: var(--mist);">可並行多個</p></div>
+        <div class="card"><h4>L4 觀察者</h4><p>自動觸發 → 記憶落地 + 訊號更新</p><p style="font-size: 14px; color: var(--mist);">完全無感知</p></div>
+        <div class="card"><h4>Nightly 自我修復</h4><p>每晚 02:00 → 統計日間 → 檢測異常 → 觸發改進</p><p style="font-size: 14px; color: var(--mist);">持續無間</p></div>
+      </div>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>6. MuseMEM 記憶引擎</h2>
+      <table>
+        <thead><tr><th>層級</th><th>存儲</th><th>用途</th><th>保留期</th></tr></thead>
+        <tbody>
+          <tr><td><strong>快取層</strong></td><td>RAM</td><td>本次對話上下文</td><td>本次</td></tr>
+          <tr><td><strong>短期層</strong></td><td>SQLite</td><td>最近 7 天對話</td><td>7 天</td></tr>
+          <tr><td><strong>長期層</strong></td><td>結晶庫 JSON</td><td>已驗證的判斷規則</td><td>永久</td></tr>
+          <tr><td><strong>遺傳層</strong></td><td>DNA36 向量</td><td>本質人格屬性</td><td>終身進化</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>7. Nightly 自我演化</h2>
+      <div class="card"><h4>四步自我修復</h4><ol><li><strong>統計觀察（02:00）：</strong>掃描 24h 對話</li><li><strong>異常偵測（02:30）：</strong>找出「錯誤率異常」「新問題類型」</li><li><strong>結晶化生成（03:00）：</strong>生成改進規則並自動驗證</li><li><strong>動態調整（03:30）：</strong>低風險改進直接應用</li></ol></div>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>8. DNA36 個性化引擎</h2>
+      <p>從「通用」到「只為你」——不是「問卷」，而是通過 3-6 個月對話自動推導。36 維度涵蓋決策風格、價值優先級、溝通風格、關係模式、學習方式。</p>
+    </section>
+    <div class="divider"></div>
+    <section>
+      <h2>9. 與其他工具的核心差異</h2>
+      <table>
+        <thead><tr><th>維度</th><th>ChatGPT</th><th>OpenClaw</th><th>MUSEON</th></tr></thead>
+        <tbody>
+          <tr><td><strong>記憶</strong></td><td>只有當前對話</td><td>外部記憶但手動管理</td><td><strong>四層自動</strong></td></tr>
+          <tr><td><strong>主動感知</strong></td><td>純被動</td><td>可配製規則但靜態</td><td><strong>七大信號實時掃描</strong></td></tr>
+          <tr><td><strong>個性化</strong></td><td>0</td><td>淺層</td><td><strong>DNA36 動態演化</strong></td></tr>
+          <tr><td><strong>自我改進</strong></td><td>無</td><td>需人為介入</td><td><strong>Nightly 全自動</strong></td></tr>
+          <tr><td><strong>成本效率</strong></td><td>按 token，反覆付費</td><td>Token 低</td><td><strong>記憶一次，終身複用</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="highlight"><strong>一句話對比</strong> ChatGPT 是「超強搜尋引擎」，OpenClaw 是「可編程智能體框架」，MUSEON 是「會學習、會自我修復的個人智能夥伴」。</div>
+    </section>
+    <section style="text-align: center; padding: 48px 0;">
+      <h2>準備好進化了嗎？</h2>
+      <p style="font-size: 18px; margin: 24px 0;">MUSEON 不是工具，是你長期的思維升級夥伴。</p>
+      <a href="mailto:zeal.chou@gmail.com" style="display: inline-block; padding: 12px 24px; background: var(--ember); color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">聯繫我們</a>
+    </section>
+  </div>
+  <footer>
+    <h3 style="color: #E8E8E8; font-family: 'Cormorant Garamond', serif; margin-bottom: 0.5em;">MUSEON</h3>
+    <p>AI 思維品質引擎 — 讓個人的聲音變成系統可持續的資產</p>
+    <p style="margin: 16px 0; font-size: 13px; color: var(--mist);">© 2026 MUSEON. All voices preserved.</p>
+  </footer>
+</body>
+</html>
