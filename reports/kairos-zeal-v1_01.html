@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你這個人的說明書 · 周逸達 · v1.01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8; --border:#E2E0DA;
+    --parchment:#F7F5F0; --snow:#FDFCFA; --code-bg:#F0EDE8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--parchment); color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',sans-serif;
+    font-size:16px; line-height:1.75; font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px}
+  .display{font-family:'Cormorant Garamond','Noto Sans TC',serif}
+
+  .hero{padding:88px 0 56px; text-align:center}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--ember-dark);
+    background:rgba(196,80,42,.1); padding:5px 14px; border-radius:100px;
+    display:inline-block; margin-bottom:28px;
+  }
+  .hero h1{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:54px; font-weight:600; line-height:1.12; letter-spacing:.01em;
+    color:var(--ink); margin-bottom:18px;
+  }
+  .hero .sub{font-size:18px; color:var(--slate); font-weight:300; max-width:580px; margin:0 auto}
+  .hero .meta{
+    margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    color:var(--mist); letter-spacing:.04em;
+  }
+  .rule{width:48px; height:2px; background:var(--ember); margin:40px auto 0; border-radius:2px}
+
+  .intro{
+    background:var(--snow); border:1px solid var(--border); border-left:3px solid var(--gold);
+    border-radius:12px; padding:28px 30px; margin:8px 0 48px; color:#23232e; font-size:16.5px;
+  }
+  .intro p{margin-bottom:1em}
+  .intro p:last-child{margin-bottom:0}
+  .intro strong{color:var(--ember-dark); font-weight:600}
+
+  .toc{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:28px 28px 24px; margin:0 0 72px;
+    box-shadow:0 1px 3px rgba(18,18,26,.06), 0 4px 12px rgba(18,18,26,.04);
+  }
+  .toc h4{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-bottom:18px;
+  }
+  .toc ol{list-style:none; counter-reset:ch}
+  .toc li{
+    counter-increment:ch; display:flex; align-items:baseline; gap:14px;
+    padding:9px 2px; border-bottom:1px dashed var(--border); font-size:15.5px; color:var(--ink);
+  }
+  .toc li:last-child{border-bottom:none}
+  .toc li::before{
+    content:counter(ch,decimal-leading-zero);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    color:var(--ember); min-width:26px;
+  }
+  .toc li a{color:inherit; text-decoration:none}
+  .toc li a:hover{color:var(--ember)}
+  .toc .phase{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;
+    color:var(--gold); padding:16px 0 6px; font-weight:600;
+  }
+  .toc .phase:first-child{padding-top:0}
+
+  .chapter{margin-bottom:72px; scroll-margin-top:24px}
+  .ch-num{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ember);
+  }
+  .ch-title{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:38px; font-weight:600; line-height:1.2; margin:10px 0 8px; color:var(--ink);
+  }
+  .ch-lead{font-size:17px; color:var(--slate); font-weight:300; margin-bottom:34px}
+
+  .card{
+    background:var(--snow); border:1px solid var(--border); border-radius:12px;
+    padding:30px 30px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .card .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;
+  }
+  .card h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:16px; color:var(--ink);
+  }
+  .card p{margin-bottom:1.05em; color:#23232e}
+  .card p:last-child{margin-bottom:0}
+  .card strong{font-weight:600; color:var(--ember-dark)}
+  .card .em{color:var(--ink); font-weight:500}
+
+  .pull{
+    border-left:3px solid var(--ember); padding:4px 0 4px 20px; margin:6px 0 1.05em;
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:21px; line-height:1.5; color:var(--ember-dark); font-weight:500;
+  }
+  .step{
+    background:rgba(184,146,58,.07); border:1px solid rgba(184,146,58,.25);
+    border-radius:10px; padding:22px 24px; margin-top:8px;
+  }
+  .step .kicker{color:var(--gold)}
+
+  /* 短敘事段（不裝進 card 的純文字過場，讓節奏長短不一） */
+  .flow{margin:0 2px 20px; font-size:16.5px; color:#23232e; line-height:1.78}
+  .flow p{margin-bottom:1.05em}
+  .flow p:last-child{margin-bottom:0}
+  .flow strong{font-weight:600; color:var(--ember-dark)}
+  .flow .em{color:var(--ink); font-weight:500}
+
+  .sep{display:flex; align-items:center; gap:18px; margin:64px 0 56px}
+  .sep::before,.sep::after{content:""; flex:1; height:1px; background:var(--border)}
+  .sep span{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px;
+    color:var(--gold); font-weight:600; white-space:nowrap;
+  }
+
+  /* ── v2 系統會診 ── */
+  .clinic{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:30px 30px 26px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .clinic .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px;
+  }
+  .clinic.unison{border-left:3px solid var(--teal)}
+  .clinic.unison .kicker{color:var(--teal)}
+  .clinic.discord{border-left:3px solid var(--ember)}
+  .clinic.discord .kicker{color:var(--ember)}
+  .clinic h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:14px; color:var(--ink);
+  }
+  .clinic .item{padding:13px 0; border-bottom:1px dashed var(--border)}
+  .clinic .item:last-child{border-bottom:none; padding-bottom:0}
+  .clinic .item .t{font-weight:600; color:var(--ink); display:block; margin-bottom:3px}
+  .clinic .item p{margin:0; color:#33333e; font-size:15.5px}
+  .clinic.discord .item .t{color:var(--ember-dark)}
+
+  /* ── v1.01 新增：修煉地圖（單一專欄 · 取代每章三段式） ── */
+  .lessonmap-intro{
+    background:var(--snow); border:1px solid var(--border); border-left:3px solid var(--ember);
+    border-radius:12px; padding:26px 30px; margin-bottom:26px; color:#23232e; font-size:16.5px;
+  }
+  .lessonmap-intro p{margin-bottom:.9em}
+  .lessonmap-intro p:last-child{margin-bottom:0}
+  .lessonmap-intro strong{color:var(--ember-dark); font-weight:600}
+  .lesson{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:28px 30px 26px; margin-bottom:22px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .lesson .l-no{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--ember);
+  }
+  .lesson h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:26px; font-weight:600; line-height:1.3; margin:6px 0 18px; color:var(--ink);
+  }
+  .arc{
+    position:relative; padding:15px 18px 15px 20px; border-radius:10px; margin-bottom:10px;
+    border:1px solid var(--border);
+  }
+  .arc:last-child{margin-bottom:0}
+  .arc .lvl{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:18px; font-weight:600; display:block; margin-bottom:4px;
+  }
+  .arc p{font-size:15.5px; color:#33333e; line-height:1.7; margin:0}
+  .arc strong{font-weight:600}
+  .arc-down{border-left:3px solid var(--ember);
+    background:linear-gradient(90deg, rgba(196,80,42,.06), var(--snow) 62%);}
+  .arc-down .lvl{color:var(--ember-dark)}
+  .arc-cross{margin-left:20px; border-left:3px solid var(--gold);
+    background:linear-gradient(90deg, rgba(184,146,58,.07), var(--snow) 62%);}
+  .arc-cross .lvl{color:var(--gold)}
+  .arc-up{margin-left:40px; border-left:3px solid var(--teal);
+    background:linear-gradient(90deg, rgba(42,122,110,.07), var(--snow) 62%);}
+  .arc-up .lvl{color:var(--teal)}
+
+  /* ── v2 擺渡人的一封信（信箋） ── */
+  .letter{
+    position:relative; margin:8px 0 20px; padding:46px 44px 40px;
+    border:1px solid #E6DCC4; border-radius:6px;
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 31px, rgba(184,146,58,.10) 32px),
+      linear-gradient(160deg, #FBF6EA, #F5EEDC);
+    box-shadow:0 1px 3px rgba(120,90,30,.10), 0 10px 30px rgba(120,90,30,.08);
+    transform:rotate(-.5deg);
+  }
+  .letter::before{
+    content:""; position:absolute; left:30px; top:0; bottom:0; width:1px;
+    background:rgba(196,80,42,.18);
+  }
+  .letter .salute{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-size:24px;
+    font-weight:600; color:var(--ember-dark); margin-bottom:18px;
+  }
+  .letter p{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:19px; line-height:1.85; color:#3a3326; margin-bottom:1em; font-weight:500;
+  }
+  .letter p.lead-in{font-style:italic}
+  .letter strong{color:var(--ember-dark); font-weight:600}
+  .letter .sign{
+    text-align:right; margin-top:26px; margin-bottom:0;
+    font-style:italic; font-size:21px; color:var(--ember-dark);
+  }
+  .letter .sign-name{
+    display:block; font-size:26px; font-weight:600; color:var(--ember-dark);
+    margin-top:4px; letter-spacing:.04em;
+  }
+
+  details.basis{
+    margin:8px 0 0; border:1px dashed var(--border); border-radius:10px;
+    background:#fbfaf7; padding:0 22px;
+  }
+  details.basis summary{
+    cursor:pointer; padding:16px 0; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--slate); list-style:none;
+  }
+  details.basis summary::-webkit-details-marker{display:none}
+  details.basis[open] summary{border-bottom:1px solid var(--border); margin-bottom:14px}
+  details.basis .grid{padding-bottom:20px; font-size:13.5px; color:var(--slate)}
+  details.basis .grid div{padding:5px 0; border-bottom:1px dotted var(--border)}
+  details.basis .grid div:last-child{border-bottom:none}
+  details.basis b{color:var(--ink); font-weight:600}
+  details.basis code{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--code-bg);
+    padding:1px 6px; border-radius:4px; color:var(--ember-dark);
+  }
+  details.basis i{color:var(--slate); font-style:italic}
+
+  .foot{
+    border-top:1px solid var(--border); padding:36px 0 80px; margin-top:24px;
+    font-size:13px; color:var(--mist); line-height:1.7;
+  }
+  .foot .logo{
+    font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;
+    font-style:italic; color:var(--slate); margin-bottom:8px;
+  }
+  @media(max-width:640px){
+    .hero{padding:60px 0 40px}
+    .hero h1{font-size:40px}
+    .ch-title{font-size:30px}
+    .card{padding:26px 22px}
+    .pull{font-size:19px}
+    .arc-cross{margin-left:12px}
+    .arc-up{margin-left:24px}
+    .letter{padding:38px 26px 34px}
+    .letter p{font-size:18px}
+  }
+  /* ── 核心定錨（一句話的你）── */
+  .anchor{max-width:720px; margin:32px auto 4px; padding:24px 34px; border:1px solid var(--border); border-radius:16px; background:var(--snow)}
+  .anchor .tag{display:block; font-size:11px; letter-spacing:4px; color:var(--ember); text-align:center; margin-bottom:12px}
+  .anchor p{font-family:'Cormorant Garamond',serif; font-size:24px; line-height:1.5; color:var(--ink); font-style:italic; text-align:center; margin:0}
+  .anchor b{color:var(--ember-dark); font-weight:600; font-style:normal}
+
+  /* ── 九宮印記牆（數據摘要即視覺）── */
+  .sigwall{margin:22px 0 6px}
+  .sigwall .sw-head{font-size:13px; letter-spacing:2px; color:var(--slate); text-align:center; margin-bottom:5px}
+  .sigwall .sw-sub{font-size:13px; color:var(--mist); text-align:center; margin-bottom:18px}
+  .sigrid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden}
+  .sigcell{background:var(--snow); padding:16px 17px 17px}
+  .sigcell .sys{font-size:12px; color:var(--ember); font-weight:600; letter-spacing:.5px}
+  .sigcell .raw{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--mist); margin:3px 0 8px; line-height:1.4}
+  .sigcell .say{font-size:13.5px; color:var(--ink); line-height:1.55}
+  .sigcap{font-size:12.5px; color:var(--slate); text-align:center; margin-top:13px; font-style:italic}
+
+  /* ── 擺渡人問你（每章反思題）── */
+  .ask{margin:24px 0 2px; padding:20px 24px; border-left:3px solid var(--gold); background:linear-gradient(90deg,rgba(184,146,58,.08),transparent); border-radius:0 8px 8px 0}
+  .ask .q-head{font-size:12px; letter-spacing:2px; color:var(--gold); margin-bottom:9px}
+  .ask p{font-size:16px; color:var(--ink); line-height:1.7; margin:0; font-weight:500}
+  .ask .q-note{font-size:13px; color:var(--slate); margin-top:9px; font-weight:400; line-height:1.6}
+
+  @media(max-width:640px){
+    .anchor{padding:20px 22px} .anchor p{font-size:20px}
+    .sigrid{grid-template-columns:repeat(2,1fr)} .sigcell{padding:13px 13px 14px}
+  }
+  body{animation:fade .4s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Kairos · 九系統融合報告 · 格式 v1.00 · 報告 v1.01</span>
+    <h1 class="display">你這個人的說明書</h1>
+    <p class="sub">不是算命，是一封寫給你的信——關於你天生是誰、為什麼會卡、以及怎麼一步步走回那個本來就該由你站上去的位置。</p>
+    <div class="meta">周逸達　·　1979.07.16　22:30　·　台灣台北</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="anchor">
+    <span class="tag">如 果 只 用 一 句 話 說 你</span>
+    <p>你是一個被設計成「<b>骨子裡想建一個自己的世界、又野得想往前衝，偏偏真正的力量要等到被看見、被邀請才放得出來</b>」的男人——<br>你有結構、有野心、有一手把混亂整成秩序的本事，可你越用力去推，反而越覺得累、越覺得苦。</p>
+  </div>
+
+  <div class="intro">
+    <p>我把九套不同的系統，一次套在你身上跑過一遍，然後做一件事——<strong>讓這九套全都出力，再只留下那些「好幾套系統都同時指向同一件事」的訊號</strong>。因為當這麼多套不同的語言都在說同一句話時，那句話多半就是真的。</p>
+    <p>這一版，我把講你的方式改了。我不再每一章都用同一個框、塞同一種收尾——那會讓你讀到後面疲乏、也把你拆成記不住的碎片。我改成<strong>把你的故事好好講一遍，章節有長有短、節奏有起伏，像一個真正認識你的人在跟你聊你自己</strong>。然後，等九章講完、你也認得自己了，我才在最後攤開一張<strong>「修煉地圖」</strong>：那上面只放你這輩子真正反覆出現、繞不開的幾個核心功課，每一個都告訴你——一直不面對會怎樣、開始面對會怎樣、真的過關了又會活成什麼樣。</p>
+    <p>這份報告的順序是有講究的，跟著一條很老的道理走：<strong>先把自己顧好，才顧得了關係；關係對了，事業和財富才會水到渠成。</strong>所以我們會從「你這個人」開始，一路走到你的關係、你的家、最後才談你的事業與翻身。</p>
+    <p>還有一件事我想先講清楚：這份報告不預測你的未來，也不替你做決定。它只幫你看清楚——你站在哪、風往哪吹、怎麼順著走。<strong>選擇權，永遠在你手上。</strong></p>
+  </div>
+
+  <div class="sigwall">
+    <div class="sw-head">九 系 統 · 數 據 印 記 牆</div>
+    <div class="sw-sub">九套系統各自獨立算出來的你（小字是專業原始數據，下面那句是它在說的話）</div>
+    <div class="sigrid">
+      <div class="sigcell"><div class="sys">八字</div><div class="raw">甲木日主 · 正財格 · 身偏弱(-5.7) · 喜水木忌土金火 · 五行缺火 · 稱骨三兩六錢「不须劳碌过平生，独自成家福不轻」 · 財星土墓庫未未現（命中2庫）· 現走丙寅運(2022–2031)</div><div class="say">一棵想頂天立地的大樹，根卻還沒扎得夠深：有理想、有格局，但身子骨偏單薄，需要水的滋養、需要同伴與靠山，才撐得起你想成就的那番事。你不是靠運氣堆出來的命，是靠自己一塊磚一塊磚把家業砌出來的——但天意特別寫了一句：你不必把自己累死，也能成。</div></div>
+      <div class="sigcell"><div class="sys">紫微斗數</div><div class="raw">命宮在申 · 主星破軍（火星 天鉞 紅鸞同宮）· 命主廉貞 · 身主天相</div><div class="say">天生帶著「破舊立新、不甘於現狀」的開創魂：你坐不住一個別人安排好的局，總想打掉重來、闖出一個自己的版本。衝勁很猛、火氣也旺，是先鋒型的人——能開疆，但要學會收尾與守成。</div></div>
+      <div class="sigcell"><div class="sys">人類圖</div><div class="raw">投射者 · 情緒型權威 · 3/5 profile · 二分定義 · 輪迴交叉 62/61｜42/32（右角度）</div><div class="say">你不是那種埋頭硬幹就會成的人——你的天賦是「看穿系統、看懂別人、給出別人想不到的指引」，但這份力量要在被看見、被邀請、被認可的時候才真正放得出來。硬推、硬擠、硬證明，只會換來一身苦澀。你是來被請上桌的，不是來搶位子的。</div></div>
+      <div class="sigcell"><div class="sys">西洋占星</div><div class="raw">太陽巨蟹 · 月亮牡羊 · 上升雙魚 · 水象主導(水6火5土1) · 凱龍金牛14° 第2宮（精度 medium）</div><div class="say">內心其實很柔軟、念舊、重感情，渴望一個能安心歸屬的窩（巨蟹）；情緒卻急、直、想要就要、一點就燃（牡羊）；外表給人溫和、夢幻、不設防的感覺（雙魚）。你最深的那道隱痛，跟「我到底夠不夠好、值不值得擁有」有關——而它正是你這輩子要療癒、要長出來的地方。</div></div>
+      <div class="sigcell"><div class="sys">生命靈數</div><div class="raw">生命靈數 4（建造數）</div><div class="say">你是天生的建造者：務實、可靠、重秩序、靠一步一腳印把東西蓋穩。你信的是地基、是系統、是把事情做扎實，不是空談。</div></div>
+      <div class="sigcell"><div class="sys">十三月亮曆</div><div class="raw">電力的黃種子 · kin 224 · 音3 電力</div><div class="say">你像一顆帶電的種子：天生想把潛能種進對的土壤、讓它開花，而且帶著一股「啟動、催化、把一件事點著」的電力。你的修行是耐心——種子要等季節，急不得。</div></div>
+      <div class="sigcell"><div class="sys">吠陀占星</div><div class="raw">火星大運啟動（2021–2028 · 7 年）</div><div class="say">你正走在一段「行動、衝勁、開疆闢土」的火熱長路上——能量旺、想衝、想拚、想把事做成。這股火用對地方是猛將，用錯地方是內傷。</div></div>
+      <div class="sigcell"><div class="sys">北歐符文</div><div class="raw">本命符文 Uruz ᚢ</div><div class="say">你體內有一股原始的、野性的生命力——像一頭野牛，力氣大、衝得猛、不易被馴。這股蠻力是你的本錢，馴服它、給它方向，它就是你開天闢地的引擎。</div></div>
+      <div class="sigcell"><div class="sys">塔羅本命牌</div><div class="raw">人格牌＝靈魂牌 皇帝 The Emperor（IV）· 皇帝家族｛皇帝 IV／死神 XIII／愚者 0｝· 2026 流年牌 惡魔 The Devil（XV）</div><div class="say">此生原型＝建立秩序的王者：你天生帶著「打造一個自己的疆域、立規矩、扛責任、給人依靠」的使命，外顯的你和內在的靈魂指向同一個方向，內外一致。而眼前這一年，是一段「看清楚自己被什麼綁住、被什麼上癮、被什麼困住」的功課年——不是壞事，是看見枷鎖、才解得開枷鎖的轉折。</div></div>
+    </div>
+    <div class="sigcap">九套用完全不同語言的系統，指針卻幾乎都落在同一個人身上——這不是巧合，是準。</div>
+  </div>
+
+  <nav class="toc">
+    <h4>這份報告會帶你走一趟 — 共九章 + 修煉地圖 + 收尾</h4>
+    <ol>
+      <div class="phase">第一部 · 先把自己顧好（這是一切的根）</div>
+      <li><a href="#c1">你是怎麼被設計出來的</a></li>
+      <li><a href="#c2">你體內那場打不完的戰爭</a></li>
+      <li><a href="#c3">你那個一直重複的隱形迴圈</a></li>
+      <li><a href="#c4">你的能量怎麼充、怎麼漏</a></li>
+      <div class="phase">第二部 · 顧好自己，才顧得了關係</div>
+      <li><a href="#c5">你愛與被愛，真正的樣子</a></li>
+      <li><a href="#c6">你從家裡帶出來的鑰匙與傷</a></li>
+      <div class="phase">第三部 · 關係對了，事業財富才水到渠成</div>
+      <li><a href="#c7">你天生是來做什麼的</a></li>
+      <li><a href="#c8">你此刻卡在哪一格</a></li>
+      <li><a href="#c9">你的翻身時機與下一步</a></li>
+      <div class="phase">收尾 · 把九套系統收成一條路</div>
+      <li><a href="#clinic">系統會診：眾口同聲 vs 眾說紛紜</a></li>
+      <li><a href="#field">五運實戰摘要（可以馬上用）</a></li>
+      <li><a href="#now">此刻：你正站在哪裡 · 接下來這一年</a></li>
+      <li><a href="#lessonmap">修煉地圖：你這輩子繞不開的幾個功課</a></li>
+      <li><a href="#letter">擺渡人的一封信</a></li>
+    </ol>
+  </nav>
+
+  <!-- ░░░░░░░░ 第一部 ░░░░░░░░ -->
+  <div class="sep"><span>第一部 · 先把自己顧好</span></div>
+
+  <!-- ① -->
+  <article class="chapter" id="c1">
+    <div class="ch-num">第一章</div>
+    <h2 class="ch-title display">你是怎麼被設計出來的</h2>
+    <p class="ch-lead">在聊你的關係、事業、錢之前，得先回到最源頭——你這個人，出廠的時候到底是哪一款。後面所有的順與不順，都是從這裡長出來的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你是一棵想頂天立地的大樹，骨子裡是個建王國的人</h3>
+      <p>我看完你整個人之後，最想先跟你說一句話：你天生，<span class="em">是一個來「建立一個屬於自己的世界」的人</span>。</p>
+      <p>這件事，好幾套系統不約而同地指著同一個方向。你不是來隨波逐流、混口飯吃的——你心裡一直有一塊版圖，一個「我想把它蓋起來」的東西：可能是一份事業、一套自己的方法、一個能讓人依靠的疆域。你天生重秩序、重結構、想立規矩、想扛責任，你信的是「把地基打穩、把系統建好、一塊磚一塊磚砌上去」，不是空談、不是碰運氣。別人看你，會覺得你有格局、有擔當、是那種「可以靠」的人。</p>
+      <p>而且你不只是想蓋，你還有一股<strong>很猛的開創魂</strong>——你坐不住一個別人替你安排好、一成不變的局。你心裡常有一個聲音：「這樣不對、這樣不夠好，我想打掉重來、做一個更好的版本。」這股「破舊立新」的勁，讓你天生是個先鋒、是個開路的人。你能去到別人不敢去的地方，能把一片荒地變成一塊有秩序的疆土。</p>
+      <p>但這裡有一個你一定要懂的關鍵——<strong>一棵想頂天的大樹，要的不是更猛的風，是更深的根</strong>。你格局大、企圖大、火氣旺，可你天生的身子骨，其實比你以為的要單薄一點：你需要被滋養、需要有靠山、需要有同伴，根才扎得穩，才撐得起你想長到的高度。<span class="em">外面看你像個強悍的開創者，裡面其實藏著一棵需要被好好澆水、才不會把自己燒乾的樹。</span>這份報告，幾乎每一章都會回到這一句。</p>
+    </section>
+
+    <div class="flow">
+      <p>講到這裡，得先把一個你可能背了很多年的誤會解開——那個你常常責備自己的點，其實根本不是缺點，是你被設計的方式被你誤讀了。</p>
+    </div>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個誤會</div>
+      <h3>那個「我明明很努力，卻越推越累」的感覺，其實是你用錯了力的方式</h3>
+      <p>你可能從年輕到現在，一直有一種隱隱的疲憊：<span class="em">「我明明這麼拚、這麼用力，為什麼總覺得事倍功半、推得好累、心裡好苦？」</span></p>
+      <p>你看著有些人，好像沒你拚，卻一路被人請、被人捧、機會自己找上門；而你呢，常常是自己卯起來扛、卯起來推、卯起來證明，結果累得半死，得到的回應卻配不上你付出的力氣。久了，你會懷疑：是不是我不夠好？是不是我哪裡做錯了？我要告訴你一個很重要的真相——<strong>不是你不夠好，是你用力的「方式」跟你的設計天生不合</strong>。</p>
+      <div class="pull">你不是來「主動衝、用力推、拚命證明」的那一款，你是來「先被看見、被邀請、被認可，再放出你真正本事」的那一款。</div>
+      <p>你天生的天賦，是一種很特別的東西：你能看穿一個系統哪裡卡住、能看懂一個人真正需要什麼、能給出別人想不到的那個關鍵指引。這種能力，不是靠「我來、我衝、我做給你看」展現的，而是靠「被請上桌、被認可、被需要」才真正發光的。當你硬要去推、去搶、去證明自己時，你那份珍貴的洞察力反而會被你的用力給蓋住——而你換來的，往往就是那股說不出的<strong>苦</strong>。看懂這一點，你的人生會鬆開一大半。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的破局，不在更用力，在把根扎深、再等對的人來請你上桌</h3>
+      <p>我們把話講到底。你真正的轉機，是這三步：</p>
+      <p><strong>第一，看清楚你手上本來就有的牌。</strong>你有格局、有結構、有把混亂整成秩序的本事；你有開創的膽、有破舊立新的勇；你還有一雙能看穿系統、看懂人的眼睛，能給出真正有價值的指引。這些加起來，是非常稀有的組合：一個既能建、又能破、還能看透局的人。這不是你要去學的，是你出廠就帶著的。</p>
+      <p><strong>第二，看清楚你最缺、也最該補的東西。</strong>你不缺能力，你缺的是<span class="em">「把根扎深」和「等對的時機」這兩份耐心</span>。你太容易因為一股火、一股「我要趕快證明、趕快做成」的急，就硬推硬上，把自己累垮、把好牌打壞。你需要練的，不是更拚，而是——先把自己養好、把根扎穩，然後讓你的本事被人看見，等那個對的邀請來。</p>
+      <div class="pull">你不需要把自己累死才配成功。天意都替你寫好了：你不必勞碌過一生，也能自己成一個家、立一個業。</div>
+      <p>當你開始把力氣從「向外硬推」轉成「向下扎根、向內養好自己，再等對的人來請」，你會發現——你那份開創力與洞察力，不但不再讓你苦，反而變成你最大的優勢：對的人會來找你、對的舞台會請你上去，而你只要把你早就準備好的本事，漂亮地放出來就好。那棵樹，會因為根終於扎深、又等到了對的季節，而長得又高又穩。</p>
+      <div class="step">
+        <div class="kicker">今天可以怎麼開始</div>
+        <p>挑一件你最近「卯起來硬推、推得很累、回應卻很冷」的事，<strong>停下來問自己一句：「這件事，是真的有人在等我、需要我，還是我自己急著證明、硬要去做的？」</strong>不是要你放棄，是要你練習分辨「被需要的事」和「自己硬撐的事」——前者值得你全力，後者該先放下。</p>
+        <p style="margin-bottom:0">還有，每天留一點時間，<span class="em">什麼都不證明、什麼都不推，就好好把自己養回來</span>——睡飽、吃好、找會滋養你的人待著。對你這棵樹來說，這不是偷懶，這是扎根。你的力量，是在被滋養夠了之後才放得出來的。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>這輩子到現在，你最「卯起來硬推、用盡全力證明自己，結果累得半死、回應卻配不上付出」的一次，是什麼時候？如果那一次，你願意先停下來、等一個真正需要你的人來請你——現在的你，會不會少了很多苦？</p>
+      <p class="q-note">（這些問題不用急著答。寫下來，或就放著讓它在心裡發酵——真正的看見，是被一個好問題「問」出來的，不是被答案「餵」出來的。每一章結尾，我都會留一個這樣的問題給你。）</p>
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="chapter" id="c2">
+    <div class="ch-num">第二章</div>
+    <h2 class="ch-title display">你體內那場打不完的戰爭</h2>
+    <p class="ch-lead">你有沒有一種感覺——你心裡好像住著兩股完全相反的勁：一股野得想立刻往前衝、想要就要；另一股卻一直在喊「等一下、再想想、急什麼」。我跟你說，那不是你優柔寡斷，那是你被裝進了兩股都很強的力。</p>
+
+    <div class="flow">
+      <p>這一章短一點，但它是整份報告的樞紐。因為你後面所有的「為什麼會卡」，幾乎都從這一場內戰長出來。</p>
+    </div>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你裡面，同時住著「一頭想立刻衝的野牛」和「一個要你先等情緒過完的智者」</h3>
+      <p>你出生的時候，被同時裝進了兩股都很強、卻方向相反的力。</p>
+      <p>一股是——<strong>野性的、原始的、想要就要、一點就燃的衝勁</strong>。這一面的你像一頭野牛、像一團烈火：力氣大、爆發力強，心裡常燒著「我想要那個、我想趕快做成、我等不及了」的急。你的情緒來得又快又直，想到就想動，看不順眼就想打掉重來。這股蠻力是你的引擎，是你能開疆闢土的本錢。</p>
+      <p>另一股卻是——<strong>「真相要等情緒的浪退了才看得清」的智慧</strong>。你內在有一個很深的設定：你不是那種「當下的衝動就是答案」的人，恰恰相反，你當下的興奮或憤怒，往往不是最終的真相。你需要讓那股情緒的浪，從高峰、到平、到低，整個走過一輪，等心真的靜下來，你才會看清楚「我到底要不要、值不值得」。</p>
+      <p>你看出問題了嗎——<span class="em">一股力叫你「現在就衝」，另一股力卻說「等情緒過完再說」</span>。一個是油門踩到底的野牛，一個是要你先停車看清路的老靈魂。這兩股住在同一個身體裡，難怪你常常在原地拉扯：明明很想立刻拍板、立刻動手，心裡卻有個聲音一直拉住你。你不是猶豫，你是<strong>被「想衝的火」和「要等的智慧」同時拉扯</strong>。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>於是你常常「在衝動裡拍了板，事後才發現那不是你要的」</h3>
+      <p>這場內戰最常見的代價是這樣的——</p>
+      <p>那股野性的火一燒起來，你會在情緒的高點上，急著做決定、急著表態、急著拍板：要做這個、要跟這個人合作、要把這件事推下去。可是等那股浪退了、心靜下來，你常常會發現：<span class="em">「咦，這好像不是我真正想要的」、「我剛剛是不是太衝動了」</span>。然後你得花更多力氣去收拾、去後悔、去把那個衝動做下的決定救回來。一次兩次沒事，但長年累月下來——<strong>你會覺得自己好像老是在「衝動下決定、事後再後悔」之間繞圈，明明很聰明、看得很透，卻總栽在同一個地方。</strong></p>
+      <div class="pull">你栽的從來不是判斷力，你判斷力很強。你栽的是「沒等情緒的浪退完，就在高點上拍了板」。</div>
+      <p>這也是為什麼你有時候會莫名地煩、莫名地後悔——不是事情不好，是你<span class="em">在不對的時間點上，用不對的那股力做了決定</span>。那頭野牛太急著衝，沒給那個要等的智者開口的機會。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>這個矛盾不是病，是你最珍貴的組合</h3>
+      <p>我要跟你說一個會讓你鬆一口氣的真相：<strong>你的「又野又猛、卻又需要等情緒過完才拍板」，不是要被解決的毛病，它是你最稀有的天賦。</strong></p>
+      <p>你想想——正因為你「既有野牛的爆發力、又有等浪退去的智慧」，你才有機會成為那種<span class="em">既敢開創、又不會被一時衝動帶溝裡</span>的人。世界上最稀缺的，不是有衝勁的人，也不是會冷靜的人，而是<strong>能把「猛烈的行動力」和「沉得住氣的判斷」合在一個人身上</strong>的人——那正是你。很多有衝勁的人沒有耐性，衝得快也死得快；很多沉得住氣的人沒有膽，一輩子沒開過一局；而你兩樣都有。你那兩股看似打架的力，合起來剛好是一個別人沒有的禮物：一種「敢衝、卻衝得準」的開創力。</p>
+      <div class="step">
+        <div class="kicker">把內戰變和解</div>
+        <p>下次又感覺到那股拉扯——一邊急著拍板、一邊有聲音叫你等——<strong>請相信那個叫你等的聲音，它才是真正替你做主的那一個</strong>。給自己一條鐵律：<span class="em">重大的決定，絕不在情緒的高點上拍板</span>。讓那股興奮或憤怒，走過一個完整的起伏（有時一晚，有時幾天），等心真的平了、那件事在你心裡還是清楚的、踏實的，再動手。</p>
+        <p style="margin-bottom:0">這不是要你澆熄那頭野牛，恰恰相反——是讓那頭野牛<strong>朝對的方向衝</strong>。野性的力，加上等對時機才出手的智慧，那才是真正能成事的猛將。你會發現，<span class="em">當你願意讓情緒的浪先退、再讓那股勁出手，你做的決定會準很多、後悔會少很多、也走得遠很多。</span></p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>回想一下，你這輩子那些讓你最後悔的決定，是不是很多都是「在情緒的最高點上拍的板」？如果有一條鐵律是「重大的事，等情緒的浪退完再決定」——你現在腦中浮起的哪件事，會因此走向完全不同的結局？</p>
+    </div>
+  </article>
+
+  <!-- ③ -->
+  <article class="chapter" id="c3">
+    <div class="ch-num">第三章</div>
+    <h2 class="ch-title display">你那個一直重複的隱形迴圈</h2>
+    <p class="ch-lead">每個人身上都有一段「明明知道、卻一再重演」的劇本。你的那一段，跟「先試了、踩坑了、撞牆了，才真正學會」這件事有關——而旁人常常誤會你，你自己有時候也誤會了自己。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 那個一直重演的劇本</div>
+      <h3>你是「非得親身撞過、栽過，才長得出真本事」的那一款</h3>
+      <p>你有沒有發現，你這輩子很多最重要的東西，<span class="em">都不是別人教會你的，是你自己一頭撞進去、撞得鼻青臉腫，才真正學會的</span>？</p>
+      <p>你天生就是「試錯型」的人。別人可能看本書、聽個建議就能避開的坑，你往往得親自跳下去走一遍才會懂。你會開很多頭、試很多東西，有些半途而廢，有些撞得灰頭土臉。你心裡可能因此偷偷責備過自己：「為什麼我老是三分鐘熱度？為什麼我老是要繞遠路、要跌倒了才學乖？是不是我不夠穩、不夠定？」</p>
+      <p>我要很慎重地告訴你——<strong>這不是你的缺陷，這是你長本事的唯一方式</strong>。你這種人，知識不是用聽的、用看的進到你身體裡的，是用<span class="em">「親身活過、親手栽過、親自悟出來」</span>的方式長出來的。你那些看起來像「失敗、白走、繞遠路」的經歷，其實是你在替自己累積一座別人沒有的礦——那是你日後能看穿事情、能給人真正有用建議的底氣。你不是在浪費時間，你是在用你的方式採礦。</p>
+    </section>
+
+    <div class="flow">
+      <p>但這座礦採到一個程度，會發生一件很奇妙的事——而這件事，正是你這個劇本真正的高潮。</p>
+    </div>
+
+    <section class="card">
+      <div class="kicker">其二 · 劇本的下半場</div>
+      <h3>你親身踩過的坑，會變成別人眼中「你怎麼什麼都懂」的智慧</h3>
+      <p>這裡有一個很美的設計，是你一定要知道的：你前半生那些跌跌撞撞、親身試錯換來的東西，到了某個階段，會開始<strong>變成別人眼中的智慧與指引</strong>。</p>
+      <p>你會發現，越到後來，越多人開始來問你、來請教你、把你當成「那個走過很多路、看得很透、能給出關鍵建議」的人。你跟人講的，不是書上抄來的大道理，是你自己用血淚換來的真東西——所以特別有重量、特別能打中人。你天生就帶著一種「被人投射為解惑者、引路人」的氣場：你親身活過的，正好是別人最需要被點醒的。</p>
+      <div class="pull">你前半生踩的每一個坑，都不是白踩的——它們都會在後半生，變成你給別人的一盞燈。</div>
+      <p>所以你這個隱形迴圈，真正的全貌是這樣的：<span class="em">親身試 → 踩坑、撞牆、繞遠路 → 悟出真東西 → 變成能照亮別人的智慧</span>。你卡住的地方，通常是停在「踩坑」那一段，責備自己「怎麼又繞遠路了」，沒走到後面那段把它煉成智慧、傳給別人的高光。看懂這個全貌，你就不會再為了「我怎麼又試錯了」而自我懷疑——你會知道，你只是還在採礦，礦會變成金子的。</p>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你心裡有沒有一段「曾經覺得是失敗、是白走、是丟臉」的經歷？如果它其實不是失敗，而是你採到的一塊礦——它教會了你什麼別人沒有的東西？那塊礦，現在能照亮誰？</p>
+    </div>
+  </article>
+
+  <!-- ④ -->
+  <article class="chapter" id="c4">
+    <div class="ch-num">第四章</div>
+    <h2 class="ch-title display">你的能量怎麼充、怎麼漏</h2>
+    <p class="ch-lead">這一章很實際——它講你這個人，什麼時候會發光、什麼時候會耗乾。搞懂這個，你就不會再莫名其妙地累到懷疑人生了。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的能量怎麼漏掉的</div>
+      <h3>你最大的漏電，是「沒人請你，你也硬要上」</h3>
+      <p>我們先講你怎麼把自己耗乾的，因為這是你最容易忽略、卻最致命的一個漏洞。</p>
+      <p>你的能量，跟一般人不一樣。一般人是「多做多累、少做少累」，可你不是——<strong>你的累，主要不是來自做太多，是來自「在沒被看見、沒被需要、沒被請的地方，硬撐、硬推、硬證明」</strong>。當你卯起來去爭一個沒人在等你的位子、硬要去推一件沒人請你做的事、拚命想證明「我很行、你們快看我」，你那份力氣會像漏水的桶子一樣，怎麼倒都填不滿，最後換來的，是一身說不出的<span class="em">苦澀和疲憊</span>。</p>
+      <p>更糟的是，你身子骨本來就偏單薄，火氣又旺——這種硬撐，會讓你又急又燥、睡不好、容易上火、容易把自己燒乾。你常常不是被事情累垮的，是被「我必須證明我配得上」這個念頭累垮的。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你的能量怎麼充回來的</div>
+      <h3>你最強的充電，是「被看見、被邀請、被滋養」</h3>
+      <p>那反過來，你怎麼充電、怎麼發光？</p>
+      <p>第一個充電口，是<strong>被看見、被邀請、被認可</strong>。當有人真心地說「我需要你的看法」「來，這件事請你來主持」「你說得太對了」，你整個人會瞬間活過來——那份洞察力、那份開創力，會毫不費力地湧出來。你是那種「被請上桌就會發光、被晾在旁邊就會枯掉」的人。所以與其到處去搶、去爭，不如把心力放在「把自己變得值得被請」，然後等對的邀請來。</p>
+      <p>第二個充電口，是<strong>被滋養</strong>——好好休息、被人疼、待在一個讓你安心的窩裡。你內心其實很念舊、很重感情、很需要一個能歸屬的地方（雖然你外表看起來獨立又灑脫）。你需要水一樣的滋潤：睡飽、有人懂你、有個能讓你卸下盔甲的角落。你越是把自己照顧好、把根養深，你那棵想頂天的樹，才越撐得住。</p>
+      <div class="step">
+        <div class="kicker">今天可以怎麼開始</div>
+        <p>做一個小盤點：列出你最近最累的三件事，<strong>在每一件後面標一個記號——這是「有人在等我、需要我」的事，還是「沒人請我、我自己硬要上」的事？</strong>把後者那幾件，試著放下一兩件，你會立刻感覺到能量回來。</p>
+        <p style="margin-bottom:0">然後，刻意安排一件<span class="em">純粹滋養你、不為證明任何事</span>的事：睡到自然醒、跟一個讓你安心的人吃頓飯、回去做一件你以前很愛的事。對你這棵樹來說，這不是浪費時間，這是在替你想成就的那番事，偷偷扎根。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>誠實地問自己：你最近這陣子的累，有多少是「真的有人需要你」累出來的，又有多少是「沒人請你、你自己硬要證明」累出來的？如果你把後面那一塊放掉，你會多出多少力氣，去做真正值得的事？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第二部 ░░░░░░░░ -->
+  <div class="sep"><span>第二部 · 顧好自己，才顧得了關係</span></div>
+
+  <!-- ⑤ -->
+  <article class="chapter" id="c5">
+    <div class="ch-num">第五章</div>
+    <h2 class="ch-title display">你愛與被愛，真正的樣子</h2>
+    <p class="ch-lead">在感情裡，你是一個很容易被誤會的人——外表給人一種獨立、溫和、不太需要人的感覺，可你心裡，其實藏著一個非常渴望被好好疼、被穩穩接住的人。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你在愛裡的真實樣子</div>
+      <h3>外表灑脫不黏人，內心卻很念舊、很想要一個安心的窩</h3>
+      <p>先講一個你可能自己都沒完全承認的事：<strong>你內心，其實是個很重感情、很念舊、很想要歸屬感的人。</strong></p>
+      <p>你嚮往一個能讓你安心的窩、一個能讓你卸下盔甲的人、一段能讓你不必再武裝自己的關係。你會記得很多別人忘了的細節，你對在乎的人其實很軟、很深情。但問題來了——你外表給人的感覺，卻常常是<span class="em">溫和、獨立、夢幻、好像不太需要人</span>。你不太主動討愛，甚至會在很想靠近的時候，反而擺出一副「我一個人也很好」的樣子。</p>
+      <p>於是就出現了一個很心酸的落差：<strong>你心裡明明很渴望被疼，外表卻給人「他好像不需要我」的訊號。</strong>結果對方可能就真的退開了、或不敢靠太近，而你又默默受傷，覺得「為什麼沒人懂我其實很需要愛」。這不是別人狠心，是你那層獨立的外殼，把你真正的需要藏得太好了。</p>
+    </section>
+
+    <div class="flow">
+      <p>而你在愛裡那股「想要就要」的急，又會讓這個落差雪上加霜——這是你感情裡最需要看見的一塊。</p>
+    </div>
+
+    <section class="card">
+      <div class="kicker">其二 · 你在愛裡最容易卡的地方</div>
+      <h3>情感來得又急又猛，但「衝動下的愛」常常不是你真正要的</h3>
+      <p>你在感情裡，情緒來得又快又烈——喜歡一個人，可能很快就燒得很旺，急著靠近、急著確認、急著想要一個答案；吵架或受傷時，那股火也來得又急又衝，可能話說得很重、或一氣之下就想走人。</p>
+      <p>但還記得第二章那場內戰嗎？在感情裡，它一樣成立：<strong>你在情緒高點上對一段關係做的判斷與決定，常常不是真相。</strong>你可能在熱戀的高點上把一個人理想化、衝動承諾；也可能在受傷的低點上把一段值得的關係一刀砍掉。等那股浪退了，你才看清楚——「他其實沒那麼適合我」或「我剛剛根本不該那樣對他」。</p>
+      <div class="pull">在愛裡，你最該守的一條線是：不在情緒的最高點或最低點，做任何決定一段關係去留的事。</div>
+      <p>所以你感情裡真正的功課很清楚：一是<strong>學會誠實地把「我需要你」說出口</strong>，別讓那層獨立的殼，替你把愛推走；二是<strong>讓情緒的浪退了再決定關係</strong>，無論是承諾還是離開，都別在火頭上拍板。當你做到這兩件事，你會發現——你完全可以既保有你的獨立與空間，又被一個人穩穩地、深深地愛著。這兩件事，從來不衝突。</p>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>有沒有一段關係，是你其實很在乎、卻因為「拉不下臉說我需要你」或「在一時氣頭上做了決定」而錯過或弄壞的？如果重來一次，你願不願意在那個當下，把心裡真正的渴望，誠實地說出來？</p>
+    </div>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="chapter" id="c6">
+    <div class="ch-num">第六章</div>
+    <h2 class="ch-title display">你從家裡帶出來的鑰匙與傷</h2>
+    <p class="ch-lead">我們每個人都從原生家庭帶走兩樣東西：一把能打開人生的鑰匙，和一道還沒癒合的傷。你帶走的那道傷，跟「我到底夠不夠好、值不值得擁有」有關。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你帶出來的那道傷</div>
+      <h3>那個「我夠好嗎、我值得擁有嗎」的隱隱不安</h3>
+      <p>你心裡，可能藏著一道你自己都不一定常拿出來看的傷：<span class="em">一種「我到底夠不夠好、我配不配擁有好東西、我值不值得被愛」的隱隱不安。</span></p>
+      <p>它可能很早就種下了——也許是小時候，你的價值感是跟「有沒有表現好、有沒有用、有沒有達到某個標準」綁在一起的；也許你很早就學會「我得靠自己、得做出點什麼，才值得被看重」。於是長大後，這道傷會用各種方式冒出來：你可能很難真心覺得「我已經夠好了」；你可能用拚命賺、拚命成就、拚命囤積，來證明自己的價值；你也可能在「想要一個好東西、一段好關係」的時候，心裡偷偷有個聲音說「我真的配嗎？」</p>
+      <p>這道傷，正是前面好幾章那股「硬推、硬證明、累到苦」的最深源頭——<strong>你之所以那麼用力地想證明自己，是因為心底那個孩子，還在等一句「你本來就夠好了，不必證明」。</strong></p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 同一個地方藏著的鑰匙</div>
+      <h3>傷在哪裡，療癒就在哪裡——你的價值，不必再用力去掙</h3>
+      <p>但這道傷有一個很美的反面，那就是——<strong>你最痛的地方，剛好藏著你這輩子最大的鑰匙。</strong></p>
+      <p>當你開始一點一點地相信「我的價值，不是靠表現掙來的，是我本來就有的」，奇妙的事情會發生：你不再需要靠硬推、硬撐、拚命囤積來證明自己，你那份力氣就鬆開了；你開始能心安理得地擁有好東西、接受好的愛、享受你掙來的成果，而不是一邊擁有一邊不安。你會從「我得夠好才配」，慢慢走到「我本來就夠好，這些是我可以坦然擁有的」。</p>
+      <div class="pull">你不是來「掙一個值得」的，你是來「想起你本來就值得」的。</div>
+      <p>而且更深一層——<strong>你親身走過這道「覺得自己不夠好」的路，會讓你特別能懂別人的那份不安。</strong>有一天，當你療癒了自己，你會變成那個能對別人說「你已經夠好了、你值得」的人。你受過的傷，會變成你給別人的禮物。這就是傷與鑰匙，本來就是同一個東西。</p>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你願不願意，現在就試著對自己說一次：「我不必再證明什麼，我本來就夠好了。」說出口的時候，你心裡有沒有冒出一個「可是……」的聲音？那個「可是」後面接的話，可能就是你這道傷，最想被你聽見的那一句。</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第三部 ░░░░░░░░ -->
+  <div class="sep"><span>第三部 · 關係對了，事業財富才水到渠成</span></div>
+
+  <!-- ⑦ -->
+  <article class="chapter" id="c7">
+    <div class="ch-num">第七章</div>
+    <h2 class="ch-title display">你天生是來做什麼的</h2>
+    <p class="ch-lead">這一章，是整份報告的核心。我們把前面所有的線索收攏起來，回答一個最大的問題：你這個人，這輩子到底是來幹嘛的？</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天命主軸</div>
+      <h3>你是來「建一個自己的疆域，再用親身活過的智慧去指引人」的</h3>
+      <p>把九套系統收在一起看，你的天命主軸非常清楚，而且非常一致：<strong>你是來建立一個屬於自己的世界——一份事業、一套方法、一個能讓人依靠的疆域——然後，用你親身活過、悟出來的智慧，去指引、點亮別人。</strong></p>
+      <p>這條主軸裡有兩個你缺一不可的角色。第一個是<span class="em">「建造者」</span>：你天生重結構、有格局、敢開創、能把混亂整成秩序，你是來蓋東西、立規矩、扛起一片疆土的。第二個是<span class="em">「指引者」</span>：你那雙能看穿系統、看懂人的眼睛，加上你親身踩坑換來的真智慧，讓你天生就是那個能給人關鍵指引、能照亮別人的角色。你不只是來成就一番事業的，你是來成就一番事業、再把這份智慧傳遞出去的。</p>
+      <p>所以最適合你的位置，是那種<strong>能讓你建立自己的東西、又能讓你的洞見被人看見、被人請教、被人需要</strong>的角色：創辦人、主導者、顧問、導師、某個領域裡「大家會去找他拿主意」的那個人。你不適合被埋在一個沒人看見、只能照章辦事、不能開創也不能發聲的格子裡——那會讓你的天賦活活悶死。</p>
+    </section>
+
+    <div class="flow">
+      <p>但天命這種東西，有一個你一定要懂的「使用說明」，不然你會拿著一手好牌，卻打得滿身是傷。</p>
+    </div>
+
+    <section class="card">
+      <div class="kicker">其二 · 你的天命使用說明</div>
+      <h3>你的本事要「被請出來」才發光，不是「硬擠出來」才算數</h3>
+      <p>這是你天命最關鍵、也最容易被你違反的一條使用說明：<strong>你的天賦，是被看見、被邀請、被認可的時候，才真正放得出最大的光；不是靠你主動衝、用力推、拚命證明擠出來的。</strong></p>
+      <p>很多人的成功是「主動出擊、不斷推銷自己」，但你不是。你越是急著去爭一個位子、去推銷自己有多行、去搶一個沒人請你的舞台，你那份珍貴的洞察力反而越使不出來，還會換來一身苦。可是當你把自己的本事練扎實、讓你的價值自然地被人看見，那些對的邀請、對的舞台、對的合作，會一個一個地來找你——而那時候，你只要把你早就準備好的東西，漂亮地放出來就好。</p>
+      <div class="pull">你不是去敲門的人，你是那個「門會為你打開」的人——前提是你把自己準備好，然後耐心等對的門。</div>
+      <p>這需要兩份耐心，剛好對應你前面的功課：一份是<strong>把根扎深、把本事練扎實</strong>的耐心（別急著還沒準備好就硬上）；一份是<strong>等對的邀請、對的時機</strong>的耐心（別在情緒高點上硬推）。當你願意修這兩份耐心，你會發現——你那顆帶電的種子，會在對的季節、對的土壤裡，長成一棵別人來乘涼、來請益的大樹。你的成就，不會是你拚出來的，是你準備好、再被請出來的。</p>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果你真的相信「你的本事是被請出來才發光、不是硬擠出來」——那麼，你現在花最多力氣在硬推、硬爭的那件事，是真的值得你推，還是你該把那份力氣，拿去把自己準備得更值得被請？</p>
+    </div>
+  </article>
+
+  <!-- ⑧ -->
+  <article class="chapter" id="c8">
+    <div class="ch-num">第八章</div>
+    <h2 class="ch-title display">你此刻卡在哪一格</h2>
+    <p class="ch-lead">講完你「永遠是誰」，這一章來看你「現在卡在哪」。每個人都會卡，但卡的地方不一樣——你卡的這一格，跟「看清楚自己被什麼綁住」有關。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你眼前這一格</div>
+      <h3>你正站在一個「看見自己的枷鎖」的關口上</h3>
+      <p>眼前這一段時間，你身上有一個很特別的功課被點亮了——<strong>看清楚：你到底被什麼綁住了？被什麼上癮了？被什麼困住了，卻一直以為那是「不得不」？</strong></p>
+      <p>這個功課聽起來有點重，但它其實是個好消息。它可能會以各種樣子出現在你的生活裡：也許你發現自己被某種「我必須一直賺、一直成就、一直證明」的執念綁住，停不下來；也許是被一段消耗你、卻又離不開的關係綁住；也許是被某個習慣、某種對「擁有更多才安心」的渴求綁住；也許，是被那個「我不夠好、我得更努力」的舊念頭綁住。</p>
+      <p>這一格的關鍵字是<span class="em">「看見」</span>。你不是真的被那些東西困住——你是<strong>還沒看清楚「是我自己把鎖鏈套上的，我也可以自己解開」</strong>。一旦你看清楚那條綁住你的鏈子長什麼樣、從哪來，你就已經一隻腳跨出牢籠了。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 怎麼走出這一格</div>
+      <h3>解鎖的鑰匙，是誠實面對「我其實可以選擇放下」</h3>
+      <p>那怎麼走出這一格？答案不是用力掙脫，是<strong>誠實地看見、然後選擇放下</strong>。</p>
+      <p>先做一件事：<span class="em">挑一個你心裡明知道在消耗你、卻一直放不下的東西——一個執念、一段關係、一個習慣、一個「我必須」——把它寫下來，然後誠實地問自己：「這真的是我非要不可的嗎？還是我只是習慣了、害怕放手？」</span>光是這樣看清楚，鎖就鬆了一半。</p>
+      <p>這一格之所以出現在你現在的人生，是因為你前面已經走了夠遠、累積了夠多，到了該<strong>卸下一些不再需要的重擔、好輕裝往下一段走</strong>的時候了。你不是要把全部都放掉，你是要分清楚：哪些是真正屬於你、值得你扛的；哪些只是舊的執念與恐懼，該在這一格放下的。看清楚、放下該放的，你會輕得驚人，也會自由得驚人。</p>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>誠實地說：現在的你，心裡最清楚「這個東西在消耗我、但我一直放不下」的，是什麼？它真的是你非要不可的，還是你只是怕放手、習慣了被它綁著？</p>
+    </div>
+  </article>
+
+  <!-- ⑨ -->
+  <article class="chapter" id="c9">
+    <div class="ch-num">第九章</div>
+    <h2 class="ch-title display">你的翻身時機與下一步</h2>
+    <p class="ch-lead">最後一章，講時機。Kairos 這個名字的意思就是「對的時機」。同樣一個人，站在對的時間點做對的事，跟站在錯的時間點瞎使力，命運是完全兩樣的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你正站在的時間點</div>
+      <h3>你正走在一段「該動起來、開疆闢土」的火熱長路上</h3>
+      <p>你身上有一條很長的人生節氣，而你現在，正走在一段<strong>「行動、衝勁、開疆闢土」的火熱長路</strong>上——這段路會持續好幾年，能量很旺、很適合你動手去把想做的事做成、把想建的疆域建起來。</p>
+      <p>這跟你天生那股野性的力、那股開創魂，剛好同頻。所以這幾年，你會比過去更想衝、更想拚、更不甘於原地踏步——這不是你浮躁，是你的人生節氣真的轉到了「該出手」的時段。你前面那些沉澱、那些踩坑、那些採到的礦，正是為了讓你在這段火熱期裡，能扎扎實實地開出一片新局。</p>
+      <p>但正因為這是「火」的時段，前面所有的功課都會在這裡被加倍考驗：那股野性的火會更旺（更容易在衝動下拍板）、那股「硬推硬證明」的習慣會更強（更容易把自己累垮）。所以這段路能不能走成，關鍵不在你夠不夠拚——你絕對夠拚——而在你<span class="em">能不能把這股火，用在對的方向、對的時機上</span>。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 這段路的三個提醒</div>
+      <h3>走在這段火熱期裡，記住三件事</h3>
+      <p><strong>一、衝，但等情緒的浪退了再拍板。</strong>這是該行動的時機沒錯——但別把「終於可以動了」活成「在每個衝動的高點上做決定」。重大的事，讓那股勁先沉澱幾天，等心靜了、那件事還是清楚的，再全力去做。你的火配上你的等待，才是真正的猛將。</p>
+      <p><strong>二、把力氣放在「被需要、被請」的事上，別硬推沒人等你的局。</strong>這段路會把很多機會推到你面前，學會分辨：哪些是真的有人在等你、需要你的（全力以赴），哪些是你自己急著證明、硬要去爭的（先放下）。前者讓你發光，後者讓你漏電。</p>
+      <p><strong>三、一邊衝，一邊記得扎根、被滋養。</strong>你身子骨偏單薄，這段火熱期最怕的就是把自己燒乾。越是要衝刺，越要刻意休息、被疼、被滋養，把根養深。別讓這段難得的好時機，因為你把自己累垮而白白浪費。</p>
+      <div class="step">
+        <div class="kicker">這一年，如果只抓一件事</div>
+        <p style="margin-bottom:0">在這段火熱期裡，<strong>挑一件「真的有人需要你、也是你身體在情緒退去後仍然清楚想做」的事，把根扎穩、耐心準備，然後在對的邀請來時，全力把它建起來</strong>——不為趕、不為證明、不在火頭上衝動拍板，只為把那個有格局、有智慧、想建一個自己世界卻被你壓了太久的版本，真正放出來成形一次。這段路是來讓你開疆闢土的，但它需要你，把火用在對的方向上。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果你真的相信「現在是該動起來、開疆闢土的時機」——那麼在你想做的那些事裡，有沒有哪一件是「真的有人在等你、你情緒退去後也仍然清楚想做」的？而你卻一直因為怕、因為等不到完美把握、或因為在硬推別的局而沒去做它？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 收尾 ░░░░░░░░ -->
+  <div class="sep"><span>收尾 · 把九套系統收成一條路</span></div>
+
+  <!-- 系統會診 -->
+  <article class="chapter" id="clinic">
+    <div class="ch-num">系統會診</div>
+    <h2 class="ch-title display">眾口同聲 vs 眾說紛紜</h2>
+    <p class="ch-lead">我讓九套系統同時開口，然後做兩件事：把它們「異口同聲」的地方挑出來（那多半就是你的核心真相），再把它們「各執一詞」的地方攤開（那不是你有問題，那是你此生要整合的功課）。</p>
+
+    <section class="clinic unison">
+      <div class="kicker">眾口同聲處 · 你的核心真相</div>
+      <h3>好幾套系統同時指向，這幾條可信度最高</h3>
+      <div class="item">
+        <span class="t">一、你是來建立一個自己的世界、扛起一片疆域的——這是真的，不是你好強</span>
+        <p>好幾套系統同時這樣說：一套說你的天命原型是建立秩序、打造疆域的王者；一套說你是務實可靠、靠地基與系統把東西蓋穩的建造者；一套說你帶著破舊立新、不甘現狀的開創魂。三股聲音疊在一起，結論只有一個——你不是好勝逞強，你出廠就帶著一個想建一番事業、立一片疆土的靈魂。</p>
+      </div>
+      <div class="item">
+        <span class="t">二、你的本事要「被看見、被請」才發光，不是硬推出來的</span>
+        <p>這條很值得你聽進去：你的設計是「被邀請、被認可時才放出最大力量」的那一款，硬推、硬爭、硬證明只會換來苦澀與疲憊。而你天生帶著「被人投射為解惑者、引路人」的氣場，加上你親身踩坑換來的真智慧——你是來被請上桌給指引的，不是來搶位子證明自己的。違反這條，是你大半輩子那股「越拚越累、越推越苦」的總根源。</p>
+      </div>
+      <div class="item">
+        <span class="t">三、你身子骨偏單薄，需要被滋養、被扎根，才撐得起你想成就的高度</span>
+        <p>多個源頭同時提醒：你格局大、火氣旺，但天生的根基偏單薄，需要水的滋潤、需要靠山與同伴、需要被好好照顧，力量才放得出來。它們也同時說了一句天意——你不必把自己累死也能成（「不须劳碌过平生，独自成家福不轻」）。所以「先把自己養好、把根扎深」對你不是偷懶，是成事的前提。</p>
+      </div>
+      <div class="item">
+        <span class="t">四、你正走在一段「該動起來、開疆闢土」的火熱長路上</span>
+        <p>好幾個源頭都指向同一件事：你現在正進入一段「行動、衝勁、開創」的火熱週期（你大概也確實覺得渾身想衝）。它們也同時提醒：這股火配上你「等情緒退去再拍板」的智慧，才是猛將；配上衝動，則是內傷。時機對了，就看你把火用在哪個方向。</p>
+      </div>
+    </section>
+
+    <section class="clinic discord">
+      <div class="kicker">眾說紛紜處 · 你的內在功課</div>
+      <h3>系統打架的地方，不是你壞了，是你此生要整合的功課</h3>
+      <div class="item">
+        <span class="t">一、「想立刻衝、想要就要的你」 vs 「要等情緒退了才看得清的你」</span>
+        <p>一邊是野性的火：力氣大、爆發力強、想要就要、一點就燃，催你「現在就動、現在就拍板」；另一邊是深層的智慧：你當下的興奮或憤怒不是真相，要等情緒的浪整個退完才看得清。這兩股天天對拉——這是你內在那場戰爭的根。功課不是選一邊，是讓「等待的智慧」替「野性的火」掌舵：重大的事絕不在情緒高點上決定，等浪退了、心靜了還清楚，再讓火全力出手。</p>
+      </div>
+      <div class="item">
+        <span class="t">二、「主動衝、用力證明的你」 vs 「要被請、被看見才發光的你」</span>
+        <p>一邊是那股「我要趕快做成、趕快證明我配得上」的急與衝；另一邊是你真正的天賦——被邀請、被認可時才放出最大力量。一個叫你去推、去爭、去搶，一個說你該等對的門為你打開。這兩句的拉扯，正是你「越用力越苦」的內耗。功課是把力氣從「向外硬推」轉成「向下扎根、把自己準備到值得被請」，再耐心等對的邀請。</p>
+      </div>
+      <div class="item">
+        <span class="t">三、「獨立灑脫、不太需要人的你」 vs 「念舊重感情、很想被疼的你」</span>
+        <p>一邊說你外表獨立、溫和、夢幻、好像一個人也很好；另一邊說你內心其實又念舊、又重感情、又很渴望一個安心歸屬的窩。一個要你穿好獨立的殼，一個要你放心地說出「我需要你」。這兩句都對。功課很清楚：你可以既保有獨立與空間、又被穩穩地深愛——關鍵是允許自己卸下殼、誠實地需要人，而那不會讓你失去自由。</p>
+      </div>
+      <div class="item" style="border-top:1px dashed var(--border); margin-top:6px; padding-top:14px">
+        <span class="t">所以，請記住這句</span>
+        <p>系統打架的地方，從來不代表你「有問題」。恰恰相反——那是你這一生被交付的整合功課。等你把這幾組對立的力，一組一組接上、變成彼此支援，你就不只是活著，而是活成了一個別人學不來的你：一個既敢衝、又沉得住氣，既能建一片疆域、又被人請去給指引，既獨立自由、又被好好愛著的王者。</p>
+      </div>
+    </section>
+  </article>
+
+  <!-- 五運實戰摘要 -->
+  <article class="chapter" id="field">
+    <div class="ch-num">五運實戰摘要</div>
+    <h2 class="ch-title display">可以馬上用的五個方向</h2>
+    <p class="ch-lead">道理講完了，這裡給你五段最落地的建議——事業、財富、關係、家庭、身心使命，每一段都是你今天就能拿去用的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 事業（創業或主導）</div>
+      <h3>建一個自己能主導的疆域，靠「被請」而不是「硬推」拿位子</h3>
+      <p>你適合<strong>當創辦人、主導者、顧問、導師，或某個領域裡「大家會去找他拿主意」的那個人</strong>——任何能讓你建立自己的東西、又能讓你的洞見被人看見、被人請教的位置；不適合被困在沒人看見、只能照章辦事、不能開創也不能發聲的角色。如果你還在猶豫方向，答案偏向：選一件你能建、又能讓你的本事被人需要的事，把根扎深、把本事練扎實，再讓對的邀請來找你。</p>
+      <p style="margin-bottom:0">具體做法——<span class="em">把力氣從「主動衝、用力證明」轉成「把自己準備到值得被請，再等對的門為你打開」</span>。你越是把本事練扎實、讓價值自然被看見，對的舞台、對的合作、對的位子，就會一個一個地來請你。眼下正進入行動開創的火熱期，是把想建的疆域動手建起來的好時機——但記得，等情緒退了再拍板。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 財富（理財與聚財）</div>
+      <h3>你靠「一步一腳印經營、讓財流動」聚財，不靠囤積與衝動下注</h3>
+      <p>你的財路有兩個重要特性。第一，<strong>你是靠自己一塊磚一塊磚經營、累積出來的命，財富要靠扎扎實實地建、不是天上掉下來</strong>——這聽起來辛苦，但反過來看，這正是你最大的安穩：你的財，握在你自己手裡，不必依附誰、不必等誰恩賜。第二，<strong>你的財喜歡流動、循環，不喜歡被死守、囤積</strong>：敢投資自己的成長、投資能深耕的事業、用在能讓資源循環增值的地方，財反而越旺。</p>
+      <p style="margin-bottom:0">但給你最重要的一句聚財忠告：<strong>別在情緒高點上衝動下注。</strong>你那股野性的火，最容易讓你在一時興奮裡衝動投資、衝動開銷、衝動押上去，事後才後悔。守住那條鐵律——重大的財務決定，讓那股勁先沉澱幾天，等心靜了再決定。把財用在「能讓資源循環、能增值、能利人利己」的地方，而不是「一時心動就撒出去」，是你聚財的功課。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 關係（朋友、同事、戀情）</div>
+      <h3>誠實說出「我需要你」，重大決定別在火頭上定</h3>
+      <p>你外表獨立、內心重感情，情緒又來得急——這是你的特質，但要小心兩個老習慣。一是別讓「想保持獨立、不想麻煩人」直接演成「明明很在乎，卻擺出一副不需要你的樣子」，把人推遠。你真正要練的，是<strong>在想靠近的時候，誠實地說出「我需要你」</strong>——那不會讓你失去自由，反而會讓你被真正接住。二是別讓那股急，逼你在熱戀的高點衝動承諾、或在受傷的低點一刀砍掉一段值得的關係。</p>
+      <p style="margin-bottom:0">所以記住這條<span class="em">：所有重大的關係決定（承諾、分手、攤牌），都別在情緒的最高點或最低點上做，讓浪退了、心靜了再定</span>。對的人，經得起你那股火冷卻下來之後再看。你的判斷力很強，但它只在情緒退去之後才聽得清。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其四 · 家庭</div>
+      <h3>當家裡那個給人依靠的支柱，但別把硬撐活成「我必須一個人扛」</h3>
+      <p>你重感情、念舊，又有「建立秩序、扛起責任、給人依靠」的本事——成為家裡那根穩穩的支柱、那個讓家人有安全感的人，這件事你做得到，也很適合你。你天生想給家人一個安心的窩，那份心意很深。</p>
+      <p style="margin-bottom:0">唯一要小心的是那個老習慣：<strong>別把「我得靠自己、我得撐住」活成「所有重擔我一個人扛、不能示弱、不能求助」</strong>。你身子骨偏單薄，硬撐久了會把自己燒乾，也會讓家人不知道怎麼靠近你、幫你。真正的支柱，不是一個人硬扛所有事，是一個願意在累的時候說「我需要幫忙」、願意被家人滋養的人。試著在家裡，讓自己也能被照顧——那會讓這個家，從「你一個人撐」變成「彼此撐」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其五 · 身體健康 · 情緒管理 · 人生使命</div>
+      <h3>顧好身心、馴服那股火，然後用親身的智慧去指引人</h3>
+      <p><strong>身體：</strong>你火氣旺、身子骨偏單薄、特別需要水一樣的滋養，要特別顧<span class="em">別讓自己長期處在又急又燥、硬撐硬拚的緊繃裡，注意睡眠、別把自己燒乾、別讓肝火與壓力悶在身體裡</span>。該休息的別硬撐、該被滋養的別逞強，身體會輕鬆很多。<strong>情緒：</strong>當那股野性的火又燒起來、急著要動時，守住鐵律——「重大的事，等情緒的浪退完再決定」。讓那股渴望沉澱幾天，等心靜了再出手。</p>
+      <p style="margin-bottom:0"><strong>使命：</strong>說到底，你這一生的天命，就是<strong>用你的格局與開創力，建立一個屬於自己的疆域，再把你親身活過、悟出來的智慧，傳遞出去、指引人、點亮人</strong>。這裡有個很美的循環——<span class="em">你越是把自己療癒好、把根扎深、把本事練扎實，那些對的邀請就越會來請你，而你的智慧也就越能真正影響人。</span>所以先把自己養好、把那股火馴服，再慷慨地把你的光與智慧，放給那些來請你的人。</p>
+    </section>
+  </article>
+
+  <!-- 此刻活層 -->
+  <article class="chapter" id="now">
+    <div class="ch-num">此刻</div>
+    <h2 class="ch-title display">你正站在哪裡 · 接下來這一年</h2>
+    <p class="ch-lead">前面講的，是「你永遠是誰」。這一段不一樣——它講「你現在站在哪、風往哪邊吹」。因為同樣一個人，站在不同的時間點，要做的事是不一樣的。這也是 Kairos 這個名字的意思：時機。</p>
+
+    <section class="card">
+      <div class="kicker">你現在在哪一格</div>
+      <h3>你站在「火熱開創期」與「看見枷鎖」的交會點上</h3>
+      <p>此刻的你，身上同時有兩股時間的力在運作。一股是那段<strong>「行動、衝勁、開疆闢土」的火熱長路</strong>——你渾身是勁、想衝、想拚、想把想做的事做成，這股力會持續好幾年。另一股，是眼前這一年特別被點亮的功課：<strong>看清楚你到底被什麼綁住、被什麼上癮、被什麼困住</strong>。</p>
+      <p>這兩股力放在一起，其實是個很巧妙的安排：一邊推你往前衝、開創，一邊要你停下來看清楚「我衝的方向對嗎？我是不是還被某些舊執念、舊習慣綁著，所以才一直使錯力？」。<span class="em">如果你只顧著衝、不看清枷鎖，你會把這股難得的火，用力地撞向一面牆；如果你先看清枷鎖、解開它，再衝，這股火會帶你開出一片真正屬於你的新局。</span></p>
+      <p>所以這一年，你最該做的，不是更拚命地衝，而是<strong>一邊保有那股開創的勁，一邊誠實地看清楚：我現在最大的綁縛是什麼？是那個「我必須一直證明自己」的執念？是某段消耗我的關係？是某個停不下來的習慣？</strong>把它看清楚、鬆開它，你那股火才會用在對的方向上。</p>
+      <div class="pull">這一年不是來考驗你能不能再拚一點，是來幫你看清楚——你那股勁，到底被什麼舊鎖鏈，綁去了錯的方向。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">接下來 12 個月 · 三個提醒</div>
+      <h3>走在這段路上，記住三件事</h3>
+      <p><strong>一、衝，但先看清楚枷鎖、再決定方向。</strong>這是該行動的時機沒錯，但別蒙著頭衝。先誠實盤點：我現在最大的綁縛、最該放下的執念或習慣是什麼？看清楚、鬆開它，再把火用上去。否則你會非常用力地，把自己推向一個其實該放下的方向。</p>
+      <p><strong>二、重大的事，等情緒的浪退完再拍板。</strong>火熱期裡，那股衝動會更旺。守住這條對你最重要的鐵律：無論多興奮、多急、多氣，重大的決定都讓情緒先走過一輪、等心靜了還清楚，再動手。這一條，能替你省下這一年大半的後悔。</p>
+      <p><strong>三、一邊衝，一邊扎根、被滋養，別把自己燒乾。</strong>你身子骨偏單薄，這段火熱期最大的風險就是硬撐到燒乾。越要衝刺，越要刻意休息、被疼、把根養深。把自己照顧好，這股火才燒得久、燒得遠。</p>
+      <div class="step">
+        <div class="kicker">這一年，如果只抓一件事</div>
+        <p style="margin-bottom:0">在這段火熱期裡，<strong>先誠實地找出那條一直綁著你、讓你使錯力的舊鎖鏈——多半是那個「我必須一直證明自己才夠好」的執念——把它看清楚、開始鬆開它</strong>。然後，把省下來的那股力氣，拿去把一件真正值得、也真的有人需要你的事，扎扎實實地建起來。這一年，是來幫你「解開舊鎖、再把火用對方向」的——別只顧著衝，先看清楚你被什麼綁住。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果這一年真的是來幫你「看清枷鎖、解開它」的——那麼此刻你心裡最先浮起的那條鎖鏈是什麼？它是不是其實一直在偷偷決定你那股勁的方向，而你卻一直以為「那是不得不」？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░ 修煉地圖（v1.01 新增 · 單一專欄取代每章三段式 · 放 now 之後 letter 之前）░░░░ -->
+  <article class="chapter" id="lessonmap">
+    <div class="ch-num">修煉地圖</div>
+    <h2 class="ch-title display">你這輩子繞不開的幾個功課</h2>
+    <p class="ch-lead">前面九章，是把你這個人講清楚。現在，我把九套系統「不約而同、一講再講」的訊號收攏起來，挑出你這輩子真正繞不開的幾個核心功課——數量不多，但每一個都是你生命的主旋律。</p>
+
+    <div class="lessonmap-intro">
+      <p>這張地圖跟前面的章節不一樣。前面講「你是誰」，這裡講「你為什麼非面對不可」。</p>
+      <p>每一個功課，我都會帶你看三種未來：<strong>一直不面對，你會一路往下沉、活在重複的痛裡；開始面對，你會踏上一條會痛、卻在鬆動、在轉化的路；真的修過關了，你會往上提升，活出那個本來就該由你站上去的版本。</strong>同一副牌，三種頻率——你現在大概在哪一格，自己讀著讀著就會知道。</p>
+      <p>這不是嚇你，是一張動力引擎：它要讓你清清楚楚地看見——<strong>面對的代價，遠比逃避的代價小；而過關之後的禮物，大得超乎你的想像。</strong></p>
+    </div>
+
+    <section class="lesson">
+      <div class="l-no">核心功課 一</div>
+      <h3>把「硬推、硬證明」放下，學會「被請出來才發光」</h3>
+      <p style="color:#5A5A6E; font-size:14.5px; margin:-8px 0 18px">這是你最核心、也最多系統同時指向的功課——你的力量要在被看見、被邀請時才放得出來，硬推只會換來苦。</p>
+      <div class="arc arc-down"><span class="lvl">一直不面對會怎樣</span>
+        <p>你會一輩子卯起來硬推、硬爭、拚命證明「我夠行、你們快看我」，累得半死，回應卻永遠配不上付出。你會反覆嚐到那股說不出的<strong>苦澀</strong>，懷疑「我這麼努力，為什麼總是事倍功半」，把身子骨愈撐愈虛，把那雙能看穿局的好眼睛，活活蓋在自己的用力底下。</p></div>
+      <div class="arc arc-cross"><span class="lvl">開始面對會怎樣</span>
+        <p>你開始學會在硬推前停一下，問自己：「這件事是真有人在等我，還是我自己急著證明？」你會試著把力氣，從「向外搶位子」轉向「把自己準備到值得被請」。剛開始會不安、會手癢、會忍不住想衝——但你已經嚐到，有些事一鬆手、改成等待，反而來得更順。那股苦，在鬆動。</p></div>
+      <div class="arc arc-up"><span class="lvl">修行過關了會怎樣</span>
+        <p>你不再去敲門，而是成了那個<strong>「門會為他打開」的人</strong>。對的邀請、對的舞台、對的合作自己來找你，你只要把早就準備好的本事，漂亮地放出來。你那雙看穿系統、看懂人的眼睛終於完全發光，成為大家爭相請教的引路人。你用一半的力氣，成就了過去拚死也搆不到的高度——而且不再苦。</p></div>
+    </section>
+
+    <section class="lesson">
+      <div class="l-no">核心功課 二</div>
+      <h3>讓「等情緒退去的智慧」替「想立刻衝的火」掌舵</h3>
+      <p style="color:#5A5A6E; font-size:14.5px; margin:-8px 0 18px">你體內那頭野牛與那個老靈魂的內戰——學會不在情緒高點上拍板，是你少掉大半後悔的關鍵。</p>
+      <div class="arc arc-down"><span class="lvl">一直不面對會怎樣</span>
+        <p>你會一輩子在情緒的高點上拍板——興奮時衝動承諾、憤怒時一刀砍斷，事後才發現「這不是我要的」「我剛剛太衝動了」。你會反覆在<strong>「衝動下決定、事後再收拾」</strong>之間繞圈，明明判斷力很強，卻老栽在同一個地方，把好好的局、好好的關係，一次次毀在那股沒退完的浪上。</p></div>
+      <div class="arc arc-cross"><span class="lvl">開始面對會怎樣</span>
+        <p>你開始替自己立一條鐵律：重大的事，絕不在情緒最高或最低的時候決定。你會逼自己讓那股浪先走過一輪——一晚、幾天——等心真的靜了再看。偶爾還是會破功、還是會手癢想立刻拍板，但你已經親身驗證過：等一等做的決定，準很多、後悔少很多。那股急，在被馴服。</p></div>
+      <div class="arc arc-up"><span class="lvl">修行過關了會怎樣</span>
+        <p>你成了那種<strong>「敢衝、卻衝得準」的猛將</strong>——野性的爆發力，配上等對時機才出手的判斷力。你開的每一個局，都是情緒退去後依然清楚、踏實的選擇，所以又狠又準、又少後悔。那場曾撕扯你一生的內戰，變成別人學不來的本事：能猛烈行動，又沉得住氣。</p></div>
+    </section>
+
+    <section class="lesson">
+      <div class="l-no">核心功課 三</div>
+      <h3>放下「我必須一個人硬撐」，允許自己被滋養、被靠</h3>
+      <p style="color:#5A5A6E; font-size:14.5px; margin:-8px 0 18px">你身子骨偏單薄卻硬要獨自扛——這份「我得靠自己、不能示弱」的執念，是你燒乾自己的主因。</p>
+      <div class="arc arc-down"><span class="lvl">一直不面對會怎樣</span>
+        <p>你會一輩子把所有重擔一個人扛、不示弱、不求助，硬撐到把自己燒乾。你外表獨立灑脫，心裡卻又累又孤單——明明很需要被疼、被靠，卻發出「我不需要你」的訊號，把能滋養你的人推遠。那棵想頂天的樹，根一直扎不深，撐不起你想成就的高度，最後在硬撐裡把自己耗垮。</p></div>
+      <div class="arc arc-cross"><span class="lvl">開始面對會怎樣</span>
+        <p>你開始練習一件對你很難、卻很重要的事——<strong>誠實地說出「我需要你」「我累了」「我需要幫忙」</strong>。你開始刻意休息、被人疼、待在會滋養你的窩裡，而不是逞強。剛開始會覺得彆扭、會怕麻煩人、會怕示弱，但你慢慢發現，被接住的時候，你反而更有力氣。你的根，在往下扎。</p></div>
+      <div class="arc arc-up"><span class="lvl">修行過關了會怎樣</span>
+        <p>你成了一個<strong>既能扛、又懂得被滋養</strong>的人——你扎了深根，所以撐得起你想長到的高度。你不再一個人硬扛所有事，而是讓對的人靠近你、幫你、疼你；你的疆域，從「你一個人撐」變成「一群人一起撐」。你那棵樹，終於又高又穩，還能讓人來樹下乘涼。</p></div>
+    </section>
+
+    <section class="lesson">
+      <div class="l-no">核心功課 四</div>
+      <h3>把「掙一個值得」放下，想起你本來就夠好、本來就值得</h3>
+      <p style="color:#5A5A6E; font-size:14.5px; margin:-8px 0 18px">這是你最深的那道傷，也是前面所有「硬推、硬撐」的源頭——你不必再證明，你本來就夠好。</p>
+      <div class="arc arc-down"><span class="lvl">一直不面對會怎樣</span>
+        <p>你會一輩子被「我夠好嗎、我配不配擁有」的隱隱不安推著走，用拚命賺、拚命成就、拚命囤積，去填一個永遠填不滿的洞。就算擁有了好東西、好關係，你也一邊擁有一邊不安，享受不了。那個心底的孩子，會一直等不到那句「你本來就夠好，不必證明」——於是你永遠在掙，永遠不夠。</p></div>
+      <div class="arc arc-cross"><span class="lvl">開始面對會怎樣</span>
+        <p>你開始試著對自己說：「我不必再證明什麼，我本來就夠好了。」說的時候心裡會冒出「可是……」——而你開始願意去聽那個「可是」後面藏著什麼，去看清這道傷從哪來。你開始能稍微心安地擁有、稍微坦然地接受愛，而不是立刻不安。那個用力證明的習慣，在一點點鬆開。</p></div>
+      <div class="arc arc-up"><span class="lvl">修行過關了會怎樣</span>
+        <p>你終於從<strong>「我得夠好才配」走到「我本來就夠好，這些是我可以坦然擁有的」</strong>。你不再需要靠成就與囤積來證明自己，那股一生的用力鬆開了，你輕得驚人、自由得驚人。而且，因為你親身走過這道傷，你成了那個能對別人說「你已經夠好了、你值得」的人——你受過的傷，變成了你給世界的禮物。</p></div>
+    </section>
+
+    <div class="lessonmap-intro" style="border-left-color:var(--teal); margin-top:6px">
+      <p>這四個功課，其實是同一條路上的四段——它們彼此咬合：<strong>因為心底覺得「不夠好」（功課四），所以你「硬推硬證明、一個人硬撐」（功課一、三）；又因為那股急著證明的火（功課二），讓你在衝動裡使錯力。</strong></p>
+      <p>所以你不必四個一起扛。<strong>從最深的那一個開始——當你真的想起「我本來就夠好」，上面三個會跟著鬆開一大半。</strong>這是你這輩子最值得走的一條路，而你，完全走得到。</p>
+    </div>
+  </article>
+
+  <!-- 擺渡人的一封信 -->
+  <article class="chapter" id="letter">
+    <div class="ch-num">封印 · 一封信</div>
+    <h2 class="ch-title display">擺渡人的一封信</h2>
+    <p class="ch-lead">最後，我想脫下所有系統、所有分析，只用一個「真正看見你的人」的身分，寫幾句話給你。</p>
+
+    <div class="letter">
+      <div class="salute">逸達，</div>
+      <p class="lead-in">我們素未謀面，但讀完你這整副牌，我覺得我好像已經認識你很久了。所以請容我，把幾句藏在分析背後的話，直接跟你說。</p>
+      <p>我知道你這輩子有多累。不是身體那種累——是那種<strong>心裡好像永遠有一個聲音在說「你還不夠、你得再證明、你得再做成一點什麼，才配」的累</strong>。你卯起來扛、卯起來推、卯起來證明，常常累得半死，回應卻配不上你的付出；你看著有些人沒你拚卻一路被請、被捧，心裡偷偷酸過、也偷偷懷疑過自己。那種「我這麼努力，為什麼還是這麼苦」的委屈，你很少說出口，但我看見了。</p>
+      <p>我也想跟你說一句，可能沒什麼人這樣對你說過——<strong>那不是你不夠好，也不是你方法錯了，那是一個從小就覺得「我得夠好、得有用、得做出點什麼才值得」的孩子，長大後還在拚命證明自己配得上的樣子。</strong>你不是好強，你是太怕一停下來、一不證明，就會被發現「其實我不夠好」。</p>
+      <p>但逸達，我想很慎重地告訴你：<strong>你本來就夠好了。</strong>你有格局、有開創的膽、有把混亂整成秩序的本事；你有一雙能看穿系統、看懂人的眼睛；你親身踩過那麼多坑、採過那麼多礦，換來一身別人沒有的真智慧。這樣的你，從來不需要靠「再做成一點什麼」來證明你配得上——你早就配得上了。你欠自己的，不是更多的成就，是一句「我可以停下來了，我本來就夠好」。</p>
+      <p>還有一句很老的話，我想送給你——<strong>你這條命，不必勞碌過一生，也能自己成一個家、立一個業（「不须劳碌过平生，独自成家福不轻」）。</strong>天意都替你寫好了：你的福氣不在「拚得多狠」，在「靠自己、一步一腳印，安安穩穩地把它建起來」。每當你又開始硬撐、開始懷疑自己，請記得這句——你不必把自己累死才配成功，你本來就有「靠自己活出一片天」的命，而且是不必勞碌的那種。</p>
+      <p>現在這個時間點，你正走在一段該動起來、該開疆闢土的火熱長路上，我知道你渾身想衝。這股勁很好，去用它——但請帶上兩樣東西：一是<strong>等情緒退了再拍板</strong>的智慧，別讓那頭野牛把你帶溝裡；二是<strong>先看清楚你被什麼綁住</strong>的清醒，別把這股難得的火，用力地撞向一面其實該放下的牆。然後，把你的本事準備到值得被請，耐心等對的門為你打開——那時候，你只要把早就準備好的東西漂亮地放出來就好。</p>
+      <p>我相信你。我相信你會走到那個——<strong>不再需要靠硬撐、硬證明來填補心裡那個洞，可以心安理得地擁有、坦然地被愛、用一半的力氣成就過去搆不到的高度</strong>的位置。那條路一直都在，它只是在等你，願意放下那句「我還不夠好」，願意相信自己本來就值得，然後勇敢地走進去。</p>
+      <p>路上有我，也有你自己。去吧，這一次，記得帶上那個你壓了很久的、有格局又夠好、不必再證明的你。</p>
+      <p class="sign">願你建起那片屬於你的疆域，<span class="sign-name">—— 擺渡人</span></p>
+    </div>
+  </article>
+
+  <details class="basis">
+    <summary>🔒 幕後依據（只有你看得到，正式給客戶的版本會隱藏這塊）</summary>
+    <div class="grid">
+      <div>這份報告把九套系統裡「多套同時指向同一件事」的訊號，翻成你聽得懂的話。九套系統各司其職，依據逐條標明來源（術語只放這裡，正文一律白話）：</div>
+      <div><b>八字 · 先天</b>：<code>甲木日主・正財格・身偏弱(score −5.7)</code>（月支未本氣己透干＝正財格；甲木在月支未為墓、得令−4）→ 一棵想頂天的大樹根偏單薄：有格局企圖、但需扶身才撐得起（①④・建造者天命）；<code>喜用水木、忌土金火（扶身為主：喜印水比劫木）・五行缺火</code> → 需要滋養、靠山、同伴；忌耗洩硬撐（④・能量・五運身心）。</div>
+      <div><b>八字 · 大運</b>：現走<code>丙寅運（2022–2031，44–53 歲）</code>（前接丁卯 2012–2021）＋與吠陀火星大運同步 → 木火轉旺、食傷生財、動起來開創的時段（⑨・此刻・會診時間軸）。</div>
+      <div><b>稱骨命書（八字加深 · v1.00）</b>：<code>三兩六錢（36 錢）「不须劳碌过平生，独自成家福不轻」</code>（袁天罡稱骨歌：己未年6＋農六月16＋廿三日8＋亥時6＝36錢）→ 靠自己經營、獨自成家立業，但福氣不在勞碌——不必把自己累死也能成（⑨・此刻・信・五運財富）。</div>
+      <div><b>財庫（八字加深 · v1.00）</b>：<code>日主甲(木)→財星＝土→土墓庫＝未/戌；四柱地支未/未命中2庫</code> → 財星入庫、有積財之器，但身弱需先扶身才守得住財；配「一步一腳印經營、讓財流動」（⑨・五運財富・會診一步一腳印）。<i>（命中2庫＝財庫條件成立，非無庫；身弱故重點在扶身聚財。）</i></div>
+      <div><b>紫微 · 命宮</b>：<code>命宮在申・主星破軍（火星／天鉞／紅鸞同宮）・命主廉貞・身主天相</code>（命宮有主星，不需借星）→ 破軍＝破舊立新、開創先鋒、不甘現狀、衝勁旺；火星增其急烈；天相身主＝重輔佐、秩序、扛責（①②・開創魂・建造者）。</div>
+      <div><b>人類圖</b>：<code>投射者・情緒型權威（Solar Plexus）</code>→ 策略＝等待被邀請；力量在被看見、被認可時才放出，硬推＝非自我主題「苦澀」（①④⑦・被請才發光・能量漏電・天命使用說明・會診核心真相二）；<code>情緒權威</code>＝無當下真相、須待情緒波完整起伏退去再決定（②⑤⑨・內戰・愛裡決定・五運・等浪退再拍板）。</div>
+      <div><b>人類圖</b>：<code>3/5 profile（烈士＋異端）</code>→ 3爻＝親身試錯、踩坑換真知（試錯型）；5爻＝被投射為解惑者／引路人，親身智慧化為對人的指引（③⑦・隱形迴圈採礦→智慧・天命指引者）。</div>
+      <div><b>輪迴交叉（人類圖加深 · v1.00）</b>：<code>右角度 Incarnation Cross 62/61｜42/32</code>（人格太陽閘62／人格地球閘61｜設計太陽閘42／設計地球閘32；太陽-地球對沖一致 verified）→ 主題環繞「細節整理與表達（閘62）／內在洞見真知（閘61）／把經歷走完成熟（閘42）／辨識什麼值得延續（閘32）」：建構秩序＋從經驗淬鍊智慧＋務實守成的生命劇本（①③⑦・建造者・採礦・天命）。<i>（誠實標：此四閘組合不在內建 36 個 verified 名稱表，gates＋角度＋對沖皆 verified，交叉「正式名稱」待補。）</i></div>
+      <div><b>占星</b>：<code>太陽巨蟹＋月亮牡羊＋上升雙魚</code> → 核心張力數據：太陽巨蟹＝內在念舊、重感情、渴歸屬與安全（⑤⑥・念舊重感情・想要的窩）；月亮牡羊＝情緒急切直接、想要就要、一點就燃（②⑤⑨・野性火・愛裡急・會診想衝 vs 想等）；上升雙魚＝外表溫和夢幻、獨立不設防（⑤・獨立殼 vs 內心需要・會診獨立 vs 重感情）；<code>水象主導(加權水6火5土1)、缺土補耐性落實</code>（④⑦）。</div>
+      <div><b>凱龍 Chiron（西洋占星加深 · v1.00）</b>：<code>凱龍落金牛14.05°（黃經44.05°）・第2宮（自寫兩體克卜勒，精度 medium）</code> → 金牛／第2宮＝自我價值、值不值得擁有的內在傷：那道「我夠不夠好、配不配擁有」的隱痛（⑥・家裡帶出的傷・會診/核心功課四）；療癒之路＝想起本來就值得、再去對別人說「你也夠好」（⑥・鑰匙）。<i>（誠實標：凱龍 e≈0.38 受土星/天王攝動，自寫兩體法離曆元越遠漂移越大；1979 距曆元數十年，度數約1°級——星座/宮位可用，不引 GPL 庫換精度，商用授權潔淨優先。）</i></div>
+      <div><b>生命靈數</b>：<code>life path 4（建造數）</code>（務實、可靠、重秩序、靠地基與系統把東西蓋穩）→ 建造者天命基調，與皇帝牌、破軍開創、八字立業同向（①⑦・建造者・會診核心真相一）。</div>
+      <div><b>十三月亮曆（Dreamspell 星系印記）</b>：<code>電力的黃種子・kin 224・音3 電力</code> → 黃種子＝把潛能種進對的土壤、催化開花、需耐心等季節；音3 電力＝啟動、激活、把一件事點著。指向「帶電的種子：能催化點燃，修行是耐心」（③⑦⑨・採礦・天命・等時機）。<i>（採心靈圈通用 Dreamspell 星系印記，非考古 GMT Tzolkin。）</i></div>
+      <div><b>吠陀（業力週期）</b>：<code>火星大運 Mars / Mangal（2021–2028，7年）</code>（前接月亮大運 2011–2021；月宿 Ashwini）＝行動、衝勁、開疆闢土、戰鬥力、實踐；與八字丙寅木火運＋稱骨「自成家業」同步指向「現在進入行動開創期」（⑨・此刻・會診時間軸）。</div>
+      <div><b>北歐符文</b>：<code>Uruz ᚢ（原始力量、野性、健康活力）</code> → 體內野牛般的原始生命力與爆發力，馴服給方向＝開創引擎，失控＝內傷；對應「想立刻衝的野性火」（②⑨・內戰野牛・會診想衝 vs 想等）。</div>
+      <div><b>塔羅本命牌（含擴充牌陣加深 · v1.00）</b>：<code>人格牌＝靈魂牌 皇帝（IV）｜皇帝家族｛皇帝 IV／死神 XIII／愚者 0｝｜2026 流年牌 惡魔（XV）</code>（月+日+年 7+16+1979 約化＝4 皇帝；個位數命牌故人格牌＝靈魂牌、無中段隱藏牌；2026 流年 7+16+2026 約化＝15 惡魔）→ 此生原型＝建立秩序、立規矩、扛責任、給人依靠的王者，內外一致（①⑦・建造者・天命）；家族同調死神＝破舊立新轉化（呼應破軍）；2026 流年惡魔＝看清自己被什麼綁住／上癮／困住、看見枷鎖才解得開的功課年（⑧・卡點・此刻・核心功課・會診時間軸）。</div>
+      <div><b>九系統會診邏輯</b>：眾口同聲＝多套系統交集（高可信度核心真相，如「建立者天命」＝靈數4＋皇帝牌＋破軍＋八字立業四源；「被請才發光」＝人類圖投射者＋等待被邀請策略；「身弱需滋養」＝八字身弱喜印＋稱骨不勞碌＋太陽巨蟹需安全）；眾說紛紜＝系統互斥處（此生整合功課，如月亮牡羊／符文 Uruz 想立刻衝 vs 人類圖情緒權威要等浪退；投射者要被請 vs 火星大運／破軍想主動衝；上升雙魚／太陽巨蟹獨立溫和 vs 巨蟹念舊渴歸屬）。修煉地圖4功課＝會診紛紜處交叉收斂，凱龍金牛「自我價值傷」為其最深根（功課四）。</div>
+      <div><b>校時標注</b>：出生 1979-07-16 22:30＋台北經緯度（lat 25.03 / lon 121.57）。<b>台灣 1979 年實施日光節約時間（夏令時 active）</b>，引擎以 IANA 時區資料庫（Asia/Taipei）自動處理＝當時鐘 22:30 對應 UTC+9（b_utc 1979-07-16 13:30，dst_active=true，source iana_zoneinfo），未手動改時區。亥時不跨界。上升星座、宮位、人類圖 type/authority/profile 對出生時間精度敏感；若實際出生時間與 22:30 有出入會微調上升（雙魚）與 profile（3/5）。八字、靈數、十三月亮曆、符文、塔羅不受分鐘級誤差影響。</div>
+    </div>
+  </details>
+
+  <footer class="foot">
+    <div class="logo">Kairos</div>
+    格式 v1.00・報告 v1.01・共九章 + 系統會診 + 五運實戰摘要 + 此刻這一年 + 修煉地圖 + 擺渡人的一封信。報告數據由九套系統（人類圖／八字／紫微／占星／印度吠陀／十三月亮曆／北歐符文／生命靈數／塔羅）一次運算融合，依「天道循環」順序排列：先顧好自己 → 再到關係家庭 → 才到事業財富。<br>
+    本版結構調整：九章不再每章重複「修煉前／中／後」三段式，改為把故事講好、節奏有變化；核心修煉收攏成末尾單一「修煉地圖」專欄（3–5 個核心功課 × 後果三段弧）。<br>
+    不主張預測準確，只幫你看清自己在什麼位置、勢往哪走、怎麼順。選擇權，永遠在你手上。改命靠行動，不靠知道。
+  </footer>
+
+</div>
+</body>
+</html>
+
