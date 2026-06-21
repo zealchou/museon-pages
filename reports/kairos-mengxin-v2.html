@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你這個人的說明書 · 葉孟欣 · v2.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8; --border:#E2E0DA;
+    --parchment:#F7F5F0; --snow:#FDFCFA; --code-bg:#F0EDE8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--parchment); color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',sans-serif;
+    font-size:16px; line-height:1.75; font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px}
+  .display{font-family:'Cormorant Garamond','Noto Sans TC',serif}
+
+  .hero{padding:88px 0 56px; text-align:center}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--ember-dark);
+    background:rgba(196,80,42,.1); padding:5px 14px; border-radius:100px;
+    display:inline-block; margin-bottom:28px;
+  }
+  .hero h1{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:54px; font-weight:600; line-height:1.12; letter-spacing:.01em;
+    color:var(--ink); margin-bottom:18px;
+  }
+  .hero .sub{font-size:18px; color:var(--slate); font-weight:300; max-width:580px; margin:0 auto}
+  .hero .meta{
+    margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    color:var(--mist); letter-spacing:.04em;
+  }
+  .rule{width:48px; height:2px; background:var(--ember); margin:40px auto 0; border-radius:2px}
+
+  .intro{
+    background:var(--snow); border:1px solid var(--border); border-left:3px solid var(--gold);
+    border-radius:12px; padding:28px 30px; margin:8px 0 48px; color:#23232e; font-size:16.5px;
+  }
+  .intro p{margin-bottom:1em}
+  .intro p:last-child{margin-bottom:0}
+  .intro strong{color:var(--ember-dark); font-weight:600}
+
+  .toc{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:28px 28px 24px; margin:0 0 72px;
+    box-shadow:0 1px 3px rgba(18,18,26,.06), 0 4px 12px rgba(18,18,26,.04);
+  }
+  .toc h4{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-bottom:18px;
+  }
+  .toc ol{list-style:none; counter-reset:ch}
+  .toc li{
+    counter-increment:ch; display:flex; align-items:baseline; gap:14px;
+    padding:9px 2px; border-bottom:1px dashed var(--border); font-size:15.5px; color:var(--ink);
+  }
+  .toc li:last-child{border-bottom:none}
+  .toc li::before{
+    content:counter(ch,decimal-leading-zero);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    color:var(--ember); min-width:26px;
+  }
+  .toc li a{color:inherit; text-decoration:none}
+  .toc li a:hover{color:var(--ember)}
+  .toc .phase{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;
+    color:var(--gold); padding:16px 0 6px; font-weight:600;
+  }
+  .toc .phase:first-child{padding-top:0}
+
+  .chapter{margin-bottom:72px; scroll-margin-top:24px}
+  .ch-num{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ember);
+  }
+  .ch-title{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:38px; font-weight:600; line-height:1.2; margin:10px 0 8px; color:var(--ink);
+  }
+  .ch-lead{font-size:17px; color:var(--slate); font-weight:300; margin-bottom:34px}
+
+  .card{
+    background:var(--snow); border:1px solid var(--border); border-radius:12px;
+    padding:30px 30px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .card .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;
+  }
+  .card h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:16px; color:var(--ink);
+  }
+  .card p{margin-bottom:1.05em; color:#23232e}
+  .card p:last-child{margin-bottom:0}
+  .card strong{font-weight:600; color:var(--ember-dark)}
+  .card .em{color:var(--ink); font-weight:500}
+
+  .pull{
+    border-left:3px solid var(--ember); padding:4px 0 4px 20px; margin:6px 0 1.05em;
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:21px; line-height:1.5; color:var(--ember-dark); font-weight:500;
+  }
+  .step{
+    background:rgba(184,146,58,.07); border:1px solid rgba(184,146,58,.25);
+    border-radius:10px; padding:22px 24px; margin-top:8px;
+  }
+  .step .kicker{color:var(--gold)}
+
+  .sep{display:flex; align-items:center; gap:18px; margin:64px 0 56px}
+  .sep::before,.sep::after{content:""; flex:1; height:1px; background:var(--border)}
+  .sep span{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px;
+    color:var(--gold); font-weight:600; white-space:nowrap;
+  }
+
+  /* ── v2 新增：章節後記（修煉前／中／後 成長階梯） ── */
+  .afterword{
+    margin:8px 0 0; padding:24px 26px 22px;
+    background:linear-gradient(180deg, rgba(247,245,240,.5), rgba(253,252,250,.9));
+    border:1px solid var(--border); border-radius:12px;
+  }
+  .afterword .aw-head{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--slate);
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+  .afterword .aw-head::after{content:""; flex:1; height:1px; background:var(--border)}
+  .aw-step{
+    position:relative; padding:14px 18px; border-radius:10px; margin-bottom:8px;
+    border:1px solid var(--border); background:var(--snow);
+  }
+  .aw-step:last-child{margin-bottom:0}
+  .aw-step .lvl{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:17px; font-weight:600; display:block; margin-bottom:3px;
+  }
+  .aw-step p{font-size:15px; color:#33333e; line-height:1.65; margin:0}
+  .aw-before{margin-left:0;  border-left:3px solid var(--ember);
+    background:linear-gradient(90deg, rgba(196,80,42,.05), var(--snow) 60%);}
+  .aw-before .lvl{color:var(--ember-dark)}
+  .aw-during{margin-left:22px; border-left:3px solid var(--gold);
+    background:linear-gradient(90deg, rgba(184,146,58,.06), var(--snow) 60%);}
+  .aw-during .lvl{color:var(--gold)}
+  .aw-after{margin-left:44px; border-left:3px solid var(--teal);
+    background:linear-gradient(90deg, rgba(42,122,110,.06), var(--snow) 60%);}
+  .aw-after .lvl{color:var(--teal)}
+
+  /* ── v2 新增：系統會診 ── */
+  .clinic{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:30px 30px 26px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .clinic .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px;
+  }
+  .clinic.unison{border-left:3px solid var(--teal)}
+  .clinic.unison .kicker{color:var(--teal)}
+  .clinic.discord{border-left:3px solid var(--ember)}
+  .clinic.discord .kicker{color:var(--ember)}
+  .clinic h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:14px; color:var(--ink);
+  }
+  .clinic .item{padding:13px 0; border-bottom:1px dashed var(--border)}
+  .clinic .item:last-child{border-bottom:none; padding-bottom:0}
+  .clinic .item .t{font-weight:600; color:var(--ink); display:block; margin-bottom:3px}
+  .clinic .item p{margin:0; color:#33333e; font-size:15.5px}
+  .clinic.discord .item .t{color:var(--ember-dark)}
+
+  /* ── v2 新增：擺渡人的一封信（信箋） ── */
+  .letter{
+    position:relative; margin:8px 0 20px; padding:46px 44px 40px;
+    border:1px solid #E6DCC4; border-radius:6px;
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 31px, rgba(184,146,58,.10) 32px),
+      linear-gradient(160deg, #FBF6EA, #F5EEDC);
+    box-shadow:0 1px 3px rgba(120,90,30,.10), 0 10px 30px rgba(120,90,30,.08);
+    transform:rotate(-.5deg);
+  }
+  .letter::before{
+    content:""; position:absolute; left:30px; top:0; bottom:0; width:1px;
+    background:rgba(196,80,42,.18);
+  }
+  .letter .salute{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-size:24px;
+    font-weight:600; color:var(--ember-dark); margin-bottom:18px;
+  }
+  .letter p{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:19px; line-height:1.85; color:#3a3326; margin-bottom:1em; font-weight:500;
+  }
+  .letter p.lead-in{font-style:italic}
+  .letter strong{color:var(--ember-dark); font-weight:600}
+  .letter .sign{
+    text-align:right; margin-top:26px; margin-bottom:0;
+    font-style:italic; font-size:21px; color:var(--ember-dark);
+  }
+  .letter .sign-name{
+    display:block; font-size:26px; font-weight:600; color:var(--ember-dark);
+    margin-top:4px; letter-spacing:.04em;
+  }
+
+  details.basis{
+    margin:8px 0 0; border:1px dashed var(--border); border-radius:10px;
+    background:#fbfaf7; padding:0 22px;
+  }
+  details.basis summary{
+    cursor:pointer; padding:16px 0; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--slate); list-style:none;
+  }
+  details.basis summary::-webkit-details-marker{display:none}
+  details.basis[open] summary{border-bottom:1px solid var(--border); margin-bottom:14px}
+  details.basis .grid{padding-bottom:20px; font-size:13.5px; color:var(--slate)}
+  details.basis .grid div{padding:5px 0; border-bottom:1px dotted var(--border)}
+  details.basis .grid div:last-child{border-bottom:none}
+  details.basis b{color:var(--ink); font-weight:600}
+  details.basis code{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--code-bg);
+    padding:1px 6px; border-radius:4px; color:var(--ember-dark);
+  }
+
+  .foot{
+    border-top:1px solid var(--border); padding:36px 0 80px; margin-top:24px;
+    font-size:13px; color:var(--mist); line-height:1.7;
+  }
+  .foot .logo{
+    font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;
+    font-style:italic; color:var(--slate); margin-bottom:8px;
+  }
+  @media(max-width:640px){
+    .hero{padding:60px 0 40px}
+    .hero h1{font-size:40px}
+    .ch-title{font-size:30px}
+    .card{padding:26px 22px}
+    .pull{font-size:19px}
+    .aw-during{margin-left:14px}
+    .aw-after{margin-left:28px}
+    .letter{padding:38px 26px 34px}
+    .letter p{font-size:18px}
+  }
+  /* ── 核心定錨（一句話的你）── */
+  .anchor{max-width:720px; margin:32px auto 4px; padding:24px 34px; border:1px solid var(--border); border-radius:16px; background:var(--snow)}
+  .anchor .tag{display:block; font-size:11px; letter-spacing:4px; color:var(--ember); text-align:center; margin-bottom:12px}
+  .anchor p{font-family:'Cormorant Garamond',serif; font-size:24px; line-height:1.5; color:var(--ink); font-style:italic; text-align:center; margin:0}
+  .anchor b{color:var(--ember-dark); font-weight:600; font-style:normal}
+
+  /* ── 九宮印記牆（數據摘要即視覺）── */
+  .sigwall{margin:22px 0 6px}
+  .sigwall .sw-head{font-size:13px; letter-spacing:2px; color:var(--slate); text-align:center; margin-bottom:5px}
+  .sigwall .sw-sub{font-size:13px; color:var(--mist); text-align:center; margin-bottom:18px}
+  .sigrid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden}
+  .sigcell{background:var(--snow); padding:16px 17px 17px}
+  .sigcell .sys{font-size:12px; color:var(--ember); font-weight:600; letter-spacing:.5px}
+  .sigcell .raw{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--mist); margin:3px 0 8px; line-height:1.4}
+  .sigcell .say{font-size:13.5px; color:var(--ink); line-height:1.55}
+  .sigcap{font-size:12.5px; color:var(--slate); text-align:center; margin-top:13px; font-style:italic}
+
+  /* ── 擺渡人問你（每章反思題）── */
+  .ask{margin:24px 0 2px; padding:20px 24px; border-left:3px solid var(--gold); background:linear-gradient(90deg,rgba(184,146,58,.08),transparent); border-radius:0 8px 8px 0}
+  .ask .q-head{font-size:12px; letter-spacing:2px; color:var(--gold); margin-bottom:9px}
+  .ask p{font-size:16px; color:var(--ink); line-height:1.7; margin:0; font-weight:500}
+  .ask .q-note{font-size:13px; color:var(--slate); margin-top:9px; font-weight:400; line-height:1.6}
+
+  @media(max-width:640px){
+    .anchor{padding:20px 22px} .anchor p{font-size:20px}
+    .sigrid{grid-template-columns:repeat(2,1fr)} .sigcell{padding:13px 13px 14px}
+  }
+  body{animation:fade .4s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Kairos · 九系統融合報告 · 深度 v2.1</span>
+    <h1 class="display">你這個人的說明書</h1>
+    <p class="sub">不是算命，是一封寫給你的信——關於你天生是誰、為什麼會悶、以及為什麼「走出去」會讓你整個人活過來。</p>
+    <div class="meta">葉孟欣　小孟　·　1993.07.01　09:33　·　台灣台南</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="anchor">
+    <span class="tag">如 果 只 用 一 句 話 說 你</span>
+    <p>你是一個「<b>務實能扛、雙手能成事，卻藏著一顆想飛的心</b>」的人——<br>你越是走出去、移動、不被困在原地，命就越旺。</p>
+  </div>
+
+  <div class="intro">
+    <p>我把九套不同的系統，一次套在你身上跑過一遍，然後做一件事——<strong>讓這九套全都出力，再只留下那些「好幾套系統都同時指向同一件事」的訊號</strong>。因為當這麼多套不同的語言都在說同一句話時，那句話多半就是真的。</p>
+    <p>這一版（v2.1）比上一版更深。我多做了三件事：每一章的最後，我會告訴你「同樣這副牌，沒修煉、正在修、修煉後」會活成三種完全不同的人生，讓你知道自己現在大概在哪一格——<strong>這三格不是三個不同的人，是同一個天賦在三種頻率：你以為的「不安分」，往往只是你的天賦還沒被你帶到對的地方</strong>；走完九章，我會把九套系統<strong>哪裡異口同聲、哪裡各執一詞</strong>攤開給你看；最後，我會用擺渡人的身分，寫一封信給你。</p>
+    <p>這份報告的順序是有講究的，跟著一條很老的道理走：<strong>先把自己顧好，才顧得了關係；關係對了，事業和財富才會水到渠成。</strong>所以我們會從「你這個人」開始，一路走到你的關係、你的家、最後才談你的事業與翻身。</p>
+    <p>還有一件事我想先講清楚：這份報告不預測你的未來，也不替你做決定。它只幫你看清楚——你站在哪、風往哪吹、怎麼順著走。<strong>選擇權，永遠在你手上。</strong></p>
+  </div>
+
+  <div class="sigwall">
+    <div class="sw-head">九 系 統 · 數 據 印 記 牆</div>
+    <div class="sw-sub">九套系統各自獨立算出來的你（小字是專業原始數據，下面那句是它在說的話）</div>
+    <div class="sigrid">
+      <div class="sigcell"><div class="sys">八字</div><div class="raw">癸水日主 · 偏財格 · 身極弱（近從弱）</div><div class="say">一滴靈活的水：隨境而流、機敏應變，要金水滋養；火土環境太重會把你曬乾。</div></div>
+      <div class="sigcell"><div class="sys">紫微斗數</div><div class="raw">命宮太陽＋太陰（丑）· 巨門</div><div class="say">太陽月亮同宮：你能照亮別人也需要被照顧，博愛、心軟，情緒有陰有晴。</div></div>
+      <div class="sigcell"><div class="sys">人類圖</div><div class="raw">顯示生產者 · 薦骨權威 · 6/2 profile</div><div class="say">做你真心有回應、真心愛的事才不會悶；前半生試錯、後半生成榜樣，身上有需要被召喚的天賦。</div></div>
+      <div class="sigcell"><div class="sys">西洋占星</div><div class="raw">太陽巨蟹 · 月亮射手 · 上升處女</div><div class="say">外表細心務實、會打點一切，內心其實愛自由、愛冒險——顧家又想飛。</div></div>
+      <div class="sigcell"><div class="sys">生命靈數</div><div class="raw">生命靈數 3</div><div class="say">你有表達、創意、把歡樂帶給人的天賦，是天生的氣氛點亮者。</div></div>
+      <div class="sigcell"><div class="sys">瑪雅曆</div><div class="raw">紅手 Manik · 音2</div><div class="say">療癒與服務的天賦，有一雙能把事情做成、能撫慰人的巧手。</div></div>
+      <div class="sigcell"><div class="sys">吠陀占星</div><div class="raw">計都大運 2021–2028</div><div class="say">正走一段「放下、向內、清理舊業力」的靈性週期，適合斷捨離、回到自己。</div></div>
+      <div class="sigcell"><div class="sys">北歐符文</div><div class="raw">本命符文 Fehu ᚠ</div><div class="say">財富與豐盛流動的能量：賺得到，也要學會流動分享。</div></div>
+      <div class="sigcell"><div class="sys">塔羅本命牌</div><div class="raw">皇后 The Empress（III）</div><div class="say">此生原型＝豐盛滋養的創造者，把美、愛與生機帶給身邊的人。</div></div>
+    </div>
+    <div class="sigcap">九套用完全不同語言的系統，指針卻幾乎都落在同一個人身上——這不是巧合，是準。</div>
+  </div>
+
+  <nav class="toc">
+    <h4>這份報告會帶你走一趟 — 共九章 + 收尾環節</h4>
+    <ol>
+      <div class="phase">第一部 · 先把自己顧好（這是一切的根）</div>
+      <li><a href="#c1">你是怎麼被設計出來的</a></li>
+      <li><a href="#c2">你體內那場打不完的拉扯</a></li>
+      <li><a href="#c3">你那個一直重複的隱形迴圈</a></li>
+      <li><a href="#c4">你的能量怎麼充、怎麼漏</a></li>
+      <div class="phase">第二部 · 顧好自己，才顧得了關係</div>
+      <li><a href="#c5">你愛與被愛，真正的樣子</a></li>
+      <li><a href="#c6">你從家裡帶出來的鑰匙與傷</a></li>
+      <div class="phase">第三部 · 關係對了，事業財富才水到渠成</div>
+      <li><a href="#c7">你天生是來做什麼的</a></li>
+      <li><a href="#c8">你此刻卡在哪一格</a></li>
+      <li><a href="#c9">你的翻身時機與下一步</a></li>
+      <div class="phase">收尾 · 把九套系統收成一條路</div>
+      <li><a href="#clinic">系統會診：眾口同聲 vs 眾說紛紜</a></li>
+      <li><a href="#field">五運實戰摘要（可以馬上用）</a></li>
+      <li><a href="#now">此刻：你正站在哪裡 · 接下來這一年</a></li>
+      <li><a href="#letter">擺渡人的一封信</a></li>
+    </ol>
+  </nav>
+
+  <!-- ░░░░░░░░ 第一部 ░░░░░░░░ -->
+  <div class="sep"><span>第一部 · 先把自己顧好</span></div>
+
+  <!-- ① -->
+  <article class="chapter" id="c1">
+    <div class="ch-num">第一章</div>
+    <h2 class="ch-title display">你是怎麼被設計出來的</h2>
+    <p class="ch-lead">在聊你的關係、事業、錢之前，得先回到最源頭——你這個人，出廠的時候到底是哪一款。後面所有的順與不順，都是從這裡長出來的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你天生，是「一滴會找路的水」，不是一塊釘在原地的石頭</h3>
+      <p>我看完你整個人之後，最想先跟你說一句話：你這輩子，<span class="em">真正的力量不在「站穩不動」，而在「流動、移動、走出去」</span>。</p>
+      <p>有一本很老的命書，幫你秤過這條命，寫了兩句話我想原原本本唸給你聽——<strong>「東西南北盡皆通，出姓移居更覺隆」</strong>。翻成白話就是：你這條命，<span class="em">四海都行得通，你越是離開原本待著的地方、移動、往外闖，就越會發達、越會旺起來</span>。這句話，我們後面會一再回來呼應，因為它幾乎是你整副牌的定音。</p>
+      <p>你身上有一種很特別的設計——你像<strong>一滴靈活的水：隨著環境流動、機敏地應變、總能在縫隙裡找到出路</strong>。水的本事不是硬碰硬，是繞、是滲、是找到那條沒人發現的通道。這是天賦，而且是稀有的那種。但水的另一面是：它需要被滋養、需要流動。一旦把你困在一個又熱又悶、動彈不得的地方，這滴水就會被慢慢曬乾。</p>
+      <p>換個比喻你會更有感：你不是那塊「種在哪就長在哪」的大樹，你是<span class="em">一條會自己找河道的水</span>。水硬要當石頭、釘在原地，會悶、會枯；但水一旦流動起來，它能穿過任何地形，到達任何地方。</p>
+      <p>而且很有意思——你身上好幾個地方都在講同一件事：你<strong>外表務實、細心、會把一切打點好，內心卻藏著一股很大的、想往外跑、想自由、想冒險的能量</strong>。所以你不是不安分，你是<strong>移動型＋務實型，不是定居型</strong>。這兩種人，活法完全不一樣。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>那個一直讓你又能扛又悶的循環，我幫你說出來</h3>
+      <p>正因為你是這款人，你從年輕到現在，可能一直在跑一個自己沒察覺的迴圈：</p>
+      <p>因為你太能扛、雙手又真的能把事情做成，身邊的人會很自然地<strong>把事情一件一件交給你</strong>，而你也接得住、做得好。於是你一邊把責任攬下來、把日子過得穩穩當當，一邊心裡卻有一個小小的聲音在喊：「我想出去、我想換個環境、我不想一直困在這裡。」然後呢——你<span class="em">明明把一切都打理好了，卻還是覺得悶、覺得這不是你真正想要的生活</span>，心裡冒出一種說不出口的卡：「我這樣很穩，但好像哪裡不對。」</p>
+      <div class="pull">這個悶，不是因為你不知足，是因為你把一條會流動的水，硬養在一個池子裡。</div>
+      <p>你愈是逼自己「乖乖待著、別亂動、現在這樣很好」，就愈遠離你真正會旺的那條路。這跟那句老話正好對上：你的命本來「出姓移居更覺隆」，可你偏偏拿「留在原地」在過——難怪會悶。這是這份報告裡，我最想先幫你鬆開的一個結。</p>
+      <p>最後，如果你前半生繞了很多路、試了很多不一樣的方向，我想跟你說：那不是浪費。你這款人<span class="em">本來就被設計成「前半生去試、去探索、去多走幾條路，再從裡面慢慢長出自己的樣子」</span>。你的智慧不是讀來的，是走出來的。多繞的那些路，是你的養分，不是你的彎路。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的破局，不在更穩，在「讓自己動起來」</h3>
+      <p>我們把話講到底。你真正的轉機，是這三步：</p>
+      <p><strong>第一，看清楚你手上本來就有的牌。</strong>你務實、細心、雙手能把事情做成、又懂得隨機應變找出路——這些加起來，就是一個「走到哪都能落地生根、走到哪都能把事情做起來」的人。這不是你要去學的，是你出廠就帶著的。</p>
+      <p><strong>第二，看清楚你真正需要的環境。</strong>你不需要逼自己「安定下來、別亂跑」。你需要的是——<span class="em">一個能讓你移動、能讓你接觸新人新事、能讓你保持流動的舞台</span>。可以是出外發展、跨地域工作、常出差、做有「往外連結」性質的事，甚至只是定期換個城市、換個環境呼吸一下。對你來說，「移動」不是逃避，是充電。</p>
+      <div class="pull">你發現了嗎？你越是允許自己走出去，你那滴水就越活、越旺。你天生，就該往外流。</div>
+      <p>你不是在勉強自己過一個安穩的人生，你是終於可以走到出廠設定裡，那個「四海皆通」的位置。</p>
+      <div class="step">
+        <div class="kicker">今天可以怎麼開始</div>
+        <p>挑一件事，問自己一句：<strong>「這件事，是讓我更流動、更開闊，還是把我更困在原地？」</strong>然後刻意去做一件「往外走」的小事——報名一個外地的活動、安排一趟小旅行、接一個需要移動或跨域的機會。</p>
+        <p>做完之後，特別去感覺——<span class="em">當你動起來、走出去的時候，你的精神是不是明顯變好了</span>。對你這款人來說，這種「一動起來就活過來」的感覺，就是命在跟你說「你走對了」。</p>
+        <p style="margin-bottom:0">你這一生，不是來證明自己有多能安分的。你是來<strong>四海為家、走到哪、旺到哪的</strong>。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>逼自己「乖乖待著、別亂動」，把一切打點得很穩，卻悶得說不出口，還回頭怪自己「是不是太貪心、人家這樣不是很好嗎」。明明是會流動的水，卻被養在一個小池子裡慢慢曬乾。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始半信半疑地讓自己「動起來」——換環境、出去走走、接外地的機會；偶爾還是會因為怕不穩而縮回原地，但你已經會在心裡問一句：「我這次，是真的想留，還是只是不敢走？」</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你安然地讓自己流動，走到哪、把根扎到哪、把事做到哪。那句「東西南北盡皆通」終於不只是命書上的字，而是你真正活出來的樣子——你發現，原來你越走越旺。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>這輩子到現在，你最「整個人都活過來、發光發亮」的一次，是什麼時候？那一次，你是不是正好離開了原本的地方、正在移動、正在闖一個新環境？</p>
+      <p class="q-note">（這些問題不用急著答。寫下來，或就放著讓它在心裡發酵——真正的看見，是被一個好問題「問」出來的，不是被答案「餵」出來的。每一章結尾，我都會留一個這樣的問題給你。）</p>
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="chapter" id="c2">
+    <div class="ch-num">第二章</div>
+    <h2 class="ch-title display">你體內那場打不完的拉扯</h2>
+    <p class="ch-lead">你有沒有一種感覺——你心裡好像住著不只一個人，一個要你「顧好、穩住、別亂」，一個要你「飛、闖、走出去」。我跟你說，那不是你不穩定，那是你被裝進了兩股相反的力。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你裡面，同時住著「想顧家」和「想流浪」的兩個你</h3>
+      <p>你出生的時候，被同時裝進了兩股方向相反的力。</p>
+      <p>一個是——<strong>很想把身邊的人照顧好、把家打理得溫暖、有一個能歸屬的窩</strong>。這一面的你，務實、細心、重感情、心很軟，會默默把每個人的需要都記在心上。另一個是——<strong>愛自由、愛冒險、想往外跑、見不得自己一直困在同一個地方</strong>。這一面的你骨子裡有一匹野馬，總想越過眼前的牆，去看看更遠的地方。</p>
+      <p>所以你常常是這樣的：<span class="em">外表把家、把工作、把責任都顧得好好的，內心卻有一個聲音一直在說「我想出去走走、我想換個活法」</span>。一個務實得不得了的外殼，包著一顆想飛的心。</p>
+      <p>所以你不是矛盾，你是裡面真的有兩個人。這在別人身上可能只有一邊，在你身上是「顧家」和「想飛」同時很強。而且巧的是，你這幾年正走在一段「放下、向內整理、把舊的東西斷捨離」的人生階段——這會讓你更想清掉那些綁住你的東西，更想活得輕、活得自由。這是真的，不是你想太多。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>於是你常常「身在這、心在遠方」</h3>
+      <p>這場拉扯的代價是：你很難真正「安心地在」一個地方。</p>
+      <p>待久了、穩定了，你會悶、會覺得自己在原地打轉、想衝出去；可是真的想走了，你又會放不下手上照顧的人和事、怕自己太任性、怕一動就亂了套。你一邊嫌自己「怎麼這麼不安分、好好的日子幹嘛要折騰」，一邊又嫌自己「怎麼這麼放不開、明明想走卻一直留」。<strong>你常常用一個你，去責備另一個你。</strong></p>
+      <div class="pull">你不是有問題，你是一直把兩股都是你的力，當成敵人在打。</div>
+      <p>這也是為什麼你有時候會莫名悶、莫名累——不是事情多，是<span class="em">內耗</span>。兩股力對拉的時候，你站在中間，被「想顧」和「想飛」兩邊扯。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>這個矛盾不是病，是你天命的形狀</h3>
+      <p>我要跟你說一個會讓你會心一笑的真相：<strong>你的矛盾，不是要被解決的問題，它就是你天命的形狀。</strong></p>
+      <p>你想想——正因為你「既能務實顧好、又渴望往外流動」，你才會剛好適合那種<span class="em">「帶著一身把事做成的本事，走出去開拓」</span>的人生。你那雙能把事情做好的手，加上那顆想走出去的心，合起來剛好是一個別人沒有的天賦：<strong>你走到哪，都能落地、都能把那裡經營起來，而且還永遠保有往下一站去的活力。</strong>你那兩股看似打架的力，合起來剛好就是「四海為家、走到哪旺到哪」。</p>
+      <div class="step">
+        <div class="kicker">把拉扯變成翅膀</div>
+        <p>下次又感覺到那股拉扯時，別急著選邊、別罵自己。試著問：<strong>「有沒有一條路，能同時餵到我兩邊？」</strong>——既能照顧到我在乎的人，又能讓我往外走、保持流動。</p>
+        <p>盤點一下：你「想顧好」的那股力，最放不下什麼？你「想飛」的那股力，最渴望什麼？然後找一個能同時餵到兩邊的方向去試試看。你會發現，<span class="em">當「顧好」變成你出去闖的後盾、「想飛」變成你顧好之餘的出口，兩股力同向時，你整個人會輕盈很多。</span></p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>把「想顧家」和「想飛」當成內鬼在打，今天嫌自己太不安分、明天嫌自己太放不開，永遠有一個你在罵另一個你。悶到累，卻說不出累在哪。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始懂得在拉扯來的時候停一下、不急著選邊；偶爾還是會自責，但你已經會試著問：「有沒有一條路，能讓我既照顧好在乎的人，又能走出去？」</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你不再打內戰，而是讓兩股力同向發功——用「能把事做好的本事」去支撐「往外闖的渴望」。那曾經撕扯你的矛盾，變成別人學不來的本領：走到哪、顧到哪、也旺到哪。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你心裡那個「想顧好一切的你」和「想飛出去的你」，最近一次為了什麼拉扯？後來你聽了哪一個——又有沒有，委屈到另一個？</p>
+    </div>
+  </article>
+
+  <!-- ③ -->
+  <article class="chapter" id="c3">
+    <div class="ch-num">第三章</div>
+    <h2 class="ch-title display">你那個一直重複的隱形迴圈</h2>
+    <p class="ch-lead">每個人心裡都有一套自己沒察覺的劇本，一遍又一遍地演。我幫你把你的那套，攤開來看一次——看見了，就有機會改寫。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你的情緒，有陰有晴，比你以為的有重量</h3>
+      <p>你的情緒不是小事——它像天氣，有陰有晴，而且會影響一整個場。</p>
+      <p>你心情好、被滋養夠的時候，能<strong>把歡樂和暖意帶給一整群人</strong>，你天生就是那個會讓氣氛亮起來的人；可是你心情低的時候，那片陰也會悄悄籠罩你和身邊。你裡面同時住著「會發光照亮別人」的太陽，和「需要被好好照顧」的月亮——<span class="em">你能給出很多光，但你自己也很需要被接住</span>。這讓你博愛、心軟、同理心強，卻也讓你的情緒比一般人更有起伏。</p>
+      <p>而且你心思很細、很會替人著想。你是那種<strong>把別人的感受都接收進來、默默放在心上</strong>的人。一件別人沒注意到的小事，你都收得到。這讓你溫柔、貼心，但也讓你容易把太多不屬於你的情緒，也一起扛進身體裡。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你重複在跑的那套劇本，長這樣</h3>
+      <p>來，我們把它畫出來：</p>
+      <p><span class="em">你把一切顧好、把大家照顧好 → 心裡那股「想走出去」的渴望被壓著 → 越壓越悶 → 你開始覺得卡、覺得這不是你要的 → 但你又告訴自己「不能任性、要懂事、要穩」 → 於是又繼續把自己框回原地……</span></p>
+      <p>這個圈，你已經繞了很多年。而它的燃料，是一句你從小就裝進身體的話——<strong>「我要懂事、要穩、要把大家顧好，才不會給人添麻煩、才會被接受。」</strong></p>
+      <div class="pull">不是現實困住你，是這套劇本困住你。現實會變，劇本不會，除非你看見它。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>改寫劇本的三個鬆動點</h3>
+      <p>你不用一次改掉整套，你只要在三個地方鬆手：</p>
+      <p><strong>第一，把情緒當天氣，不當真相。</strong>當那股悶或那股低潮上來時，那是「陰天」，不是「事實」。先別急著對自己下結論、別在低潮裡決定「我這輩子大概就這樣了」——<span class="em">等天氣放晴了再看</span>，你會發現天空一直都在那裡。</p>
+      <p><strong>第二，換一句翻譯。</strong>當你又覺得「我想走出去是不是太任性」時，把它從「我太不安分」翻譯成「<span class="em">這是我的命在提醒我：我天生就是要流動、要往外走的人</span>」。這不是替自己找藉口，這是事實——你這款人本來就「出姓移居更覺隆」。</p>
+      <div class="step">
+        <div class="kicker">給自己一個「往外走」的出口</div>
+        <p>第三，也是最重要的：<strong>定期，給自己一個真正屬於你的「移動時間」</strong>。不一定要做什麼大事——一趟說走就走的小旅行、一個換環境的安排、一件讓你接觸到新人新事的決定。你太習慣把渴望壓下去（壓到最後變成悶），但你真正需要的，是<span class="em">讓那股「想走」的力，有一個正當的、定期的出口</span>。給它出口，它就不會變成內耗。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>劇本自動播放：顧好一切、壓下渴望、越壓越悶、又告訴自己要懂事……一圈一圈繞，你以為是命，其實是那句「要懂事才被接受」在後台一直跑。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>你開始認得出那股熟悉的悶——「啊，劇本又開始了」。會在低潮時忍住不對自己下結論；也開始偷偷給自己一些「往外走」的小出口，雖然還沒每次都敢，但你已經看得見它了。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>情緒來了你知道那只是陰天，等放晴再說。你不再把「想走出去」當成任性，而是當成天命的提醒，定期給它出口。舊劇本還在，但已經抓不住你了。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>上一次你「明明很想往外走、卻又把自己勸回原地」是什麼時候？如果能重來，你最想在哪一步先停下來，問自己一句：「我這次，是真的該留，還是只是不敢走？」</p>
+    </div>
+  </article>
+
+  <!-- ④ -->
+  <article class="chapter" id="c4">
+    <div class="ch-num">第四章</div>
+    <h2 class="ch-title display">你的能量怎麼充、怎麼漏</h2>
+    <p class="ch-lead">你不是沒有能量，你是「充電方式」跟大部分人不一樣。搞錯了，你會一直覺得悶、覺得乾；搞對了，你會發現自己其實電力很足、很有韌性。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你是「流動、有回應」才有電，不是「困住硬撐」會有電</h3>
+      <p>很多人是把自己釘在固定的地方、固定的節奏，才覺得安穩有力。<strong>你不是。</strong></p>
+      <p>你的電，來自<span class="em">流動、來自做你「身體真心有回應、真心想做」的事、來自接觸到新鮮的人事物、來自待在清涼舒服而不悶熱的環境</span>。你天生像一滴水——水要流動才會活、才會清；一旦被困在一個又熱又悶、動彈不得的地方，它就會慢慢蒸發、慢慢濁掉。這是你的設計裡很明確的一個提醒：<strong>你需要被滋養、被流動，不能被困、被乾耗</strong>。</p>
+      <p>還有一個很關鍵的判斷力你天生就有：<span class="em">你的身體，比你的頭腦更知道答案</span>。你做一件事的時候，如果身體是「打開的、有勁的、想做的」，那就是對的；如果身體是「悶的、提不起勁的、勉強的」，那它就是在跟你說「這不是你的」。你最準的指南針，不在腦子裡的分析，在你的<strong>身體有沒有真的回應</strong>。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你最大的兩個漏電破口</h3>
+      <p>你的電其實夠用，問題出在<strong>漏</strong>。你有兩個很大的破口：</p>
+      <p><strong>破口一：困在一個悶熱、動不了的環境太久。</strong>不管是一份讓你提不起勁的工作、一個你一直想離開卻沒走的處境、還是一種「乖乖待著別亂動」的生活慣性——只要你被困住、無法流動，你的電就會像水被曬在太陽下，一點一點蒸發掉。</p>
+      <p><strong>破口二：太替別人著想、把太多不屬於你的情緒扛進來。</strong>你心軟、博愛、什麼都收得到，所以你很容易把別人的情緒、別人的期待，全都默默接進自己身體裡。這份體貼很美，但用過頭就是慢性漏電——你會在沒人要求你的時候，自己把自己的電，分給太多不需要的地方。</p>
+      <p>還要提醒你身體的一個訊號：你這款體質「喜歡清涼滋潤、不喜歡過熱過悶」，要特別避免長期待在<span class="em">又燥又熱又悶</span>的環境裡（不論是實際的氣候、還是讓你窒息的人際與處境）。你的身體會比嘴巴更早跟你抗議。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>別硬撐，要流動</h3>
+      <p>你悶的時候，直覺是「再忍一下、再撐一陣、現在這樣也還可以」——那是把自己更困住，只會更乾。你真正需要的是<strong>讓自己流動起來</strong>：換環境、走出去、靠近清涼舒服的地方、做有回應的事。記住四個字：<strong>清涼則旺</strong>。</p>
+      <div class="step">
+        <div class="kicker">三個具體的充電/止漏動作</div>
+        <p><strong>1. 定期製造「流動」</strong>：哪怕只是換個地方工作、去一趟近水的地方、安排一段移動的小旅程。把「流動」當成你的正事，因為它就是你的發電機。</p>
+        <p><strong>2. 每接一件事前，先問身體一句</strong>：「我的身體，對這件事是<span class="em">打開的</span>，還是<span class="em">悶住的</span>？」悶住的，學著禮貌地放掉或交出去——這是你這輩子最值得練的一課。</p>
+        <p style="margin-bottom:0"><strong>3. 把過度替人著想的力氣收回來</strong>一點，留給自己。你不需要接住每個人的情緒，你只需要先把自己的水養清。給自己一週的「流動儀式」，然後看你的身體怎麼回應你。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>悶了就想「再忍一下、再撐一陣」，把自己困在一個提不起勁的處境裡硬待。明明是喜歡流動的水，卻天天被悶在原地蒸發，等到身體抗議了才肯停，停完又繼續困回去。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始把「流動、換環境」當正事安排，做事前會多問一句「我的身體對這件事是打開還是悶住」；雖然還會手滑把太多別人的情緒扛進來，但你已經知道哪裡在漏電了。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你懂得流動勝過硬撐，把過度替人著想的力氣收回來養自己。你跟著身體的回應走，待在清涼舒服的環境裡——電力穩穩的，韌性是被養出來的，不是被悶出來的。你終於不再被困住的日子榨乾。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>誠實一點：這個禮拜，是什麼（或哪一段移動、哪一件有回應的事）在幫你充電，又是什麼悶住的處境在默默漏你的電？你願意，為自己打開哪一扇關著的窗？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第二部 ░░░░░░░░ -->
+  <div class="sep"><span>第二部 · 顧好自己，才顧得了關係</span></div>
+
+  <!-- ⑤ -->
+  <article class="chapter" id="c5">
+    <div class="ch-num">第五章</div>
+    <h2 class="ch-title display">你愛與被愛，真正的樣子</h2>
+    <p class="ch-lead">把自己顧好之後，我們來看關係。因為你的狀態，會直接決定你吸引到什麼樣的人、以及你在關係裡會不會悶。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你愛起來很深、很顧，但你也需要一個「不困住你」的人</h3>
+      <p>外面的人看你，可能覺得你細心、體貼、把對方照顧得無微不至。我看見的也是——<strong>你天生重感情、心很軟、會把愛的人放在心上的每一個角落</strong>，你愛一個人的時候，會把對方的生活、情緒、需要全都接住。這是你最溫柔、最珍貴的底色。</p>
+      <p>但你心裡同時還有另一股很真實的渴望，是你不太好意思說出口的——<span class="em">你需要愛，但你更需要「在愛裡還能呼吸、還能保有自己的自由」</span>。你愛得深，卻最怕被綁死、被困住、被要求「你哪裡都不准去」。一旦關係讓你覺得喘不過氣、動彈不得，那股「想飛」的你就會悄悄想逃。</p>
+      <p>於是你常常在關係裡很矛盾：<span class="em">一邊把對方顧得好好的，一邊又怕自己被這份「顧」給綁住了</span>。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你常吸引到「讓你不敢做自己」的關係</h3>
+      <p>還記得第三章那句「我要懂事、要穩，才會被接受」嗎？它在關係裡會變成一個陷阱：</p>
+      <p>你會不自覺地<strong>變成那個「一直體貼、一直退讓、一直顧全大局」的人</strong>，把自己真正的需要、真正想往外走的渴望，悄悄藏起來。你太怕「給對方添麻煩、太怕自己任性」，於是把自己縮得小小的。結果在某個夜裡，你會突然覺得很悶、很孤單——「我這麼努力配合，可是這真的是我想要的關係嗎？」</p>
+      <p>而你真正需要的，剛好相反：你需要一個<span class="em">不會把你困住、願意陪你一起往外走、也能接住你陰晴起伏的人</span>。你的情緒會有陰有晴，你的心會時不時想飛——這不是問題，問題是你身邊的人，懂不懂「給你空間，而不是給你籠子」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的正緣，不是某個星座，是某種頻率</h3>
+      <p>別再用「他是什麼星座、合不合」來找人了。對你來說，對的人只有一個標準——</p>
+      <div class="pull">會給你空間、會陪你往外走、會接住你陰晴的人；而不是把你困在原地、要你一直配合縮小自己的人。</div>
+      <div class="step">
+        <div class="kicker">在關係裡練兩件事</div>
+        <p><strong>1. 練習說出你的需要，包括「我想出去走走」。</strong>你太習慣體貼別人、藏起自己了。試著說一次「我這陣子好想換個環境」「我需要一點屬於自己的空間」。對你來說，說出這些不是任性，是讓對方有機會真正認識你、陪伴你——而不是只認識那個一直配合的你。</p>
+        <p style="margin-bottom:0"><strong>2. 用身體的回應，當關係的指南針。</strong>跟一個人在一起，你的身體是「打開、放鬆、想靠近」的，還是「悶住、緊繃、想逃」的？你的身體會比你的腦袋，更早知道這段關係到底對不對。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>在關係裡一味體貼、退讓、顧全大局，把真正的需要和「想飛」的渴望藏到最深，然後在深夜偷偷悶「這真的是我要的嗎」。愛得很周到，卻不讓人看見真正的你。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始試著說出一兩句真實的需要，雖然講出口還會怕對方覺得你任性；也開始用身體的反應去分辨「困住我的人」和「給我空間的人」，差在哪。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你敢在愛裡做自己、敢說出「我想走走」，因為你知道真正愛你的人不會把你關起來，會牽著你的手一起往外走。你身邊的人懂得給你空間、接住你的陰晴——你終於不必在關係裡縮小自己。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你最希望身邊最親的人怎麼愛你——尤其是「給你自由、陪你往外走」這件事，你其實從來沒有真正開口說過的，是哪一句話？</p>
+    </div>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="chapter" id="c6">
+    <div class="ch-num">第六章</div>
+    <h2 class="ch-title display">你從家裡帶出來的鑰匙與傷</h2>
+    <p class="ch-lead">你今天會這樣愛人、這樣顧家、這樣不敢「太任性地為自己活」——很多都不是你的選擇，是你很小的時候，為了被愛而學會的。看懂它，你就能放下一半。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你的安全感藍圖，是在原生家庭畫下的</h3>
+      <p>你對世界「安不安全、我值不值得被愛」的最底層設定，是在你很小的時候、特別是跟<strong>母親（或主要照顧你的人）</strong>那條線上形成的。</p>
+      <p>你身上有一股很深的「需要被照顧、被滋養」的渴望，也有一股很深的「要懂事、要把大家顧好」的習慣——這兩股，都是從那條線來的。你很可能<span class="em">很早就學會察言觀色、學會「我乖、我體貼、我把事情打點好，家裡就會和樂」</span>。你那雙能把事情做成的巧手、那份替人著想的細心，很大一部分是這樣練出來的。</p>
+      <p>而你內心那股「想往外走、想自由」的力——很可能也跟這裡有關：當一個孩子太早學會「為了家、要懂事、要待著」，長大後，那股被壓住的「我也想為自己活一次、想出去看看」的渴望，就會特別強烈。好消息是：你天生帶著「四海皆通、移居則旺」的福氣，這股想飛的力，正是你後半生翻身的關鍵——這個我們第八、第九章還會講到。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>那道傷，就是「我要懂事、要為大家，才值得被愛」</h3>
+      <p>看到了嗎——這句話，從第三章追到這裡，根在這。</p>
+      <p>你小時候為了被愛、為了讓家和樂，發展出一套生存策略：<strong>把自己變得懂事、體貼、能照顧人、不給人添麻煩</strong>。這套策略當年救了你，讓你被疼、被需要、被誇「好乖、好貼心」。但它也長成了今天那個「總是先想別人、不敢太為自己、把『想飛』壓在心底」的你。</p>
+      <div class="pull">那不是你的缺點，那是一個小孩，用盡全力想被愛的方式。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>把這把鑰匙一轉，好幾道門會同時開</h3>
+      <p>這一章是整份報告的一個樞紐。因為只要你鬆開這一個結，<strong>第四章的漏電、第五章的關係陷阱、第二章的拉扯，會同時跟著鬆</strong>。</p>
+      <p>練習很簡單，但要練很久——<span class="em">把「懂事、為大家」和「值得被愛」這兩件事，慢慢分開。</span>你不需要一直體貼、一直顧全、一直壓住自己的渴望，才值得被愛。你就只是你、你為自己活一次、你走出去追你想要的——你也一樣值得被愛。這句話你現在可能不信，沒關係，先放在心裡。</p>
+      <div class="step">
+        <div class="kicker">你的家族功課</div>
+        <p>把母親（或家）給你的<strong>「滋養力、同理心、把人照顧好的巧手」留下來</strong>——那是你最珍貴的天賦之一。</p>
+        <p style="margin-bottom:0">同時，把那份<strong>「必須懂事、不能任性、要為大家而活」慢慢放下</strong>。你已經長大了，你現在可以用「成人的你」，重新疼一次「那個一直懂事、卻很想出去看看世界的小孩」。給她一次自由，帶她走出去。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>不知不覺活在那個小孩的生存策略裡——總是先想別人、不敢太為自己、把「想飛」壓在心底，還以為這就是「成熟、懂事」。把當年討愛的乖巧，穿成了今天綁住自己的繩子。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始看懂「啊，這是小時候學來的，不是我真的非這樣不可」。你慢慢試著把「懂事」和「值得被愛」分開，偶爾敢為自己任性一次、敢走出去一趟，雖然還半信半疑，但已經鬆了一點點。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你留下了家給你的滋養力與巧手，放下了那份「必須懂事才被愛」的焦慮。你用成人的自己，帶著那個一直懂事的小孩，終於走出去看了世界——顧好在乎的人，不再等於犧牲掉那個想飛的自己。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你身上有一個反應，其實是小時候為了被愛才學會的乖巧。你認得出它是哪一個嗎？它今天，是還在保護你，還是已經在綁住那個想往外飛的你？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第三部 ░░░░░░░░ -->
+  <div class="sep"><span>第三部 · 關係對了，事業財富才水到渠成</span></div>
+
+  <!-- ⑦ -->
+  <article class="chapter" id="c7">
+    <div class="ch-num">第七章</div>
+    <h2 class="ch-title display">你天生是來做什麼的</h2>
+    <p class="ch-lead">自己顧好了、關係對了，我們才談事業。因為你的事業，本來就該是你這個人「自然長出來的果」，不是你硬擠出來的東西。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你是來「用一雙巧手做成事、把豐盛和暖意帶給人」的</h3>
+      <p>把前面幾章串起來，你的天命其實已經很清楚了——</p>
+      <p>你務實、細心、雙手能把事情真正做成，又有一份能撫慰人、把氣氛點亮的天賦。這幾樣加起來，世界上有一種角色剛好需要全部：<strong>能把事情落地做成、又能療癒人、服務人、把美與生機帶給別人的創造者</strong>。你不是只會空想的人，你是<span class="em">那種「想得到、也真的做得出來」的人</span>——而且你做出來的東西，往往帶著一種讓人覺得溫暖、被照顧到的質地。</p>
+      <p>而且你身上還帶著一個很美的主題——<span class="em">你像大地之母一樣，走到哪，就讓那裡更豐盛、更有生機、更舒服</span>。這幾乎是你靈魂層級的印記：你天生就是來「滋養、創造、讓身邊更美好」的。再加上你「四海皆通」的命格——你最適合的，是<strong>帶著這身本事走出去，在更大的世界裡，把你的巧手和暖意，發揮給更多人</strong>。困在一個小範圍裡，太可惜了。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你最稀有，也最容易卡的地方</h3>
+      <p>你有一個很珍貴的組合：<strong>你既有「把事情踏實做成」的務實巧手，又有「想往外闖、不被框住」的開闊渴望。</strong>大部分人，要嘛踏實但不敢動、要嘛愛闖但落不了地。你兩種都有——這讓你能「走到哪、都把那裡經營起來」。</p>
+      <p>但這也是你最容易卡的地方——因為你太能扛、太會把事情做好，你會忍不住<span class="em">一直接下手邊穩定的、別人交給你的事，把自己困在一個「做得很好、卻提不起勁」的位置上</span>。而那，恰恰是最消耗你的部分。你的天賦，要在「流動、往外、做你真心有回應的事」裡才會發光，不在「困在原地把別人的事做完」裡。</p>
+      <p>還有一個甜蜜的負擔：你心軟、博愛、人緣好，但這也讓你<span class="em">容易被人情綁住、被別人的需要拉著走</span>。你要學會分辨「真正滋養你的事與人」和「只是消耗你的事與人」，別讓一身的好，反而把自己框死。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的事業槓桿：把巧手與暖意，帶到更大的世界去</h3>
+      <p>你最大的財富，不在你「在原地做得多穩」，在你<strong>「敢不敢帶著本事，往外走、往大處走」</strong>。</p>
+      <p>你的巧手、你的細心、你那份能療癒人、讓人舒服的特質，是很稀有的。把它們<span class="em">帶到一個更開闊、能流動、能接觸更多人的舞台</span>——可以是跨地域的工作、出外發展、做有「往外連結」性質的事業、或任何能讓你不斷接觸新人新事的方向——讓更多人因為你的巧手和暖意而受惠。這就是你的槓桿：<strong>不是把自己困得更穩，而是讓自己流得更廣。</strong></p>
+      <div class="step">
+        <div class="kicker">下一步</div>
+        <p>找出<strong>「你做哪件事的時候，身體是真的打開、真的有回應、做完還意猶未盡的」</strong>——那通常就是你天命的入口。那件事，往往跟「創造、療癒、服務、把美帶給人」有關。</p>
+        <p style="margin-bottom:0">然後記得第一章那句老話：<span class="em">出姓移居更覺隆</span>。問問自己——這件你真心有回應的事，能不能帶我「走出去」？能往外走的版本，永遠是更旺你的版本。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>明明是來創造、來把豐盛帶給人的，卻把自己埋在一堆穩定卻沒勁的事裡，被人情和責任綁住，困在原地。一身巧手與暖意，卻沒帶到能發光的地方，難怪愈做愈悶。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始去找「身體真的有回應」的事，試著把巧手與暖意帶到更開闊的場合；偶爾還是會因為怕不穩、怕辜負別人而縮回原地，但你已經嚐到「往外走」比「困在原地」更有生命力的甜頭。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你帶著一身本事走出去，在更大的世界裡用巧手把事做成、用暖意滋養人。你走到哪，哪裡就更豐盛——你活出了那個「大地之母般的創造者」靈魂印記，也活出了「四海皆通、走到哪旺到哪」的命。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果錢和別人的眼光，都不再是問題——你會帶著你這雙巧手和這顆暖心，走到哪裡、去點亮哪一群人？</p>
+    </div>
+  </article>
+
+  <!-- ⑧ -->
+  <article class="chapter" id="c8">
+    <div class="ch-num">第八章</div>
+    <h2 class="ch-title display">你此刻，卡在哪一格</h2>
+    <p class="ch-lead">前面講的是你「本來的樣子」，這一章我們對一下「你現在的位置」——看看藍圖和現況之間，差在哪、又有什麼好消息正在路上。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>如果你還困在原地，那就是卡在「不敢流動」</h3>
+      <p>你的藍圖寫得很清楚：<strong>流動、走出去、四海皆通、做有回應的事</strong>。</p>
+      <p>所以如果你誠實地看，現在的你還在「乖乖待著、把穩定的事扛好、不敢為自己往外闖」——那你卡住的點，不是能力不夠，是<span class="em">還沒讓自己流動起來</span>。你還在用「定居模式」過一個本來該用「移動模式」過的人生。這不是你的錯，只是還沒換過來。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 一個你一定要聽進去的好消息</div>
+      <h3>你正走在一段很重要的「清理與重生」期</h3>
+      <p>我特別想把這個告訴你——<strong>你這幾年（大約 2021 到 2028），正走在一段「放下、向內整理、清理舊業力」的靈性週期。</strong>聽起來有點玄，但它對你其實是個大禮物：這是一段<span class="em">很適合斷捨離、很適合把不再適合你的東西（包括困住你的處境、消耗你的關係、那個過度懂事的舊習慣）一件一件放掉</span>的時間。表面上像在失去，其實是在幫你騰出空間，迎接那個更自由、更像自己的你。</p>
+      <p>打個比方：你前半生像一個揹了很多行李的旅人，行李太重，所以一直走得很累、也走不遠。而<span class="em">現在這一段，剛好是「把不需要的行李一件件卸下來」的階段</span>。卸得越乾淨，你後半生的路就走得越輕、越遠。</p>
+      <p>還有一個你大概沒被人這樣講過的好消息：你這條命，<strong>本身就帶著「豐盛流動」的財富能量</strong>。白話說，就是你<span class="em">賺得到、也能讓財富在你身上流動起來</span>——但關鍵是「流動」二字：你的財，是動態的、是跟著你往外走、跟著你流動而來的，不是死守在原地存出來的。再加上你正在清理舊業力——這跟整份報告的順序完全對上了：先把舊的、困住你的清掉，把自己理順，後面的豐盛才流得進來。地基，正在重新成形。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你繞過的路，正要變成你的本錢</h3>
+      <p>所以，請別再用「我都這個年紀了還沒安定下來」來責備自己。你只是<strong>走到了試錯期的尾巴，成為榜樣期的開頭</strong>。你前半生繞的每一段路、試的每一個方向，都不是白費——它們正要變成你最值錢的智慧資本，也正是你「四海皆通」這份本事的養成。</p>
+      <div class="step">
+        <div class="kicker">下一步</div>
+        <p>趁這段清理期，盤點一下：<strong>有哪些東西（處境、關係、習慣、心裡的包袱），其實早就不適合你、卻一直被你揹著？</strong>挑最重的那一兩件，開始放下它。</p>
+        <p style="margin-bottom:0">然後問自己：<span class="em">卸下這些之後，我最想往哪裡走？</span>把那個方向，輕輕地放在心上——這段清理期結束後，你會發現自己已經準備好出發了。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>明明走進了一段幫你卸下重擔、重新出發的時間，卻還用「我怎麼這年紀還沒安定」自責，繼續揹著早該放下的行李困在原地。該斷捨離的時候，你卻死抓著不放。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始相信「這段清理是來幫我的」，試著放下一兩件早該放下的東西；偶爾還是會捨不得、會害怕放手後的空，但你已經願意輕輕地，想像自己卸下行李後要往哪裡走。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你看懂自己正站在試錯期的尾巴、榜樣期的開頭，順勢清理、輕裝上路。那些繞過的路，全變成別人沒有的智慧資本——而你，正帶著一身輕，準備往那個四海皆通的世界走出去。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>此刻最讓你卡住的那件事——如果先把「我不能任性、要懂事、要穩」這一層拿掉，它還剩下多少，是真正放不下的？又有多少，其實是早該卸下的行李？</p>
+    </div>
+  </article>
+
+  <!-- ⑨ -->
+  <article class="chapter" id="c9">
+    <div class="ch-num">第九章</div>
+    <h2 class="ch-title display">你的翻身時機與下一步</h2>
+    <p class="ch-lead">最後一章，我們把整份報告收成一條路——不是給你一個結論，是給你一個起點。因為改命這件事，從來不靠「知道」，靠「做出第一步」。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的時機</div>
+      <h3>你是「越往後、越走出去，越值錢」的設計</h3>
+      <p>我知道這個社會讓人覺得「要趁早安定」，但你的設計剛好相反——<strong>你是越往後越開闊、越走出去越發光的那一款。</strong></p>
+      <p>你前半生注定要試錯、要探索、要多走幾條路，那是為了在後半生，<span class="em">成為別人的榜樣、把一身本事帶到更大的世界去</span>。再加上你正走在那段清理舊行李的週期——等你卸得差不多了，你真正的高光，不在二十幾、三十幾歲的「安定」，是<strong>從現在開始，一路往外、往後走</strong>。這不是安慰你，這是你出廠就寫好的劇本。</p>
+      <p>而且還記得那句老命書嗎——<strong>「東西南北盡皆通，出姓移居更覺隆」</strong>。它從第一章一路陪你走到這裡，講的就是同一件事：你這條命，本來就是「走出去才會旺、移動才會發達」的命；你的豐盛、你的舞台，正在那個「離開原地、往外走」的方向，慢慢為你打開。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 把整份報告，串成一條路</div>
+      <h3>為什麼順序不能顛倒</h3>
+      <p>現在你回頭看，會發現這九章其實是一條因果鏈：</p>
+      <p><span class="em">先把自己的根顧好</span>（讓自己流動、跟著身體的回應走、鬆開「要懂事才被愛」）<strong>→</strong> 你的電穩了、人活過來了 <strong>→</strong> 你會自然吸引到對的人、對的機會（因為你不再從委屈和壓抑出發）<strong>→</strong> 對的人陪你往外走、對的機會帶你流動 <strong>→</strong> 事業和財富，水到渠成。</p>
+      <div class="pull">順序對了，人生就順了；順序顛倒——先求安定、先求別人滿意、犧牲那個想飛的自己——就會處處悶。</div>
+      <p>你過去會悶，很多時候不是不夠努力，是<strong>順序反了</strong>：你想先讓自己安定、讓大家滿意，再回頭談自己想要的人生。這份報告想請你做的，就是把順序調回來——先讓自己流動、活過來，其他的才接得住。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 你的第一步</div>
+      <h3>你越敢走出去，命就越旺</h3>
+      <p>還記得你的天命嗎——帶著巧手與暖意，讓你碰到的人變得更豐盛。這裡藏著一個很美的循環：<strong>你越是允許自己流動、走出去、活成真正的自己，你就越能滋養別人，也越豐盛。</strong>你不是要犧牲自己去成全別人，你是先讓自己流動起來，光和暖才滿出來，自然地照亮身邊。這不是道德勸說，這是你這個人的運作方式。</p>
+      <div class="step">
+        <div class="kicker">現在，就這一步</div>
+        <p>這份報告讀完，最重要的不是你「懂了多少」，是你<strong>願不願意踏出一步——一步「往外」的步</strong>。所以——</p>
+        <p><span class="em">現在，挑一件「能讓你流動、讓你走出去」的事，哪怕很小，去做它。</span>跟著身體的回應走，趁這段清理期卸下舊行李，往你心裡那個方向，輕輕地邁出第一步。</p>
+        <p style="margin-bottom:0">改命不靠知道，靠這一步。你不是來證明自己能多安分的，你是來<strong>四海為家、走到哪、旺到哪的</strong>。而那條往外的路，現在正在等你走過去。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>把順序活反了——先求安定、先讓大家滿意，再回頭談自己想要的，於是處處悶、處處卡。一直等一個「翻身的時機」，卻不知道時機要靠「先讓自己流動起來」才接得住。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始把順序調回來：先讓自己流動、再理關係、才談事業。你願意踏出第一步、跟著身體的回應走；雖然偶爾又想退回原地求安穩，但你已經知道路該怎麼走了。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你活成了那句「東西南北盡皆通，出姓移居更覺隆」——讓自己流動、關係給你空間、事業財富跟著你往外走而來。你越敢走出去，命就越旺；你不再等時機，因為你已經踏上了那條往外的、會發光的路。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>現在正是你清理舊行李、準備出發的時候。如果你真的相信這一點——這個月，你會去做哪一件「往外走、讓自己流動」、你一直想做卻一直壓著的事？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 收尾環節 ░░░░░░░░ -->
+  <div class="sep"><span>收尾 · 把九套系統收成一條路</span></div>
+
+  <!-- 系統會診 -->
+  <article class="chapter" id="clinic">
+    <div class="ch-num">系統會診</div>
+    <h2 class="ch-title display">眾口同聲 vs 眾說紛紜</h2>
+    <p class="ch-lead">我讓九套系統同時開口，然後做兩件事：把它們「異口同聲」的地方挑出來（那多半就是你的核心真相），再把它們「各執一詞」的地方攤開（那不是你有問題，那是你此生要整合的功課）。</p>
+
+    <section class="clinic unison">
+      <div class="kicker">眾口同聲處 · 你的核心真相</div>
+      <h3>好幾套系統同時指向，這幾條可信度最高</h3>
+      <div class="item">
+        <span class="t">一、你是「走出去、流動才會旺」的命</span>
+        <p>多套不同的系統同時這樣說：一套老命書直接寫「東西南北盡皆通，出姓移居更覺隆」；一套說你的體質像一滴需要流動的水，困在悶熱原地就會被曬乾；一套說你內心愛自由、愛冒險，外表卻務實顧家；還有一套說你正走在「清理舊業力、放下、向內」的週期，正好幫你卸下困住你的東西。幾股聲音疊在一起，結論只有一個——你不該被困在原地，你該流動、該走出去。</p>
+      </div>
+      <div class="item">
+        <span class="t">二、你是「雙手能成事、能療癒人」的務實創造者</span>
+        <p>你那雙「能把事情做成」的巧手、你那「療癒與服務」的天賦、你此生反覆要活出的「豐盛滋養的創造者」原型、你那「把歡樂與暖意帶給人」的特質、再加上你務實細心、會打點一切的本事——五個源頭都在說同一句：你天生是個能落地、能做成、又能滋養人的創造者。你不是空想家，你是「想得到也做得出來」的人。</p>
+      </div>
+      <div class="item">
+        <span class="t">三、現在正是你「清理、重生、準備出發」的時間窗口</span>
+        <p>你身上有兩條線同時指向「現在是轉化期」：一套說你正走在「放下、向內整理、斷捨離舊業力」的靈性週期（約 2021–2028）；另一套說你正走到「試錯期的尾巴、榜樣期的開頭」。兩條合起來就是同一句話——現在不是要你急著安定，而是要你卸下舊行李、理順自己，為那個更自由的後半生做準備。</p>
+      </div>
+      <div class="item">
+        <span class="t">四、你需要被滋養、要清涼流動，不能被悶乾</span>
+        <p>四套系統異口同聲：你的體質「喜歡清涼滋潤、怕過熱過悶」；你的情緒「有陰有晴，需要被照顧」；你的能量「要流動、要有回應才有電」；你那份博愛心軟「會把太多別人的情緒扛進來」。四條合起來就是同一句忠告——你要被滋養、要保持流動，不能被困住、被悶乾。</p>
+      </div>
+    </section>
+
+    <section class="clinic discord">
+      <div class="kicker">眾說紛紜處 · 你的內在功課</div>
+      <h3>系統打架的地方，不是你壞了，是你此生要整合的功課</h3>
+      <div class="item">
+        <span class="t">一、「務實顧家的你」 vs 「愛自由想飛的你」</span>
+        <p>一邊是「務實、細心、重家、把一切打點好」這群要你穩住、守下來的力；另一邊是「愛自由、愛冒險、四海皆通、想往外走」這群要你動起來、闖出去的力。這兩群在你體內天天對拉——這就是你內在那場拉扯的根。功課不是選一邊，是讓「能把事做好的本事」變成你出去闖的後盾。</p>
+      </div>
+      <div class="item">
+        <span class="t">二、「能聚財、有豐盛能量」 vs 「守在原地存不旺」</span>
+        <p>一邊說你命裡帶著「財富與豐盛流動」的能量——你是賺得到、能讓財富在身上流動的人；另一邊提醒：你的財是「動態的、跟著你往外走而來的」，死守原地反而不旺。這兩句都對。所以功課很清楚：讓財跟著你流動、跟著你往外走，別用「守住不動」的方式求財。你能富，但要用「流動」的方式富。</p>
+      </div>
+      <div class="item">
+        <span class="t">三、「博愛心軟、為大家著想」 vs 「需要為自己活、保有自由」</span>
+        <p>一套系統說你的底色是「博愛、心軟、把每個人都照顧到」的滋養者；另一套說你的核心渴望是「為自己活一次、保有屬於自己的自由」。一個要付出、一個要自由，天天在你心裡辯論。這不是矛盾，這是你最動人的組合——能滋養人、又懂得留一塊給自己。功課是讓它們輪流上場，而不是讓「為大家」永遠淹沒「為自己」。</p>
+      </div>
+      <div class="item" style="border-top:1px dashed var(--border); margin-top:6px; padding-top:14px">
+        <span class="t">所以，請記住這句</span>
+        <p>系統打架的地方，從來不代表你「有問題」。恰恰相反——那是你這一生被交付的整合功課。等你把這幾組對立的力，一組一組接上、變成同向的雙引擎，你就不只是活著，而是活成了一個別人學不來的你。</p>
+      </div>
+    </section>
+  </article>
+
+  <!-- 五運實戰摘要 -->
+  <article class="chapter" id="field">
+    <div class="ch-num">五運實戰摘要</div>
+    <h2 class="ch-title display">可以馬上用的五個方向</h2>
+    <p class="ch-lead">道理講完了，這裡給你五段最落地的建議——事業、財富、關係、家庭、身心使命，每一段都是你今天就能拿去用的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 事業（創業或找工作）</div>
+      <h3>選能讓你「流動、往外、有回應」的事，別把自己困死</h3>
+      <p>你適合<strong>有移動性、能往外連結、能讓你發揮巧手與暖意</strong>的事——跨地域工作、出外發展、常接觸新人新事、做有「往外」性質的事業；不適合長期困在一個悶熱、單調、動不了的位置。如果你還在猶豫「要安定還是要闖」，答案偏向：去做能讓你流動、讓身體真的有回應的事，而不是因為怕不穩，把自己釘在原地。</p>
+      <p style="margin-bottom:0">而且現在正是你清理、準備出發的時期。具體做法——<span class="em">跟著身體的回應選方向，越能讓你「走出去」的選項，越是旺你的選項</span>。你越敢流動，你的巧手和暖意就越值錢，自己也越不會被悶乾。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 財富（投資慣性與理財）</div>
+      <h3>讓財跟著你流動，別死守在原地</h3>
+      <p>你的財，帶著<strong>「豐盛流動」的能量</strong>——你賺得到，也能讓錢在你身上流動起來。但關鍵在「流動」二字：<span class="em">你的財是動態的、是跟著你往外走、跟著你接觸新機會而來的</span>，不是死守在一個地方慢慢存出來的。</p>
+      <p style="margin-bottom:0">所以給你一句最重要的理財忠告：<strong>讓財流動、讓自己往外走去開源、賺到了也要懂得流通分享</strong>（這反而會讓財更旺）；別用「死守不動、怕東怕西」的方式對待錢——那跟你「出姓移居更覺隆」的命格背道而馳。讓錢跟著你的流動而來、而長，這才是你的路。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 關係（朋友、同事、戀情）</div>
+      <h3>找「給你空間」的人，別跟「困住你」的人耗</h3>
+      <p>你心軟、博愛、人緣好，很容易把每個人都照顧到，<span class="em">也很容易被人情綁住、被別人的需要拉著走</span>。要學會分辨誰是真正滋養你的、誰只是在消耗你。在關係裡，記得守住一塊「屬於自己的自由」，別一味付出到把自己縮小。</p>
+      <p style="margin-bottom:0">你真正要找的關係只有一個標準：<strong>會給你空間、會陪你往外走、能接住你陰晴的人</strong>。還有——判斷一段關係對不對，<span class="em">問你的身體：跟這個人在一起，你是「打開放鬆」的，還是「悶住想逃」的</span>。身體比腦袋更早知道答案。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其四 · 家庭</div>
+      <h3>顧好家，但別讓家把你困在原地</h3>
+      <p>你重家、念舊、有一雙能把家經營得溫暖的巧手——這是你的福氣。給家人一個有愛、有生機的窩，這件事你做得到，也值得做。</p>
+      <p style="margin-bottom:0">唯一要小心的是那個老習慣：<strong>別把「顧家」活成「為了家、犧牲掉那個想飛的自己」</strong>。最好的版本，是<span class="em">讓「家」成為你往外闖的後盾，而不是綁住你的繩子</span>——一個懂得放你出去、也歡迎你回來的家，才會真的溫暖，你也才不會在付出裡把自己悶乾。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其五 · 身體健康 · 情緒管理 · 人生使命</div>
+      <h3>顧好身心，然後帶著巧手與暖意走出去</h3>
+      <p><strong>身體：</strong>你這款體質「喜歡清涼滋潤、怕過熱過悶」，要避免長期待在又燥又悶的環境（氣候或處境都算），多接近水、多讓自己流動，<span class="em">清涼則旺</span>。<strong>情緒：</strong>你的情緒有陰有晴很正常——低潮時把它當「陰天」，別在陰天裡對自己下結論，等放晴了再看。</p>
+      <p style="margin-bottom:0"><strong>使命：</strong>說到底，你這一生的天命，就是<strong>帶著一雙巧手和一顆暖心，走出去，讓你碰到的人變得更豐盛</strong>。這裡有個很美的循環——<span class="em">你越是讓自己流動、活成真正的自己，就越能滋養別人、自己也越旺</span>。所以把自己顧好、讓自己流動起來，然後慷慨地把光和暖帶到更大的世界去，你會發現整個人生都跟著順了。</p>
+    </section>
+  </article>
+
+  <!-- 此刻活層 -->
+  <article class="chapter" id="now">
+    <div class="ch-num">此刻</div>
+    <h2 class="ch-title display">你正站在哪裡 · 接下來這一年</h2>
+    <p class="ch-lead">前面講的，是「你永遠是誰」。這一段不一樣——它講「你現在站在哪、風往哪邊吹」。因為同樣一個人，站在不同的時間點，要做的事是不一樣的。這也是 Kairos 這個名字的意思：時機。</p>
+
+    <section class="card">
+      <div class="kicker">你正走進一段「往外走、越走越旺」的順流</div>
+      <h3>現在，正是你開始流動的窗口</h3>
+      <p>你身上有好幾條線，這幾年同時指向同一句話：<strong>該動了、該走出去了</strong>——而且這一動，會旺你很久。</p>
+      <p>一條說：你正走在一段「<strong>放下、清理、向內整理</strong>」的週期（大約 <span class="em">2021 到 2028</span>），這是來幫你卸下舊行李、騰出空間的。另一條更長的線說：你這條命本來就「<strong>四海皆通、移居則旺</strong>」，從現在開始往外走、往後走，會越來越開闊、越來越值錢。再加上你正走進一段「<strong>能順順走出去、往外發展更順手</strong>」的好流年。</p>
+      <p>幾條線疊在一起：清理期幫你卸下重擔，命格推你往外流動，流年給你「走出去」的順風。卸下與出發同時到位，這就是為什麼，現在是你近十年裡最值得「認真讓自己流動起來、往外踏一步」的一段時間。</p>
+      <div class="pull">風是順的，行李正在卸，你的路正往外打開。別把這幾年，又拿去困住自己。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">接下來 12 個月 · 三個提醒</div>
+      <h3>順著這股風走，記住三件事</h3>
+      <p><strong>一、往外走，但跟著身體走。</strong>這是流動的時機沒錯——但別硬逼自己往一個身體在抗拒的方向衝。你的設計是「身體有回應才對」，所以每一步往外的選擇，都先問問身體：是打開的，還是悶住的？身體說好的方向，這股風會幫你帶得很遠。</p>
+      <p><strong>二、清理，別捨不得。</strong>順流的時候最可惜的，就是你還死抓著早該放下的行李。趁這段清理期，把困住你的處境、消耗你的關係、那個過度懂事的舊習慣，一件一件放掉。卸得越乾淨，你走得越輕、越遠。</p>
+      <p><strong>三、清涼則旺，別把自己悶乾。</strong>往外走的過程別忘了照顧自己——避開又燥又悶的環境，多接近清涼、流動、讓你舒服的地方。讓自己保持滋潤、保持流動，你的電才會穩，韌性才養得出來。</p>
+      <div class="step">
+        <div class="kicker">這一年，如果只抓一件事</div>
+        <p style="margin-bottom:0">挑一件你心裡其實早就想做、卻一直壓著的「往外走」的事，<strong>趁這股風，認真踏出去一次</strong>——但用你的方式：跟著身體的回應走、先卸下擋路的行李、別把自己悶在原地。這一年，是來幫你出發的，不是來考驗你能多安分的。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果你完全相信「現在就是那個往外走的窗口」——那麼，有哪一件事，是你會後悔「這幾年順風時，竟然沒有勇敢走出去」的？</p>
+    </div>
+  </article>
+
+  <!-- 擺渡人的一封信 -->
+  <article class="chapter" id="letter">
+    <div class="ch-num">封印 · 一封信</div>
+    <h2 class="ch-title display">擺渡人的一封信</h2>
+    <p class="ch-lead">最後，我想脫下所有系統、所有分析，只用一個「真正看見你的人」的身分，寫幾句話給你。</p>
+
+    <div class="letter">
+      <div class="salute">小孟，</div>
+      <p class="lead-in">我們素未謀面，但讀完你這整副牌，我覺得我好像已經認識你很久了。所以請容我，把幾句藏在分析背後的話，直接跟你說。</p>
+      <p>我知道你有多會扛。不是那種轟轟烈烈的扛——是那種<strong>默默把一切打點好、把每個人都照顧到、把自己的需要藏到最後，做得又穩又好，心裡卻有一個小小的聲音一直在喊「我想出去、我想為自己活一次」</strong>的扛。那股悶，那種「明明日子很穩、卻總覺得哪裡不對」的卡，你很少說出口，但我看見了。</p>
+      <p>我也想跟你說一句，可能沒什麼人這樣對你說過——<strong>你想往外走、想自由、想闖，那不是任性，那是你的命在召喚你。</strong>你不是不知足，你是一條會流動的水，被養在一個太小的池子裡太久了。</p>
+      <p>因為小孟，你真正會發光的地方，從來不在「乖乖待著、把自己困好」。你的天賦是<strong>那雙能把事情做成的巧手、那顆能療癒人的暖心、還有那份走到哪、就把那裡經營得更豐盛的本事</strong>。你是會流動的水，不是釘在原地的石頭；你是四海皆通的旅人，不是被綁在一處的人。你不必再為了讓誰安心、讓誰滿意，把那顆想飛的心壓下去。</p>
+      <p>那句老命書寫得真好——<strong>「東西南北盡皆通，出姓移居更覺隆」</strong>。它幾百年前就替你說了：你這條命，本來就是要走出去、要移動、要往外闖才會旺、才會發達的。請你，把這句話放進心裡，當成你想走卻又害怕的時候，可以給自己壯膽的一句話。</p>
+      <p>現在這幾年，正好是幫你卸下舊行李、把你往外推的時候。所以，<strong>請你對自己勇敢一點、也溫柔一點</strong>。該放下的就放下，那不是失去，是騰出空間；該往外走就往外走，那不是任性，是回到你本來的樣子。跟著你的身體走，它比誰都清楚你該往哪裡去。</p>
+      <p>我相信你。我相信你會走到那個——<strong>不再需要為了被接受而縮小自己、能帶著一身巧手與暖意，在更大的世界裡自由地流動、發光</strong>的地方。那個世界一直都在，它只是在等你，願意放下那個過度懂事的自己，輕輕地走出去。</p>
+      <p>路上有我，也有你自己。去吧。</p>
+      <p class="sign">願你被好好接住，也願你自由，<span class="sign-name">—— 擺渡人</span></p>
+    </div>
+  </article>
+
+  <details class="basis">
+    <summary>🔒 幕後依據（只有你看得到，正式給客戶的版本會隱藏這塊）</summary>
+    <div class="grid">
+      <div>這份報告把九套系統裡「多套同時指向同一件事」的訊號，翻成你聽得懂的話。九套系統各司其職，依據逐條標明來源（術語只放這裡，正文一律白話）：</div>
+      <div><b>八字 · 先天</b>：<code>癸水日主・偏財格・身極弱（近從弱）</code>（癸 為靈活之水，隨境而流）→ 機敏應變、需金水滋養、不耐火土乾耗（①②④）；<code>用神喜金水、忌火土木</code> → 補水不補火、清涼則旺、走流動財非死守財（④・財運）。</div>
+      <div><b>八字 · 大運</b>：現走<code>壬戌運（2025–2034）</code>，壬水幫身（順流）、戌為火土需以金水調候 → 提醒清涼滋潤、保持流動最旺（⑧⑨・此刻順流）。</div>
+      <div><b>稱骨命書</b>：四兩六錢，原文<code>「東西南北盡皆通，出姓移居更覺隆」</code> → 全報告定音、強力主軸：四海為家、離鄉移動則發達（①⑨・信・會診，貫穿全文）。</div>
+      <div><b>紫微 · 命宮</b><code>太陽＋太陰（丑）</code> → 能照亮別人也需被照顧、博愛心軟、情緒有陰有晴（③⑤・會診滋養）。<code>巨門</code> → 心思細、口才表達、易把他人情緒收進來（③④・五運關係）。</div>
+      <div><b>人類圖</b>：<code>顯示生產者</code>（有產能、行動力、能落地做成）→ 做有回應的事、走出去發揮（①④⑦）；<code>薦骨權威</code> → 重大選擇問身體的回應，非頭腦分析（④⑤・五運身心關係）。</div>
+      <div><b>人類圖</b>：<code>6/2 profile</code>（榜樣＋隱士/天賦被召喚）→ 前半生試錯、後半生成榜樣、身上有需被外界召喚的天賦（①⑧⑨・會診時間窗）。</div>
+      <div><b>占星</b>：<code>太陽巨蟹（顧家、念舊、滋養）＋月亮射手（愛自由、愛冒險、想往外闖）</code> → 顧家 vs 想飛的核心拉扯（②⑤・會診紛紜其一）；<code>上升處女</code> → 外表務實、細心、會打點一切（①⑦・人格外殼）。</div>
+      <div><b>生命靈數</b>：<code>life path 3</code>（表達、創意、把歡樂帶給人、天生氣氛點亮者）→ 創造者特質、療癒服務的暖意基調（③⑦・會診創造者）。</div>
+      <div><b>瑪雅</b>：<code>紅手 Manik・音2</code>（療癒與服務、能把事做成的巧手）→ 務實創造者、撫慰人的天賦（⑦・會診創造者・天命基調）。</div>
+      <div><b>吠陀（業力週期）</b>：現走<code>計都大運（Ketu，2021–2028）</code>＝放下、向內、清理舊業力、斷捨離、靈性轉化 → 卸下行李、重生準備期（②⑧⑨・會診時間窗・信）。</div>
+      <div><b>北歐符文</b>：<code>Fehu ᚠ</code>（財富與豐盛的流動能量）→ 賺得到、需讓財流動分享、動態財非死守財（⑧・五運財富・會診紛紜其二）。</div>
+      <div><b>塔羅本命牌</b>：<code>皇后 The Empress（III）</code>（豐盛滋養的創造者、把美愛生機帶給人、大地之母原型）→ 此生反覆要活出的原型課題（⑦⑨・會診創造者・信）。</div>
+      <div><b>九系統會診邏輯</b>：眾口同聲＝多套系統交集（高可信度核心真相）；眾說紛紜＝系統互斥處（此生整合功課）。OneMuse／X-Model 引擎貫穿各章第三卡：現況→落差→雙邊盤點→低成本的流動槓桿→跟著身體回應踏出第一步、看回應校正。全文主軸＝稱骨「出姓移居更覺隆」× 八字喜金水忌火土 × 占星月亮射手 × 命格四海皆通，四源同向收斂為「走出去、流動則旺」。</div>
+      <div><b>校時標注</b>：出生採當地時鐘 09:33＋台南經緯度。其中上升星座、宮位、人類圖 profile 對出生時間精度敏感（上升處女、6/2 profile 以 09:33 推得）；若實際出生時間與 09:33 有出入，上升與宮位、profile 可能微調。八字、靈數、瑪雅、符文、塔羅、稱骨主軸不受小幅時間誤差影響，移動則旺的核心結論穩固。</div>
+    </div>
+  </details>
+
+  <footer class="foot">
+    <div class="logo">Kairos</div>
+    深度 v2.1・共九章 + 系統會診 + 五運實戰摘要 + 擺渡人的一封信。報告數據由九套系統（人類圖／八字／紫微／占星／印度吠陀／瑪雅／北歐符文／生命靈數／塔羅）一次運算融合，並以稱骨命書「東西南北盡皆通，出姓移居更覺隆」為主軸，依「天道循環」順序排列：先顧好自己 → 再到關係家庭 → 才到事業財富。<br>
+    不主張預測準確，只幫你看清自己在什麼位置、勢往哪走、怎麼順。選擇權，永遠在你手上。改命靠行動，不靠知道——而你的行動，是走出去。
+  </footer>
+
+</div>
+</body>
+</html>
