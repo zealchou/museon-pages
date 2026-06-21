@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你這個人的說明書 · Peggy · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8; --border:#E2E0DA;
+    --parchment:#F7F5F0; --snow:#FDFCFA; --code-bg:#F0EDE8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--parchment); color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',sans-serif;
+    font-size:16px; line-height:1.75; font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px}
+  .display{font-family:'Cormorant Garamond','Noto Sans TC',serif}
+
+  .hero{padding:88px 0 56px; text-align:center}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--ember-dark);
+    background:rgba(196,80,42,.1); padding:5px 14px; border-radius:100px;
+    display:inline-block; margin-bottom:28px;
+  }
+  .hero h1{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:54px; font-weight:600; line-height:1.12; letter-spacing:.01em;
+    color:var(--ink); margin-bottom:18px;
+  }
+  .hero .sub{font-size:18px; color:var(--slate); font-weight:300; max-width:580px; margin:0 auto}
+  .hero .meta{
+    margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    color:var(--mist); letter-spacing:.04em;
+  }
+  .rule{width:48px; height:2px; background:var(--ember); margin:40px auto 0; border-radius:2px}
+
+  .intro{
+    background:var(--snow); border:1px solid var(--border); border-left:3px solid var(--gold);
+    border-radius:12px; padding:28px 30px; margin:8px 0 48px; color:#23232e; font-size:16.5px;
+  }
+  .intro p{margin-bottom:1em}
+  .intro p:last-child{margin-bottom:0}
+  .intro strong{color:var(--ember-dark); font-weight:600}
+
+  .toc{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:28px 28px 24px; margin:0 0 72px;
+    box-shadow:0 1px 3px rgba(18,18,26,.06), 0 4px 12px rgba(18,18,26,.04);
+  }
+  .toc h4{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-bottom:18px;
+  }
+  .toc ol{list-style:none; counter-reset:ch}
+  .toc li{
+    counter-increment:ch; display:flex; align-items:baseline; gap:14px;
+    padding:9px 2px; border-bottom:1px dashed var(--border); font-size:15.5px; color:var(--ink);
+  }
+  .toc li:last-child{border-bottom:none}
+  .toc li::before{
+    content:counter(ch,decimal-leading-zero);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    color:var(--ember); min-width:26px;
+  }
+  .toc li a{color:inherit; text-decoration:none}
+  .toc li a:hover{color:var(--ember)}
+  .toc .phase{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;
+    color:var(--gold); padding:16px 0 6px; font-weight:600;
+  }
+  .toc .phase:first-child{padding-top:0}
+
+  .chapter{margin-bottom:72px; scroll-margin-top:24px}
+  .ch-num{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ember);
+  }
+  .ch-title{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:38px; font-weight:600; line-height:1.2; margin:10px 0 8px; color:var(--ink);
+  }
+  .ch-lead{font-size:17px; color:var(--slate); font-weight:300; margin-bottom:34px}
+
+  .card{
+    background:var(--snow); border:1px solid var(--border); border-radius:12px;
+    padding:30px 30px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .card .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;
+  }
+  .card h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:16px; color:var(--ink);
+  }
+  .card p{margin-bottom:1.05em; color:#23232e}
+  .card p:last-child{margin-bottom:0}
+  .card strong{font-weight:600; color:var(--ember-dark)}
+  .card .em{color:var(--ink); font-weight:500}
+
+  .pull{
+    border-left:3px solid var(--ember); padding:4px 0 4px 20px; margin:6px 0 1.05em;
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:21px; line-height:1.5; color:var(--ember-dark); font-weight:500;
+  }
+  .step{
+    background:rgba(184,146,58,.07); border:1px solid rgba(184,146,58,.25);
+    border-radius:10px; padding:22px 24px; margin-top:8px;
+  }
+  .step .kicker{color:var(--gold)}
+
+  .sep{display:flex; align-items:center; gap:18px; margin:64px 0 56px}
+  .sep::before,.sep::after{content:""; flex:1; height:1px; background:var(--border)}
+  .sep span{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px;
+    color:var(--gold); font-weight:600; white-space:nowrap;
+  }
+
+  /* ── v2 新增：章節後記（修煉前／中／後 成長階梯） ── */
+  .afterword{
+    margin:8px 0 0; padding:24px 26px 22px;
+    background:linear-gradient(180deg, rgba(247,245,240,.5), rgba(253,252,250,.9));
+    border:1px solid var(--border); border-radius:12px;
+  }
+  .afterword .aw-head{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--slate);
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+  .afterword .aw-head::after{content:""; flex:1; height:1px; background:var(--border)}
+  .aw-step{
+    position:relative; padding:14px 18px; border-radius:10px; margin-bottom:8px;
+    border:1px solid var(--border); background:var(--snow);
+  }
+  .aw-step:last-child{margin-bottom:0}
+  .aw-step .lvl{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:17px; font-weight:600; display:block; margin-bottom:3px;
+  }
+  .aw-step p{font-size:15px; color:#33333e; line-height:1.65; margin:0}
+  .aw-before{margin-left:0;  border-left:3px solid var(--ember);
+    background:linear-gradient(90deg, rgba(196,80,42,.05), var(--snow) 60%);}
+  .aw-before .lvl{color:var(--ember-dark)}
+  .aw-during{margin-left:22px; border-left:3px solid var(--gold);
+    background:linear-gradient(90deg, rgba(184,146,58,.06), var(--snow) 60%);}
+  .aw-during .lvl{color:var(--gold)}
+  .aw-after{margin-left:44px; border-left:3px solid var(--teal);
+    background:linear-gradient(90deg, rgba(42,122,110,.06), var(--snow) 60%);}
+  .aw-after .lvl{color:var(--teal)}
+
+  /* ── v2 新增：系統會診 ── */
+  .clinic{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:30px 30px 26px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .clinic .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px;
+  }
+  .clinic.unison{border-left:3px solid var(--teal)}
+  .clinic.unison .kicker{color:var(--teal)}
+  .clinic.discord{border-left:3px solid var(--ember)}
+  .clinic.discord .kicker{color:var(--ember)}
+  .clinic h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:14px; color:var(--ink);
+  }
+  .clinic .item{padding:13px 0; border-bottom:1px dashed var(--border)}
+  .clinic .item:last-child{border-bottom:none; padding-bottom:0}
+  .clinic .item .t{font-weight:600; color:var(--ink); display:block; margin-bottom:3px}
+  .clinic .item p{margin:0; color:#33333e; font-size:15.5px}
+  .clinic.discord .item .t{color:var(--ember-dark)}
+
+  /* ── v2 新增：擺渡人的一封信（信箋） ── */
+  .letter{
+    position:relative; margin:8px 0 20px; padding:46px 44px 40px;
+    border:1px solid #E6DCC4; border-radius:6px;
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 31px, rgba(184,146,58,.10) 32px),
+      linear-gradient(160deg, #FBF6EA, #F5EEDC);
+    box-shadow:0 1px 3px rgba(120,90,30,.10), 0 10px 30px rgba(120,90,30,.08);
+    transform:rotate(-.5deg);
+  }
+  .letter::before{
+    content:""; position:absolute; left:30px; top:0; bottom:0; width:1px;
+    background:rgba(196,80,42,.18);
+  }
+  .letter .salute{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-size:24px;
+    font-weight:600; color:var(--ember-dark); margin-bottom:18px;
+  }
+  .letter p{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:19px; line-height:1.85; color:#3a3326; margin-bottom:1em; font-weight:500;
+  }
+  .letter p.lead-in{font-style:italic}
+  .letter strong{color:var(--ember-dark); font-weight:600}
+  .letter .sign{
+    text-align:right; margin-top:26px; margin-bottom:0;
+    font-style:italic; font-size:21px; color:var(--ember-dark);
+  }
+  .letter .sign-name{
+    display:block; font-size:26px; font-weight:600; color:var(--ember-dark);
+    margin-top:4px; letter-spacing:.04em;
+  }
+
+  details.basis{
+    margin:8px 0 0; border:1px dashed var(--border); border-radius:10px;
+    background:#fbfaf7; padding:0 22px;
+  }
+  details.basis summary{
+    cursor:pointer; padding:16px 0; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--slate); list-style:none;
+  }
+  details.basis summary::-webkit-details-marker{display:none}
+  details.basis[open] summary{border-bottom:1px solid var(--border); margin-bottom:14px}
+  details.basis .grid{padding-bottom:20px; font-size:13.5px; color:var(--slate)}
+  details.basis .grid div{padding:5px 0; border-bottom:1px dotted var(--border)}
+  details.basis .grid div:last-child{border-bottom:none}
+  details.basis b{color:var(--ink); font-weight:600}
+  details.basis code{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--code-bg);
+    padding:1px 6px; border-radius:4px; color:var(--ember-dark);
+  }
+
+  .foot{
+    border-top:1px solid var(--border); padding:36px 0 80px; margin-top:24px;
+    font-size:13px; color:var(--mist); line-height:1.7;
+  }
+  .foot .logo{
+    font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;
+    font-style:italic; color:var(--slate); margin-bottom:8px;
+  }
+  @media(max-width:640px){
+    .hero{padding:60px 0 40px}
+    .hero h1{font-size:40px}
+    .ch-title{font-size:30px}
+    .card{padding:26px 22px}
+    .pull{font-size:19px}
+    .aw-during{margin-left:14px}
+    .aw-after{margin-left:28px}
+    .letter{padding:38px 26px 34px}
+    .letter p{font-size:18px}
+  }
+  /* ── 核心定錨（一句話的你）── */
+  .anchor{max-width:720px; margin:32px auto 4px; padding:24px 34px; border:1px solid var(--border); border-radius:16px; background:var(--snow)}
+  .anchor .tag{display:block; font-size:11px; letter-spacing:4px; color:var(--ember); text-align:center; margin-bottom:12px}
+  .anchor p{font-family:'Cormorant Garamond',serif; font-size:24px; line-height:1.5; color:var(--ink); font-style:italic; text-align:center; margin:0}
+  .anchor b{color:var(--ember-dark); font-weight:600; font-style:normal}
+
+  /* ── 九宮印記牆（數據摘要即視覺）── */
+  .sigwall{margin:22px 0 6px}
+  .sigwall .sw-head{font-size:13px; letter-spacing:2px; color:var(--slate); text-align:center; margin-bottom:5px}
+  .sigwall .sw-sub{font-size:13px; color:var(--mist); text-align:center; margin-bottom:18px}
+  .sigrid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden}
+  .sigcell{background:var(--snow); padding:16px 17px 17px}
+  .sigcell .sys{font-size:12px; color:var(--ember); font-weight:600; letter-spacing:.5px}
+  .sigcell .raw{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--mist); margin:3px 0 8px; line-height:1.4}
+  .sigcell .say{font-size:13.5px; color:var(--ink); line-height:1.55}
+  .sigcap{font-size:12.5px; color:var(--slate); text-align:center; margin-top:13px; font-style:italic}
+
+  /* ── 擺渡人問你（每章反思題）── */
+  .ask{margin:24px 0 2px; padding:20px 24px; border-left:3px solid var(--gold); background:linear-gradient(90deg,rgba(184,146,58,.08),transparent); border-radius:0 8px 8px 0}
+  .ask .q-head{font-size:12px; letter-spacing:2px; color:var(--gold); margin-bottom:9px}
+  .ask p{font-size:16px; color:var(--ink); line-height:1.7; margin:0; font-weight:500}
+  .ask .q-note{font-size:13px; color:var(--slate); margin-top:9px; font-weight:400; line-height:1.6}
+
+  @media(max-width:640px){
+    .anchor{padding:20px 22px} .anchor p{font-size:20px}
+    .sigrid{grid-template-columns:repeat(2,1fr)} .sigcell{padding:13px 13px 14px}
+  }
+  body{animation:fade .4s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Kairos · 九系統融合報告 · 深度 v2</span>
+    <h1 class="display">你這個人的說明書</h1>
+    <p class="sub">不是算命，是一封寫給你的信——關於你天生是誰、為什麼會卡、以及怎麼一步步走回那個本來就該由你點亮的位置。</p>
+    <div class="meta">Peggy　·　1998.05.10　10:46　·　台灣桃園</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="anchor">
+    <span class="tag">如 果 只 用 一 句 話 說 你</span>
+    <p>你是一團被設計成「<b>要把心裡的火點亮給別人看、卻先要學會聽懂自己情緒的潮汐</b>」的高理想女子——<br>你又熱又亮、想連結整個世界，偏偏最怕的是，自己一個人的時候那片深海裡的暗湧。</p>
+  </div>
+
+  <div class="intro">
+    <p>我把九套不同的系統，一次套在你身上跑過一遍，然後做一件事——<strong>讓這九套全都出力，再只留下那些「好幾套系統都同時指向同一件事」的訊號</strong>。因為當這麼多套不同的語言都在說同一句話時，那句話多半就是真的。</p>
+    <p>這一版（v2）比上一版更深。我多做了三件事：每一章的最後，我會告訴你「同樣這副牌，沒修煉、正在修、修煉後」會活成三種完全不同的人生，讓你知道自己現在大概在哪一格——<strong>這三格不是三個不同的人，是同一個天賦在三種頻率：你以為的「缺點」，往往只是你的天賦還沒被你馴服的樣子</strong>；走完九章，我會把九套系統<strong>哪裡異口同聲、哪裡各執一詞</strong>攤開給你看；最後，我會用擺渡人的身分，寫一封信給你。</p>
+    <p>這份報告的順序是有講究的，跟著一條很老的道理走：<strong>先把自己顧好，才顧得了關係；關係對了，事業和財富才會水到渠成。</strong>所以我們會從「你這個人」開始，一路走到你的關係、你的家、最後才談你的事業與翻身。</p>
+    <p>還有一件事我想先講清楚：這份報告不預測你的未來，也不替你做決定。它只幫你看清楚——你站在哪、風往哪吹、怎麼順著走。<strong>選擇權，永遠在你手上。</strong></p>
+  </div>
+
+  <div class="sigwall">
+    <div class="sw-head">九 系 統 · 數 據 印 記 牆</div>
+    <div class="sw-sub">九套系統各自獨立算出來的你（小字是專業原始數據，下面那句是它在說的話）</div>
+    <div class="sigrid">
+      <div class="sigcell"><div class="sys">八字</div><div class="raw">丁火日主 · 劫財格 · 身極旺(從旺) · 四兩三錢</div><div class="say">一盞極旺的燭火：又熱又亮、能量爆滿，天生想照亮人、不甘平庸，但火太旺需要水來收。</div></div>
+      <div class="sigcell"><div class="sys">紫微斗數</div><div class="raw">命宮武曲＋天府(子) · 命主貪狼 · 紫微天相在官祿</div><div class="say">財星＋財庫雙坐命：務實、能掙能守、有商業手腕；多才多藝又渴望豐盛體驗。</div></div>
+      <div class="sigcell"><div class="sys">人類圖</div><div class="raw">生產者 · 情緒型權威 · 1/3 profile</div><div class="say">做你真心有回應的事才有力量；重大決定別當下衝動，要等情緒潮汐過完再定。</div></div>
+      <div class="sigcell"><div class="sys">西洋占星</div><div class="raw">太陽金牛 · 月亮天蠍 · 上升獅子</div><div class="say">外表大方有光、想被看見，內心卻深沉、感受極濃烈——亮麗的外殼，深海般的內在。</div></div>
+      <div class="sigcell"><div class="sys">生命靈數</div><div class="raw">生命靈數 33（大師數）· 靈魂渴望 5</div><div class="say">天生的療癒者與傳遞者，帶著很高的理想，想用愛與創意去服務、啟發一大群人。</div></div>
+      <div class="sigcell"><div class="sys">瑪雅曆</div><div class="raw">紅龍 Imix · kin 21 · 音8</div><div class="say">像生命的起源與母性：滋養、孕育、給出源源不絕的能量，是天生會照顧人的源頭。</div></div>
+      <div class="sigcell"><div class="sys">吠陀占星</div><div class="raw">月宿 Swati · 木星大運(2013–2029)</div><div class="say">正走一段「擴展、學習、貴人、機會」的成長旺運，是適合大膽往外長的階段。</div></div>
+      <div class="sigcell"><div class="sys">北歐符文</div><div class="raw">本命符文 Laguz ᛚ</div><div class="say">水與直覺的能量：你最深的智慧來自直覺與感受，要學會順著內在的流動走。</div></div>
+      <div class="sigcell"><div class="sys">塔羅本命牌</div><div class="raw">戀人 The Lovers（VI）</div><div class="say">此生原型＝連結與抉擇：在愛與關係裡認識自己，一生都在學「忠於內心的選擇」。</div></div>
+    </div>
+    <div class="sigcap">九套用完全不同語言的系統，指針卻幾乎都落在同一個人身上——這不是巧合，是準。</div>
+  </div>
+
+  <nav class="toc">
+    <h4>這份報告會帶你走一趟 — 共九章 + 收尾環節</h4>
+    <ol>
+      <div class="phase">第一部 · 先把自己顧好（這是一切的根）</div>
+      <li><a href="#c1">你是怎麼被設計出來的</a></li>
+      <li><a href="#c2">你體內那場打不完的戰爭</a></li>
+      <li><a href="#c3">你那個一直重複的隱形迴圈</a></li>
+      <li><a href="#c4">你的能量怎麼充、怎麼漏</a></li>
+      <div class="phase">第二部 · 顧好自己，才顧得了關係</div>
+      <li><a href="#c5">你愛與被愛，真正的樣子</a></li>
+      <li><a href="#c6">你從家裡帶出來的鑰匙與傷</a></li>
+      <div class="phase">第三部 · 關係對了，事業財富才水到渠成</div>
+      <li><a href="#c7">你天生是來做什麼的</a></li>
+      <li><a href="#c8">你此刻卡在哪一格</a></li>
+      <li><a href="#c9">你的翻身時機與下一步</a></li>
+      <div class="phase">收尾 · 把九套系統收成一條路</div>
+      <li><a href="#clinic">系統會診：眾口同聲 vs 眾說紛紜</a></li>
+      <li><a href="#field">五運實戰摘要（可以馬上用）</a></li>
+      <li><a href="#now">此刻：你正站在哪裡 · 接下來這一年</a></li>
+      <li><a href="#letter">擺渡人的一封信</a></li>
+    </ol>
+  </nav>
+
+  <!-- ░░░░░░░░ 第一部 ░░░░░░░░ -->
+  <div class="sep"><span>第一部 · 先把自己顧好</span></div>
+
+  <!-- ① -->
+  <article class="chapter" id="c1">
+    <div class="ch-num">第一章</div>
+    <h2 class="ch-title display">你是怎麼被設計出來的</h2>
+    <p class="ch-lead">在聊你的關係、事業、錢之前，得先回到最源頭——你這個人，出廠的時候到底是哪一款。後面所有的順與不順，都是從這裡長出來的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你是一團又熱又亮的火——能量爆滿，天生想照亮人、不甘於平淡</h3>
+      <p>我看完你整個人之後，最想先跟你說一句話：你天生，<span class="em">是一團燒得很旺、又熱又亮的火</span>。</p>
+      <p>這團火的意思是——你裡面有一股別人很少見的熱度與生命力。你會被想法點燃、會為一件你愛的事整個人發亮、會自然而然地想把溫暖跟光照到別人身上。你不是那種冷冷的、安安靜靜的人；你是那種一旦投入，就會燒得很猛、很投入、很有感染力的人。而且你的火還特別「旺」——能量很足、很想往外衝、很想被看見、很想成就些什麼。很多人一輩子溫溫吞吞，找不到自己心裡那把火，而你天生就帶著一種「我心裡有光，而且想點亮人」的熱力。</p>
+      <p>再把另一張牌疊上去你會更有感——你身上同時帶著一種<strong>非常高的理想與療癒、服務的天命</strong>。你不只是想自己過得好，你心裡深處有一個更大的渴望：想用你的愛、你的創意、你的光，去照亮、去療癒、去啟發一整群人。這份理想性不是後天學的，是出廠就裝在你身上的。你天生就是來「給出去」的——給光、給愛、給能量。</p>
+      <p>但這裡有一個你一定要懂的關鍵——<strong>一團太旺的火，最怕的不是不夠亮，是燒過頭、把自己燒乾</strong>。你的熱情、你的理想、你想照亮所有人的衝動，如果沒有東西去收、去澆、去平衡，很容易變成「對自己太狠、對別人付出到掏空、燒到自己都沒電了還停不下來」。<span class="em">外面看你開朗發亮、能量滿滿，裡面其實藏著一團需要被好好照顧、好好收住的火。</span>這份報告，幾乎每一章都會回到這一句：你不缺火，你缺的是「怎麼讓這把火，燒得久、燒得穩、不燒傷自己」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>那個「我得一直發光、一直給」的習慣，正在悄悄把你燒乾</h3>
+      <p>正因為你是這款人——火很旺、理想很高、又特別想照亮人——你從年輕到現在，可能一直在跑一個自己沒察覺的迴圈：</p>
+      <p>因為你心裡那把火總是燒著、總有源源不絕的想法和熱情，你會本能地<span class="em">一直往外衝、一直答應、一直給</span>。你很難讓自己停下來，因為停下來會讓你覺得「我在浪費、我不夠好、我還可以做更多」。於是你一個接一個地投入、一份接一份地付出，把自己的時間、力氣、感情全都燒進去——直到某一天，你突然覺得整個人空了、累了、提不起勁了，才發現：原來這把火，已經燒到沒柴了。</p>
+      <div class="pull">你怕的不是燒得不夠旺，你怕的是停下來。但火要燒得久，靠的不是一直加柴，是懂得什麼時候該收。</div>
+      <p>你越是把「我能量滿滿、我什麼都接得住」演得好，你就越容易忽略身體和心裡那個「我其實累了、我需要停一下」的訊號。這不是別人逼你，是你自己那把太旺的火，逼著你一直燒。這是這份報告裡，我最想先幫你鬆開的一個結——學會收火，不是熄火，是讓你能燒一輩子。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的破局，不在燒得更旺，在學會給自己「澆水」與「留白」</h3>
+      <p>我們把話講到底。你真正的轉機，是這三步：</p>
+      <p><strong>第一，看清楚你手上本來就有的牌。</strong>你有滿滿的熱情與生命力、有照亮人的天賦、有很高的理想、有療癒與服務一大群人的使命，還有一種別人沒有的本事——你能把自己心裡的火，傳遞給別人，讓別人也被點燃。這些加起來，是非常稀有的組合：又熱、又有理想、又會給。這不是你要去學的，是你出廠就帶著的。</p>
+      <p><strong>第二，看清楚你最缺、也最該補的東西。</strong>你不缺火，你缺的是<span class="em">「水」——能讓你停下來、沉澱、收住、滋潤自己的那份能力</span>。你需要練的，不是燒得更旺、給得更多，而是——學會在燒之前先問自己「我現在還有柴嗎」、學會在情緒和念頭翻湧的時候先讓它沉澱，而不是當下就行動。把往外給的力氣，分一點回來澆灌自己。</p>
+      <div class="pull">你不是要變得不熱情，你是要學會：先把自己的杯子裝滿，再倒給別人。乾的杯子，倒不出水。</div>
+      <p>當你願意給自己留白、給自己澆水，你會發現——你的火不但沒有變小，反而燒得更穩、更亮、更持久。那團火，會因為終於被你自己好好照顧，而從「燒一陣就累」變成「能照亮人一輩子」的長明燈。</p>
+      <div class="step">
+        <div class="kicker">今天可以怎麼開始</div>
+        <p>挑一件你最近「明明很累、卻還是不好意思停、硬撐著在做」的事，<strong>試著允許自己停一下、慢一點、甚至先放著</strong>，哪怕只是今天少答應一件事。然後特別去感覺——停下來之後，世界有沒有崩壞？（不會的。）</p>
+        <p>還有，每天留一點點「什麼都不做、只是滋潤自己」的時間：泡個澡、發個呆、走一段沒有目的的路。對你這團旺火來說，這不是偷懶，這是<span class="em">給自己澆水、不讓自己燒乾</span>。</p>
+        <p style="margin-bottom:0">你這一生，不是來把自己燒成灰、證明自己能給多少的。你是來<strong>當一盞能燒很久、很穩的長明燈，照亮你愛的人與你信的事</strong>的。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>把「一直發光、一直給、停下來就是不夠好」當成最高原則，一份接一份地把自己燒進去，直到某天突然空掉、累垮，才發現火燒到沒柴了。明明是一團能照亮人的旺火，卻一次次把自己燒到熄滅邊緣。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始半信半疑地練習「停一下、留點白給自己」，偶爾還是會手滑又把自己燒過頭；但你已經會在累的時候問自己一句：「我這是真的想做，還是只是停不下來、怕自己不夠好？」</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你既熱情又懂得收火，發光但不燒乾自己。你會先把自己的杯子裝滿，再慷慨地倒給別人。那團火因為終於被你好好照顧，越燒越穩——外面依然又熱又亮，裡面卻多了一份能燒一輩子的從容。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>這輩子到現在，你最「明明已經很累、卻還是停不下來、硬把自己燒進去」的一段，是什麼時候？那一次，如果你當時允許自己停下來、慢下來，現在的你會不會不太一樣？</p>
+      <p class="q-note">（這些問題不用急著答。寫下來，或就放著讓它在心裡發酵——真正的看見，是被一個好問題「問」出來的，不是被答案「餵」出來的。每一章結尾，我都會留一個這樣的問題給你。）</p>
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="chapter" id="c2">
+    <div class="ch-num">第二章</div>
+    <h2 class="ch-title display">你體內那場打不完的戰爭</h2>
+    <p class="ch-lead">你有沒有一種感覺——你心裡好像住著兩個人，一個又熱又亮、想衝出去、想被看見；一個又深又沉、想躲起來、把感受藏得很深。我跟你說，那不是你陰晴不定，那是你被裝進了一明一暗、兩股都很強的力。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你裡面，同時住著「想發光的太陽」和「藏得很深的深海」</h3>
+      <p>你出生的時候，被同時裝進了兩股都很強、卻氣質完全相反的力。</p>
+      <p>一個是——<strong>外向、大方、有光、想被看見、想被肯定、想站到亮處發光</strong>。這一面的你像個小太陽，自然散發溫暖和魅力，走到哪裡都希望被注意、被欣賞，骨子裡有一份「我想閃閃發亮、我想被世界看見」的渴望。另一個是——<strong>內向、深沉、感受極其濃烈、把情緒藏得很深、對人事物有一種看穿表面的洞察力</strong>。這一面的你像一片深海，表面平靜，底下卻有著澎湃的暗湧、強烈的愛恨、不輕易讓人靠近的祕密角落。</p>
+      <p>這兩股力，一個叫你「亮出來、被看見、去發光」，一個叫你「藏起來、守住內心、別讓人看透」。所以你常常在矛盾裡：你明明渴望被看見、被理解，卻又本能地把最真實、最深的那一面藏起來，連最親的人都未必摸得透你。你不是難搞，你是<span class="em">一個外表很亮、內心卻很深的人，而這兩層，常常自己在打架</span>。</p>
+      <p>而且你身上還有一個重要的設定：你做重要決定的時候，<strong>不該靠當下的衝動，而要等情緒的潮汐過完再定</strong>。你的感受像海浪，有高有低——情緒高的時候你覺得什麼都可以，情緒低的時候你又覺得全完了。這場「太陽想衝、深海想沉」的內戰，會在你的情緒漲落裡，打得特別兇。這是真的，不是你想太多。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>於是你常常「臉上在發光，心裡卻在獨自翻湧」</h3>
+      <p>這場內戰的代價是：你很容易<span class="em">把「深海」藏起來，只讓人看見「太陽」</span>。</p>
+      <p>當你心裡那片深海翻起濃烈的情緒——強烈的在意、受傷、嫉妒、不安、或是說不出口的渴望——那個想發光、想被喜歡的太陽會立刻跳出來說：「別讓人看到你這麼脆弱、這麼濃烈、這麼黑暗，會嚇到人、會不好看，撐住、笑一個。」於是你把那些深的情緒往肚子裡吞，繼續發光、繼續大方。一次兩次沒事，但長年累月下來——<strong>你會跟自己最真實的感受越來越遠，那些被你藏起來的濃烈情緒不會消失，它們會在某個夜裡、某個臨界點，一次湧上來淹沒你。</strong></p>
+      <div class="pull">你不是情緒太多，你是太習慣不准自己被看見情緒。這兩者，差很多。</div>
+      <p>這也是為什麼你有時候會突然很低落、很想消失、很想躲起來舔傷口——不是發生了什麼大事，是<span class="em">那片被你壓住的深海，終於漲潮了</span>。你一邊在亮處努力發光（太陽），一邊在暗處獨自承接那些濃烈的感受（深海），你站在中間，被兩邊撕。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>這個矛盾不是病，是你最有深度的天賦</h3>
+      <p>我要跟你說一個會讓你會心一笑的真相：<strong>你的「外面很亮、裡面很深」，不是要被解決的問題，它是你最稀有的天賦。</strong></p>
+      <p>你想想——正因為你「既能在亮處發光、又有深海般的洞察與感受力」，你才會是那種<span class="em">既有魅力、又有深度</span>的人。你不是只會表面熱鬧的人，也不是只會躲在深處的人。你那片深海，給了你別人沒有的東西：你能感受到別人感受不到的細膩、能看穿表面的真相、能在最深的層次去愛、去理解、去療癒一個人。世界上最迷人的人，不是只會發光的，而是<strong>有光、也有深度，能照亮人、也能懂人最深的痛</strong>——那正是你。很多閃亮的人很淺，很多深刻的人不發光，而你兩樣都有。</p>
+      <div class="step">
+        <div class="kicker">把內戰變和解</div>
+        <p>下次又感覺到那股拉扯——那片深海翻湧、太陽卻急著要你藏起來的時候——別急著壓。試著<strong>讓「太陽」去陪伴「深海」，而不是去否認它</strong>。也就是說：先允許自己感受那些濃烈的情緒（深海是真的、值得被看見的），別急著用笑容蓋過去；等情緒的潮汐過完、沉澱下來，再決定怎麼表達、怎麼行動（太陽來執行）。</p>
+        <p>盤點一下：你那個「想發光的太陽」最渴望什麼？你那片「藏得很深的深海」最害怕被看見什麼？然後試著找一個能同時承接兩邊的方式。你會發現，<span class="em">當太陽開始溫柔地照進深海、而不是急著把它蓋住，你整個人會鬆很多、也真實很多。</span></p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>用發光的太陽天天蓋住翻湧的深海，臉上笑著、心裡卻獨自承接濃烈的情緒。怕被看見脆弱、怕嚇到人，於是一次次把最深的感受吞下去，活成一個亮麗卻沒人真正懂的人，然後在某個夜裡被漲潮的情緒淹沒。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始在情緒翻湧時停一下，不急著用笑容蓋過去；偶爾還是會自責「我怎麼這麼多感受、這麼難搞」，但你已經會試著先問自己一句：「等這陣潮汐過了，我真正的感受到底是什麼？」</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你不再打內戰，而是讓「太陽」溫柔地照進「深海」。你既有光、又有深度——先允許自己感受，等潮汐沉澱再表達。那曾經撕扯你的矛盾，變成了別人學不來的魅力：一個既能發光、又懂人心最深處的迷人靈魂。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你心裡那片「藏得很深的深海」，最近一次是為了什麼翻起濃烈的情緒，而你又用「發光的太陽」把它笑著蓋了過去？如果那一次，你允許自己先好好感受、等潮汐過完再回應，會怎麼樣？</p>
+    </div>
+  </article>
+
+  <!-- ③ -->
+  <article class="chapter" id="c3">
+    <div class="ch-num">第三章</div>
+    <h2 class="ch-title display">你那個一直重複的隱形迴圈</h2>
+    <p class="ch-lead">每個人心裡都有一套自己沒察覺的劇本，一遍又一遍地演。我幫你把你的那套，攤開來看一次——看見了，就有機會改寫。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你對情緒與感受的濃烈，是天賦，也是枷鎖</h3>
+      <p>你的感受力不是小事——它是一片非常深的海。</p>
+      <p>你能<strong>感受到別人感受不到的濃度</strong>：同一件事，別人覺得「還好吧」，你卻能體會到底下那層強烈的情緒；你愛起來很深、在意起來很濃、受傷起來也很重。你天生帶著一種對情感的高解析度，這讓你成為一個能深深去愛、深深共情、能陪人走到最深處的人。這是一種很珍貴的能力——很多人活得很表面，恰恰最缺這個。</p>
+      <p>但海太深也有代價：你會<strong>讓情緒的潮汐主導你的判斷</strong>。情緒高漲的時候，你覺得這件事太棒了、這個人太好了、我什麼都辦得到；情緒低落的時候，你又覺得一切都糟透了、這段關係沒救了、我什麼都不行。同一件事，你在浪頭和浪谷會做出兩種完全相反的決定。於是你常常在情緒最濃的當下衝動地說了什麼、決定了什麼，等潮水退了又後悔。你常常累，是因為你一直在獨自承接這片海的漲落，卻沒給它時間沉澱。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你重複在跑的那套劇本，長這樣</h3>
+      <p>來，我們把它畫出來：</p>
+      <p><span class="em">一件事或一個人，在你心裡掀起一陣濃烈的情緒（強烈的興奮、或強烈的受傷）→ 你在情緒最高/最低的當下，急著做出決定或說出口 → 你把最深的那層感受藏起來，外表還是發光、大方 → 短時間裡好像撐過去了 → 但那股沒被好好消化的情緒，悄悄沉進深海 → 過一陣子它又漲潮，把你整個淹沒 → 你又在情緒裡衝動地反應一次……</span></p>
+      <p>這個圈，你已經繞了很多年。而它的燃料，是一句你很早就裝進身體的話——<strong>「我的感受太濃、太多、太黑暗了，不能被看見、不能拖累別人，我得自己消化、自己撐住、繼續發光。」</strong></p>
+      <div class="pull">不是情緒讓你委屈，是「不准情緒被看見、被好好沉澱」這套劇本讓你委屈。浪會退，劇本不會，除非你看見它。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>改寫劇本的三個鬆動點</h3>
+      <p>你不用一次改掉整套，你只要在三個地方鬆手：</p>
+      <p><strong>第一，學會「等情緒的潮汐過完，再做決定」。</strong>當一件事在你心裡掀起濃烈的情緒、你很想當下就拍板或攤牌時，先按住——告訴自己：「<span class="em">這是浪頭（或浪谷），不是真相。等我平靜下來、潮水退了，答案才會清楚。</span>」這對你來說，是最重要的一個開關：重大的事，永遠不在情緒最濃的當下決定。</p>
+      <p><strong>第二，給濃烈的情緒一個出口，別只是吞下去。</strong>你的感受需要被「流動」掉，不是被「壓住」。寫下來、找個信任的人說、用創作或運動把它倒出來——讓那片深海有地方流，它就不會在某個夜裡突然漲潮淹沒你。<span class="em">被表達過的情緒會過去，被壓住的情緒只會累積。</span></p>
+      <div class="step">
+        <div class="kicker">把「當下衝動」改成「先讓它沉澱」</div>
+        <p>第三，也是最重要的：<strong>每次情緒很濃、很想立刻反應的時候，先停下來，給自己至少一個晚上（甚至幾天），等心真的平靜了再回應。</strong>你太習慣在情緒的浪頭上行動了。不是要你變得冷感、壓抑，是要你<span class="em">先讓海沉澱，再從清澈的水底看答案</span>。你的直覺其實非常準——但它只在你平靜下來、潮水退去之後，才聽得清。情緒翻湧時聽到的，是浪的聲音，不是直覺的聲音。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>劇本自動播放：情緒掀起、當下衝動決定、把深的感受藏起來繼續發光、過陣子又被漲潮淹沒……一圈一圈繞，你以為這是「我感受太多、我太敏感」，其實是那句「我的情緒不能被看見」在後台一直跑。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>你開始認得出那股熟悉的翻湧——「啊，潮汐又來了」。會試著在情緒最濃時先按住、不當下決定，會給感受找個出口而不是只吞下去；雖然還沒每次都成功，但你已經看得見它了。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>情緒來了你知道那是潮汐、不是真相，會等它沉澱再回應。你給濃烈的感受找到了流動的出口，不再讓它累積成淹沒你的大浪。舊劇本還在，但已經抓不住你了——你終於能用清澈水底的眼睛，看清自己真正要什麼。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>上一次你「在情緒最濃的當下衝動做了決定、說了話」是哪件事？如果能重來，你最想在哪一步先停下來，告訴自己一句：「這是浪，不是真相——等我平靜了，再決定。」</p>
+    </div>
+  </article>
+
+  <!-- ④ -->
+  <article class="chapter" id="c4">
+    <div class="ch-num">第四章</div>
+    <h2 class="ch-title display">你的能量怎麼充、怎麼漏</h2>
+    <p class="ch-lead">你不是沒有能量，你的能量其實爆滿——你是「不知道怎麼收、怎麼省」。搞錯了，你會一直在燒乾與充滿之間劇烈擺盪；搞對了，你會發現自己其實是一座很厚的電池，後勁很強。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你是「做真心有回應的事」才有電，不是「衝動接下的事」會有電</h3>
+      <p>很多人是靠規劃、靠理性算計來決定要做什麼。<strong>你不是。</strong></p>
+      <p>你的電，來自<span class="em">做那些你身體真正有回應、真正點頭、真正愛的事</span>。你的設計裡有一個很清楚的開關：當一件事你打從心底想做、身體會自然「嗯，就是這個」地響應，你做起來就有用不完的力氣、做得又好又久；可是當一件事你只是「在情緒高漲的當下一時衝動答應」、或「覺得不做不行而硬接」，你就會越做越累、越做越空，最後耗到對自己生氣。<strong>你不缺能量，你缺的是把能量用在「真心有回應」而不是「一時衝動」的事情上。</strong></p>
+      <p>而且要老實說：你那把火本來就旺、你的情緒本來就濃，所以你特別容易在情緒的浪頭上一口氣答應一堆事、一頭栽進去，等潮水退了才發現「這根本不是我真正想做的，我只是當下被沖昏頭了」。你需要學的，不是接更多，而是<strong>把「等情緒沉澱後，身體還是有回應嗎」當成接事的第一道關卡</strong>。對你來說，慢一點決定，不是猶豫，是省電。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你最大的兩個漏電破口</h3>
+      <p>你的電其實爆滿，問題出在<strong>漏</strong>。你有兩個很大的破口：</p>
+      <p><strong>破口一：在情緒高漲時衝動答應太多事，退潮後才發現不想做。</strong>你的火旺、情緒濃，一被點燃就什麼都想接、什麼都覺得辦得到。但這些「在浪頭上答應」的事，等情緒沉澱後常常變成你不想做、卻又不好意思反悔的負擔——它們是你最大、也最隱形的漏電口。</p>
+      <p><strong>破口二：獨自承接濃烈情緒造成的內耗。</strong>你習慣把最深的感受藏起來、自己消化，不讓人看見。但那些被壓住的情緒不會消失，它們在你心裡反覆翻湧、反覆消耗你。這股「一邊發光、一邊獨自承接深海」的拉扯，本身就極度耗電——你會在沒人逼你的時候，自己跟自己內耗，累的不是身體，是那顆一直在壓抑、一直在獨自撐住的心。</p>
+      <p>還要提醒你身體的一個訊號：你這款體質，火旺、情緒悶，要特別顧好<span class="em">睡眠、別讓自己長期處在亢奮燃燒的狀態、也別讓壓抑的情緒累積成身體的緊繃或上火</span>。你的火需要「水」來平衡——多喝水、多接觸大自然與水、給自己安靜沉澱的空間，對你不是養生口號，是真正的調節。你的身體，會比你的嘴巴更早說出「我燒過頭了」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>別再在浪頭上衝動，要學會「等沉澱、先問身體還有沒有回應」</h3>
+      <p>你卡的時候，直覺是「再加把勁、再多接一點、再撐一下」——那只會更耗。你真正需要的是<strong>把力氣收回到「等情緒沉澱後，你身體還是真心有回應」的事情上</strong>：該等的等、該收的收、該流動的讓它流動。這幾個字，請你記一輩子。</p>
+      <div class="step">
+        <div class="kicker">三個具體的充電/止漏動作</div>
+        <p><strong>1. 接任何事之前，先讓情緒過一夜，再問身體「我有沒有真心想做」</strong>：不是在當下的興頭上點頭，是等潮水退了、心平靜了，去感覺身體還有沒有那聲「嗯，好」。沒有那聲回應的，溫和地拒絕或延後——這是你最重要的省電開關。</p>
+        <p><strong>2. 每天留一段「給自己澆水」的時間</strong>：安靜、獨處、接觸水或大自然、把情緒倒出來。你的火太旺了，需要主動補水——這對你不是奢侈，是不讓自己燒乾的必需品。</p>
+        <p style="margin-bottom:0"><strong>3. 把「在情緒浪頭上做決定」的次數，慢慢減下來</strong>。每當你又想在情緒最濃時立刻行動，提醒自己：在浪頭上做的決定，十次有八次會後悔。試一個月，重要的事都等沉澱後再定，看你的人生穩多少。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>一被點燃就什麼都接、什麼都答應，又把濃烈的情緒全往肚裡吞、自己消化。明明能量爆滿，卻全漏在「衝動接下的事」和「獨自承接的情緒」上，在燒乾與充滿之間劇烈擺盪，累到對自己生氣還搞不懂為什麼。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始在答應之前讓情緒先過一夜，練習給感受找出口、給自己澆水；雖然還會在浪頭上手滑接下不想做的事、又把情緒壓回去，但你已經知道哪裡在漏電了。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你把力氣收回到「等沉澱後身體還有回應」的事情上，會等、會收、會讓情緒流動。不在浪頭上衝動，固定給自己澆水——電力穩穩的，後勁很強，因為你的火終於學會了，怎麼燒得久而不燒乾。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>誠實一點：這個月，是什麼（或誰）讓你做起來特別有勁、特別不累？又有哪些「在情緒高漲時衝動答應」的事，現在正默默漏你的電？這些漏掉的，有多少其實退潮後你根本不想做？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第二部 ░░░░░░░░ -->
+  <div class="sep"><span>第二部 · 顧好自己，才顧得了關係</span></div>
+
+  <!-- ⑤ -->
+  <article class="chapter" id="c5">
+    <div class="ch-num">第五章</div>
+    <h2 class="ch-title display">你愛與被愛，真正的樣子</h2>
+    <p class="ch-lead">把自己顧好之後，我們來看關係。因為你的狀態，會直接決定你吸引到什麼樣的人、以及你在關係裡會不會把自己愛到失了分寸。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你在「愛與連結」裡認識自己——這既是你的天命，也是你的軟肋</h3>
+      <p>外面的人看你，可能覺得你大方、開朗、有魅力、能量很好。但我看見的是——<strong>在你心裡最核心的位置，放著的其實是「連結」這兩個字</strong>。你這一生很大一部分的功課，都是在愛與關係裡完成的：你透過一段段深刻的關係，去認識自己、去學習選擇、去長大。對你來說，一段真正深刻的關係，不是生活的點綴，是你靈魂的功課之一。這是你最熱、也最深的底色。</p>
+      <p>只是你愛人的方式，有一個很特別的特徵：你<span class="em">愛得很濃、很深、很全心全意，一旦投入就會把整團火都燒進去</span>。你不是淺淺地喜歡，你是深深地愛、深深地在意、深深地渴望融為一體。你願意為對方付出、為對方發光、為對方掏心掏肺。這是你最動人的地方，但也是你最容易受傷的地方——因為你給得太滿、愛得太深，<strong>很容易在關係裡失了自己的分寸，把對方的世界當成自己的全部，最後在這段關係裡燒乾了自己。</strong></p>
+      <p>而且你的設計裡還有一個很重要的特質：你做關係裡的重要選擇時，<strong>千萬不要在情緒最濃的當下衝動決定，要等那陣情緒的潮汐過完、心真的平靜了，再定</strong>。你太容易在熱戀的甜頭裡昏頭、也太容易在受傷的浪谷裡賭氣。你的智慧是「讓時間沉澱、等潮水退了再看清」。對的人，經得起你等潮水退；不對的人，會在潮水退去後露出真相。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你常吸引到「讓你燃燒、卻也讓你失衡」的關係</h3>
+      <p>還記得前面那把又旺又深的火嗎？它在親密關係裡會變成一個陷阱：</p>
+      <p>你會不自覺地<strong>被「能點燃你、讓你瞬間燃燒起來」的對象吸引</strong>——那種充滿張力、充滿激情、讓你心跳加速、讓你愛恨交織的關係。一開始那種濃烈讓你覺得「這才是愛」，但時間久了，你又會發現自己在這段關係裡愈陷愈深、愈付出愈多、情緒被對方牽著劇烈起伏，甚至開始失去自己。你會在某個浪谷裡委屈地想：「為什麼我愛得這麼深、給得這麼多，最後卻把自己弄得遍體鱗傷？」</p>
+      <p>而你真正需要的，剛好相反：你需要一個<span class="em">能接得住你的濃烈、給你安全感、讓你穩定、不會把你的情緒拉得忽高忽低</span>的人。你的火很旺，你需要的不是另一把更猛的火（那會把你們兩個都燒掉），而是一片能涵容你、平衡你、讓你穩穩燃燒的水。對的人，不是讓你燒得更瘋的，是讓你燒得更穩、更久、更踏實的。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的正緣，不是最讓你心動的，是最讓你安定的</h3>
+      <p>別再用「他能不能瞬間點燃我、夠不夠刺激」來找人了。對你來說，對的人只有一個標準——</p>
+      <div class="pull">能接得住你的濃烈與深、給你安定與安全感、讓你在關係裡還是你自己的人；而不是讓你愛得失了分寸、情緒被拉得忽高忽低、最後燒乾自己的人。</div>
+      <div class="step">
+        <div class="kicker">在關係裡練兩件事</div>
+        <p><strong>1. 練習在關係裡保有自己，別把對方當成全部。</strong>你太容易把整團火都燒進一段關係裡了。試著在愛得最深的時候，也留一塊只屬於你自己的空間——你的朋友、你的興趣、你的目標。一段健康的愛，是兩個完整的人靠近，不是一個人燃燒自己去成全另一個人。你愈是保有自己，反而愈被珍惜。</p>
+        <p style="margin-bottom:0"><strong>2. 重大的關係決定，等情緒沉澱、潮水退了再定。</strong>不在熱戀的甜頭上衝動承諾，也不在受傷的浪谷裡賭氣分手。你的智慧是「等潮水退、看清楚再決定」——讓平靜下來之後的你，幫你看清這個人到底是不是對的人。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>被能瞬間點燃你的人吸引，愛得很濃很深、把整團火都燒進去，在關係裡愈陷愈深、失了自己的分寸。情緒被對方拉得忽高忽低，最後把自己燒得遍體鱗傷，還在浪谷裡委屈「我愛得這麼深，為什麼是這個下場」。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始試著在愛得最深時也留一塊屬於自己的空間，重大決定學著等潮水退了再定；雖然還會被濃烈的張力吸引、還會在浪頭上衝動，但你已經分得清「讓我燃燒的人」和「讓我安定的人」差在哪。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你愛得深，但不再把自己燒乾。你選擇能接得住你的濃烈、給你安定的人，在最深的愛裡也還是完整的自己。重大決定都等潮水退了再定——你終於不是關係裡那個燃燒殆盡的人，而是被穩穩地、深深地、也安全地愛著。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>回想你愛得最深的一段——你是在那段關係裡「更成為自己」，還是「漸漸失去自己」？如果現在的你能跟當時的自己說一句話，你最想提醒她什麼？</p>
+    </div>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="chapter" id="c6">
+    <div class="ch-num">第六章</div>
+    <h2 class="ch-title display">你從家裡帶出來的鑰匙與傷</h2>
+    <p class="ch-lead">你今天會這樣愛得濃、這樣把情緒藏得深、這樣習慣自己撐住——很多都不是你的選擇，是你很小的時候，為了被愛、為了讓自己安全，而學會的。看懂它，你就能放下一半。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你的安全感藍圖，是在原生家庭畫下的</h3>
+      <p>你對世界「安不安全、我值不值得被愛」的最底層設定，是在你很小的時候、特別是跟<strong>家裡那個情感與情緒的氣氛</strong>那條線上形成的。</p>
+      <p>你身上有一股很深的「情緒很濃、卻習慣藏起來自己消化」的傾向，也有一股很深的「我得發光、得讓人開心、得自己撐住」的習慣——這兩股，很可能都跟你的成長環境有關。你很可能<span class="em">很早就學會「我的真實情緒（特別是負面的、脆弱的）最好不要表現出來，要嘛沒人接得住，要嘛會讓家裡的氣氛更糟」</span>。於是你把那片深海藏進心底，只把發光的太陽拿出來給人看——你那份「報喜不報憂、自己的苦自己吞」的本事，很多時候不是天生的，是在一個你覺得「情緒不被允許」的環境裡，被磨出來的。</p>
+      <p>而你那份「想被看見、想被肯定、想透過愛來確認自己值得」的渴望——也是從這裡長出來的。你心裡一直有一個渴望：想要一段可以放心做完整的自己、連最深最濃的情緒都被接得住、不用報喜不報憂的關係。好消息是：你天生帶著很旺的能量、很高的理想，還有一股能透過愛與創意去療癒人的天賦，而且你現在正走在一段擴展與貴人很旺的階段，這份深刻的愛人能力，會在你長大的這些年慢慢以好的關係與機會回報你，這個我們第八、第九章還會講到。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>那道傷，就是「我的真實情緒太多、太重，不能被看見，得自己撐住才安全」</h3>
+      <p>看到了嗎——這句話，從第三章追到這裡，根在這。</p>
+      <p>你小時候為了被愛、為了讓自己在情感上感到安全，發展出一套生存策略：<strong>把脆弱和濃烈的情緒藏起來，只展現開朗、發光、什麼都能扛的那一面</strong>。這套策略當年保護了你，讓你不會因為「太情緒化、太黏、太多需求」而被嫌、被推開。但它也長成了今天那個「習慣報喜不報憂、習慣自己消化所有情緒、習慣在最深的地方獨自承受」的你。你那片又深又濃的海，從小就被教會了「藏好，別讓人看見，自己撐住」。</p>
+      <div class="pull">那不是你的缺點，那是一個小孩，用盡全力想被愛、想讓自己在情感上活下來的方式。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>把這把鑰匙一轉，好幾道門會同時開</h3>
+      <p>這一章是整份報告的一個樞紐。因為只要你鬆開這一個結，<strong>第四章的漏電、第五章的關係陷阱、第二章的內戰，會同時跟著鬆</strong>。</p>
+      <p>練習很簡單，但要練很久——<span class="em">把「展現真實的情緒」和「會被推開、會不被愛」這兩件事，慢慢分開。</span>你讓人看見你的脆弱、你的濃烈、你的需要，你也一樣值得被愛、被靠近，甚至會因此被愛得更深。這句話你現在可能不信，沒關係，先放在心裡。</p>
+      <div class="step">
+        <div class="kicker">你的家族功課</div>
+        <p>把家給你的<strong>「深刻的感受力、體貼別人的細膩、自己扛得住的堅強、想照亮人的熱情」留下來</strong>——那是你最珍貴的天賦之一，你的深度與療癒力，根就在這。</p>
+        <p style="margin-bottom:0">同時，把那份<strong>「情緒不能被看見、什麼都得自己撐」慢慢放下</strong>。你已經長大了，你現在可以用「成人的你」，重新養一次「小時候那個太早學會藏起情緒、自己消化一切的你」——這一次，允許她有情緒、允許她示弱、允許她讓人看見最深的那片海，並且發現：被看見，不會失去愛，反而會得到更真實的愛。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>不知不覺活在那個太早學會藏情緒的小孩的生存策略裡——報喜不報憂、自己消化一切、最深的脆弱絕不讓人看見，還以為這就是「堅強、懂事、不麻煩人」。把當年保命的隱藏，穿成了今天綁住自己的繭。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始看懂「啊，這是小時候學來的，不是我真的非藏不可」。你慢慢試著對信任的人露一點脆弱、說一點真實的感受，雖然還半信半疑、還怕被推開，但你已經鬆了一點點。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你留下了家給你的深度與堅強，放下了那份「情緒不能被看見」的恐懼。你用成人的自己，重新把那個太早學會藏起濃烈情緒的小孩，好好抱了一次——你終於可以，既有深度、又敢在愛裡讓人看見完整的、有光也有暗的你。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你身上有一個「報喜不報憂、什麼都自己扛」的反應，其實是小時候為了被愛、為了情感上活下來才學會的。你認得出它是哪一個嗎？它今天，是還在保護你，還是已經在綁住你、讓你不敢被真正靠近？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第三部 ░░░░░░░░ -->
+  <div class="sep"><span>第三部 · 關係對了，事業財富才水到渠成</span></div>
+
+  <!-- ⑦ -->
+  <article class="chapter" id="c7">
+    <div class="ch-num">第七章</div>
+    <h2 class="ch-title display">你天生是來做什麼的</h2>
+    <p class="ch-lead">自己顧好了、關係對了，我們才談事業。因為你的事業，本來就該是你這個人「自然長出來的果」，不是你硬擠出來的東西。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>你是來「用你的光與愛，去療癒、滋養、啟發一大群人」的</h3>
+      <p>把前面幾章串起來，你的天命其實已經很清楚了——</p>
+      <p>你有滿滿的熱情與生命力，能點燃人、感染人；你有深刻的感受力與洞察，能懂人最深的痛、能在最深的層次去療癒；你還有一份很特別的特質——<strong>你像生命的源頭一樣，能源源不絕地給出滋養與能量，是天生會照顧人、孕育人、給人力量的那種源頭型的人</strong>。這幾樣加起來，世界上有一種角色剛好需要全部：<strong>療癒者、滋養者、能啟發與帶動一大群人的傳遞者</strong>。你不是來默默做執行、躲在角落的，你是來站到能被看見的地方、用你的光與愛去影響很多人的。</p>
+      <p>而且你身上還帶著一個很高的天賦——<span class="em">你帶著一份「大師級」的理想與服務性</span>。你心裡那個渴望，不只是「我自己過得好」，而是「我想讓更多人因為我而變好、被啟發、被療癒、被照亮」。你有理想、有直覺、有一種想「把愛與光大規模地傳出去」的使命感。這種「既有滿溢的能量、又有深刻的療癒力、又有高遠的理想」的組合，是很多領域（療癒、教學、創作、品牌、自媒體、任何需要「用個人魅力與愛去感染、滋養一大群人」的工作）裡，最稀缺的核心。你做的，從來不該只是「把工作做完」，而是「用你的光，去點亮、去滋養很多人」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>你最稀有，也最容易卡的地方</h3>
+      <p>你有一個很罕見的組合：<strong>你既有「能發光、能感染、能滋養一大群人」的熱情與能量，又有「懂人心、能深刻療癒」的感受力與深度。</strong>大部分人只有其中一種——要嘛很有能量但很淺，要嘛很深刻但發不出光。能兩者兼備的人，非常少。</p>
+      <p>但這也是你最容易卡的地方——因為你的火太旺、你太想給，你會忍不住<span class="em">把自己燒進每一件事、每一個人身上，給到掏空、累到沒電，最後不是優雅地發光，而是疲憊地硬撐</span>。你那麼高的理想，反而可能變成壓垮你的重擔：「我應該做得更多、影響更多人、做得更好」——這份完美的理想，會逼著你不准自己休息、不准自己只是「夠好」。你的天賦在「穩穩地發光、長久地滋養」，不在「燒乾自己去追一個永遠不夠的理想」。</p>
+      <p>還有一個常見的卡點：你心裡有很高的理想和很濃的熱情，但因為情緒起伏大，你很容易<span class="em">在情緒高漲時一頭栽進一個大計畫、退潮後又懷疑自己、想放棄，於是事情常常開了頭卻難以持續</span>。你的設計其實是要你「先紮根、再親身去試、從一次次經驗裡長出真本事」的——別讓「情緒的浪頭」和「過高的理想」，把那個本該穩穩發光的你燒壞了。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>你的事業槓桿：把你的光與愛，變成能持久滋養一大群人的力量</h3>
+      <p>你最大的價值，不在你「燒了多少、給了多少」，在你<strong>「能不能穩穩地發光、能不能用你的愛與深度去真正滋養、啟發人」</strong>。</p>
+      <p>你的熱情、你的感受力、你的療癒與感染力，對你來說是低成本的（你本來就有），但對別人是無價的。把它們<span class="em">變成一個能持久發光、能滋養一大群人的位置</span>——做療癒、做教學、做創作、做品牌、做自媒體、做任何能「用你的光與愛去點亮、陪伴、啟發人」的事——讓你的熱情和深度發揮，而不是讓你的火燒乾在一堆消耗你的事情上。這就是你的槓桿。</p>
+      <div class="step">
+        <div class="kicker">下一步</div>
+        <p>找出<strong>「別人最常因為你而被點燃、被療癒、被照亮的那一類場合」</strong>——別人最常跟你說「跟你聊完整個人都亮了」「被你鼓勵到」「你好有能量、好溫暖」的，那通常就是你天命的入口。把你的熱情、你想傳遞的愛與理念，整理成一個你能「長久去做、而不是燒一陣就累」的東西（一門課、一個療癒/創作的事業、一個品牌、一個社群）。</p>
+        <p style="margin-bottom:0">然後記得：<span class="em">把「燒得更旺」換成「燒得更穩」，把「追一個永遠不夠的理想」換成「先做出一個夠好的、能持續的版本」</span>。還有——別在情緒的浪頭上開太多坑。地基打得差不多了、情緒沉澱了，再穩穩地站出去發光。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>明明是來用光與愛滋養一大群人的，卻把自己燒進每件事、每個人身上，給到掏空、累到硬撐。被過高的理想壓著「永遠不夠好」，又在情緒浪頭上開一堆坑、退潮就想放棄——天賦在持久的發光與療癒，人卻卡在燒乾與半途而廢裡。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始試著把「燒得旺」換成「燒得穩」，學著先做出一個夠好、能持續的版本，不在浪頭上亂開坑；偶爾還是會燒過頭、又被完美的理想逼得喘不過氣，但你已經嚐到「穩穩發光」比「拚命燃燒」更有威力的甜頭。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你把力氣用在持久地發光、用愛與深度真正滋養人，不再燒乾自己去追一個永遠不夠的理想。情緒沉澱了才開坑，做出能長久的版本——你活出了那個「又有滿溢能量、又有深刻療癒力」的稀有天賦，成了一盞能照亮很多人、卻不燒乾自己的長明燈。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果錢和「我夠不夠好」的焦慮，都不再是問題——你會用你的光與愛，去療癒、滋養、啟發哪一群人？做哪一件你打從心底覺得「這值得我長久地、穩穩地去發光」的事？</p>
+    </div>
+  </article>
+
+  <!-- ⑧ -->
+  <article class="chapter" id="c8">
+    <div class="ch-num">第八章</div>
+    <h2 class="ch-title display">你此刻，卡在哪一格</h2>
+    <p class="ch-lead">前面講的是你「本來的樣子」，這一章我們對一下「你現在的位置」——看看藍圖和現況之間，差在哪、又有什麼好消息正在路上。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>如果你還在燒乾自己，那就是卡在「不准自己停、不准自己只是夠好」</h3>
+      <p>你的藍圖寫得很清楚：<strong>穩穩地發光、用你的光與愛去滋養人、做你真心有回應的事、等情緒沉澱再做重要決定、學會給自己澆水</strong>。</p>
+      <p>所以如果你誠實地看，現在的你還在「一直燒、一直給、停不下來、在情緒的浪頭上衝動、把濃烈的感受獨自吞下去」——那你卡住的點，不是能力不夠，是<span class="em">還沒允許自己慢下來、收住、好好照顧那團火</span>。你還在用「拚命燃燒模式」過一個本來該用「穩穩發光模式」過的人生。這不是你的錯，只是那套「我得一直發光、得自己撐住、得做得更多才夠好」的舊程式，跑得太久、太自動了。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 一個你一定要聽進去的好消息</div>
+      <h3>你正走在一段「擴展、貴人、機會」的成長旺運裡</h3>
+      <p>我特別想把這個告訴你——<strong>你正走在一段（從幾年前開始、會持續到你三十歲出頭的）關於「擴展、學習、貴人、機會、往外長」的好運裡。</strong>這是一段很適合你大膽往外走、去學、去試、去連結人、去把自己的世界打開的時期。這幾年如果你有遇到貴人、有抓到機會、有覺得「世界在為我打開一些門」，那不是運氣，那是你正走在這段旺運上。</p>
+      <p>而且要提醒你一件事：<strong>這段往外擴展的好運，不會永遠都在。</strong>大約到你三十歲出頭，你會走進一段比較「收斂、紮根、扛責任、慢慢熬」的長路（那是另一種成長，是把份量沉澱下來的階段）。所以這幾年，<span class="em">是你最該大膽去長、去試、去抓機會、去把根基打好的黃金窗口</span>。不是要你急、要你衝動地什麼都接，而是說——在你情緒沉澱、身體真心有回應的方向上，這幾年值得你勇敢地、扎實地往前長一大步。</p>
+      <p>還有一個你大概沒被人這樣講過的好消息：你這條命，<strong>天生帶著務實聚財與多才多藝的能量</strong>。白話說，就是你<span class="em">不只有理想和熱情，你還很實際、很能掙、也很能守</span>——你不是只會發光、不懂現實的人，你有把光變成實際成果與收入的本事。而且你多才多藝、什麼都學得會，這讓你在這段擴展期，有非常多條路可以走。你的理想若能配上你的務實，會走得又遠又穩。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>趁這段旺運，把根紮深、把方向選對</h3>
+      <p>所以，請別在這段最該往外長的時候，把力氣全燒在消耗你的事情上。你正走在<strong>「擴展與機會」的黃金窗口</strong>裡，這幾年你抓住的學習、遇到的貴人、打下的基礎，都會成為你日後最重要的本錢——尤其是在三十歲出頭那段收斂、扛責的長路來臨之前。</p>
+      <div class="step">
+        <div class="kicker">下一步</div>
+        <p>盤點一下：<strong>這段擴展期裡，有哪些機會、貴人、或想學的東西，是你心裡真正有回應、卻一直因為害怕或猶豫而沒去抓的？</strong>把它們寫下來——這幾年，是你最適合大膽去抓、去試的時候，別讓它白白溜走。</p>
+        <p style="margin-bottom:0">然後在這段擴展裡，<span class="em">記得只把火燒在你真心有回應的方向上，並且邊長邊給自己澆水</span>：別把「擴展」活成「在情緒浪頭上什麼機會都接」。往外長，是為了長出真正屬於你的根與方向，不是為了把自己燒乾在一堆機會裡。大膽，但選對戰場。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>正走在一段擴展與機會的黃金窗口裡，卻把火燒在消耗自己的事情上、在情緒浪頭上什麼都接，或反過來因為害怕而不敢抓機會。把難得的旺運，過成了一邊燒乾、一邊錯過真正屬於你的門。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始相信「這幾年是我最該大膽往外長的時候」，試著去抓那些心裡真正有回應的機會、貴人、想學的東西；偶爾還是會在浪頭上亂接、或在害怕裡退縮，但你已經願意一邊長、一邊給自己澆水。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你看懂自己正走在擴展的黃金窗口，趁這段旺運把根紮深、把對的機會抓牢，也懂得選對戰場、邊長邊澆水。你把理想配上務實，在三十歲出頭那段紮根長路來臨前，已經長出了真正屬於你的方向與底氣。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>此刻擺在你面前、你心裡其實很有回應、卻一直因為害怕或自我懷疑而沒敢去抓的那個機會（或那段關係、那個夢）——如果你真的相信「這幾年是來幫你擴展的」，你會不會其實，早就該勇敢地往前踏一步了？</p>
+    </div>
+  </article>
+
+  <!-- ⑨ -->
+  <article class="chapter" id="c9">
+    <div class="ch-num">第九章</div>
+    <h2 class="ch-title display">你的翻身時機與下一步</h2>
+    <p class="ch-lead">最後一章，我們把整份報告收成一條路——不是給你一個結論，是給你一個起點。因為改命這件事，從來不靠「知道」，靠「做出第一步」。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的時機</div>
+      <h3>你現在正走在「該大膽往外長」的窗口，趁勢把根打深</h3>
+      <p>我知道很多人會焦慮「我是不是還沒成功、還沒找到方向」，但你的時機其實很清楚——<strong>你現在這幾年，正走在一段最適合擴展、學習、抓機會、往外大膽長的旺運裡。</strong></p>
+      <p>這段擴展期，注定是你去學、去試、去連結人、去把世界打開的階段，那是為了在這之後，<span class="em">當你走進三十歲出頭那段比較收斂、扛責、紮根的長路時，你已經長好了根、選對了方向、累積了本錢</span>。你真正要做的，不是急著「翻身」「證明自己」，而是趁這個窗口，把那些你真心有回應的機會抓牢、把基礎打扎實。這不是安慰你，這是你出廠就寫好的劇本：你的人生有它的節奏——現在是往外長的春天，要趁勢；之後是紮根沉澱的階段，要熬住。</p>
+      <p>而且有一本很老的命書，幫你秤過這條命，說了一句我想原原本本唸給你聽——<strong>「為人心性最聰明，作事軒昂近貴人」</strong>。意思是：你天生心思聰慧、做事大方有氣度，而且一生容易遇到貴人相助。換句話說：你不是孤軍奮戰、靠蠻力硬拚的命，你是<span class="em">靠聰明、靠氣度、靠貴人，把事情愈做愈順</span>的命。所以別總覺得「什麼都要自己扛」——記住這句話，它會提醒你：在這段擴展期，主動去連結人、讓貴人靠近你，你的路會比你以為的順很多。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 把整份報告，串成一條路</div>
+      <h3>為什麼順序不能顛倒</h3>
+      <p>現在你回頭看，會發現這九章其實是一條因果鏈：</p>
+      <p><span class="em">先把自己的根顧好</span>（學會收火、給自己澆水、等情緒沉澱再決定、允許情緒被看見、做真心有回應的事）<strong>→</strong> 你的火穩了、心定了 <strong>→</strong> 你會自然吸引到能接住你、給你安定的關係（因為你不再從「燃燒自己去抓住誰」出發）<strong>→</strong> 關係滋養了你，而不是燒乾你 <strong>→</strong> 事業和財富，水到渠成。</p>
+      <div class="pull">順序對了，人生就順了；順序顛倒——先拚事業、先談戀愛、把自己燒乾——就會處處卡。</div>
+      <p>你過去會卡，很多時候不是不夠努力，是<strong>順序反了</strong>：你想先把熱情全給出去、先在一段關係裡燃燒、先證明自己夠好，再回頭顧自己那團需要澆水的火。這份報告想請你做的，就是把順序調回來——先把自己的火照顧穩了，剩下的才接得住。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 你的第一步</div>
+      <h3>你越懂得照顧好自己的火，你的光就越能照亮人、越有貴人圍繞</h3>
+      <p>還記得你那股「靠聰明與氣度、近貴人」的能量嗎——它喜歡「一個照顧好自己、穩穩發光的你」。其實你整個人都是這樣：<strong>你越是懂得收火、給自己澆水、等情緒沉澱、忠於自己真心有回應的方向，而不是一味燃燒、一味討好、一味硬撐，你的光就越穩、人生就越順、越有貴人圍繞。</strong>因為人們真正會被吸引、會想靠近的，是一團穩穩發光、又熱又溫暖的火，不是一團快燒乾、忽明忽暗的火。這不是道德勸說，這是你這個人的運作方式。</p>
+      <div class="step">
+        <div class="kicker">現在，就這一步</div>
+        <p>這份報告讀完，最重要的不是你「懂了多少」，是你<strong>願不願意對自己，溫柔地踏出一步</strong>。所以——</p>
+        <p><span class="em">現在，挑一件你最近「明明累了、卻不准自己停」的事，允許自己停下來、給自己澆一次水；或挑一個你心裡真正有回應、卻一直因為害怕而沒去抓的機會，等情緒沉澱後，勇敢地去抓。</span>跟著真實的回應走，學會收火、學會等潮水退、允許自己的情緒被看見。</p>
+        <p style="margin-bottom:0">改命不靠知道，靠這一步。你不是來把自己燒成灰、證明自己能給多少的，你是來<strong>當一盞又熱又穩的長明燈，用你的光與愛，去療癒、滋養、照亮你愛的人與你信的事</strong>的。而那盞燈想要燒得久，第一步，就是先好好照顧它。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>把順序活反了——先把熱情全燒出去、先在關係裡燃燒、先證明自己夠好，再回頭顧自己那團快乾的火，於是處處卡、處處空。一直等一個「翻身的時機」，卻不知道時機要靠先把自己的火照顧穩了才接得住。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始把順序調回來：先顧火、先給自己澆水、再理關係、才談事業。你願意溫柔地踏出第一步、去抓真心有回應的機會；雖然偶爾又想在浪頭上衝、又想燒乾自己去成全誰，但你已經知道路該怎麼走。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>你活成了那句「心性最聰明、作事軒昂近貴人」——火穩、心定、關係安定、事業財富水到渠成。你越懂得照顧好自己的火，光就越亮、越有貴人；你不再追時機，因為你已經成了那盞又熱、又穩、又能照亮很多人的長明燈。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果你真的相信「先把自己的火照顧穩了，剩下的才接得住」——這個月，你會為自己做哪一件，你一直覺得「太放縱自己、太對不起別人、不夠拚」而遲遲沒做的、好好照顧自己的事？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 收尾環節 ░░░░░░░░ -->
+  <div class="sep"><span>收尾 · 把九套系統收成一條路</span></div>
+
+  <!-- 系統會診 -->
+  <article class="chapter" id="clinic">
+    <div class="ch-num">系統會診</div>
+    <h2 class="ch-title display">眾口同聲 vs 眾說紛紜</h2>
+    <p class="ch-lead">我讓九套系統同時開口，然後做兩件事：把它們「異口同聲」的地方挑出來（那多半就是你的核心真相），再把它們「各執一詞」的地方攤開（那不是你有問題，那是你此生要整合的功課）。</p>
+
+    <section class="clinic unison">
+      <div class="kicker">眾口同聲處 · 你的核心真相</div>
+      <h3>好幾套系統同時指向，這幾條可信度最高</h3>
+      <div class="item">
+        <span class="t">一、你的能量又旺又熱，天生想照亮人——這是真的，不是你自我感覺良好</span>
+        <p>好幾套不同的系統同時這樣說：一套說你是一團燒得極旺、又熱又亮的火；一套說你像生命的起源與母性，能源源不絕地給出滋養與能量；還有一套說你外表大方有光、自然想被看見、想發亮。這幾股聲音疊在一起，結論只有一個——你不是個能量平淡的人，你出廠就帶著滿溢的熱力與一份想照亮、滋養人的源頭能量。</p>
+      </div>
+      <div class="item">
+        <span class="t">二、你帶著很高的理想，是天生的療癒者與傳遞者</span>
+        <p>一套系統說你是大師級的橋樑與傳遞者，想用愛與創意服務、啟發一大群人；另一套說你像一陣靈感與滋養之風，是天生會照顧人、給人力量的源頭；還有一套說你此生的原型是在「愛與連結」裡認識自己。三條合起來就是同一件事：你不是來只顧自己的，你是來「把光與愛大規模地傳出去、療癒並啟發很多人」的——這是你天命的核心。</p>
+      </div>
+      <div class="item">
+        <span class="t">三、你的情緒與感受，又深又濃，需要學會沉澱</span>
+        <p>這條很值得你聽進去：好幾個源頭都指向同一件事——你內在的感受極其濃烈深沉（你大概也確實這樣感覺）；你最深的智慧來自直覺與感受的流動；而你做重大決定時，最忌諱在情緒最濃的當下衝動，要等潮汐過完、心平靜了再定。它們同時在提醒你：你的深情與直覺是天賦，但要學會讓它「沉澱、流動」，而不是被它的浪頭推著走。</p>
+      </div>
+      <div class="item">
+        <span class="t">四、你現在正走在「擴展、機會、貴人」的成長旺運裡</span>
+        <p>幾套系統異口同聲：你正走在一段擴展、學習、貴人很旺的好運中；你天生「近貴人」、容易遇到相助的人；你務實能掙、多才多藝、有很多條路可走。合起來就是同一個好消息——這幾年是你最該大膽往外長、抓機會、把根紮深的黃金窗口，而且你不是孤軍奮戰，路上會有貴人。</p>
+      </div>
+    </section>
+
+    <section class="clinic discord">
+      <div class="kicker">眾說紛紜處 · 你的內在功課</div>
+      <h3>系統打架的地方，不是你壞了，是你此生要整合的功課</h3>
+      <div class="item">
+        <span class="t">一、「外向發光的太陽」 vs 「深沉內斂的深海」</span>
+        <p>一邊是「大方、有光、想被看見、想被肯定」這股要你站到亮處發光的力；另一邊是「感受濃烈、深沉、習慣把情緒藏起來、不輕易讓人看透」這股要你往內收、往深處沉的力。這兩股在你體內天天對拉——這就是你內在那場戰爭的根。功課不是選一邊，是讓「發光的太陽」去溫柔地照進「深海」：先允許自己感受、別急著用笑容蓋過去，等潮汐沉澱再表達，做一個既有光、又有深度的人。</p>
+      </div>
+      <div class="item">
+        <span class="t">二、「滿溢想給的你」 vs 「需要被澆水、被收住的你」</span>
+        <p>一邊是「能量爆滿、想照亮人、想源源不絕地給」的源頭能量；另一邊是「火太旺需要水來收、最深的智慧來自安靜的直覺與流動」的提醒。一個要你往外燒、往外給，一個要你往內收、給自己澆水。這兩句都對。所以功課很清楚：你可以既慷慨地發光、又不燒乾自己——關鍵是先把自己的杯子裝滿，再倒給別人；先收火沉澱，再穩穩地照亮人。</p>
+      </div>
+      <div class="item">
+        <span class="t">三、「很高的理想」 vs 「該紮根、從經驗一步步長本事的你」</span>
+        <p>一套系統說你帶著大師級的高理想、想做很大很好的事；另一套說你的智慧是「先打好地基、再親身試錯，從經驗裡慢慢長出真本事」。一個要你追那個很高很遠的願景，一個要你腳踏實地一步一步來，有時候在你心裡拉扯（我應該做得更大更好 vs 先把眼前的做扎實）。這不是矛盾——功課是讓它們合作：用高理想當北極星指方向，用紮根的耐心一步步走過去，別讓「永遠不夠好」的完美感，逼著你燒乾或半途而廢。</p>
+      </div>
+      <div class="item" style="border-top:1px dashed var(--border); margin-top:6px; padding-top:14px">
+        <span class="t">所以，請記住這句</span>
+        <p>系統打架的地方，從來不代表你「有問題」。恰恰相反——那是你這一生被交付的整合功課。等你把這幾組對立的力，一組一組接上、變成彼此支援，你就不只是活著，而是活成了一個別人學不來的你：一團又熱又深、又有光又有底、能慷慨照亮人卻不燒乾自己的長明燈。</p>
+      </div>
+    </section>
+  </article>
+
+  <!-- 五運實戰摘要 -->
+  <article class="chapter" id="field">
+    <div class="ch-num">五運實戰摘要</div>
+    <h2 class="ch-title display">可以馬上用的五個方向</h2>
+    <p class="ch-lead">道理講完了，這裡給你五段最落地的建議——事業、財富、關係、家庭、身心使命，每一段都是你今天就能拿去用的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 事業（創業或找工作）</div>
+      <h3>用你的光與愛去發光、滋養人，別把火燒在消耗你的事上</h3>
+      <p>你適合<strong>療癒、教學、創作、做品牌、做自媒體、帶社群、任何能「用你的熱情與愛去感染、滋養一大群人」的位置</strong>——不適合冷冰冰、沒有情感連結、純粹機械執行、又消耗你能量的角色。如果你還在猶豫方向，答案偏向：去做能用上你「熱情、感受力、療癒與傳遞力」的事，敢站到能被看見、能影響人的地方。你還有一股很高的理想和滿溢的能量，別讓一個消耗你又無法發光的位置把它困住。</p>
+      <p style="margin-bottom:0">具體做法——<span class="em">趁這幾年的擴展旺運，去抓那些你真心有回應的機會與學習，並把事情做成「能持久」而非「燒一陣就累」的版本</span>。你越是穩穩地發光、越是讓自己的光被看見，就越能吸引到貴人與機會，成就那一番你骨子裡一直想做的、能照亮人的事。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 財富（理財與聚財）</div>
+      <h3>你有理想也很務實，能把光變成收入，但別在情緒浪頭上亂花亂投</h3>
+      <p>你的財路有一個好消息：<strong>你天生不只有理想和熱情，還很務實、很能掙也很能守，加上多才多藝與近貴人的能量，賺錢的路子很多、也容易遇到相助的人</strong>。你不是只會發光、不懂現實的人——你有把熱情和才華變成實際成果與收入的本事。這是你的本錢。</p>
+      <p style="margin-bottom:0">但給你一句最重要的理財忠告：<strong>別在情緒高漲時衝動消費或投資</strong>。你的火旺、情緒濃，特別容易在興頭上一口氣大手筆買下、投進、答應出去，退潮後才後悔。守住一條鐵律：所有大筆的花費與投資，都等情緒沉澱、過了至少一晚再決定。把你的務實天賦發揮出來——你本來就守得住財，只要別讓一時的衝動把它漏掉。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 關係（朋友、同事、戀情）</div>
+      <h3>找能接住你的安定的人，重大決定等潮水退了再定</h3>
+      <p>你愛得深、給得濃，這是你的天賦——但要小心那個老習慣：別被「能瞬間點燃你」的張力吸引，最後把自己燒乾、失了分寸。你真正要找的，是<strong>能接得住你的濃烈、給你安定與安全感、讓你在關係裡還是你自己的人</strong>，而不是讓你情緒忽高忽低、愈陷愈深的人。在所有關係裡，練習在愛得最深時也保有一塊只屬於自己的空間。</p>
+      <p style="margin-bottom:0">還有——所有重大的關係決定（在一起、分手、攤牌、承諾），都<span class="em">等情緒的潮汐過完、心真的平靜了再定</span>。別在熱戀的甜頭上衝動承諾，也別在受傷的浪谷裡賭氣決定。你的智慧是「等潮水退、看清楚再決定」——對的人，經得起你等潮水退。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其四 · 家庭</div>
+      <h3>用你的熱情與愛當家裡的暖源，但別把情緒全自己吞</h3>
+      <p>你重情、能給、又帶著務實聚財與近貴人的能量——成為家裡那個有溫度、能給大家能量、能把家凝聚起來的暖源，這件事你做得到，也很適合你，會慢慢回報你。</p>
+      <p style="margin-bottom:0">唯一要小心的是那個老習慣：<strong>別把「照顧家人」活成「自己的情緒和疲憊全往肚裡吞、報喜不報憂、一個人撐住一切」</strong>。你從小可能就太習慣藏起脆弱、自己消化。但真正親密的家，是每個人都能露出真實的情緒、互相接住，而不是靠你一個人燃燒自己、撐住所有人。在家裡也練習說出你的累、你的需要、你真實的感受——那會讓這個家，從「你獨自撐住」變成「彼此真正靠近」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其五 · 身體健康 · 情緒管理 · 人生使命</div>
+      <h3>給火澆水、讓情緒流動，然後穩穩地用你的光照亮人</h3>
+      <p><strong>身體：</strong>你的火旺、情緒悶，要特別顧<span class="em">睡眠、別讓自己長期處在亢奮燃燒的狀態、多喝水、多接觸大自然與水，別讓壓抑的情緒累積成緊繃或上火</span>。該停的別硬撐、該流動的情緒別憋著，給自己澆水，身體會輕鬆很多。<strong>情緒：</strong>當情緒掀起濃烈的浪、你很想當下反應時，先告訴自己「這是浪、不是真相」，等它沉澱再回應；同時給濃烈的感受找個出口（寫、說、創作、運動），別只是吞下去。</p>
+      <p style="margin-bottom:0"><strong>使命：</strong>說到底，你這一生的天命，就是<strong>用你那團又熱又亮的火、和那份源頭般的滋養力，去療癒人、啟發人、照亮人，把愛與光大規模地傳出去</strong>。這裡有個很美的循環——<span class="em">你越是懂得照顧好自己的火、先把杯子裝滿，你的光就越穩、越能真正滋養人、照亮人</span>。所以先把自己的火照顧穩了，再慷慨地把光傳出去。</p>
+    </section>
+  </article>
+
+  <!-- 此刻活層 -->
+  <article class="chapter" id="now">
+    <div class="ch-num">此刻</div>
+    <h2 class="ch-title display">你正站在哪裡 · 接下來這一年</h2>
+    <p class="ch-lead">前面講的，是「你永遠是誰」。這一段不一樣——它講「你現在站在哪、風往哪邊吹」。因為同樣一個人，站在不同的時間點，要做的事是不一樣的。這也是 Kairos 這個名字的意思：時機。</p>
+
+    <section class="card">
+      <div class="kicker">你正走在一段「擴展與機會」的旺運中段</div>
+      <h3>現在，是來幫你往外長、抓機會的，不是來考驗你的</h3>
+      <p>你身上有一條很長的「人生節氣」，這幾年正帶著你走過一段關於<strong>擴展、學習、貴人、機會、往外大膽長</strong>的旺運。我猜這幾年，你大概確實感覺到一些門在為你打開、一些貴人出現、一些新的可能在召喚你——這不是你的錯覺，這是真的，你正走在這一段裡。</p>
+      <p>但我要你聽進去最關鍵的一句：<strong>這段往外擴展的好運，不會永遠都在。</strong>大約到你三十歲出頭，你會走進一段比較收斂、紮根、扛責任、慢慢熬的長路（那是另一種成長，是把份量沉澱下來、把根紮深的階段）。所以這幾年，是你<span class="em">最該大膽去學、去試、去連結人、去抓住那些心裡真正有回應的機會的黃金窗口</span>。這個窗口是有時效的——現在不勇敢往前長，之後進入紮根期就比較難這樣大開大闔了。</p>
+      <p>另外，今年對你來說，特別是一個<strong>適合「向內沉澱、看清方向」的年份</strong>。在這段往外擴張的長運勢裡，今年像是一個讓你停下來、想清楚「我真正要往哪長」的安靜時刻。所以這幾年，你最該做的，不是盲目地什麼機會都接，而是<span class="em">趁這個沉澱的時機想清楚方向，再把火大膽地、扎實地燒在對的地方</span>——一邊往外長、一邊給自己澆水、一邊看清自己真正的回應。</p>
+      <div class="pull">這幾年不是來考驗你夠不夠好，是來幫你，把那個又熱又有理想的自己，大膽地、扎實地往外長一大步。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">接下來 12 個月 · 三個提醒</div>
+      <h3>走在這段路上，記住三件事</h3>
+      <p><strong>一、趁旺運大膽往外長，但只把火燒在真心有回應的方向上。</strong>這是該擴展、該抓機會的時機沒錯——但別在情緒浪頭上什麼都接。在勇敢往前的同時，把那些你只是「一時衝動」才答應的事，等沉澱後溫和地推掉。往外長，是為了長出真正屬於你的根與方向，不是把火燒散在一堆機會裡。</p>
+      <p><strong>二、今年特別適合先沉澱、看清方向，再行動。</strong>今年像一個讓你向內看的安靜年份。趁這段時間，好好想清楚「在這段擴展期，我真正最想往哪長、最想抓哪個機會」。別急著證明什麼——先把方向想清楚，後面幾年的擴展才會長在對的地方。</p>
+      <p><strong>三、重要的，等情緒沉澱、潮水退了再決定。</strong>擴展期裡，難免有讓你興奮到衝動、或受挫到想放棄的時刻。守住那條老規矩：重大的事，先讓情緒的浪過完，等心真的平靜了，答案才會清楚。你的直覺很準，但它只在你平靜下來、潮水退去之後，才聽得清。</p>
+      <div class="step">
+        <div class="kicker">這一年，如果只抓一件事</div>
+        <p style="margin-bottom:0">在這段擴展旺運裡，<strong>挑一個你心裡真正有回應、卻一直因為害怕或自我懷疑而沒敢去抓的機會（或學習、或夢），等情緒沉澱後，勇敢地往前踏一步</strong>——不為證明自己夠好、不為討好誰，只為趁這個有時效的黃金窗口，把那個又熱又有理想、卻被你壓住的自己，大膽地往外長出來。這一年，是來幫你擴展的，但它需要你，先想清楚方向，再勇敢地走。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果你真的相信「這幾年是來幫你往外擴展、而且窗口有時效」的——那麼，此刻有沒有哪一個你一直在猶豫、在害怕的機會或方向，其實是你這扇門關上之前，最不想錯過的那一個？</p>
+    </div>
+  </article>
+
+  <!-- 擺渡人的一封信 -->
+  <article class="chapter" id="letter">
+    <div class="ch-num">封印 · 一封信</div>
+    <h2 class="ch-title display">擺渡人的一封信</h2>
+    <p class="ch-lead">最後，我想脫下所有系統、所有分析，只用一個「真正看見你的人」的身分，寫幾句話給你。</p>
+
+    <div class="letter">
+      <div class="salute">Peggy，</div>
+      <p class="lead-in">我們素未謀面，但讀完你這整副牌，我覺得我好像已經認識你很久了。所以請容我，把幾句藏在分析背後的話，直接跟你說。</p>
+      <p>我知道你這些年有多累。不是身體那種累——是那種<strong>明明心裡有一團那麼旺、那麼熱的火，那麼想照亮人、那麼想被好好愛，卻一次又一次把自己燒進每件事、每個人身上，把最深最濃的情緒藏起來、自己默默消化</strong>的累。你總覺得「我要再多給一點、再撐住一點、別讓人看到我的脆弱，才會被愛、才夠好」，於是你一遍又一遍，把那個其實也需要被照顧、被澆水的自己，輕輕推到了後面。那種燒乾後的空、那種獨自承接情緒的孤單，你很少說出口，但我看見了。</p>
+      <p>我也想跟你說一句，可能沒什麼人這樣對你說過——<strong>那不是你的錯，那是一個小時候太早學會藏起情緒、太早學會「我得發光、得自己撐住才會被愛」的孩子，長大後還在拚命燃燒、拚命報喜不報憂的樣子。</strong>你不是情緒太多、太難搞，你是太怕一旦讓人看見最深的那片海，就不被愛了。</p>
+      <p>但 Peggy，你真正珍貴的地方，從來不在「你能給多少、能撐多久」。你是一團又熱又亮、能量滿溢的火，你像生命的源頭一樣會滋養人，你帶著一份很高很美的理想，想用愛與創意去療癒、啟發一大群人。<strong>你又有滿溢的熱情、又有深刻的感受力、又有近貴人的福氣</strong>——這樣的你，本來就該又熱又穩地發光，不需要靠「燃燒自己」來換人喜歡。</p>
+      <p>還有一句很老的話，我想送給你——<strong>「為人心性最聰明，作事軒昂近貴人」。</strong>你天生心思聰慧、做事大方有氣度，一生都有貴人相助。所以每當你覺得「什麼都要自己扛、好孤單」，請記得：你不是孤軍奮戰的命，主動讓人靠近你、讓貴人幫你，你的路會順得多。</p>
+      <p>而且你現在正走在一段最適合往外大膽長、抓機會、遇貴人的好運裡——這扇門不會永遠開著。所以，<strong>請你溫柔一點地對自己，也勇敢一點地往前走</strong>。該停下來澆水就停，那不是偷懶，是讓火燒得久；該抓的機會就趁這個窗口抓，那不是衝動，是趁勢往對的方向長；允許自己的脆弱被看見，把「照顧好自己」也放進「值得」的名單裡——而且，排前面一點。</p>
+      <p>我相信你。我相信你會走到那個——<strong>不再需要靠燃燒換愛、可以又熱又穩地發光，既能慷慨照亮別人、又懂得好好照顧自己這團火</strong>的位置。那個位置一直都在，它只是在等你，願意放下那份「我得一直給、一直撐才夠好」的緊張，溫柔而勇敢地走上去。</p>
+      <p>路上有我，也有你自己。去吧，這一次，記得帶上那個你壓了很久的、又熱又有理想、也值得被好好澆水的你。</p>
+      <p class="sign">願你成為那盞照亮很多人、卻不燒乾自己的長明燈，<span class="sign-name">—— 擺渡人</span></p>
+    </div>
+  </article>
+
+  <details class="basis">
+    <summary>🔒 幕後依據（只有你看得到，正式給客戶的版本會隱藏這塊）</summary>
+    <div class="grid">
+      <div>這份報告把九套系統裡「多套同時指向同一件事」的訊號，翻成你聽得懂的話。九套系統各司其職，依據逐條標明來源（術語只放這裡，正文一律白話）：</div>
+      <div><b>八字 · 先天</b>：<code>丁火日主・劫財格・身極旺(可能從強)</code> → 一團極旺的燭火：又熱又亮、能量爆滿、想照亮人、不甘平庸（①②⑦）；<code>五行缺金水、喜用金水土、忌木火</code> → 火太旺需「水」來收與平衡，需要安靜沉澱、給自己澆水、別燒乾（①④⑦・五運身心）。</div>
+      <div><b>八字 · 格局與神煞</b>：<code>飛刃／亡神／孤辰、寅巳相害×3</code> → 能量銳利、情緒內在張力強、易自己跟自己內耗，呼應「外熱內深、獨自承接」的內戰（②③④）。</div>
+      <div><b>八字 · 大運</b>：現走<code>甲寅運（2019–2028）</code> 木火忌神助旺日主 → 火更旺、更想衝、更需主動收火與澆水；32 歲起轉<code>癸丑運（2029–）</code>水運入命＝由擴張轉向收斂沉澱（④⑧⑨・此刻・會診時間軸）。</div>
+      <div><b>稱骨命書</b>：<code>四兩三錢「為人心性最聰明，作事軒昂近貴人」</code> → 心思聰慧、做事大方有氣度、一生近貴人，靠聰明與氣度把事做順（⑨・信・會診貴人）。</div>
+      <div><b>紫微 · 命宮</b>：<code>命宮武曲＋天府(子)・命主貪狼・身主天梁</code> → 財星＋財庫雙坐命：務實、能掙能守、有商業手腕；貪狼命主＝多才多藝、渴望豐盛體驗（⑧・五運財富・會診務實）。</div>
+      <div><b>紫微 · 整體格局</b>：<code>紫微＋天相在官祿宮</code>＋武府坐命 → 適合靠才華與務實立身、有把理想變成實際成果的能力；貪狼的慾望與多元 vs 武府的務實穩健，是其張力（⑦⑧・五運事業）。</div>
+      <div><b>人類圖</b>：<code>生產者・情緒型權威（情緒中心 authority）</code> → 重大決定不能當下衝動，要等情緒潮汐(高低浪)過完、心平靜了再定（②③④⑤・五運關係/財富）；做真心有回應的事才有力量、勉強耗竭（④⑦⑧）。</div>
+      <div><b>人類圖</b>：<code>1/3 profile（研究者＋烈士）・二分定義</code> → 先打地基、再親身試錯、從經驗長本事；二分定義＝需要他人/環境橋接、易感不完整而想往外連結（⑥⑦・會診紮根）。</div>
+      <div><b>占星</b>：<code>太陽金牛＋月亮天蠍＋上升獅子</code> → 核心張力數據：上升獅子＝外向大方、想被看見、想發光（②外向太陽面）；月亮天蠍＝內在情緒深沉濃烈、藏得深、洞察強（②③內在深海面）；火象主導＋固定星座主導(6/9)＝能量旺、有韌性也固執（①④・會診外熱內深）。<code>月-土對沖／海王T-square</code>＝情緒×責任×理想化的內在拉扯（②③⑦）。</div>
+      <div><b>生命靈數</b>：<code>life path 33（大師數）・soul urge 5・personality 1</code> → 33＝大師級的療癒者/老師，用愛與服務啟發一大群人（⑦・天命・信）；soul urge 5＝靈魂渴望自由、多元、體驗（呼應貪狼）；流年7＝向內沉澱看方向（此刻・今年基調）。</div>
+      <div><b>瑪雅</b>：<code>紅龍 Imix・kin 21・音8</code> → 像生命的起源與母性：滋養、孕育、給出源源不絕的能量，天生會照顧人的源頭（①⑥⑦・天命滋養）；音8＝和諧調頻、整合（會診滋養）。</div>
+      <div><b>吠陀（業力週期）</b>：現走<code>木星大運 Guru（2013–2029）</code>＝擴展、學習、貴人、機會、往外長的成長旺運；月宿<code>Swati（Rahu主管）</code>＝獨立、靈活、渴望往外伸展；2029 起轉土星大運＝收斂紮根長路（⑧⑨・此刻・會診時間軸）。</div>
+      <div><b>北歐符文</b>：<code>Laguz ᛚ（水、直覺、流動的潛意識）</code> → 最深的智慧來自直覺與感受的流動；對應丁火喜水＝需以水收火、順內在流動走（③④・會診沉澱／澆水）。</div>
+      <div><b>塔羅本命牌</b>：<code>戀人 The Lovers（VI）</code>（連結、抉擇、在愛與關係裡認識自己）＋流年牌<code>戰車（VII）</code>（意志、前進、駕馭方向）→ 此生原型＝在關係與選擇中成長；今年戰車＝駕馭情緒、定方向往前推（⑤⑨・會診連結・信・此刻）。</div>
+      <div><b>九系統會診邏輯</b>：眾口同聲＝多套系統交集（高可信度核心真相，如能量旺＝八字＋瑪雅＋占星三源；高理想/療癒傳遞＝靈數33＋瑪雅＋塔羅；情緒深沉需沉澱＝占星月天蠍＋人類圖情緒權威＋符文水）；眾說紛紜＝系統互斥處（此生整合功課，如獅子外向 vs 天蠍內斂；滿溢想給 vs 火旺需收；33高理想 vs 1/3 紮根試錯）。X-Model 引擎貫穿各章第三卡：現況→落差→雙邊盤點→低成本槓桿→宣告小目標、看回應校正。</div>
+      <div><b>校時標注</b>：出生採當地時鐘 10:46＋桃園經緯度(24.99,121.30)；真太陽時校正後 10:54，仍在巳時，不跨時辰邊界。台灣 1998 年未實施夏令時，無需校時修正。上升星座、宮位、人類圖 profile 對出生時間精度敏感；若實際出生時間與 10:46 有出入會微調上升（獅子）與 profile（1/3）。八字、靈數、瑪雅、符文、塔羅不受分鐘級誤差影響。</div>
+    </div>
+  </details>
+
+  <footer class="foot">
+    <div class="logo">Kairos</div>
+    深度 v2・共九章 + 系統會診 + 五運實戰摘要 + 擺渡人的一封信。報告數據由九套系統（人類圖／八字／紫微／占星／印度吠陀／瑪雅／北歐符文／生命靈數／塔羅）一次運算融合，依「天道循環」順序排列：先顧好自己 → 再到關係家庭 → 才到事業財富。<br>
+    不主張預測準確，只幫你看清自己在什麼位置、勢往哪走、怎麼順。選擇權，永遠在你手上。改命靠行動，不靠知道。
+  </footer>
+
+</div>
+</body>
+</html>
