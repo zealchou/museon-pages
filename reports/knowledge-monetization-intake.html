@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知識變現輔導 · 客戶初診表</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1f1f1f;
+    --border: #2a2a2a;
+    --border-active: #4a4a4a;
+    --text: #e8e8e8;
+    --text-muted: #888;
+    --accent: #c8a96e;
+    --accent-dim: rgba(200, 169, 110, 0.15);
+    --danger: #e05555;
+    --success: #5a9a5a;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .page-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  .header { margin-bottom: 48px; }
+  .logo-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.8;
+    padding: 16px;
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  /* Progress */
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 40px;
+    align-items: center;
+  }
+  .progress-seg {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    transition: background 0.3s;
+  }
+  .progress-seg.active { background: var(--accent); }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 48px;
+    display: none;
+  }
+  .section.visible { display: block; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: #000;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 600; }
+  .section-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Field */
+  .field { margin-bottom: 28px; }
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .field-hint strong { color: var(--accent); font-weight: 500; }
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--border-active);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+  textarea { min-height: 100px; }
+  select option { background: var(--surface2); }
+
+  /* Radio group */
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .radio-item:hover { border-color: var(--border-active); }
+  .radio-item.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .radio-item input[type="radio"] { display: none; }
+  .radio-dot {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-active);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .radio-item.selected .radio-dot {
+    border-color: var(--accent);
+  }
+  .radio-item.selected .radio-dot::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .radio-text { font-size: 14px; }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--border-active); color: var(--text); }
+  .btn-copy {
+    background: var(--success);
+    color: #fff;
+    width: 100%;
+    padding: 16px;
+    font-size: 15px;
+    border-radius: var(--radius);
+    margin-top: 12px;
+  }
+
+  /* Review */
+  .review-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .review-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .review-qa { margin-bottom: 14px; }
+  .review-q { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .review-a { font-size: 14px; color: var(--text); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--success);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 0.3s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Required mark */
+  .req { color: var(--accent); margin-left: 3px; }
+
+  /* Final screen */
+  .final-screen { text-align: center; padding: 40px 0; display: none; }
+  .final-screen.visible { display: block; }
+  .final-icon { font-size: 48px; margin-bottom: 16px; }
+  .final-screen h2 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .final-screen p { color: var(--text-muted); font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .page-wrap { padding: 32px 16px 60px; }
+    .header h1 { font-size: 22px; }
+    .btn-row { flex-direction: column-reverse; }
+    .btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-tag">知識變現輔導</div>
+    <h1>客戶初診表</h1>
+    <p>這份問卷幫我們在第一次正式輔導前，看清楚你的真實起點。<br>
+    請盡量給具體資料——<strong>有數字、有例子、有連結</strong>比描述性文字更有用。<br>
+    大約需要 8–12 分鐘填完。</p>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-seg active" id="ps1"></div>
+    <div class="progress-seg" id="ps2"></div>
+    <div class="progress-seg" id="ps3"></div>
+    <div class="progress-seg" id="ps4"></div>
+    <div class="progress-label" id="progressLabel">第 1 段 / 共 4 段</div>
+  </div>
+
+  <!-- Section A：你是誰 -->
+  <div class="section visible" id="sec1">
+    <div class="section-header">
+      <div class="section-num">A</div>
+      <div>
+        <div class="section-title">你是誰</div>
+        <div class="section-subtitle">讓我先了解你的背景與專業</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">1. 你的名字／暱稱<span class="req">*</span></label>
+      <div class="field-hint">你希望在輔導過程中如何被稱呼？</div>
+      <input type="text" id="q1" placeholder="例：小明 / Kevin / 小花老師">
+    </div>
+
+    <div class="field">
+      <label class="field-label">2. 目前主要的工作或收入來源<span class="req">*</span></label>
+      <div class="field-hint">現在主要靠什麼養活自己？（不需精確，大方向就好）</div>
+      <input type="text" id="q2" placeholder="例：全職上班族、自由接案、已有小規模創業、家庭主婦...">
+    </div>
+
+    <div class="field">
+      <label class="field-label">3. 別人會來找你請教什麼？<span class="req">*</span></label>
+      <div class="field-hint">不限工作範疇——越具體越好。<strong>「做過 3 次跨國搬家協助家人安頓」比「有跨國經驗」有用十倍。</strong></div>
+      <textarea id="q3" placeholder="例：朋友常問我如何談薪水、如何準備面試；我做過 XX 年 YY 工作，業界的人會問我..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <div></div>
+      <button class="btn btn-primary" onclick="nextSection(1)">繼續 →</button>
+    </div>
+  </div>
+
+  <!-- Section B：市場驗證 -->
+  <div class="section" id="sec2">
+    <div class="section-header">
+      <div class="section-num">B</div>
+      <div>
+        <div class="section-title">市場驗證</div>
+        <div class="section-subtitle">有沒有人曾為你的知識付過錢？</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">4. 是否有人付錢請你教學、顧問或提供服務？<span class="req">*</span></label>
+      <div class="field-hint">哪怕只有一次、哪怕是很小的金額都算。</div>
+      <div class="radio-group">
+        <label class="radio-item" onclick="selectRadio(this, 'q4', 'yes')">
+          <input type="radio" name="q4" value="yes">
+          <div class="radio-dot"></div>
+          <div class="radio-text">有——下面我會說明是什麼</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q4', 'no')">
+          <input type="radio" name="q4" value="no">
+          <div class="radio-dot"></div>
+          <div class="radio-text">沒有，完全還沒有</div>
+        </label>
+      </div>
+      <div id="q4detail_wrap" style="margin-top:12px; display:none;">
+        <textarea id="q4detail" placeholder="有的話請說明：是什麼服務、收費大概多少、是找上門還是你主動推銷..."></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">5. 有沒有公開內容？</label>
+      <div class="field-hint">公眾號、Instagram、YouTube、Blog、Podcast、抖音... 有的話請附連結。</div>
+      <textarea id="q5" placeholder="有的話請附連結（例：IG @xxx、YouTube 頻道名稱）。沒有也請直接說沒有。" style="min-height:70px;"></textarea>
+    </div>
+
+    <div class="field" id="q6_wrap">
+      <label class="field-label">6. 這些內容中，哪個最多人問你、最多人轉發？</label>
+      <div class="field-hint">如果有公開內容的話——哪篇文、哪支影片最多互動？</div>
+      <textarea id="q6" placeholder="沒有公開內容的話留空就好" style="min-height:70px;"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">7. 你的受眾大概是什麼樣的人？<span class="req">*</span></label>
+      <div class="field-hint">年齡段、職業、他們的主要痛點是什麼？（即使還沒受眾，想像中的目標客戶是誰？）</div>
+      <textarea id="q7" placeholder="例：25-35 歲上班族、想轉職但不知道怎麼開始、對薪資不滿意但不敢開口談..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevSection(2)">← 上一步</button>
+      <button class="btn btn-primary" onclick="nextSection(2)">繼續 →</button>
+    </div>
+  </div>
+
+  <!-- Section C：目標與資源 -->
+  <div class="section" id="sec3">
+    <div class="section-header">
+      <div class="section-num">C</div>
+      <div>
+        <div class="section-title">目標與資源</div>
+        <div class="section-subtitle">你想去哪裡？你有什麼可以用？</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">8. 你想透過知識變現達到什麼？<span class="req">*</span></label>
+      <div class="field-hint">越具體越好——說「月收 50,000 以上」比說「增加收入」更有用。</div>
+      <textarea id="q8" placeholder="例：每月多 2 萬被動收入、三年後完全脫離朝九晚五、建立個人品牌讓人認識我在 XX 領域的能力..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">9. 你期待幾個月內看到第一個明顯成果？<span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-item" onclick="selectRadio(this, 'q9', '1-3個月')">
+          <input type="radio" name="q9" value="1-3個月">
+          <div class="radio-dot"></div>
+          <div class="radio-text">1–3 個月（急迫，需要盡快看到結果）</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q9', '3-6個月')">
+          <input type="radio" name="q9" value="3-6個月">
+          <div class="radio-dot"></div>
+          <div class="radio-text">3–6 個月（穩健，願意打好基礎）</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q9', '6個月以上')">
+          <input type="radio" name="q9" value="6個月以上">
+          <div class="radio-dot"></div>
+          <div class="radio-text">6 個月以上（長期佈局，不急）</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">10. 每週可以投入多少時間？<span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-item" onclick="selectRadio(this, 'q10', '5小時以下')">
+          <input type="radio" name="q10" value="5小時以下">
+          <div class="radio-dot"></div>
+          <div class="radio-text">5 小時以下（兼顧本業，時間有限）</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q10', '5-15小時')">
+          <input type="radio" name="q10" value="5-15小時">
+          <div class="radio-dot"></div>
+          <div class="radio-text">5–15 小時（有一定投入）</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q10', '15小時以上')">
+          <input type="radio" name="q10" value="15小時以上">
+          <div class="radio-dot"></div>
+          <div class="radio-text">15 小時以上（高度投入，接近全職）</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">11. 有沒有預算投入在工具、廣告或外包上？</label>
+      <div class="radio-group">
+        <label class="radio-item" onclick="selectRadio(this, 'q11', '暫無預算')">
+          <input type="radio" name="q11" value="暫無預算">
+          <div class="radio-dot"></div>
+          <div class="radio-text">暫無預算，先用免費工具</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q11', '每月1000-5000')">
+          <input type="radio" name="q11" value="每月1000-5000">
+          <div class="radio-dot"></div>
+          <div class="radio-text">每月 1,000–5,000 元（小額試水）</div>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'q11', '每月5000以上')">
+          <input type="radio" name="q11" value="每月5000以上">
+          <div class="radio-dot"></div>
+          <div class="radio-text">每月 5,000 元以上</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevSection(3)">← 上一步</button>
+      <button class="btn btn-primary" onclick="nextSection(3)">繼續 →</button>
+    </div>
+  </div>
+
+  <!-- Section D：你的卡點 -->
+  <div class="section" id="sec4">
+    <div class="section-header">
+      <div class="section-num">D</div>
+      <div>
+        <div class="section-title">你的卡點</div>
+        <div class="section-subtitle">這段最重要——說真話</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">12. 你自己覺得現在最大的障礙是什麼？<span class="req">*</span></label>
+      <div class="field-hint">不要說「不知道從哪裡開始」就結束——<strong>試著說具體是哪一步卡住了</strong>。</div>
+      <textarea id="q12" placeholder="例：我有內容但沒人看、我不知道怎麼定價、我有追蹤者但沒人買、我想做但一直沒開始、我做了但收入起不來..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">13. 有沒有試過但失敗或放棄的做法？</label>
+      <div class="field-hint">說說曾經嘗試過什麼、為什麼停下來。這很有參考價值。</div>
+      <textarea id="q13" placeholder="例：開了 IG 帳號但三個月後放棄，因為沒人互動很沮喪；辦過一次工作坊但虧錢；買過課程但沒學完..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">14. 補充：有什麼想讓顧問知道的事？</label>
+      <div class="field-hint">任何你覺得重要但前面沒提到的事。</div>
+      <textarea id="q14" placeholder="自由填寫" style="min-height:70px;"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevSection(4)">← 上一步</button>
+      <button class="btn btn-primary" onclick="showReview()">檢視答案 →</button>
+    </div>
+  </div>
+
+  <!-- Review & Submit -->
+  <div class="section" id="secReview">
+    <div class="section-header">
+      <div class="section-num" style="background: var(--text); color: var(--bg);">✓</div>
+      <div>
+        <div class="section-title">確認你的答案</div>
+        <div class="section-subtitle">確認無誤後，點按複製，把內容傳給輔導顧問</div>
+      </div>
+    </div>
+
+    <div id="reviewContent"></div>
+
+    <button class="btn btn-copy" id="copyBtn" onclick="copyAnswers()">📋 複製所有答案，傳給顧問</button>
+    <div style="text-align:center; margin-top:12px;">
+      <button class="btn btn-ghost" onclick="prevSection('review')">← 回去修改</button>
+    </div>
+  </div>
+
+  <!-- Final -->
+  <div class="final-screen" id="finalScreen">
+    <div class="final-icon">✅</div>
+    <h2>已複製！</h2>
+    <p>直接貼給你的輔導顧問就可以了。<br>顧問會根據你的答案進行第一次初步診斷。</p>
+    <button class="btn btn-ghost" onclick="resetForm()">重新填寫</button>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ 已複製到剪貼簿</div>
+
+<script>
+let currentSection = 1;
+const radioValues = {};
+
+function selectRadio(el, name, value) {
+  document.querySelectorAll(`.radio-item`).forEach(item => {
+    if (item.closest('.radio-group') === el.closest('.radio-group')) {
+      item.classList.remove('selected');
+    }
+  });
+  el.classList.add('selected');
+  radioValues[name] = value;
+
+  // Show detail for q4
+  if (name === 'q4') {
+    document.getElementById('q4detail_wrap').style.display = value === 'yes' ? 'block' : 'none';
+  }
+}
+
+function updateProgress(sec) {
+  const labels = ['第 1 段 / 共 4 段', '第 2 段 / 共 4 段', '第 3 段 / 共 4 段', '第 4 段 / 共 4 段', '確認答案'];
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('ps' + i).classList.toggle('active', i <= sec);
+  }
+  document.getElementById('progressLabel').textContent = labels[Math.min(sec, 4) - 1];
+}
+
+function nextSection(from) {
+  // Validate required
+  if (from === 1) {
+    if (!getValue('q1') || !getValue('q2') || !getValue('q3')) {
+      alert('請填寫所有標 * 的必填欄位');
+      return;
+    }
+  }
+  if (from === 2) {
+    if (!radioValues['q4'] || !getValue('q7')) {
+      alert('請填寫所有標 * 的必填欄位');
+      return;
+    }
+  }
+  if (from === 3) {
+    if (!getValue('q8') || !radioValues['q9'] || !radioValues['q10']) {
+      alert('請填寫所有標 * 的必填欄位');
+      return;
+    }
+  }
+
+  document.getElementById('sec' + from).classList.remove('visible');
+  currentSection = from + 1;
+  document.getElementById('sec' + currentSection).classList.add('visible');
+  updateProgress(currentSection);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevSection(from) {
+  if (from === 'review') {
+    document.getElementById('secReview').classList.remove('visible');
+    currentSection = 4;
+    document.getElementById('sec4').classList.add('visible');
+    updateProgress(4);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  document.getElementById('sec' + from).classList.remove('visible');
+  currentSection = from - 1;
+  document.getElementById('sec' + currentSection).classList.add('visible');
+  updateProgress(currentSection);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getValue(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  return el.value.trim();
+}
+
+function getRadio(name) {
+  return radioValues[name] || '（未填）';
+}
+
+function showReview() {
+  if (!getValue('q12')) {
+    alert('請填寫必填欄位（第 12 題）');
+    return;
+  }
+
+  const q4radio = getRadio('q4');
+  const q4detail = getValue('q4detail');
+  const q4ans = q4radio === 'yes'
+    ? `有。${q4detail || ''}`
+    : '沒有';
+
+  const sections = [
+    {
+      title: 'A · 你是誰',
+      items: [
+        { q: '1. 名字／暱稱', a: getValue('q1') || '（未填）' },
+        { q: '2. 目前工作／收入來源', a: getValue('q2') || '（未填）' },
+        { q: '3. 別人會來找你請教什麼', a: getValue('q3') || '（未填）' },
+      ]
+    },
+    {
+      title: 'B · 市場驗證',
+      items: [
+        { q: '4. 是否有人付錢過', a: q4ans },
+        { q: '5. 公開內容連結', a: getValue('q5') || '（無）' },
+        { q: '6. 互動最好的內容', a: getValue('q6') || '（無）' },
+        { q: '7. 受眾是什麼樣的人', a: getValue('q7') || '（未填）' },
+      ]
+    },
+    {
+      title: 'C · 目標與資源',
+      items: [
+        { q: '8. 想透過知識變現達到什麼', a: getValue('q8') || '（未填）' },
+        { q: '9. 期待幾個月看到成果', a: getRadio('q9') },
+        { q: '10. 每週可投入時間', a: getRadio('q10') },
+        { q: '11. 預算投入', a: getRadio('q11') },
+      ]
+    },
+    {
+      title: 'D · 你的卡點',
+      items: [
+        { q: '12. 最大的障礙', a: getValue('q12') || '（未填）' },
+        { q: '13. 曾試過但放棄的做法', a: getValue('q13') || '（無）' },
+        { q: '14. 補充', a: getValue('q14') || '（無）' },
+      ]
+    }
+  ];
+
+  let html = '';
+  sections.forEach(sec => {
+    html += `<div class="review-card"><div class="review-section-title">${sec.title}</div>`;
+    sec.items.forEach(item => {
+      html += `<div class="review-qa"><div class="review-q">${item.q}</div><div class="review-a">${item.a.replace(/\n/g, '<br>')}</div></div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('reviewContent').innerHTML = html;
+  document.getElementById('sec4').classList.remove('visible');
+  document.getElementById('secReview').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyAnswers() {
+  const q4radio = getRadio('q4');
+  const q4detail = getValue('q4detail');
+  const q4ans = q4radio === 'yes' ? `有。${q4detail || ''}` : '沒有';
+
+  const text = `【知識變現輔導 · 客戶初診表】
+
+━━ A · 你是誰 ━━
+1. 名字／暱稱：${getValue('q1') || '（未填）'}
+2. 目前工作／收入來源：${getValue('q2') || '（未填）'}
+3. 別人會來找你請教什麼：
+${getValue('q3') || '（未填）'}
+
+━━ B · 市場驗證 ━━
+4. 是否有人付錢過：${q4ans}
+5. 公開內容連結：${getValue('q5') || '（無）'}
+6. 互動最好的內容：${getValue('q6') || '（無）'}
+7. 受眾是什麼樣的人：
+${getValue('q7') || '（未填）'}
+
+━━ C · 目標與資源 ━━
+8. 想透過知識變現達到什麼：
+${getValue('q8') || '（未填）'}
+9. 期待幾個月看到成果：${getRadio('q9')}
+10. 每週可投入時間：${getRadio('q10')}
+11. 預算投入：${getRadio('q11')}
+
+━━ D · 你的卡點 ━━
+12. 最大的障礙：
+${getValue('q12') || '（未填）'}
+13. 曾試過但放棄的做法：
+${getValue('q13') || '（無）'}
+14. 補充：
+${getValue('q14') || '（無）'}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast();
+    document.getElementById('secReview').classList.remove('visible');
+    document.getElementById('finalScreen').classList.add('visible');
+    document.getElementById('progressBar').style.display = 'none';
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast();
+  });
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function resetForm() {
+  document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('.radio-item').forEach(el => el.classList.remove('selected'));
+  Object.keys(radioValues).forEach(k => delete radioValues[k]);
+  document.getElementById('q4detail_wrap').style.display = 'none';
+  document.getElementById('finalScreen').classList.remove('visible');
+  document.getElementById('secReview').classList.remove('visible');
+  for (let i = 2; i <= 4; i++) document.getElementById('sec' + i).classList.remove('visible');
+  document.getElementById('sec1').classList.add('visible');
+  document.getElementById('progressBar').style.display = 'flex';
+  currentSection = 1;
+  updateProgress(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
