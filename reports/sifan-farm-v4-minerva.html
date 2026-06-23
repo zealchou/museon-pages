@@ -1,1063 +1,1557 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>思凡自然農園 — 營收升級完整方案 v4.0</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    /* ── MUSEON Design System v1.0 ── */
-    :root {
-      --ember:        #C4502A;
-      --ember-light:  #E0714D;
-      --ember-dark:   #9A3A1C;
-      --teal:         #2A7A6E;
-      --gold:         #B8923A;
-      --ink:          #12121A;
-      --slate:        #5A5A6E;
-      --mist:         #9898A8;
-      --border:       #E2E0DA;
-      --parchment:    #F7F5F0;
-      --snow:         #FDFCFA;
-      --deep-ink:     #0E0E16;
-      --surface:      #16161F;
-      --raised:       #1E1E2A;
-      --border-dark:  #2A2A38;
-      --success:      #2D8A6E;
-      --warning:      #C9943A;
-      --error:        #C4402A;
-      --info:         #2A6A8A;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
-    body {
-      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
-      background: var(--parchment);
-      color: var(--ink);
-      line-height: 1.75;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思凡自然農園｜升級方案 v4 — MUSEON × 密涅瓦引擎</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* MUSEON Brand Colors */
+  --ember:       #C4502A;
+  --ember-light: #E0714D;
+  --ember-dark:  #9A3A1C;
+  --teal:        #2A7A6E;
+  --teal-light:  #3A9A8E;
+  --gold:        #B8923A;
+  --gold-light:  #D4AE5A;
+  --navy:        #141428;
+  --navy-mid:    #1E1E38;
+  --ink:         #12121A;
+  --slate:       #5A5A6E;
+  --parchment:   #F7F5F0;
+  --snow:        #FDFCFA;
+  --border:      rgba(196,80,42,0.15);
+  --border-light: rgba(196,80,42,0.08);
 
-    /* ── Typography ── */
-    h1, h2, h3 { font-family: 'Cormorant Garamond', serif; }
-    h1 { font-size: 3rem; font-weight: 600; line-height: 1.15; }
-    h2 { font-size: 2.2rem; font-weight: 600; line-height: 1.2; }
-    h3 { font-size: 1.5rem; font-weight: 600; line-height: 1.3; }
-    h4 { font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-    p { font-size: 1rem; color: var(--slate); line-height: 1.8; }
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 32px rgba(20,20,40,0.12);
+  --shadow-sm: 0 2px 12px rgba(20,20,40,0.08);
+}
 
-    /* ── Layout ── */
-    .page-wrap { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── HERO ── */
-    .hero {
-      background: var(--deep-ink);
-      padding: 96px 0 80px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse at 20% 50%, rgba(196,80,42,0.18) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 20%, rgba(42,122,110,0.12) 0%, transparent 50%);
-    }
-    .hero-inner { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 40px; }
-    .hero-kicker {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; font-weight: 600;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--ember-light);
-      margin-bottom: 24px;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .hero-kicker::before { content: ''; display: block; width: 24px; height: 1px; background: var(--ember); }
-    .hero h1 { color: #F7F5F0; margin-bottom: 16px; }
-    .hero h1 em { color: var(--ember-light); font-style: italic; }
-    .hero-sub { font-size: 1.1rem; color: rgba(247,245,240,0.6); max-width: 600px; margin-bottom: 40px; }
-    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .hero-tag {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 4px 12px; border-radius: 100px;
-      border: 1px solid rgba(247,245,240,0.2); color: rgba(247,245,240,0.6);
-    }
-    .hero-tag.accent { border-color: var(--ember); color: var(--ember-light); }
+body {
+  font-family: 'Outfit', 'Noto Sans TC', -apple-system, sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  line-height: 1.75;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ── Sections ── */
-    .section { padding: 64px 0; }
-    .section + .section { border-top: 1px solid var(--border); }
-    .section-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--ember); margin-bottom: 8px;
-    }
-    .section-title { margin-bottom: 12px; }
-    .section-desc { font-size: 1rem; color: var(--slate); margin-bottom: 40px; max-width: 640px; }
+/* ── TYPOGRAPHY ── */
+.font-display {
+  font-family: 'Cormorant Garamond', serif;
+}
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
 
-    /* ── Cards ── */
-    .card {
-      background: var(--snow);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(18,18,26,0.06), 0 4px 12px rgba(18,18,26,0.04);
-    }
-    .card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    @media(max-width: 640px) { .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; } }
+/* ── HERO ── */
+.hero {
+  background: var(--navy);
+  color: white;
+  padding: 80px 24px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(196,80,42,0.20) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='40' cy='40' r='30' stroke='%23C4502A' stroke-opacity='0.04' stroke-width='1'/%3E%3Ccircle cx='40' cy='40' r='15' stroke='%23C4502A' stroke-opacity='0.03' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(196,80,42,0.2);
+  border: 1px solid rgba(196,80,42,0.4);
+  border-radius: 24px;
+  padding: 5px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ember-light);
+  margin-bottom: 28px;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--ember-light);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.2;
+  color: white;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.hero h1 span { color: var(--ember-light); font-style: normal; }
+.hero-subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 40px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-tags {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.hero-tag {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(255,255,255,0.65);
+}
+.hero-tag.ember { border-color: rgba(196,80,42,0.4); color: var(--ember-light); }
+.hero-tag.teal { border-color: rgba(42,122,110,0.4); color: #3A9A8E; }
+.hero-tag.gold { border-color: rgba(184,146,58,0.4); color: var(--gold-light); }
 
-    /* ── Badge ── */
-    .badge {
-      display: inline-block;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 100px;
-      background: rgba(196,80,42,0.10); color: var(--ember-dark);
-    }
-    .badge-teal { background: rgba(42,122,110,0.10); color: #1C5A51; }
-    .badge-gold { background: rgba(184,146,58,0.12); color: #7A5E1C; }
-    .badge-dark { background: rgba(18,18,26,0.08); color: var(--slate); }
-    .badge-warn { background: rgba(201,148,58,0.12); color: #7A5020; }
+.hero-stats {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  overflow: hidden;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.hero-stat {
+  flex: 1 1 160px;
+  padding: 20px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat .val {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ember-light);
+  line-height: 1.1;
+}
+.hero-stat .label {
+  display: block;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+}
 
-    /* ── Problem Frame ── */
-    .problem-frame {
-      background: var(--deep-ink);
-      border-radius: 12px;
-      padding: 40px;
-      position: relative; overflow: hidden;
-      margin-bottom: 24px;
-    }
-    .problem-frame::after {
-      content: '#rightproblem';
-      position: absolute; right: 32px; bottom: 24px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; color: rgba(247,245,240,0.2);
-    }
-    .problem-vs {
-      display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center;
-    }
-    .problem-box { background: rgba(247,245,240,0.05); border-radius: 8px; padding: 20px; }
-    .problem-box .label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
-    .problem-box.surface .label { color: rgba(196,80,42,0.7); }
-    .problem-box.real .label { color: rgba(42,122,110,0.8); }
-    .problem-box .text { font-size: 1rem; color: rgba(247,245,240,0.85); line-height: 1.7; }
-    .problem-arrow { font-size: 1.5rem; color: rgba(247,245,240,0.3); text-align: center; }
-    @media(max-width: 640px) { .problem-vs { grid-template-columns: 1fr; } .problem-arrow { transform: rotate(90deg); } }
+/* ── LAYOUT ── */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 
-    /* ── HC Table ── */
-    .hc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media(max-width: 640px) { .hc-grid { grid-template-columns: 1fr; } }
-    .hc-card {
-      background: var(--snow); border: 1px solid var(--border); border-radius: 8px;
-      padding: 16px 20px;
-      display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start;
-    }
-    .hc-tag {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; font-weight: 600; color: var(--ember); white-space: nowrap;
-      padding-top: 2px;
-    }
-    .hc-body {}
-    .hc-title { font-weight: 600; font-size: 0.9rem; color: var(--ink); margin-bottom: 4px; }
-    .hc-insight { font-size: 0.875rem; color: var(--slate); line-height: 1.65; }
+/* ── SECTION ── */
+.section {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.section:last-of-type { border-bottom: none; }
 
-    /* ── 12-Force Scorecard ── */
-    .force-table { width: 100%; border-collapse: collapse; }
-    .force-table th {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--mist); padding: 8px 12px; text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    .force-table td {
-      padding: 10px 12px; border-bottom: 1px solid rgba(226,224,218,0.5);
-      font-size: 0.9rem; vertical-align: middle;
-    }
-    .force-table tr:last-child td { border-bottom: none; }
-    .force-name { font-weight: 500; color: var(--ink); }
-    .force-code { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--mist); }
-    .force-bar-wrap { width: 100px; }
-    .force-bar-bg { height: 6px; background: rgba(226,224,218,0.6); border-radius: 3px; overflow: hidden; }
-    .force-bar { height: 6px; border-radius: 3px; }
-    .bar-1 { background: #C4402A; width: 20%; }
-    .bar-2 { background: #C9943A; width: 40%; }
-    .bar-3 { background: #B8923A; width: 60%; }
-    .bar-4 { background: var(--teal); width: 80%; }
-    .bar-5 { background: var(--success); width: 100%; }
-    .force-score { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; }
-    .force-note { font-size: 0.8rem; color: var(--slate); }
-    .priority-badge {
-      font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600;
-      letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
-    }
-    .pri-1 { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
-    .pri-2 { background: rgba(201,148,58,0.12); color: #7A5020; }
-    .pri-3 { background: rgba(42,122,110,0.10); color: #1C5A51; }
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+.section-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.icon-ember { background: rgba(196,80,42,0.12); }
+.icon-teal { background: rgba(42,122,110,0.12); }
+.icon-gold { background: rgba(184,146,58,0.12); }
+.icon-navy { background: rgba(20,20,40,0.08); }
 
-    /* ── Funnel ── */
-    .funnel-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    @media(max-width: 640px) { .funnel-grid { grid-template-columns: 1fr; } }
-    .funnel-col {
-      background: var(--snow); border: 1px solid var(--border); border-radius: 10px;
-      overflow: hidden;
-    }
-    .funnel-head {
-      padding: 16px 20px;
-      background: var(--deep-ink);
-    }
-    .funnel-head h4 { color: rgba(247,245,240,0.9); font-size: 0.85rem; margin-bottom: 2px; }
-    .funnel-head span { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: rgba(247,245,240,0.4); }
-    .funnel-body { padding: 16px 20px; }
-    .funnel-step {
-      display: flex; gap: 10px; align-items: flex-start;
-      padding: 8px 0; border-bottom: 1px solid rgba(226,224,218,0.4);
-      font-size: 0.875rem;
-    }
-    .funnel-step:last-child { border-bottom: none; }
-    .funnel-step-num {
-      font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600;
-      color: var(--ember); min-width: 20px; padding-top: 2px;
-    }
-    .funnel-step-text { color: var(--slate); line-height: 1.6; }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.section-title span { color: var(--ember); }
+.section-desc {
+  font-size: 14px;
+  color: var(--slate);
+  max-width: 600px;
+}
 
-    /* ── Strategy Cards (陽謀/陰謀) ── */
-    .strategy-split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media(max-width: 640px) { .strategy-split { grid-template-columns: 1fr; } }
-    .strategy-yang { background: rgba(42,122,110,0.06); border: 1.5px solid rgba(42,122,110,0.3); border-radius: 10px; padding: 24px; }
-    .strategy-yin  { background: rgba(18,18,26,0.04); border: 1.5px solid rgba(18,18,26,0.12); border-radius: 10px; padding: 24px; }
-    .strategy-label {
-      font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600;
-      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;
-    }
-    .yang-label { color: var(--teal); }
-    .yin-label  { color: var(--slate); }
-    .strategy-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 16px; }
-    .strategy-yang .strategy-title { color: var(--ink); }
-    .strategy-yin  .strategy-title { color: var(--ink); }
-    .strategy-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(226,224,218,0.5); }
-    .strategy-item:last-child { border-bottom: none; }
-    .strategy-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
-    .yang-dot { background: var(--teal); }
-    .yin-dot  { background: var(--slate); }
-    .strategy-item-text { font-size: 0.9rem; color: var(--slate); line-height: 1.65; }
-    .strategy-item-text strong { color: var(--ink); font-weight: 600; }
+/* ── LABEL CHIP ── */
+.chip {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.chip-ember { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
+.chip-teal { background: rgba(42,122,110,0.12); color: var(--teal); }
+.chip-gold { background: rgba(184,146,58,0.12); color: #8A6C1E; }
+.chip-navy { background: rgba(20,20,40,0.08); color: var(--navy-mid); }
+.chip-slate { background: rgba(90,90,110,0.1); color: var(--slate); }
 
-    /* ── Role Matrix ── */
-    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media(max-width: 640px) { .role-grid { grid-template-columns: 1fr; } }
-    .role-card {
-      background: var(--snow); border: 1px solid var(--border); border-radius: 10px;
-      padding: 24px;
-    }
-    .role-avatar { font-size: 2rem; margin-bottom: 12px; }
-    .role-name { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-    .role-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ember); letter-spacing: 0.08em; margin-bottom: 16px; }
-    .role-list { list-style: none; }
-    .role-list li {
-      display: flex; gap: 8px; align-items: flex-start;
-      font-size: 0.875rem; color: var(--slate); padding: 5px 0;
-    }
-    .role-list li::before { content: '→'; color: var(--ember); font-size: 0.75rem; padding-top: 3px; flex-shrink: 0; }
+/* ── HC TAG ── */
+.hc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  background: rgba(196,80,42,0.08);
+  border: 1px solid rgba(196,80,42,0.2);
+  color: var(--ember-dark);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
 
-    /* ── Revenue Tiers ── */
-    .tier-list { display: flex; flex-direction: column; gap: 12px; }
-    .tier {
-      background: var(--snow); border: 1px solid var(--border); border-radius: 10px;
-      padding: 20px 24px;
-      display: grid; grid-template-columns: 80px 1fr auto; align-items: center; gap: 20px;
-    }
-    @media(max-width: 640px) { .tier { grid-template-columns: 1fr; } }
-    .tier-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 600; color: rgba(196,80,42,0.2); line-height: 1; }
-    .tier-body {}
-    .tier-name { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-    .tier-desc { font-size: 0.875rem; color: var(--slate); }
-    .tier-potential { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--ember); font-weight: 600; text-align: right; white-space: nowrap; }
+/* ── CARD ── */
+.card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+.card-accent-left {
+  border-left: 3px solid var(--ember);
+}
+.card-accent-teal {
+  border-left: 3px solid var(--teal);
+}
+.card-accent-gold {
+  border-left: 3px solid var(--gold);
+}
 
-    /* ── Timeline ── */
-    .timeline { position: relative; padding-left: 24px; }
-    .timeline::before { content: ''; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 1px; background: var(--border); }
-    .tl-item { position: relative; margin-bottom: 28px; }
-    .tl-item::before {
-      content: ''; position: absolute; left: -21px; top: 4px;
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--snow); border: 2px solid var(--ember);
-    }
-    .tl-month { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ember); margin-bottom: 6px; }
-    .tl-title { font-weight: 600; color: var(--ink); margin-bottom: 6px; font-size: 0.95rem; }
-    .tl-tasks { list-style: none; }
-    .tl-tasks li { font-size: 0.875rem; color: var(--slate); padding: 3px 0; display: flex; gap: 8px; }
-    .tl-tasks li::before { content: '·'; color: var(--mist); }
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
 
-    /* ── Risk Matrix ── */
-    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media(max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
-    .risk-card { background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; }
-    .risk-level { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-    .risk-high { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
-    .risk-med  { background: rgba(201,148,58,0.12); color: #7A5020; }
-    .risk-low  { background: rgba(42,122,110,0.10); color: #1C5A51; }
-    .risk-name { font-weight: 600; font-size: 0.9rem; color: var(--ink); margin-bottom: 4px; }
-    .risk-mitigation { font-size: 0.8rem; color: var(--slate); line-height: 1.6; }
+/* ── HC ANALYSIS CARD ── */
+.hc-card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.hc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember) 0%, var(--gold) 100%);
+}
+.hc-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ember);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hc-number::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.hc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.hc-insight {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.hc-apply {
+  background: rgba(196,80,42,0.05);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  border-left: 2px solid var(--ember);
+  font-size: 13px;
+  color: var(--ember-dark);
+  font-style: italic;
+  line-height: 1.65;
+}
 
-    /* ── Chromosome Pills ── */
-    .chromosome-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-    .chromosome {
-      background: rgba(18,18,26,0.05); border: 1px solid rgba(18,18,26,0.1);
-      border-radius: 6px; padding: 6px 12px;
-      font-size: 0.8rem; color: var(--slate);
-    }
-    .chromosome strong { color: var(--ink); font-weight: 600; }
+/* ── BIZ12 GRID ── */
+.biz12-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 700px) {
+  .biz12-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.biz12-item {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+  position: relative;
+}
+.biz12-label {
+  font-size: 11px;
+  color: var(--slate);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-bottom: 6px;
+}
+.biz12-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.biz12-bar {
+  height: 4px;
+  background: rgba(90,90,110,0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.biz12-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.fill-strong { background: var(--teal); }
+.fill-mid { background: var(--gold); }
+.fill-weak { background: var(--ember); }
+.biz12-score {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.score-strong { color: var(--teal); }
+.score-mid { color: #8A6C1E; }
+.score-weak { color: var(--ember-dark); }
 
-    /* ── ESG Box ── */
-    .esg-box {
-      background: rgba(184,146,58,0.06); border: 1.5px solid rgba(184,146,58,0.3);
-      border-radius: 10px; padding: 24px; margin: 20px 0;
-    }
-    .esg-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+/* ── SSA TABLE ── */
+.ssa-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ssa-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  border-bottom: 2px solid var(--border);
+  background: rgba(196,80,42,0.04);
+}
+.ssa-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+  color: var(--ink);
+}
+.ssa-table tr:last-child td { border-bottom: none; }
+.ssa-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ember);
+}
+.ssa-status {
+  display: inline-block;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.status-critical { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
+.status-mid { background: rgba(184,146,58,0.12); color: #8A6C1E; }
+.status-ok { background: rgba(42,122,110,0.12); color: var(--teal); }
 
-    /* ── Callout ── */
-    .callout {
-      background: rgba(196,80,42,0.05); border-left: 3px solid var(--ember);
-      border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0;
-      font-size: 0.9rem; color: var(--slate);
-    }
-    .callout strong { color: var(--ink); }
+/* ── SHADOW DUAL ── */
+.shadow-dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 600px) {
+  .shadow-dual { grid-template-columns: 1fr; }
+}
+.shadow-panel {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.shadow-panel.yang { border-top: 3px solid var(--teal); }
+.shadow-panel.yin { border-top: 3px solid var(--ember); }
+.shadow-panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shadow-panel.yang .shadow-panel-title { color: var(--teal); }
+.shadow-panel.yin .shadow-panel-title { color: var(--ember); }
+.shadow-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+  line-height: 1.65;
+}
+.shadow-item:last-child { border-bottom: none; }
+.shadow-item strong { font-weight: 600; }
 
-    /* ── Footer ── */
-    .footer { background: var(--deep-ink); padding: 48px 0; text-align: center; }
-    .footer p { font-size: 0.875rem; color: rgba(247,245,240,0.3); }
-    .footer strong { color: rgba(247,245,240,0.6); }
+/* ── ROLES ── */
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .roles-grid { grid-template-columns: 1fr; }
+}
+.role-card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+.role-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.role-avatar.ember-bg { background: rgba(196,80,42,0.12); }
+.role-avatar.teal-bg { background: rgba(42,122,110,0.12); }
+.role-avatar.gold-bg { background: rgba(184,146,58,0.12); }
+.role-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+.role-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--slate);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.role-duties {
+  list-style: none;
+  text-align: left;
+}
+.role-duties li {
+  font-size: 13px;
+  color: var(--ink);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.role-duties li:last-child { border-bottom: none; }
+.role-duties li::before {
+  content: '→';
+  font-size: 11px;
+  color: var(--ember);
+  margin-top: 3px;
+  flex-shrink: 0;
+}
 
-    /* ── Divider ── */
-    .divider { height: 1px; background: var(--border); margin: 32px 0; }
-    .divider-thick { height: 2px; background: linear-gradient(90deg, var(--ember), transparent); margin: 40px 0; }
+/* ── SOLUTION PILLARS ── */
+.pillar {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.pillar-header {
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.pillar-num {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.pillar-num.ember { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
+.pillar-num.teal { background: rgba(42,122,110,0.12); color: var(--teal); }
+.pillar-num.gold { background: rgba(184,146,58,0.12); color: #8A6C1E; }
+.pillar-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.25; }
+.pillar-owner { font-size: 12px; font-family: 'IBM Plex Mono', monospace; margin-top: 4px; }
+.pillar-body { padding: 24px 28px; }
+.pillar-desc { font-size: 14px; color: var(--ink); line-height: 1.75; margin-bottom: 20px; }
 
-    /* ── Stakeholder Utility Table ── */
-    .util-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    .util-table th { background: var(--deep-ink); color: rgba(247,245,240,0.8); padding: 10px 14px; text-align: left; font-size: 0.8rem; font-weight: 500; }
-    .util-table th:first-child { border-radius: 6px 0 0 0; }
-    .util-table th:last-child { border-radius: 0 6px 0 0; }
-    .util-table td { padding: 10px 14px; border-bottom: 1px solid rgba(226,224,218,0.5); color: var(--slate); vertical-align: top; }
-    .util-table tr:last-child td { border-bottom: none; }
-    .util-table tr:nth-child(even) td { background: rgba(247,245,240,0.5); }
-    .util-name { font-weight: 600; color: var(--ink); }
+.action-list { list-style: none; }
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.action-item:last-child { border-bottom: none; }
+.action-phase {
+  flex-shrink: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-top: 2px;
+}
+.phase-s { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
+.phase-m { background: rgba(184,146,58,0.12); color: #8A6C1E; }
+.phase-l { background: rgba(42,122,110,0.12); color: var(--teal); }
+.action-text { font-size: 14px; color: var(--ink); line-height: 1.65; }
+.action-text strong { font-weight: 600; }
 
-    /* ── Highlight Number ── */
-    .stat-row { display: flex; gap: 24px; flex-wrap: wrap; margin: 24px 0; }
-    .stat { flex: 1; min-width: 120px; background: var(--snow); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; }
-    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--ember); }
-    .stat-label { font-size: 0.8rem; color: var(--mist); margin-top: 2px; }
-  </style>
+.tradeoff {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.tradeoff-item {
+  flex: 1 1 180px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.tradeoff-item.sweet { background: rgba(42,122,110,0.07); border: 1px solid rgba(42,122,110,0.2); }
+.tradeoff-item.cost { background: rgba(196,80,42,0.06); border: 1px solid rgba(196,80,42,0.18); }
+.tradeoff-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+.tradeoff-item.sweet .tradeoff-label { color: var(--teal); }
+.tradeoff-item.cost .tradeoff-label { color: var(--ember-dark); }
+
+/* ── ROADMAP ── */
+.roadmap { position: relative; }
+.roadmap-track {
+  position: absolute;
+  left: 21px; top: 28px; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--ember) 0%, var(--gold) 50%, var(--teal) 100%);
+  opacity: 0.3;
+}
+.roadmap-item {
+  display: flex;
+  gap: 24px;
+  padding-bottom: 32px;
+  position: relative;
+}
+.roadmap-item:last-child { padding-bottom: 0; }
+.roadmap-dot {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: var(--snow);
+  position: relative;
+  z-index: 1;
+}
+.dot-s { border-color: var(--ember); color: var(--ember); }
+.dot-m { border-color: var(--gold); color: #8A6C1E; }
+.dot-l { border-color: var(--teal); color: var(--teal); }
+.roadmap-content { padding-top: 8px; flex: 1; }
+.roadmap-phase {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.roadmap-items { list-style: none; }
+.roadmap-items li {
+  font-size: 14px;
+  color: var(--ink);
+  padding: 5px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.roadmap-items li::before {
+  content: '▸';
+  font-size: 10px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.s li::before { color: var(--ember); }
+.m li::before { color: var(--gold); }
+.l li::before { color: var(--teal); }
+
+/* ── RISK MATRIX ── */
+.risk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .risk-grid { grid-template-columns: 1fr; }
+}
+.risk-item {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+}
+.risk-level {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+  height: fit-content;
+  margin-top: 2px;
+}
+.level-h { background: rgba(196,80,42,0.12); color: var(--ember-dark); }
+.level-m { background: rgba(184,146,58,0.12); color: #8A6C1E; }
+.level-l { background: rgba(42,122,110,0.12); color: var(--teal); }
+.risk-content { flex: 1; }
+.risk-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--ink); }
+.risk-desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+.risk-counter { font-size: 13px; color: var(--teal); margin-top: 6px; }
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 48px 0 0;
+}
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-icon { color: var(--ember); font-size: 14px; opacity: 0.6; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.45);
+  padding: 40px 24px;
+  text-align: center;
+  font-size: 12px;
+}
+.footer-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+.footer-desc { max-width: 480px; margin: 0 auto 20px; line-height: 1.65; }
+.footer-tags {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.footer-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.35);
+}
+.footer-note { font-size: 11px; color: rgba(255,255,255,0.2); }
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box {
+  background: rgba(196,80,42,0.05);
+  border: 1px solid rgba(196,80,42,0.2);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.highlight-box.gold-box {
+  background: rgba(184,146,58,0.05);
+  border-color: rgba(184,146,58,0.2);
+}
+.highlight-box.teal-box {
+  background: rgba(42,122,110,0.05);
+  border-color: rgba(42,122,110,0.2);
+}
+
+/* ── SUMMARY BOX ── */
+.summary {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+  color: white;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+.summary::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(196,80,42,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.summary h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  font-style: italic;
+  color: white;
+  margin-bottom: 20px;
+}
+.summary-point {
+  display: flex;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 14px;
+  line-height: 1.65;
+  align-items: flex-start;
+}
+.summary-point:last-child { border-bottom: none; }
+.summary-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ember-light);
+  padding-top: 2px;
+  flex-shrink: 0;
+  width: 24px;
+}
+.summary-text { color: rgba(255,255,255,0.8); }
+.summary-text strong { color: white; }
+
+/* ── SCROLL PROGRESS ── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ember), var(--gold));
+  width: 0%;
+  z-index: 999;
+  transition: width 0.1s;
+}
+</style>
 </head>
 <body>
 
-<!-- ══════════ HERO ══════════ -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-kicker">MUSEON × 思凡自然農園</div>
-    <h1>營收升級<em>完整方案</em><br>v4.0</h1>
-    <p class="hero-sub">
-      密涅瓦認知框架 × SSA 系統創業 × Business-12 十二力 × 陽謀陰謀博弈<br>
-      四維交叉診斷，找出真正的槓桿點
-    </p>
+    <div class="hero-badge">MUSEON × Minerva Engine · v4</div>
+    <h1 class="font-display">思凡自然農園<br><span>升級方案</span></h1>
+    <p class="hero-subtitle">密涅瓦 HC 框架 × SSA × Business-12 × 陽謀陰謀雙軌分析<br>角色分工重新校準：Evvon（ESG）× Zeal（課程＋營運）</p>
     <div class="hero-tags">
-      <span class="hero-tag accent">密涅瓦 11 HCs</span>
-      <span class="hero-tag accent">Business-12</span>
-      <span class="hero-tag accent">SSA 染色體</span>
-      <span class="hero-tag accent">陽謀 × 陰謀</span>
-      <span class="hero-tag">Zeal 課程 + 營運顧問</span>
-      <span class="hero-tag">Evvon ESG 白皮書</span>
-      <span class="hero-tag">台東 思凡自然農園</span>
+      <span class="hero-tag ember">#rightproblem</span>
+      <span class="hero-tag ember">#gametheory</span>
+      <span class="hero-tag ember">#constraints</span>
+      <span class="hero-tag teal">SSA-01/03/10/23</span>
+      <span class="hero-tag teal">BF02/03/11/12</span>
+      <span class="hero-tag gold">陽謀 × 陰謀</span>
     </div>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 1: PROBLEM FRAMING ══════════ -->
-<div class="page-wrap">
-<section class="section">
-  <div class="section-label">Section 01 — 問題定錨</div>
-  <h2 class="section-title">你在解對的問題嗎？</h2>
-  <p class="section-desc">密涅瓦 HC #rightproblem：大多數人在解法上用力，但在問題定義上出錯。先把問題刻畫清楚，再談解方。</p>
-
-  <div class="problem-frame">
-    <div class="problem-vs">
-      <div class="problem-box surface">
-        <div class="label">表面問題（使用者陳述）</div>
-        <div class="text">「怎麼快速拉升思凡的營業額？」</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="val">紫蘇 220</span>
+        <span class="label">元/公斤 · 目標→280</span>
       </div>
-      <div class="problem-arrow">→</div>
-      <div class="problem-box real">
-        <div class="label">真實問題（#rightproblem 重構）</div>
-        <div class="text">「思凡的商業模式，在高採購價 + 低通路多元化 + 無品牌溢價的結構下，無法規模化。要的不是賣更多，而是重建商業結構。」</div>
+      <div class="hero-stat">
+        <span class="val">1 → 3</span>
+        <span class="label">買方通路擴張</span>
       </div>
-    </div>
-  </div>
-
-  <div class="stat-row">
-    <div class="stat">
-      <div class="stat-num">2</div>
-      <div class="stat-label">主要品項（紫蘇 / 香茅）</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">1</div>
-      <div class="stat-label">主要通路（協會網絡）</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">0</div>
-      <div class="stat-label">品牌溢價 / 差異化定位</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">GG</div>
-      <div class="stat-label">量一大成本結構就崩</div>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>屠崇軒親口說：「量一大就 GG。」</strong><br>
-    這句話揭露了根本矛盾——「快速拉升營業額」如果只靠量，反而會加速崩潰。解法必須走「提升單位價值」路線，不是「增加出貨量」路線。
-  </div>
-</section>
-
-<!-- ══════════ SECTION 2: MINERVA HCs ══════════ -->
-<section class="section">
-  <div class="section-label">Section 02 — 密涅瓦認知掃描</div>
-  <h2 class="section-title">11 個思考鏡頭<br>照出全局</h2>
-  <p class="section-desc">調用密涅瓦大學 HC 框架（Building the Intentional University, Kosslyn & Nelson 2017），從批判思考、創意思考、決策權衡三個域多角切入。</p>
-
-  <div class="hc-grid">
-    <div class="hc-card">
-      <div class="hc-tag">#rightproblem<br><span style="color:var(--mist);font-size:9px">HC-54</span></div>
-      <div class="hc-body">
-        <div class="hc-title">先解對問題</div>
-        <div class="hc-insight">核心問題不是「怎麼賣更多」，是「如何讓單位產品產生更高邊際貢獻」。方向錯誤時，用力越多損失越大。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#broadframing<br><span style="color:var(--mist);font-size:9px">HC-49</span></div>
-      <div class="hc-body">
-        <div class="hc-title">拒絕二元框架</div>
-        <div class="hc-insight">不只「賣香草原料 vs 不賣」，選項還包括：加工品、體驗課、B2B企業採購、農場訂閱制、認養制……不要被框死在一個商業模式裡。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#gapanalysis<br><span style="color:var(--mist);font-size:9px">HC-53</span></div>
-      <div class="hc-body">
-        <div class="hc-title">落差在哪裡</div>
-        <div class="hc-insight">現況：月收入依賴協會採購，無法議價、無品牌。目標：3-6 個月內建立 2 個以上獨立收入流。落差核心：通路議價能力為零。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#utility<br><span style="color:var(--mist);font-size:9px">HC-44</span></div>
-      <div class="hc-body">
-        <div class="hc-title">所有利害關係人的利益</div>
-        <div class="hc-insight">Zeal（顧問費 + 課程效益）、Evvon（ESG 案例 + 白皮書影響力）、屠崇軒（永續營收 + 使命達成）、朱芳嫻（共創案例 + 社企影響力）——每個人的利益都要被設計進去。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#constraints<br><span style="color:var(--mist);font-size:9px">HC-69</span></div>
-      <div class="hc-body">
-        <div class="hc-title">限制即設計條件</div>
-        <div class="hc-insight">台東地理限制、人力小規模、高採購成本——這些不是問題，是設計參數。讓所有限制同時滿足，答案自然浮現：小量 × 高價值 × 強故事。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#emergentproperties<br><span style="color:var(--mist);font-size:9px">HC-39</span></div>
-      <div class="hc-body">
-        <div class="hc-title">1+1+1 的湧現效果</div>
-        <div class="hc-insight">Zeal 課程 + Evvon ESG白皮書 + 思凡農場 = 單獨都做不到，但三者結合可以成為「台灣第一個有完整 ESG 認證 + 課程體系 + 白皮書的香草社企農場」。這是不可複製的競爭壁壘。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#gametheory<br><span style="color:var(--mist);font-size:9px">HC-57</span></div>
-      <div class="hc-body">
-        <div class="hc-title">三方賽局分析</div>
-        <div class="hc-insight">現在是「零和博弈」（協會壓低採購價，農場吃虧）。要重構成「正和博弈」：協會得到 ESG 案例 + 品牌加分，農場得到議價空間 + 多元通路，雙方都往上走。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#contrarian<br><span style="color:var(--mist);font-size:9px">HC-72</span></div>
-      <div class="hc-body">
-        <div class="hc-title">逆向思考突破</div>
-        <div class="hc-insight">所有人都在想「怎麼賣更多」，逆向問：「如果只賣一點但賣得非常貴，可行嗎？」→ 體驗課 + 農場認養 + 限量禮盒，不用量，靠稀缺感。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#multiplecauses<br><span style="color:var(--mist);font-size:9px">HC-40</span></div>
-      <div class="hc-body">
-        <div class="hc-title">多重根因交叉</div>
-        <div class="hc-insight">營收停滯的根因不是單一的：① 定價結構（高採購成本 + 低售價）② 通路壟斷（依賴單一協會）③ 品牌缺席（無法產生溢價）④ 產品型態（原料 = 最低附加值）。同時動四個點才有效。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#analogies<br><span style="color:var(--mist);font-size:9px">HC-68</span></div>
-      <div class="hc-body">
-        <div class="hc-title">成功模型類比</div>
-        <div class="hc-insight">台灣精品茶（坪林茶農 → 茶葉體驗 + 故事品牌 → 溢價 5-10x）、日本自然農法農園（認養制 + 社區支持農業 CSA）——「香草版坪林茶」的模型可行。</div>
-      </div>
-    </div>
-    <div class="hc-card">
-      <div class="hc-tag">#systemdynamics<br><span style="color:var(--mist);font-size:9px">HC-38</span></div>
-      <div class="hc-body">
-        <div class="hc-title">系統正負反饋</div>
-        <div class="hc-insight">現在的負反饋循環：高成本 → 低毛利 → 無法投資品牌 → 無差異化 → 只能靠量 → 量大成本更高。要打破：ESG認證 → 議價能力 → 毛利提升 → 投資品牌 → 溢價。</div>
+      <div class="hero-stat">
+        <span class="val">3 軸</span>
+        <span class="label">短中長期路線圖</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ SECTION 3: BUSINESS-12 ══════════ -->
-<section class="section">
-  <div class="section-label">Section 03 — Business-12 十二力體檢</div>
-  <h2 class="section-title">商模健康度<br>完整診斷</h2>
-  <p class="section-desc">以商模十二力框架對思凡自然農園進行評分（1-5），找出優先補強的底盤弱項。</p>
+<div class="container">
 
-  <div class="card">
-    <table class="force-table">
-      <thead>
-        <tr>
-          <th>力項</th>
-          <th>評分</th>
-          <th>評量條</th>
-          <th>優先</th>
-          <th>診斷與行動</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><div class="force-name">產品力 BF01</div></td>
-          <td><span class="force-score" style="color:var(--warning)">3</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-3"></div></div></div></td>
-          <td><span class="priority-badge pri-2">P2</span></td>
-          <td class="force-note">產品真實（有機香草），但停在原料型態。升級至加工品 / 體驗套裝，BF01 可達 4+</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">累積力 BF02</div></td>
-          <td><span class="force-score" style="color:var(--error)">1</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-1"></div></div></div></td>
-          <td><span class="priority-badge pri-1">P1</span></td>
-          <td class="force-note">無案例見證、無數據記錄、無故事沉澱。ESG白皮書（Evvon）即是最強的累積力建設工具。</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">整合力 BF03</div></td>
-          <td><span class="force-score" style="color:var(--warning)">3</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-3"></div></div></div></td>
-          <td><span class="priority-badge pri-2">P2</span></td>
-          <td class="force-note">朱芳嫻連結是優勢，但依賴單一資源。需整合：Zeal課程網絡、Evvon ESG企業客戶、其他社企平台</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">共享力 BF04</div></td>
-          <td><span class="force-score" style="color:var(--error)">1</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-1"></div></div></div></td>
-          <td><span class="priority-badge pri-1">P1</span></td>
-          <td class="force-note">完全無口碑機制、無分潤設計。設計「農場大使計畫」：推薦者享折扣 + 認養農地命名權</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">感受力 BF05</div></td>
-          <td><span class="force-score" style="color:var(--warning)">2</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-2"></div></div></div></td>
-          <td><span class="priority-badge pri-2">P2</span></td>
-          <td class="force-note">體驗旅程未設計。農場體驗課（Zeal負責）即是感受力的最大投資：從原料到料理到帶回家</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">感召力 BF06</div></td>
-          <td><span class="force-score" style="color:var(--warning)">3</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-3"></div></div></div></td>
-          <td><span class="priority-badge pri-3">P3</span></td>
-          <td class="force-note">社企故事有底蘊，但未被系統化說出。ESG白皮書 + 屠崇軒個人故事 = 感召力素材寶庫</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">品牌力 BF07</div></td>
-          <td><span class="force-score" style="color:var(--error)">1</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-1"></div></div></div></td>
-          <td><span class="priority-badge pri-1">P1</span></td>
-          <td class="force-note">幾乎零品牌建設。品牌定位建議：「台灣第一個有完整 ESG 紀錄的香草社企農場」</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">優化力 BF08</div></td>
-          <td><span class="force-score" style="color:var(--error)">1</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-1"></div></div></div></td>
-          <td><span class="priority-badge pri-1">P1</span></td>
-          <td class="force-note">無 SOP、無 KPI 追蹤、無財務模型。Zeal 營運顧問的核心任務：建立第一個月報模板</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">社群力 BF09</div></td>
-          <td><span class="force-score" style="color:var(--warning)">2</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-2"></div></div></div></td>
-          <td><span class="priority-badge pri-3">P3</span></td>
-          <td class="force-note">依賴朱芳嫻的協會社群，自身社群為零。建立「思凡香草手帖」訂閱 newsletter 作為自媒體起點</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">視覺力 BF10</div></td>
-          <td><span class="force-score" style="color:var(--warning)">2</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-2"></div></div></div></td>
-          <td><span class="priority-badge pri-2">P2</span></td>
-          <td class="force-note">包裝視覺未知但推估薄弱。ESG報告視覺 + 農場拍攝素材包 = 最快提升視覺力的路徑</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">談判力 BF11</div></td>
-          <td><span class="force-score" style="color:var(--error)">1</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-1"></div></div></div></td>
-          <td><span class="priority-badge pri-1">P1</span></td>
-          <td class="force-note">現在完全無議價籌碼，被動接受採購價。ESG認證一旦完成，談判力立刻躍升：「企業要 ESG 供應商，你就是唯一選項」</td>
-        </tr>
-        <tr>
-          <td><div class="force-name">轉換力 BF12</div></td>
-          <td><span class="force-score" style="color:var(--error)">1</span></td>
-          <td><div class="force-bar-wrap"><div class="force-bar-bg"><div class="force-bar bar-1"></div></div></div></td>
-          <td><span class="priority-badge pri-1">P1</span></td>
-          <td class="force-note">無漏斗、無 CTA、無追蹤。課程報名頁 + 農場訂閱入口是首要建設目標</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div style="margin-top:20px; padding:16px 20px; background:rgba(196,80,42,0.05); border-radius:8px; border:1px solid rgba(196,80,42,0.15);">
-    <h4 style="color:var(--ember-dark);margin-bottom:8px">底盤三力診斷</h4>
-    <p style="font-size:0.875rem">BF02 累積力（1分）× BF05 感受力（2分）× BF10 視覺力（2分）= <strong style="color:var(--ink)">底盤均分 1.67 / 5</strong>。底盤不穩，上層所有行銷投資都會漏失。首要任務：先補底盤，再做行銷。</p>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 4: SSA 系統設計 ══════════ -->
-<section class="section">
-  <div class="section-label">Section 04 — SSA 系統創業設計</div>
-  <h2 class="section-title">三重漏斗 ×<br>核心染色體</h2>
-  <p class="section-desc">以 SSA 系統創業方法論，設計思凡的三重漏斗結構，並匹配最關鍵的 SSA 染色體作為行動藍圖。</p>
-
-  <div class="funnel-grid">
-    <div class="funnel-col">
-      <div class="funnel-head">
-        <h4>產品漏斗</h4>
-        <span>Product Funnel</span>
+  <!-- ── 執行摘要 ── -->
+  <section class="section">
+    <div class="summary">
+      <h3>執行摘要</h3>
+      <div class="summary-point">
+        <div class="summary-num">01</div>
+        <div class="summary-text"><strong>真正的問題不是「量不夠多」</strong>——HC #rightproblem 告訴我們：農場本質瓶頸是「單點依賴 + 定價停滯 + 無故事資產」，靠量解決只會先把人力壓垮（量大了就 GG）。</div>
       </div>
-      <div class="funnel-body">
-        <div class="funnel-step">
-          <div class="funnel-step-num">L0</div>
-          <div class="funnel-step-text"><strong>免費引流</strong>：農場一日體驗（Zeal 課程引薦）/ 香草知識 IG 內容</div>
+      <div class="summary-point">
+        <div class="summary-num">02</div>
+        <div class="summary-text"><strong>三方協作是關鍵破局點</strong>——Evvon 的 ESG 白皮書 + Zeal 的課程輸出 + 屠崇軒的生產品質，三位一體才能創造「故事溢價」並開啟企業 ESG 採購這條新通路，把餅做大而非爭同一塊。</div>
+      </div>
+      <div class="summary-point">
+        <div class="summary-num">03</div>
+        <div class="summary-text"><strong>陰謀比陽謀更危急</strong>——目前最高風險不是定價談判，而是屠崇軒的士氣與信任危機（被壓垮感）。朱芳嫻已覺察這點，這是最寶貴的人心資產，必須立刻建立正和博弈框架。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 密涅瓦 HC 診斷 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-ember">⬡</div>
+      <div>
+        <div class="chip chip-ember">密涅瓦引擎 · Minerva HC Framework</div>
+        <h2 class="section-title">用 <span>109 條認知工具</span> 解構思凡的真實問題</h2>
+        <p class="section-desc">先用 #rightproblem 定義問題，再用其他 HC 展開解方——多數人開會直接跳解法，跳過了最關鍵的第一步。</p>
+      </div>
+    </div>
+
+    <div class="hc-card" style="margin-bottom: 20px;">
+      <div class="hc-number">HC #54 · Critical Thinking · Analyzing Problems</div>
+      <div class="hc-title">#rightproblem ── 你在解的是對的問題嗎？</div>
+      <div class="hc-insight">
+        思凡的表面問題是「怎麼快速拉升營業額」。但用 #rightproblem 往深刨：香茅 170、紫蘇 220 的收購價已一年未調整，朱芳嫻甚至想「調降」（因為運費上漲）；量一大農場就 GG（人力瓶頸）——所以「增量」根本不是解法，因為系統不支持。
+        <br><br>
+        <strong>真正的問題是：</strong>「如何在不崩掉人力的前提下，系統性提升單位農產品的市場價值？」這個問題有三個子問題：① 誰負責定價談判（陽謀）？② 誰開闢新通路（ESG 採購）？③ 誰建立品牌資產讓故事撐起溢價？
+      </div>
+      <div class="hc-apply">→ 應用：Zeal 的顧問介入不應從「銷售策略」切入，而是先協助農場釐清「什麼是我們真正在解決的問題」，建立三方共識。</div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div class="hc-card">
+        <div class="hc-number">HC #40 · Critical Thinking</div>
+        <div class="hc-title">#multiplecauses ── 多重原因交互作用</div>
+        <div class="hc-insight">營收停滯不是單一原因，而是五個問題同時作用：
+          <ul style="margin: 10px 0 0 16px; font-size: 13px; line-height: 1.9;">
+            <li><strong>單一買方依賴</strong>（只有朱芳嫻的協會）</li>
+            <li><strong>定價一年凍結</strong>（甚至面臨降價壓力）</li>
+            <li><strong>人力瓶頸</strong>（量大了就 GG）</li>
+            <li><strong>沒有二次加工</strong>（停在一級農產品）</li>
+            <li><strong>零品牌資產</strong>（無法支撐溢價）</li>
+          </ul>
         </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">L1</div>
-          <div class="funnel-step-text"><strong>入門品 $300-500</strong>：思凡香草禮盒（紫蘇 + 香茅精油 + 乾燥包）</div>
+        <div class="hc-apply">→ 解一個點不夠，必須系統性拆解。</div>
+      </div>
+      <div class="hc-card">
+        <div class="hc-number">HC #57 · Critical Thinking</div>
+        <div class="hc-title">#gametheory ── 賽局理論重新設計</div>
+        <div class="hc-insight">
+          <strong>現狀博弈（零和趨向）：</strong><br>
+          朱芳嫻壓收購價 → 屠崇軒利潤受壓 → 動力下降 → 品質風險 → 協會找不到穩定供應商 → 雙輸。
+          <br><br>
+          <strong>目標博弈（正和）：</strong><br>
+          引入外部資金（企業 ESG 採購）讓餅變大 → 農場提高品質有獲利 → 協會得到穩定優質供應 → 三方共贏。
         </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">L2</div>
-          <div class="funnel-step-text"><strong>核心品 $1,500-3,000</strong>：農場半日體驗課（料理 + 採收 + 帶走）</div>
+        <div class="hc-apply">→ 核心槓桿：ESG 白皮書打開企業採購通路，這才是改變博弈結構的關鍵。</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div class="hc-card">
+        <div class="hc-number">HC #44 · Critical Thinking</div>
+        <div class="hc-title">#utility ── 所有利害關係人盤點</div>
+        <div class="hc-insight">
+          <table style="width:100%; font-size: 12px; border-collapse: collapse; margin-top: 8px;">
+            <tr style="border-bottom: 1px solid var(--border);">
+              <th style="padding: 6px 8px; text-align:left; color: var(--slate); font-family: 'IBM Plex Mono'; font-size: 10px;">角色</th>
+              <th style="padding: 6px 8px; text-align:left; color: var(--slate); font-family: 'IBM Plex Mono'; font-size: 10px;">甜頭</th>
+              <th style="padding: 6px 8px; text-align:left; color: var(--slate); font-family: 'IBM Plex Mono'; font-size: 10px;">代價</th>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-light);">
+              <td style="padding: 7px 8px; font-weight: 600;">屠崇軒</td>
+              <td style="padding: 7px 8px;">更高單價、品牌認同感</td>
+              <td style="padding: 7px 8px;">需接受更嚴品質審計</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-light);">
+              <td style="padding: 7px 8px; font-weight: 600;">朱芳嫻</td>
+              <td style="padding: 7px 8px;">ESG 採購通路、白皮書案例</td>
+              <td style="padding: 7px 8px;">需接受收購價微漲</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-light);">
+              <td style="padding: 7px 8px; font-weight: 600;">Zeal</td>
+              <td style="padding: 7px 8px;">課程案例、顧問費、生態布局</td>
+              <td style="padding: 7px 8px;">需投入輔導時間</td>
+            </tr>
+            <tr>
+              <td style="padding: 7px 8px; font-weight: 600;">企業 ESG 方</td>
+              <td style="padding: 7px 8px;">可驗證的 CSR 故事</td>
+              <td style="padding: 7px 8px;">需通過白皮書審核</td>
+            </tr>
+          </table>
         </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">L3</div>
-          <div class="funnel-step-text"><strong>高毛利 $12,000+</strong>：企業 ESG 採購訂閱 / 農地認養年方案</div>
+        <div class="hc-apply">→ 把這張帳攤給所有人看，談判才有共識支點。</div>
+      </div>
+      <div class="hc-card">
+        <div class="hc-number">HC #49 · Critical Thinking</div>
+        <div class="hc-title">#broadframing ── 拒絕被框成 Yes/No</div>
+        <div class="hc-insight">
+          不要只想「賣更多香草」。完整選項光譜：
+          <ul style="margin: 10px 0 0 16px; font-size: 12px; line-height: 2.0;">
+            <li>A. <strong>提高收購單價</strong>（降量提質）← <span style="color:var(--ember)">最快</span></li>
+            <li>B. <strong>企業 ESG 採購</strong>（全新通路）← <span style="color:var(--ember)">最有槓桿</span></li>
+            <li>C. <strong>Zeal 課程整合</strong>（學員即市場）</li>
+            <li>D. <strong>農場體驗課程</strong>（加工品直銷）</li>
+            <li>E. <strong>白牌授權</strong>（品牌合作）</li>
+          </ul>
+        </div>
+        <div class="hc-apply">→ 三個選項同步推進（A + B + C），而非單押一個。</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="hc-card">
+        <div class="hc-number">HC #69 · Creative Thinking</div>
+        <div class="hc-title">#constraints ── 把限制當成解的形狀</div>
+        <div class="hc-insight">同時滿足所有限制，解法自動浮現：
+          <div style="background: rgba(196,80,42,0.04); border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 12px; line-height: 1.8;">
+            ✗ 不能靠量（人力 GG）<br>
+            ✗ 不能大規模加工（資本不足）<br>
+            ✗ 物流成本高（台東遠）<br>
+            ✓ 有機認證（差異化）<br>
+            ✓ 社企故事（溢價來源）<br>
+            ✓ Evvon ESG 白皮書（背書工具）
+          </div>
+        </div>
+        <div class="hc-apply">→ 結論：走「少量高溢價 + 故事認證」路線，不走「量大平價」路線。</div>
+      </div>
+      <div class="hc-card">
+        <div class="hc-number">HC #72 × HC #68</div>
+        <div class="hc-title">#contrarian × #analogies ── 逆向 + 類比</div>
+        <div class="hc-insight">
+          <strong>#contrarian（逆向）：</strong>不要「快速增加營業額」，而是「快速提升單位價值 + 故事資產」，讓客戶主動找上門。
+          <br><br>
+          <strong>#analogies（類比）：</strong>對標「主婦聯盟有機合作社」模式——農場不是供應商，是「共同創業夥伴」，採購價反映的是投資關係，不是商品交易。
+        </div>
+        <div class="hc-apply">→ 朱芳嫻的「合作夥伴」框架說法已對，需要具體化成條款與共識文件。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Business-12 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-gold">⚡</div>
+      <div>
+        <div class="chip chip-gold">商模十二力 · Business-12</div>
+        <h2 class="section-title">十二力 <span>快速診斷</span></h2>
+        <p class="section-desc">哪些力撐著農場，哪些力是危險缺口？</p>
+      </div>
+    </div>
+    <div class="biz12-grid">
+      <div class="biz12-item">
+        <div class="biz12-label">BF01</div>
+        <div class="biz12-name">產品力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-strong" style="width:78%"></div></div>
+        <div class="biz12-score score-strong">強 ▲</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF02</div>
+        <div class="biz12-name">累積力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:12%"></div></div>
+        <div class="biz12-score score-weak">極弱 ▼▼</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF03</div>
+        <div class="biz12-name">整合力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:18%"></div></div>
+        <div class="biz12-score score-weak">極弱 ▼▼</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF04</div>
+        <div class="biz12-name">共享力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:5%"></div></div>
+        <div class="biz12-score score-weak">幾乎無 ✕</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF05</div>
+        <div class="biz12-name">感受力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-mid" style="width:35%"></div></div>
+        <div class="biz12-score score-mid">待修復 ⚠</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF06</div>
+        <div class="biz12-name">感召力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-strong" style="width:70%"></div></div>
+        <div class="biz12-score score-strong">強 ▲</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF07</div>
+        <div class="biz12-name">品牌力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:15%"></div></div>
+        <div class="biz12-score score-weak">極弱 ▼▼</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF08</div>
+        <div class="biz12-name">優化力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:10%"></div></div>
+        <div class="biz12-score score-weak">極弱 ▼▼</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF09</div>
+        <div class="biz12-name">社群力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:8%"></div></div>
+        <div class="biz12-score score-weak">幾乎無 ✕</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF10</div>
+        <div class="biz12-name">視覺力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:10%"></div></div>
+        <div class="biz12-score score-weak">幾乎無 ✕</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF11</div>
+        <div class="biz12-name">談判力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:20%"></div></div>
+        <div class="biz12-score score-weak">極弱 ▼▼</div>
+      </div>
+      <div class="biz12-item">
+        <div class="biz12-label">BF12</div>
+        <div class="biz12-name">轉換力</div>
+        <div class="biz12-bar"><div class="biz12-fill fill-weak" style="width:5%"></div></div>
+        <div class="biz12-score score-weak">幾乎無 ✕</div>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top: 20px;">
+      <div class="chip chip-ember">診斷結論</div>
+      <p style="font-size: 14px; line-height: 1.8; color: var(--ink);">
+        思凡的 <strong>BF01 產品力</strong>（有機品質）和 <strong>BF06 感召力</strong>（社企故事）是兩根強柱——這是最珍貴的資產。但 <strong>BF02 累積力、BF03 整合力、BF11 談判力、BF12 轉換力</strong> 四項幾乎是空的，導致好產品賣不出高價、故事沒有擴散通路。<br><br>
+        優先修復：BF11（先談收購價）→ BF02（用 Evvon 白皮書開始累積故事資產）→ BF03（開拓企業採購通路）→ BF12（Zeal 課程整合直銷）。
+      </p>
+    </div>
+  </section>
+
+  <!-- ── SSA 系統診斷 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-teal">🧬</div>
+      <div>
+        <div class="chip chip-teal">SSA 系統創業 · 27 染色體</div>
+        <h2 class="section-title">染色體 <span>匹配診斷</span></h2>
+        <p class="section-desc">從 27 條 SSA 專家染色體中，命中思凡最關鍵的 6 條。</p>
+      </div>
+    </div>
+    <div class="card" style="overflow: hidden;">
+      <table class="ssa-table">
+        <thead>
+          <tr>
+            <th>染色體</th>
+            <th>名稱</th>
+            <th>診斷現況</th>
+            <th>處方</th>
+            <th>緊急度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ssa-id">SSA01</span></td>
+            <td style="font-weight: 600; white-space: nowrap;">脫鉤</td>
+            <td>100% 依賴朱芳嫻協會單一買方，是最高系統脆弱點</td>
+            <td>開發第 2、3 個買方通路（企業 ESG 採購為首選）</td>
+            <td><span class="ssa-status status-critical">P0 危急</span></td>
+          </tr>
+          <tr>
+            <td><span class="ssa-id">SSA03</span></td>
+            <td style="font-weight: 600; white-space: nowrap;">三腳支撐</td>
+            <td>現有只有一腳（協會），兩腳缺失，系統不穩</td>
+            <td>建立三腳：① 協會（穩定）② 企業 ESG ③ Zeal 課程學員直銷</td>
+            <td><span class="ssa-status status-critical">P0 危急</span></td>
+          </tr>
+          <tr>
+            <td><span class="ssa-id">SSA10</span></td>
+            <td style="font-weight: 600; white-space: nowrap;">價值疊加</td>
+            <td>目前只賣一級農產品，沒有疊加任何附加價值</td>
+            <td>疊加：有機認證 + ESG 白皮書背書 + Zeal 課程案例 + 加工品</td>
+            <td><span class="ssa-status status-critical">P0</span></td>
+          </tr>
+          <tr>
+            <td><span class="ssa-id">SSA22</span></td>
+            <td style="font-weight: 600; white-space: nowrap;">英雄故事</td>
+            <td>屠崇軒的社企故事有強大張力但未結晶</td>
+            <td>Evvon 的 ESG 白皮書就是最好的英雄故事載體</td>
+            <td><span class="ssa-status status-mid">P1</span></td>
+          </tr>
+          <tr>
+            <td><span class="ssa-id">SSA23</span></td>
+            <td style="font-weight: 600; white-space: nowrap;">奇正相生</td>
+            <td>正道（穩定協會訂單）有，奇道（新通路）全無</td>
+            <td>正道：協會固定採購 / 奇道：企業 ESG + 體驗課程</td>
+            <td><span class="ssa-status status-mid">P1</span></td>
+          </tr>
+          <tr>
+            <td><span class="ssa-id">SSA05</span></td>
+            <td style="font-weight: 600; white-space: nowrap;">口碑驗證</td>
+            <td>沒有任何公開可見的社會證明</td>
+            <td>Evvon ESG 白皮書 + Zeal 課程案例頁面 = 雙重口碑</td>
+            <td><span class="ssa-status status-ok">P2</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 陽謀 × 陰謀 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-navy">⚔</div>
+      <div>
+        <div class="chip chip-navy">Shadow × Master-Strategy</div>
+        <h2 class="section-title">陽謀 × <span>陰謀</span> 雙軌分析</h2>
+        <p class="section-desc">master-strategy 處理看得見的策略佈局（陽謀），Shadow 處理人心深處的博弈動態（陰謀）。兩者兼備才是完整的人類世界認知。</p>
+      </div>
+    </div>
+    <div class="shadow-dual">
+      <div class="shadow-panel yang">
+        <div class="shadow-panel-title">☀ 陽謀：看得見的局</div>
+        <div class="shadow-item">
+          <strong>朱芳嫻已明牌</strong>：以「物流成本漲價」為契機，主動釋出重新協商意向。這是公開的策略意圖，且她已率先承認「我把你壓垮了」——攻守框架已定，現在是重建期。
+        </div>
+        <div class="shadow-item">
+          <strong>三方協作架構</strong>：Zeal 引入作為顧問，Evvon 負責 ESG 白皮書，這是公開可驗證的分工佈局，不存在資訊不對稱。
+        </div>
+        <div class="shadow-item">
+          <strong>物流漲價是籌碼</strong>（HC #90 #negotiate）：把物流成本攤開算，從「我要漲」變成「我們一起面對漲價，怎麼分攤」——這是有效的談判重新框架。
+        </div>
+        <div class="shadow-item">
+          <strong>朱芳嫻已拋出「合作夥伴」定位</strong>（非上下游），這是陽謀層面最有利的信號，需要立刻用條款和機制固化。
+        </div>
+      </div>
+      <div class="shadow-panel yin">
+        <div class="shadow-panel-title">🌑 陰謀：人心深處的博弈</div>
+        <div class="shadow-item">
+          <strong>⚠ 最危急訊號</strong>：屠崇軒「量一大就 GG」這句話背後有沉重的情緒——他已經到臨界點。表面說的是人力問題，實際上是「我不想再被這樣使用」。這是 SSA01 脫鉤最深層的驅力。
+        </div>
+        <div class="shadow-item">
+          <strong>朱芳嫻同時在評估替代方案</strong>（「除了我們，還有哪些單位可以提供比較大量的香草？」）——她一邊釋出善意，一邊在降低自己對思凡的依賴，是理性的採購端行為，但農場要知道這個動態。
+        </div>
+        <div class="shadow-item">
+          <strong>信任是最高資產</strong>：朱芳嫻自我暴露「我肯定是要調整的，但...實在高出批價太多」——她願意主動承認，這種誠實是極寶貴的夥伴訊號。
+        </div>
+        <div class="shadow-item">
+          <strong>解法：從交易博弈轉型為策略共同體</strong>。具體機制：白紙黑字的「合作夥伴共識備忘錄」，釐清利益共同點 → 降低人心層面的焦慮。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 角色分工 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-ember">👥</div>
+      <div>
+        <div class="chip chip-ember">角色分工重新校準</div>
+        <h2 class="section-title">三方 <span>職責邊界</span> 確認</h2>
+        <p class="section-desc">每個人做最擅長的事，不越界、不重疊、不遺漏。</p>
+      </div>
+    </div>
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-avatar ember-bg">🌿</div>
+        <div class="role-name">朱芳嫻（Evvon）</div>
+        <div class="role-title" style="color: var(--ember);">ESG 顧問</div>
+        <ul class="role-duties">
+          <li>ESG 白皮書主筆與發佈</li>
+          <li>連結企業 CSR 採購決策者</li>
+          <li>思凡 ESG 認證敘事框架設計</li>
+          <li>協會採購通路的定價談判</li>
+          <li>多方農場供應鏈評估（已知）</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar teal-bg">📐</div>
+        <div class="role-name">Zeal（老闆）</div>
+        <div class="role-title" style="color: var(--teal);">課程設計 × 營運顧問</div>
+        <ul class="role-duties">
+          <li>思凡營運系統診斷 × SOP 建立</li>
+          <li>課程案例整合（讓學員認識思凡）</li>
+          <li>二次加工產品開發顧問</li>
+          <li>Business-12 × SSA 框架實戰應用</li>
+          <li>學員採購轉化機制設計</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar gold-bg">🌾</div>
+        <div class="role-name">屠崇軒（思凡）</div>
+        <div class="role-title" style="color: #8A6C1E;">農場主 × 內容主角</div>
+        <ul class="role-duties">
+          <li>生產品質把關（最核心任務）</li>
+          <li>ESG 白皮書訪談配合</li>
+          <li>限量高品質農產品的維持</li>
+          <li>加工品 1-2 個 SKU 試驗</li>
+          <li>拒絕量大壓垮自己</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-box teal-box" style="margin-top: 20px;">
+      <div class="chip chip-teal">⚠ 邊界紅線</div>
+      <p style="font-size: 14px; line-height: 1.8; color: var(--ink);">
+        <strong>Evvon 的 ESG 白皮書是 Evvon 的職責，不是 Zeal 的工作。</strong>Zeal 的角色是課程設計與營運顧問——兩者互補，但邊界清晰。在對外溝通中，Zeal 不代表 ESG 認證，Evvon 不代表課程培訓，這個分工越清晰，對思凡的交付越可信。
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 升級方案三根柱子 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-ember">🏛</div>
+      <div>
+        <div class="chip chip-ember">升級方案 · v4</div>
+        <h2 class="section-title">三根 <span>收入支柱</span> 重建</h2>
+        <p class="section-desc">SSA03 三腳支撐原則：穩住舊通路、引入新通路、轉化課程流量。</p>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-header">
+        <div class="pillar-num ember">Ⅰ</div>
+        <div>
+          <div class="chip chip-ember">Evvon 主導</div>
+          <div class="pillar-title">ESG 企業採購通路 — 最高單價新通路</div>
+          <div class="pillar-owner" style="color: var(--ember);">BF03 整合力 × SSA10 價值疊加 × HC #gametheory</div>
+        </div>
+      </div>
+      <div class="pillar-body">
+        <p class="pillar-desc">
+          ESG 白皮書讓思凡從「台東一個農場」升格為「可被企業年報引用的 ESG 供應鏈案例」。這不只是行銷素材——白皮書通過的供應商，在企業採購端可以溢價 30-60%，因為買的不是香草，是合規証明。
+        </p>
+        <ul class="action-list">
+          <li class="action-item">
+            <span class="action-phase phase-s">短期</span>
+            <div class="action-text"><strong>收購價重新談判</strong>：以物流成本漲價為契機，香茅從 170 調至 200、紫蘇從 220 調至 260（先求單價，不求量）。Evvon 主導對話框架。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-s">短期</span>
+            <div class="action-text"><strong>ESG 白皮書素材蒐集</strong>：屠崇軒配合訪談（成本、收購機制、社企使命、農場故事），Evvon 主筆。目標：3 個月內完稿。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-m">中期</span>
+            <div class="action-text"><strong>鎖定企業 CSR 預算季</strong>：台灣企業 CSR 採購高峰在 Q3-Q4（10-12 月年報衝刺期）。白皮書完成後，Evvon 的協會網絡連接企業 ESG 採購窗口，進入招標流程。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-l">長期</span>
+            <div class="action-text"><strong>「認養農場」ESG 方案</strong>：企業一年認養思凡部分農地，獲得供應量承諾 + 年報使用授權。思凡獲得穩定預付款，解脫現金流焦慮。</div>
+          </li>
+        </ul>
+        <div class="tradeoff">
+          <div class="tradeoff-item sweet">
+            <span class="tradeoff-label">甜頭</span>
+            企業採購單價可達市場 1.5-2x，且一旦進入年度採購清單，穩定性極高。
+          </div>
+          <div class="tradeoff-item cost">
+            <span class="tradeoff-label">代價</span>
+            需要 Evvon 白皮書完成才能啟動；企業採購決策週期長（3-6 個月）；品質審計要求較嚴。
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="funnel-col">
-      <div class="funnel-head">
-        <h4>行銷漏斗</h4>
-        <span>Marketing Funnel</span>
-      </div>
-      <div class="funnel-body">
-        <div class="funnel-step">
-          <div class="funnel-step-num">前端</div>
-          <div class="funnel-step-text"><strong>理念 × 見證</strong>：屠崇軒的社企故事 + ESG認證過程記錄 + Evvon白皮書發布</div>
-        </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">中端</div>
-          <div class="funnel-step-text"><strong>方案 × 案例</strong>：Zeal 課程學員到訪紀錄 + 企業 ESG 合作案例展示</div>
-        </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">後端</div>
-          <div class="funnel-step-text"><strong>行動 × 承諾</strong>：企業採購洽詢 CTA + 農場訂閱制報名 + 課程預約系統</div>
-        </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">口碑</div>
-          <div class="funnel-step-text"><strong>90% 好評先建立</strong>：體驗課→打卡牆設計→Instagram UGC 機制</div>
+    <div class="pillar">
+      <div class="pillar-header">
+        <div class="pillar-num teal">Ⅱ</div>
+        <div>
+          <div class="chip chip-teal">Zeal 主導</div>
+          <div class="pillar-title">課程整合 × 學員市場 — 最快直接流量</div>
+          <div class="pillar-owner" style="color: var(--teal);">BF12 轉換力 × SSA23 奇正相生 × HC #networks</div>
         </div>
       </div>
-    </div>
-
-    <div class="funnel-col">
-      <div class="funnel-head">
-        <h4>社群漏斗</h4>
-        <span>Community Funnel</span>
-      </div>
-      <div class="funnel-body">
-        <div class="funnel-step">
-          <div class="funnel-step-num">L0</div>
-          <div class="funnel-step-text"><strong>認識思凡</strong>：IG / 朱芳嫻協會 / Zeal 課程曝光</div>
-        </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">L1</div>
-          <div class="funnel-step-text"><strong>體驗過一次</strong>：農場到訪 / 買過禮盒的人</div>
-        </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">L2</div>
-          <div class="funnel-step-text"><strong>訂閱戶</strong>：香草手帖訂閱 / 定期採購戶</div>
-        </div>
-        <div class="funnel-step">
-          <div class="funnel-step-num">L3</div>
-          <div class="funnel-step-text"><strong>農場大使</strong>：認養農地 + 主動分享 + 帶企業來談 ESG 採購</div>
+      <div class="pillar-body">
+        <p class="pillar-desc">
+          Zeal 的課程學員是最精準的潛在消費者——他們已建立對 Zeal 的信任，願意為「有故事的農產品」付溢價。思凡作為課程中的真實案例，學員自然轉化為買家，完全不需要廣告成本。
+        </p>
+        <ul class="action-list">
+          <li class="action-item">
+            <span class="action-phase phase-s">短期</span>
+            <div class="action-text"><strong>思凡案例整合進課程</strong>：在「社企合作」或「農業供應鏈」課程單元中引入思凡的真實數據（收購價、成本結構、轉型歷程），讓學員看到真實的商業困境與機會。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-m">中期</span>
+            <div class="action-text"><strong>學員小批直購機制</strong>：課程後設計「學員限量購」——紫蘇乾燥包、香草鹽等簡單加工品，每批 20-50 組，配合故事卡。Zeal 不做中間商，而是連線角色。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-m">中期</span>
+            <div class="action-text"><strong>SOP 系統建立</strong>（Zeal 核心輸出）：幫思凡建立品質記錄 SOP、採收日誌、訂單追蹤表，讓數據可被 Evvon 引用進白皮書，也讓 Zeal 課程案例有數據支撐。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-l">長期</span>
+            <div class="action-text"><strong>農場體驗課模塊</strong>：Zeal 設計「農業實境課程」帶學員到台東思凡，兼具體驗旅遊 + 課程認證 + 現場採購，打通最後一哩路。</div>
+          </li>
+        </ul>
+        <div class="tradeoff">
+          <div class="tradeoff-item sweet">
+            <span class="tradeoff-label">甜頭</span>
+            零廣告成本、學員信任轉化率高、可驗證商業模式；對思凡來說幾乎無額外銷售努力。
+          </div>
+          <div class="tradeoff-item cost">
+            <span class="tradeoff-label">代價</span>
+            規模取決於 Zeal 的課程學員量；需要思凡配合少量加工品開發；台東 → 全台物流需要包裝規劃。
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div style="margin-top: 28px;">
-    <h4 style="color:var(--slate);margin-bottom:12px">命中 SSA 染色體</h4>
-    <div class="chromosome-wrap">
-      <div class="chromosome"><strong>SSA01</strong> 脫鉤設計 — 不再依賴單一協會</div>
-      <div class="chromosome"><strong>SSA03</strong> 三腳支撐 — 原料 + 加工 + 體驗三流收入</div>
-      <div class="chromosome"><strong>SSA05</strong> 口碑驗證 — 體驗課好評先建立</div>
-      <div class="chromosome"><strong>SSA07</strong> 資產累積 — 每次課程 = ESG 案例記錄</div>
-      <div class="chromosome"><strong>SSA10</strong> 價值疊加 — 香草 + 故事 + 體驗 + ESG = 定價 5-10x</div>
-      <div class="chromosome"><strong>SSA13</strong> 外部槓桿 — ESG 政策趨勢、企業採購需求</div>
-      <div class="chromosome"><strong>SSA14</strong> 鐵粉裂變 — 農場大使 = 最強的無成本業務</div>
-      <div class="chromosome"><strong>SSA23</strong> 奇正相生 — 正：穩定供應協會；奇：體驗經濟突破</div>
-      <div class="chromosome"><strong>SSA24</strong> X模型 — 非對稱槓桿：小人力 × 大影響</div>
-    </div>
-  </div>
-
-  <div class="callout" style="margin-top:24px">
-    <strong>SSA 漲價原則（BF11 談判力）：</strong><br>
-    思凡現在是「被動接受批發價」。啟動 ESG 認證後，定價邏輯翻轉：不再問「市場價格是多少」，而是問「企業要 ESG 供應商，他們願意支付什麼溢價」。精品有機茶農案例：市場批發茶葉 100/100g，品牌故事 + 認證後定價 850-1,500/100g，相差 8-15 倍。
-  </div>
-</section>
-
-<!-- ══════════ SECTION 5: 陽謀 × 陰謀 ══════════ -->
-<section class="section">
-  <div class="section-label">Section 05 — 陽謀 × 陰謀 博弈棋局</div>
-  <h2 class="section-title">看得見的佈局<br>與人心暗流</h2>
-  <p class="section-desc">master-strategy 處理陽謀（可見的策略行動）；Shadow 處理陰謀（人心動機與隱性博弈）。兩者兼備才是完整的決策地圖。</p>
-
-  <div class="strategy-split">
-    <div class="strategy-yang">
-      <div class="strategy-label yang-label">陽謀 / master-strategy</div>
-      <div class="strategy-title">可見的策略行動</div>
-
-      <div class="strategy-item">
-        <div class="strategy-dot yang-dot"></div>
-        <div class="strategy-item-text"><strong>ESG 認證路徑（Evvon主導）</strong>：啟動正式的 ESG 社企評估，Evvon 出白皮書記錄過程。完成後，思凡擁有「台灣首個 ESG 認證香草農場」的不可複製標籤。</div>
+    <div class="pillar">
+      <div class="pillar-header">
+        <div class="pillar-num gold">Ⅲ</div>
+        <div>
+          <div class="chip chip-gold">三方協作</div>
+          <div class="pillar-title">協作生態底盤 — 合作夥伴框架固化</div>
+          <div class="pillar-owner" style="color: #8A6C1E;">SSA01 脫鉤保障 × HC #negotiate × Shadow 陰謀解方</div>
+        </div>
       </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yang-dot"></div>
-        <div class="strategy-item-text"><strong>課程嵌入式採購（Zeal主導）</strong>：Zeal 的 SSA 課程學員 → 農場體驗一日課程 → 課程結束帶走禮盒 → 轉化為長期訂閱戶。課程是最強的無廣告費業務員。</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yang-dot"></div>
-        <div class="strategy-item-text"><strong>B2B 企業採購開拓</strong>：鎖定重視 ESG 的中大型企業採購部門（台積電協力廠商、有 ESG 報告需求的上市公司）。一張採購合約 = 3-6 個月安全墊。</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yang-dot"></div>
-        <div class="strategy-item-text"><strong>農場認養制訂閱</strong>：年費制，每月收到本月產品 + 農場手帖 + 認養農地命名。把客戶從「買家」升級為「共同參與者」，提升黏著度與年度 LTV。</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yang-dot"></div>
-        <div class="strategy-item-text"><strong>利用「運費調漲」重談合作條件</strong>：朱芳嫻已主動釋出重新談判意向。把 ESG 認證進度作為談判籌碼，爭取更好的採購條款或共同品牌授權分成。</div>
+      <div class="pillar-body">
+        <p class="pillar-desc">
+          最容易被忽略但最根本的基礎：把三方合作關係從「默契」升級為「白紙黑字的共識備忘錄（MOU）」。這不是法律文件，而是讓屠崇軒、朱芳嫻、Zeal 三方都能從中看到自己的利益保障，消除 Shadow 層面的焦慮與算計。
+        </p>
+        <ul class="action-list">
+          <li class="action-item">
+            <span class="action-phase phase-s">立即</span>
+            <div class="action-text"><strong>三方共識備忘錄草案</strong>：釐清 ① 收購價調整機制（含每年重新審議條款）② 白皮書使用授權 ③ 課程案例引用授權 ④ 新通路開發後的分配原則。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-s">短期</span>
+            <div class="action-text"><strong>思凡農場品質數據化</strong>：Zeal 幫助建立最簡單的月度記錄（採收量、品質評分、出貨時間），這是所有後續溝通的共同語言，也防止「感覺上被壓垮」的模糊焦慮。</div>
+          </li>
+          <li class="action-item">
+            <span class="action-phase phase-m">中期</span>
+            <div class="action-text"><strong>「合作夥伴節奏」建立</strong>：每季一次三方對話，復盤數據、調整採購量、討論新機會。讓屠崇軒從「被動等人下單」變成「主動出席決策桌」。</div>
+          </li>
+        </ul>
+        <div class="tradeoff">
+          <div class="tradeoff-item sweet">
+            <span class="tradeoff-label">甜頭</span>
+            解除陰謀層面的不確定感；讓屠崇軒有尊嚴感；為後續 ESG 白皮書提供可信的「合作深度」說明。
+          </div>
+          <div class="tradeoff-item cost">
+            <span class="tradeoff-label">代價</span>
+            需要 Zeal 花時間起草與促成共識；農場主可能對正式文件不習慣；需要敏感地平衡朱芳嫻的商業考量。
+          </div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="strategy-yin">
-      <div class="strategy-label yin-label">陰謀 / Shadow — 人心暗流</div>
-      <div class="strategy-title">隱性博弈與動機分析</div>
-
-      <div class="strategy-item">
-        <div class="strategy-dot yin-dot"></div>
-        <div class="strategy-item-text"><strong>朱芳嫻的真實動機</strong>：「我們把你壓垮了，對我們沒有好處」— 她意識到現有模式不可持續。她真正需要的是：一個可以對外說「我們共創了這個社企農場」的故事，這比採購便宜更有價值。<strong>用她的名聲需求換取思凡的議價空間。</strong></div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yin-dot"></div>
-        <div class="strategy-item-text"><strong>屠崇軒的心理關鍵</strong>：他的痛點不只是錢，是「高付出低回收的存在感危機」。課程輔導要先讓他看到「這個農場 5 年後的模樣」，才能產生改變的動能。</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yin-dot"></div>
-        <div class="strategy-item-text"><strong>Zeal 的定位要清晰</strong>：顧問費未談清楚時，對方容易把你當義工。ESG認證啟動 + 課程植入設計完成後，是重新設定顧問範疇與收費的時機點。</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yin-dot"></div>
-        <div class="strategy-item-text"><strong>競爭對手的潛在威脅</strong>：若思凡的「社企香草農場」模式被驗證，朱芳嫻協會網絡中的其他農場可能仿效。<strong>要搶先把 Evvon 的白皮書 + Zeal 的課程體系設計為「不可複製的護城河」</strong>，時機敏感。</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-dot yin-dot"></div>
-        <div class="strategy-item-text"><strong>社企光環的雙面刃</strong>：ESG 定位會吸引到「只想要便宜 ESG 故事」的企業。需篩選真正有文化、願意長期合作的 B2B 客戶，避免掉入「社企光環 → 被壓低採購價」的循環。</div>
+  <!-- ── 行動路線圖 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-gold">📅</div>
+      <div>
+        <div class="chip chip-gold">三軸路線圖</div>
+        <h2 class="section-title">短中長期 <span>行動計畫</span></h2>
+        <p class="section-desc">HC #decisiontrees 決策樹：每個行動有清楚的前置條件與後繼效果。</p>
       </div>
     </div>
-  </div>
-
-  <div class="esg-box" style="margin-top:24px">
-    <div class="esg-label">ESG × 利害關係人利益矩陣（#utility HC-44）</div>
-    <table class="util-table">
-      <thead>
-        <tr>
-          <th>角色</th>
-          <th>付出</th>
-          <th>獲得</th>
-          <th>動機強度</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="util-name">屠崇軒（農場主）</span></td>
-          <td>農場運作、產品、體驗場地</td>
-          <td>穩定收入、ESG 品牌、高毛利通路</td>
-          <td><span class="badge">核心受益人</span></td>
-        </tr>
-        <tr>
-          <td><span class="util-name">Zeal（課程+營運）</span></td>
-          <td>課程設計、SOP 建立、顧問時間</td>
-          <td>顧問費、課程素材、社企 showcase</td>
-          <td><span class="badge-teal badge">雙重利益</span></td>
-        </tr>
-        <tr>
-          <td><span class="util-name">Evvon（ESG顧問）</span></td>
-          <td>白皮書撰寫、ESG 評估時間</td>
-          <td>白皮書影響力、企業客戶引薦、ESG案例</td>
-          <td><span class="badge-gold badge">高影響力回報</span></td>
-        </tr>
-        <tr>
-          <td><span class="util-name">朱芳嫻（協會）</span></td>
-          <td>通路資源、人脈背書</td>
-          <td>ESG農場共創故事、協會品牌加分</td>
-          <td><span class="badge-dark badge">名聲驅動</span></td>
-        </tr>
-        <tr>
-          <td><span class="util-name">企業採購方</span></td>
-          <td>ESG 採購預算</td>
-          <td>ESG供應商紀錄、ESG報告素材</td>
-          <td><span class="badge-warn badge">法規壓力驅動</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 6: ROLE MATRIX ══════════ -->
-<section class="section">
-  <div class="section-label">Section 06 — 角色分工清單</div>
-  <h2 class="section-title">誰做什麼<br>邊界清晰</h2>
-  <p class="section-desc">明確的角色分工是執行成敗的關鍵。Evvon 主導 ESG 白皮書，Zeal 負責課程設計與營運 SOP，屠崇軒聚焦農場生產。</p>
-
-  <div class="role-grid">
-    <div class="role-card">
-      <div class="role-avatar">🌿</div>
-      <div class="role-name">屠崇軒</div>
-      <div class="role-title">農場主 / 產品核心</div>
-      <ul class="role-list">
-        <li>維持有機香草種植品質（紫蘇、香茅）</li>
-        <li>提供農場體驗場地（課程主場）</li>
-        <li>配合月報制度記錄農場數據</li>
-        <li>參與 ESG 評估訪談（Evvon訪談對象）</li>
-        <li>執行 Zeal 設計的營運 SOP</li>
-      </ul>
-    </div>
-
-    <div class="role-card">
-      <div class="role-avatar">📋</div>
-      <div class="role-name">Zeal</div>
-      <div class="role-title">課程設計師 × 營運顧問</div>
-      <ul class="role-list">
-        <li>設計「香草農場體驗課」課程結構（半日 / 一日）</li>
-        <li>設計三重漏斗：產品 → 課程 → 訂閱的轉化路徑</li>
-        <li>建立農場月報 SOP（財務 / 訂單 / 庫存）</li>
-        <li>引導 SSA 學員至農場體驗（課程嵌入採購）</li>
-        <li>協助洽談 B2B 企業採購提案邏輯</li>
-      </ul>
-    </div>
-
-    <div class="role-card">
-      <div class="role-avatar">📄</div>
-      <div class="role-name">Evvon</div>
-      <div class="role-title">ESG 顧問 × 白皮書主筆</div>
-      <ul class="role-list">
-        <li>主導思凡自然農園 ESG 評估框架設計</li>
-        <li>撰寫 ESG 白皮書（農場社會影響力報告）</li>
-        <li>建立 B2B 企業 ESG 採購引薦管道</li>
-        <li>設計 ESG 認證後的對外溝通素材</li>
-        <li>白皮書發布記者會 / 聯名發布規劃</li>
-      </ul>
-    </div>
-
-    <div class="role-card">
-      <div class="role-avatar">🌐</div>
-      <div class="role-name">朱芳嫻</div>
-      <div class="role-title">協會通路 × 共創夥伴</div>
-      <ul class="role-list">
-        <li>維持現有協會通路（穩定基礎訂單）</li>
-        <li>協助運費調漲談判重新框架</li>
-        <li>提供協會人脈作為 ESG 認證背書</li>
-        <li>共同對外說「我們共創了這個農場」的故事</li>
-        <li>引薦其他有 ESG 採購需求的合作單位</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 7: THREE-TIER REVENUE ══════════ -->
-<section class="section">
-  <div class="section-label">Section 07 — 三層營收升級藍圖</div>
-  <h2 class="section-title">從穩底盤<br>到建護城河</h2>
-  <p class="section-desc">三層分階段執行，不做跳躍式佈局。每一層以前一層為基礎，風險逐層可控。</p>
-
-  <div class="tier-list">
-    <div class="tier">
-      <div class="tier-num">01</div>
-      <div class="tier-body">
-        <div class="tier-name">穩住底盤：現有協會通路重談條件</div>
-        <div class="tier-desc">以運費調漲為契機，重新框架合作條款。目標：採購單價提升 10-20%，或取得「ESG 共創夥伴」背書換算等值。不急著衝量，先確保每一單都不虧錢。</div>
+    <div class="roadmap">
+      <div class="roadmap-track"></div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot dot-s">S</div>
+        <div class="roadmap-content">
+          <div class="roadmap-phase s" style="color: var(--ember);">短期 · 0–3 個月 · 止血 + 破冰</div>
+          <ul class="roadmap-items s">
+            <li>收購價重新談判（物流漲價契機）：香茅 170→200，紫蘇 220→260</li>
+            <li>三方共識備忘錄草案（Zeal 起草）</li>
+            <li>ESG 白皮書訪談啟動（Evvon × 屠崇軒）</li>
+            <li>思凡農場最小 SOP 建立（採收記錄、品質日誌）</li>
+            <li>Zeal 課程中首次引入思凡案例</li>
+          </ul>
+        </div>
       </div>
-      <div class="tier-potential">月增 +15-25%<br><span style="font-size:0.7rem;color:var(--mist)">現有通路談判</span></div>
-    </div>
-
-    <div class="tier">
-      <div class="tier-num">02</div>
-      <div class="tier-body">
-        <div class="tier-name">提升單位價值：加工品 + 體驗課上線</div>
-        <div class="tier-desc">Zeal 設計「香草農場體驗半日課」（定價 1,500-2,500/人）。同步推出香草禮盒（加工品，毛利率估計 60-70%）。先做小量，確認口碑後擴規模。目標：月均 10-20 人次體驗課。</div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot dot-m">M</div>
+        <div class="roadmap-content">
+          <div class="roadmap-phase m" style="color: #8A6C1E;">中期 · 3–12 個月 · 新通路開通</div>
+          <ul class="roadmap-items m">
+            <li>ESG 白皮書完稿 + 發佈（Evvon，Q3 前）</li>
+            <li>進入至少 1 家企業的 CSR 採購評估</li>
+            <li>學員小批直購機制上線（紫蘇乾燥包試銷）</li>
+            <li>開發 1-2 個簡單加工 SKU（不增加大量人力）</li>
+            <li>三方季度回顧機制正式啟動</li>
+          </ul>
+        </div>
       </div>
-      <div class="tier-potential">月增 +40-80%<br><span style="font-size:0.7rem;color:var(--mist)">課程 + 加工品</span></div>
-    </div>
-
-    <div class="tier">
-      <div class="tier-num">03</div>
-      <div class="tier-body">
-        <div class="tier-name">建立護城河：ESG B2B 採購 + 農地認養</div>
-        <div class="tier-desc">Evvon 白皮書完成後，主動接觸 5-10 家有 ESG 報告需求的企業。目標：2-3 家年度 ESG 採購合約。同步推農地認養年方案（1 萬/年，限量 20 組）。這一層是真正的可重複規模化路徑。</div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot dot-l">L</div>
+        <div class="roadmap-content">
+          <div class="roadmap-phase l" style="color: var(--teal);">長期 · 1–3 年 · 示範點確立</div>
+          <ul class="roadmap-items l">
+            <li>企業認養農場方案（預付款 + 年報授權）</li>
+            <li>Zeal 農場體驗課程模組正式開課</li>
+            <li>思凡成為台東社企示範案例（白皮書 v2）</li>
+            <li>三腳收入結構穩定（協會 40% / 企業 40% / 課程 20%）</li>
+            <li>農場擴產（第一次有底氣談擴充）</li>
+          </ul>
+        </div>
       </div>
-      <div class="tier-potential">月增 +100%+<br><span style="font-size:0.7rem;color:var(--mist)">B2B 合約為主</span></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══════════ SECTION 8: 90-DAY ACTION PLAN ══════════ -->
-<section class="section">
-  <div class="section-label">Section 08 — 90 天行動計畫</div>
-  <h2 class="section-title">每一步<br>都可執行</h2>
-  <p class="section-desc">以 SSA PCT 閉環設計三個月節奏：每月一個主旋律，每週有具體任務。三個月結束時，三層收入結構第一版成形。</p>
+  <!-- ── 風險矩陣 ── -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon icon-navy">⚠</div>
+      <div>
+        <div class="chip chip-navy">風險矩陣 · HC #risk</div>
+        <h2 class="section-title">四大 <span>風險與對策</span></h2>
+        <p class="section-desc">區分可知風險（機率已知）與不確定性（機率未知），分別應對。</p>
+      </div>
+    </div>
+    <div class="risk-grid">
+      <div class="risk-item">
+        <div class="risk-level level-h">高</div>
+        <div class="risk-content">
+          <div class="risk-title">屠崇軒動力崩潰</div>
+          <div class="risk-desc">若收購價談判失敗或等待過長，農場主已在臨界點，可能退出合作。</div>
+          <div class="risk-counter">↳ 對策：最優先處理收購價；三方 MOU 給予心理安全感。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-level level-h">高</div>
+        <div class="risk-content">
+          <div class="risk-title">朱芳嫻切換供應商</div>
+          <div class="risk-desc">她已在評估其他供應源。若思凡不能提供穩定品質，被取代的風險真實存在。</div>
+          <div class="risk-counter">↳ 對策：SOP 建立確保品質一致性；快速啟動第二通路降低依賴。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-level level-m">中</div>
+        <div class="risk-content">
+          <div class="risk-title">ESG 白皮書延誤</div>
+          <div class="risk-desc">白皮書是開啟企業採購的鑰匙，若 Evvon 的優先順序變化，整個 Pillar I 受阻。</div>
+          <div class="risk-counter">↳ 對策：訂定清楚 MOU 里程碑；Pillar II（課程）同步推進，不全押白皮書。</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-level level-m">中</div>
+        <div class="risk-content">
+          <div class="risk-title">加工品品質不穩</div>
+          <div class="risk-desc">農場主力在農業，加工品若做了品質不穩定，反而傷害品牌力。</div>
+          <div class="risk-counter">↳ 對策：只做 1-2 個最簡單 SKU；先小批試賣再擴量。</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-month">Month 1 — 7月</div>
-      <div class="tl-title">「底盤確立 + 第一次體驗課」</div>
-      <ul class="tl-tasks">
-        <li>【Zeal】啟動農場月報 SOP 設計，第一份月報產出（含成本/訂單/毛利）</li>
-        <li>【Zeal】設計第一版農場體驗半日課腳本（含課程流程 + 定價 + 帶走物品）</li>
-        <li>【Evvon】啟動 ESG 評估框架，完成屠崇軒訪談 + 農場現況記錄</li>
-        <li>【屠崇軒 + 朱芳嫻】以運費調漲為由重談採購條款，目標單價提升 10%</li>
-        <li>【Zeal 學員測試】邀請 5-8 位 SSA 學員作為第一批體驗課測試者（不收費或象徵收費）</li>
-        <li>【全員】統一對外說法：「思凡自然農園 × Zeal × Evvon 社企三角共創計畫啟動」</li>
-      </ul>
-    </div>
+</div><!-- end container -->
 
-    <div class="tl-item">
-      <div class="tl-month">Month 2 — 8月</div>
-      <div class="tl-title">「口碑建立 + 禮盒上市」</div>
-      <ul class="tl-tasks">
-        <li>【Zeal】體驗課正式對外開放報名（定價 1,500/人，月目標 15 人次）</li>
-        <li>【屠崇軒 + Zeal】推出思凡香草禮盒（含紫蘇乾燥 + 香茅精油 + 食譜卡）定價 480/組</li>
-        <li>【Evvon】ESG 白皮書第一稿完成，內部審閱</li>
-        <li>【Zeal】設計農地認養方案（年費 10,000，限量 20 組），預熱名單收集</li>
-        <li>【全員】收集體驗課學員口碑（至少 90% 好評率確認後才對外大推）</li>
-        <li>【屠崇軒】Instagram / Facebook 農場日誌開始發布（週 1-2 次，Zeal 給框架）</li>
-      </ul>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-month">Month 3 — 9月</div>
-      <div class="tl-title">「ESG 白皮書發布 + B2B 開拓」</div>
-      <ul class="tl-tasks">
-        <li>【Evvon】ESG 白皮書正式發布（可搭配小型發布會或聯名 PR）</li>
-        <li>【Evvon + Zeal】接觸 5 家有 ESG 採購需求的企業（Evvon 引薦 + Zeal 簡報）</li>
-        <li>【Zeal】農地認養年方案正式開放，目標 10 組認養戶</li>
-        <li>【Zeal】第一份季報產出：3 個月數據回顧 + 下一季策略調整</li>
-        <li>【屠崇軒】針對 B2B 採購設計專屬包裝與 ESG 產品簡介單頁</li>
-        <li>【全員】評估：哪個收入層最有複製潛力？Q4 加碼哪一個？</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 9: RISK MATRIX ══════════ -->
-<section class="section">
-  <div class="section-label">Section 09 — 風險矩陣</div>
-  <h2 class="section-title">每個甜頭<br>都有代價</h2>
-  <p class="section-desc">SSA 原則：每個策略必須同時說清楚甜頭與代價。密涅瓦 #risk（HC-48）：區分已知風險（機率可估）與不確定性（機率未知）。</p>
-
-  <div class="risk-grid">
-    <div class="risk-card">
-      <div class="risk-level risk-high">高風險</div>
-      <div class="risk-name">ESG 認證拖延 → 談判籌碼失效</div>
-      <div class="risk-mitigation"><strong>緩解：</strong>Evvon 給定明確里程碑（月 1 訪談 → 月 2 初稿 → 月 3 發布）。白皮書發布前可先用「認證進行中」作為籌碼，不必等完成。</div>
-    </div>
-    <div class="risk-card">
-      <div class="risk-level risk-high">高風險</div>
-      <div class="risk-name">體驗課供給量不足（人力/農場容量）</div>
-      <div class="risk-mitigation"><strong>緩解：</strong>第一個月只開 2-3 場（每場 5-8 人），測試容量上限後再定期班。先確認可承接量，不超賣。</div>
-    </div>
-    <div class="risk-card">
-      <div class="risk-level risk-med">中風險</div>
-      <div class="risk-name">B2B 企業採購決策週期長（3-6 個月）</div>
-      <div class="risk-mitigation"><strong>緩解：</strong>第三層 B2B 不應是唯一收入來源。前兩層（體驗課 + 禮盒）先建立現金流，B2B 是加分項非救援項。</div>
-    </div>
-    <div class="risk-card">
-      <div class="risk-level risk-med">中風險</div>
-      <div class="risk-name">朱芳嫻談判破裂，失去協會通路</div>
-      <div class="risk-mitigation"><strong>緩解：</strong>多元通路建立前，不宜與朱芳嫻關係惡化。談判策略：「讓雙方都獲益更多」而非「重分配既有利益」。有 BATNA 才有底氣。</div>
-    </div>
-    <div class="risk-card">
-      <div class="risk-level risk-low">低風險</div>
-      <div class="risk-name">農地認養年費後台管理複雜</div>
-      <div class="risk-mitigation"><strong>緩解：</strong>認養制 20 組以內靠 Google Sheet + Email 手動管理即可。規模到 50 組以上再考慮系統。</div>
-    </div>
-    <div class="risk-card">
-      <div class="risk-level risk-low">低風險</div>
-      <div class="risk-name">ESG 光環被濫用（採購方拿故事壓低價格）</div>
-      <div class="risk-mitigation"><strong>緩解：</strong>白皮書本身是「質量守門員」—— 認真做的企業才有資格出現在白皮書裡。把白皮書的入選資格設計成稀缺性資源，而非廣發。</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ SECTION 10: SYNTHESIS ══════════ -->
-<section class="section">
-  <div class="section-label">Section 10 — 綜合結論</div>
-  <h2 class="section-title">整合所有框架<br>的核心命題</h2>
-
-  <div class="card" style="background: linear-gradient(135deg, rgba(196,80,42,0.04) 0%, var(--snow) 100%);">
-    <div class="section-label" style="margin-bottom:12px">密涅瓦 × SSA × Business-12 × 陽謀陰謀 四維共識</div>
-    <h3 style="margin-bottom:16px;color:var(--ink)">
-      思凡的問題不是「沒有錢賺」，<br>
-      是「還沒有讓價值被正確定價的工具」。
-    </h3>
-    <p style="margin-bottom:16px">
-      現在的商業結構：<strong>高採購成本 + 單通路依賴 + 零品牌 = 利潤被榨盡</strong>。<br>
-      升級後的商業結構：<strong>ESG認證（Evvon）+ 課程嵌入（Zeal）+ 三重漏斗 = 每一份香草都有故事溢價</strong>。
-    </p>
-    <div class="divider"></div>
-    <p><strong>SSA 以終為始原則</strong>：18 個月後，思凡是什麼？<br>
-    → 台灣第一個同時擁有：ESG 白皮書、Zeal 認可課程體驗、農地認養訂閱社群的香草社企農場。這不是農場，是一個<strong>有機香草生活方式品牌</strong>。</p>
-  </div>
-
-  <div class="card-grid-3" style="margin-top:16px">
-    <div class="card" style="text-align:center">
-      <div class="badge" style="margin-bottom:8px">密涅瓦 #emergentproperties</div>
-      <p style="font-size:0.85rem;margin-top:8px">三方合作的湧現效果，是任何單方都做不到的獨特定位</p>
-    </div>
-    <div class="card" style="text-align:center">
-      <div class="badge-teal badge" style="margin-bottom:8px">SSA 三重螺旋</div>
-      <p style="font-size:0.85rem;margin-top:8px">消費者 → 課程學員 → 農場大使，每個角色都在系統裡自動流動</p>
-    </div>
-    <div class="card" style="text-align:center">
-      <div class="badge-gold badge" style="margin-bottom:8px">陽謀 × 陰謀並用</div>
-      <p style="font-size:0.85rem;margin-top:8px">看得見的佈局讓所有人受益，看清人心讓談判不被情感綁架</p>
-    </div>
-  </div>
-</section>
-</div><!-- /page-wrap -->
-
-<!-- ══════════ FOOTER ══════════ -->
+<!-- FOOTER -->
 <footer class="footer">
-  <p><strong>思凡自然農園 × MUSEON 升級方案 v4.0</strong></p>
-  <p style="margin-top:4px">密涅瓦認知框架 (HC) × SSA系統創業 × Business-12 × 陽謀陰謀</p>
-  <p style="margin-top:8px;font-size:0.75rem">Generated by MUSEON · Powered by Claude · 2026-06-24</p>
+  <div class="footer-logo">MUSEON</div>
+  <p class="footer-desc">
+    此報告由 MUSEON AI 顧問系統產出，融合密涅瓦大學 HC 認知框架 × SSA 系統創業引擎 × Business-12 商模診斷 × Shadow 人際博弈引擎。
+  </p>
+  <div class="footer-tags">
+    <span class="footer-tag">Minerva HC Framework</span>
+    <span class="footer-tag">SSA-27 Chromosomes</span>
+    <span class="footer-tag">Business-12</span>
+    <span class="footer-tag">Shadow × Master-Strategy</span>
+    <span class="footer-tag">v4 · 2026-06-24</span>
+  </div>
+  <div class="footer-note">角色分工：Evvon（ESG 白皮書）× Zeal（課程＋營運顧問）× 屠崇軒（生產品質）<br>MUSEON — Your AI Muse, Always On.</div>
 </footer>
 
+<script>
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('progressBar');
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  el.style.width = pct + '%';
+});
+</script>
 </body>
 </html>
