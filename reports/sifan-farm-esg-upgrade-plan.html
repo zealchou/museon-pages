@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思凡自然農園 × ESG 升級方案｜MUSEON 戰略報告</title>
+<style>
+  :root {
+    --green: #2d7a4f;
+    --green-light: #4aab72;
+    --green-pale: #e8f5ee;
+    --brown: #7a4a2d;
+    --gold: #c9a227;
+    --gold-light: #f5d97a;
+    --esg-blue: #2563eb;
+    --esg-blue-light: #dbeafe;
+    --text-dark: #1a2332;
+    --text-mid: #4a5568;
+    --text-light: #718096;
+    --bg: #f8faf7;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --red: #e53e3e;
+    --orange: #dd6b20;
+    --purple: #6b46c1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    line-height: 1.7;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1a4a2e 0%, #2d7a4f 50%, #1a3a5c 100%);
+    color: white;
+    padding: 60px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 250px; height: 250px;
+    background: rgba(74,171,114,0.12);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 span { color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+    max-width: 600px;
+    margin: 0 auto 24px;
+    position: relative; z-index: 1;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .hero-meta-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+  }
+  .hero-meta-item strong { color: var(--gold-light); display: block; font-size: 16px; }
+
+  /* ── Container ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── Section titles ── */
+  .section {
+    padding: 48px 0 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+  .section-subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  /* ── Alert / Summary Box ── */
+  .alert-box {
+    border-left: 4px solid var(--orange);
+    background: #fffbf5;
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .alert-box h3 { color: var(--orange); font-size: 15px; margin-bottom: 8px; }
+  .alert-box p { font-size: 15px; color: var(--text-mid); }
+
+  /* ── Lens Cards ── */
+  .lens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .lens-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .lens-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .lens-card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 14px 14px 0 0;
+  }
+  .lens-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .lens-emoji { font-size: 24px; }
+  .lens-name { font-size: 16px; font-weight: 700; }
+  .lens-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .lens-card ul { list-style: none; }
+  .lens-card ul li {
+    font-size: 14px;
+    color: var(--text-mid);
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f4f0;
+    display: flex;
+    gap: 8px;
+  }
+  .lens-card ul li:last-child { border-bottom: none; }
+  .lens-card ul li::before { content: '▸'; color: var(--green-light); flex-shrink: 0; }
+  .insight-box {
+    margin-top: 14px;
+    background: var(--green-pale);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .insight-box::before { content: '💡 '; }
+
+  /* Lens color themes */
+  .lens-finance .lens-card-accent { background: linear-gradient(90deg, #e53e3e, #ed8936); }
+  .lens-finance .lens-tag { background: #fff5f5; color: #e53e3e; }
+  .lens-market .lens-card-accent { background: linear-gradient(90deg, #4299e1, #667eea); }
+  .lens-market .lens-tag { background: #ebf8ff; color: #3182ce; }
+  .lens-brand .lens-card-accent { background: linear-gradient(90deg, #ed64a6, #9f7aea); }
+  .lens-brand .lens-tag { background: #faf5ff; color: #9f7aea; }
+  .lens-channel .lens-card-accent { background: linear-gradient(90deg, #48bb78, #38b2ac); }
+  .lens-channel .lens-tag { background: #f0fff4; color: #276749; }
+  .lens-esg .lens-card-accent { background: linear-gradient(90deg, #2563eb, #0ea5e9); }
+  .lens-esg .lens-tag { background: var(--esg-blue-light); color: var(--esg-blue); }
+  .lens-system .lens-card-accent { background: linear-gradient(90deg, #dd6b20, #d69e2e); }
+  .lens-system .lens-tag { background: #fffaf0; color: #c05621; }
+  .lens-time .lens-card-accent { background: linear-gradient(90deg, #6b46c1, #d53f8c); }
+  .lens-time .lens-tag { background: #faf5ff; color: #6b46c1; }
+
+  /* ── ESG Section ── */
+  .esg-banner {
+    background: linear-gradient(135deg, #1e40af, #2563eb, #0369a1);
+    border-radius: 16px;
+    padding: 36px;
+    color: white;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .esg-banner::before {
+    content: '📋';
+    position: absolute;
+    right: 24px; top: 24px;
+    font-size: 64px;
+    opacity: 0.2;
+  }
+  .esg-banner h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .esg-banner p { font-size: 15px; opacity: 0.9; max-width: 600px; }
+  .esg-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .esg-stat {
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: center;
+  }
+  .esg-stat strong { display: block; font-size: 24px; font-weight: 800; }
+  .esg-stat span { font-size: 12px; opacity: 0.85; }
+
+  .esg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .esg-benefit-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .esg-benefit-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--esg-blue);
+    margin-bottom: 10px;
+  }
+  .esg-benefit-card .value-tag {
+    display: inline-block;
+    background: var(--esg-blue-light);
+    color: var(--esg-blue);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .esg-benefit-card p { font-size: 14px; color: var(--text-mid); }
+
+  /* ── Upgrade Plan Timeline ── */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--green), var(--esg-blue), var(--purple));
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -27px; top: 8px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px currentColor;
+  }
+  .timeline-phase {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .timeline-item h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+  .timeline-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+  .action-list { list-style: none; }
+  .action-list li {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--text-mid);
+    border-bottom: 1px dashed var(--border);
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .phase-quick .timeline-dot { color: var(--orange); }
+  .phase-quick .timeline-phase { color: var(--orange); }
+  .phase-quick .action-num { background: var(--orange); }
+  .phase-mid .timeline-dot { color: var(--green); }
+  .phase-mid .timeline-phase { color: var(--green); }
+  .phase-mid .action-num { background: var(--green); }
+  .phase-long .timeline-dot { color: var(--purple); }
+  .phase-long .timeline-phase { color: var(--purple); }
+  .phase-long .action-num { background: var(--purple); }
+
+  .kpi-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .kpi-chip {
+    background: #f7fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+  .kpi-chip strong { color: var(--text-dark); }
+
+  /* ── Priority Table ── */
+  .priority-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .priority-table th {
+    background: var(--green);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .priority-table th:first-child { border-radius: 8px 0 0 0; }
+  .priority-table th:last-child { border-radius: 0 8px 0 0; }
+  .priority-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .priority-table tr:last-child td { border-bottom: none; }
+  .priority-table tr:nth-child(even) td { background: #f9fafb; }
+  .priority-level {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .level-p0 { background: #fff5f5; color: #e53e3e; }
+  .level-p1 { background: #fffaf0; color: #dd6b20; }
+  .level-p2 { background: #ebf8ff; color: #3182ce; }
+
+  /* ── Score Box ── */
+  .score-box {
+    background: #1a2332;
+    color: white;
+    border-radius: 14px;
+    padding: 28px;
+    margin-top: 40px;
+    font-family: 'Courier New', monospace;
+  }
+  .score-box h4 { color: var(--gold-light); font-size: 14px; margin-bottom: 16px; }
+  .score-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .score-item { text-align: center; }
+  .score-val {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--green-light);
+  }
+  .score-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+  .score-limit { font-size: 12px; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.15); padding-top: 14px; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    background: white;
+    border-top: 1px solid var(--border);
+    color: var(--text-light);
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  footer strong { color: var(--green); }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0 32px;
+  }
+
+  /* ── Callout ── */
+  .callout {
+    background: #fefce8;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #92400e;
+    margin: 20px 0;
+  }
+  .callout strong { color: #78350f; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 16px 32px; }
+    .lens-grid, .esg-grid { grid-template-columns: 1fr; }
+    .score-row { grid-template-columns: repeat(3, 1fr); }
+    .priority-table { font-size: 12px; }
+    .priority-table th, .priority-table td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-badge">MUSEON 戰略報告 · Lens 多維度升級版</div>
+  <h1>思凡自然農園<br><span>× ESG 升級方案</span></h1>
+  <p class="hero-sub">用 7 個透鏡重新看懂這個農場的錢從哪裡來，把 ESG 使命轉化為最強的商業武器</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>屠崇軒</strong>負責人</div>
+    <div class="hero-meta-item"><strong>社會企業</strong>農場類型</div>
+    <div class="hero-meta-item"><strong>香草 × 加工</strong>一級 + 二級</div>
+    <div class="hero-meta-item"><strong>2026.06</strong>報告日期</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══════ DIAGNOSTIC ═══════ -->
+  <div class="section">
+    <div class="alert-box">
+      <h3>⚠ 核心診斷（一句話）</h3>
+      <p>思凡自然農園的問題不是「產品不夠好」，而是<strong>「高成本結構 + 單一通路 + 沒有把使命轉成收入」</strong>——它做善事的方式本身就是最大的商業資產，但從未被貨幣化。</p>
+    </div>
+    <div class="callout">
+      <strong>背景：</strong>農場僱用身心障礙者，以高於市場的收購價保障其收入；種植香草（紫蘇、香茅）並自行加工（一級＋二級）。現況：庫存積壓、現金流緊張、依賴朱芳嫻的齊共好協會單一通路。
+    </div>
+  </div>
+
+  <!-- ═══════ LENS 7 DIMENSIONS ═══════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f5ee;">🔭</div>
+      <div>
+        <div class="section-title">Lens 七維度透鏡分析</div>
+        <div class="section-subtitle">從 7 個不同視角看同一個問題，找出被單一框架遮蔽的機會</div>
+      </div>
+    </div>
+
+    <div class="lens-grid">
+
+      <!-- 財務透鏡 -->
+      <div class="lens-card lens-finance">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">💰</span>
+          <span class="lens-name">財務透鏡</span>
+          <span class="lens-tag">🔴 高風險</span>
+        </div>
+        <ul>
+          <li>一級成本（種植）+ 二級成本（加工）= 雙重成本堆疊</li>
+          <li>高於市場的收購價是使命支出，不是浪費，但壓縮了利潤</li>
+          <li>庫存積壓 = 已付成本但無現金流入（最危險）</li>
+          <li>三級服務（體驗、教育、授權）邊際成本接近零</li>
+        </ul>
+        <div class="insight-box">解方不是降成本，而是找到願意為「使命溢價」付費的買家</div>
+      </div>
+
+      <!-- 市場透鏡 -->
+      <div class="lens-card lens-market">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">🎯</span>
+          <span class="lens-name">市場透鏡</span>
+          <span class="lens-tag">🔵 大機會</span>
+        </div>
+        <ul>
+          <li>B2C 高端：天然香草愛好者、媽媽族群、健康意識消費者</li>
+          <li>B2B 餐飲：手工香草料理需求（餐廳/飯店/咖啡館）</li>
+          <li>B2B 企業採購：員工福利禮盒、節日伴手禮（高 ASP）</li>
+          <li>B2G 政府：社會企業優先採購政策（有法源依據）</li>
+        </ul>
+        <div class="insight-box">企業採購是最高優先——訂單大、溢價高、不需要解釋品牌</div>
+      </div>
+
+      <!-- 品牌透鏡 -->
+      <div class="lens-card lens-brand">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">✨</span>
+          <span class="lens-name">品牌透鏡</span>
+          <span class="lens-tag">🟣 未開採</span>
+        </div>
+        <ul>
+          <li>現況：農場識別（蝴蝶 logo）可愛但品牌定位模糊</li>
+          <li>核心故事：「被精神障礙者的雙手種出的香草」= 情感磁石</li>
+          <li>媒體磁吸力強（公視、NPR 風格故事天生有傳播力）</li>
+          <li>名字「思凡」暗含「凡人的思考」= 有詩意有深度</li>
+        </ul>
+        <div class="insight-box">把農場日記做成 IG 故事，讓種植者出鏡——這是任何廣告都買不到的真實性</div>
+      </div>
+
+      <!-- 通路透鏡 -->
+      <div class="lens-card lens-channel">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">📡</span>
+          <span class="lens-name">通路透鏡</span>
+          <span class="lens-tag">🟢 急需多元</span>
+        </div>
+        <ul>
+          <li>現況：單一通路（齊共好協會網絡）= 致命的單點依賴</li>
+          <li>電商平台：蝦皮/台灣好農/Pinkoi（天然手工定位吃香）</li>
+          <li>訂閱制：每月「香草生活箱」（高黏性、預收現金）</li>
+          <li>企業通路：直接接洽 HR 部門做員工禮品採購</li>
+          <li>市集：有機市集、文創市集（測試定價、積累品牌）</li>
+        </ul>
+        <div class="insight-box">訂閱制解決庫存積壓問題——先賣後種，消滅庫存風險</div>
+      </div>
+
+      <!-- ESG透鏡 -->
+      <div class="lens-card lens-esg">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">🌿</span>
+          <span class="lens-name">ESG 透鏡</span>
+          <span class="lens-tag" style="background:#dbeafe;color:#1d4ed8;">🔵 戰略核彈</span>
+        </div>
+        <ul>
+          <li>2025 起台灣上市公司強制 ESG 揭露（金管會政策）</li>
+          <li>企業採購思凡產品 = 供應鏈 ESG 故事 + SDGs 貢獻</li>
+          <li>ESG 白皮書讓這個貢獻變成「可量化、可引用的資產」</li>
+          <li>企業需要「真實的社會影響力故事」而非空洞的數字</li>
+        </ul>
+        <div class="insight-box">ESG 白皮書把思凡的使命轉化為企業採購的稅務與公關正當理由</div>
+      </div>
+
+      <!-- 系統透鏡 -->
+      <div class="lens-card lens-system">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">⚙️</span>
+          <span class="lens-name">系統透鏡</span>
+          <span class="lens-tag">🟠 靠人→靠系統</span>
+        </div>
+        <ul>
+          <li>現況：靠朱芳嫻的人脈 = 典型「靠人」結構，脆弱</li>
+          <li>系統化訂單管理（固定客戶池、合約採購、自動催款）</li>
+          <li>品質標準化（確保不同種植者產出一致性）</li>
+          <li>CRM 建立（每個買家留檔，定期追蹤復購）</li>
+        </ul>
+        <div class="insight-box">建立「固定採購合約」機制——從臨時訂單升級為預測性現金流</div>
+      </div>
+
+      <!-- 時間透鏡 -->
+      <div class="lens-card lens-time">
+        <div class="lens-card-accent"></div>
+        <div class="lens-card-header">
+          <span class="lens-emoji">⏰</span>
+          <span class="lens-name">時間透鏡</span>
+          <span class="lens-tag">🟣 三段節奏</span>
+        </div>
+        <ul>
+          <li>快（30天）：清庫存——目標是快速回現金，不在乎毛利</li>
+          <li>中（90天）：建企業通路——找 3 家願意試採購的企業</li>
+          <li>長（180天）：ESG 白皮書完成，進入機構採購名單</li>
+          <li>永遠：訂閱制形成穩定現金流底座</li>
+        </ul>
+        <div class="insight-box">快速行動順序：清庫存 → 企業試單 → ESG 認可 → 訂閱制</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════ ESG WHITEPAPER ═══════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#dbeafe;">📋</div>
+      <div>
+        <div class="section-title">ESG 白皮書：從使命到商業的橋梁</div>
+        <div class="section-subtitle">這不是公關文件——是打開企業採購閘門的鑰匙</div>
+      </div>
+    </div>
+
+    <div class="esg-banner">
+      <h3>🌏 為什麼 2026 年是 ESG 白皮書的最佳時機？</h3>
+      <p>台灣金管會要求上市上櫃公司 2025 年起強制申報 ESG 報告。企業正在積極尋找「有真實影響力故事的供應商」來填充其供應鏈 ESG 章節。思凡農園是天然的目標夥伴——但沒有白皮書，企業無法引用。</p>
+      <div class="esg-stats">
+        <div class="esg-stat">
+          <strong>1,700+</strong>
+          <span>台灣需申報 ESG 的上市公司</span>
+        </div>
+        <div class="esg-stat">
+          <strong>SDG 8 + 12</strong>
+          <span>思凡貢獻的 SDGs 目標</span>
+        </div>
+        <div class="esg-stat">
+          <strong>3x</strong>
+          <span>ESG 認可供應商溢價空間</span>
+        </div>
+        <div class="esg-stat">
+          <strong>2025 起</strong>
+          <span>強制揭露政策生效</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="esg-grid">
+      <div class="esg-benefit-card">
+        <div class="value-tag">💼 企業採購</div>
+        <h4>供應鏈 ESG 認可憑據</h4>
+        <p>企業採購思凡產品後，可在 ESG 報告中引用白皮書數據：「僱用 X 位身心障礙者、支付高出市場 Y% 工資、採購量 Z 公斤」——具體、可量化、可審計。</p>
+      </div>
+      <div class="esg-benefit-card">
+        <div class="value-tag">🏛 政府計畫</div>
+        <h4>社會企業補助資格強化</h4>
+        <p>白皮書提供勞動部、農委會、社企流等申請補助所需的影響力數據報告，大幅提升補助申請成功率。</p>
+      </div>
+      <div class="esg-benefit-card">
+        <div class="value-tag">📰 媒體磁石</div>
+        <h4>自然傳播素材</h4>
+        <p>有白皮書才能發新聞稿；有新聞稿才能上公視、天下、NPR Taiwan——這些報導的廣告等值遠超過印白皮書的成本。</p>
+      </div>
+      <div class="esg-benefit-card">
+        <div class="value-tag">🤝 B2B 差異化</div>
+        <h4>企業禮品採購說服力</h4>
+        <p>當 HR 在選年節禮品時，「附 ESG 影響力報告的香草禮盒」vs 「一般市售伴手禮」——前者有故事、有公關價值，定價可高 40-80%。</p>
+      </div>
+      <div class="esg-benefit-card">
+        <div class="value-tag">🌱 品牌深度</div>
+        <h4>從農場到影響力品牌</h4>
+        <p>白皮書讓「思凡」從「一個賣香草的農場」升級為「一個改變身心障礙者生命的社會影響力品牌」——這個定位上去之後，定價邏輯完全不同。</p>
+      </div>
+      <div class="esg-benefit-card">
+        <div class="value-tag">🔄 採購長約</div>
+        <h4>年度採購合約依據</h4>
+        <p>有了白皮書數據，企業 CSR 部門可以向採購部門提出「年度定額採購思凡」的正式申請——把一次性試單轉化為可預期的年度收入。</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>白皮書最低版本（不需要顧問）：</strong>一份 A4×8 頁的 PDF，包含：農場簡介、僱用數據（人數、工時、工資）、種植面積與產量、客戶使用場景、SDGs 對應說明。這份文件的 ROI 極高——投入 1-2 週，開啟企業採購大門。
+    </div>
+  </div>
+
+  <!-- ═══════ UPGRADE PLAN TIMELINE ═══════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fef3c7;">🚀</div>
+      <div>
+        <div class="section-title">升級方案：三段節奏行動計畫</div>
+        <div class="section-subtitle">快（30天）× 中（90天）× 長（180天）</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+
+      <!-- Phase 1: Quick Wins -->
+      <div class="timeline-item phase-quick">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">Phase 1 · 0-30 天</div>
+        <h3>🔥 快速回現金：清庫存三刀</h3>
+        <div class="timeline-card">
+          <ul class="action-list">
+            <li>
+              <div class="action-num">1</div>
+              <div><strong>社群閃購活動：</strong>在 IG/FB 辦「支持身心障礙農夫」主題閃購，限時 72 小時、原價 85 折。訴求使命而非折扣——使命才是真正的購買動機。目標清掉 30% 庫存。</div>
+            </li>
+            <li>
+              <div class="action-num">2</div>
+              <div><strong>朱芳嫻網絡積極推：</strong>請朱芳嫻向齊共好及其連結的各協會、NGO 發送採購邀請函——這些組織本身有 ESG 採購傾向且熟悉思凡故事，轉化率高。</div>
+            </li>
+            <li>
+              <div class="action-num">3</div>
+              <div><strong>禮品拼箱試賣：</strong>把現有庫存組成 3 款禮盒（基本/標準/高端），定價策略以組合拉高 ASP，蝦皮上架。一週內完成。</div>
+            </li>
+          </ul>
+          <div class="kpi-row">
+            <div class="kpi-chip">目標 <strong>30% 庫存清除率</strong></div>
+            <div class="kpi-chip">現金回流 <strong>2-3 萬元</strong></div>
+            <div class="kpi-chip">執行成本 <strong>&lt;5,000元</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2: Build Channels -->
+      <div class="timeline-item phase-mid">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">Phase 2 · 30-90 天</div>
+        <h3>🌱 建立企業通路：找到 3 個固定買家</h3>
+        <div class="timeline-card">
+          <ul class="action-list">
+            <li>
+              <div class="action-num">1</div>
+              <div><strong>目標企業清單：</strong>優先鎖定「重視 ESG 且有禮品採購需求」的中型企業——科技業、金融業、顧問業為主。每家企業聯繫 HR 或 CSR 負責人，不要打採購部門電話。</div>
+            </li>
+            <li>
+              <div class="action-num">2</div>
+              <div><strong>企業提案一頁紙：</strong>製作一份企業採購說明（不是型錄）——說明採購思凡的 ESG 意義、可以怎麼在報告中呈現、最小試單門檻（建議 50 盒）。</div>
+            </li>
+            <li>
+              <div class="action-num">3</div>
+              <div><strong>訂閱制試跑：</strong>招募 30 個「香草箱訂閱者」——每月定期收到香草植栽 / 乾燥香草 / 精油產品。這解決庫存問題，也建立穩定現金流底座。</div>
+            </li>
+            <li>
+              <div class="action-num">4</div>
+              <div><strong>Zeal SSA-I 系統化課程：</strong>屠崇軒參加 7/1-3 的 SSA-I 「靠人→靠系統」課程——把通路管理、訂單系統、客戶 CRM 做成 SOP，不再依賴創辦人記憶力。</div>
+            </li>
+          </ul>
+          <div class="kpi-row">
+            <div class="kpi-chip">目標 <strong>3 家企業試採購</strong></div>
+            <div class="kpi-chip">訂閱制 <strong>30 名會員</strong></div>
+            <div class="kpi-chip">月穩定營收 <strong>目標 3 萬</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3: ESG & Institutionalize -->
+      <div class="timeline-item phase-long">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">Phase 3 · 90-180 天</div>
+        <h3>📋 ESG 白皮書完成：進入機構採購名單</h3>
+        <div class="timeline-card">
+          <ul class="action-list">
+            <li>
+              <div class="action-num">1</div>
+              <div><strong>完成 ESG 影響力白皮書：</strong>8-12 頁 PDF，包含工作者故事、數字成果、SDGs 對應、企業採購說明。可找社企流或大學 CSR 課程學生協助撰寫降低成本。</div>
+            </li>
+            <li>
+              <div class="action-num">2</div>
+              <div><strong>政府採購登記：</strong>向政府電子採購網登記，符合「優先採購身障機構產品」條件。這是一扇有法律保障的門，很多農場沒走。</div>
+            </li>
+            <li>
+              <div class="action-num">3</div>
+              <div><strong>媒體主動投稿：</strong>白皮書完成後主動寄新聞稿給公視新聞網、天下雜誌 CSR 版、社企流——故事天然有媒體吸引力，目標 1 篇報導。</div>
+            </li>
+            <li>
+              <div class="action-num">4</div>
+              <div><strong>三級產業延伸（選項）：</strong>「香草農場體驗工作坊」——企業 ESG 活動、員工 team building、學校校外教學。一次活動收費 5,000-15,000 元，邊際成本低。</div>
+            </li>
+          </ul>
+          <div class="kpi-row">
+            <div class="kpi-chip">白皮書完成 <strong>可對外發行</strong></div>
+            <div class="kpi-chip">政府採購登記 <strong>完成</strong></div>
+            <div class="kpi-chip">月營收目標 <strong>8-10 萬</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════ PRIORITY TABLE ═══════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fef9e7;">📊</div>
+      <div>
+        <div class="section-title">優先行動清單（排序版）</div>
+        <div class="section-subtitle">按投入產出比排列——先做回報最高、成本最低的</div>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+    <table class="priority-table">
+      <thead>
+        <tr>
+          <th>優先級</th>
+          <th>行動項目</th>
+          <th>甜頭</th>
+          <th>代價</th>
+          <th>時程</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="priority-level level-p0">P0 立刻</span></td>
+          <td><strong>禮盒組合 + 蝦皮上架</strong></td>
+          <td>庫存立即見到現金，7 天內可完成</td>
+          <td>需要拍照、寫文案（約 1 天工）</td>
+          <td>1 週</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p0">P0 立刻</span></td>
+          <td><strong>朱芳嫻協會網絡採購邀請函</strong></td>
+          <td>現有關係最快轉化，零成本</td>
+          <td>朱芳嫻需要花時間發信（協調成本）</td>
+          <td>3 天</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p1">P1 本月</span></td>
+          <td><strong>企業採購提案一頁紙</strong></td>
+          <td>一份文件開啟 B2B 通路，複用無限次</td>
+          <td>寫作約 2-3 小時，需要確認數字</td>
+          <td>2 週</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p1">P1 本月</span></td>
+          <td><strong>IG 農場日記開始更新</strong></td>
+          <td>免費，讓種植者出鏡有情感力量</td>
+          <td>需要每週 1-2 個短影片的習慣</td>
+          <td>持續</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p1">P1 本月</span></td>
+          <td><strong>Zeal SSA-I 7/1-3 課程</strong></td>
+          <td>從靠人到靠系統的框架，直接適用</td>
+          <td>3 天時間成本 + 費用</td>
+          <td>7/1-3</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p2">P2 季度</span></td>
+          <td><strong>訂閱制「香草箱」建立</strong></td>
+          <td>穩定現金流、預收、解庫存焦慮</td>
+          <td>需要打包標準化、每月操作成本</td>
+          <td>30-60 天</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p2">P2 季度</span></td>
+          <td><strong>ESG 影響力白皮書</strong></td>
+          <td>打開企業採購最高附加值通路</td>
+          <td>製作約 2-4 週，需要數據整理</td>
+          <td>90 天內</td>
+        </tr>
+        <tr>
+          <td><span class="priority-level level-p2">P2 季度</span></td>
+          <td><strong>政府電子採購網登記</strong></td>
+          <td>法律保障的通路，競爭少</td>
+          <td>行政作業約 1-2 週，一次性</td>
+          <td>90 天內</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ═══════ KEY INSIGHT ═══════ -->
+  <div class="section">
+    <div style="background: linear-gradient(135deg, #f0fdf4, #e0f2fe); border-radius: 16px; padding: 36px; border: 1px solid #bbf7d0;">
+      <h3 style="font-size:20px; font-weight:800; color:#15803d; margin-bottom:16px;">🌿 最重要的一個洞見</h3>
+      <p style="font-size:16px; line-height:1.8; color:#1e3a5f;">
+        思凡農園目前把「使命」當成成本（高收購價），卻沒有把「使命」當成收入工具（ESG 白皮書 + 企業採購）。
+        <br><br>
+        世界上最貴的東西是<strong style="color:#15803d;">「被量化的善意」</strong>。一盒香草在超市賣 120 元，在企業 ESG 禮盒裡賣 380 元，在機構採購名單裡變成年度合約——產品一模一樣，差別只在「有沒有把故事轉成可用的文件」。
+        <br><br>
+        ESG 白皮書就是這個文件。它不是公關，它是<strong style="color:#1e40af;">定價權的根基</strong>。
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════ SELF SCORE ═══════ -->
+  <div class="score-box">
+    <h4>▸ MUSEON 自評</h4>
+    <div class="score-row">
+      <div class="score-item">
+        <div class="score-val">0.82</div>
+        <div class="score-label">self_score</div>
+      </div>
+      <div class="score-item">
+        <div class="score-val">0.76</div>
+        <div class="score-label">confidence</div>
+      </div>
+      <div class="score-item">
+        <div class="score-val">7</div>
+        <div class="score-label">lens 維度</div>
+      </div>
+    </div>
+    <div class="score-limit">
+      limitations: 思凡農園的精確財務數字（月收入、庫存金額、雇員人數）未直接取得，部分建議基於農場規模推估。ESG 白皮書製作成本與時程因執行者能力而異。訂閱制可行性需驗證物流配送覆蓋範圍。政府採購登記條件需確認思凡是否已有社企登記或身障機構認定。
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>MUSEON</strong> 戰略分析引擎 · Lens 多維度升級版 · 2026.06<br>
+  本報告基於公開資訊與對話紀錄分析，建議在實際執行前與思凡農園負責人確認關鍵數字。
+</footer>
+
+</body>
+</html>
