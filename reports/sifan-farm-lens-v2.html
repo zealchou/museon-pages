@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>思凡自然農園｜Lens 多維升級方案</title>
+  <style>
+    :root {
+      --green-deep: #1a4a2e;
+      --green-mid: #2d7a4f;
+      --green-light: #4caf7d;
+      --green-pale: #e8f5ec;
+      --amber: #f59e0b;
+      --amber-pale: #fffbeb;
+      --red-soft: #ef4444;
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-500: #6b7280;
+      --gray-100: #f3f4f6;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Serif TC', 'Georgia', serif;
+      background: #f9fafb;
+      color: var(--gray-900);
+      line-height: 1.8;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 60%, #3d9970 100%);
+      color: var(--white);
+      padding: 72px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+    .hero-badge {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px;
+      padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: .02em;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 1rem;
+      opacity: .82;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      font-size: .82rem;
+      opacity: .7;
+    }
+    .hero-meta span::before { content: '• '; }
+
+    /* ── Container ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── Section wrapper ── */
+    section { padding: 56px 0 40px; }
+    section + section { border-top: 1px solid #e5e7eb; }
+
+    .section-label {
+      font-family: 'Courier New', monospace;
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      color: var(--gray-500);
+      font-size: .92rem;
+      margin-bottom: 32px;
+    }
+
+    /* ── Alert box ── */
+    .alert {
+      background: #fef9c3;
+      border-left: 4px solid var(--amber);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 36px;
+      font-size: .92rem;
+      color: #78350f;
+    }
+    .alert strong { display: block; margin-bottom: 4px; font-size: .95rem; }
+
+    /* ── Insight Banner ── */
+    .insight-banner {
+      background: var(--green-deep);
+      color: var(--white);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin: 36px 0;
+      position: relative;
+    }
+    .insight-banner .label {
+      font-family: 'Courier New', monospace;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 10px;
+    }
+    .insight-banner p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .insight-banner em {
+      font-style: normal;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* ── Lens Grid ── */
+    .lens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 20px;
+      margin: 32px 0;
+    }
+    .lens-card {
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 24px;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .lens-card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,.1);
+      transform: translateY(-2px);
+    }
+    .lens-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+    .lens-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: 10px;
+    }
+    .lens-card p {
+      font-size: .875rem;
+      color: var(--gray-700);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+    .lens-finding {
+      background: var(--green-pale);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: .82rem;
+      color: var(--green-deep);
+      font-weight: 600;
+    }
+    .lens-finding::before { content: '↳ '; }
+
+    /* ── HC Audit ── */
+    .hc-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+    .hc-tag {
+      font-family: 'Courier New', monospace;
+      font-size: .75rem;
+      font-weight: 700;
+      background: var(--green-pale);
+      color: var(--green-deep);
+      border-radius: 6px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .hc-text {
+      font-size: .9rem;
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+    .hc-text strong { color: var(--gray-900); }
+
+    /* ── Phase Plan ── */
+    .phase-list { display: flex; flex-direction: column; gap: 28px; margin: 32px 0; }
+    .phase-card {
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .phase-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+      color: var(--white);
+    }
+    .phase-num.p0 { background: var(--red-soft); }
+    .phase-num.p1 { background: var(--amber); color: #1a0000; }
+    .phase-num.p2 { background: var(--green-mid); }
+    .phase-num.p3 { background: var(--green-deep); }
+
+    .phase-title-group h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--green-deep);
+    }
+    .phase-title-group span {
+      font-size: .78rem;
+      color: var(--gray-500);
+    }
+    .phase-body { padding: 20px 24px; }
+    .phase-body ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .phase-body ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .9rem;
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+    .phase-body ul li::before {
+      content: '▸';
+      color: var(--green-light);
+      font-size: .85rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .phase-body ul li strong { color: var(--gray-900); }
+
+    .phase-kpi {
+      background: var(--green-pale);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 16px;
+      font-size: .82rem;
+      color: var(--green-deep);
+    }
+    .phase-kpi strong { display: block; margin-bottom: 4px; }
+
+    /* ── Zeal Action ── */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .action-card {
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .action-card .a-label {
+      font-size: .72rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 8px;
+    }
+    .action-card h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: 8px;
+    }
+    .action-card p {
+      font-size: .85rem;
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+    .action-card .sweet { color: #16a34a; font-size: .8rem; margin-top: 8px; }
+    .action-card .cost { color: #dc2626; font-size: .8rem; }
+
+    /* ── Rev Model Table ── */
+    .rev-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: .88rem;
+    }
+    .rev-table th {
+      background: var(--green-deep);
+      color: var(--white);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: .82rem;
+      letter-spacing: .05em;
+    }
+    .rev-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .rev-table tr:nth-child(even) td { background: #fafafa; }
+    .rev-table td:first-child { font-weight: 600; color: var(--green-deep); white-space: nowrap; }
+
+    /* ── Risk Table ── */
+    .risk-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed #e5e7eb; align-items: flex-start; }
+    .risk-badge {
+      font-size: .7rem;
+      font-weight: 700;
+      border-radius: 6px;
+      padding: 3px 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .risk-badge.high { background: #fee2e2; color: #dc2626; }
+    .risk-badge.mid { background: #fef3c7; color: #d97706; }
+    .risk-badge.low { background: #dcfce7; color: #16a34a; }
+    .risk-text { font-size: .875rem; color: var(--gray-700); }
+    .risk-text strong { color: var(--gray-900); display: block; margin-bottom: 2px; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--green-deep);
+      color: rgba(255,255,255,.55);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: .78rem;
+      margin-top: 60px;
+    }
+    footer strong { color: rgba(255,255,255,.85); }
+
+    /* ── HC footnote ── */
+    .hc-footnote {
+      background: var(--gray-100);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: .75rem;
+      color: var(--gray-500);
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 48px 20px 40px; }
+      .lens-grid { grid-template-columns: 1fr; }
+      .action-grid { grid-template-columns: 1fr; }
+      .rev-table { font-size: .78rem; }
+      .rev-table th, .rev-table td { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">Lens 多維升級方案 v2</div>
+  <h1>思凡自然農園<br>營收突破全局圖</h1>
+  <p>六透鏡 × HC 思考審計 × 四階行動方案<br>從「賣不掉貨」到「賣不夠貨」的系統性重構</p>
+  <div class="hero-meta">
+    <span>農場主：屠崇軒</span>
+    <span>連結人：朱芳嫻 / 齊共好</span>
+    <span>分析日：2026-06-24</span>
+    <span>MUSEON 出品</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── 0. 緊急訊號 ── -->
+  <section>
+    <div class="alert">
+      <strong>🚨 現況警訊（圖片原話）</strong>
+      農場主說：「我現在很頭痛$的問題，要想辦法賣貨」「現在堆了一批...」「現在吃飯都很沒胃口」——
+      這不是策略問題，這是<strong>現金流危機的心理壓力信號</strong>。
+      解法必須分成「止血（30天）」和「升級（90天）」兩層，不能只給長期規劃。
+    </div>
+  </section>
+
+  <!-- ── 1. 核心洞見 ── -->
+  <section>
+    <div class="section-label">Core Insight</div>
+    <h2 class="section-title">真正的問題是什麼？</h2>
+    <p class="section-sub">#rightproblem — HC 思考第一動作：確認在解對的問題</p>
+
+    <div class="insight-banner">
+      <div class="label">根本問題診斷</div>
+      <p>
+        農場沒有生產問題，有的是<em>分配問題</em>。<br><br>
+        現在的商業模型：把「社會企業的故事溢價」白白讓給了通路——
+        低價供貨給協會網絡，自己吃成本。<br><br>
+        正確命題不是「怎麼賣更多貨」，而是：
+        <em>「怎麼讓每一公斤香草賺到應得的故事溢價？」</em>
+      </p>
+    </div>
+
+    <p style="color:var(--gray-700);font-size:.92rem;line-height:1.75">
+      思凡有兩件別人沒有的資產：<strong>①&nbsp;真實的社會企業身份</strong>（可向 ESG 採購部門收取溢價），
+      <strong>②&nbsp;朱芳嫻 + Zeal 的人際網絡</strong>（可快速進入企業禮品/員工福利市場）。
+      這兩件資產目前完全沒有貨幣化。
+    </p>
+  </section>
+
+  <!-- ── 2. 六透鏡分析 ── -->
+  <section>
+    <div class="section-label">Lens Analysis</div>
+    <h2 class="section-title">六透鏡多維剖析</h2>
+    <p class="section-sub">每個透鏡都會看到不同的問題與機會，合起來才是完整地圖</p>
+
+    <div class="lens-grid">
+
+      <div class="lens-card">
+        <div class="lens-icon" style="background:#fee2e2">💰</div>
+        <h3>財務透鏡</h3>
+        <p>一級＋二級並行是雙重固定成本負擔。貨堆積＝凍結的現金。問題不是「賣不出去」，是「賣的對象錯了、定價太低了」。</p>
+        <div class="lens-finding">B2B 低價供貨讓故事溢價歸零，要先修定價再拼量</div>
+      </div>
+
+      <div class="lens-card">
+        <div class="lens-icon" style="background:#fef3c7">🎯</div>
+        <h3>市場透鏡</h3>
+        <p>台灣 ESG 採購預算 2025 年起強制揭露，企業有「花掉 ESG 採購額度」的壓力。香草禮品＋社企認證＝天然解法，但農場根本沒打這個門。</p>
+        <div class="lens-finding">ESG 採購市場幾乎是空白，無競爭</div>
+      </div>
+
+      <div class="lens-card">
+        <div class="lens-icon" style="background:#dcfce7">⚙️</div>
+        <h3>運營透鏡</h3>
+        <p>一級（鮮品）＋二級（加工）同時做，邏輯上對，但庫存管理要分開看。鮮品是易腐庫存（危），加工品是耐久庫存（機）。</p>
+        <div class="lens-finding">加工品先清，鮮品換成預訂制，消滅庫存風險</div>
+      </div>
+
+      <div class="lens-card">
+        <div class="lens-icon" style="background:#ede9fe">🌿</div>
+        <h3>社企透鏡</h3>
+        <p>農場的身份是一張可以換錢的通行證，但沒有拿去換。台灣有「社會企業採購加分」制度、基金會補助、ESG 報告引用等三條貨幣化路徑。</p>
+        <div class="lens-finding">社企認證＋故事包裝＝定價上調 30-50% 的合理性</div>
+      </div>
+
+      <div class="lens-card">
+        <div class="lens-icon" style="background:#fce7f3">🤝</div>
+        <h3>關係透鏡</h3>
+        <p>農場主說「那兩個服務你幫我推推看，業務的分潤我們找時間聊聊」——這句話在問 Zeal 成為業務夥伴。Evvon 的齊共好網絡是另一條已預熱的通路。</p>
+        <div class="lens-finding">Zeal + Evvon = 已有信任的業務引介網，只差結構化</div>
+      </div>
+
+      <div class="lens-card">
+        <div class="lens-icon" style="background:#e0f2fe">⏱</div>
+        <h3>時間透鏡</h3>
+        <p>農場主現在心理壓力很大。長期方案再好，30 天內沒有現金流進來，方案就沒意義。需要把方案分成「止血」和「重建」兩個時間層。</p>
+        <div class="lens-finding">第一步必須是 30 天內可見的現金回收動作</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 3. HC 思考審計 ── -->
+  <section>
+    <div class="section-label">HC-Lens Audit</div>
+    <h2 class="section-title">密涅瓦思考透鏡審計</h2>
+    <p class="section-sub">本次分析實際啟用的思考動作（非裝飾性標記）</p>
+
+    <div class="hc-row">
+      <span class="hc-tag">#rightproblem</span>
+      <div class="hc-text"><strong>重新定義問題本質：</strong>農場主以為在解「賣貨」問題，實際上是「定價機制」與「分配渠道」問題。先把問題刻畫清楚，才能進入正確的解法空間。</div>
+    </div>
+
+    <div class="hc-row">
+      <span class="hc-tag">#breakitdown</span>
+      <div class="hc-text"><strong>拆解成可處理元件：</strong>「營收不足」拆成：庫存積壓（現金流問題）× 通路單一（風險集中）× 定價偏低（結構問題）× 品牌故事未貨幣化（機會問題）。每個元件有獨立解法。</div>
+    </div>
+
+    <div class="hc-row">
+      <span class="hc-tag">#broadframing</span>
+      <div class="hc-text"><strong>拒絕「賣更多 vs 賣不掉」的二元框架：</strong>生成第三選項——不只賣貨，而是「賣故事包裝的貨」+「賣體驗」+「賣採購資格」（ESG 合規供應商）。框架重設後，選項空間擴大三倍。</div>
+    </div>
+
+    <div class="hc-row">
+      <span class="hc-tag">#utility</span>
+      <div class="hc-text"><strong>逐一盤點各方成本效益：</strong>農場主（解壓力）、企業採購方（ESG 額度消化）、Zeal（分潤＋社會形象）、Evvon（機構客戶引介信任）、協會網絡（取得優質供應商）。五方皆有盈餘的方案才會真正落地。</div>
+    </div>
+
+    <div class="hc-row">
+      <span class="hc-tag">#sunkcost</span>
+      <div class="hc-text"><strong>沉沒成本不應影響未來決策：</strong>一級＋二級的投入已經投了，但未來決策應基於「每條產品線的向前毛利率」而非「回本邏輯」。若某加工品線毛利太低，就算已投設備，也要考慮停線或外包。</div>
+    </div>
+
+    <div class="hc-row" style="border-bottom:none">
+      <span class="hc-tag">#variables</span>
+      <div class="hc-text"><strong>標明可控 vs 不可控變數：</strong>不可控：天氣/產量/市場香草價格。可控：目標客群選擇、定價策略、通路組合、Zeal 是否投入業務引介。策略應聚焦可控變數的最大化。</div>
+    </div>
+  </section>
+
+  <!-- ── 4. 升級收入模型 ── -->
+  <section>
+    <div class="section-label">Revenue Architecture</div>
+    <h2 class="section-title">升級後的收入結構</h2>
+    <p class="section-sub">從「單一低價 B2B 供貨」轉向「四流並行」收入架構</p>
+
+    <table class="rev-table">
+      <thead>
+        <tr>
+          <th>收入流</th>
+          <th>目標客群</th>
+          <th>產品/服務</th>
+          <th>預估溢價</th>
+          <th>起跑難度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>① ESG 企業採購</td>
+          <td>有 ESG 採購額度的中大型企業</td>
+          <td>香草禮盒（附社企故事卡）、年節禮品</td>
+          <td>+40–80%</td>
+          <td>中（需要 Zeal 引介）</td>
+        </tr>
+        <tr>
+          <td>② 機構訂閱制</td>
+          <td>醫療機構、學校、協會</td>
+          <td>月供香草、冷凍加工品、精油原料</td>
+          <td>+15–25%</td>
+          <td>低（現有網絡直接談）</td>
+        </tr>
+        <tr>
+          <td>③ D2C 網路通路</td>
+          <td>都市養生族、料理愛好者</td>
+          <td>乾燥香草、精油、香草茶包、故事訂閱盒</td>
+          <td>+60–120%</td>
+          <td>高（需建通路、需時間）</td>
+        </tr>
+        <tr>
+          <td>④ 體驗 / 知識變現</td>
+          <td>企業 ESG 員工活動、學校戶外課</td>
+          <td>農場體驗日、香草工作坊、線上 live</td>
+          <td>純利潤流</td>
+          <td>中（需要場地準備）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:.82rem;color:var(--gray-500);margin-top:-8px">
+      ⚠️ 現階段只有①②是 90 天內可落地的。③④作為 6 個月後的第二波。
+    </p>
+  </section>
+
+  <!-- ── 5. 四階方案 ── -->
+  <section>
+    <div class="section-label">Action Plan</div>
+    <h2 class="section-title">四階行動方案</h2>
+    <p class="section-sub">依時間軸排列，每階有明確的可見成果指標</p>
+
+    <div class="phase-list">
+
+      <!-- Phase 0 -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num p0">0</div>
+          <div class="phase-title-group">
+            <h3>止血期：緊急清庫存</h3>
+            <span>⏱ 0–30 天 ｜ 目標：現金回收，解除心理壓力</span>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul>
+            <li><strong>Zeal 直接牽線：</strong>把農場的加工品介紹給 Zeal 已有信任的企業聯絡人，哪怕是「友情小批量試用」也能立刻出貨</li>
+            <li><strong>Evvon × 齊共好緊急通路：</strong>透過 Evvon 把加工品推給她的機構網絡（精神障礙機構、社服單位），這些機構有補貼採購空間</li>
+            <li><strong>農場主開直播：</strong>由農場主本人做 IG/Facebook Live，「讓大家看到真實的農場人」——故事力轉換成直接銷售</li>
+            <li><strong>小批量禮盒：</strong>打包現有庫存出「社企農場特惠禮盒」，定價略高於成本＋運費，透過朋友圈消化</li>
+          </ul>
+          <div class="phase-kpi">
+            <strong>30 天成果指標</strong>
+            庫存減少 ≥ 30%，有 ≥ 1 筆企業/機構訂單成交，農場主壓力感下降
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 1 -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num p1">1</div>
+          <div class="phase-title-group">
+            <h3>通路重建：打開 B 端正確門</h3>
+            <span>⏱ 30–90 天 ｜ 目標：建立 ≥ 2 條穩定 B2B 收入流</span>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul>
+            <li><strong>ESG 企業採購提案：</strong>Zeal 協助撰寫「社企供應商介紹頁」，做成一頁 PDF，針對有 ESG 採購壓力的企業 HR/CSR 部門主動發送</li>
+            <li><strong>分潤機制確認：</strong>與農場主談清楚：Zeal/Evvon 引薦成交的訂單，分潤 10–15%。書面化，雙方都安心</li>
+            <li><strong>鮮品改預訂制：</strong>鮮品不再賭庫存，改成預訂後種/採，消滅鮮品積壓風險</li>
+            <li><strong>加工品定價重設：</strong>把社企故事寫進包裝與定價說明，漲價 20% 並解釋原因——有故事支撐的漲價通常不會失客</li>
+            <li><strong>餐廳/外燴通路試探：</strong>透過介紹，接觸 2–3 家有「在地食材」主張的餐廳，談月供協議</li>
+          </ul>
+          <div class="phase-kpi">
+            <strong>90 天成果指標</strong>
+            ≥ 2 家企業/機構成為定期客戶，月收入較現在提升 40–60%，庫存周轉週期縮短至 4 週以內
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num p2">2</div>
+          <div class="phase-title-group">
+            <h3>品牌建立：故事溢價貨幣化</h3>
+            <span>⏱ 90–180 天 ｜ 目標：建立品牌溢價，脫離價格競爭</span>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul>
+            <li><strong>品牌識別系統：</strong>農場需要一個能在城市人心中「有感」的品牌故事。核心敘事：「台東的土地 × 被照顧的人 × 照顧你的香草」</li>
+            <li><strong>D2C 電商啟動：</strong>ShopLine 或蝦皮開店，主打「每月香草探索盒」（月訂閱），每箱 NT$650–900，故事卡＋農場照片</li>
+            <li><strong>體驗日設計：</strong>設計「企業 ESG 員工日」套裝（NT$1,500/人，包含農場巡禮＋香草料理工作坊），企業 HR 很喜歡這類有故事的員工活動</li>
+            <li><strong>媒體曝光：</strong>投稿給《CSR@天下》《社企流》，讓故事自己跑——這些媒體喜歡農場型社企</li>
+          </ul>
+          <div class="phase-kpi">
+            <strong>180 天成果指標</strong>
+            品牌在社群有可識別形象，D2C 月收入 ≥ NT$30,000，至少 1 家媒體曝光
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-num p3">3</div>
+          <div class="phase-title-group">
+            <h3>規模化：建立可複製的收入引擎</h3>
+            <span>⏱ 6–18 個月 ｜ 目標：月收入達可持續盈利水位</span>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul>
+            <li><strong>認證加持：</strong>申請有機認證（MOA）或友善環境農業標章，進一步鞏固定價優勢</li>
+            <li><strong>三級產品開發：</strong>香草醬料、乾燥香草組合包、精油萃取——毛利率最高的品項</li>
+            <li><strong>出口潛力探索：</strong>東南亞台灣社群（新加坡、馬來西亞）對台灣社企農產有情感溢價，試探小批量出口</li>
+            <li><strong>Zeal 顧問化：</strong>若 Phase 1/2 效果顯著，Zeal 可轉為正式顧問角色（月顧問費＋銷售分潤），雙方關係結構化</li>
+          </ul>
+          <div class="phase-kpi">
+            <strong>18 個月成果指標</strong>
+            月收入達 NT$150,000 以上，B2B/B2C/體驗 三流各占 30% 以上，農場主可以「吃飯有胃口」
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 6. Zeal 的角色 ── -->
+  <section>
+    <div class="section-label">Zeal's Role</div>
+    <h2 class="section-title">Zeal 可以做什麼？</h2>
+    <p class="section-sub">農場主說想找 Zeal 談「業務分潤」——這是他在邀你入局。甜頭和代價都要清楚。</p>
+
+    <div class="action-grid">
+
+      <div class="action-card">
+        <div class="a-label">Option A</div>
+        <h4>業務引介 + 分潤</h4>
+        <p>幫農場引薦 B2B 客戶（企業採購、機構）。每成交一筆，收 10–15% 傭金。</p>
+        <div class="sweet">甜頭：零沉沒成本，依績效收費，Zeal 的人際網絡直接變現</div>
+        <div class="cost">代價：需要 Zeal 主動去談，花時間精力</div>
+      </div>
+
+      <div class="action-card">
+        <div class="a-label">Option B</div>
+        <h4>顧問服務</h4>
+        <p>提供商業策略顧問，月顧問費 NT$15,000–30,000，協助整個升級計畫落地。</p>
+        <div class="sweet">甜頭：穩定月收入，農場主願意付錢的顧問比免費建議更認真執行</div>
+        <div class="cost">代價：要承擔「如果農場沒成長」的隱性壓力</div>
+      </div>
+
+      <div class="action-card">
+        <div class="a-label">Option C</div>
+        <h4>純社群推廣</h4>
+        <p>Zeal 在自己的社群分享農場故事，帶流量但不直接參與業務。</p>
+        <div class="sweet">甜頭：最低承諾，只要 Zeal 有受眾就有效</div>
+        <div class="cost">代價：效果最不可控，也最難結構化分潤</div>
+      </div>
+
+      <div class="action-card">
+        <div class="a-label">建議</div>
+        <h4>先談分潤結構，再決定投入深度</h4>
+        <p>跟農場主先把「哪兩個服務、分潤比例、如何計算」談清楚，再根據數字決定 A/B/C 哪種角色最划算。</p>
+        <div class="sweet">甜頭：先談清楚才不會日後尷尬</div>
+        <div class="cost">代價：需要一次約 30 分鐘的對話</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 7. 風險地圖 ── -->
+  <section>
+    <div class="section-label">Risk Map</div>
+    <h2 class="section-title">風險地圖</h2>
+    <p class="section-sub">#risk — 區分可估機率的風險 vs 不可估的不確定性</p>
+
+    <div class="risk-row">
+      <span class="risk-badge high">高風險</span>
+      <div class="risk-text">
+        <strong>農場主執行力不足</strong>
+        農場主目前心理壓力大，最高風險是「知道要做但做不動」。解法：每週給他一個可完成的小任務，不要一次給太多。
+      </div>
+    </div>
+
+    <div class="risk-row">
+      <span class="risk-badge high">高風險</span>
+      <div class="risk-text">
+        <strong>分潤結構沒談清楚</strong>
+        Zeal 幫忙引薦但沒有書面分潤協議，日後容易滋生誤會。必須在開始行動前先書面確認。
+      </div>
+    </div>
+
+    <div class="risk-row">
+      <span class="risk-badge mid">中風險</span>
+      <div class="risk-text">
+        <strong>ESG 採購週期長</strong>
+        企業採購通常有 1–3 個月的審批週期，不能解短期庫存問題。要把這個管道放在 Phase 1 後段，不是止血用的。
+      </div>
+    </div>
+
+    <div class="risk-row">
+      <span class="risk-badge mid">中風險</span>
+      <div class="risk-text">
+        <strong>D2C 電商冷啟動慢</strong>
+        電商通路 3–6 個月才能建立穩定流量，不適合作為短期救急方案。
+      </div>
+    </div>
+
+    <div class="risk-row" style="border-bottom:none">
+      <span class="risk-badge low">低風險</span>
+      <div class="risk-text">
+        <strong>產品力本身</strong>
+        香草是全球需求穩定的農產品，台灣本地香草更是稀缺。產品本身沒問題，問題在通路和定價。
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8. 立刻要做的三件事 ── -->
+  <section>
+    <div class="section-label">Next Actions</div>
+    <h2 class="section-title">Zeal，你現在可以做的三件事</h2>
+    <p class="section-sub">不用等農場主，Zeal 自己可以先啟動的</p>
+
+    <div style="display:flex;flex-direction:column;gap:16px;margin:24px 0">
+
+      <div style="background:var(--white);border:2px solid var(--green-mid);border-radius:12px;padding:20px 24px;display:flex;gap:16px;align-items:flex-start">
+        <div style="background:var(--green-mid);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</div>
+        <div>
+          <div style="font-weight:700;color:var(--green-deep);margin-bottom:6px">跟農場主約一次 30 分鐘對話，談清楚「哪兩個服務 + 分潤結構」</div>
+          <div style="font-size:.87rem;color:var(--gray-700)">農場主已開口了，你只要接住。不要讓這個邀請冷掉。</div>
+        </div>
+      </div>
+
+      <div style="background:var(--white);border:1px solid #e5e7eb;border-radius:12px;padding:20px 24px;display:flex;gap:16px;align-items:flex-start">
+        <div style="background:var(--green-pale);color:var(--green-deep);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</div>
+        <div>
+          <div style="font-weight:700;color:var(--green-deep);margin-bottom:6px">盤點你的企業聯絡人，找 2–3 家有 ESG 採購需求的，先問「你們有沒有在找社企供應商」</div>
+          <div style="font-size:.87rem;color:var(--gray-700)">不用有完整提案，問問題就夠了。市場探查零成本。</div>
+        </div>
+      </div>
+
+      <div style="background:var(--white);border:1px solid #e5e7eb;border-radius:12px;padding:20px 24px;display:flex;gap:16px;align-items:flex-start">
+        <div style="background:var(--green-pale);color:var(--green-deep);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">3</div>
+        <div>
+          <div style="font-weight:700;color:var(--green-deep);margin-bottom:6px">把這份方案傳給農場主，讓他知道「你已經認真研究過了」</div>
+          <div style="font-size:.87rem;color:var(--gray-700)">這本身就是對農場主的一個情緒支撐訊號。他不是一個人在扛。</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="hc-footnote">
+    ─ HC ─ #rightproblem #breakitdown #broadframing #utility #sunkcost #variables<br>
+    [dormant: 促進發現, 談判調解] — 已標記為下次分析擴充依據
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <strong>MUSEON</strong> × 思凡自然農園升級方案 v2<br>
+  分析日期：2026-06-24 ｜ Lens 六透鏡 + HC 思考審計 出品<br>
+  本報告適用範圍：商業策略規劃，不構成投資建議
+</footer>
+
+</body>
+</html>
