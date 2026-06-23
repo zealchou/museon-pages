@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思凡自然農園 · 三方升維方案 v4</title>
+<style>
+/* ═══════════════════════════════════════════════
+   MUSEON 品牌色系（來自 brand-manual-template.html）
+   ═══════════════════════════════════════════════ */
+:root {
+  --ember:       #C4502A;
+  --ember-light: #E0714D;
+  --ember-dark:  #9A3A1C;
+  --teal:        #2A7A6E;
+  --teal-light:  #3A9A8E;
+  --gold:        #B8923A;
+  --gold-light:  #D4AE5A;
+  --ink:         #12121A;
+  --slate:       #5A5A6E;
+  --mist:        #9898A8;
+  --border:      #E2E0DA;
+  --parchment:   #F7F5F0;
+  --snow:        #FDFCFA;
+  --font-display:'Cormorant Garamond','Noto Serif TC',serif;
+  --font-body:   'Outfit','Noto Sans TC',sans-serif;
+  --font-mono:   'IBM Plex Mono',monospace;
+  --nav-w: 240px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--parchment);
+  color: var(--ink);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── 側邊欄 ─── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-w);
+  height: 100vh;
+  background: var(--ink);
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+}
+.sidebar-brand {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 1rem;
+}
+.sidebar-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ember);
+  margin-bottom: 0.4rem;
+}
+.sidebar-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: white;
+  line-height: 1.4;
+}
+.nav-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mist);
+  padding: 0.75rem 1.5rem 0.3rem;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.5rem;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+.nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
+.nav-link .num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--ember-light);
+  min-width: 1.4rem;
+}
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--mist);
+  letter-spacing: 0.05em;
+}
+
+/* ─── 主內容 ─── */
+.main {
+  margin-left: var(--nav-w);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─── Hero ─── */
+.hero {
+  background: var(--ink);
+  padding: 5rem 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(196,80,42,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 100px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(42,122,110,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ember-light);
+  margin-bottom: 1rem;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-style: italic;
+  font-weight: 400;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.hero-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.55);
+  max-width: 560px;
+  margin-bottom: 2rem;
+}
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+.badge-ember { border-color: var(--ember); color: var(--ember-light); background: rgba(196,80,42,0.1); }
+.badge-teal  { border-color: var(--teal); color: var(--teal-light); background: rgba(42,122,110,0.1); }
+.badge-gold  { border-color: var(--gold); color: var(--gold-light); background: rgba(184,146,58,0.1); }
+
+/* ─── 章節通用 ─── */
+.section {
+  padding: 4rem;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-child { border-bottom: none; }
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ember);
+  margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+.section-desc {
+  color: var(--slate);
+  font-size: 0.95rem;
+  max-width: 640px;
+  margin-bottom: 2.5rem;
+}
+
+/* ─── 角色卡 ─── */
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.role-card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.role-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.role-sifan::before { background: var(--teal); }
+.role-evvon::before { background: var(--gold); }
+.role-zeal::before  { background: var(--ember); }
+.role-name {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.role-sifan .role-name { color: var(--teal); }
+.role-evvon .role-name { color: var(--gold); }
+.role-zeal  .role-name { color: var(--ember); }
+.role-who {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.role-scope {
+  font-size: 0.82rem;
+  color: var(--slate);
+  line-height: 1.6;
+}
+.role-scope li {
+  list-style: none;
+  padding-left: 1rem;
+  position: relative;
+  margin-bottom: 0.3rem;
+}
+.role-scope li::before { content: '→'; position: absolute; left: 0; opacity: 0.5; }
+.role-not {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(152,152,168,0.1);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--mist);
+}
+
+/* ─── 情報框 (圖片洞察) ─── */
+.intel-box {
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  color: white;
+  margin-bottom: 2rem;
+}
+.intel-title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ember-light);
+  margin-bottom: 1rem;
+}
+.intel-items { display: flex; flex-direction: column; gap: 0.75rem; }
+.intel-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.75);
+}
+.intel-dot {
+  min-width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--ember);
+  margin-top: 0.45rem;
+}
+.intel-key { color: var(--gold-light); font-weight: 500; }
+
+/* ─── HC 卡片 ─── */
+.hc-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+.hc-card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.hc-left {}
+.hc-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ember);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+.hc-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.hc-def {
+  font-size: 0.78rem;
+  color: var(--mist);
+  font-style: italic;
+  line-height: 1.5;
+}
+.hc-right {}
+.hc-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.4rem;
+}
+.hc-insight {
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.hc-upgrade {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(196,80,42,0.06);
+  border-left: 3px solid var(--ember);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+
+/* ─── 12力雷達 ─── */
+.force-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.force-item {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+.force-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.force-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.force-score {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.score-1 { background: rgba(42,122,110,0.15); color: var(--teal); }
+.score-2 { background: rgba(42,122,110,0.1); color: var(--teal-light); }
+.score-3 { background: rgba(184,146,58,0.15); color: var(--gold); }
+.score-4 { background: rgba(224,113,77,0.15); color: var(--ember-light); }
+.score-5 { background: rgba(196,80,42,0.15); color: var(--ember); }
+.force-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+.force-fill { height: 100%; border-radius: 2px; }
+.fill-1 { background: var(--teal); }
+.fill-2 { background: var(--teal-light); }
+.fill-3 { background: var(--gold); }
+.fill-4 { background: var(--ember-light); }
+.fill-5 { background: var(--ember); }
+.force-note { font-size: 0.78rem; color: var(--mist); }
+
+/* ─── SSA 漏斗 ─── */
+.funnel-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.funnel-card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.funnel-head {
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.funnel-prod .funnel-head { background: rgba(196,80,42,0.1); color: var(--ember); }
+.funnel-mkt  .funnel-head { background: rgba(42,122,110,0.1); color: var(--teal); }
+.funnel-comm .funnel-head { background: rgba(184,146,58,0.1); color: var(--gold); }
+.funnel-body { padding: 1.25rem; }
+.funnel-tier {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.funnel-tier:last-child { border-bottom: none; }
+.funnel-arrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--mist);
+  min-width: 1.5rem;
+}
+.funnel-item { color: var(--ink); flex: 1; }
+.funnel-price {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ember);
+}
+
+/* ─── 七步設計 ─── */
+.steps-timeline { position: relative; padding-left: 2rem; }
+.steps-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.45rem; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.step-item {
+  position: relative;
+  padding: 0 0 1.5rem 2rem;
+}
+.step-dot {
+  position: absolute;
+  left: -0.05rem;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--parchment);
+  border: 2px solid var(--border);
+  top: 0.35rem;
+}
+.step-dot.active { background: var(--ember); border-color: var(--ember); }
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--mist);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.2rem;
+}
+.step-title { font-size: 0.9rem; font-weight: 500; color: var(--ink); margin-bottom: 0.25rem; }
+.step-detail { font-size: 0.82rem; color: var(--slate); }
+
+/* ─── 陽謀/陰謀 ─── */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.yang-card {
+  background: linear-gradient(135deg, rgba(42,122,110,0.08) 0%, rgba(42,122,110,0.03) 100%);
+  border: 1px solid rgba(42,122,110,0.25);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+.yin-card {
+  background: linear-gradient(135deg, rgba(18,18,26,0.06) 0%, rgba(90,90,110,0.04) 100%);
+  border: 1px solid rgba(90,90,110,0.25);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+.strategy-type {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.yang-card .strategy-type { color: var(--teal); }
+.yin-card  .strategy-type { color: var(--slate); }
+.strategy-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.yang-card .strategy-title { color: var(--teal); }
+.yin-card  .strategy-title { color: var(--ink); }
+.strategy-items { display: flex; flex-direction: column; gap: 0.85rem; }
+.strategy-item { font-size: 0.87rem; color: var(--slate); line-height: 1.6; }
+.strategy-item strong { color: var(--ink); }
+
+/* ─── 三方協同表 ─── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: var(--snow);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+thead tr { background: var(--ink); }
+thead th {
+  padding: 0.9rem 1.2rem;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ember-light);
+  font-weight: 400;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(196,80,42,0.03); }
+tbody td { padding: 0.85rem 1.2rem; color: var(--slate); vertical-align: top; }
+tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+/* ─── 行動矩陣 ─── */
+.action-timeline { display: flex; flex-direction: column; gap: 1.5rem; }
+.action-phase {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.action-phase-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.phase-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.phase-title { font-size: 1rem; font-weight: 500; color: var(--ink); }
+.phase-owner {
+  margin-left: auto;
+  display: flex;
+  gap: 0.4rem;
+}
+.owner-tag {
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+}
+.ot-z { background: rgba(196,80,42,0.1); color: var(--ember); }
+.ot-e { background: rgba(184,146,58,0.1); color: var(--gold); }
+.ot-s { background: rgba(42,122,110,0.1); color: var(--teal); }
+.action-items { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.action-item {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+  font-size: 0.87rem;
+}
+.ai-icon { color: var(--ember); font-size: 0.7rem; padding-top: 0.25rem; }
+.ai-body { color: var(--slate); line-height: 1.5; }
+.ai-body strong { color: var(--ink); }
+.ai-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--mist);
+  white-space: nowrap;
+  padding-top: 0.1rem;
+}
+
+/* ─── 核心洞見 callout ─── */
+.callout {
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.callout-ember { background: rgba(196,80,42,0.07); border-left: 4px solid var(--ember); color: var(--ink); }
+.callout-teal  { background: rgba(42,122,110,0.07); border-left: 4px solid var(--teal); color: var(--ink); }
+.callout-gold  { background: rgba(184,146,58,0.07); border-left: 4px solid var(--gold); color: var(--ink); }
+.callout-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.callout-ember .callout-label { color: var(--ember); }
+.callout-teal  .callout-label { color: var(--teal); }
+.callout-gold  .callout-label { color: var(--gold); }
+
+/* ─── RWD ─── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 3rem 2rem; }
+  .section { padding: 2.5rem 2rem; }
+  .role-grid { grid-template-columns: 1fr; }
+  .hc-card { grid-template-columns: 1fr; }
+  .funnel-section { grid-template-columns: 1fr; }
+  .strategy-grid { grid-template-columns: 1fr; }
+  .force-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-tag">MUSEON × 思凡</div>
+    <div class="sidebar-title">三方升維方案<br>v4 · 密涅瓦版</div>
+  </div>
+
+  <div class="nav-section-label">分析架構</div>
+  <a href="#roles" class="nav-link"><span class="num">00</span> 角色定位釐清</a>
+  <a href="#intel" class="nav-link"><span class="num">01</span> 最新情報更新</a>
+
+  <div class="nav-section-label">密涅瓦透鏡</div>
+  <a href="#hc" class="nav-link"><span class="num">02</span> 7大思考透鏡</a>
+
+  <div class="nav-section-label">商業框架</div>
+  <a href="#b12" class="nav-link"><span class="num">03</span> 12力診斷</a>
+  <a href="#ssa" class="nav-link"><span class="num">04</span> SSA三重漏斗</a>
+  <a href="#xp" class="nav-link"><span class="num">05</span> 消費者七步體驗</a>
+
+  <div class="nav-section-label">戰略層</div>
+  <a href="#yang" class="nav-link"><span class="num">06</span> 陽謀 / 陰謀分析</a>
+  <a href="#coalition" class="nav-link"><span class="num">07</span> 三方協同設計</a>
+
+  <div class="nav-section-label">執行</div>
+  <a href="#action" class="nav-link"><span class="num">08</span> 行動矩陣</a>
+
+  <div class="sidebar-footer">
+    思凡自然農園 · 2026-06<br>
+    Minerva × SSA × Business-12
+  </div>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">MUSEON STRATEGY REPORT · SIFAN NATURAL FARM · v4</div>
+    <h1 class="hero-title">思凡自然農園<br>三方升維方案</h1>
+    <p class="hero-sub">調用密涅瓦 7 大思考透鏡 × SSA 系統創業 × 商模12力 × 陽謀/陰謀分析，重新構建「如何快速拉升營業額」的完整解法。</p>
+    <div class="hero-badges">
+      <span class="badge badge-ember">密涅瓦 HC · 7 透鏡</span>
+      <span class="badge badge-teal">SSA 三重漏斗</span>
+      <span class="badge badge-gold">Business-12 · 12力</span>
+      <span class="badge badge-ember">陽謀 / 陰謀</span>
+      <span class="badge badge-teal">三方協同設計</span>
+    </div>
+  </div>
+
+  <!-- ── SECTION 0：角色定位 ── -->
+  <section class="section" id="roles">
+    <div class="section-eyebrow">Section 00 · 角色定位</div>
+    <h2 class="section-title">三方各就各位</h2>
+    <p class="section-desc">先釐清誰做什麼——策略的力量來自分工清晰，而非角色模糊。以下是這場局的正確角色分配。</p>
+
+    <div class="role-grid">
+      <div class="role-card role-sifan">
+        <div class="role-name">農場主</div>
+        <div class="role-who">思凡自然農園<br><small style="font-size:0.75rem;color:var(--mist)">屠崇軒</small></div>
+        <ul class="role-scope">
+          <li>香草生產（紫蘇 / 香茅 / 其他）</li>
+          <li>初級加工與包裝</li>
+          <li>農場體驗場域提供</li>
+          <li>社會企業精神承載者</li>
+        </ul>
+        <div class="role-not">痛點：成本高、通路單一、品牌力弱、SOP 缺</div>
+      </div>
+
+      <div class="role-card role-evvon">
+        <div class="role-name">ESG 顧問</div>
+        <div class="role-who">Evvon<br><small style="font-size:0.75rem;color:var(--mist)">朱芳嫻</small></div>
+        <ul class="role-scope">
+          <li>ESG 白皮書撰寫（白皮書是她出）</li>
+          <li>機構採購 / B2B ESG 通路</li>
+          <li>協會生態圈連結</li>
+          <li>社企合作意向書談判</li>
+        </ul>
+        <div class="role-not">明確邊界：白皮書 = Evvon，非 Zeal 職責</div>
+      </div>
+
+      <div class="role-card role-zeal">
+        <div class="role-name">課程 + 營運顧問</div>
+        <div class="role-who">Zeal<br><small style="font-size:0.75rem;color:var(--mist)">這份報告的委託方</small></div>
+        <ul class="role-scope">
+          <li>SSA 系統課程導入（教屠崇軒商業思維）</li>
+          <li>營運顧問：成本結構 / SOP / 定價策略</li>
+          <li>D2C 漏斗設計與建立</li>
+          <li>產品分層 × 體驗設計</li>
+        </ul>
+        <div class="role-not">明確邊界：ESG 白皮書、機構通路 = 非 Zeal 職責</div>
+      </div>
+    </div>
+
+    <div class="callout callout-ember">
+      <div class="callout-label">角色定位核心原則</div>
+      三方是聯盟，不是上下游。思凡提供<strong>產品本體 + 故事</strong>；Evvon 提供<strong>ESG 信用背書 + 機構通路</strong>；Zeal 提供<strong>商業系統 + 運作能力</strong>。缺任何一方，另外兩方都弱化。
+    </div>
+  </section>
+
+  <!-- ── SECTION 1：最新情報 ── -->
+  <section class="section" id="intel">
+    <div class="section-eyebrow">Section 01 · 最新情報</div>
+    <h2 class="section-title">圖片解讀：Evvon 釋出的訊號</h2>
+    <p class="section-desc">以下是從最新對話截圖提取的關鍵情報，這改變了我們的策略設定。</p>
+
+    <div class="intel-box">
+      <div class="intel-title">▸ 情報摘要 · 2026-06-23 對話截圖</div>
+      <div class="intel-items">
+        <div class="intel-item">
+          <div class="intel-dot"></div>
+          <span><span class="intel-key">定價資訊（確認）：</span>香茅 170元/公斤、紫蘇 220元/公斤。Evvon 指出「高出批發市場太多，量一大就 GG」</span>
+        </div>
+        <div class="intel-item">
+          <div class="intel-dot"></div>
+          <span><span class="intel-key">談判訊號：</span>Evvon 說「利用運費調漲的契機做啟動，我這邊都主動釋出意向了」——這是邀請思凡主動提出新合作結構，不是單純砍價</span>
+        </div>
+        <div class="intel-item">
+          <div class="intel-dot"></div>
+          <span><span class="intel-key">關係定性：</span>Evvon 明確說「我目前是把思凡視為合作夥伴，一起來推動這個社會企業實驗，而不單純是上下游的關係」</span>
+        </div>
+        <div class="intel-item">
+          <div class="intel-dot"></div>
+          <span><span class="intel-key">共同利益確認：</span>「我們把你壓垮了，對我們沒有好處」——Evvon 承認思凡垮掉對她自己也有損失，這是籌碼</span>
+        </div>
+        <div class="intel-item">
+          <div class="intel-dot"></div>
+          <span><span class="intel-key">需求訊號：</span>「除了我們，還有那些單位可以提供比較大量的香草嗎？」——Evvon 在評估供應多元化，暗示她需要思凡提升產能或引入聯盟</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">情報戰略含義</div>
+      Evvon 的訊息不是「砍價通知」，是「邀請思凡重新設計合作模式」。正確的回應不是被動接受降價，而是<strong>主動提出三方共贏的新結構</strong>——而這正是 Zeal 作為顧問最能發揮的地方。
+    </div>
+  </section>
+
+  <!-- ── SECTION 2：密涅瓦透鏡 ── -->
+  <section class="section" id="hc">
+    <div class="section-eyebrow">Section 02 · 密涅瓦大學思考透鏡</div>
+    <h2 class="section-title">7 個 HC 升維原有計劃</h2>
+    <p class="section-desc">密涅瓦大學的 Habits of Mind 不是知識，是「思考動作」——每個 HC 是一道不同的鏡子，照出原計劃看不見的角度。以下 7 個透鏡直接對原計劃開刀。</p>
+
+    <div class="hc-grid">
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#rightproblem</div>
+          <div class="hc-name">刻畫真正的問題</div>
+          <div class="hc-def">先確定你在解對的問題，再想解法。「能量全給在錯的問題上」是最貴的浪費。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">原計劃的問題定義</div>
+          <div class="hc-insight">原本是：「思凡要賣更多草藥來增加營收」。</div>
+          <div class="hc-upgrade">
+            <strong>HC 升維後的真正問題：</strong>思凡的成本結構讓規模化無利可圖，加上通路高度依賴 Evvon 一人——真正問題是「如何重設成本-價值方程式，讓規模化反而更賺錢」，而不是「賣更多」。賣更多但不改結構，只會賠更多。
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#broadframing</div>
+          <div class="hc-name">展開選項空間</div>
+          <div class="hc-def">決策時拒絕被框成 Yes/No 二選一，強迫自己看見至少 4 個以上的路徑。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">原計劃的框架限制</div>
+          <div class="hc-insight">原本只想到「B2B 賣香草給 Evvon 的網絡」這一條路。</div>
+          <div class="hc-upgrade">
+            <strong>HC 展開後的 4 條路徑：</strong><br>
+            ① <strong>B2B 機構通路</strong>（Evvon 的 ESG 企業採購）<br>
+            ② <strong>D2C 直銷</strong>（精品消費者，Line群體驗包訂閱）<br>
+            ③ <strong>體驗經濟</strong>（農場參訪 × 香草工作坊，高毛利）<br>
+            ④ <strong>加值產品</strong>（精油、香草茶、保養品，脫離原物料定價邏輯）<br>
+            四條路同步走，Zeal 優先協助②③；Evvon 主導①；④是中期目標。
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#multiplecauses</div>
+          <div class="hc-name">辨識多重因果</div>
+          <div class="hc-def">複雜問題從來不只有一個根因——找出所有交互作用的因素，才能設計有效干預。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">思凡營收問題的 5 個根因</div>
+          <div class="hc-insight">
+            這 5 個同時存在，解其中一個不夠：<br><br>
+            <strong>① 成本過高</strong> → 規模化後毛利惡化<br>
+            <strong>② 定價邏輯</strong> → 以原物料計價（公斤），而非以價值計（體驗、故事）<br>
+            <strong>③ 通路集中</strong> → Evvon 一人，單點失效風險<br>
+            <strong>④ 品牌空白</strong> → 故事強但無包裝、無視覺、無 SOP<br>
+            <strong>⑤ 轉換機制缺席</strong> → 沒有漏斗，陌生人無法成為客戶
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#utility</div>
+          <div class="hc-name">所有利害關係人利益</div>
+          <div class="hc-def">為所有利害關係人考量不同類型的未來成本與效益，不只看自己的。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">各方利益地圖</div>
+          <div class="hc-insight">
+            <strong>思凡/屠崇軒：</strong>收入穩定 + 農場永續<br>
+            <strong>Evvon/協會：</strong>ESG 採購案例 + 可信賴供應商 + 白皮書素材<br>
+            <strong>Zeal：</strong>顧問成效被看見 + 課程案例 + 回頭客<br>
+            <strong>機構採購方：</strong>ESG 積分 + 真實故事 + 穩定供應<br>
+            <strong>終端消費者：</strong>身份認同（支持社企） + 品質保證<br><br>
+          </div>
+          <div class="hc-upgrade">
+            最優解不是思凡單贏——是讓以上 5 方同時獲益的設計。這才是「價值交換」的本質（SSA I.01）。
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#gametheory</div>
+          <div class="hc-name">賽局理論視角</div>
+          <div class="hc-def">應用賽局理論模型評估策略——辨識玩家、誘因、均衡與改變賽局結構的方法。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">當前賽局分析</div>
+          <div class="hc-insight">
+            目前思凡 vs Evvon 是<strong>不對稱談判</strong>（Evvon 掌握通路，思凡是純供應商）。這個賽局思凡恆輸。<br><br>
+            <strong>改變賽局結構：</strong>引入 Zeal 作為第三方，形成「三方聯盟 vs 傳統香草市場」。三人聯盟的核心資產——<strong>真實 ESG 故事 + 體驗場域</strong>——是傳統供應商無法複製的。當賽局從「誰供應香草便宜」變成「誰有可信 ESG 認證香草供應鏈」，思凡從價格接受者變成稀缺資源。
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#constraints</div>
+          <div class="hc-name">限制滿足</div>
+          <div class="hc-def">辨識所有不能違反的限制，把這些限制同時放進解題框架——真正的解往往在限制交叉點浮現。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">思凡的不可違反限制</div>
+          <div class="hc-insight">
+            <strong>L1 — 社企價值不能妥協：</strong>不能為了追量而犧牲自然農耕或弱勢雇用<br>
+            <strong>L2 — 思凡的人力上限：</strong>目前農場人手有限，不能無限放量<br>
+            <strong>L3 — Evvon 的關係：</strong>不能在 Evvon 幫扶期間繞過她直接搶她的機構通路<br>
+            <strong>L4 — 資金限制：</strong>需要低成本優先的行動計劃<br><br>
+          </div>
+          <div class="hc-upgrade">
+            滿足 L1-L4 的解：<strong>先做高毛利低產量的體驗產品（工作坊）</strong>，不放量但提單價。再用 D2C 訂閱制穩定現金流。讓 Evvon 的 B2B 成為規模的第三階段，而非唯一出路。
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-card">
+        <div class="hc-left">
+          <div class="hc-tag">#analogies</div>
+          <div class="hc-name">類比遷移</div>
+          <div class="hc-def">在解題中恰當使用類比——把在別處已被驗證的解法模式，遷移到當前問題。</div>
+        </div>
+        <div class="hc-right">
+          <div class="hc-label">三個可遷移的類比</div>
+          <div class="hc-insight">
+            <strong>類比①：SSA 排骨便當（M09）</strong><br>
+            80元的便當做到鐵粉體驗——不是靠食材，是靠「以終為始」設計每個接觸點。思凡的香草也是：不是靠「更好的草」，是靠「更好的體驗旅程」。<br><br>
+            <strong>類比②：Patagonia ESG品牌策略</strong><br>
+            Patagonia 把環保理念貫穿所有設計，客戶不只買衣服，是買「我也是環保人」的身份認同。思凡的「自然農耕 + 社企」= 香草界的 Patagonia 原型。<br><br>
+            <strong>類比③：SSA One Muse 卡牌（L2 價值疊加）</strong><br>
+            成本 700 市價 1980 → 用課程包產品，整體定價從 1980 → 2980。思凡的香草可以相同邏輯：「香草包（低毛利）」包在「工作坊體驗（高毛利）」裡，整體客單價翻 3-5 倍。
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SECTION 3：Business-12 ── -->
+  <section class="section" id="b12">
+    <div class="section-eyebrow">Section 03 · Business-12 商模12力</div>
+    <h2 class="section-title">12力診斷</h2>
+    <p class="section-desc">分數 1=強（已做好）到 5=弱（急需補位）。思凡目前底盤三力（BF02/BF05/BF10）幾乎全紅——必須優先修。</p>
+
+    <div class="callout callout-gold">
+      <div class="callout-label">底盤三力警示</div>
+      SSA 原則：底盤不穩，上層力的所有投資都會折損。思凡的 <strong>BF02 累積力</strong>（沒有任何見證/案例）、<strong>BF05 感受力</strong>（顧客旅程未設計）、<strong>BF10 視覺力</strong>（無視覺識別系統）三力同時弱——先補底盤，再談廣告或通路。
+    </div>
+
+    <div class="force-grid">
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF01 產品力</div>
+          <div class="force-score score-3">弱 ●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-3" style="width:60%"></div></div>
+        <div class="force-note">香草品質有基礎，但缺乏差異化包裝與故事說明。同規格賣給不同買家，看不出價值差異。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF02 累積力 🔴</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">幾乎零見證、零案例庫。Evvon 白皮書是第一塊累積資產，但尚未落地。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF03 整合力</div>
+          <div class="force-score score-4">弱 ●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-4" style="width:80%"></div></div>
+        <div class="force-note">通路 100% 依賴 Evvon 協會——單點風險極高。需引入 1-2 個互補資源。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF04 共享力</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">沒有任何轉介/推薦機制，口碑無法結構化擴散。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF05 感受力 🔴</div>
+          <div class="force-score score-4">弱 ●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-4" style="width:80%"></div></div>
+        <div class="force-note">自然農耕場域本身潛力強，但顧客旅程未被設計——進農場到離開，沒有被刻意打造的體驗。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF06 感召力</div>
+          <div class="force-score score-2">中 ●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-2" style="width:40%"></div></div>
+        <div class="force-note">社企故事有感動性，但未被包裝。屠崇軒的個人故事 = 品牌最強資產，尚未被說出來。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF07 品牌力</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">無視覺識別、無一致語調、無品牌人格。「思凡自然農園」這個名字還需要建立記憶點。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF08 優化力</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">無 SOP、無 KPI、無成本追蹤。Zeal 顧問工作的首要目標。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF09 社群力</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">幾乎無社媒存在。D2C 的基礎建設缺席。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF10 視覺力 🔴</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">包裝設計薄弱——「自然農耕」的價值感無法從外觀傳遞。這直接影響溢價能力。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF11 談判力</div>
+          <div class="force-score score-4">弱 ●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-4" style="width:80%"></div></div>
+        <div class="force-note">目前是純價格接受者。需要靠 BF01+BF06+BF07 先拉升價值感，才有談判空間。</div>
+      </div>
+
+      <div class="force-item">
+        <div class="force-header">
+          <div class="force-name">BF12 轉換力</div>
+          <div class="force-score score-5">極弱 ●●●●●</div>
+        </div>
+        <div class="force-bar"><div class="force-fill fill-5" style="width:100%"></div></div>
+        <div class="force-note">無漏斗、無 CTA、無轉換機制。陌生人碰到思凡但沒有任何路徑變成客戶。</div>
+      </div>
+    </div>
+
+    <div class="callout callout-ember" style="margin-top:1.5rem">
+      <div class="callout-label">Zeal 顧問優先序（三時間軸）</div>
+      <strong>短衝（30天）：</strong>BF08 優化力（成本 SOP）+ BF05 感受力（農場體驗設計）<br>
+      <strong>穩抗（90天）：</strong>BF02 累積力（見證收集）+ BF12 轉換力（D2C 漏斗）+ BF10 視覺力（基礎包裝）<br>
+      <strong>長養（180天）：</strong>BF07 品牌力（完整品牌識別）+ BF09 社群力（社媒建立）
+    </div>
+  </section>
+
+  <!-- ── SECTION 4：SSA 三重漏斗 ── -->
+  <section class="section" id="ssa">
+    <div class="section-eyebrow">Section 04 · SSA 系統創業 · 三重漏斗</div>
+    <h2 class="section-title">SSA 三重漏斗設計</h2>
+    <p class="section-desc">SSA 核心：沒有口碑前不下廣告（M07）。先建產品漏斗，讓體驗產生口碑，口碑形成社群，社群才開啟廣告。</p>
+
+    <div class="funnel-section">
+      <div class="funnel-card funnel-prod">
+        <div class="funnel-head">① 產品漏斗</div>
+        <div class="funnel-body">
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">香草體驗包（免費/贈品）</div>
+            <div class="funnel-price">$0</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">精選香草禮盒</div>
+            <div class="funnel-price">$350</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">月訂閱香草箱（含食譜卡）</div>
+            <div class="funnel-price">$580/月</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">香草工作坊（農場半日體驗）</div>
+            <div class="funnel-price">$1,800</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">企業 ESG 農場包場體驗</div>
+            <div class="funnel-price">議價</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="funnel-card funnel-mkt">
+        <div class="funnel-head">② 行銷漏斗</div>
+        <div class="funnel-body">
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">前端：理念 × 屠崇軒故事（社媒短影片）</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">中端：客戶見證 × 工作坊照片分享</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">後端：訂閱 CTA × 工作坊預約連結</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">Evvon ESG 白皮書：機構前端曝光</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-item">Zeal 課程學員：社企案例複習材料</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="funnel-card funnel-comm">
+        <div class="funnel-head">③ 社群漏斗</div>
+        <div class="funnel-body">
+          <div class="funnel-tier">
+            <div class="funnel-arrow">L0</div>
+            <div class="funnel-item">陌生觸及：IG / FB 追蹤者</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">L1</div>
+            <div class="funnel-item">體驗者：買過禮盒或訂閱</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">L2</div>
+            <div class="funnel-item">核心社群：Line 香草愛好者群</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">L3</div>
+            <div class="funnel-item">鐵粉大使：主動分享 × 揪朋友來</div>
+          </div>
+          <div class="funnel-tier">
+            <div class="funnel-arrow">L4</div>
+            <div class="funnel-item">ESG 採購方：Evvon 機構通路接入</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">SSA M03 漲價邏輯</div>
+      SSA 立場：永遠漲，不降價。Evvon 說「批價太高」的解法不是降價——是<strong>把「香草」的交付形式從「公斤計算的原料」升級為「工作坊裡的體驗材料」</strong>。同一把紫蘇，在 B2B 批發是 220/公斤，在香草工作坊是 1,800/人 材料成本的一部分。定價邏輯完全改變。
+    </div>
+  </section>
+
+  <!-- ── SECTION 5：七步體驗 ── -->
+  <section class="section" id="xp">
+    <div class="section-eyebrow">Section 05 · SSA M09 以終為始</div>
+    <h2 class="section-title">消費者七步逆向體驗設計</h2>
+    <p class="section-desc">SSA 核心法則：從終點往回設計，不是從入口往後想。先問「我希望客戶離開後會跟別人說什麼」，再逆推每個接觸點。</p>
+
+    <div class="steps-timeline">
+
+      <div class="step-item">
+        <div class="step-dot active"></div>
+        <div class="step-num">STEP 7 · 終點設計</div>
+        <div class="step-title">客戶主動分享的那一刻</div>
+        <div class="step-detail">目標口碑：「我在台東一個自然農場親手做了香草精油，農夫告訴我他用這個養活一群弱勢農工——太感動了，你一定要去。」<br>設計：農場出口設打卡牆 + 「你的採購拯救了誰」故事卡 + 限量農場紀念香包作為帶走物件。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-dot active"></div>
+        <div class="step-num">STEP 6 · 離場體驗</div>
+        <div class="step-title">道別的方式</div>
+        <div class="step-detail">屠崇軒本人送客，贈送一小包親手摘的香草 + 手寫感謝卡 + 下次預約二維碼。不是「謝謝光臨」，是「你成為了這個農場的一部分」。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-dot active"></div>
+        <div class="step-num">STEP 5 · 產品核心交付</div>
+        <div class="step-title">價值兌現點</div>
+        <div class="step-detail">香草工作坊：現場摘草 → 乾燥 / 萃取 / 料理 → 帶走成品。體驗的設計讓客戶「參與了生產」，不只是消費者。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-dot active"></div>
+        <div class="step-num">STEP 4 · 桌邊服務細節</div>
+        <div class="step-title">個人化 × 主動關懷</div>
+        <div class="step-detail">屠崇軒或農場夥伴全程陪同，分享每種香草的種植故事（誰種的、為什麼種這個）。問客戶帶什麼香草回家最想嘗試。記下偏好。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-dot active"></div>
+        <div class="step-num">STEP 3 · 方案設計</div>
+        <div class="step-title">選擇架構 × 錨點定價</div>
+        <div class="step-detail">三個工作坊套餐：香草料理體驗（$1,200）/ 精油萃取體驗（$1,800，主推）/ 農場全日導覽（$2,800）。錨點效應讓精油體驗看起來「中間最划算」。</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-dot active"></div>
+        <div class="step-num">STEP 2 · 進場第一印象</div>
+        <div class="step-title">前 30 秒決定留或走</div>
+        <div class="step-detail">農場入口的香氣設計（現摘香草鋪路）+ 手寫黑板寫今日開放的香草品項 + 第一眼看到屠崇軒本人的照片和一句話：「我相信每一棵草都有它的使命。」</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-dot"></div>
+        <div class="step-num">STEP 1 · 吸引門面</div>
+        <div class="step-title">路過就想進來</div>
+        <div class="step-detail">對 D2C：IG 短影片「30 秒台東香草農場早晨」（農場日出 + 手採香草 + 一句話故事）。<br>對 B2B：Evvon 白皮書封面故事思凡案例 + 機構邀請函設計。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SECTION 6：陽謀/陰謀 ── -->
+  <section class="section" id="yang">
+    <div class="section-eyebrow">Section 06 · 戰略層 · Master Strategy</div>
+    <h2 class="section-title">陽謀 / 陰謀分析</h2>
+    <p class="section-desc">陽謀是公開可見、對方知道你在做但也擋不了的策略。陰謀是辨識他人的隱性動機與結構性力量，找到槓桿點。</p>
+
+    <div class="strategy-grid">
+      <div class="yang-card">
+        <div class="strategy-type">陽謀 · 公開佈局</div>
+        <div class="strategy-title">明牌策略</div>
+        <div class="strategy-items">
+          <div class="strategy-item">
+            <strong>① 創造新品類</strong><br>
+            不跟傳統香草批商打「誰便宜」，而是創造「ESG 認證自然農耕香草體驗供應鏈」這個新品類。Evvon 白皮書 + 思凡農場 = 傳統批商永遠無法複製的組合。
+          </div>
+          <div class="strategy-item">
+            <strong>② 以終為始定錨</strong><br>
+            讓「香草工作坊」成為思凡的標誌性高毛利產品。3 年後，「台東香草工作坊」= 思凡。這是陽謀：讓所有人知道你要做什麼，但你做到了他們也沒辦法搶。
+          </div>
+          <div class="strategy-item">
+            <strong>③ 聯盟可見化</strong><br>
+            Zeal（課程）+ Evvon（白皮書）+ 思凡（農場）= 公開的三方背書聯盟。這讓採購方看到的不只是一個農場，而是有完整支援體系的社企供應鏈。
+          </div>
+          <div class="strategy-item">
+            <strong>④ 口碑先行閘門（SSA M07）</strong><br>
+            前 3 個月不投廣告，只做鐵粉體驗收集見證。90% 好評率達到後才開啟廣告。這是 SSA 原則的陽謀應用。
+          </div>
+        </div>
+      </div>
+
+      <div class="yin-card">
+        <div class="strategy-type">陰謀辨識 · 隱性動力</div>
+        <div class="strategy-title">局中局</div>
+        <div class="strategy-items">
+          <div class="strategy-item">
+            <strong>① Evvon 的真實籌碼</strong><br>
+            Evvon 說「我們把你壓垮了對我們沒有好處」——她的 ESG 顧問事業需要思凡這個成功案例。思凡垮了，她的白皮書也失去最強主角。所以思凡在談判中<strong>比她說的更有籌碼</strong>，只是自己不知道。
+          </div>
+          <div class="strategy-item">
+            <strong>② 定價的隱形戰場</strong><br>
+            Evvon 說「批價太高」，表面是抱怨，實際是在邀請思凡「主動提出新結構」。她不想當壞人砍價，她給了思凡主動權——但思凡若只是被動降價，就丟了這個主動權。正確回應：主動提出「量大折扣 + 體驗合作」的新模型。
+          </div>
+          <div class="strategy-item">
+            <strong>③ 供應多元化的訊號</strong><br>
+            「除了你們還有哪些單位？」——Evvon 在評估備胎，這代表思凡必須盡快在品質/故事/關係上建立不可替代性，而不是只靠 Evvon 的善意。這是最重要的警訊。
+          </div>
+          <div class="strategy-item">
+            <strong>④ Zeal 的隱性籌碼</strong><br>
+            Zeal 作為「課程老師 + 顧問」同時服務思凡，等於把思凡建成了 SSA 課程的活體案例。課程學員看到思凡成功 = 課程背書。思凡成功 = Zeal 課程更有說服力。<strong>Zeal 比其他顧問更有動力讓思凡成功</strong>，因為兩者利益完全對齊。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 7：三方協同 ── -->
+  <section class="section" id="coalition">
+    <div class="section-eyebrow">Section 07 · 三方協同設計</div>
+    <h2 class="section-title">聯盟結構 × 共贏設計</h2>
+    <p class="section-desc">三方聯盟的設計原則：每方的成功都放大其他方的成功，而不是任何一方的成功建立在其他方的犧牲上。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>角色</th>
+          <th>投入（付出什麼）</th>
+          <th>產出（貢獻什麼）</th>
+          <th>回報（得到什麼）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>思凡 / 屠崇軒</td>
+          <td>農場產能 + 農場場域 + 社企精神 + 屠崇軒的個人故事</td>
+          <td>優質香草原料 + 工作坊場地 + ESG 白皮書核心案例</td>
+          <td>工作坊高毛利收入 + D2C 訂閱現金流 + Evvon B2B 通路 + 更高收購溢價</td>
+        </tr>
+        <tr>
+          <td>Evvon / 朱芳嫻</td>
+          <td>ESG 白皮書撰寫 + 機構通路 + 協會生態圈 + 採購意向</td>
+          <td>為思凡帶入機構採購客戶 + ESG 認證可信度 + 關係網絡</td>
+          <td>ESG 顧問收費 + 思凡作為白皮書旗艦案例 + 機構客戶信任建立</td>
+        </tr>
+        <tr>
+          <td>Zeal</td>
+          <td>SSA 課程導入 + 營運顧問服務 + 商業系統建立</td>
+          <td>成本 SOP + 產品分層定價 + D2C 漏斗 + 工作坊設計框架</td>
+          <td>顧問費 + 思凡成為 SSA 課程活體案例 + 課程招生說服力提升</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-gold" style="margin-top:1.5rem">
+      <div class="callout-label">三方聯盟的不可替代性護城河</div>
+      傳統香草批商有的：低價大量供應。<br>
+      思凡 + Evvon + Zeal 三方聯盟有的：<strong>ESG 白皮書認證 + 可驗證的社企故事 + 農場體驗場域 + 系統化運營能力</strong>。<br>
+      前者可被複製，後者需要數年才能建立。只要三方維持聯盟，護城河就在。
+    </div>
+  </section>
+
+  <!-- ── SECTION 8：行動矩陣 ── -->
+  <section class="section" id="action">
+    <div class="section-eyebrow">Section 08 · 行動矩陣</div>
+    <h2 class="section-title">30 / 90 / 180 天行動計畫</h2>
+    <p class="section-desc">以 Zeal 的職責範圍（課程 + 營運顧問）為主線。Evvon 的 ESG 工作為平行線。兩條線在 180 天時交匯，開啟機構通路。</p>
+
+    <div class="action-timeline">
+
+      <div class="action-phase">
+        <div class="action-phase-head">
+          <div class="phase-label">Phase 01</div>
+          <div class="phase-title">第 1-30 天 · 底盤建設</div>
+          <div class="phase-owner">
+            <span class="owner-tag ot-z">Zeal 主導</span>
+            <span class="owner-tag ot-s">思凡執行</span>
+          </div>
+        </div>
+        <div class="action-items">
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>成本 SOP 建立：</strong>與屠崇軒一起做全成本盤點（種植 / 人力 / 加工 / 運輸），找出最高成本 Top 3 並設定目標壓縮率</div>
+            <div class="ai-tag">BF08 優化力</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>產品分層設計：</strong>設計 4 層產品階梯（體驗包 / 禮盒 / 訂閱 / 工作坊），訂定錨點定價邏輯</div>
+            <div class="ai-tag">SSA M03 / BF01</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>農場體驗七步設計：</strong>按 SSA M09 逆向設計農場參訪流程，從「客戶要說什麼口碑」往回推</div>
+            <div class="ai-tag">SSA M09 / BF05</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>Evvon 關係重新定錨：</strong>請屠崇軒主動提出「量大折扣 + 體驗合作資源交換」的新合作結構提案，而不是等待降價</div>
+            <div class="ai-tag">陽謀佈局</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-phase">
+        <div class="action-phase-head">
+          <div class="phase-label">Phase 02</div>
+          <div class="phase-title">第 31-90 天 · 轉換引擎啟動</div>
+          <div class="phase-owner">
+            <span class="owner-tag ot-z">Zeal 顧問</span>
+            <span class="owner-tag ot-s">思凡執行</span>
+          </div>
+        </div>
+        <div class="action-items">
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>第一場香草工作坊：</strong>邀請 10-15 名體驗者（Evvon 生態圈 + 朋友口碑），執行七步體驗設計，收集照片 / 見證 / 口碑</div>
+            <div class="ai-tag">SSA M07 / BF02</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>D2C 試水：</strong>建立 Line 官方帳號 + 月訂閱香草箱 Beta 版（30 位先行者），測試定價 $580/月</div>
+            <div class="ai-tag">BF12 轉換力</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>視覺底盤：</strong>設計思凡的基礎包裝（禮盒設計 + 食譜卡），讓產品視覺傳遞「精品自然農耕」的定位</div>
+            <div class="ai-tag">BF10 視覺力</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>屠崇軒故事包裝：</strong>製作「30 秒農場故事」短影片（屠崇軒親自說話），發佈 IG + FB，開始建立社群存在</div>
+            <div class="ai-tag">BF06 感召力 / BF09</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-phase">
+        <div class="action-phase-head">
+          <div class="phase-label">Phase 03</div>
+          <div class="phase-title">第 91-180 天 · 三方交匯</div>
+          <div class="phase-owner">
+            <span class="owner-tag ot-z">Zeal</span>
+            <span class="owner-tag ot-e">Evvon</span>
+            <span class="owner-tag ot-s">思凡</span>
+          </div>
+        </div>
+        <div class="action-items">
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>Evvon ESG 白皮書發布：</strong>以思凡為核心案例，配合機構採購邀請函發佈。Zeal 協助制作「農場體驗 ESG 採購方案」配套文件</div>
+            <div class="ai-tag">Evvon 主導 / 陽謀</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>SSA 課程正式導入：</strong>Zeal 帶屠崇軒走完 SSA 商業系統建構 12 模組，讓農場能自主優化而不依賴 Zeal</div>
+            <div class="ai-tag">Zeal 課程職責</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>企業採購包場工作坊：</strong>開啟「企業 ESG 活動」包場體驗產品，Evvon 的機構通路開始導流到工作坊預約</div>
+            <div class="ai-tag">BF03 整合力 / 三方交匯</div>
+          </div>
+          <div class="action-item">
+            <div class="ai-icon">◆</div>
+            <div class="ai-body"><strong>口碑閘門評估：</strong>好評率達 90% 後，才正式開啟廣告投放（SSA M07 口碑先行原則）。不到 90% 繼續強化體驗</div>
+            <div class="ai-tag">SSA M07</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-teal" style="margin-top:2rem">
+      <div class="callout-label">最小下一步（24小時內可執行）</div>
+      <strong>Zeal：</strong>安排與屠崇軒的第一次成本盤點對話（30 分鐘）。帶著「12 力診斷表」逐一確認現況分數，確認優先補哪一力。<br><br>
+      <strong>思凡：</strong>主動聯絡 Evvon，提出「我想設計一個量大折扣 + 我提供農場工作坊場地給你的機構客戶」的交換提案——這是把被動降價變成主動出招。
+    </div>
+  </section>
+
+  <!-- 結尾 -->
+  <section class="section" style="border-bottom:none;background:var(--ink);color:white;padding:3rem 4rem;">
+    <div style="font-family:var(--font-display);font-size:1.8rem;font-style:italic;margin-bottom:1rem;">
+      追風的人，終究會被風帶走；<br>造風的人，終會被時代記住。
+    </div>
+    <div style="font-size:0.82rem;color:var(--mist);font-family:var(--font-mono);letter-spacing:0.05em;">
+      — SSA 系統創業方法論 · Zeal<br><br>
+      MUSEON REPORT · 思凡自然農園三方升維方案 v4<br>
+      密涅瓦透鏡 × SSA × Business-12 × 陽謀/陰謀 · 2026-06
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
