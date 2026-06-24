@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON 經銷商兩天培訓設計 v1.0</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --ink:#e6edf3; --sub:#9aa7b5;
+    --gold:#d4b072; --cyan:#5ad1c8; --line:#2a313c; --warn:#e0a458; --good:#6cc28f;
+    --bad:#d97a7a; --accent:#7aa2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+    line-height:1.75;font-size:16px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 22px 90px}
+  header.hero{padding:64px 22px 40px;text-align:center;
+    background:radial-gradient(circle at 50% -10%,rgba(212,176,114,.16),transparent 60%);
+    border-bottom:1px solid var(--line)}
+  .hero .kicker{color:var(--gold);letter-spacing:.32em;font-size:13px;font-weight:600}
+  .hero h1{font-size:34px;margin:14px 0 8px;line-height:1.3}
+  .hero .sub{color:var(--sub);font-size:16px;max-width:620px;margin:8px auto 0}
+  .hero .meta{margin-top:22px;color:var(--sub);font-size:13px}
+  .hero .meta b{color:var(--cyan)}
+  h2{font-size:24px;margin:54px 0 6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--gold);font-variant-numeric:tabular-nums;margin-right:10px}
+  h3{font-size:18px;margin:30px 0 8px;color:var(--cyan)}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:15px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;margin:16px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}.hero h1{font-size:26px}}
+  .pill{display:inline-block;font-size:12px;padding:2px 10px;border-radius:20px;
+    border:1px solid var(--line);color:var(--sub);margin:2px 4px 2px 0}
+  .pill.gold{color:var(--gold);border-color:rgba(212,176,114,.4)}
+  .pill.cyan{color:var(--cyan);border-color:rgba(90,209,200,.4)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.04em}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .time{color:var(--cyan);white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+  .tag{font-size:11.5px;color:var(--sub)}
+  .daybar{display:flex;align-items:center;gap:14px;margin:40px 0 6px;
+    padding:18px 22px;border-radius:14px;
+    background:linear-gradient(100deg,var(--panel2),var(--panel))}
+  .daybar .big{font-size:30px;color:var(--gold);font-weight:700}
+  .daybar .t{font-size:19px;font-weight:600}
+  .daybar .d{color:var(--sub);font-size:14px}
+  .truth{border-left:3px solid var(--warn);background:rgba(224,164,88,.06);
+    padding:14px 18px;border-radius:0 10px 10px 0;margin:14px 0}
+  .truth b{color:var(--warn)}
+  .ev{color:var(--sub);font-size:13.5px;font-style:italic}
+  ul{margin:8px 0;padding-left:22px}
+  li{margin:5px 0}
+  .mod{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0;
+    background:var(--panel)}
+  .mod .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .mod .h b{font-size:16px;color:var(--ink)}
+  .mod .src{font-size:12px;color:var(--gold)}
+  .foot{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);
+    color:var(--sub);font-size:13px;text-align:center}
+  code{background:#0a0e14;border:1px solid var(--line);border-radius:5px;
+    padding:1px 6px;font-size:13px;color:var(--cyan)}
+  .stage{counter-reset:none;display:flex;gap:14px;margin:12px 0;align-items:flex-start}
+  .stage .num{flex:0 0 36px;height:36px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;background:rgba(122,162,247,.14);color:var(--accent);
+    font-weight:700;border:1px solid rgba(122,162,247,.3)}
+  .stage .body{flex:1}
+  .stage .body b{color:var(--ink)}
+  .disc{border:1px dashed var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;
+    background:rgba(217,122,122,.04);font-size:14px}
+  .disc h3{color:var(--bad);margin-top:0}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">MUSEON DEALER ENABLEMENT</div>
+  <h1>Museon 經銷商 · 兩天實戰培訓設計</h1>
+  <div class="sub">從「會用 Museon」到「能在客戶端落地交付」——以白老師國際語言中心真實導入案為骨架，配真實使用數據與資料工程操作步驟。</div>
+  <div class="meta">版本 <b>v1.0</b>　·　設計日期 <b>2026-06-24</b>　·　規格 <b>2 天 × 9:00–18:00</b>　·　對象 <b>Museon 經銷商 / 顧問落地團隊</b></div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 設計理念 ============ -->
+<h2><span class="n">00</span>設計理念：為什麼這樣設計</h2>
+<p class="lead">這份課程不是「功能教學手冊」。它要解決的真問題是——<b>客戶感受不到 Museon 跟 ChatGPT 的差別</b>。差別不在功能清單，在經銷商能不能用顧問的姿態診斷、能不能把客戶的隱性知識做成 RAG、能不能在客戶端陪跑兩個月直到復能。三個來自真實資料的發現，定錨了整份設計：</p>
+
+<div class="truth">
+  <b>真相一｜白老師案揭露「能力缺口」在哪。</b> 從 5/26→6/21 的真實會議逐字稿看，經銷端做得最吃力的不是技術，是：算力/成本估不準、外部串接「不確定能不能做」、機房規劃現學現賣、中台價值講到客戶聽不懂、範圍一路膨脹收不住。<b>這些踩坑，就是課程模組的來源。</b>
+</div>
+<div class="truth">
+  <b>真相二｜真實活躍客戶只有 5–8 人，不是「市場已驗證」。</b> skill 使用 log 1411 筆裡，最大兩個帳號是開發者本人（佔 ~19MB，斷崖第一二名）。這代表客戶端真實採用率還很低——<b>這不是壞消息，是經銷商的機會缺口</b>，課程要教的是「怎麼把睡著的能力喚醒給客戶」。
+</div>
+<div class="truth">
+  <b>真相三｜最有差異化的功能，幾乎全在睡覺。</b> 命理體驗類（人類圖/解夢/合盤）、整條媽媽市場產品線、短影音/storytelling/live-commentary——黏著度與裂變力最強，卻被點個位數次。<b>這些是 Day1 下午的「差異化主菜」。</b>
+</div>
+
+<div class="card">
+  <b style="color:var(--gold)">兩天的能力爬升曲線</b>
+  <div class="grid2" style="margin-top:12px">
+    <div><span class="pill gold">DAY 1</span><b> 顧問腦 × 系統力</b><div class="lead" style="margin-top:6px">會診斷、會講價值、會操作核心與差異化功能——從「會用」到「會賣」。</div></div>
+    <div><span class="pill cyan">DAY 2</span><b> 資料工程 × 落地交付</b><div class="lead" style="margin-top:6px">把客戶知識做成 RAG、用 Museon 產提案報價、兩個月陪跑——從「會賣」到「能交付」。</div></div>
+  </div>
+</div>
+
+<!-- ============ 能力模型 ============ -->
+<h2><span class="n">01</span>經銷商能力模型（六大類）</h2>
+<p class="lead">以下六類從白老師案「服務這個客戶實際需要什麼」反推得出，每類都有逐字稿證據支撐。整份課表就是依這六類編排。</p>
+
+<div class="grid2">
+  <div class="card"><b style="color:var(--cyan)">① 需求診斷與顧問能力</b><div class="lead" style="margin-top:6px">聽懂業態、窮舉複雜業務規則、不亂承諾、把痛點換算成省錢數字。<br><span class="ev">證據：Eric「我不能需求聽不清楚就跟你說可以」；折扣「3×3 就有九種可能性」。</span></div></div>
+  <div class="card"><b style="color:var(--cyan)">② Museon 系統操作與配置</b><div class="lead" style="margin-top:6px">前中後台三分法、權限 min(Agent,員工)、ID 串接、記憶/結晶/RAG 配置、人格克隆。<br><span class="ev">證據：「前台都可換，資料統一被中台處理，AI 是中台」。</span></div></div>
+  <div class="card"><b style="color:var(--cyan)">③ 技術導入與串接</b><div class="lead" style="margin-top:6px">後台/資料庫設計、舊資料遷移、外部串接、本地端機房/網路、算力壓測、AI 模組「人審最終」邊界。<br><span class="ev">證據：「同時 10 個人用就不 ok」；口說對打「會燒很快」。</span></div></div>
+  <div class="card"><b style="color:var(--cyan)">④ 提案、報價與商業溝通</b><div class="lead" style="margin-top:6px">用 Museon 產結構化提案、模組化報價、多角色/隔代決策溝通、範圍收斂。<br><span class="ev">證據：「報告完全不用手做，跟 AI 聊天就出來」；達哥「越講越大，要收斂」。</span></div></div>
+  <div class="card"><b style="color:var(--cyan)">⑤ 落地陪跑與專案管理</b><div class="lead" style="margin-top:6px">望聞問切式輔導、分階段上線、客戶端內訓、合規把關。目標是「你學會了，我就撤退」。<br><span class="ev">證據：「至少落地輔導兩個月，每週來一次」。</span></div></div>
+  <div class="card"><b style="color:var(--gold)">⑥ 差異化變現（課程加值）</b><div class="lead" style="margin-top:6px">把睡著的高黏著功能（命理/媽媽線/短影音/敘事）變成引流鉤子與裂變引擎。<br><span class="ev">來源：真實數據揭露這些「有料卻被冷落」。</span></div></div>
+</div>
+
+<!-- ============ DAY 1 ============ -->
+<div class="daybar">
+  <div class="big">D1</div>
+  <div><div class="t">顧問腦 × 系統力</div><div class="d">從「會用 Museon」到「敢站在客戶面前賣」</div></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:120px">時段</th><th>模組</th><th style="width:150px">教什麼能力 / 用什麼功能</th></tr></thead>
+  <tbody>
+    <tr><td class="time">09:00–09:30</td><td><b>開場：你賣的不是軟體，是 AI 員工</b><div class="tag">破題殘酷真相——全平台真實活躍客戶只有 5–8 人。這不是勸退，是說明「藍海還在、就看你會不會喚醒能力」。設定兩天目標。</div></td><td class="tag">心法定錨</td></tr>
+    <tr><td class="time">09:30–10:45</td><td><b>模組 1：顧問式診斷力</b><div class="tag">SSA 12 步訪談 + xmodel 重定義 GAP + 望聞問切。用白老師案演練「聽懂補教業流程、窮舉帳務/薪資規則、先聽清楚再答應」。</div></td><td class="tag">能力① · ssa-consultant / xmodel</td></tr>
+    <tr><td class="time">11:00–12:00</td><td><b>模組 2：Museon 到底是什麼（業主版三分鐘）</b><div class="tag">前中後台三分法白話腳本——治「客戶聽不懂中台價值」這個真實踩坑。現場 demo：當場用聊天產出一頁提案。</div></td><td class="tag">能力② · 白話講解</td></tr>
+    <tr><td class="time" style="color:var(--sub)">12:00–13:00</td><td class="tag" style="color:var(--sub)">午休</td><td></td></tr>
+    <tr><td class="time">13:00–14:30</td><td><b>模組 3：核心變現武器實戰</b><div class="tag">現場跑高頻功能：ssa（成交對話）、business-12（商模十二力診斷）、master-strategy（決策兵推）、workflow-ai-deployment（AI 導入劇本）。每人帶一個自己客戶練。</div></td><td class="tag">能力① · 高頻功能</td></tr>
+    <tr><td class="time">14:45–16:00</td><td><b>模組 4：回答客戶的可靠性疑慮</b><div class="tag">記憶/結晶/RAG/權限/人格克隆的設定與講解。回應三大客戶恐懼：幻覺（每五輪打散+凌晨重置）、個資（本地端+min權限）、越權（ID 攔截）。</div></td><td class="tag">能力② · Museon 機制</td></tr>
+    <tr><td class="time">16:15–17:30</td><td><b>模組 5：差異化主菜（喚醒睡著的武器）</b><div class="tag">demo 高黏著功能當鉤子：人類圖/解夢（個人客戶引流）、short-video/reels（店家最想要）、storytelling（提案影響力）、live-commentary（暖場神器）。</div></td><td class="tag">能力⑥ · 漏網之魚</td></tr>
+    <tr><td class="time">17:30–18:00</td><td><b>收束 + 回家作業</b><div class="tag">挑一個自己手上的真實客戶，用今天的工具盤出他的 GAP 與三個可切入功能。明天上午要用。</div></td><td class="tag">固化</td></tr>
+  </tbody>
+</table>
+
+<!-- ============ DAY 2 ============ -->
+<div class="daybar">
+  <div class="big">D2</div>
+  <div><div class="t">資料工程 × 落地交付</div><div class="d">從「會賣」到「能把客戶知識變成會運作的 AI 員工」</div></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:120px">時段</th><th>模組</th><th style="width:150px">教什麼能力 / 配套工具</th></tr></thead>
+  <tbody>
+    <tr><td class="time">09:00–09:30</td><td><b>回顧 + 今日地圖</b><div class="tag">展開「從一句客戶需求 → 到 AI 員工上線」的完整工程鏈。今天把客戶的知識真的灌進 Museon。</div></td><td class="tag">地圖</td></tr>
+    <tr><td class="time">09:30–11:00</td><td><b>模組 6：資料工程核心（本課重頭戲）</b><div class="tag">五階段實作：抓工作流 → 資料清洗 → 結晶 → 建 wiki → 進 RAG。每人把昨天客戶的一份真實資料，跑完整條鏈，最後 curl 驗證它真的進了向量庫。</div></td><td class="tag">能力③ · Claude Code/Cowork</td></tr>
+    <tr><td class="time">11:15–12:15</td><td><b>模組 7：技術導入與串接（補三大缺口）</b><div class="tag">直攻白老師案最痛三點：① 算力/Token 成本估算表 + 壓測 SOP；② 外部串接（LINE/簡訊/金流）可串清單；③ 本地端機房/網路/資安最低規格 checklist。</div></td><td class="tag">能力③ · 踩坑修補</td></tr>
+    <tr><td class="time" style="color:var(--sub)">12:15–13:15</td><td class="tag" style="color:var(--sub)">午休</td><td></td></tr>
+    <tr><td class="time">13:15–14:45</td><td><b>模組 8：用 Museon 產提案 + 模組化報價</b><div class="tag">提案 11 章結構（含 Out of Scope / Not Now 範圍守門）+ 報價公式（製作週數×12k + 驗收點×5k × 複雜度係數）。現場把昨天的客戶逐字稿丟進去產一份提案。</div></td><td class="tag">能力④ · 提案/報價</td></tr>
+    <tr><td class="time">15:00–16:15</td><td><b>模組 9：落地陪跑方法論</b><div class="tag">望聞問切兩個月輔導法（坐辦公室角落觀察、360 度訪談、冰山下錄音累積）+ 分階段上線（先做不影響家長的後台）+ 客戶端兩天內訓設計（行政是 60% 真實使用者）。</div></td><td class="tag">能力⑤ · 陪跑</td></tr>
+    <tr><td class="time">16:30–17:30</td><td><b>模組 10：實戰大演練</b><div class="tag">分組用白老師案（或自己客戶）跑一輪完整：診斷 → 提案 → 報價 → 落地計畫 → 上台 pitch，講師＋同儕回饋。</div></td><td class="tag">綜合驗收</td></tr>
+    <tr><td class="time">17:30–18:00</td><td><b>結業 + 能力認證 checklist</b><div class="tag">對照六大能力類逐項自評，列出個人補強清單。發經銷商落地 SOP 速查卡。</div></td><td class="tag">認證</td></tr>
+  </tbody>
+</table>
+
+<!-- ============ 附錄 A ============ -->
+<h2><span class="n">A</span>附錄：高頻功能 → 可直接當教學內容</h2>
+<p class="lead">以下取自真實 skill 使用 log（近 30 天，已剔除 dna-core/plugin-registry 等純內部治理流量），是「客戶真的會用、且體現 Museon 價值」的功能。<b>這些就是 Day1 模組 3 的教材。</b></p>
+<table>
+  <thead><tr><th>功能</th><th>指令</th><th>教什麼場景</th></tr></thead>
+  <tbody>
+    <tr><td><b>ssa-consultant</b></td><td><code>/ssa</code></td><td>顧問式銷售卡關：客戶抗拒成交、價格異議，當場診斷卡點給成交腳本。<b>經銷商自己賣 Museon 也用，最適合第一堂。</b></td></tr>
+    <tr><td><b>course-forge</b></td><td><code>/course</code></td><td>把講師腦中的課變成可逆推、可切段、可驗收的教學系統。教「怎麼把專業變成可賣的課」。</td></tr>
+    <tr><td><b>xmodel</b></td><td><code>/xmodel</code></td><td>任何卡點用跨領域槓桿生成多條路徑，再轉成可承擔的小實驗。教「卡住時怎麼破框」。</td></tr>
+    <tr><td><b>master-strategy</b></td><td>—</td><td>兵法＋鬼谷子的戰略診斷與沙盤兵推。教「重大決策怎麼推演對手與我方」。</td></tr>
+    <tr><td><b>business-12</b></td><td>—</td><td>商模十二力：營收、轉換率、流失、CAC/LTV 逐項診斷。教「老闆怎麼盤點商業弱項」。</td></tr>
+    <tr><td><b>workflow-ai-deployment</b></td><td>—</td><td>給中小企業的 2–4 週 AI 導入診斷工作流。<b>經銷商談 AI 導入案的標準劇本。</b></td></tr>
+    <tr><td><b>resonance</b></td><td><code>/resonance</code></td><td>情緒先承接再分析。教「客戶情緒上來時怎麼先接住」。</td></tr>
+    <tr><td><b>dd-individual</b></td><td><code>/dd-individual</code></td><td>對個人做結構化盡職調查。教「合作前怎麼查一個人」。</td></tr>
+  </tbody>
+</table>
+
+<!-- ============ 附錄 B ============ -->
+<h2><span class="n">B</span>附錄：漏網之魚 → 差異化主菜</h2>
+<p class="lead">真實數據揭露：真冷宮只有 2 個，但「有料卻被點個位數次」的一大票。以下是黏著度/裂變力最強、卻被忽略的——<b>這是 Day1 模組 5 的內容，也是經銷商在客戶端兩個月輔導要刻意推的。</b></p>
+
+<h3>創意・敘事類（最被低估）</h3>
+<div class="grid2">
+  <div class="mod"><div class="h"><b>storytelling-engine</b><span class="src">全期 63 / 近 30 天 3</span></div><div class="lead">黃金圈＋英雄旅程＋Pixar 22 條。所有銷售/簡報/品牌/招生本質都是說故事。<br><span class="ev">推法：「你的故事為什麼沒人記得？我幫你診斷弧線。」</span></div></div>
+  <div class="mod"><div class="h"><b>video-strategy</b><span class="src">全期 2 · <code>/reels</code></span></div><div class="lead">短影音策略＋腳本：鎖賽道→批量 20 條→1min 腳本。中小企業最想做卻最不會做的渠道。<br><span class="ev">推法：當場跑 20 條腳本給店家看，轉化最快。</span></div></div>
+  <div class="mod"><div class="h"><b>creativity-engine</b><span class="src">全期 2 · <code>/creative</code></span></div><div class="lead">雙聯想＋TRIZ＋SCAMPER 的跨域碰撞。行銷/產品發想最缺的「結構化跳框」。<br><span class="ev">推法：「不是等靈感，是逼出 20 個跨域組合。」</span></div></div>
+  <div class="mod"><div class="h"><b>live-commentary</b><span class="src">全期 1 · <code>/戰報</code></span></div><div class="lead">把事件流轉成世足主播口吻的臨場播報。展示型功能，差異化極強。<br><span class="ev">推法：把客戶的銷售排行榜變主播播報，demo 暖場神器。</span></div></div>
+</div>
+
+<h3>命理・身心體驗類（差異化最強，最被冷落）</h3>
+<div class="card lead">
+  <b style="color:var(--gold)">human-design-blueprint（人類圖，全期 16）· dream-interpreter（解夢，6）· combined-reading（合盤，4）· wan-miu-16（萬謬 16 型，3）· kairos-core（時機，全期 0）</b><br>
+  <span style="display:block;margin-top:8px">情感黏著度與付費意願最高的體驗型功能，且 Museon 把多個命理系統交叉融合，市場罕見。客戶把 Museon 當「工作工具」，完全沒想到它能做身心靈體驗。<br>
+  <span class="ev">經銷商推法：對個人客戶/女性社群/教練——用「免費幫你解一個夢」「人類圖原廠設定」當引流鉤子，黏著最快、最易裂變。</span></span>
+</div>
+
+<h3>家庭・媽媽市場（完整一條產品線，幾乎全冷）</h3>
+<div class="card lead">
+  <b style="color:var(--gold)">mom-parenting-coach · meal-planner-mom · side-hustle-mom · child-dev-router · parent-child-sync-rescue · circle-amplifier</b><br>
+  <span style="display:block;margin-top:8px">這是為高黏著、高口碑社群（媽媽群）量身打造的完整產品線，自帶 circle-amplifier 裂變引擎。現有母體是開發者與 B2B 顧問場景，根本沒有媽媽用戶，整條線零曝光。<br>
+  <span class="ev">經銷商推法：這是<b>全新垂直市場，不是補強</b>。用「孩子大哭時說對一句話」「冰箱剩菜變菜單」當免費鉤子，再用 circle-amplifier 讓第一批媽媽帶第二批。</span></span>
+</div>
+
+<h3>主動洞察・交付工具</h3>
+<div class="grid2">
+  <div class="mod"><div class="h"><b>workflow-proactive-capability-suggestion</b></div><div class="lead">每次互動後主動提示「Museon 還能幫你做什麼」。<b>這直接解決「客戶不知道能用 Museon 做什麼」這個核心痛點——它本身就是賣點。</b></div></div>
+  <div class="mod"><div class="h"><b>shadow-muse</b><span class="src"><code>/coach</code></span></div><div class="lead">「不附和先挑戰」的教練人格。市面 AI 都在討好，敢逼客戶把立論過火——稀缺。推給需要被點醒的老闆。</div></div>
+  <div class="mod"><div class="h"><b>roundtable</b><span class="src"><code>/roundtable</code></span></div><div class="lead">3–5 個角色交叉詰問、使用者當仲裁。重大決策盲點照妖鏡。推法：「召一桌專家吵給你看，你來裁決。」</div></div>
+  <div class="mod"><div class="h"><b>變現一條龍</b><span class="src">report / quote / landing-page-forge</span></div><div class="lead">組「診斷→報告→報價→銷售頁」一條龍 demo，展示 Museon 不只聊天、能產出可交付物。</div></div>
+</div>
+
+<!-- ============ 附錄 C ============ -->
+<h2><span class="n">C</span>附錄：資料清洗 → 結晶 → Wiki → RAG 操作步驟</h2>
+<p class="lead">Day2 模組 6 的教材。以下五階段每一步都對應 Museon 真實模組（已逐一驗證），經銷商在客戶端能照做。完整版見 <code>docs/dealer_wiki_rag_pipeline_playbook.md</code>。</p>
+
+<div class="card">
+  <div class="stage"><div class="num">0</div><div class="body"><b>抓取（識別可優化工作流）</b><br><span class="lead">三判準找客戶的可 SOP 化環節：重複性高、規則明確、依賴人腦。資料來源寫進 digest（<code>pulse_engine._save_to_digest()</code>），人手知識直接編輯 Wiki。</span></div></div>
+  <div class="stage"><div class="num">1</div><div class="body"><b>資料清洗</b><br><span class="lead"><code>build_wiki_from_digest.py</code> 把雜亂資料轉成標準 markdown（frontmatter 帶 <code>crystal_status: pending</code>）。客戶給的紙本/Excel/LINE 對話先整理成可結晶格式。</span></div></div>
+  <div class="stage"><div class="num">2</div><div class="body"><b>結晶（品質硬閘）</b><br><span class="lead">兩條路徑共用品質閘 <code>atom_crystallizer.passes_crystal_template</code>（擋太短/太長/低多樣性/樣板）。結晶 ≠ 筆記，差在這道硬閘 + 結構化欄位。經 <code>crystallize_wiki_pending.py</code> 寫入 <code>crystal.db</code>。</span></div></div>
+  <div class="stage"><div class="num">3</div><div class="body"><b>向量化進 RAG</b><br><span class="lead">父子雙層：<code>WikiRagSync.sync()</code> 索引細節（documents）、<code>_vector_index()</code> 索引摘要（crystals），靠 <code>source_file</code> 對齊。這一步才是「變成 RAG」。</span></div></div>
+  <div class="stage"><div class="num">4</div><div class="body"><b>調用與驗證</b><br><span class="lead">對話時經 <code>vector_bridge.search()</code> 撈回注入。三關驗證真的進去了：crystal.db → frontmatter → vector_bridge 反查。每日閉環由 launchd（<code>5:30</code>）跑 <code>wiki_rag_sync_daily.py</code>。</span></div></div>
+</div>
+<p class="lead"><b>Claude Code / Cowork 的角色：</b>Claude Code 直接跑這些 script（<code>.venv/bin/python</code> 可執行已實證），是經銷商在客戶端的「執行手」；Cowork 用於團隊協作場景（註：repo 內無對應程式碼，此為依產品定位的建議，非原始碼實證）。</p>
+
+<!-- ============ 附錄 D ============ -->
+<h2><span class="n">D</span>附錄：白老師案 8 大踩坑（課程模組的來源）</h2>
+<p class="lead">以下是逐字稿中經銷端實際做得吃力、被客戶反覆追問、或當場給不出準答之處——每一個都對應到一個培訓模組。</p>
+<table>
+  <thead><tr><th style="width:32px">#</th><th>踩坑</th><th style="width:120px">對應模組</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><b>算力/Token 成本與併發壓測給不出準數</b><div class="tag">「不能跟你承諾，但你可以先訂」「15–20 人才不會爆」</div></td><td class="tag">D2 模組 7</td></tr>
+    <tr><td>2</td><td><b>外部串接「能不能做」反覆說不確定</b><div class="tag">LINE 群發/簡訊/預約都「不確定能不能接上」</div></td><td class="tag">D2 模組 7</td></tr>
+    <tr><td>3</td><td><b>硬體/機房/網路是現學現賣</b><div class="tag">冷氣、防火牆、固定 IP、網速由客戶反過來提醒</div></td><td class="tag">D2 模組 7</td></tr>
+    <tr><td>4</td><td><b>中台價值講到客戶聽不懂</b><div class="tag">「我聽不懂那個可以處理到什麼程度」</div></td><td class="tag">D1 模組 2</td></tr>
+    <tr><td>5</td><td><b>Scope creep 範圍失控</b><div class="tag">模組 28→46，達哥連喊「越講越大，要收斂」</div></td><td class="tag">D2 模組 8</td></tr>
+    <tr><td>6</td><td><b>跨校薪資/帳務複雜度，連經銷端都怕</b><div class="tag">「這節點上打架打最久」</div></td><td class="tag">D1 模組 1</td></tr>
+    <tr><td>7</td><td><b>關鍵決策者（徐主任）始終缺席</b><div class="tag">「只要他點頭就能做」卻不到場</div></td><td class="tag">D2 模組 9</td></tr>
+    <tr><td>8</td><td><b>舊系統遷移與轉移體驗門檻準備不足</b><div class="tag">「上次員工也快爆炸、家長也快爆炸」</div></td><td class="tag">D2 模組 9</td></tr>
+  </tbody>
+</table>
+
+<!-- ============ 誠實聲明 ============ -->
+<div class="disc">
+  <h3>資料限制誠實聲明（請先讀）</h3>
+  <ul>
+    <li><b>「前 30 名使用者 × 各用哪些功能」無法精確算。</b><code>skill_usage_log.jsonl</code> 不含 user_id，所有 skill 次數都是全域加總，不是 per-user。任何「某使用者最常用 X」皆禁止捏造。</li>
+    <li><b>「活躍約 5–8 人」是推斷，不是精確數。</b>依據是記憶體積（du）＋群組訊息量兩個 proxy。</li>
+    <li><b>高頻 ≠ 客戶愛用。</b>TOP 流量被兩個開發者帳號嚴重污染，「內部 vs 客戶價值」的二分本身帶推斷成分。</li>
+    <li><b>「白老師」是客戶（國際語言中心），不是講師。</b>能力模型是從「服務此客戶所需」反推，非 Museon 官方經銷制度（分潤/層級/考核逐字稿無實證）。</li>
+    <li><b>RAG pipeline 兩處未實證：</b>vita-explore cron 註冊點未在本次讀到的檔內出現；Claude Cowork repo 內無對應程式碼。</li>
+    <li><b>白老師案截至 6/24 仍在「規劃費」階段，未見簽約。</b>最終報價/上線時程未定。法規結論（吃藥提醒、薪資電子簽核留存）皆停在「要問人資顧問」，不可當定論。</li>
+  </ul>
+</div>
+
+<div class="foot">
+  MUSEON 經銷商兩天培訓設計 v1.0　·　2026-06-24<br>
+  資料源：白老師案 5/26–6/21 第一手會議逐字稿 · skill_usage_log（1411 筆）· memory_v3（42 目錄）· RAG pipeline 真實模組驗證<br>
+  延伸文件：<code>docs/dealer_wiki_rag_pipeline_playbook.md</code>
+</div>
+
+</div>
+</body>
+</html>
