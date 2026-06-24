@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracy 花藝事業整合方案 | MUSEON 聯合顧問框架</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --info: #3498db;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .header-tags {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Core Problem */
+        .problem-section {
+            background: #fef5e7;
+            padding: 40px;
+            border-left: 5px solid var(--warning);
+            margin: 40px;
+        }
+
+        .problem-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .problem-core {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--accent);
+            border-left: 4px solid var(--accent);
+            margin: 15px 0;
+        }
+
+        /* Solution Framework */
+        .solution-section {
+            padding: 40px;
+        }
+
+        .solution-section h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        /* Three Pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .pillar {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .pillar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .pillar-header {
+            padding: 25px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+
+        .pillar-museon .pillar-header { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+        .pillar-consultant .pillar-header { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+        .pillar-coach .pillar-header { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
+
+        .pillar-content {
+            padding: 25px;
+        }
+
+        .pillar-row {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .pillar-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .pillar-row-label {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .pillar-row-value {
+            font-size: 1em;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        /* Timeline */
+        .timeline-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .timeline-section h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .gantt {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .gantt-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .gantt-label {
+            flex: 0 0 180px;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--dark);
+        }
+
+        .gantt-bar-container {
+            flex: 1;
+            height: 40px;
+            background: #e8e8e8;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gantt-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+            border-radius: 4px;
+        }
+
+        .gantt-bar-museon { background: linear-gradient(90deg, #3498db, #2980b9); }
+        .gantt-bar-consultant { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+        .gantt-bar-coach { background: linear-gradient(90deg, #27ae60, #229954); }
+
+        .gantt-months {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            font-size: 0.85em;
+            color: #7f8c8d;
+        }
+
+        .month-label {
+            flex: 0 0 80px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #ecf0f1;
+        }
+
+        /* ROI Section */
+        .roi-section {
+            padding: 40px;
+        }
+
+        .roi-section h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .roi-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .roi-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .roi-card.investment {
+            border-top: 5px solid var(--accent);
+        }
+
+        .roi-card.return {
+            border-top: 5px solid var(--success);
+        }
+
+        .roi-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        .roi-items {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .roi-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .roi-icon {
+            font-weight: 700;
+            flex: 0 0 25px;
+        }
+
+        .roi-text {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* Implementation */
+        .implementation-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .implementation-section h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .implementation-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .implementation-phase {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background: var(--info);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+
+        .phase-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .implementation-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .implementation-item {
+            padding: 10px 0;
+            padding-left: 10px;
+            border-left: 3px solid var(--info);
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer-cta h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .footer-cta p {
+            font-size: 1em;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #c0392b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .roi-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .pillars {
+                grid-template-columns: 1fr;
+            }
+
+            .gantt-label {
+                flex: 0 0 120px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tracy 花藝事業整合方案</h1>
+            <p>從時間困局到永續經營的三層聯合框架</p>
+            <div class="header-tags">
+                <span class="tag">🤖 AI 員工</span>
+                <span class="tag">💼 顧問策略</span>
+                <span class="tag">🎯 教練監督</span>
+                <span class="tag">📈 持續成長</span>
+            </div>
+        </div>
+
+        <!-- Core Problem -->
+        <div class="problem-section">
+            <h2>⚠️ 核心病灶</h2>
+            <p style="margin-bottom: 15px;"><strong>表象：</strong>課程繁多、營收分散、無人協助</p>
+            <p style="margin-bottom: 25px;"><strong>深層：</strong>時間被賤賣到極限，聚焦完又長回來</p>
+            <div class="problem-core">
+                請不起員工，卻淹在只有員工能接的活裡。<br>
+                選擇障礙具現化成課程表，每門賺一點、時間全燒光。
+            </div>
+        </div>
+
+        <!-- Three Pillars Solution -->
+        <div class="solution-section">
+            <h2>💡 三層解決方案</h2>
+            <div class="pillars">
+                <!-- MUSEON -->
+                <div class="pillar pillar-museon">
+                    <div class="pillar-header">🤖 MUSEON AI 員工</div>
+                    <div class="pillar-content">
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">運作節奏</div>
+                            <div class="pillar-row-value">持續低強度（全週運作）</div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">核心工作</div>
+                            <div class="pillar-row-value">
+                                • 記帳自動化<br>
+                                • 報價系統管理<br>
+                                • 排程優化<br>
+                                • 防復發監測
+                            </div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">不可替代</div>
+                            <div class="pillar-row-value">記得 Tracy 是誰，盯著她不復發</div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">時間投入</div>
+                            <div class="pillar-row-value">Tracy 週 2-3 小時（交代工作）</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 顧問 -->
+                <div class="pillar pillar-consultant">
+                    <div class="pillar-header">💼 企業顧問</div>
+                    <div class="pillar-content">
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">運作節奏</div>
+                            <div class="pillar-row-value">間歇高強度（每月/季度）</div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">核心工作</div>
+                            <div class="pillar-row-value">
+                                • 課程砍減決策<br>
+                                • 身份定位内戰<br>
+                                • 定價策略<br>
+                                • 商業模式優化
+                            </div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">不可替代</div>
+                            <div class="pillar-row-value">扛起 Tracy 的心理壓力，做出困難決定</div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">時間投入</div>
+                            <div class="pillar-row-value">Tracy 月 8-12 小時</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 教練 -->
+                <div class="pillar pillar-coach">
+                    <div class="pillar-header">🎯 執行教練</div>
+                    <div class="pillar-content">
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">運作節奏</div>
+                            <div class="pillar-row-value">定期陪伴（每週/隔週）</div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">核心工作</div>
+                            <div class="pillar-row-value">
+                                • 行動監督<br>
+                                • 心理支援<br>
+                                • 復發預警<br>
+                                • 進度追蹤
+                            </div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">不可替代</div>
+                            <div class="pillar-row-value">對 Tracy 的人格理解，防止「聚焦完又長回來」</div>
+                        </div>
+                        <div class="pillar-row">
+                            <div class="pillar-row-label">時間投入</div>
+                            <div class="pillar-row-value">Tracy 週 1-2 小時</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section">
+            <h2>📊 12 個月實施進度</h2>
+            <div class="gantt">
+                <div class="gantt-item">
+                    <div class="gantt-label">MUSEON 導入</div>
+                    <div class="gantt-bar-container">
+                        <div class="gantt-bar gantt-bar-museon" style="width: 100%;">
+                            全年 52 週持續運作
+                        </div>
+                    </div>
+                </div>
+                <div class="gantt-item">
+                    <div class="gantt-label">顧問介入</div>
+                    <div class="gantt-bar-container">
+                        <div class="gantt-bar gantt-bar-consultant" style="width: 75%; margin-left: 0%;">
+                            月 1-9：集中診斷 & 優化 | 月 10-12：鞏固
+                        </div>
+                    </div>
+                </div>
+                <div class="gantt-item">
+                    <div class="gantt-label">教練陪伴</div>
+                    <div class="gantt-bar-container">
+                        <div class="gantt-bar gantt-bar-coach" style="width: 100%;">
+                            全年週期性複訓 + 復發預警
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gantt-months">
+                <div class="month-label">月 1</div>
+                <div class="month-label">月 3</div>
+                <div class="month-label">月 6</div>
+                <div class="month-label">月 9</div>
+                <div class="month-label">月 12</div>
+            </div>
+        </div>
+
+        <!-- ROI Analysis -->
+        <div class="roi-section">
+            <h2>💰 投入 vs 回報分析</h2>
+            <div class="roi-comparison">
+                <div class="roi-card investment">
+                    <div class="roi-title">年度投入</div>
+                    <div class="roi-items">
+                        <div class="roi-item">
+                            <div class="roi-icon">🤖</div>
+                            <div class="roi-text"><strong>MUSEON 月費</strong><br>包含記帳、報價、排程、監測</div>
+                        </div>
+                        <div class="roi-item">
+                            <div class="roi-icon">💼</div>
+                            <div class="roi-text"><strong>顧問服務</strong><br>月 8-12 小時 × 9 個月</div>
+                        </div>
+                        <div class="roi-item">
+                            <div class="roi-icon">🎯</div>
+                            <div class="roi-text"><strong>教練陪伴</strong><br>週 1 小時 × 52 週</div>
+                        </div>
+                        <div class="roi-item">
+                            <div class="roi-icon">✅</div>
+                            <div class="roi-text"><strong>Tracy 時間成本</strong><br>週 3-5 小時（遠低於現況 60h）</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roi-card return">
+                    <div class="roi-title">預期年度回報</div>
+                    <div class="roi-items">
+                        <div class="roi-item">
+                            <div class="roi-icon">⏱️</div>
+                            <div class="roi-text"><strong>時間解放</strong><br>從 60h → 3-5h 週投入<br>月解放 200+ 小時</div>
+                        </div>
+                        <div class="roi-item">
+                            <div class="roi-icon">💵</div>
+                            <div class="roi-text"><strong>營收提升</strong><br>聚焦課程 + 漲價策略<br>預估年增 30-50%</div>
+                        </div>
+                        <div class="roi-item">
+                            <div class="roi-icon">🛡️</div>
+                            <div class="roi-text"><strong>復發防禦</strong><br>教練監測 + MUSEON 防線<br>聚焦持續性 95%+</div>
+                        </div>
+                        <div class="roi-item">
+                            <div class="roi-icon">😊</div>
+                            <div class="roi-text"><strong>生活品質</strong><br>可用時間做藝術創作<br>身心健康重建</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Phases -->
+        <div class="implementation-section">
+            <h2>🚀 四階段實施路線</h2>
+            <div class="implementation-grid">
+                <div class="implementation-card">
+                    <div class="implementation-phase">
+                        <div class="phase-number">1</div>
+                        <div class="phase-title">診斷 & 協議<br>(Week 1-2)</div>
+                    </div>
+                    <div class="implementation-items">
+                        <div class="implementation-item">整理全部課程 & 報價檔</div>
+                        <div class="implementation-item">建立帳務基準線</div>
+                        <div class="implementation-item">三方簽署服務協議</div>
+                        <div class="implementation-item">建立溝通機制</div>
+                    </div>
+                </div>
+
+                <div class="implementation-card">
+                    <div class="implementation-phase">
+                        <div class="phase-number">2</div>
+                        <div class="phase-title">優化 & 決策<br>(Week 3-16)</div>
+                    </div>
+                    <div class="implementation-items">
+                        <div class="implementation-item">MUSEON 導入記帳系統</div>
+                        <div class="implementation-item">顧問梳理課程組合</div>
+                        <div class="implementation-item">確定砍課清單</div>
+                        <div class="implementation-item">定價策略制定</div>
+                    </div>
+                </div>
+
+                <div class="implementation-card">
+                    <div class="implementation-phase">
+                        <div class="phase-number">3</div>
+                        <div class="phase-title">執行 & 調整<br>(Week 17-36)</div>
+                    </div>
+                    <div class="implementation-items">
+                        <div class="implementation-item">課程變更落地</div>
+                        <div class="implementation-item">新定價上線</div>
+                        <div class="implementation-item">報價 & 排程自動化</div>
+                        <div class="implementation-item">教練每週監督</div>
+                    </div>
+                </div>
+
+                <div class="implementation-card">
+                    <div class="implementation-phase">
+                        <div class="phase-number">4</div>
+                        <div class="phase-title">鞏固 & 迭代<br>(Week 37-52)</div>
+                    </div>
+                    <div class="implementation-items">
+                        <div class="implementation-item">效果評估 & 微調</div>
+                        <div class="implementation-item">MUSEON 自動化擴展</div>
+                        <div class="implementation-item">教練進度複訓</div>
+                        <div class="implementation-item">Y2 規劃啟動</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer CTA -->
+        <div class="footer-cta">
+            <h3>準備好開啟永續經營之路嗎？</h3>
+            <p>
+                三層聯合框架設計給 Tracy 的不只是效率提升，<br>
+                而是「從重複燃燒到創意綻放」的人生轉向。
+            </p>
+            <p style="font-size: 0.9em; margin-top: 20px;">
+                📅 下一步：諮詢會議（60 分鐘）| 💬 聯繫 MUSEON 團隊
+            </p>
+        </div>
+    </div>
+</body>
+</html>
