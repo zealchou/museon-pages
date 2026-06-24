@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>服務報價單 | Tracy 業務轉型計劃 · MUSEON × 顧問 × 教練</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#0D2137; --navy-mid:#1A3A5C; --gold:#B8962E; --gold-light:#F0D98A; --gold-bg:#FDF8EC;
+  --emerald:#1A6B45; --emerald-bg:#E6F4ED; --slate:#334155; --muted:#64748B; --border:#CBD5E1;
+  --bg:#F1F5F9; --surface:#FFFFFF; --text:#0F172A; --red:#B91C1C; --amber-bg:#FEF3C7; --amber-line:#D97706;
+  --xs:8px; --sm:16px; --md:24px; --lg:40px; --xl:64px; --radius:4px; --radius-lg:8px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.65;}
+h1{font-size:clamp(24px,4vw,40px);font-weight:800;line-height:1.18;letter-spacing:-0.025em;}
+h2{font-size:clamp(19px,3vw,30px);font-weight:700;line-height:1.25;letter-spacing:-0.015em;}
+h3{font-size:clamp(16px,2vw,20px);font-weight:600;line-height:1.3;}
+.container{max-width:1000px;margin:0 auto;padding:0 var(--md);}
+.section{padding:var(--xl) 0;}
+.section-alt{background:var(--surface);}
+.section-header{margin-bottom:var(--lg);}
+.section-header .label{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:var(--xs);}
+.section-header h2{color:var(--navy);margin-bottom:var(--sm);}
+.section-header p{color:var(--muted);max-width:600px;font-size:15px;line-height:1.7;}
+
+/* COVER */
+.cover{background:linear-gradient(135deg,#071525 0%,var(--navy) 40%,#1A3A5C 100%);color:white;padding:64px 0 48px;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-30%;right:-8%;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(184,150,46,0.08) 0%,transparent 70%);}
+.cover-inner{position:relative;z-index:1;}
+.cover-tag{display:inline-flex;gap:8px;background:rgba(184,150,46,0.15);border:1px solid rgba(184,150,46,0.3);color:var(--gold-light);padding:5px 14px;border-radius:2px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:var(--md);}
+.cover h1{color:white;margin-bottom:var(--sm);max-width:720px;}
+.cover-sub{font-size:16px;color:rgba(255,255,255,0.65);max-width:560px;margin-bottom:var(--lg);line-height:1.6;}
+.cover-divider{height:1px;background:rgba(255,255,255,0.1);margin-bottom:var(--md);}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--md);}
+.meta-label{font-size:10px;color:rgba(255,255,255,0.45);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.08em;}
+.meta-value{font-size:15px;font-weight:700;color:white;line-height:1.4;}
+.meta-value.accent{color:var(--gold-light);}
+
+/* AMBER NOTE */
+.amber{background:var(--amber-bg);border-left:4px solid var(--amber-line);border-radius:var(--radius);padding:var(--md);font-size:14px;line-height:1.7;color:#78350F;}
+.amber strong{color:#92400E;}
+.hl{background:var(--amber-bg);border-bottom:2px solid var(--amber-line);padding:0 3px;font-weight:700;border-radius:2px;}
+
+/* TABLE */
+.quote-block{background:var(--surface);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:var(--md);}
+.quote-head{padding:var(--sm) var(--md);color:white;display:flex;align-items:center;gap:10px;}
+.qh-navy{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);}
+.qh-gold{background:linear-gradient(135deg,#6B3E00 0%,#9A5C00 100%);}
+.qh-emerald{background:linear-gradient(135deg,#0F4A30 0%,var(--emerald) 100%);}
+.quote-head .icon{font-size:22px;}
+.quote-head h3{color:white;font-size:17px;}
+.quote-head .tagline{font-size:12px;opacity:0.72;margin-left:auto;}
+.qtable{width:100%;border-collapse:collapse;font-size:13.5px;}
+.qtable th{background:var(--bg);color:var(--navy);padding:10px var(--md);text-align:left;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.qtable td{padding:12px var(--md);border-bottom:1px solid var(--border);color:var(--slate);vertical-align:top;}
+.qtable tr:last-child td{border-bottom:none;}
+.qtable .item{font-weight:700;color:var(--text);}
+.qtable .desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.qtable .price{font-weight:800;color:var(--navy);white-space:nowrap;text-align:right;font-size:15px;}
+.qtable .unit{font-size:11px;font-weight:400;color:var(--muted);}
+.qtable .phase-badge{display:inline-block;padding:1px 7px;border-radius:2px;font-size:10px;font-weight:700;background:#E3EAF5;color:var(--navy);}
+.subtotal-row td{background:var(--gold-bg);font-weight:800;color:var(--navy);font-size:14px;}
+
+/* CASHFLOW */
+.cf-wrap{background:var(--surface);border-radius:var(--radius-lg);overflow:auto;box-shadow:var(--shadow-md);}
+.cf-table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
+.cf-table th{background:var(--navy);color:white;padding:11px var(--sm);text-align:center;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.cf-table th:first-child{text-align:left;}
+.cf-table td{padding:11px var(--sm);border-bottom:1px solid var(--border);color:var(--slate);text-align:center;}
+.cf-table td:first-child{text-align:left;font-weight:600;color:var(--text);}
+.cf-table tr:nth-child(even) td{background:var(--bg);}
+.cf-table .cf-total td{background:var(--navy);color:white;font-weight:800;}
+.cf-table .cf-total td:first-child{color:white;}
+.cf-light{color:var(--muted);}
+
+/* ROI */
+.roi-top{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--md);}
+@media(max-width:780px){.roi-top{grid-template-columns:1fr;}}
+.roi-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--md);box-shadow:var(--shadow);text-align:center;}
+.roi-card.hero{background:var(--navy);color:white;}
+.roi-tag{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:var(--sm);display:block;color:var(--muted);}
+.roi-card.hero .roi-tag{color:var(--gold-light);}
+.roi-num{font-size:42px;font-weight:800;line-height:1;color:var(--navy);}
+.roi-card.hero .roi-num{color:white;}
+.roi-unit{font-size:17px;font-weight:400;}
+.roi-note{font-size:12.5px;margin-top:8px;color:var(--muted);}
+.roi-card.hero .roi-note{color:rgba(255,255,255,0.65);}
+
+/* TERMS + SIGN */
+.terms{list-style:none;}
+.terms li{font-size:14px;color:var(--slate);margin-bottom:10px;padding-left:24px;position:relative;line-height:1.6;}
+.terms li::before{content:'§';position:absolute;left:0;color:var(--gold);font-weight:700;}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--lg);margin-top:var(--lg);}
+@media(max-width:600px){.sign-grid{grid-template-columns:1fr;}}
+.sign-box{border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--md);background:var(--surface);}
+.sign-box h4{color:var(--navy);font-size:13px;margin-bottom:var(--md);text-transform:uppercase;letter-spacing:0.06em;}
+.sign-line{border-bottom:1px solid var(--slate);height:36px;margin-bottom:6px;}
+.sign-cap{font-size:11px;color:var(--muted);}
+.footer{background:#060F18;color:rgba(255,255,255,0.3);padding:var(--lg) 0;text-align:center;font-size:12px;}
+.footer span{color:var(--gold);}
+.mt-md{margin-top:var(--md);} .mt-sm{margin-top:var(--sm);}
+@media print{body{background:white;} .section{padding:var(--lg) 0;} .cover{padding:40px 0;}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover">
+  <div class="container cover-inner">
+    <div class="cover-tag">服務報價單 · QUOTATION</div>
+    <h1>業務轉型陪跑服務報價</h1>
+    <p class="cover-sub">MUSEON AI 員工 × 顧問策略服務 × 教練輔導 — 三大單元整合報價，分階段付款、與成效掛鉤</p>
+    <div class="cover-divider"></div>
+    <div class="meta-grid">
+      <div><div class="meta-label">報價對象</div><div class="meta-value">Tracy<br><span style="font-size:12px;opacity:0.6;font-weight:400;">永生花暨花藝教育事業</span></div></div>
+      <div><div class="meta-label">報價單編號</div><div class="meta-value">QT-TRACY-2026-07</div></div>
+      <div><div class="meta-label">報價日期</div><div class="meta-value">2026 / 06 / 24</div></div>
+      <div><div class="meta-label">有效期限</div><div class="meta-value accent">30 天<br><span style="font-size:12px;opacity:0.7;font-weight:400;">至 2026/07/24</span></div></div>
+      <div><div class="meta-label">服務期間</div><div class="meta-value">12 個月<br><span style="font-size:12px;opacity:0.6;font-weight:400;">2026/07 起</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 價格待確認警示 -->
+<section class="section section-alt" style="padding-top:var(--lg);padding-bottom:0;">
+  <div class="container">
+    <div class="amber">
+      <strong>⚠️ 關於本報價單的金額：</strong>以下所有 <span class="hl">黃色標記</span> 的數字，為依據《Tracy 12 個月業務轉型計劃》提案 + Tracy 負擔能力（月營收 2–5 萬）設計的<strong>建議報價</strong>，並非定案。顧問（您）確認後可逐項調整。定價核心原則承自提案：<strong>分階段、與成效掛鉤、不一次收齊</strong>——讓服務費對 Tracy 是「救命的員工」，不是壓垮她的固定成本。
+    </div>
+  </div>
+</section>
+
+<!-- 單元一 MUSEON -->
+<section class="section section-alt" style="padding-top:var(--lg);">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">服務單元一</span>
+      <h2>MUSEON AI 員工陪跑</h2>
+      <p>記帳（翻倍雷達）+ 報價整合 + 每日節奏秘書 + 防復發守門。她請不起人，但 AI 員工負擔得起——月費隨成效分三段遞增，前期極輕。</p>
+    </div>
+    <div class="quote-block">
+      <div class="quote-head qh-navy"><span class="icon">🤖</span><h3>MUSEON AI 員工（月費制）</h3><span class="tagline">finance-pilot · quote-forge · daily-pilot</span></div>
+      <table class="qtable">
+        <thead><tr><th>階段</th><th>服務內容</th><th style="text-align:right;">建議月費</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="phase-badge">Phase 0–1</span><div class="desc">導入期 · 7月</div></td>
+            <td><span class="item">基礎啟動：報價三合一整合、每日節奏秘書上線、被動記帳開始累積</span><div class="desc">首月導入優惠價，降低啟動阻力——她只要丟三份 docx</div></td>
+            <td class="price"><span class="hl">NT$ 2,000</span><div class="unit">/ 首月（優惠）</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 2</span><div class="desc">成長期 · 8–9月</div></td>
+            <td><span class="item">全配運作：毛利報表產出、報價秒出、排程追蹤、數據供顧問開刀</span><div class="desc">第一次翻倍（行政工時實際下降）達標後，才進此費率</div></td>
+            <td class="price"><span class="hl">NT$ 5,000</span><div class="unit">/ 月</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 3</span><div class="desc">穩定期 · 10月起</div></td>
+            <td><span class="item">防復發守門全開：聚焦衝突主動提醒、淡旺季節奏、報價單一窗口</span><div class="desc">旺季營收上升後的常態月費，含 ChatGPT 接不住的防復發機制</div></td>
+            <td class="price"><span class="hl">NT$ 6,000</span><div class="unit">/ 月</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td colspan="2">單元一 · 12 個月累計（2,000 + 5,000×2 + 6,000×9）</td>
+            <td class="price"><span class="hl">NT$ 66,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 單元二 顧問 -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">服務單元二</span>
+      <h2>顧問策略服務</h2>
+      <p>定方向、扛決定、設計翻倍藍圖。按 session / 專案計費——重的決策落在 8 月淡季、有數據撐腰時，不在她最累的時候加碼。</p>
+    </div>
+    <div class="quote-block">
+      <div class="quote-head qh-gold"><span class="icon">📊</span><h3>顧問策略服務（專案 / Session 制）</h3></div>
+      <table class="qtable">
+        <thead><tr><th>時機</th><th>項目</th><th style="text-align:right;">建議費用</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="phase-badge">Phase 0</span><div class="desc">7月第1週</div></td>
+            <td><span class="item">課程現況盤點 Session</span><div class="desc">盤四源、定調「先拿掉一樣，不加東西」、建立信任</div></td>
+            <td class="price"><span class="hl">NT$ 8,000</span><div class="unit">/ 次</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 2</span><div class="desc">8月上旬</div></td>
+            <td><span class="item">毛利分析 + 砍課決策 Session</span><div class="desc">拿 MUSEON 累積毛利表當面幫她砍 / 漲，承擔砍收入心理壓力</div></td>
+            <td class="price"><span class="hl">NT$ 12,000</span><div class="unit">/ 次</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 2–3</span><div class="desc">8月下旬起</div></td>
+            <td><span class="item">B2B 企業通路開發路線圖</span><div class="desc">既有公家機關關係切入企業福利 / ESG 永續花藝，證照漏斗重佈局</div></td>
+            <td class="price"><span class="hl">NT$ 15,000</span><div class="unit">/ 專案</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 3</span><div class="desc">每季 1 次</div></td>
+            <td><span class="item">季度複盤 Session</span><div class="desc">數據複盤、策略微調、防復發成效檢視（Q3 + Q4 共 2 次）</div></td>
+            <td class="price"><span class="hl">NT$ 8,000</span><div class="unit">/ 季 × 2</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td colspan="2">單元二 · 12 個月累計（8,000 + 12,000 + 15,000 + 8,000×2）</td>
+            <td class="price"><span class="hl">NT$ 51,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 單元三 教練 -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">服務單元三</span>
+      <h2>教練輔導服務</h2>
+      <p>數據解決不了的那一塊——企業主 vs 藝術家的身份內戰、砍課的不捨、漲價的恐懼。每次 session 90 分鐘，可單次亦可包套。</p>
+    </div>
+    <div class="quote-block">
+      <div class="quote-head qh-emerald"><span class="icon">🧭</span><h3>教練輔導服務（90 分鐘 / 次）</h3></div>
+      <table class="qtable">
+        <thead><tr><th>時機</th><th>項目</th><th style="text-align:right;">建議費用</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="phase-badge">Phase 0</span></td>
+            <td><span class="item">開場 · 身份整合 Session</span><div class="desc">「商業化等於背叛藝術」的身份衝突鬆動，建立信任</div></td>
+            <td class="price"><span class="hl">NT$ 4,000</span><div class="unit">/ 次</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 2</span></td>
+            <td><span class="item">砍課情緒支撐 Session（前 + 後 各 1 次）</span><div class="desc">陪扛「萬一客人跑了怎麼辦」，砍完處理失落與反悔衝動</div></td>
+            <td class="price"><span class="hl">NT$ 4,000</span><div class="unit">/ 次 × 2</div></td>
+          </tr>
+          <tr>
+            <td><span class="phase-badge">Phase 1–3</span></td>
+            <td><span class="item">漲價勇氣 · 定位深化 Session</span><div class="desc">從「我怕客人跑掉」到「我的工時值得被正確定價」的行為改變</div></td>
+            <td class="price"><span class="hl">NT$ 4,000</span><div class="unit">/ 次</div></td>
+          </tr>
+          <tr class="subtotal-row">
+            <td colspan="2">單元三 · 4 次包套（單買 16,000，包套優惠）</td>
+            <td class="price"><span class="hl">NT$ 14,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="amber mt-sm">💡 <strong>包套建議：</strong>教練 4 次包套 NT$14,000（省 2,000）。若 Tracy 現金流吃緊，可只先買 Phase 0 開場 1 次（NT$4,000）測試契合度，後續再決定是否續購。</div>
+  </div>
+</section>
+
+<!-- 現金流節奏 -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">付款節奏</span>
+      <h2>她每個月實際付多少</h2>
+      <p>這張表是整份報價最重要的一頁——證明「1 萬/月不會壓垮她」。重的費用全落在 8 月（淡季、有數據撐腰），前後月份都很輕。</p>
+    </div>
+    <div class="cf-wrap">
+      <table class="cf-table">
+        <thead>
+          <tr><th>月份</th><th>MUSEON</th><th>顧問</th><th>教練</th><th>當月合計</th><th>說明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>7 月（Phase 0–1）</td><td>2,000</td><td>8,000</td><td>4,000</td><td><strong>14,000</strong></td><td class="cf-light">啟動月：盤點+身份整合+導入</td></tr>
+          <tr><td>8 月（Phase 2）</td><td>5,000</td><td>27,000</td><td>8,000</td><td><strong>40,000</strong></td><td class="cf-light">開刀月：砍課+B2B+情緒支撐（淡季）</td></tr>
+          <tr><td>9 月（Phase 2）</td><td>5,000</td><td>—</td><td>—</td><td><strong>5,000</strong></td><td class="cf-light">執行月：MUSEON 持續運作</td></tr>
+          <tr><td>10 月（Phase 3）</td><td>6,000</td><td>8,000</td><td>—</td><td><strong>14,000</strong></td><td class="cf-light">Q3 季度複盤</td></tr>
+          <tr><td>11 月</td><td>6,000</td><td>—</td><td>—</td><td><strong>6,000</strong></td><td class="cf-light">旺季陪跑</td></tr>
+          <tr><td>12 月</td><td>6,000</td><td>—</td><td>—</td><td><strong>6,000</strong></td><td class="cf-light">旺季陪跑</td></tr>
+          <tr><td>隔年 1 月</td><td>6,000</td><td>8,000</td><td>—</td><td><strong>14,000</strong></td><td class="cf-light">Q4 季度複盤</td></tr>
+          <tr><td>隔年 2–6 月（5 個月）</td><td>6,000/月</td><td>—</td><td>—</td><td><strong>30,000</strong></td><td class="cf-light">穩定陪跑（6,000 × 5）</td></tr>
+          <tr class="cf-total"><td>12 個月總投入</td><td>66,000</td><td>51,000</td><td>14,000</td><td>131,000</td><td>年均約 1.1 萬/月</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="amber mt-md">⚠️ <strong>現金流紅線檢查：</strong>除 8 月（40,000，淡季 + 砍課數據撐腰，且此月起每小時實收應已 +80%）外，其餘各月落在 5,000–14,000，<strong>都在 Tracy 月營收可承受範圍內</strong>。8 月那筆若仍偏重，Plan B：顧問費可拆兩期（8 月、9 月各半）。</div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">投入 vs 回報</span>
+      <h2>投入 13 萬，目標增益 50 萬</h2>
+      <p>替代方案是繼續一個人撐——那才是真正的賠錢。本報價的回報，遠大於投入。</p>
+    </div>
+    <div class="roi-top">
+      <div class="roi-card"><span class="roi-tag">12 個月總投入</span><div class="roi-num"><span class="roi-unit">約 NT$</span>13<span class="roi-unit">萬</span></div><div class="roi-note">三大單元整合 · 分階段付款</div></div>
+      <div class="roi-card hero"><span class="roi-tag">預期 12 個月增益</span><div class="roi-num">+50<span class="roi-unit">萬</span></div><div class="roi-note">年收 ＜50 萬 → 100 萬目標</div></div>
+      <div class="roi-card"><span class="roi-tag">投報比（ROI）</span><div class="roi-num">≈ 3.8<span class="roi-unit">倍</span></div><div class="roi-note">尚未計入工時 –40% 的生活品質回報</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 成效掛鉤 + 報價條件 -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">報價條件</span>
+      <h2>成效掛鉤機制與條款</h2>
+    </div>
+    <ul class="terms">
+      <li><strong>成效門檻（MUSEON 費）：</strong>Phase 2 費率（NT$5,000/月）於「第一次翻倍」客觀達標後啟動——客觀指標為：報價系統上線 + 每週行政工時實測下降 ≥ 30%。未達標前維持導入優惠價。</li>
+      <li><strong>分期彈性：</strong>8 月顧問費（NT$27,000）如對現金流壓力過大，可拆為 8 月、9 月兩期支付。</li>
+      <li><strong>教練彈性：</strong>可先購 Phase 0 開場單次（NT$4,000）測試契合度，再決定是否續購包套。</li>
+      <li><strong>本報價有效期 30 天</strong>（至 2026/07/24）。逾期金額與服務範圍得重新議定。</li>
+      <li><strong>報價未含：</strong>第三方軟體訂閱、廣告投放預算、差旅費（如需實體 session）。發生時另行報價。</li>
+      <li><strong>幣別與稅務：</strong>以上均為新台幣（NT$），未稅。如需開立發票，依法另計稅額。</li>
+      <li><strong>本報價為建議版：</strong>所有金額待顧問與 Tracy 雙方確認後，以正式《服務合約書》載明者為準。</li>
+    </ul>
+
+    <div class="sign-grid">
+      <div class="sign-box">
+        <h4>服務提供方（顧問）</h4>
+        <div class="sign-line"></div><div class="sign-cap">簽名 / 用印</div>
+        <div class="sign-line mt-md"></div><div class="sign-cap">日期</div>
+      </div>
+      <div class="sign-box">
+        <h4>委託方（Tracy）</h4>
+        <div class="sign-line"></div><div class="sign-cap">簽名 / 用印</div>
+        <div class="sign-line mt-md"></div><div class="sign-cap">日期</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>由 <span>MUSEON</span> 生成 · 報價單 QT-TRACY-2026-07 · 2026年6月24日 · 黃標金額為建議估算，正式條款以《服務合約書》為準 · 本文件含商業敏感資訊，請妥善保管</p>
+  </div>
+</footer>
+
+</body>
+</html>
