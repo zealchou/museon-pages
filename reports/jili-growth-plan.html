@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>吉力 · 90天社群陪跑：狀況解讀 × 迭代執行手冊</title>
+<title>吉力 · 90天社群陪跑：狀況解讀 × 迭代執行手冊 × 回流設計</title>
 <style>
   :root{
     --ink:#1a1b1e; --sub:#5b6068; --line:#e6e3dc; --bg:#faf8f4;
     --card:#ffffff; --accent:#b4884a; --accent-soft:#f3ead9;
     --wolf:#6b7280; --dolphin:#3b9ec4; --hedge:#9a6fb0; --fox:#c4843b; --bear:#7a5c43;
+    --green:#3a7d5a; --green-soft:#e8f5ee;
+    --blue:#2d6fa8; --blue-soft:#e8f1fb;
+    --iter:#7c4dbc; --iter-soft:#f3eeff;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
@@ -21,13 +24,20 @@
   .meta{margin-top:16px; font-size:13px; color:var(--sub);}
   .tag{display:inline-block; background:var(--accent-soft); color:var(--accent);
     padding:3px 11px; border-radius:20px; font-size:12px; font-weight:700; margin-right:6px;}
+  .tag-green{background:var(--green-soft); color:var(--green);}
+  .tag-blue{background:var(--blue-soft); color:var(--blue);}
+  .tag-iter{background:var(--iter-soft); color:var(--iter);}
   section{margin-top:48px;}
   .doc-label{font-size:13px; letter-spacing:2px; color:var(--accent); font-weight:700; margin-bottom:6px;}
+  .doc-label-green{color:var(--green);}
+  .doc-label-iter{color:var(--iter);}
   h2{font-size:22px; font-weight:800; padding-bottom:12px; border-bottom:1px solid var(--line); margin-bottom:22px;}
   h3{font-size:18px; font-weight:700; margin:30px 0 12px;}
   p{margin:14px 0; color:#2c2e33;}
   .lead{font-size:17px; color:var(--sub); background:var(--card); border-left:4px solid var(--accent);
     padding:18px 20px; border-radius:0 10px 10px 0; margin:20px 0;}
+  .lead-green{border-color:var(--green);}
+  .lead-iter{border-color:var(--iter);}
   ul,ol{margin:14px 0 14px 4px; padding-left:22px;}
   li{margin:9px 0;}
   strong{color:var(--ink); font-weight:700;}
@@ -50,14 +60,34 @@
   .step h3{margin-top:0;}
   .why{background:var(--accent-soft); border-radius:8px; padding:9px 14px; font-size:14px;
     color:#6a4d22; margin-top:10px;}
+  .why-green{background:var(--green-soft); color:#215c3e;}
   .callout{background:#fff7ea; border:1px solid #f0dcb4; border-radius:12px; padding:18px 22px; margin:20px 0;}
   .callout .t{font-weight:800; color:var(--accent); margin-bottom:6px;}
+  .callout-green{background:#edf8f2; border-color:#a3d9bc;}
+  .callout-green .t{color:var(--green);}
   table{width:100%; border-collapse:collapse; margin:18px 0; font-size:14.5px;}
   th,td{text-align:left; padding:11px 13px; border-bottom:1px solid var(--line);}
   th{background:var(--accent-soft); color:#6a4d22; font-weight:700;}
+  th.green{background:var(--green-soft); color:#1a5c3a;}
+  th.iter{background:var(--iter-soft); color:#5a2daa;}
   .diag{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0;}
   .diag .b{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px;}
   .diag .b b{display:block; margin-bottom:4px;}
+  .signal-card{border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin:14px 0;
+    background:var(--card); border-left:5px solid var(--green);}
+  .signal-card .sig-head{font-size:16px; font-weight:800; color:var(--green); margin-bottom:6px;}
+  .signal-card .sig-cond{font-size:13.5px; color:var(--sub); margin-bottom:10px;}
+  .signal-card .sig-service{background:var(--green-soft); border-radius:8px; padding:10px 14px; font-size:14.5px;}
+  .iter-card{border:1px solid var(--iter-soft); border-radius:12px; padding:18px 22px; margin:14px 0;
+    background:var(--card); border-left:5px solid var(--iter);}
+  .iter-n{font-size:13px; color:var(--iter); font-weight:700; letter-spacing:1px; margin-bottom:4px;}
+  .iter-title{font-size:16px; font-weight:800; color:var(--ink); margin-bottom:8px;}
+  .iter-flip{font-size:14px; color:var(--sub); margin-bottom:10px;}
+  .iter-body{font-size:15px;}
+  .iter-key{background:var(--iter-soft); border-radius:8px; padding:9px 14px; font-size:14px;
+    color:#5a2daa; margin-top:10px; font-style:italic;}
+  .layer-table tr:nth-child(odd) td{background:#faf8ff;}
+  .layer-table tr:last-child td{background:var(--iter-soft); font-weight:700;}
   footer{margin-top:60px; padding-top:24px; border-top:1px solid var(--line);
     font-size:13px; color:var(--sub); text-align:center;}
   .sig{font-weight:700; color:var(--accent);}
@@ -68,12 +98,14 @@
 <div class="wrap">
 
 <header>
-  <div class="kicker">MUSEON · 顧問報告書</div>
-  <h1>吉力 90 天社群陪跑<br>狀況解讀 × 迭代執行手冊</h1>
+  <div class="kicker">MUSEON · 顧問報告書 v2</div>
+  <h1>吉力 90 天社群陪跑<br>狀況解讀 × 迭代執行手冊 × 回流設計</h1>
   <div class="meta">
     <span class="tag">學習說明</span>
-    <span class="tag">執行步驟</span><br>
-    給吉力的兩份文件 · 整合版 · 2026.06
+    <span class="tag">執行步驟</span>
+    <span class="tag tag-green">回流設計</span>
+    <span class="tag tag-iter">方法論迭代</span><br>
+    給吉力的三份文件 · v2 更新版 · 2026.06
   </div>
 </header>
 
@@ -216,14 +248,161 @@
     <tr><td>第 2 月 · 行動期</td><td>步驟 3–4</td><td>每人跑自己的最小路徑 + 兩週回顧</td></tr>
     <tr><td>第 3 月 · 鞏固期</td><td>步驟 5</td><td>撐過高原期，把行為變習慣</td></tr>
   </table>
+</section>
 
-  <h3>給五型再補一個傳播鉤子</h3>
-  <p>目前五型回答的是「為什麼你卡住」，建議每型再補一句<strong>第一人稱自我辨識語</strong>（上方每張卡片引號內已示範）。這樣讀者會自動對號入座，截圖轉發說「我是刺蝟型！」——這就是天然的傳播素材，不花一毛廣告費。</p>
+<!-- ════════ 文件三 ════════ -->
+<section>
+  <div class="doc-label doc-label-green">文件三 · 新增</div>
+  <h2>回流設計：吉力下一步做什麼 × 何時回來 × 需要什麼服務</h2>
+
+  <p class="lead lead-green">顧問收口最容易漏的一塊。按時間約回訪是「硬約」，客戶不一定有需求；正確做法是<strong>按信號回流</strong>——在文件裡預埋三個卡點信號，讓吉力一遇到就知道「該回來找服務了」。</p>
+
+  <h3>一、下一步做什麼（單一里程碑，不是清單）</h3>
+  <div class="callout callout-green">
+    <div class="t">兩週里程碑</div>
+    <p style="margin:6px 0 0">五步跑完後，吉力的下一個里程碑只有<strong>一個數字</strong>：<br><br>
+    <strong>兩週內，沉默讀者開口數從 1 → 10</strong><br><br>
+    不是「持續經營」這種模糊話，是有數字才知道有沒有到下一步。數字到了，才有資格談放大。</p>
+  </div>
+
+  <h3>二、何時回來找服務（信號觸發，不是時間觸發）</h3>
+  <p>預埋三個信號，命中任一就是回流點：</p>
+
+  <div class="signal-card">
+    <div class="sig-head">信號 A · 成功放大</div>
+    <div class="sig-cond">開口數破 10 → 吉力會卡在「怎麼把互動變成付費轉換」</div>
+    <div class="sig-service">回來談：<strong>變現設計</strong>——如何讓沉默讀者 → 開口讀者 → 付費學員，設計漏斗結構</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="sig-head">信號 B · 執行卡住</div>
+    <div class="sig-cond">發了兩週還是只有 1–2 人動 → 吉力會卡在「內容沒問題，為什麼還是沒人動」</div>
+    <div class="sig-service">回來談：<strong>社群激活機制</strong>——診斷是「分類困難」還是「執行困難」，設計具體的激活介入</div>
+  </div>
+
+  <div class="signal-card">
+    <div class="sig-head">信號 C · 規模觸頂</div>
+    <div class="sig-cond">66 人滿了想擴 → 吉力會卡在「怎麼從免費社群導到付費課程」</div>
+    <div class="sig-service">回來談：<strong>漏斗設計</strong>——免費社群定位、付費門票設計、轉換節點的整體架構</div>
+  </div>
+
+  <h3>三、各信號對應的服務階梯</h3>
+  <table>
+    <tr><th class="green">信號</th><th class="green">觸發條件</th><th class="green">下一服務</th><th class="green">核心交付</th></tr>
+    <tr><td>A · 成功放大</td><td>開口數 ≥ 10</td><td>變現設計</td><td>付費轉換漏斗 + 定價策略</td></tr>
+    <tr><td>B · 執行卡住</td><td>兩週後仍 ≤ 2 人動</td><td>社群激活機制</td><td>重新診斷 + 破冰腳本升級</td></tr>
+    <tr><td>C · 規模觸頂</td><td>想擴充或開付費</td><td>漏斗設計</td><td>免費→付費架構 + 入場門票設計</td></tr>
+  </table>
+
+  <div class="callout callout-green">
+    <div class="t">為什麼這樣設計回流</div>
+    <p style="margin:6px 0 0">吉力不會覺得被推銷——她是<strong>遇到真實卡點時自己回來</strong>。回流動機來自她的問題，不是我們的時間表。這才是顧問式而非業務式的後端。</p>
+  </div>
+</section>
+
+<!-- ════════ 附錄：方法論迭代軌跡 ════════ -->
+<section>
+  <div class="doc-label doc-label-iter">附錄 · 方法論迭代軌跡</div>
+  <h2>九層迭代：從「給方案」到「生態自運轉」</h2>
+
+  <p class="lead lead-iter">每一層都不是「補東西」，而是<strong>推翻上一版的隱藏假設</strong>。這份軌跡記錄這套方法論如何從單次交付演化成可自我增長的系統。</p>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 01</div>
+    <div class="iter-title">線性交付 → 驗證迴圈</div>
+    <div class="iter-flip">推翻的假設：「方案是對的，只要執行。」</div>
+    <div class="iter-body">90 天線性結構前插一個<strong>一週證偽環</strong>：把五型辨識語丟進社群，問「哪一句最像你，回一個數字」。5 人以上對號 → 往下走；沒人理 → 重寫整套。</div>
+    <div class="iter-key">先花一週證偽，比花 90 天執行一個沒驗證的假設便宜太多。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 02</div>
+    <div class="iter-title">吉力照做 → 吉力能自己讀信號</div>
+    <div class="iter-flip">推翻的假設：「吉力照做就好。」</div>
+    <div class="iter-body">交付物從「腳本」升級成<strong>三數字儀表板</strong>：對號率 / 開口率 / 兩週留存率。哪個掉了，吉力自己知道調哪裡，不需要我們每次給下一步。</div>
+    <div class="iter-key">顧問的價值不是一直在場，是讓客戶不需要你也能運轉。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 03</div>
+    <div class="iter-title">客製方案 → 可複製的產品</div>
+    <div class="iter-flip">推翻的假設：「這是吉力的客製方案。」</div>
+    <div class="iter-body">「五型 + 驗證環 + 自運轉儀表板」若在吉力身上跑通，就不再只屬於吉力——它是可以原樣搬給下一個健身教練、美業社群主的<strong>產品模型</strong>。吉力從「一個客戶」變成「第一個成功案例」。</div>
+    <div class="iter-key">一次顧問服務，變成一個可規模化的資產。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 04</div>
+    <div class="iter-title">可複製的工具 → 可移植的情境判準</div>
+    <div class="iter-flip">推翻的假設：「複製五型腳本就是可複製。」</div>
+    <div class="iter-body">腳本能搬，情境不能搬。這一刀把「什麼情況用哪種打法」提煉成<strong>決策樹</strong>：社群冷啟動 → 先跑辨識語；已有互動但沒轉換 → 直接跑信號回流；客戶根本不互動 → 先確認這群人是不是對的人。</div>
+    <div class="iter-key">下一個客戶進來，對照情境選路徑——工具變成框架。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 05</div>
+    <div class="iter-title">人工維護判準 → 案例自動長判準</div>
+    <div class="iter-flip">推翻的假設：「判準由我們更新。」</div>
+    <div class="iter-body">讓每個跑完的案例本身成為下一條判準：吉力跑完 → 數據自動進 case bank → 下一個客戶對照「吉力型情境」直接選路徑。判準不是被設計的，是被案例<strong>長出來</strong>的。</div>
+    <div class="iter-key">越跑越準，不需要人工維護。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 06</div>
+    <div class="iter-title">吉力是受益人 → 吉力是下一個傳遞者</div>
+    <div class="iter-flip">推翻的假設：「吉力是這個系統的終端用戶。」</div>
+    <div class="iter-body">吉力的學員想跟她學——她沒有一套能教的東西，只有「我用這方法成功了」。這一刀讓吉力能把這套框架教給學員——她成為這個方法的下一個節點，不是終點。</div>
+    <div class="iter-key">吉力從受益人翻轉成傳遞者，系統從「服務吉力」升到「透過吉力服務更多人」。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 07</div>
+    <div class="iter-title">傳方法 → 傳判斷力</div>
+    <div class="iter-flip">推翻的假設：「傳遞者傳的是腳本和工具。」</div>
+    <div class="iter-body">腳本只能應對當初設計的情境。吉力傳給學員的不是「用這個腳本」，是「怎麼讀情境、自己選路徑」——三個診斷問題：這個人卡在分類還是執行？以前崩完後做了什麼？距離下一個里程碑還有幾步？</div>
+    <div class="iter-key">從傳「答案」→ 傳「提問能力」。能問對問題，學員自己能診斷，不需要吉力在場。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 08</div>
+    <div class="iter-title">靠吉力傳判斷力 → 判斷力工具化</div>
+    <div class="iter-flip">推翻的假設：「判斷力只能靠人傳。」</div>
+    <div class="iter-body">「三個診斷問題 + 對應路徑」提煉成標準問診流程——任何人拿到這份問診流程，對著新客戶走一遍，就能輸出「你的情境屬於哪條路徑 + 下一步做什麼」。</div>
+    <div class="iter-key">傳遞從「人帶人」升級成「工具帶人」。吉力在不在場，判斷力都能流通。</div>
+  </div>
+
+  <div class="iter-card">
+    <div class="iter-n">ITER 09</div>
+    <div class="iter-title">工具固化 → 工具靠使用自我迭代</div>
+    <div class="iter-flip">推翻的假設：「工具需要被維護才能更新。」</div>
+    <div class="iter-body">最終形態：工具不再依賴任何人維護——每一次新客戶使用問診流程後，他們的真實情境自動成為新案例；case bank 越來越豐富，決策樹的判準越來越精確，覆蓋的情境越來越廣。</div>
+    <div class="iter-key">從「人維護工具」→「工具靠使用長大」。不再需要任何人注入新知識——系統靠使用者的真實反饋持續進化。</div>
+  </div>
+
+  <h3>九層完整軌跡</h3>
+  <table class="layer-table">
+    <tr><th class="iter">層次</th><th class="iter">核心翻轉</th></tr>
+    <tr><td>ITER 01</td><td>我們出方案，吉力照做</td></tr>
+    <tr><td>ITER 02</td><td>插驗證環，一週證偽</td></tr>
+    <tr><td>ITER 03</td><td>腳本 → 自運轉儀表板</td></tr>
+    <tr><td>ITER 04</td><td>客製 → 可複製產品</td></tr>
+    <tr><td>ITER 05</td><td>工具 → 情境判準框架</td></tr>
+    <tr><td>ITER 06</td><td>人工維護 → 案例自動生長</td></tr>
+    <tr><td>ITER 07</td><td>受益人 → 傳遞者</td></tr>
+    <tr><td>ITER 08</td><td>傳答案 → 傳判斷力</td></tr>
+    <tr><td>ITER 09 ★</td><td>工具固化 → 工具靠使用自我迭代（生態）</td></tr>
+  </table>
+
+  <div class="callout" style="background:var(--iter-soft); border-color:#c8a8f0;">
+    <div class="t" style="color:var(--iter);">第九層的本質</div>
+    <p style="margin:6px 0 0">不再需要任何人注入新知識——系統靠使用者的真實反饋持續進化，判準越用越準，覆蓋的情境越來越廣。吉力不只是一個成功案例，她是這個生態能不能活下去的關鍵槓桿點——她成功、她傳出去，case bank 才有下一批案例進來自動長判準。這是一個<strong>自我強化的生態</strong>，不是一次顧問服務。</p>
+  </div>
 </section>
 
 <footer>
-  <p class="sig">MUSEON 顧問報告</p>
-  <p>本報告為吉力 90 天社群陪跑專案的狀況解讀與執行手冊<br>方法論：型診斷 → 最小路徑 → 兩週回顧 → 高原期管理</p>
+  <p class="sig">MUSEON 顧問報告 v2</p>
+  <p>本報告為吉力 90 天社群陪跑專案的狀況解讀 × 迭代執行手冊 × 回流設計<br>
+  更新：加入文件三（回流觸發點）+ 附錄（九層方法論迭代軌跡）</p>
 </footer>
 
 </div>
