@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1｜內核凝聚 × 人才磁吸 — MUSEON 導遊轉型方案</title>
+<style>
+  :root {
+    --primary: #1a6b4a; --primary-light: #2d8a62; --accent: #e8a030; --accent-light: #f5c060;
+    --dark: #1c2b22; --text: #2c3e30; --text-light: #5a7060; --bg: #f8faf9;
+    --card-bg: #ffffff; --border: #d4e8db; --shadow: 0 4px 20px rgba(26,107,74,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'PingFang TC','Microsoft JhengHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .nav-bar { background:white; border-bottom:1px solid var(--border); padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .nav-logo { font-size:16px; font-weight:800; color:var(--primary); text-decoration:none; }
+  .nav-back { font-size:13px; color:var(--text-light); text-decoration:none; display:flex; align-items:center; gap:6px; }
+  .nav-back:hover { color:var(--primary); }
+  .hero { background:linear-gradient(135deg,#0d3d2a 0%,#1a6b4a 100%); color:white; padding:56px 24px; }
+  .hero-inner { max-width:800px; margin:0 auto; }
+  .phase-badge { display:inline-block; background:rgba(232,160,48,0.2); border:1px solid var(--accent-light); color:var(--accent-light); padding:5px 16px; border-radius:16px; font-size:12px; font-weight:700; letter-spacing:2px; margin-bottom:16px; }
+  .hero h1 { font-size:clamp(24px,4vw,38px); font-weight:800; line-height:1.3; margin-bottom:12px; }
+  .hero p { font-size:16px; opacity:.85; max-width:560px; }
+  .container { max-width:800px; margin:0 auto; padding:0 20px; }
+  section { padding:48px 0; }
+  .section-label { display:inline-block; background:#e8f5ee; color:var(--primary); font-size:12px; font-weight:700; letter-spacing:2px; padding:4px 14px; border-radius:4px; margin-bottom:10px; }
+  .section-title { font-size:clamp(20px,3.5vw,28px); font-weight:800; color:var(--dark); margin-bottom:8px; }
+  .section-sub { font-size:15px; color:var(--text-light); margin-bottom:28px; }
+  .why-box { background:var(--card-bg); border:1.5px solid var(--border); border-left:4px solid var(--primary); border-radius:0 12px 12px 0; padding:24px; margin-bottom:32px; }
+  .why-box p { font-size:15px; line-height:1.8; }
+  .deliverable-list { display:grid; gap:16px; }
+  .deliverable { background:var(--card-bg); border:1.5px solid var(--border); border-radius:14px; padding:24px; display:flex; gap:20px; align-items:flex-start; }
+  .deliverable-icon { width:44px; height:44px; background:#e8f5ee; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .deliverable-title { font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px; }
+  .deliverable-desc { font-size:14px; color:var(--text-light); line-height:1.6; margin-bottom:10px; }
+  .deliverable-output { font-size:13px; background:#e8f5ee; color:var(--primary); display:inline-block; padding:3px 12px; border-radius:8px; font-weight:600; }
+  .process-steps { display:grid; gap:0; counter-reset:step; }
+  .step { display:flex; gap:20px; padding:20px 0; border-bottom:1px solid var(--border); }
+  .step:last-child { border-bottom:none; }
+  .step-num { width:36px; height:36px; background:var(--primary); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; flex-shrink:0; margin-top:2px; }
+  .step-content {}
+  .step-title { font-size:16px; font-weight:800; color:var(--dark); margin-bottom:4px; }
+  .step-desc { font-size:14px; color:var(--text-light); }
+  .timeline { background:linear-gradient(135deg,#f0faf5,#e8f5ee); border-radius:16px; padding:32px; }
+  .timeline-row { display:flex; align-items:flex-start; gap:20px; margin-bottom:20px; }
+  .timeline-row:last-child { margin-bottom:0; }
+  .tl-dot { width:12px; height:12px; background:var(--primary); border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .tl-week { font-size:12px; font-weight:700; color:var(--primary); width:60px; flex-shrink:0; padding-top:1px; }
+  .tl-content .tl-title { font-size:15px; font-weight:700; color:var(--dark); }
+  .tl-content .tl-sub { font-size:13px; color:var(--text-light); }
+  .outcome-box { background:var(--dark); color:white; border-radius:16px; padding:32px; margin-top:32px; }
+  .outcome-box h3 { font-size:20px; font-weight:800; margin-bottom:16px; }
+  .outcome-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; }
+  .outcome-item { text-align:center; padding:16px; background:rgba(255,255,255,.08); border-radius:10px; }
+  .outcome-num { font-size:26px; font-weight:900; color:var(--accent-light); }
+  .outcome-label { font-size:12px; color:rgba(255,255,255,.7); margin-top:4px; }
+  .nav-phase { display:flex; gap:16px; flex-wrap:wrap; padding:24px 0; border-top:1px solid var(--border); }
+  .nav-phase a { font-size:14px; color:var(--primary); text-decoration:none; font-weight:600; }
+  .nav-phase a:hover { text-decoration:underline; }
+  footer { background:var(--dark); color:rgba(255,255,255,.6); text-align:center; padding:24px 20px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <a class="nav-logo" href="guide-tour-museon-report.html">← 回整體報告</a>
+  <div style="font-size:13px;color:var(--text-light)">Phase 1 / 3 — 內核凝聚 × 人才磁吸</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="phase-badge">PHASE 01</div>
+    <h1>把你腦子裡的帶團哲學<br>萃取成可傳遞的文字資產</h1>
+    <p>你帶了這麼多年的團，有一套屬於你的方式——但這套方式現在只活在你腦子裡。Phase 1 的任務，是把它挖出來、寫下來、讓同頻的人自動找上你</p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="why-box">
+      <p><strong>為什麼要先做這一步？</strong><br>
+      招募錯的人比不招人更傷——因為你要花時間說服他、糾正他、最後再送走他。Phase 1 的邏輯是：先把你的標準說清楚，讓「不同頻的人看到就自動離開」，才能找到真正能跟你共事的人。</p>
+    </div>
+
+    <span class="section-label">交付物清單</span>
+    <h2 class="section-title">Phase 1 結束，你手上有哪些東西</h2>
+    <p class="section-sub">四份文件，每份都能直接使用，不是草稿</p>
+
+    <div class="deliverable-list">
+      <div class="deliverable">
+        <div class="deliverable-icon">🧭</div>
+        <div>
+          <div class="deliverable-title">服務使命宣言</div>
+          <div class="deliverable-desc">你為什麼帶團？你帶的是什麼感受？你服務的是什麼樣的客人？這份文件不是公司簡介，是你的靈魂——讓看到的人知道你跟別的導遊哪裡不同</div>
+          <span class="deliverable-output">交付：A4 一頁，中英文版</span>
+        </div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-icon">📖</div>
+        <div>
+          <div class="deliverable-title">工作哲學文件</div>
+          <div class="deliverable-desc">你帶團的節奏、你對突發狀況的態度、你覺得好的導遊應該具備什麼——把這些整理成一份可以給面試者看的文件，讓他在面試前就知道你要什麼</div>
+          <span class="deliverable-output">交付：6–10 頁工作指引</span>
+        </div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-icon">📢</div>
+        <div>
+          <div class="deliverable-title">招募文案（兩版）</div>
+          <div class="deliverable-desc">一版給導遊看（吸引同頻的帶團者）、一版給行政人員看（吸引認同旅遊服務精神的人）。不是寫「誠徵~~」的制式文案，是讓看到的人覺得「這就是我要找的環境」</div>
+          <span class="deliverable-output">交付：2 版社群版 + 1 版長版</span>
+        </div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-icon">🔍</div>
+        <div>
+          <div class="deliverable-title">面試問題庫（20 題）</div>
+          <div class="deliverable-desc">測「理念接受度」，不只測技能。20 題分兩類：情境題（用來看他的本能反應）+ 觀念題（用來看他的價值觀）。每題附判斷標準——什麼樣的答案是紅旗、什麼是綠燈</div>
+          <span class="deliverable-output">交付：完整問題庫 + 評分說明</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:white;padding:48px 0">
+  <div class="container">
+    <span class="section-label">執行流程</span>
+    <h2 class="section-title">Phase 1 怎麼進行</h2>
+    <p class="section-sub">你投入約 2 小時，其餘的我來整理</p>
+
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">深度訪談（你說，我記）</div>
+          <div class="step-desc">你用說的，跟我聊你怎麼帶團、最享受什麼時刻、最受不了什麼類型的客人或同事。大約 45 分鐘語音或文字訊息，不需要準備</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">我整理初稿（24 小時內）</div>
+          <div class="step-desc">從你說的內容提煉核心，整理成使命宣言 + 工作哲學初稿，回傳給你看</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">你修正確認（你說不對的，我改）</div>
+          <div class="step-desc">「這句話不是我的語氣」「這個優先順序要換」——你提，我改，直到你看了說「對，就是這樣」</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">招募文案 + 面試庫產出</div>
+          <div class="step-desc">使命宣言確認後，我根據你的核心主張撰寫招募文案，並設計與你的工作哲學一致的面試問題</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">最終版交付，可直接使用</div>
+          <div class="step-desc">所有文件整理成可直接貼到社群的格式 + PDF 版本，招募需要的時候拿出來用就好</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <span class="section-label">時間規劃</span>
+    <h2 class="section-title">兩週完成，你的投入不超過 3 小時</h2>
+
+    <div class="timeline">
+      <div class="timeline-row">
+        <div class="tl-dot"></div>
+        <div class="tl-week">第 1 週</div>
+        <div class="tl-content">
+          <div class="tl-title">深度訪談 → 使命宣言初稿</div>
+          <div class="tl-sub">你投入：45 分鐘訪談 + 30 分鐘確認修改</div>
+        </div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-dot"></div>
+        <div class="tl-week">第 2 週</div>
+        <div class="tl-content">
+          <div class="tl-title">工作哲學文件 + 招募文案 + 面試問題庫</div>
+          <div class="tl-sub">你投入：30 分鐘確認 + 小幅修改</div>
+        </div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-dot"></div>
+        <div class="tl-week">交付</div>
+        <div class="tl-content">
+          <div class="tl-title">四份完整文件，可立即使用</div>
+          <div class="tl-sub">你隨時可以啟動招募，不用從零開始寫</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="outcome-box">
+      <h3>Phase 1 完成後，你得到什麼</h3>
+      <div class="outcome-grid">
+        <div class="outcome-item">
+          <div class="outcome-num">4</div>
+          <div class="outcome-label">份可直接使用的文件</div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-num">2 週</div>
+          <div class="outcome-label">完成全套，你投入 ≤ 3 小時</div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-num">∞</div>
+          <div class="outcome-label">次招募可重複使用同一套</div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-num">0</div>
+          <div class="outcome-label">次再需要從頭想「我要怎麼說」</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#f0faf5;padding:40px 0">
+  <div class="container">
+    <div class="nav-phase">
+      <a href="guide-tour-museon-report.html">← 整體報告</a>
+      <span style="color:var(--border)">|</span>
+      <a href="guide-tour-phase2-automation.html">Phase 2：行政自動化 →</a>
+      <span style="color:var(--border)">|</span>
+      <a href="guide-tour-phase3-expansion.html">Phase 3：市場擴張 →</a>
+    </div>
+  </div>
+</section>
+
+<footer>MUSEON AI 數位員工系統 | Phase 1 — 內核凝聚 × 人才磁吸</footer>
+</body>
+</html>
