@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSEON × 導遊數位轉型 | 整體提案報告</title>
+<style>
+  :root {
+    --primary: #1a6b4a;
+    --primary-light: #2d8a62;
+    --accent: #e8a030;
+    --accent-light: #f5c060;
+    --dark: #1c2b22;
+    --text: #2c3e30;
+    --text-light: #5a7060;
+    --bg: #f8faf9;
+    --card-bg: #ffffff;
+    --border: #d4e8db;
+    --shadow: 0 4px 20px rgba(26,107,74,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 60%, #2d8a62 100%);
+    color: white;
+    padding: 64px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge { display: inline-block; background: rgba(232,160,48,0.25); border: 1px solid var(--accent-light); color: var(--accent-light); padding: 6px 18px; border-radius: 20px; font-size: 13px; letter-spacing: 1px; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(26px, 5vw, 42px); font-weight: 800; line-height: 1.25; margin-bottom: 16px; }
+  .hero p { font-size: 17px; opacity: 0.88; max-width: 580px; margin: 0 auto 32px; }
+  .hero-meta { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; font-size: 14px; opacity: 0.75; }
+  .hero-meta span::before { content: '◆ '; color: var(--accent-light); }
+
+  /* CONTAINER */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+  /* SECTION */
+  section { padding: 56px 0; }
+  .section-label { display: inline-block; background: #e8f5ee; color: var(--primary); font-size: 12px; font-weight: 700; letter-spacing: 2px; padding: 4px 14px; border-radius: 4px; margin-bottom: 12px; }
+  .section-title { font-size: clamp(22px, 4vw, 30px); font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+  .section-sub { font-size: 16px; color: var(--text-light); margin-bottom: 36px; }
+
+  /* PHASE CARDS */
+  .phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+  .phase-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--primary-light); }
+  .phase-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+  .phase-num { font-size: 12px; font-weight: 700; color: var(--primary); letter-spacing: 2px; margin-bottom: 8px; }
+  .phase-title { font-size: 18px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+  .phase-desc { font-size: 14px; color: var(--text-light); line-height: 1.6; margin-bottom: 16px; }
+  .phase-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: #e8f5ee; color: var(--primary); font-size: 12px; padding: 3px 10px; border-radius: 10px; }
+  .phase-arrow { position: absolute; top: 28px; right: 24px; color: var(--primary); font-size: 18px; opacity: 0.4; }
+
+  /* ROI TABLE */
+  .roi-section { background: linear-gradient(135deg, #f0faf5 0%, #e8f5ee 100%); border-radius: 20px; padding: 40px; margin: 0; }
+  .roi-headline { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin-bottom: 36px; }
+  .roi-stat { text-align: center; }
+  .roi-num { font-size: clamp(28px, 5vw, 42px); font-weight: 900; color: var(--primary); line-height: 1; }
+  .roi-unit { font-size: 14px; font-weight: 700; color: var(--primary); margin-left: 2px; }
+  .roi-label { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+  .roi-divider { width: 1px; background: var(--border); align-self: center; height: 50px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--primary); color: white; padding: 12px 16px; text-align: left; font-weight: 700; }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(26,107,74,0.03); }
+  .save-badge { background: #d4f5e4; color: #0f5732; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; }
+
+  /* COST COMPARISON */
+  .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  @media(max-width: 560px) { .cost-grid { grid-template-columns: 1fr; } }
+  .cost-card { border-radius: 16px; padding: 28px 24px; }
+  .cost-card.human { background: #fff5f5; border: 1.5px solid #f5c0c0; }
+  .cost-card.museon { background: #f0faf5; border: 1.5px solid var(--border); position: relative; overflow: hidden; }
+  .cost-card.museon::after { content: '推薦'; position: absolute; top: 14px; right: -20px; background: var(--accent); color: white; font-size: 11px; font-weight: 700; padding: 4px 32px; transform: rotate(40deg); }
+  .cost-type { font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+  .cost-card.human .cost-type { color: #c04040; }
+  .cost-card.museon .cost-type { color: var(--primary); }
+  .cost-price { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+  .cost-card.human .cost-price { color: #c04040; }
+  .cost-card.museon .cost-price { color: var(--primary); }
+  .cost-period { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+  .cost-list { list-style: none; }
+  .cost-list li { font-size: 13px; padding: 4px 0; }
+  .cost-list li::before { content: '✓ '; font-weight: 700; }
+  .cost-card.human .cost-list li::before { color: #c04040; }
+  .cost-card.museon .cost-list li::before { color: var(--primary); }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 32px; }
+  .pricing-card { border-radius: 16px; border: 1.5px solid var(--border); padding: 28px 24px; background: var(--card-bg); text-align: center; position: relative; overflow: hidden; }
+  .pricing-card.featured { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,107,74,0.1); }
+  .pricing-card.featured::before { content: '最受歡迎'; position: absolute; top: 0; left: 0; right: 0; background: var(--primary); color: white; font-size: 12px; font-weight: 700; padding: 6px; letter-spacing: 1px; }
+  .pricing-card.featured { padding-top: 44px; }
+  .plan-name { font-size: 14px; font-weight: 700; color: var(--text-light); letter-spacing: 1px; margin-bottom: 8px; }
+  .plan-price { font-size: 36px; font-weight: 900; color: var(--dark); line-height: 1; }
+  .plan-price sup { font-size: 16px; vertical-align: top; margin-top: 6px; }
+  .plan-price span { font-size: 14px; font-weight: 400; color: var(--text-light); }
+  .plan-desc { font-size: 13px; color: var(--text-light); margin: 10px 0 20px; }
+  .plan-features { list-style: none; text-align: left; font-size: 13px; }
+  .plan-features li { padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 8px; }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features li::before { content: '✓'; color: var(--primary); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .plan-setup { font-size: 12px; color: var(--text-light); margin-top: 16px; }
+
+  /* VALUE STRIP */
+  .value-strip { background: var(--primary); color: white; padding: 40px 24px; text-align: center; margin: 0; }
+  .value-strip h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+  .value-strip p { font-size: 16px; opacity: 0.85; max-width: 560px; margin: 0 auto; }
+
+  /* MARKET VALUE */
+  .market-box { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 32px; margin-top: 32px; }
+  .market-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+  .market-row:last-child { border-bottom: none; }
+  .market-label { font-size: 15px; font-weight: 600; color: var(--text); }
+  .market-note { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .market-val { font-size: 18px; font-weight: 800; color: var(--primary); }
+  .market-val.accent { color: var(--accent); }
+  .market-val.red { color: #c04040; }
+  .market-divider { border: none; border-top: 2px dashed var(--border); margin: 8px 0; }
+
+  /* NAV */
+  .nav-bar { background: white; border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-size: 16px; font-weight: 800; color: var(--primary); }
+  .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .nav-links a { font-size: 13px; color: var(--text-light); text-decoration: none; }
+  .nav-links a:hover { color: var(--primary); }
+
+  /* FOOTER */
+  footer { background: var(--dark); color: rgba(255,255,255,0.6); text-align: center; padding: 32px 20px; font-size: 13px; }
+
+  /* DIVIDER */
+  .hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <span class="nav-logo">MUSEON × 導遊數位轉型</span>
+  <div class="nav-links">
+    <a href="#roi">效益分析</a>
+    <a href="#market">市場價值</a>
+    <a href="#pricing">方案報價</a>
+    <a href="guide-tour-phase1-core.html">Phase 1</a>
+    <a href="guide-tour-phase2-automation.html">Phase 2</a>
+    <a href="guide-tour-phase3-expansion.html">Phase 3</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">MUSEON AI 數位員工 × 旅遊業導入提案</div>
+    <h1>你負責讓客人感動<br>我負責讓你不被文書淹死</h1>
+    <p>三階段系統化導入方案——從理念萃取、行政自動化到市場規模擴張，用 AI 數位員工重新定義導遊的工作方式</p>
+    <div class="hero-meta">
+      <span>每月省 30+ 小時</span>
+      <span>成本降低 85%</span>
+      <span>月效益 NT$25,000+</span>
+    </div>
+  </div>
+</div>
+
+<!-- PHASES OVERVIEW -->
+<section>
+  <div class="container">
+    <span class="section-label">三階段完整方案</span>
+    <h2 class="section-title">從今天到未來：系統化成長路線</h2>
+    <p class="section-sub">每個階段都有明確交付物與可量測的成果，循序漸進，不冒進</p>
+    <div class="phase-grid">
+      <a class="phase-card" href="guide-tour-phase1-core.html">
+        <span class="phase-arrow">→</span>
+        <div class="phase-num">PHASE 01</div>
+        <div class="phase-title">內核凝聚 × 人才磁吸</div>
+        <div class="phase-desc">把你的帶團哲學萃取成文字資產，讓同頻的人自動靠過來，不同頻的自動篩出去</div>
+        <div class="phase-tags">
+          <span class="tag">使命宣言</span>
+          <span class="tag">招募文案</span>
+          <span class="tag">面試問題庫</span>
+        </div>
+      </a>
+      <a class="phase-card" href="guide-tour-phase2-automation.html">
+        <span class="phase-arrow">→</span>
+        <div class="phase-num">PHASE 02</div>
+        <div class="phase-title">行政自動化 × 數位員工化</div>
+        <div class="phase-desc">員工只要開口說需求，文件自己出來。報價、帳務、文案、客訊——全部自動</div>
+        <div class="phase-tags">
+          <span class="tag">報價單</span>
+          <span class="tag">核銷帳務</span>
+          <span class="tag">客服模板</span>
+          <span class="tag">行程手冊</span>
+        </div>
+      </a>
+      <a class="phase-card" href="guide-tour-phase3-expansion.html">
+        <span class="phase-arrow">→</span>
+        <div class="phase-num">PHASE 03</div>
+        <div class="phase-title">市場擴張 × 規模複製</div>
+        <div class="phase-desc">一套系統在跑，不是老闆一個人在撐。口碑自動滾、業務快速報價、新導遊快速上手</div>
+        <div class="phase-tags">
+          <span class="tag">社群行銷</span>
+          <span class="tag">口碑機制</span>
+          <span class="tag">擴張 SOP</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- ROI SECTION -->
+<section id="roi">
+  <div class="container">
+    <span class="section-label">效益分析</span>
+    <h2 class="section-title">數字不說謊：導入後你實際省了什麼</h2>
+    <p class="section-sub">以下數據基於台灣導遊實際工作流程估算，以月接 8 個團為基準</p>
+
+    <div class="roi-section">
+      <div class="roi-headline">
+        <div class="roi-stat">
+          <div><span class="roi-num">30</span><span class="roi-unit">小時</span></div>
+          <div class="roi-label">每月節省行政時間</div>
+        </div>
+        <div class="roi-divider"></div>
+        <div class="roi-stat">
+          <div><span class="roi-num">75</span><span class="roi-unit">%</span></div>
+          <div class="roi-label">行政工作自動化比例</div>
+        </div>
+        <div class="roi-divider"></div>
+        <div class="roi-stat">
+          <div><span class="roi-num">NT$25,000</span></div>
+          <div class="roi-label">每月創造效益（時間＋額外收入）</div>
+        </div>
+        <div class="roi-divider"></div>
+        <div class="roi-stat">
+          <div><span class="roi-num">4.3</span><span class="roi-unit">x</span></div>
+          <div class="roi-label">投資報酬率（ROI）</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>行政工作項目</th>
+              <th>現在花費時間</th>
+              <th>導入後</th>
+              <th>每月節省（×8團）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>行程表製作 + 報價單</td>
+              <td>90 分鐘/團</td>
+              <td>10 分鐘（我出稿，你確認）</td>
+              <td><span class="save-badge">省 10.7 小時</span></td>
+            </tr>
+            <tr>
+              <td>核銷報帳 + 帳務整理</td>
+              <td>120 分鐘/團</td>
+              <td>15 分鐘（丟照片給我）</td>
+              <td><span class="save-badge">省 14 小時</span></td>
+            </tr>
+            <tr>
+              <td>行前說明文件 + 通知</td>
+              <td>45 分鐘/團</td>
+              <td>5 分鐘（複製貼上）</td>
+              <td><span class="save-badge">省 5.3 小時</span></td>
+            </tr>
+            <tr>
+              <td>客服回應 + 詢問處理</td>
+              <td>60 分鐘/週</td>
+              <td>10 分鐘（模板微調）</td>
+              <td><span class="save-badge">省 3.3 小時</span></td>
+            </tr>
+            <tr>
+              <td>社群文案（IG/FB）</td>
+              <td>45 分鐘/團</td>
+              <td>5 分鐘（給照片我寫）</td>
+              <td><span class="save-badge">省 5.3 小時</span></td>
+            </tr>
+            <tr style="font-weight:800">
+              <td>合計</td>
+              <td>月耗 40+ 小時</td>
+              <td>月耗 約 10 小時</td>
+              <td><span class="save-badge" style="font-size:14px">每月省 30 小時</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- MARKET VALUE -->
+<section id="market">
+  <div class="container">
+    <span class="section-label">市場價值 × 成本計算</span>
+    <h2 class="section-title">和「請真人助理」相比，你實際差多少</h2>
+    <p class="section-sub">同樣的工作，MUSEON 的成本是傳統方案的 15–20%</p>
+
+    <div class="cost-grid">
+      <div class="cost-card human">
+        <div class="cost-type">傳統方案：聘真人行政助理</div>
+        <div class="cost-price">NT$35,000</div>
+        <div class="cost-period">/月（基本薪資）</div>
+        <ul class="cost-list">
+          <li style="color:#c04040">需要排班、交接、培訓期</li>
+          <li style="color:#c04040">請假、離職風險</li>
+          <li style="color:#c04040">旺季量大跟不上</li>
+          <li style="color:#c04040">只能單工，不能並行</li>
+          <li style="color:#c04040">另計勞健保、年終</li>
+        </ul>
+      </div>
+      <div class="cost-card museon">
+        <div class="cost-type">MUSEON 數位員工</div>
+        <div class="cost-price">NT$5,800</div>
+        <div class="cost-period">/月（全方位行政方案）</div>
+        <ul class="cost-list">
+          <li>24 小時待命，不請假</li>
+          <li>旺季、淡季一樣的服務速度</li>
+          <li>多工並行，報價、帳務同時跑</li>
+          <li>一週熟悉你的格式和習慣</li>
+          <li>費用固定，不因工作量浮動</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="market-box">
+      <div class="market-row">
+        <div>
+          <div class="market-label">省下行政時間的等值收入</div>
+          <div class="market-note">30 小時 × NT$500/小時（導遊時間市場價值）</div>
+        </div>
+        <div class="market-val">NT$15,000 / 月</div>
+      </div>
+      <div class="market-row">
+        <div>
+          <div class="market-label">省出時間多接的團（估 2 個半日團）</div>
+          <div class="market-note">每個半日團費用約 NT$4,500–6,000</div>
+        </div>
+        <div class="market-val">NT$9,000–12,000 / 月</div>
+      </div>
+      <div class="market-row">
+        <div>
+          <div class="market-label">口碑機制產生的老帶新轉介</div>
+          <div class="market-note">Phase 3 問卷 + 引導好評啟動後，平均增加 1–2 個新客</div>
+        </div>
+        <div class="market-val">NT$4,500–9,000 / 月</div>
+      </div>
+      <hr class="market-divider">
+      <div class="market-row">
+        <div>
+          <div class="market-label" style="font-size:17px;font-weight:800">每月總效益估算</div>
+          <div class="market-note">節省成本 + 新增收入的加總</div>
+        </div>
+        <div class="market-val accent" style="font-size:24px">NT$28,000–42,000 / 月</div>
+      </div>
+      <div class="market-row">
+        <div>
+          <div class="market-label">MUSEON 月費（全方位方案）</div>
+        </div>
+        <div class="market-val red">- NT$5,800 / 月</div>
+      </div>
+      <hr class="market-divider">
+      <div class="market-row">
+        <div>
+          <div class="market-label" style="font-size:17px;font-weight:800">淨收益</div>
+        </div>
+        <div class="market-val" style="font-size:24px;color:#0f5732;font-weight:900">NT$22,200–36,200 / 月</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <span class="section-label">方案報價</span>
+    <h2 class="section-title">按你現在的階段選，不用一次全上</h2>
+    <p class="section-sub">三個方案對應三個階段，可以漸進式導入，成效驗證後再升級</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="plan-name">STARTER</div>
+        <div class="plan-price"><sup>NT$</sup>3,800<span>/月</span></div>
+        <div class="plan-desc">Phase 2 行政自動化<br>最快看到效果的一關</div>
+        <ul class="plan-features">
+          <li>行程表 + 報價單自動出稿</li>
+          <li>核銷帳務報表整理</li>
+          <li>行前說明文件產出</li>
+          <li>客服回應模板庫（30 題）</li>
+          <li>每月無限次使用</li>
+        </ul>
+        <div class="plan-setup">導入費 NT$2,000（一次性）</div>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="plan-name">PROFESSIONAL</div>
+        <div class="plan-price"><sup>NT$</sup>5,800<span>/月</span></div>
+        <div class="plan-desc">Phase 1 + 2<br>品牌建立 + 行政全自動</div>
+        <ul class="plan-features">
+          <li>使命宣言 + 品牌文件建立</li>
+          <li>招募文案 + 面試問題庫</li>
+          <li>全套行政自動化（同 Starter）</li>
+          <li>社群文案產出（IG/FB）</li>
+          <li>外語翻譯（英、日、簡中）</li>
+          <li>優先回應，4 小時內處理</li>
+        </ul>
+        <div class="plan-setup">導入費 NT$3,000（一次性）</div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-name">FULL SUITE</div>
+        <div class="plan-price"><sup>NT$</sup>9,800<span>/月</span></div>
+        <div class="plan-desc">Phase 1 + 2 + 3<br>完整數位轉型，規模複製</div>
+        <ul class="plan-features">
+          <li>包含 Professional 全部功能</li>
+          <li>口碑轉介機制建立</li>
+          <li>新導遊 Onboarding SOP</li>
+          <li>業績回報系統 + 月報</li>
+          <li>主題團型設計協助</li>
+          <li>合作導遊管理文件</li>
+          <li>月度策略檢討會（視訊 30 min）</li>
+        </ul>
+        <div class="plan-setup">導入費 NT$5,000（一次性）</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:20px 24px;background:#fffbf0;border:1.5px solid var(--accent-light);border-radius:12px;font-size:14px;color:var(--text);">
+      <strong style="color:var(--accent)">💡 建議從哪裡開始？</strong><br>
+      如果你是第一次導入 AI 助理，建議從 <strong>STARTER</strong> 的「核銷帳務」開始——這是每個導遊最頭痛、最花時間的環節。一旦你看到第一份自動出來的帳務報表，就知道這東西真的值。
+    </div>
+  </div>
+</section>
+
+<div class="value-strip">
+  <div class="container">
+    <h2>不是工具，是你的數位員工</h2>
+    <p>MUSEON 不是給你一堆功能去學——是把工作直接接走。你說需求，結果出來，就這樣。</p>
+  </div>
+</div>
+
+<!-- WHAT I CAN'T DO -->
+<section>
+  <div class="container">
+    <span class="section-label">誠實邊界</span>
+    <h2 class="section-title">我做得到，和我做不到的</h2>
+    <p class="section-sub">清楚知道邊界，才能正確分工——不期待我替你帶團，我也不期待你來幫我整理帳務</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+      <div style="padding:24px;background:#f0faf5;border-radius:14px;border:1.5px solid var(--border)">
+        <div style="font-weight:800;color:var(--primary);margin-bottom:14px;font-size:16px">✅ 我能接手的</div>
+        <div style="font-size:14px;color:var(--text);line-height:2">
+          行程表 / 報價單製作<br>
+          核銷報帳 / 帳務整理<br>
+          行前說明文件 / 通知文案<br>
+          外語翻譯（英日簡中）<br>
+          社群貼文文案<br>
+          客服回應模板<br>
+          招募文案 / 面試問題<br>
+          老客戶問候 / 節慶訊息<br>
+          滿意度問卷設計<br>
+          新導遊 SOP 文件
+        </div>
+      </div>
+      <div style="padding:24px;background:#fff5f5;border-radius:14px;border:1.5px solid #f5c0c0">
+        <div style="font-weight:800;color:#c04040;margin-bottom:14px;font-size:16px">⚠️ 需要你在場的</div>
+        <div style="font-size:14px;color:var(--text);line-height:2">
+          現場突發狀況應對<br>
+          班機 delay / 客訴當下<br>
+          訂房訂票按確認鍵<br>
+          簽約 / 簽名 / 授權<br>
+          客人之間的現場關係<br>
+          你的帶團感染力和人情味
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEXT STEP -->
+<section style="background:#f0faf5;padding:56px 0">
+  <div class="container" style="text-align:center">
+    <span class="section-label">最小下一步</span>
+    <h2 class="section-title" style="margin-bottom:12px">想看效果？給我一個真實任務</h2>
+    <p style="font-size:16px;color:var(--text-light);max-width:520px;margin:0 auto 32px">
+      最快的方式不是繼續看簡報——是把你下一份核銷表或下一團的行前說明需求丟給我，我現在就做給你看
+    </p>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+      <a href="guide-tour-phase1-core.html" style="background:var(--primary);color:white;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px">查看 Phase 1 方案 →</a>
+      <a href="guide-tour-phase2-automation.html" style="background:white;color:var(--primary);border:2px solid var(--primary);padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px">查看行政自動化 →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>MUSEON AI 數位員工系統 | 旅遊業導遊轉型提案</div>
+  <div style="margin-top:6px;font-size:11px">ROI 數據為根據台灣導遊平均工作流程之估算值，實際效益因個人狀況而異</div>
+</footer>
+</body>
+</html>
