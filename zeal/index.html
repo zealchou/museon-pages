@@ -590,6 +590,14 @@
     display: none;
   }
 
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
   /* ---------- Quote ---------- */
   .quote { text-align: center; }
   .quote blockquote {
@@ -999,6 +1007,11 @@
       <form class="waitlist" onsubmit="return handleWaitlist(event)">
         <input type="email" required placeholder="你的 Email" id="waitlistEmailZh" lang="zh-Hant">
         <input type="email" required placeholder="Your email" id="waitlistEmailEn" lang="en">
+        <div class="hp-field" aria-hidden="true">
+          <label for="hp_field">請勿填寫這欄</label>
+          <input id="hp_field" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADwiktiZZ9yIcv8c"></div>
         <button type="submit" lang="zh-Hant">加入等候名單</button>
         <button type="submit" lang="en">Join the waitlist</button>
       </form>
@@ -1037,6 +1050,7 @@
   </footer>
 </div>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
   var PROFILE_DOMAINS = [
     { zh: "商業戰略", en: "Business Strategy", levelZh: "專家級", levelEn: "Expert", rank: 5, conf: 0.92, evid: 885 },
@@ -1207,11 +1221,37 @@
     renderProfile(next);
     syncWaitlistInputs(next);
   }
-  function handleWaitlist(e) {
+  async function handleWaitlist(e) {
     e.preventDefault();
     var isEn = document.documentElement.getAttribute('data-lang') === 'en';
-    document.getElementById(isEn ? 'waitlistSuccessEn' : 'waitlistSuccessZh').style.display = 'block';
-    e.target.reset();
+    var form = e.target;
+    var emailInput = document.getElementById(isEn ? 'waitlistEmailEn' : 'waitlistEmailZh');
+    var successEl = document.getElementById(isEn ? 'waitlistSuccessEn' : 'waitlistSuccessZh');
+    var submitBtns = form.querySelectorAll('button[type="submit"]');
+    submitBtns.forEach(function (btn) { btn.disabled = true; });
+    try {
+      var res = await fetch('https://museon-website.pages.dev/api/waitlist', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput.value,
+          kind: 'waitlist',
+          note: '',
+          lang: isEn ? 'en' : 'zh-tw',
+          source: 'zeal-personal',
+          hp: document.getElementById('hp_field').value,
+          turnstileToken: (document.querySelector('[name="cf-turnstile-response"]') || {}).value || ''
+        })
+      });
+      if (!res.ok) throw new Error('request failed');
+      successEl.style.display = 'block';
+      form.reset();
+    } catch (err) {
+      alert(isEn ? 'Something went wrong - please try again.' : '送出失敗，請再試一次。');
+    } finally {
+      submitBtns.forEach(function (btn) { btn.disabled = false; });
+      if (window.turnstile) window.turnstile.reset();
+    }
     return false;
   }
   document.documentElement.setAttribute('data-lang', 'zh');
