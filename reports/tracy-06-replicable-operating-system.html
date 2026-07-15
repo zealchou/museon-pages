@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+    <title>戀花宅｜可複製營運系統藍圖</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap");
+      :root {
+        --ink: #19232a;
+        --muted: #596771;
+        --paper: #f7f3eb;
+        --white: #fffdfa;
+        --pine: #123d36;
+        --teal: #16796b;
+        --orange: #b54d2e;
+        --red: #aa3027;
+        --line: #d9d2c6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.82 "Noto Sans TC",
+          sans-serif;
+      }
+      .wrap {
+        max-width: 1050px;
+        margin: auto;
+        padding: 0 30px;
+      }
+      .hero {
+        padding: 76px 0 64px;
+        background:
+          radial-gradient(circle at 84% 0, #b1704d 0, transparent 27%),
+          linear-gradient(137deg, #102d29, #194a42 67%, #215f55);
+        color: #fff;
+      }
+      .eyebrow,
+      .tag,
+      .code {
+        font:
+          600 11px/1.4 "IBM Plex Mono",
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .eyebrow {
+        color: #d9d0ac;
+      }
+      .hero h1,
+      h2 {
+        font-family: "Cormorant Garamond", "Noto Sans TC", serif;
+      }
+      .hero h1 {
+        font-size: clamp(43px, 6.5vw, 76px);
+        line-height: 1.03;
+        margin: 15px 0;
+      }
+      .hero p {
+        font-size: 19px;
+        max-width: 800px;
+        color: #e0ebe6;
+      }
+      .meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        color: #c9d9d3;
+        font-size: 13px;
+      }
+      .nav {
+        position: sticky;
+        z-index: 4;
+        top: 0;
+        background: rgba(247, 243, 235, 0.97);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav .wrap {
+        display: flex;
+        gap: 17px;
+        overflow: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .nav a {
+        color: var(--muted);
+        white-space: nowrap;
+        text-decoration: none;
+        font-size: 13px;
+      }
+      section {
+        padding: 58px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      h2 {
+        font-size: clamp(34px, 4.5vw, 50px);
+        line-height: 1.08;
+        margin: 0 0 15px;
+      }
+      .lead {
+        font-size: 18px;
+        color: #344049;
+      }
+      .tag {
+        padding: 4px 9px;
+        border-radius: 99px;
+        display: inline-block;
+        background: #dceee9;
+        color: #126558;
+      }
+      .tag.orange {
+        background: #f8e1db;
+        color: #96371f;
+      }
+      .decision {
+        background: #fff;
+        border: 1px solid #b9d9d0;
+        border-left: 7px solid var(--teal);
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 25px;
+      }
+      .decision strong {
+        font:
+          600 12px/1.4 "IBM Plex Mono",
+          monospace;
+        letter-spacing: 0.07em;
+        color: var(--teal);
+      }
+      .decision p {
+        font-size: 22px;
+        line-height: 1.55;
+        font-weight: 800;
+        margin: 9px 0 0;
+      }
+      .warning {
+        background: #fff0ef;
+        border: 1px solid #efc2bc;
+        border-left: 5px solid var(--red);
+        border-radius: 0 9px 9px 0;
+        padding: 19px 21px;
+        margin-top: 23px;
+        color: #6f2921;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .fact {
+        background: #dceee9;
+        color: #126558;
+      }
+      .hyp {
+        background: #fff0c8;
+        color: #765907;
+      }
+      .gap {
+        background: #f9e0dc;
+        color: #94301f;
+      }
+      .layers {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 25px;
+      }
+      .layer {
+        position: relative;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-top: 5px solid var(--teal);
+        padding: 21px;
+        border-radius: 10px;
+      }
+      .layer:nth-child(2) {
+        border-top-color: #b54d2e;
+      }
+      .layer:nth-child(3) {
+        border-top-color: #94701c;
+      }
+      .layer .code {
+        color: var(--teal);
+      }
+      .layer h3 {
+        font-size: 21px;
+        margin: 8px 0;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 23px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .table th,
+      .table td {
+        text-align: left;
+        vertical-align: top;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .table th {
+        background: #edf5f1;
+        color: #315047;
+        font-size: 12px;
+      }
+      .table tr:last-child td {
+        border-bottom: 0;
+      }
+      .table td:first-child {
+        font-weight: 800;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 25px;
+      }
+      .step {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 17px;
+        min-height: 190px;
+      }
+      .step .num {
+        font:
+          600 13px/1.4 "IBM Plex Mono",
+          monospace;
+        color: var(--teal);
+      }
+      .step h3 {
+        font-size: 19px;
+        line-height: 1.35;
+        margin: 8px 0;
+      }
+      .audit {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 23px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .audit th,
+      .audit td {
+        text-align: left;
+        vertical-align: top;
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .audit th {
+        background: #edf5f1;
+        color: #315047;
+        font-size: 12px;
+      }
+      .audit tr:last-child td {
+        border-bottom: 0;
+      }
+      .audit td:first-child {
+        font:
+          600 12px/1.45 "IBM Plex Mono",
+          monospace;
+        color: var(--teal);
+      }
+      .source {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .footer {
+        background: #101a18;
+        color: #c8d7d2;
+        padding: 39px 0;
+        font-size: 13px;
+      }
+      @media (max-width: 760px) {
+        .wrap {
+          padding: 0 18px;
+        }
+        .hero {
+          padding: 55px 0;
+        }
+        .layers,
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        section {
+          padding: 43px 0;
+        }
+        .decision p {
+          font-size: 20px;
+        }
+        .table,
+        .audit {
+          font-size: 13px;
+        }
+        .table th,
+        .table td,
+        .audit th,
+        .audit td {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <span class="eyebrow"
+          >Tracy · Page 06 · Operating system blueprint</span
+        >
+        <h1>可複製營運系統<br />藍圖</h1>
+        <p>
+          先把 Tracy
+          的經驗做成可被看見、教會、檢核與改進的工作方法；之後才可能讓店員、外包者、學員或合作講師，在不犧牲品質的前提下共同交付。
+        </p>
+        <div class="meta">
+          <span>資料截止：2026-07-15</span><span>模組 → 執行 → 品質 → 治理</span
+          ><span>非加盟招商文件</span>
+        </div>
+      </div>
+    </header>
+    <nav class="nav">
+      <div class="wrap">
+        <a href="#decision">結論</a><a href="#layers">三層系統</a
+        ><a href="#assets">資產清單</a><a href="#flow">複製流程</a
+        ><a href="#gates">啟動門檻</a><a href="#audit">審計</a>
+      </div>
+    </nav>
+    <main>
+      <section id="decision">
+        <div class="wrap">
+          <span class="tag">結論先行</span>
+          <h2>
+            真正能被複製的，不是某一束花，而是「遇到同類需求時如何做對決定」的工作系統。
+          </h2>
+          <p class="lead">
+            白話說，客人要一束花時，不能每次都從零想：做什麼、多少錢、要花多久、材料夠不夠、客人臨時改怎麼辦。把這些常見決定整理成模組、表單與規則，別人才有可能依同一個標準工作；Tracy
+            才能把時間從反覆救火，移到設計、教學與關係經營。
+          </p>
+          <div class="decision">
+            <strong>本頁決策</strong>
+            <p>
+              先建「戀花宅作業系統」；學員合作路徑是它的後段應用，不是先賣資格、再補系統。
+            </p>
+          </div>
+          <div class="warning">
+            <strong>為什麼這個順序不能倒過來？</strong
+            >如果先招募合作角色，卻沒有產品規格、品質檢核、客資、帳務與退出規則，結果不是擴張，而是把
+            Tracy
+            個人的臨場判斷與風險一起放大。新錄音明確提出：三大模組完成後，店員或外包才可依統一規格工作，工時、成本與庫存才可統一管理。
+          </div>
+        </div>
+      </section>
+      <section id="layers">
+        <div class="wrap">
+          <span class="tag orange">三層系統</span>
+          <h2>
+            不要把「模組化」誤會成作品變得死板；它是把重複決定先做完，保留該客製的地方再加價處理。
+          </h2>
+          <div class="layers">
+            <article class="layer">
+              <span class="code">LAYER 01 · OFFER</span>
+              <h3>可賣的模組</h3>
+              <p>
+                店內、旅宿合作、課程三類單位，各自列清楚尺寸、材料、選項、價格、交期與例外。
+              </p>
+              <p>
+                <b>客製怎麼辦？</b
+                >超出既有選項時，改走明確的客製流程與加價，而不是讓每一單都偷偷變成客製。
+              </p>
+            </article>
+            <article class="layer">
+              <span class="code">LAYER 02 · DELIVERY</span>
+              <h3>可做的流程</h3>
+              <p>
+                確認訂單、選料、製作、交付、取消、缺貨與客訴，有誰做、何時做、做到什麼程度的明確紀錄。
+              </p>
+              <p>
+                <b>甜頭：</b>店員或外包不必猜；Tracy
+                也能看見何處真的花時間與成本。
+              </p>
+            </article>
+            <article class="layer">
+              <span class="code">LAYER 03 · GOVERNANCE</span>
+              <h3>可被信任的治理</h3>
+              <p>
+                品質、客資、品牌、教材、帳務、分潤、申訴、暫停與退出，都要先說清楚，才談學員協作或合作講師。
+              </p>
+              <p>
+                <b>代價：</b
+                >每位合作角色要接受同一標準；不能只憑人情或繳費取得權限。
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="assets">
+        <div class="wrap">
+          <span class="tag">系統資產清單</span>
+          <h2>
+            每一份文件都要能讓第三人少問一次、少做錯一次，才算真的有價值。
+          </h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>模組</th>
+                <th>最小可用內容</th>
+                <th>誰會使用</th>
+                <th>目前狀態</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A｜標準產品包</td>
+                <td>
+                  品項、尺寸／預算、可選花材、加購、價格、交期、替代與客製加價。
+                </td>
+                <td>Tracy、店員、日後共同交付者。</td>
+                <td><span class="status hyp">優先設計</span></td>
+              </tr>
+              <tr>
+                <td>B｜課程包</td>
+                <td>
+                  教案、材料、時間、完成標準、安全、助教工作、學員回饋與照片規則。
+                </td>
+                <td>Tracy、助教、日後合作講師。</td>
+                <td><span class="status hyp">待建立</span></td>
+              </tr>
+              <tr>
+                <td>C｜合作交付包</td>
+                <td>任務範圍、報價、責任、品質檢核、客資與取消／客訴界面。</td>
+                <td>Tracy、外包／合作角色。</td>
+                <td><span class="status gap">不得先啟動</span></td>
+              </tr>
+              <tr>
+                <td>管理底表</td>
+                <td>材料、用量、工時、成本、庫存下限、補貨與例外事件紀錄。</td>
+                <td>Tracy、指定管理者。</td>
+                <td><span class="status hyp">先用一個品項試行</span></td>
+              </tr>
+              <tr>
+                <td>合作授權包</td>
+                <td>
+                  能力證據、品牌／教材使用、帳務、資料、分潤、終止與退出契約。
+                </td>
+                <td>未來合作講師／營運角色。</td>
+                <td><span class="status gap">法務前置</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="flow">
+        <div class="wrap">
+          <span class="tag orange">複製流程</span>
+          <h2>
+            每個新模組都必須跑完這四步，才不會把一個未整理的想法直接交給別人執行。
+          </h2>
+          <div class="flow">
+            <article class="step">
+              <span class="num">01｜設計</span>
+              <h3>列出有限選項</h3>
+              <p>把最常見的尺寸、預算、材料、加購與例外寫成可選清單。</p>
+            </article>
+            <article class="step">
+              <span class="num">02｜Tracy 自跑</span>
+              <h3>記下真實摩擦</h3>
+              <p>
+                記工時、成本、缺貨、客人疑問、改單與交付問題；不靠記憶美化。
+              </p>
+            </article>
+            <article class="step">
+              <span class="num">03｜第三人試跑</span>
+              <h3>看哪裡仍需猜</h3>
+              <p>
+                讓店員、助教或受督導角色依文件完成；提問最多的地方，就是規格缺口。
+              </p>
+            </article>
+            <article class="step">
+              <span class="num">04｜核准或退回</span>
+              <h3>只複製已穩定的版本</h3>
+              <p>
+                品質、成本與責任可控才開放使用；否則回到設計，不用擴張掩蓋問題。
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="gates">
+        <div class="wrap">
+          <span class="tag">啟動門檻</span>
+          <h2>
+            「可以教」「可以外包」「可以合作」是三件不同的事，不能混成一個點頭。
+          </h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>要做的事</th>
+                <th>至少先證明什麼</th>
+                <th>尚未達標時的正確選項</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>讓店員按標準產品執行</td>
+                <td>
+                  兩次以上同規格交付，品質、工時、材料與客戶確認均可追溯。
+                </td>
+                <td>留在 Tracy 自跑，修選項與流程。</td>
+              </tr>
+              <tr>
+                <td>讓助教／合作講師帶課</td>
+                <td>試教、完成率、安全、學員回饋與突發情況處理皆有紀錄。</td>
+                <td>先擔任受督導助教，不使用合作講師名義。</td>
+              </tr>
+              <tr>
+                <td>讓學員共同接案</td>
+                <td>任務、品質、客資、收款、客訴與責任界面都有書面規則。</td>
+                <td>只做受控演練，或不啟動。</td>
+              </tr>
+              <tr>
+                <td>使用加盟／授權名稱</td>
+                <td>
+                  品牌、資訊揭露、契約、分潤、稅務、終止與退出經專業確認。
+                </td>
+                <td>維持內部系統測試，不對外招募或收費。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="audit">
+        <div class="wrap">
+          <span class="tag">頁型 06 審計標準</span>
+          <h2>
+            OS-01～OS-09：這頁必須是一份可收費的「營運系統設計」報告，而不是漂亮的流程圖。
+          </h2>
+          <table class="audit">
+            <thead>
+              <tr>
+                <th>編號</th>
+                <th>審計問題</th>
+                <th>本頁判定</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>OS-01</td>
+                <td>是否先說清楚系統要解決的經營問題？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜減少每單從零判斷，讓品質與管理可追溯。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-02</td>
+                <td>是否分開產品、執行與治理，而非把它們混在「SOP」？</td>
+                <td>
+                  <span class="status fact">通過</span>｜三層系統各自定義。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-03</td>
+                <td>每個模組是否有使用者、最小內容與目前狀態？</td>
+                <td>
+                  <span class="status fact">通過</span>｜資產清單逐項標示。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-04</td>
+                <td>是否保留客製需求而不讓模組失控？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜模組外客製須走明確加價與例外流程。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-05</td>
+                <td>是否以真實試跑，而非文件完成，作為可複製證據？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜設計→自跑→第三人試跑→核准／退回。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-06</td>
+                <td>合作、派案、收入或資格是否被不當保證？</td>
+                <td><span class="status fact">通過</span>｜明確禁止。</td>
+              </tr>
+              <tr>
+                <td>OS-07</td>
+                <td>資料、品牌、品質與退出是否被視為必要制度？</td>
+                <td>
+                  <span class="status fact">通過</span>｜列為治理層與啟動門檻。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-08</td>
+                <td>是否把「加盟」和內部模組測試混為一談？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜加盟／授權維持法務前置紅線。
+                </td>
+              </tr>
+              <tr>
+                <td>OS-09</td>
+                <td>推導是否有逐字稿來源，而非自行想像？</td>
+                <td>
+                  <span class="status fact">通過</span>｜引用 2-12
+                  錄音中模組、統一規格、店員／外包、成本／庫存與協助創業的討論；仍不視為已落地制度。
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="source" style="margin-top: 19px">
+            內部證據：2026-07-15〈Tracy 2-12 教練對話〉逐字稿約
+            00:02–00:19、00:42–00:46、00:57–01:00。內容顯示模組化、統一規格、店員／發包、成本／庫存與協助創業的對話推導。所有未完成的制度均標為待建立，非實際成效或財務數字。
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        MUSEON × Tracy｜頁型
+        06：可複製營運系統藍圖。以可觀察的作業單位、試跑與治理門檻，連接產品驗證與未來合作路徑。
+      </div>
+    </footer>
+  </body>
+</html>
