@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+    <title>戀花宅｜Museon 試點導入設計書</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap");
+      :root {
+        --ink: #19232a;
+        --muted: #596771;
+        --paper: #f7f3eb;
+        --white: #fffdfa;
+        --pine: #123d36;
+        --teal: #16796b;
+        --orange: #b54d2e;
+        --red: #aa3027;
+        --line: #d9d2c6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.82 "Noto Sans TC",
+          sans-serif;
+      }
+      .wrap {
+        max-width: 1050px;
+        margin: auto;
+        padding: 0 30px;
+      }
+      .hero {
+        padding: 76px 0 64px;
+        background:
+          radial-gradient(circle at 84% 0, #a47350 0, transparent 27%),
+          linear-gradient(137deg, #102d29, #194a42 67%, #215f55);
+        color: #fff;
+      }
+      .eyebrow,
+      .tag,
+      .code {
+        font:
+          600 11px/1.4 "IBM Plex Mono",
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .eyebrow {
+        color: #d9d0ac;
+      }
+      .hero h1,
+      h2 {
+        font-family: "Cormorant Garamond", "Noto Sans TC", serif;
+      }
+      .hero h1 {
+        font-size: clamp(43px, 6.5vw, 76px);
+        line-height: 1.03;
+        margin: 15px 0;
+      }
+      .hero p {
+        font-size: 19px;
+        max-width: 805px;
+        color: #e0ebe6;
+      }
+      .meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        color: #c9d9d3;
+        font-size: 13px;
+      }
+      .nav {
+        position: sticky;
+        z-index: 4;
+        top: 0;
+        background: rgba(247, 243, 235, 0.97);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav .wrap {
+        display: flex;
+        gap: 17px;
+        overflow: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .nav a {
+        color: var(--muted);
+        white-space: nowrap;
+        text-decoration: none;
+        font-size: 13px;
+      }
+      section {
+        padding: 58px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      h2 {
+        font-size: clamp(34px, 4.5vw, 50px);
+        line-height: 1.08;
+        margin: 0 0 15px;
+      }
+      .lead {
+        font-size: 18px;
+        color: #344049;
+      }
+      .tag {
+        padding: 4px 9px;
+        border-radius: 99px;
+        display: inline-block;
+        background: #dceee9;
+        color: #126558;
+      }
+      .tag.orange {
+        background: #f8e1db;
+        color: #96371f;
+      }
+      .decision,
+      .note {
+        background: #fff;
+        border: 1px solid #b9d9d0;
+        border-left: 7px solid var(--teal);
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 25px;
+      }
+      .decision strong {
+        font:
+          600 12px/1.4 "IBM Plex Mono",
+          monospace;
+        letter-spacing: 0.07em;
+        color: var(--teal);
+      }
+      .decision p {
+        font-size: 22px;
+        line-height: 1.55;
+        font-weight: 800;
+        margin: 9px 0 0;
+      }
+      .warning {
+        background: #fff0ef;
+        border: 1px solid #efc2bc;
+        border-left: 5px solid var(--red);
+        border-radius: 0 9px 9px 0;
+        padding: 19px 21px;
+        margin-top: 23px;
+        color: #6f2921;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .fact {
+        background: #dceee9;
+        color: #126558;
+      }
+      .hyp {
+        background: #fff0c8;
+        color: #765907;
+      }
+      .gap {
+        background: #f9e0dc;
+        color: #94301f;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 24px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 20px;
+      }
+      .card h3 {
+        font-size: 21px;
+        line-height: 1.35;
+        margin: 9px 0;
+      }
+      .card .code {
+        color: var(--teal);
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 23px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .table th,
+      .table td {
+        text-align: left;
+        vertical-align: top;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .table th {
+        background: #edf5f1;
+        color: #315047;
+        font-size: 12px;
+      }
+      .table tr:last-child td {
+        border-bottom: 0;
+      }
+      .table td:first-child {
+        font-weight: 800;
+      }
+      .stage {
+        display: grid;
+        grid-template-columns: 165px 1fr 1fr;
+        gap: 17px;
+        padding: 22px 0;
+        border-top: 1px solid var(--line);
+      }
+      .when {
+        font:
+          600 13px/1.4 "IBM Plex Mono",
+          monospace;
+        color: var(--teal);
+      }
+      .when span {
+        display: block;
+        color: var(--muted);
+        font:
+          400 13px/1.5 "Noto Sans TC",
+          sans-serif;
+        margin-top: 5px;
+      }
+      .audit {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 23px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .audit th,
+      .audit td {
+        text-align: left;
+        vertical-align: top;
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .audit th {
+        background: #edf5f1;
+        color: #315047;
+        font-size: 12px;
+      }
+      .audit tr:last-child td {
+        border-bottom: 0;
+      }
+      .audit td:first-child {
+        font:
+          600 12px/1.45 "IBM Plex Mono",
+          monospace;
+        color: var(--teal);
+      }
+      .source {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .footer {
+        background: #101a18;
+        color: #c8d7d2;
+        padding: 39px 0;
+        font-size: 13px;
+      }
+      @media (max-width: 760px) {
+        .wrap {
+          padding: 0 18px;
+        }
+        .hero {
+          padding: 55px 0;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .stage {
+          grid-template-columns: 1fr;
+          gap: 5px;
+        }
+        section {
+          padding: 43px 0;
+        }
+        .decision p {
+          font-size: 20px;
+        }
+        .table,
+        .audit {
+          font-size: 13px;
+        }
+        .table th,
+        .table td,
+        .audit th,
+        .audit td {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <span class="eyebrow"
+          >Tracy · Page 08 · Museon pilot implementation design</span
+        >
+        <h1>Museon 試點<br />導入設計書</h1>
+        <p>
+          不先做一個巨大的系統。先用「一個標準產品、一堂課、一張例外清單」跑出資料、人與工具能合作的最小閉環；證明有用，再擴大。
+        </p>
+        <div class="meta">
+          <span>90 天 MVP</span><span>資料 → 提醒 → 人核准 → 復盤</span
+          ><span>含停止條件與審計</span>
+        </div>
+      </div>
+    </header>
+    <nav class="nav">
+      <div class="wrap">
+        <a href="#decision">結論</a><a href="#scope">試點範圍</a
+        ><a href="#data">最小資料</a><a href="#flow">人機流程</a
+        ><a href="#rhythm">90 天節奏</a><a href="#audit">審計</a>
+      </div>
+    </nav>
+    <main>
+      <section id="decision">
+        <div class="wrap">
+          <span class="tag">結論先行</span>
+          <h2>
+            第一個 Museon
+            試點，不是自動接單；是把「已核准的標準產品」變成不遺漏的日常營運閉環。
+          </h2>
+          <p class="lead">
+            原因很簡單：標準產品比客製單更容易定義選項、工時、材料與交付；資料也比較一致。先把這一條跑通，才能知道系統到底減少了整理與遺漏，還是只是多了一個要填的表格。
+          </p>
+          <div class="decision">
+            <strong>試點定義</strong>
+            <p>
+              一個標準產品包＋一堂固定教案＋每日例外摘要；Museon
+              只整理、提醒、留痕，Tracy 保留核准、報價與對客承諾。
+            </p>
+          </div>
+          <div class="warning">
+            <strong>本試點不做：</strong
+            >不自動下單、不自動收款、不自動報價、不傳送客資給外部工具、不派案給學員、不宣稱有庫存整合。這些都要等資料品質、權限與責任規則驗證後才討論。
+          </div>
+        </div>
+      </section>
+      <section id="scope">
+        <div class="wrap">
+          <span class="tag orange">MECE 試點範圍</span>
+          <h2>
+            只驗證三件事：資料能否被記對、例外能否被早點看見、人是否真的省下時間。
+          </h2>
+          <div class="grid">
+            <article class="card">
+              <span class="code">01｜產品交付</span>
+              <h3>一個標準產品包</h3>
+              <p>
+                固定預算／尺寸、可選材料、加購、交期、替代與客製加價規則。每單只要記「選了什麼、耗了什麼、花多久、出什麼例外」。
+              </p>
+            </article>
+            <article class="card">
+              <span class="code">02｜教學交付</span>
+              <h3>一堂固定課</h3>
+              <p>
+                固定教案、材料、時間、安全、完成標準與課後問題。音檔輸入後，Museon
+                產出逐字稿、待辦與下次應修的教案項目。
+              </p>
+            </article>
+            <article class="card">
+              <span class="code">03｜每日例外</span>
+              <h3>一張摘要清單</h3>
+              <p>
+                只推給
+                Tracy「今天需要她判斷」的事：缺資料、接近下限、未確認、即將到期、課前待辦與未結案問題。
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="data">
+        <div class="wrap">
+          <span class="tag">最小資料契約</span>
+          <h2>
+            先定義「每次都一定要填什麼」；不要求完美資料，但不能讓欄位隨心情改。
+          </h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>資料物件</th>
+                <th>必要欄位</th>
+                <th>誰填／何時填</th>
+                <th>用途</th>
+                <th>不能放什麼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>產品交付紀錄</td>
+                <td>
+                  日期、產品版本、選項、材料／用量、工時、價格區間、狀態、例外。
+                </td>
+                <td>Tracy／執行者，交付當天。</td>
+                <td>成本、時間、缺貨與規格摩擦的復盤。</td>
+                <td>客人敏感需求、完整聊天紀錄、付款資訊。</td>
+              </tr>
+              <tr>
+                <td>課程紀錄</td>
+                <td>
+                  日期、教案版本、出席、材料、實際時長、安全／完成問題、匿名回饋。
+                </td>
+                <td>Tracy／助教，課後 24 小時內。</td>
+                <td>教案改版、提醒與合作講師能力證據。</td>
+                <td>可識別學員的私密資訊，除非另有同意與保存規則。</td>
+              </tr>
+              <tr>
+                <td>材料底表</td>
+                <td>品項代號、單位、現有量、下限、最近異動、資料來源。</td>
+                <td>指定一人，領用／採購時。</td>
+                <td>低庫存「提醒」，不是自動採購。</td>
+                <td>供應商私人聯絡資訊或未核准的成本外流。</td>
+              </tr>
+              <tr>
+                <td>例外事件</td>
+                <td>類型、發生時間、影響、當下處理、是否需改規格、負責人。</td>
+                <td>事件發生時。</td>
+                <td>讓系統把反覆出錯變成可修的規則。</td>
+                <td>責怪個人的描述；只寫可查證事實。</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note">
+            <strong>資料契約的代價與甜頭：</strong
+            >前兩週會覺得多一道記錄；甜頭是之後不必再靠「我記得上次好像」做補貨、改教案與報價。若欄位太多導致沒人填，就刪到只保留能做決定的欄位。
+          </div>
+        </div>
+      </section>
+      <section id="flow">
+        <div class="wrap">
+          <span class="tag orange">人機協作流程</span>
+          <h2>系統先把雜訊變成例外清單；人只處理需要承擔後果的判斷。</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>時點</th>
+                <th>Museon 做什麼</th>
+                <th>Tracy／人做什麼</th>
+                <th>留下什麼證據</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>每次產品／課程後</td>
+                <td>整理固定欄位、轉寫音檔、提出待確認缺漏。</td>
+                <td>確認資料正確；補例外，不讓 AI 猜。</td>
+                <td>版本化紀錄、逐字稿、待辦。</td>
+              </tr>
+              <tr>
+                <td>每日固定時間</td>
+                <td>彙整未確認、缺資料、接近下限、即將到期與未結案例外。</td>
+                <td>核准優先順序：補貨、回覆、修流程或暫停。</td>
+                <td>當日例外摘要與處理狀態。</td>
+              </tr>
+              <tr>
+                <td>每週 30 分鐘</td>
+                <td>彙整工時、例外類型、常見問題與未完成項。</td>
+                <td>決定保留、修規格、修教案或停止一個嘗試。</td>
+                <td>週復盤與變更理由。</td>
+              </tr>
+              <tr>
+                <td>每月</td>
+                <td>比較導入前後的人工分鐘、漏件、重工、資料完整度。</td>
+                <td>決定擴大、維持、退回人工或停止試點。</td>
+                <td>月度試點判定。</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="warning">
+            <strong>核准權不可消失：</strong
+            >若系統提醒「材料低於下限」，它只能提醒；是否採購、買多少、找誰買，仍是
+            Tracy 的商業判斷。若系統草擬客戶回覆，也必須由人確認後再發出。
+          </div>
+        </div>
+      </section>
+      <section id="rhythm">
+        <div class="wrap">
+          <span class="tag">90 天實施節奏</span>
+          <h2>每 30 天只回答一個問題，避免同時做太多而看不出到底哪裡有效。</h2>
+          <div class="stage">
+            <div class="when">第 1–30 天<span>資料能否持續</span></div>
+            <div>
+              <h3>完成工作</h3>
+              <p>
+                定欄位、選產品與課程、建立資料夾與命名、跑音檔→逐字稿→待辦，人工產出每日例外清單。
+              </p>
+            </div>
+            <div>
+              <h3>繼續條件</h3>
+              <p>
+                至少 80%
+                試點紀錄能在當天或隔天完成；欄位不需大量追問才能理解。未達成就簡化欄位，不急著接
+                MCP。
+              </p>
+            </div>
+          </div>
+          <div class="stage">
+            <div class="when">第 31–60 天<span>提醒是否有用</span></div>
+            <div>
+              <h3>完成工作</h3>
+              <p>
+                由 Museon
+                產出每日例外摘要與課前／課後草稿提醒；所有對外訊息維持人核准。
+              </p>
+            </div>
+            <div>
+              <h3>繼續條件</h3>
+              <p>
+                摘要真的讓 Tracy
+                提早看到問題，且不造成大量無用提醒。未達成就調規則／頻率，退回人工摘要。
+              </p>
+            </div>
+          </div>
+          <div class="stage">
+            <div class="when">第 61–90 天<span>規則能否安全排程</span></div>
+            <div>
+              <h3>完成工作</h3>
+              <p>
+                只將已驗證的內部提醒與週復盤排程；記錄送達、失敗、取消與例外。
+              </p>
+            </div>
+            <div>
+              <h3>繼續條件</h3>
+              <p>
+                不重複、不誤發、可暫停且有人查看結果。未達成就停用排程，先修資料或權限。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="audit">
+        <div class="wrap">
+          <span class="tag">頁型 08 審計標準</span>
+          <h2>
+            IM-01～IM-10：導入計畫必須能被執行、被停止，也能被驗證，不是把願望寫成甘特圖。
+          </h2>
+          <table class="audit">
+            <thead>
+              <tr>
+                <th>編號</th>
+                <th>審計問題</th>
+                <th>本頁判定</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>IM-01</td>
+                <td>試點是否夠小，且直接連回產品／課程／管理底表？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜一產品、一課、一份例外摘要。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-02</td>
+                <td>是否先列資料契約，再談自動化？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜四類資料物件均有必要欄位與禁放項。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-03</td>
+                <td>每項資料是否有責任人與填寫時點？</td>
+                <td><span class="status fact">通過</span>｜逐項指定。</td>
+              </tr>
+              <tr>
+                <td>IM-04</td>
+                <td>系統與人的決定權是否被清楚切開？</td>
+                <td>
+                  <span class="status fact">通過</span>｜Museon
+                  整理／提醒；Tracy 核准與承擔。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-05</td>
+                <td>是否避免蒐集不必要的客資與敏感資訊？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜資料最小化與禁放欄位明列。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-06</td>
+                <td>是否有日、週、月節奏，而非只列一次性任務？</td>
+                <td>
+                  <span class="status fact">通過</span>｜四個時間層級已定義。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-07</td>
+                <td>是否有量測效率的前後基準，而非自稱省時？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜比較人工分鐘、漏件、重工與資料完整度。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-08</td>
+                <td>是否有繼續／退回／停止條件？</td>
+                <td>
+                  <span class="status fact">通過</span>｜每 30
+                  天皆有門檻與退回做法。
+                </td>
+              </tr>
+              <tr>
+                <td>IM-09</td>
+                <td>是否避免未驗證的外部寫入與自動接單？</td>
+                <td><span class="status fact">通過</span>｜明確排除。</td>
+              </tr>
+              <tr>
+                <td>IM-10</td>
+                <td>是否能沉澱為日後店員、學員與合作角色可用的資產？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜資料契約、例外字典、復盤與變更理由皆可複用。
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="source" style="margin-top: 19px">
+            依據：第 06 頁可複製營運系統、第 07 頁 MUSEON
+            實際能力與擴張邊界、2026-07-15 Tracy 2-12
+            教練對話逐字稿中對模組、統一規格、工時／成本／庫存與可複製性的討論。本頁的
+            80% 是試點資料完整度門檻，不是財務或市場成果數字。
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        MUSEON × Tracy｜頁型 08：Museon
+        試點導入設計書。先用最小閉環驗證資料與行為，再擴大工具與自動化。
+      </div>
+    </footer>
+  </body>
+</html>
