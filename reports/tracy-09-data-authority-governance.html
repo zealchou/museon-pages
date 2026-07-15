@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+    <title>戀花宅｜資料、權限與自動化治理設計</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap");
+      :root {
+        --ink: #19232a;
+        --muted: #596771;
+        --paper: #f7f3eb;
+        --white: #fffdfa;
+        --pine: #123d36;
+        --teal: #16796b;
+        --orange: #b54d2e;
+        --red: #aa3027;
+        --line: #d9d2c6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.82 "Noto Sans TC",
+          sans-serif;
+      }
+      .wrap {
+        max-width: 1050px;
+        margin: auto;
+        padding: 0 30px;
+      }
+      .hero {
+        padding: 76px 0 64px;
+        background:
+          radial-gradient(circle at 84% 0, #a47350 0, transparent 27%),
+          linear-gradient(137deg, #102d29, #194a42 67%, #215f55);
+        color: #fff;
+      }
+      .eyebrow,
+      .tag,
+      .code {
+        font:
+          600 11px/1.4 "IBM Plex Mono",
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .eyebrow {
+        color: #d9d0ac;
+      }
+      .hero h1,
+      h2 {
+        font-family: "Cormorant Garamond", "Noto Sans TC", serif;
+      }
+      .hero h1 {
+        font-size: clamp(43px, 6.5vw, 76px);
+        line-height: 1.03;
+        margin: 15px 0;
+      }
+      .hero p {
+        font-size: 19px;
+        max-width: 805px;
+        color: #e0ebe6;
+      }
+      .meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        color: #c9d9d3;
+        font-size: 13px;
+      }
+      .nav {
+        position: sticky;
+        z-index: 4;
+        top: 0;
+        background: rgba(247, 243, 235, 0.97);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav .wrap {
+        display: flex;
+        gap: 17px;
+        overflow: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .nav a {
+        color: var(--muted);
+        white-space: nowrap;
+        text-decoration: none;
+        font-size: 13px;
+      }
+      section {
+        padding: 58px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      h2 {
+        font-size: clamp(34px, 4.5vw, 50px);
+        line-height: 1.08;
+        margin: 0 0 15px;
+      }
+      .lead {
+        font-size: 18px;
+        color: #344049;
+      }
+      .tag {
+        padding: 4px 9px;
+        border-radius: 99px;
+        display: inline-block;
+        background: #dceee9;
+        color: #126558;
+      }
+      .tag.orange {
+        background: #f8e1db;
+        color: #96371f;
+      }
+      .decision,
+      .note {
+        background: #fff;
+        border: 1px solid #b9d9d0;
+        border-left: 7px solid var(--teal);
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 25px;
+      }
+      .decision strong {
+        font:
+          600 12px/1.4 "IBM Plex Mono",
+          monospace;
+        letter-spacing: 0.07em;
+        color: var(--teal);
+      }
+      .decision p {
+        font-size: 22px;
+        line-height: 1.55;
+        font-weight: 800;
+        margin: 9px 0 0;
+      }
+      .warning {
+        background: #fff0ef;
+        border: 1px solid #efc2bc;
+        border-left: 5px solid var(--red);
+        border-radius: 0 9px 9px 0;
+        padding: 19px 21px;
+        margin-top: 23px;
+        color: #6f2921;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .fact {
+        background: #dceee9;
+        color: #126558;
+      }
+      .hyp {
+        background: #fff0c8;
+        color: #765907;
+      }
+      .gap {
+        background: #f9e0dc;
+        color: #94301f;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 24px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 20px;
+      }
+      .card h3 {
+        font-size: 21px;
+        line-height: 1.35;
+        margin: 9px 0;
+      }
+      .card .code {
+        color: var(--teal);
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 23px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .table th,
+      .table td {
+        text-align: left;
+        vertical-align: top;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .table th {
+        background: #edf5f1;
+        color: #315047;
+        font-size: 12px;
+      }
+      .table tr:last-child td {
+        border-bottom: 0;
+      }
+      .table td:first-child {
+        font-weight: 800;
+      }
+      .audit {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 23px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .audit th,
+      .audit td {
+        text-align: left;
+        vertical-align: top;
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .audit th {
+        background: #edf5f1;
+        color: #315047;
+        font-size: 12px;
+      }
+      .audit tr:last-child td {
+        border-bottom: 0;
+      }
+      .audit td:first-child {
+        font:
+          600 12px/1.45 "IBM Plex Mono",
+          monospace;
+        color: var(--teal);
+      }
+      .source {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .footer {
+        background: #101a18;
+        color: #c8d7d2;
+        padding: 39px 0;
+        font-size: 13px;
+      }
+      @media (max-width: 760px) {
+        .wrap {
+          padding: 0 18px;
+        }
+        .hero {
+          padding: 55px 0;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        section {
+          padding: 43px 0;
+        }
+        .decision p {
+          font-size: 20px;
+        }
+        .table,
+        .audit {
+          font-size: 13px;
+        }
+        .table th,
+        .table td,
+        .audit th,
+        .audit td {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <span class="eyebrow"
+          >Tracy · Page 09 · data & authority governance</span
+        >
+        <h1>資料、權限與<br />自動化治理設計</h1>
+        <p>
+          讓人放心使用系統的，不是它會做多少事，而是每一筆資料與每一個動作都知道：誰可以看、誰可以改、誰最後負責，以及錯了如何立刻停。
+        </p>
+        <div class="meta">
+          <span>最小權限</span><span>人類最終核准</span
+          ><span>可追溯、可停止、可退出</span>
+        </div>
+      </div>
+    </header>
+    <nav class="nav">
+      <div class="wrap">
+        <a href="#decision">結論</a><a href="#classify">資料分級</a
+        ><a href="#authority">決策權矩陣</a><a href="#events">例外與停止</a
+        ><a href="#implementation">落地順序</a><a href="#audit">審計</a>
+      </div>
+    </nav>
+    <main>
+      <section id="decision">
+        <div class="wrap">
+          <span class="tag">結論先行</span>
+          <h2>
+            先分清資料與決策權，才能讓系統加速，而不把客資、金錢與信任一起放大風險。
+          </h2>
+          <p class="lead">
+            白話說，店員需要知道怎麼做產品，不需要看見所有客戶對話；助教需要知道教案與安全規則，不需要取得付款資訊；Museon
+            可以整理與提醒，卻不能自行承諾交期或派案。這些界線先畫出來，未來加入合作角色才不會靠人情猜規則。
+          </p>
+          <div class="decision">
+            <strong>本頁原則</strong>
+            <p>
+              資料最小化、權限最小化、動作留痕、重要決定雙重確認；任何自動化只做可撤回、低風險、已核准的事。
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="classify">
+        <div class="wrap">
+          <span class="tag orange">資料分級</span>
+          <h2>不是所有資料都該進同一張表、同一個群組或同一個 AI 工具。</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>等級</th>
+                <th>例子</th>
+                <th>誰可看</th>
+                <th>可否進入 Museon 試點</th>
+                <th>規則</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>G0｜公開／可分享</td>
+                <td>已發布產品說明、公開課程資訊、去識別化教案。</td>
+                <td>依發布範圍。</td>
+                <td>可。</td>
+                <td>仍須版本與來源標記；公開不等於可任意改寫。</td>
+              </tr>
+              <tr>
+                <td>G1｜內部作業</td>
+                <td>產品規格、材料代號、匿名工時、例外類型、教案版本。</td>
+                <td>Tracy＋該工作所需角色。</td>
+                <td>試點優先。</td>
+                <td>以資料夾／工作流角色分權；不附帶客戶可識別資訊。</td>
+              </tr>
+              <tr>
+                <td>G2｜受限商業</td>
+                <td>成本底表、供應條件、未公開定價邏輯、合作評核。</td>
+                <td>Tracy＋明確授權管理者。</td>
+                <td>可在私有環境彙整。</td>
+                <td>不放公開 GitHub／Pages；不得轉傳至群組或合作講師。</td>
+              </tr>
+              <tr>
+                <td>G3｜敏感個資／交易</td>
+                <td>
+                  客戶聯絡方式、完整對話、付款、地址、學員私密資訊、合約。
+                </td>
+                <td>依法與依職務最小範圍。</td>
+                <td>本試點不收。</td>
+                <td>另行取得同意、保存期限、存取紀錄與刪除流程後才評估。</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="warning">
+            <strong>最常見的錯誤：</strong>為了「讓 AI
+            更懂」而把所有聊天、收款、地址與合約丟進去。這通常不是效率，而是把資料外流與誤用風險集中化。先用
+            G0／G1 跑出效益，才有資格討論 G2；G3 需另案設計。
+          </div>
+        </div>
+      </section>
+      <section id="authority">
+        <div class="wrap">
+          <span class="tag">決策權矩陣</span>
+          <h2>
+            每件事都要有一位「最後能說是或否的人」；系統與協作角色不能取代她。
+          </h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>動作</th>
+                <th>Museon</th>
+                <th>店員／助教</th>
+                <th>合作角色／學員</th>
+                <th>Tracy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>查閱已核准產品規格</td>
+                <td>可依權限提供</td>
+                <td>可查工作所需版本</td>
+                <td>僅受任務範圍可查</td>
+                <td>設定／撤銷權限</td>
+              </tr>
+              <tr>
+                <td>新增產品／課程紀錄</td>
+                <td>可整理、標記缺欄</td>
+                <td>可填寫</td>
+                <td>僅受督導任務可填</td>
+                <td>核准版本與例外</td>
+              </tr>
+              <tr>
+                <td>修改價格、交期、材料替代</td>
+                <td>可提出提醒／草稿</td>
+                <td>不可自行決定</td>
+                <td>不可自行決定</td>
+                <td><b>唯一最終核准</b></td>
+              </tr>
+              <tr>
+                <td>對外發送訊息</td>
+                <td>草擬、排已核准內部提醒</td>
+                <td>依授權執行</td>
+                <td>不可代表品牌承諾</td>
+                <td>核准對客規則與例外</td>
+              </tr>
+              <tr>
+                <td>客資／交易／合約</td>
+                <td>本試點不處理</td>
+                <td>最小職務需要</td>
+                <td>預設不可看</td>
+                <td><b>決定同意、保存、分享與刪除</b></td>
+              </tr>
+              <tr>
+                <td>合作資格、派案、分潤、終止</td>
+                <td>整理證據、提醒到期</td>
+                <td>可提供觀察</td>
+                <td>不可自我授權</td>
+                <td><b>唯一最終決定；另依合約／法務</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="events">
+        <div class="wrap">
+          <span class="tag orange">例外、升級與停止</span>
+          <h2>好的治理不是假設永遠不會錯，而是錯了不會一路自動錯下去。</h2>
+          <div class="grid">
+            <article class="card">
+              <span class="code">黃燈｜先停自動</span>
+              <h3>資料／規格不完整</h3>
+              <p>
+                缺關鍵欄位、同一產品版本出現矛盾、提醒雜訊過高。動作：退回人工摘要，修資料契約，不擴張。
+              </p>
+            </article>
+            <article class="card">
+              <span class="code">橘燈｜升級 Tracy</span>
+              <h3>客戶或品質例外</h3>
+              <p>
+                客製、交期爭議、品質不符、客訴、成本超出預期。動作：不自動回覆、不派案，保留事實與處理紀錄。
+              </p>
+            </article>
+            <article class="card">
+              <span class="code">紅燈｜立即停用／調查</span>
+              <h3>權限或資料事件</h3>
+              <p>
+                誤發、越權讀取、疑似外流、金流或合約錯誤。動作：停相關工作流與權限、保存日誌、通知
+                Tracy、依事件處理。
+              </p>
+            </article>
+          </div>
+          <div class="note">
+            <strong>程式對照：</strong>MUSEON
+            已有資料命名空間的保守隔離邏輯、動作／事件審計紀錄，以及針對高風險自動執行的緊急停止模式。本案不直接宣稱這些內部保護可自動覆蓋
+            Tracy
+            的所有商業資料；而是採用相同原則，在導入前明訂資料分級、停用按鈕與責任人。
+          </div>
+        </div>
+      </section>
+      <section id="implementation">
+        <div class="wrap">
+          <span class="tag">落地順序</span>
+          <h2>治理不是最後補的條款；它和第一張資料表一起建立。</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>何時</th>
+                <th>要做什麼</th>
+                <th>完成證據</th>
+                <th>未完成不得做什麼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>第 1 週</td>
+                <td>
+                  列出 G0–G3 資料、資料擁有人、儲存位置、可看角色與保存期限。
+                </td>
+                <td>資料地圖一頁紙。</td>
+                <td>不得把資料接入 MCP 或公開 repo。</td>
+              </tr>
+              <tr>
+                <td>第 2–4 週</td>
+                <td>建立產品／課程／例外紀錄的角色權限；用測試資料試跑。</td>
+                <td>角色測試：每個人只能看到需要的欄位。</td>
+                <td>不得使用真實客資做測試。</td>
+              </tr>
+              <tr>
+                <td>第 5–8 週</td>
+                <td>啟用每日摘要與已核准的內部提醒；每次發送／失敗均留痕。</td>
+                <td>抽查日誌與停用流程。</td>
+                <td>不得啟用未核准的對客自動回覆。</td>
+              </tr>
+              <tr>
+                <td>第 9–12 週</td>
+                <td>回顧權限、例外、效益與退出需求；決定是否擴到第二模組。</td>
+                <td>月度治理審查。</td>
+                <td>不得在未完成審查前擴大資料範圍。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="audit">
+        <div class="wrap">
+          <span class="tag">頁型 09 審計標準</span>
+          <h2>
+            GV-01～GV-10：治理頁要能讓人知道「誰能做什麼」，不是用抽象的資安口號帶過。
+          </h2>
+          <table class="audit">
+            <thead>
+              <tr>
+                <th>編號</th>
+                <th>審計問題</th>
+                <th>本頁判定</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GV-01</td>
+                <td>資料是否依敏感性與用途分級？</td>
+                <td><span class="status fact">通過</span>｜G0–G3 明確定義。</td>
+              </tr>
+              <tr>
+                <td>GV-02</td>
+                <td>每級是否有可看角色與禁放範圍？</td>
+                <td><span class="status fact">通過</span>｜逐級列出。</td>
+              </tr>
+              <tr>
+                <td>GV-03</td>
+                <td>是否採資料與權限最小化，而非「AI 都看得到」？</td>
+                <td>
+                  <span class="status fact">通過</span>｜G1 優先，G3 排除試點。
+                </td>
+              </tr>
+              <tr>
+                <td>GV-04</td>
+                <td>價格、交期、客資、派案與合作資格是否有最終人類責任？</td>
+                <td>
+                  <span class="status fact">通過</span>｜Tracy 為最終核准者。
+                </td>
+              </tr>
+              <tr>
+                <td>GV-05</td>
+                <td>系統是否被限定為整理／提醒，而非未授權承諾？</td>
+                <td><span class="status fact">通過</span>｜矩陣已切開。</td>
+              </tr>
+              <tr>
+                <td>GV-06</td>
+                <td>是否有黃／橘／紅三種例外升級機制？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜停自動、升級、停用／調查。
+                </td>
+              </tr>
+              <tr>
+                <td>GV-07</td>
+                <td>權限或資料事件是否有停用、留痕與通知方式？</td>
+                <td><span class="status fact">通過</span>｜紅燈處理明定。</td>
+              </tr>
+              <tr>
+                <td>GV-08</td>
+                <td>是否禁止真實客資在未驗證環境試跑？</td>
+                <td><span class="status fact">通過</span>｜第 2–4 週明定。</td>
+              </tr>
+              <tr>
+                <td>GV-09</td>
+                <td>是否連回未來合作角色，而非只保護創辦人？</td>
+                <td>
+                  <span class="status fact">通過</span
+                  >｜店員、助教、協作與學員分列。
+                </td>
+              </tr>
+              <tr>
+                <td>GV-10</td>
+                <td>是否有程式與制度證據，且不過度宣稱？</td>
+                <td>
+                  <span class="status fact">通過</span>｜引用 MUSEON
+                  命名空間、審計、緊急停止原則；商業落地仍須另行實作。
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="source" style="margin-top: 19px">
+            程式查核依據：`src/museon/governance/namespace.py`（保守資料命名空間）、`governance/response_guard.py`（公開
+            URL
+            檢查與輸出防護）、`immune/security/audit.py`（動作／事件留痕）、`guard/emergency_stop.py`（高風險自動化停止模式）。本頁是
+            Tracy
+            導入時需建立的商業治理設計，不聲稱已自動完成法律、資安或個資合規。
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="wrap">
+        MUSEON × Tracy｜頁型
+        09：資料、權限與自動化治理設計。讓系統擴張時，仍保留邊界、責任、停用與退出。
+      </div>
+    </footer>
+  </body>
+</html>
