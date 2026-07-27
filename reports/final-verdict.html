@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#07111f">
+  <title>A/B 模型團隊交叉測試｜最終判決</title>
+  <style>
+    :root {
+      --bg: #07111f; --panel: rgba(15,28,47,.86); --panel-2: rgba(22,40,66,.76);
+      --line: rgba(166,202,255,.16); --text: #f3f7ff; --muted: #9eb0c8;
+      --gold: #f6c76b; --cyan: #63dbff; --green: #63e6a6; --red: #ff858f;
+      --a: #9ca8bc; --shadow: 0 24px 80px rgba(0,0,0,.34);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      background: radial-gradient(circle at 12% 5%,rgba(48,134,255,.19),transparent 34rem),
+        radial-gradient(circle at 90% 18%,rgba(62,221,172,.13),transparent 30rem),
+        linear-gradient(155deg,#06101c 0%,#081728 52%,#07111f 100%);
+      font-family: Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+      line-height: 1.68;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .22;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size: 38px 38px; mask-image: linear-gradient(to bottom,black,transparent 82%);
+    }
+    .wrap { width: min(1120px,calc(100% - 32px)); margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; color: var(--muted); font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; }
+    .brand { color: var(--cyan); font-weight: 800; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid rgba(99,230,166,.32); border-radius: 999px; color: var(--green); background: rgba(99,230,166,.08); font-size: .76rem; font-weight: 800; letter-spacing: .08em; }
+    .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 14px currentColor; }
+    .hero { padding: 54px 0 56px; text-align: center; }
+    .eyebrow { margin: 0 0 14px; color: var(--gold); font-size: .78rem; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
+    h1 { margin: 0 auto; max-width: 900px; font-size: clamp(2.45rem,7vw,5.5rem); line-height: 1.04; letter-spacing: -.055em; }
+    h1 span { color: transparent; background: linear-gradient(90deg,#fff 0%,#8ff2ca 48%,#63dbff 100%); -webkit-background-clip: text; background-clip: text; }
+    .lead { max-width: 760px; margin: 24px auto 0; color: #c3d1e4; font-size: clamp(1.02rem,2vw,1.24rem); }
+    .verdict { margin: 36px auto 0; max-width: 860px; padding: 22px 24px; border: 1px solid rgba(99,230,166,.35); border-radius: 20px; background: linear-gradient(135deg,rgba(99,230,166,.13),rgba(99,219,255,.07)); box-shadow: var(--shadow); font-size: 1.12rem; }
+    .verdict strong { color: var(--green); }
+    section { padding: 34px 0; }
+    .section-head { margin-bottom: 22px; }
+    .section-head p { margin: 0; color: var(--muted); }
+    h2 { margin: 0 0 5px; font-size: clamp(1.5rem,3vw,2.15rem); letter-spacing: -.035em; }
+    h3 { margin: 0; font-size: 1.12rem; }
+    .scoreboard { overflow: hidden; border: 1px solid var(--line); border-radius: 26px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(18px); }
+    .teams { display: grid; grid-template-columns: 1fr 1fr; }
+    .team { padding: clamp(24px,4vw,42px); }
+    .team + .team { border-left: 1px solid var(--line); }
+    .team-name { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .team-letter { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,.06); font-size: 1.2rem; font-weight: 900; }
+    .team-b .team-letter { color: #052117; background: var(--green); }
+    .team-sub { margin-top: 4px; color: var(--muted); font-size: .9rem; }
+    .big-score { margin: 28px 0 8px; font-size: clamp(2.5rem,6vw,4.4rem); line-height: 1; font-weight: 900; letter-spacing: -.06em; }
+    .team-b .big-score { color: var(--green); }
+    .score-note { color: var(--muted); font-size: .82rem; }
+    .bar { height: 8px; margin: 17px 0 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.075); }
+    .bar > span { display: block; height: 100%; border-radius: inherit; background: var(--a); }
+    .team-b .bar > span { background: linear-gradient(90deg,var(--green),var(--cyan)); }
+    .team-list { display: grid; gap: 8px; margin-top: 24px; color: #c4d1e2; font-size: .9rem; }
+    .team-list span { display: flex; justify-content: space-between; gap: 20px; border-bottom: 1px solid rgba(255,255,255,.06); padding-bottom: 8px; }
+    .team-list b { color: var(--text); }
+    .metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .metric,.card { border: 1px solid var(--line); border-radius: 20px; background: var(--panel-2); box-shadow: 0 16px 44px rgba(0,0,0,.18); }
+    .metric { padding: 22px; }
+    .metric-label { color: var(--muted); font-size: .78rem; font-weight: 700; letter-spacing: .06em; }
+    .metric-value { margin-top: 6px; font-size: 1.72rem; font-weight: 900; letter-spacing: -.04em; }
+    .metric-detail { margin-top: 5px; color: #b7c5d8; font-size: .84rem; }
+    .win { color: var(--green)!important; } .loss { color: var(--red)!important; }
+    .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+    .card { padding: 24px; }
+    .card-number { display: inline-grid; place-items: center; width: 32px; height: 32px; margin-bottom: 14px; border-radius: 10px; color: #062418; background: var(--green); font-weight: 900; }
+    .card p { margin: 8px 0 0; color: var(--muted); }
+    .card strong { color: var(--text); }
+    .warning { display: grid; grid-template-columns: auto 1fr; gap: 16px; padding: 24px; border: 1px solid rgba(246,199,107,.28); border-radius: 20px; background: rgba(246,199,107,.075); }
+    .warning-mark { color: var(--gold); font-size: 1.5rem; }
+    .warning p { margin: 5px 0 0; color: #d6c7a6; }
+    .decision { padding: clamp(28px,5vw,48px); border-radius: 28px; border: 1px solid rgba(99,219,255,.24); background: linear-gradient(145deg,rgba(25,54,84,.9),rgba(9,25,43,.92)); box-shadow: var(--shadow); }
+    .decision-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 36px; align-items: center; }
+    .decision p { color: #bdcbe0; }
+    .decision-callout { padding: 24px; border-radius: 20px; background: rgba(99,230,166,.1); border: 1px solid rgba(99,230,166,.24); }
+    .decision-callout small { display: block; color: var(--muted); }
+    .decision-callout strong { display: block; margin-top: 4px; color: var(--green); font-size: 1.5rem; }
+    footer { padding: 56px 0 72px; color: #7f91aa; font-size: .8rem; text-align: center; }
+    .fine-print { max-width: 860px; margin: 0 auto; }
+    @media (max-width:820px) { .metrics { grid-template-columns: repeat(2,1fr); } .decision-grid { grid-template-columns: 1fr; } }
+    @media (max-width:640px) {
+      .wrap { width: min(100% - 22px,1120px); } .topbar { padding: 17px 0; } .topbar > span:last-child { display:none; }
+      .hero { padding: 40px 0 38px; } .teams,.grid { grid-template-columns: 1fr; } .team + .team { border-left: 0; border-top: 1px solid var(--line); }
+      .metrics { grid-template-columns: 1fr 1fr; gap: 10px; } .metric { padding: 17px; } .metric-value { font-size: 1.42rem; } .warning { grid-template-columns: 1fr; gap: 2px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <span class="brand">MUSEON · Model Fitness</span><span class="badge">匿名裁判已完成</span><span>2026.07.27</span>
+  </header>
+  <main>
+    <section class="wrap hero">
+      <p class="eyebrow">Team Fitness V1 · Final Verdict</p>
+      <h1>A/B 模型團隊<br><span>最終判決</span></h1>
+      <p class="lead">12 組交叉實戰、四階段協作、凍結考卷，加上獨立匿名裁判覆核。結果不是些微差距，而是同一方向的全面領先。</p>
+      <div class="verdict"><strong>決策結論：本輪優先採用 Team B。</strong><br>它在機器品質、匿名評分、硬閘安全與速度四個可採信軸都領先 Team A。</div>
+    </section>
+    <section class="wrap" aria-labelledby="score-title">
+      <div class="section-head"><h2 id="score-title">正面交鋒</h2><p>觀察性合計分；正式規則仍以各軸分開裁決，不硬湊單一冠軍分數。</p></div>
+      <div class="scoreboard"><div class="teams">
+        <article class="team team-a">
+          <div class="team-name"><div><h3>Team A</h3><div class="team-sub">大型專家團隊</div></div><span class="team-letter">A</span></div>
+          <div class="big-score">359<small style="font-size:.34em;color:var(--muted)"> / 600</small></div><div class="bar"><span style="width:59.83%"></span></div><div class="score-note">機器 335 ＋ 匿名裁判 24</div>
+          <div class="team-list"><span>機器品質 <b>335 / 360</b></span><span>匿名裁判 <b>24 / 240</b></span><span>硬閘命中 <b class="loss">6 / 6 案</b></span><span>每案平均 <b>38 分 50 秒</b></span></div>
+        </article>
+        <article class="team team-b">
+          <div class="team-name"><div><h3>Team B</h3><div class="team-sub">記憶體效率團隊</div></div><span class="team-letter">B</span></div>
+          <div class="big-score">481<small style="font-size:.34em;color:var(--muted)"> / 600</small></div><div class="bar"><span style="width:80.17%"></span></div><div class="score-note">機器 360 ＋ 匿名裁判 121</div>
+          <div class="team-list"><span>機器品質 <b class="win">360 / 360</b></span><span>匿名裁判 <b class="win">121 / 240</b></span><span>硬閘命中 <b class="win">0 / 6 案</b></span><span>每案平均 <b class="win">26 分 58 秒</b></span></div>
+        </article>
+      </div></div>
+    </section>
+    <section class="wrap" aria-labelledby="axis-title">
+      <div class="section-head"><h2 id="axis-title">四條獨立證據，同指一個方向</h2><p>不是單靠一個漂亮總分，而是四個不同角度彼此交叉支持。</p></div>
+      <div class="metrics">
+        <article class="metric"><div class="metric-label">機器品質</div><div class="metric-value win">B +25</div><div class="metric-detail">360 對 335</div></article>
+        <article class="metric"><div class="metric-label">匿名裁判</div><div class="metric-value win">B +97</div><div class="metric-detail">121 對 24</div></article>
+        <article class="metric"><div class="metric-label">硬閘安全</div><div class="metric-value win">B 0 次</div><div class="metric-detail">A 為 6 次</div></article>
+        <article class="metric"><div class="metric-label">平均耗時</div><div class="metric-value win">少 30.6%</div><div class="metric-detail">每案省 11 分 52 秒</div></article>
+      </div>
+    </section>
+    <section class="wrap" aria-labelledby="why-title">
+      <div class="section-head"><h2 id="why-title">勝負真正拉開在哪裡</h2><p>Team B 的優勢主要不是「模型比較大」，而是交接可用、規劃有讀真實資料。</p></div>
+      <div class="grid">
+        <article class="card"><span class="card-number">1</span><h3>Team A 的第一棒六次全部斷球</h3><p>六份交接都只留下工具標頭，沒有可供下一階段使用的內容，因此 <strong>6/6 全部觸發硬閘</strong>。</p></article>
+        <article class="card"><span class="card-number">2</span><h3>Team B 在成功讀檔時，規劃品質明顯較高</h3><p>它能把真實 caller、資料流、失敗語意與最小驗證連起來；六案中四案呈現高品質可施工計畫。</p></article>
+        <article class="card"><span class="card-number">3</span><h3>Team A 出現不實觀察</h3><p>兩次規劃引用不存在的檔案或聲稱找不到實際存在的檔案，已構成需要優先處理的可信度風險。</p></article>
+        <article class="card"><span class="card-number">4</span><h3>唯一施工失敗也發生在 Team A</h3><p>其中一案沒有修改目標程式，六項測試維持全紅；Team B 則六案機器驗證全部通過。</p></article>
+      </div>
+    </section>
+    <section class="wrap" aria-labelledby="limits-title">
+      <div class="section-head"><h2 id="limits-title">判決保留事項</h2><p>贏家明確，不代表這輪沒有考場污染。</p></div>
+      <div class="warning"><div class="warning-mark">⚠</div><div><h3>審查階段從第二題起失去鑑別力</h3><p>兩隊共用的審查模型後續都錯誤聲稱「缺少檔案」，使 10/12 份審查近乎無效。這是考場／權限層問題，對兩隊同向壓低；因此本輪可決定團隊選擇，但<strong>不能把審查分數當成該模型能力上限</strong>。</p></div></div>
+    </section>
+    <section class="wrap"><div class="decision"><div class="decision-grid">
+      <div><p class="eyebrow">Operational Decision</p><h2>最終採用判斷</h2><p>若現在必須在兩套團隊中選一套進入下一輪駕馭工程，選 <strong>Team B</strong>。它不只分數高，還同時做到零硬閘、全數機器驗證通過與更短週期。</p><p>下一輪的正確動作不是再替 Team A 解釋，而是先修復共用審查讀檔問題，再用等價新題重測，確認 Team B 的規劃優勢能否穩定重現。</p></div>
+      <div class="decision-callout"><small>本輪建議</small><strong>Team B 晉級</strong><small>Team A 暫不進入正式協作路徑</small></div>
+    </div></div></section>
+  </main>
+  <footer class="wrap"><p class="fine-print">資料口徑：Team Fitness V1 corrected rerun，6 個案例、A/B 各 6 組，共 12 組。每組依序經過需求接手、規劃、施工、審查與執行驗證；機器分 60 分、匿名裁判分 40 分。官方 V1 規則不指定單一綜合冠軍，本頁的「晉級」是依所有可採信決策軸一致領先所做的營運判斷。</p></footer>
+</body>
+</html>
