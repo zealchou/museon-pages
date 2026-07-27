@@ -4,409 +4,366 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>海洋空中瑜伽（台南）｜產業資源配置與品牌定位診斷報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  .viz-root {
-    color-scheme: light;
-    --surface-1:      #fcfcfb;
-    --page-plane:     #f9f9f7;
-    --text-primary:   #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted:     #898781;
-    --gridline:       #e1e0d9;
-    --border:         rgba(11,11,11,0.10);
-    --series-blue:    #2a78d6;
-    --series-blue-soft: #eaf2fc;
-    --status-good:    #0ca30c;
-    --status-warning: #b8790c;
-    --status-critical:#d03b3b;
-    --status-good-bg:    #e7f6e7;
-    --status-warning-bg: #fdf1dc;
-    --status-critical-bg:#fbe7e6;
+  :root {
+    --ember:        #C4502A;
+    --ember-light:  #E0714D;
+    --ember-dark:   #9A3A1C;
+    --teal:         #2A7A6E;
+    --teal-light:   #3A9A8E;
+    --gold:         #B8923A;
+    --gold-light:   #D4AE5A;
+    --ink:          #12121A;
+    --slate:        #5A5A6E;
+    --mist:         #9898A8;
+    --border:       #E2E0DA;
+    --parchment:    #F7F5F0;
+    --snow:         #FDFCFA;
+    --success:      #2D8A6E;
+    --warning:      #C9943A;
+    --error:        #C4402A;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root {
-      color-scheme: dark;
-      --surface-1:      #1a1a19;
-      --page-plane:     #0d0d0d;
-      --text-primary:   #ffffff;
-      --text-secondary: #c3c2b7;
-      --text-muted:     #898781;
-      --gridline:       #2c2c2a;
-      --border:         rgba(255,255,255,0.10);
-      --series-blue:    #3987e5;
-      --series-blue-soft: #17233a;
-      --status-good:    #0ca30c;
-      --status-warning: #fab219;
-      --status-critical:#e66767;
-      --status-good-bg:    #123312;
-      --status-warning-bg: #3a2c0c;
-      --status-critical-bg:#3a1817;
-    }
-  }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    margin: 0;
-    background: var(--page-plane);
-    font-family: system-ui, -apple-system, "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
-    color: var(--text-primary);
-    line-height: 1.75;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    background: var(--parchment); color: var(--ink); line-height: 1.75;
   }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px 96px; }
-  header.hero {
-    background: var(--surface-1);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px 36px;
-    margin-bottom: 32px;
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #12121A 0%, #1E1A2E 55%, #2A1A1A 100%);
+    color: white; padding: 80px 40px 60px; text-align: center; position: relative; overflow: hidden;
   }
-  .eyebrow {
-    font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
-    color: var(--series-blue); text-transform: uppercase; margin-bottom: 10px;
+  .hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 60% 40%, rgba(196,80,42,0.16) 0%, transparent 60%); pointer-events: none;
   }
-  h1 { font-size: 28px; margin: 0 0 8px; line-height: 1.4; }
-  .subtitle { color: var(--text-secondary); font-size: 15px; margin: 0; }
-  .meta-row {
-    display: flex; gap: 24px; margin-top: 20px; padding-top: 20px;
-    border-top: 1px solid var(--gridline); font-size: 13px; color: var(--text-muted);
-    flex-wrap: wrap;
+  .hero-tag {
+    display: inline-block; border: 1px solid rgba(196,80,42,0.6); color: var(--ember-light);
+    padding: 4px 16px; border-radius: 20px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px;
+    position: relative;
   }
-  section { margin-bottom: 40px; }
-  h2 {
-    font-size: 20px; margin: 0 0 16px; padding-bottom: 10px;
-    border-bottom: 2px solid var(--text-primary);
+  .hero h1 {
+    font-family: 'Cormorant Garamond', 'Noto Serif TC', serif; font-size: clamp(30px, 4.6vw, 48px);
+    font-weight: 700; line-height: 1.35; margin-bottom: 16px; color: #FDFCFA; position: relative;
   }
-  h3 { font-size: 16px; margin: 24px 0 10px; color: var(--text-primary); }
-  p { color: var(--text-secondary); margin: 0 0 14px; }
-  .card {
-    background: var(--surface-1); border: 1px solid var(--border);
-    border-radius: 12px; padding: 24px 28px; margin-bottom: 16px;
+  .hero-sub { font-size: 15px; color: rgba(255,255,255,0.62); max-width: 620px; margin: 0 auto 32px; position: relative; }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    margin-top: 36px; padding-top: 36px; border-top: 1px solid rgba(255,255,255,0.1); position: relative;
   }
-  .lede {
-    font-size: 16px; color: var(--text-primary); font-weight: 500;
+  .hero-stat-item { text-align: center; }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: var(--ember-light); display: block; }
+  .hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 28px; }
+  .section-num { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 700; color: var(--border); line-height: 1; min-width: 44px; }
+  .section-title { font-family: 'Cormorant Garamond', 'Noto Serif TC', serif; font-size: 25px; font-weight: 700; color: var(--ink); }
+  .section-desc { font-size: 13.5px; color: var(--slate); margin-top: 4px; }
+
+  p { color: var(--slate); margin-bottom: 12px; }
+  strong.ink { color: var(--ink); }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(196,80,42,0.07) 0%, rgba(184,146,58,0.07) 100%);
+    border: 1px solid rgba(196,80,42,0.22); border-radius: 12px; padding: 28px 32px; margin-bottom: 16px;
   }
-  ul, ol { color: var(--text-secondary); padding-left: 22px; margin: 0 0 14px; }
-  li { margin-bottom: 6px; }
-  table {
-    width: 100%; border-collapse: collapse; font-size: 14px;
-    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
-    overflow: hidden;
+  .highlight-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--ember); margin-bottom: 10px; }
+  .highlight-box p { font-size: 15px; color: var(--ink); line-height: 1.75; margin-bottom: 0; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 8px; }
+  .card { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; position: relative; }
+  .card-accent { position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 12px 0 0 12px; }
+  .card h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+  .card p { font-size: 13.5px; color: var(--slate); line-height: 1.65; margin-bottom: 0; }
+  .card .tag { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 12px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.3px; }
+  .tag-num {
+    display: inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
+    background: rgba(196,80,42,0.12); color: var(--ember); font-size:12px; font-weight:700; margin-bottom:10px;
   }
-  caption { caption-side: top; text-align: left; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
-  thead th {
-    text-align: left; font-size: 12px; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 0.03em;
-    padding: 12px 16px; border-bottom: 1px solid var(--gridline);
-    background: var(--page-plane);
+  .tag-num.cut { background: rgba(196,64,42,0.12); color: var(--error); }
+
+  .table-scroll { overflow-x: auto; margin-bottom: 8px; border-radius: 12px; }
+  .m-table { width: 100%; border-collapse: collapse; background: var(--snow); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); font-size: 13.5px; }
+  .m-table caption { caption-side: top; text-align: left; font-size: 12.5px; color: var(--mist); margin-bottom: 8px; font-weight: 500; }
+  .m-table th { background: #12121A; color: rgba(255,255,255,0.82); padding: 12px 16px; text-align: left; font-weight: 600; font-size: 11.5px; letter-spacing: 0.4px; text-transform: uppercase; }
+  .m-table td { padding: 13px 16px; border-bottom: 1px solid var(--border); color: var(--slate); vertical-align: top; }
+  .m-table tr:last-child td { border-bottom: none; }
+  .m-table td.force-name { color: var(--ink); font-weight: 600; white-space: nowrap; }
+
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+  .badge-cut { background: rgba(196,64,42,0.12); color: var(--error); }
+  .badge-add { background: rgba(184,146,58,0.14); color: var(--gold); }
+  .badge-keep { background: rgba(45,138,110,0.12); color: var(--success); }
+
+  .slogan-grid { display: grid; gap: 12px; margin: 6px 0 24px; }
+  .slogan-item { display: flex; gap: 16px; align-items: baseline; border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; background: var(--snow); }
+  .slogan-tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--ember); background: rgba(196,80,42,0.1); border-radius: 6px; padding: 3px 9px; flex-shrink: 0; }
+  .slogan-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; font-weight: 600; color: var(--ink); }
+
+  .timeline { position: relative; margin-bottom: 8px; }
+  .timeline::before { content: ''; position: absolute; left: 23px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { display: flex; gap: 22px; margin-bottom: 26px; position: relative; }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-dot { width: 46px; height: 46px; border-radius: 50%; background: var(--ember); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; z-index: 1; text-align:center; line-height:1.2; }
+  .timeline-content { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; flex: 1; }
+  .timeline-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+  .timeline-content p { font-size: 13.5px; margin-bottom: 0; }
+
+  /* ── 打底順序（第一性原理依賴鏈）── */
+  .foundation { position: relative; margin-bottom: 8px; }
+  .foundation::before { content: ''; position: absolute; left: 27px; top: 4px; bottom: 4px; width: 2px; background: linear-gradient(var(--ember) 0%, var(--gold) 65%, var(--teal) 100%); }
+  .f-step { display: flex; gap: 22px; margin-bottom: 22px; position: relative; }
+  .f-step:last-child { margin-bottom: 0; }
+  .f-num {
+    width: 56px; height: 56px; border-radius: 50%; background: #12121A; color: var(--ember-light);
+    display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 700; flex-shrink: 0; z-index: 1; border: 2px solid var(--ember);
   }
-  tbody td {
-    padding: 14px 16px; border-bottom: 1px solid var(--gridline);
-    color: var(--text-secondary); vertical-align: top;
+  .f-body { background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; flex: 1; }
+  .f-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .f-title { font-size: 15.5px; font-weight: 700; color: var(--ink); }
+  .f-workload { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .wl-1 { background: rgba(45,138,110,0.12); color: var(--success); }
+  .wl-2 { background: rgba(42,122,110,0.12); color: var(--teal); }
+  .wl-3 { background: rgba(184,146,58,0.14); color: var(--gold); }
+  .wl-4 { background: rgba(196,64,42,0.12); color: var(--error); }
+  .f-row { font-size: 13.5px; color: var(--slate); margin-bottom: 8px; }
+  .f-row:last-child { margin-bottom: 0; }
+  .f-row b { color: var(--ink); font-weight: 600; }
+  .f-unlock { font-size: 12.5px; color: var(--teal); background: rgba(42,122,110,0.08); border-radius: 8px; padding: 9px 13px; margin-top: 6px; }
+
+  .disclaimer { font-size: 13px; color: var(--mist); background: var(--snow); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 8px; }
+
+  .report-footer { background: #12121A; color: rgba(255,255,255,0.5); padding: 40px 24px; font-size: 13px; }
+  .report-footer h3 { font-family:'Cormorant Garamond',serif; font-size:16px; color: rgba(255,255,255,0.85); margin-bottom: 14px; font-weight:600; }
+  .source-list { list-style:none; }
+  .source-list li { margin-bottom: 6px; }
+  .report-footer a { color: var(--ember-light); text-decoration: none; }
+  .report-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 20px 40px; }
+    .hero-stats { gap: 24px; }
+    .container { padding: 0 16px; }
+    .section { padding: 40px 0; }
   }
-  tbody tr:last-child td { border-bottom: none; }
-  td.force-name { color: var(--text-primary); font-weight: 600; white-space: nowrap; }
-  .badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
-    white-space: nowrap;
-  }
-  .badge-good { background: var(--status-good-bg); color: var(--status-good); }
-  .badge-warning { background: var(--status-warning-bg); color: var(--status-warning); }
-  .badge-critical { background: var(--status-critical-bg); color: var(--status-critical); }
-  .table-scroll { overflow-x: auto; margin-bottom: 8px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
-  @media (max-width: 720px) { .grid-3 { grid-template-columns: 1fr; } }
-  .pill-card {
-    border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px;
-    background: var(--surface-1);
-  }
-  .pill-card .num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--series-blue-soft); color: var(--series-blue);
-    font-size: 13px; font-weight: 700; margin-bottom: 10px;
-  }
-  .pill-card h4 { margin: 0 0 8px; font-size: 14px; color: var(--text-primary); }
-  .pill-card p { margin: 0; font-size: 13px; }
-  .cut .num { background: var(--status-critical-bg); color: var(--status-critical); }
-  .quote-block {
-    border-left: 3px solid var(--series-blue); padding: 4px 0 4px 18px;
-    margin: 16px 0; font-size: 15px; color: var(--text-primary);
-  }
-  .slogan-grid { display: grid; gap: 12px; margin: 16px 0; }
-  .slogan-item {
-    display: flex; gap: 14px; align-items: baseline;
-    border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px;
-    background: var(--surface-1);
-  }
-  .slogan-tag {
-    font-size: 12px; font-weight: 700; color: var(--series-blue);
-    background: var(--series-blue-soft); border-radius: 6px; padding: 2px 8px;
-    flex-shrink: 0;
-  }
-  .slogan-text { font-size: 15px; font-weight: 600; color: var(--text-primary); }
-  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
-  .tl-item { display: flex; gap: 18px; }
-  .tl-marker { display: flex; flex-direction: column; align-items: center; }
-  .tl-dot {
-    width: 12px; height: 12px; border-radius: 50%; background: var(--series-blue);
-    margin-top: 5px; flex-shrink: 0;
-  }
-  .tl-line { flex: 1; width: 2px; background: var(--gridline); margin: 4px 0; }
-  .tl-content { padding-bottom: 28px; }
-  .tl-content:last-child { padding-bottom: 0; }
-  .tl-time { font-size: 12px; font-weight: 700; color: var(--series-blue); text-transform: uppercase; letter-spacing: 0.03em; }
-  .tl-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 4px 0 6px; }
-  .source-list { font-size: 13px; color: var(--text-muted); }
-  .source-list a { color: var(--series-blue); text-decoration: none; }
-  .source-list a:hover { text-decoration: underline; }
-  .disclaimer {
-    font-size: 13px; color: var(--text-muted); background: var(--surface-1);
-    border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px;
-  }
-  footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--gridline); }
 </style>
 </head>
 <body>
-<div class="viz-root">
-<div class="wrap">
 
-  <header class="hero">
-    <div class="eyebrow">產業資源配置 × 品牌定位診斷</div>
-    <h1>海洋空中瑜伽（台南）<br>資源該往哪裡集中，品牌該怎麼聚焦</h1>
-    <p class="subtitle">基於公開資料之盡職調查（DD）與商模十二力健診，回答「加強什麼／減什麼」與「定位怎麼收斂」兩個問題。</p>
-    <div class="meta-row">
-      <span>產業：空中瑜伽 / 運動休閒</span>
-      <span>地區：台南市（北區・中西區・東區三館）</span>
-      <span>方法：商模十二力健診＋品牌定位七步框架</span>
-      <span>日期：2026 年 7 月</span>
+<div class="hero">
+  <span class="hero-tag">MUSEON 產業診斷 · 品牌定位</span>
+  <h1>海洋空中瑜伽（台南）<br>資源該往哪裡集中，品牌該怎麼聚焦</h1>
+  <p class="hero-sub">基於公開資料之盡職調查（DD）與商模十二力健診，回答「加強什麼／減什麼」與「定位怎麼收斂」兩個問題，並附上第一性原理排序的重新打底步驟。</p>
+  <div class="hero-stats">
+    <div class="hero-stat-item"><span class="hero-stat-num">首家</span><span class="hero-stat-label">南台灣引進 Bungee Superfly</span></div>
+    <div class="hero-stat-item"><span class="hero-stat-num">6 屆</span><span class="hero-stat-label">空中瑜伽師資培訓</span></div>
+    <div class="hero-stat-item"><span class="hero-stat-num">3 館</span><span class="hero-stat-label">台南據點規模</span></div>
+    <div class="hero-stat-item"><span class="hero-stat-num">12 力</span><span class="hero-stat-label">商模健診覆蓋面</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header"><span class="section-num">·</span><div><div class="section-title">結論先行</div></div></div>
+    <div class="highlight-box">
+      <h3>一句話結論</h3>
+      <p>海洋空中瑜伽手上握有一張別人拿不走的牌——「南台灣首家引進 Bungee Superfly」的技術先發卡位，以及已經辦到第六屆的空中瑜伽師資培訓資歷。但目前對外溝通把這張牌收進口袋，換成「生活方式、內心平靜」這種每一家瑜伽館都能講的話，於是三館規模的優勢，被稀釋成看起來跟街角一人工作室沒有太大差異。</p>
+      <p style="margin-top:14px;">兩個問題的答案，其實是同一件事的兩面：<strong class="ink">資源該往「技術權威」集中，品牌該用「我們是教別人技術的人」重新說話。</strong></p>
     </div>
-  </header>
+  </div>
 
-  <section>
-    <h2>結論先行</h2>
-    <div class="card">
-      <p class="lede">海洋空中瑜伽手上握有一張別人拿不走的牌——「南台灣首家引進 Bungee Superfly」的技術先發卡位，以及已經辦到第六屆的空中瑜伽師資培訓資歷。但目前對外溝通把這張牌收進口袋，換成「生活方式、內心平靜」這種每一家瑜伽館都能講的話，於是三館規模的優勢，被稀釋成看起來跟街角一人工作室沒有太大差異。</p>
-      <p style="margin-top:14px;">兩個問題的答案，其實是同一件事的兩面：<strong style="color:var(--text-primary)">資源該往「技術權威」集中，品牌該用「我們是教別人技術的人」重新說話。</strong></p>
+  <div class="section">
+    <div class="section-header"><span class="section-num">0</span><div><div class="section-title">DD 摘要</div><div class="section-desc">先講查到什麼，再談建議</div></div></div>
+    <div class="card-grid">
+      <div class="card"><div class="card-accent" style="background:var(--ember)"></div>
+        <h4>品牌現況</h4><p>三館並行（北區旗艦館、中西區健康館、東區復興館），統一電話 06-2510296，有 APP 與 LINE 官方帳號，登記公司為「杉鏵運動休閒用品有限公司」。</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--gold)"></div>
+        <h4>課程結構</h4><p>地板瑜珈、輔具瑜珈、空中瑜珈、空中環、鋼管、動態心肺、舞蹈類等八大類同時經營，並對外開設 Level 2 空中瑜伽師資培訓班（已辦至第六屆）。</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--error)"></div>
+        <h4>定價揭露</h4><p>官網未公開定價，需致電或透過 APP 查詢；市場對照組團課約 400–700 元／堂，自由教練約 300–1000 元／堂。</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--teal)"></div>
+        <h4>社群觀察</h4><p>Dcard 上可查到「轉賣海洋空中瑜伽台南三館課程點數」的貼文，同時有預算考量的網友在詢問 300 元以下的空中瑜伽選項。</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--ember)"></div>
+        <h4>通路缺口</h4><p>三館集中北區／中西區／東區市中心蛋黃區，永康、安平一帶有零星在地個人教練卡位，海洋尚無據點覆蓋。</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--gold)"></div>
+        <h4>命名一致性</h4><p>Instagram 帳號使用「台南永恆－海洋空中瑜伽 Pour Toujours Ocean Aerial Studio」，官網與 Facebook 則統一用「海洋空中瑜伽」，兩者未完全對齊。</p></div>
     </div>
-  </section>
+    <p style="font-size:12.5px; color:var(--mist); margin-top:12px; margin-bottom:0;">資料來源皆為公開網路資訊（官網／社群／第三方評論），完整清單見文末；實際定價與招生策略仍建議以業主內部資料覆核。</p>
+  </div>
 
-  <section>
-    <h2>0．DD 摘要——先講查到什麼，再談建議</h2>
-    <div class="card">
-      <ul>
-        <li><strong style="color:var(--text-primary)">品牌現況：</strong>三館並行（北區旗艦館、中西區健康館、東區復興館），統一電話 06-2510296，有 APP 與 LINE 官方帳號，登記公司為「杉鏵運動休閒用品有限公司」。</li>
-        <li><strong style="color:var(--text-primary)">課程結構：</strong>地板瑜珈、輔具瑜珈、空中瑜珈、空中環、鋼管、動態心肺、舞蹈類等八大類同時經營，並對外開設 Level 2 空中瑜伽師資培訓班（已辦至第六屆）。</li>
-        <li><strong style="color:var(--text-primary)">定價揭露：</strong>官網未公開定價，需致電或透過 APP 查詢；市場對照組團課約 400–700 元／堂，自由教練約 300–1000 元／堂。</li>
-        <li><strong style="color:var(--text-primary)">社群觀察：</strong>Dcard 上可查到「轉賣海洋空中瑜伽台南三館課程點數」的貼文，同時有預算考量的網友在詢問 300 元以下的空中瑜伽選項。</li>
-        <li><strong style="color:var(--text-primary)">通路缺口：</strong>三館集中北區／中西區／東區市中心蛋黃區，永康、安平一帶有零星在地個人教練卡位，海洋尚無據點覆蓋。</li>
-        <li><strong style="color:var(--text-primary)">命名一致性：</strong>Instagram 帳號使用「台南永恆－海洋空中瑜伽 Pour Toujours Ocean Aerial Studio」，官網與 Facebook 則統一用「海洋空中瑜伽」，兩者未完全對齊。</li>
-      </ul>
-      <p style="margin-top:4px; font-size:13px; color:var(--text-muted);">資料來源皆為公開網路資訊（官網／社群／第三方評論），完整清單見文末；實際定價與招生策略仍建議以業主內部資料覆核。</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>1．Q1：產業重點怎麼加強、怎麼做減法</h2>
-    <p>用「商模十二力」逐一健診，把「加強／維持／減法」攤開來看：</p>
+  <div class="section">
+    <div class="section-header"><span class="section-num">1</span><div><div class="section-title">Q1：產業重點怎麼加強、怎麼做減法</div><div class="section-desc">用「商模十二力」逐一健診，把「加強／維持／減法」攤開來看</div></div></div>
 
     <div class="table-scroll">
-    <table>
+    <table class="m-table">
       <caption>商模十二力健診結果（海洋空中瑜伽・台南）</caption>
-      <thead>
-        <tr><th style="width:14%">力別</th><th style="width:40%">現況判讀</th><th style="width:12%">判定</th><th>為什麼</th></tr>
-      </thead>
+      <thead><tr><th style="width:13%">力別</th><th style="width:38%">現況判讀</th><th style="width:12%">判定</th><th>為什麼</th></tr></thead>
       <tbody>
-        <tr>
-          <td class="force-name">產品力</td>
-          <td>八大類課程同時開，招牌「空中瑜伽」被地板瑜珈／舞蹈／鋼管等稀釋</td>
-          <td><span class="badge badge-critical">✂ 減法</span></td>
-          <td>品牌名字叫「海洋空中瑜伽」，資源卻分給八條產品線，稀釋主線技術優勢</td>
-        </tr>
-        <tr>
-          <td class="force-name">行銷力</td>
-          <td>網路上找得到的深度介紹文多是第三方部落客代寫，官網自身內容薄弱</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>技術故事沒有被自己講出來，聲量靠別人幫忙背書，不可控也不持久</td>
-        </tr>
-        <tr>
-          <td class="force-name">銷售力</td>
-          <td>官網不列定價，須致電／用 APP 查詢；同業（Fly High、嗜Fun、體結）皆公開定價</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>比較階段就流失掉不想打電話的潛在客戶，漏斗最前端在漏水</td>
-        </tr>
-        <tr>
-          <td class="force-name">品牌力</td>
-          <td>官網文案「生活方式、內心平靜」為產業通用語，未凸顯技術先發優勢</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>有差異化資產（先發技術＋師資培訓）卻沒有講出差異化的話</td>
-        </tr>
-        <tr>
-          <td class="force-name">社群力</td>
-          <td>Dcard 上主要看到「轉賣課程點數」，非「曬成果／揪團」的正向擴散</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>社群沒有形成留存與裂變循環，反而留下二手轉讓的痕跡</td>
-        </tr>
-        <tr>
-          <td class="force-name">整合力</td>
-          <td>三館＋APP＋LINE 官方帳號基礎建設齊全</td>
-          <td><span class="badge badge-good">✓ 維持</span></td>
-          <td>這塊底座相對紮實，是既有資產，繼續沿用即可，不必重蓋</td>
-        </tr>
-        <tr>
-          <td class="force-name">累積力</td>
-          <td>「南台灣首家 Bungee Superfly」＋「已辦六屆師資培訓」是稀缺先發資產，但未被系統性放大運用</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>這是唯一別人抄不走的複利資產，現在卻被當成小字放在角落</td>
-        </tr>
-        <tr>
-          <td class="force-name">感受力</td>
-          <td>文案走抽象心靈路線，缺乏具體可想像的場景描述</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>對比同業「女性專屬、高隱私」這類具體訴求，海洋的感受力太飄</td>
-        </tr>
-        <tr>
-          <td class="force-name">視覺力</td>
-          <td>三館名稱＋一組法文次品牌名並存，命名系統不統一</td>
-          <td><span class="badge badge-critical">✂ 減法</span></td>
-          <td>多頭敘事稀釋單一品牌記憶點，搜尋與口碑無法集中累積</td>
-        </tr>
-        <tr>
-          <td class="force-name">流程力</td>
-          <td>Dcard 出現學員轉賣用不完的課程點數</td>
-          <td><span class="badge badge-critical">✂ 減法</span></td>
-          <td>大包裝堂數方案造成「買了用不完」的摩擦，傷續購率與口碑</td>
-        </tr>
-        <tr>
-          <td class="force-name">議價力</td>
-          <td>未公開定價，也未建立「因為稀缺技術所以值得更貴」的敘事，議價力普通</td>
-          <td><span class="badge badge-warning">▲ 加強</span></td>
-          <td>有本錢喊高價（稀缺技術＋規模化）卻沒把本錢兌現成敘事</td>
-        </tr>
-        <tr>
-          <td class="force-name">通路力</td>
-          <td>三館集中北區／中西區／東區蛋黃區，永康／安平需求缺口未覆蓋</td>
-          <td><span class="badge badge-good">✓ 維持</span></td>
-          <td>展店是重資本動作，現階段應先解決定位問題，再談值不值得多開一家</td>
-        </tr>
+        <tr><td class="force-name">產品力</td><td>八大類課程同時開，招牌「空中瑜伽」被地板瑜珈／舞蹈／鋼管等稀釋</td><td><span class="badge badge-cut">✂ 減法</span></td><td>品牌名字叫「海洋空中瑜伽」，資源卻分給八條產品線，稀釋主線技術優勢</td></tr>
+        <tr><td class="force-name">行銷力</td><td>網路上找得到的深度介紹文多是第三方部落客代寫，官網自身內容薄弱</td><td><span class="badge badge-add">▲ 加強</span></td><td>技術故事沒有被自己講出來，聲量靠別人幫忙背書，不可控也不持久</td></tr>
+        <tr><td class="force-name">銷售力</td><td>官網不列定價，須致電／用 APP 查詢；同業（Fly High、嗜Fun、體結）皆公開定價</td><td><span class="badge badge-add">▲ 加強</span></td><td>比較階段就流失掉不想打電話的潛在客戶，漏斗最前端在漏水</td></tr>
+        <tr><td class="force-name">品牌力</td><td>官網文案「生活方式、內心平靜」為產業通用語，未凸顯技術先發優勢</td><td><span class="badge badge-add">▲ 加強</span></td><td>有差異化資產（先發技術＋師資培訓）卻沒有講出差異化的話</td></tr>
+        <tr><td class="force-name">社群力</td><td>Dcard 上主要看到「轉賣課程點數」，非「曬成果／揪團」的正向擴散</td><td><span class="badge badge-add">▲ 加強</span></td><td>社群沒有形成留存與裂變循環，反而留下二手轉讓的痕跡</td></tr>
+        <tr><td class="force-name">整合力</td><td>三館＋APP＋LINE 官方帳號基礎建設齊全</td><td><span class="badge badge-keep">✓ 維持</span></td><td>這塊底座相對紮實，是既有資產，繼續沿用即可，不必重蓋</td></tr>
+        <tr><td class="force-name">累積力</td><td>「南台灣首家 Bungee Superfly」＋「已辦六屆師資培訓」是稀缺先發資產，但未被系統性放大運用</td><td><span class="badge badge-add">▲ 加強</span></td><td>這是唯一別人抄不走的複利資產，現在卻被當成小字放在角落</td></tr>
+        <tr><td class="force-name">感受力</td><td>文案走抽象心靈路線，缺乏具體可想像的場景描述</td><td><span class="badge badge-add">▲ 加強</span></td><td>對比同業「女性專屬、高隱私」這類具體訴求，海洋的感受力太飄</td></tr>
+        <tr><td class="force-name">視覺力</td><td>三館名稱＋一組法文次品牌名並存，命名系統不統一</td><td><span class="badge badge-cut">✂ 減法</span></td><td>多頭敘事稀釋單一品牌記憶點，搜尋與口碑無法集中累積</td></tr>
+        <tr><td class="force-name">流程力</td><td>Dcard 出現學員轉賣用不完的課程點數</td><td><span class="badge badge-cut">✂ 減法</span></td><td>大包裝堂數方案造成「買了用不完」的摩擦，傷續購率與口碑</td></tr>
+        <tr><td class="force-name">議價力</td><td>未公開定價，也未建立「因為稀缺技術所以值得更貴」的敘事，議價力普通</td><td><span class="badge badge-add">▲ 加強</span></td><td>有本錢喊高價（稀缺技術＋規模化）卻沒把本錢兌現成敘事</td></tr>
+        <tr><td class="force-name">通路力</td><td>三館集中北區／中西區／東區蛋黃區，永康／安平需求缺口未覆蓋</td><td><span class="badge badge-keep">✓ 維持</span></td><td>展店是重資本動作，現階段應先解決定位問題，再談值不值得多開一家</td></tr>
       </tbody>
     </table>
     </div>
 
-    <h3>資源集中三支箭（加強，依優先順序）</h3>
-    <div class="grid-3">
-      <div class="pill-card">
-        <div class="num">1</div>
-        <h4>把稀缺技術資產拉到最前面</h4>
-        <p>「南台灣首家 Bungee Superfly」＋「已辦六屆師資培訓」重新設為溝通主軸。長期複利邏輯：稀缺技術會隨時間變成口碑與權威，空話不會累積。</p>
-      </div>
-      <div class="pill-card">
-        <div class="num">2</div>
-        <h4>銷售漏斗前段透明化</h4>
-        <p>公開定價與方案。低成本、高槓桿，同業都已在做，海洋現在反而是漏斗最前端流失潛在客戶最多的一環。</p>
-      </div>
-      <div class="pill-card">
-        <div class="num">3</div>
-        <h4>自產內容行銷資產</h4>
-        <p>真實學員故事＋進階動作影片，把稀缺技術轉成可搜尋、可分享的長期資產，取代目前靠別人代寫文章的被動聲量。</p>
-      </div>
+    <h4 style="font-family:'Cormorant Garamond',serif; font-size:17px; margin:28px 0 14px; color:var(--ink);">資源集中三支箭（加強，依優先順序）</h4>
+    <div class="card-grid">
+      <div class="card"><div class="tag-num">1</div><h4>把稀缺技術資產拉到最前面</h4><p>「南台灣首家 Bungee Superfly」＋「已辦六屆師資培訓」重新設為溝通主軸。長期複利邏輯：稀缺技術會隨時間變成口碑與權威，空話不會累積。</p></div>
+      <div class="card"><div class="tag-num">2</div><h4>銷售漏斗前段透明化</h4><p>公開定價與方案。低成本、高槓桿，同業都已在做，海洋現在反而是漏斗最前端流失潛在客戶最多的一環。</p></div>
+      <div class="card"><div class="tag-num">3</div><h4>自產內容行銷資產</h4><p>真實學員故事＋進階動作影片，把稀缺技術轉成可搜尋、可分享的長期資產，取代目前靠別人代寫文章的被動聲量。</p></div>
     </div>
 
-    <h3>三個減法（把資源撤出）</h3>
-    <div class="grid-3">
-      <div class="pill-card cut">
-        <div class="num">1</div>
-        <h4>課程廣度砍窄</h4>
-        <p>非核心的地板瑜珈／舞蹈類轉為場地租借或合作教練抽成模式，教練與行銷資源集中回空中瑜伽／Bungee Superfly 主線。</p>
-      </div>
-      <div class="pill-card cut">
-        <div class="num">2</div>
-        <h4>統一單一品牌命名</h4>
-        <p>砍掉 IG 上的法文次品牌名，全通路只講一個名字、一個故事，讓搜尋與口碑集中累積。</p>
-      </div>
-      <div class="pill-card cut">
-        <div class="num">3</div>
-        <h4>重新設計堂數方案</h4>
-        <p>避免逼學員一次囤太多堂用不完，改成中小包裝＋回購誘因，把「一次賣飽」換成「持續回購」。</p>
-      </div>
+    <h4 style="font-family:'Cormorant Garamond',serif; font-size:17px; margin:28px 0 14px; color:var(--ink);">三個減法（把資源撤出）</h4>
+    <div class="card-grid">
+      <div class="card"><div class="tag-num cut">1</div><h4>課程廣度砍窄</h4><p>非核心的地板瑜珈／舞蹈類轉為場地租借或合作教練抽成模式，教練與行銷資源集中回空中瑜伽／Bungee Superfly 主線。</p></div>
+      <div class="card"><div class="tag-num cut">2</div><h4>統一單一品牌命名</h4><p>砍掉 IG 上的法文次品牌名，全通路只講一個名字、一個故事，讓搜尋與口碑集中累積。</p></div>
+      <div class="card"><div class="tag-num cut">3</div><h4>重新設計堂數方案</h4><p>避免逼學員一次囤太多堂用不完，改成中小包裝＋回購誘因，把「一次賣飽」換成「持續回購」。</p></div>
     </div>
-  </section>
+  </div>
 
-  <section>
-    <h2>2．Q2：品牌定位如何聚焦與實作</h2>
-    <p>用「定位陳述 → 洞察 → 差異 → 核心主張 → 人格 → 支持點 → 語言資產」的框架收斂：</p>
+  <div class="section">
+    <div class="section-header"><span class="section-num">2</span><div><div class="section-title">Q2：品牌定位如何聚焦與實作</div><div class="section-desc">用「定位陳述 → 洞察 → 差異 → 核心主張 → 人格 → 支持點 → 語言資產」的框架收斂</div></div></div>
 
-    <div class="card">
-      <h3 style="margin-top:0;">洞察 Insight</h3>
+    <div class="highlight-box">
+      <h3>洞察 Insight</h3>
       <p>市面上瑜伽館幾乎都在講「放鬆、療癒、身心平衡」，這是一片沒人記得住的紅海空話。但海洋手上有一張少有人真正拿出來講的牌——他們不只教學生，還在教「未來的老師」。這件事本身就是最強的信任狀：如果連老師都是你訓練出來的，代表技術站在食物鏈頂端。</p>
-
-      <h3>差異 Differentiation</h3>
-      <ul>
-        <li><strong style="color:var(--text-primary)">稀缺先發：</strong>南台灣首家引進 Bungee Superfly</li>
-        <li><strong style="color:var(--text-primary)">系統化規模：</strong>三館並行＋已辦六屆師資培訓班，非個人工作室型態</li>
-        <li><strong style="color:var(--text-primary)">技術權威：</strong>培育他人成為老師的能力，本身就是最高等級的背書</li>
-      </ul>
-
-      <h3>人格 Personality</h3>
-      <p>專業、值得信賴的「技術權威者」——不是市面上常見的柔性療癒系人設（那條路線同業已經佔滿），而是「你可以放心把身體交給懂技術的人」。</p>
-
-      <h3>支持點 Reasons to Believe</h3>
-      <ul>
-        <li>南台灣首家引進 Bungee Superfly（先發時間點）</li>
-        <li>舉辦第六屆 Level 2 空中瑜伽師資培訓（培育他人的實績）</li>
-        <li>三館規模＋APP＋LINE 官方帳號（系統化程度）</li>
-      </ul>
     </div>
 
-    <h3>核心主張與語言資產（3 個方向，供拍板）</h3>
+    <div class="card-grid" style="margin-bottom:24px;">
+      <div class="card"><div class="card-accent" style="background:var(--ember)"></div>
+        <h4>差異 Differentiation</h4>
+        <p><strong class="ink">稀缺先發：</strong>南台灣首家引進 Bungee Superfly<br><strong class="ink">系統化規模：</strong>三館並行＋已辦六屆師資培訓班，非個人工作室型態<br><strong class="ink">技術權威：</strong>培育他人成為老師的能力，本身就是最高等級的背書</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--gold)"></div>
+        <h4>人格 Personality</h4>
+        <p>專業、值得信賴的「技術權威者」——不是市面上常見的柔性療癒系人設（那條路線同業已經佔滿），而是「你可以放心把身體交給懂技術的人」。</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--teal)"></div>
+        <h4>支持點 Reasons to Believe</h4>
+        <p>南台灣首家引進 Bungee Superfly（先發時間點）<br>舉辦第六屆 Level 2 師資培訓（培育他人的實績）<br>三館規模＋APP＋LINE（系統化程度）</p></div>
+    </div>
+
+    <h4 style="font-family:'Cormorant Garamond',serif; font-size:17px; margin:8px 0 14px; color:var(--ink);">核心主張與語言資產（3 個方向，供拍板）</h4>
     <div class="slogan-grid">
-      <div class="slogan-item">
-        <span class="slogan-tag">A · 技術權威</span>
-        <span class="slogan-text">「南台灣空中瑜伽，從這裡教起。」</span>
-      </div>
-      <div class="slogan-item">
-        <span class="slogan-tag">B · 稀缺先發</span>
-        <span class="slogan-text">「第一個把懸吊帶進南台灣的人。」</span>
-      </div>
-      <div class="slogan-item">
-        <span class="slogan-tag">C · 信任狀</span>
-        <span class="slogan-text">「連老師，都是我們教出來的。」</span>
-      </div>
+      <div class="slogan-item"><span class="slogan-tag">A · 技術權威</span><span class="slogan-text">「南台灣空中瑜伽，從這裡教起。」</span></div>
+      <div class="slogan-item"><span class="slogan-tag">B · 稀缺先發</span><span class="slogan-text">「第一個把懸吊帶進南台灣的人。」</span></div>
+      <div class="slogan-item"><span class="slogan-tag">C · 信任狀</span><span class="slogan-text">「連老師，都是我們教出來的。」</span></div>
     </div>
 
-    <h3>實作路線圖</h3>
+    <h4 style="font-family:'Cormorant Garamond',serif; font-size:17px; margin:8px 0 14px; color:var(--ink);">實作路線圖（依時間軸）</h4>
     <div class="timeline">
-      <div class="tl-item">
-        <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-time">短期・1 個月內・成本低</div>
-          <div class="tl-title">文案與命名整頓</div>
-          <p style="margin:0;">官網／社群文案全面替換，砍掉「生活方式、內心平靜」等通用詞，把 Bungee Superfly 南台灣首家、師資培訓六屆的紀錄放到最顯眼位置；統一品牌命名（IG／FB／官網／LINE 只用一個名字）；上線公開定價頁面。</p>
-        </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">短期<br>1個月</div>
+        <div class="timeline-content"><h4>文案與命名整頓</h4><p>官網／社群文案全面替換，砍掉「生活方式、內心平靜」等通用詞，把 Bungee Superfly 南台灣首家、師資培訓六屆的紀錄放到最顯眼位置；統一品牌命名；上線公開定價頁面。</p></div>
       </div>
-      <div class="tl-item">
-        <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
-        <div class="tl-content">
-          <div class="tl-time">中期・1–3 個月・需要製作資源</div>
-          <div class="tl-title">內容資產與方案重整</div>
-          <p style="margin:0;">產出「學員故事」「進階動作教學」系列短影音，把技術權威轉成可分享、可搜尋的內容資產；重新設計堂數方案結構，避免囤積用不完。</p>
-        </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">中期<br>1–3月</div>
+        <div class="timeline-content"><h4>內容資產與方案重整</h4><p>產出「學員故事」「進階動作教學」系列短影音，把技術權威轉成可分享、可搜尋的內容資產；重新設計堂數方案結構，避免囤積用不完。</p></div>
       </div>
-      <div class="tl-item">
-        <div class="tl-marker"><div class="tl-dot"></div></div>
-        <div class="tl-content">
-          <div class="tl-time">長期・3 個月以上・複利資產</div>
-          <div class="tl-title">信任狀擴張與擴點評估</div>
-          <p style="margin:0;">延伸更多信任狀：師資培訓校友動態、技術認證證書視覺化、與南台灣其他瑜伽館的合作背書關係；視內容行銷成效與定位是否站穩，再評估是否往永康／安平擴點。</p>
-        </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">長期<br>3月+</div>
+        <div class="timeline-content"><h4>信任狀擴張與擴點評估</h4><p>延伸更多信任狀：師資培訓校友動態、技術認證證書視覺化、與南台灣其他瑜伽館的合作背書關係；視內容行銷成效與定位是否站穩，再評估是否往永康／安平擴點。</p></div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <footer>
-    <div class="disclaimer">
-      <strong style="color:var(--text-primary);">重要提醒：</strong>本報告基於公開網路資訊（官網、社群、第三方評論）進行 DD 分析，未直接接觸業主內部營運數據（如實際轉換率、續約率、各館坪效），部分判讀（如「囤堂數方案造成流程摩擦」）為間接推論。建議與業主本人核對後再定案執行方向。
+  <div class="section">
+    <div class="section-header"><span class="section-num">3</span><div><div class="section-title">重新打底：從哪裡先動</div><div class="section-desc">小公司不可能同時處理所有事——這裡不按時間排，按「哪一步先做完，會讓下一步變輕鬆」的第一性原理依賴鏈排序</div></div></div>
+
+    <div class="highlight-box">
+      <h3>排序邏輯</h3>
+      <p>上面兩題給的是「該做什麼」，這裡回答「先做哪一個」。判準只有一個：<strong class="ink">這一步做完之後，後面的每一步是變輕鬆了，還是原地不動？</strong>凡是「不做就卡住其他所有事、但自己不花錢不花人力」的決策，排最前面；凡是「牽動教練排班、學員權益、現金流結構」的高阻力動作，排最後面，等前面的動作已經驗證出效果、有新客源數據墊底之後再動，才不會在還沒看到成果前先失血。</p>
     </div>
-    <h3 style="margin-top:28px;">資料來源</h3>
+
+    <div class="foundation">
+
+      <div class="f-step">
+        <div class="f-num">1</div>
+        <div class="f-body">
+          <div class="f-head"><span class="f-title">拍板核心定位語言，統一品牌命名</span><span class="f-workload wl-1">極低成本・純決策</span></div>
+          <div class="f-row"><b>做什麼：</b>從 A／B／C 三個 slogan 方向選定一個作為對外唯一敘事；同時砍掉 IG 上的法文次品牌名，全通路統一叫「海洋空中瑜伽」。</div>
+          <div class="f-row"><b>為什麼排第一：</b>這是全部動作裡唯一「不花錢、不用新資源，只需要業主一句話拍板」，卻卡住最多後續動作的決定點——文案怎麼寫、內容行銷講什麼故事、定價頁怎麼包裝，全部要等這個決定先出來。</div>
+          <div class="f-unlock">解鎖效果：後面每一步都不用重新想「我們是誰」，直接照著這個決定寫下去。</div>
+        </div>
+      </div>
+
+      <div class="f-step">
+        <div class="f-num">2</div>
+        <div class="f-body">
+          <div class="f-head"><span class="f-title">公開定價，把資訊攤在陽光下</span><span class="f-workload wl-1">低成本・一次性上架</span></div>
+          <div class="f-row"><b>做什麼：</b>官網／APP 上線公開定價頁面，比照同業（Fly High、嗜Fun、體結）的透明度。</div>
+          <div class="f-row"><b>為什麼可以跟第 1 步同時動：</b>定價數字跟品牌故事無關，不用等敘事定案；而且這是漏斗最前端流失最嚴重的破口，越早補越早開始累積轉換率數據。</div>
+          <div class="f-unlock">解鎖效果：後面第 4 步花錢做的內容行銷，導進來的流量才不會卡在「打電話問價」這一關前流失。</div>
+        </div>
+      </div>
+
+      <div class="f-step">
+        <div class="f-num">3</div>
+        <div class="f-body">
+          <div class="f-head"><span class="f-title">用第 1 步定案的語言，重寫官網與社群文案</span><span class="f-workload wl-2">低－中成本・改寫非新建</span></div>
+          <div class="f-row"><b>做什麼：</b>把「生活方式、內心平靜」換成技術權威敘事，稀缺先發技術與六屆培訓紀錄放最顯眼位置。</div>
+          <div class="f-row"><b>為什麼要等第 1 步：</b>沒有拍板的核心語言，文案會像現在一樣繼續講通用話。但因為素材（先發技術、培訓紀錄）本來就是現成事實，這步只是「換句話說」，不需要生產新內容。</div>
+          <div class="f-unlock">解鎖效果：第 4 步的內容行銷有現成的敘事骨架可以掛，不用邊拍邊想「這支影片到底在講什麼」。</div>
+        </div>
+      </div>
+
+      <div class="f-step">
+        <div class="f-num">4</div>
+        <div class="f-body">
+          <div class="f-head"><span class="f-title">用第 3 步的框架，開始產內容行銷資產</span><span class="f-workload wl-3">中－高成本・需拍攝剪輯資源</span></div>
+          <div class="f-row"><b>做什麼：</b>學員故事、進階動作教學系列短影音，持續產出。</div>
+          <div class="f-row"><b>為什麼要等第 3 步：</b>如果沒有先把敘事框架定案，內容行銷會變成「各拍各的」——每一支影片講不同故事，流量不會疊加成品牌資產；有框架之後，每一支內容都在為同一件事（技術權威）累積複利。</div>
+          <div class="f-unlock">解鎖效果：帶來可驗證的新客源數據，這是第 5 步敢不敢動刀的底氣來源。</div>
+        </div>
+      </div>
+
+      <div class="f-step">
+        <div class="f-num">5</div>
+        <div class="f-body">
+          <div class="f-head"><span class="f-title">結構性減法：課程砍窄、堂數方案重整</span><span class="f-workload wl-4">高阻力・牽動教練與現金流</span></div>
+          <div class="f-row"><b>做什麼：</b>非核心課程轉場地租借或合作教練抽成模式；堂數方案改中小包裝＋回購誘因。</div>
+          <div class="f-row"><b>為什麼排最後：</b>這類動作牽動教練排班、既有學員權益與現金流結構，是全部動作裡阻力與風險最大的。放在新定位已上線、內容行銷已開始帶來新客源數據之後再動，即使短期招生數字有波動，也有新客源趨勢墊底，不會讓業主在還沒看到效果前先失血。</div>
+          <div class="f-unlock">解鎖效果：資源真正集中到「空中瑜伽／Bungee Superfly」主線，品牌敘事跟實際課表終於一致。</div>
+        </div>
+      </div>
+
+      <div class="f-step">
+        <div class="f-num">6</div>
+        <div class="f-body">
+          <div class="f-head"><span class="f-title">信任狀擴張與擴點評估</span><span class="f-workload wl-4">高投入・視評估結果為資本支出</span></div>
+          <div class="f-row"><b>做什麼：</b>延伸師資培訓校友動態、技術認證證書視覺化、同業合作背書；視成效評估是否往永康／安平擴點。</div>
+          <div class="f-row"><b>為什麼排最後：</b>這是前面五步全部穩定運作後的收成期——擴點是重資本決策，值不值得投資，答案就藏在前面步驟累積出來的轉換率、續購率、內容行銷觸及數據裡，不是憑感覺先押注。</div>
+          <div class="f-unlock">解鎖效果：這一步不再是「賭一把」，而是拿著前五步的真實數字做決策。</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="disclaimer" style="margin-top:24px;">
+      <strong class="ink">重要提醒：</strong>本報告基於公開網路資訊（官網、社群、第三方評論）進行 DD 分析，未直接接觸業主內部營運數據（如實際轉換率、續約率、各館坪效），部分判讀（如「囤堂數方案造成流程摩擦」）為間接推論。建議與業主本人核對後再定案執行方向。
+    </div>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  <div class="container" style="padding:0;">
+    <h3>資料來源</h3>
     <ul class="source-list">
       <li><a href="https://oceanyogatw.com/" target="_blank">海洋空中瑜珈官方網站</a></li>
       <li><a href="https://www.facebook.com/2019ocean/" target="_blank">台南海洋空中瑜伽 東區復興館 Facebook</a></li>
@@ -420,9 +377,9 @@
       <li><a href="https://www.flyhighyoga.com.tw/blog/classhighlights/tainanaerialyoga" target="_blank">Fly High Yoga：台南空中瑜珈推薦（競品參考）</a></li>
       <li><a href="https://www.shifun.com.tw/yujia.html" target="_blank">嗜Fun 身體藝術空間：台南空中瑜珈費用（競品參考）</a></li>
     </ul>
-  </footer>
+    <p style="margin-top:20px; font-size:12px; color:rgba(255,255,255,0.35);">MUSEON 產業診斷 · 2026-07-27</p>
+  </div>
+</div>
 
-</div>
-</div>
 </body>
 </html>
