@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你這個人的說明書 · R. · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ember:#C4502A; --ember-light:#E0714D; --ember-dark:#9A3A1C;
+    --teal:#2A7A6E; --gold:#B8923A;
+    --ink:#12121A; --slate:#5A5A6E; --mist:#9898A8; --border:#E2E0DA;
+    --parchment:#F7F5F0; --snow:#FDFCFA; --code-bg:#F0EDE8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--parchment); color:var(--ink);
+    font-family:'Outfit','Noto Sans TC',sans-serif;
+    font-size:16px; line-height:1.75; font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px}
+  .display{font-family:'Cormorant Garamond','Noto Sans TC',serif}
+
+  .hero{padding:88px 0 56px; text-align:center}
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--ember-dark);
+    background:rgba(196,80,42,.1); padding:5px 14px; border-radius:100px;
+    display:inline-block; margin-bottom:28px;
+  }
+  .hero h1{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:54px; font-weight:600; line-height:1.12; letter-spacing:.01em;
+    color:var(--ink); margin-bottom:18px;
+  }
+  .hero .sub{font-size:18px; color:var(--slate); font-weight:300; max-width:580px; margin:0 auto}
+  .hero .meta{
+    margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    color:var(--mist); letter-spacing:.04em;
+  }
+  .rule{width:48px; height:2px; background:var(--ember); margin:40px auto 0; border-radius:2px}
+
+  .intro{
+    background:var(--snow); border:1px solid var(--border); border-left:3px solid var(--gold);
+    border-radius:12px; padding:28px 30px; margin:8px 0 48px; color:#23232e; font-size:16.5px;
+  }
+  .intro p{margin-bottom:1em}
+  .intro p:last-child{margin-bottom:0}
+  .intro strong{color:var(--ember-dark); font-weight:600}
+
+  .toc{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:28px 28px 24px; margin:0 0 72px;
+    box-shadow:0 1px 3px rgba(18,18,26,.06), 0 4px 12px rgba(18,18,26,.04);
+  }
+  .toc h4{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-bottom:18px;
+  }
+  .toc ol{list-style:none; counter-reset:ch}
+  .toc li{
+    counter-increment:ch; display:flex; align-items:baseline; gap:14px;
+    padding:9px 2px; border-bottom:1px dashed var(--border); font-size:15.5px; color:var(--ink);
+  }
+  .toc li:last-child{border-bottom:none}
+  .toc li::before{
+    content:counter(ch,decimal-leading-zero);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    color:var(--ember); min-width:26px;
+  }
+  .toc li a{color:inherit; text-decoration:none}
+  .toc li a:hover{color:var(--ember)}
+  .toc .phase{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;
+    color:var(--gold); padding:16px 0 6px; font-weight:600;
+  }
+  .toc .phase:first-child{padding-top:0}
+
+  .chapter{margin-bottom:72px; scroll-margin-top:24px}
+  .ch-num{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ember);
+  }
+  .ch-title{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:38px; font-weight:600; line-height:1.2; margin:10px 0 8px; color:var(--ink);
+  }
+  .ch-lead{font-size:17px; color:var(--slate); font-weight:300; margin-bottom:34px}
+
+  .card{
+    background:var(--snow); border:1px solid var(--border); border-radius:12px;
+    padding:30px 30px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .card .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;
+  }
+  .card h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:16px; color:var(--ink);
+  }
+  .card p{margin-bottom:1.05em; color:#23232e}
+  .card p:last-child{margin-bottom:0}
+  .card strong{font-weight:600; color:var(--ember-dark)}
+  .card .em{color:var(--ink); font-weight:500}
+
+  .pull{
+    border-left:3px solid var(--ember); padding:4px 0 4px 20px; margin:6px 0 1.05em;
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:21px; line-height:1.5; color:var(--ember-dark); font-weight:500;
+  }
+  .step{
+    background:rgba(184,146,58,.07); border:1px solid rgba(184,146,58,.25);
+    border-radius:10px; padding:22px 24px; margin-top:8px;
+  }
+  .step .kicker{color:var(--gold)}
+
+  .sep{display:flex; align-items:center; gap:18px; margin:64px 0 56px}
+  .sep::before,.sep::after{content:""; flex:1; height:1px; background:var(--border)}
+  .sep span{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px;
+    color:var(--gold); font-weight:600; white-space:nowrap;
+  }
+
+  /* ── v2 新增：章節後記（修煉前／中／後 成長階梯） ── */
+  .afterword{
+    margin:8px 0 0; padding:24px 26px 22px;
+    background:linear-gradient(180deg, rgba(247,245,240,.5), rgba(253,252,250,.9));
+    border:1px solid var(--border); border-radius:12px;
+  }
+  .afterword .aw-head{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--slate);
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+  .afterword .aw-head::after{content:""; flex:1; height:1px; background:var(--border)}
+  .aw-step{
+    position:relative; padding:14px 18px; border-radius:10px; margin-bottom:8px;
+    border:1px solid var(--border); background:var(--snow);
+  }
+  .aw-step:last-child{margin-bottom:0}
+  .aw-step .lvl{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-style:italic;
+    font-size:17px; font-weight:600; display:block; margin-bottom:3px;
+  }
+  .aw-step p{font-size:15px; color:#33333e; line-height:1.65; margin:0}
+  .aw-before{margin-left:0;  border-left:3px solid var(--ember);
+    background:linear-gradient(90deg, rgba(196,80,42,.05), var(--snow) 60%);}
+  .aw-before .lvl{color:var(--ember-dark)}
+  .aw-during{margin-left:22px; border-left:3px solid var(--gold);
+    background:linear-gradient(90deg, rgba(184,146,58,.06), var(--snow) 60%);}
+  .aw-during .lvl{color:var(--gold)}
+  .aw-after{margin-left:44px; border-left:3px solid var(--teal);
+    background:linear-gradient(90deg, rgba(42,122,110,.06), var(--snow) 60%);}
+  .aw-after .lvl{color:var(--teal)}
+
+  /* ── v2 新增：系統會診 ── */
+  .clinic{
+    background:var(--snow); border:1px solid var(--border); border-radius:14px;
+    padding:30px 30px 26px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(18,18,26,.05), 0 4px 12px rgba(18,18,26,.03);
+  }
+  .clinic .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px;
+  }
+  .clinic.unison{border-left:3px solid var(--teal)}
+  .clinic.unison .kicker{color:var(--teal)}
+  .clinic.discord{border-left:3px solid var(--ember)}
+  .clinic.discord .kicker{color:var(--ember)}
+  .clinic h3{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:25px; font-weight:600; line-height:1.3; margin-bottom:14px; color:var(--ink);
+  }
+  .clinic .item{padding:13px 0; border-bottom:1px dashed var(--border)}
+  .clinic .item:last-child{border-bottom:none; padding-bottom:0}
+  .clinic .item .t{font-weight:600; color:var(--ink); display:block; margin-bottom:3px}
+  .clinic .item p{margin:0; color:#33333e; font-size:15.5px}
+  .clinic.discord .item .t{color:var(--ember-dark)}
+
+  /* ── v2 新增：擺渡人的一封信（信箋） ── */
+  .letter{
+    position:relative; margin:8px 0 20px; padding:46px 44px 40px;
+    border:1px solid #E6DCC4; border-radius:6px;
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 31px, rgba(184,146,58,.10) 32px),
+      linear-gradient(160deg, #FBF6EA, #F5EEDC);
+    box-shadow:0 1px 3px rgba(120,90,30,.10), 0 10px 30px rgba(120,90,30,.08);
+    transform:rotate(-.5deg);
+  }
+  .letter::before{
+    content:""; position:absolute; left:30px; top:0; bottom:0; width:1px;
+    background:rgba(196,80,42,.18);
+  }
+  .letter .salute{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif; font-size:24px;
+    font-weight:600; color:var(--ember-dark); margin-bottom:18px;
+  }
+  .letter p{
+    font-family:'Cormorant Garamond','Noto Sans TC',serif;
+    font-size:19px; line-height:1.85; color:#3a3326; margin-bottom:1em; font-weight:500;
+  }
+  .letter p.lead-in{font-style:italic}
+  .letter strong{color:var(--ember-dark); font-weight:600}
+  .letter .sign{
+    text-align:right; margin-top:26px; margin-bottom:0;
+    font-style:italic; font-size:21px; color:var(--ember-dark);
+  }
+  .letter .sign-name{
+    display:block; font-size:26px; font-weight:600; color:var(--ember-dark);
+    margin-top:4px; letter-spacing:.04em;
+  }
+
+  details.basis{
+    margin:8px 0 0; border:1px dashed var(--border); border-radius:10px;
+    background:#fbfaf7; padding:0 22px;
+  }
+  details.basis summary{
+    cursor:pointer; padding:16px 0; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--slate); list-style:none;
+  }
+  details.basis summary::-webkit-details-marker{display:none}
+  details.basis[open] summary{border-bottom:1px solid var(--border); margin-bottom:14px}
+  details.basis .grid{padding-bottom:20px; font-size:13.5px; color:var(--slate)}
+  details.basis .grid div{padding:5px 0; border-bottom:1px dotted var(--border)}
+  details.basis .grid div:last-child{border-bottom:none}
+  details.basis b{color:var(--ink); font-weight:600}
+  details.basis code{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--code-bg);
+    padding:1px 6px; border-radius:4px; color:var(--ember-dark);
+  }
+
+  .foot{
+    border-top:1px solid var(--border); padding:36px 0 80px; margin-top:24px;
+    font-size:13px; color:var(--mist); line-height:1.7;
+  }
+  .foot .logo{
+    font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;
+    font-style:italic; color:var(--slate); margin-bottom:8px;
+  }
+  @media(max-width:640px){
+    .hero{padding:60px 0 40px}
+    .hero h1{font-size:40px}
+    .ch-title{font-size:30px}
+    .card{padding:26px 22px}
+    .pull{font-size:19px}
+    .aw-during{margin-left:14px}
+    .aw-after{margin-left:28px}
+    .letter{padding:38px 26px 34px}
+    .letter p{font-size:18px}
+  }
+  /* ── 核心定錨（一句話的你）── */
+  .anchor{max-width:720px; margin:32px auto 4px; padding:24px 34px; border:1px solid var(--border); border-radius:16px; background:var(--snow)}
+  .anchor .tag{display:block; font-size:11px; letter-spacing:4px; color:var(--ember); text-align:center; margin-bottom:12px}
+  .anchor p{font-family:'Cormorant Garamond',serif; font-size:24px; line-height:1.5; color:var(--ink); font-style:italic; text-align:center; margin:0}
+  .anchor b{color:var(--ember-dark); font-weight:600; font-style:normal}
+
+  /* ── 九宮印記牆（數據摘要即視覺）── */
+  .sigwall{margin:22px 0 6px}
+  .sigwall .sw-head{font-size:13px; letter-spacing:2px; color:var(--slate); text-align:center; margin-bottom:5px}
+  .sigwall .sw-sub{font-size:13px; color:var(--mist); text-align:center; margin-bottom:18px}
+  .sigrid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden}
+  .sigcell{background:var(--snow); padding:16px 17px 17px}
+  .sigcell .sys{font-size:12px; color:var(--ember); font-weight:600; letter-spacing:.5px}
+  .sigcell .raw{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--mist); margin:3px 0 8px; line-height:1.4}
+  .sigcell .say{font-size:13.5px; color:var(--ink); line-height:1.55}
+  .sigcap{font-size:12.5px; color:var(--slate); text-align:center; margin-top:13px; font-style:italic}
+
+  /* ── 擺渡人問你（每章反思題）── */
+  .ask{margin:24px 0 2px; padding:20px 24px; border-left:3px solid var(--gold); background:linear-gradient(90deg,rgba(184,146,58,.08),transparent); border-radius:0 8px 8px 0}
+  .ask .q-head{font-size:12px; letter-spacing:2px; color:var(--gold); margin-bottom:9px}
+  .ask p{font-size:16px; color:var(--ink); line-height:1.7; margin:0; font-weight:500}
+  .ask .q-note{font-size:13px; color:var(--slate); margin-top:9px; font-weight:400; line-height:1.6}
+
+  @media(max-width:640px){
+    .anchor{padding:20px 22px} .anchor p{font-size:20px}
+    .sigrid{grid-template-columns:repeat(2,1fr)} .sigcell{padding:13px 13px 14px}
+  }
+  body{animation:fade .4s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Kairos · 九系統融合報告 · 深度 v2</span>
+    <h1 class="display">你這個人的說明書</h1>
+    <p class="sub">一份以九宮格呈現、由可追溯盤面資料交叉整理的成長導航</p>
+    <div class="meta">公開匿名版 · 2026-08-01 · 適讀：本人與照顧者</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="anchor">
+    <span class="tag">如 果 只 用 一 句 話 說 你</span>
+    <p>你像一口<b>深井</b>：理解與感受先往下走；真正的成長，是替深度裝上一條能安全流向外界的通道。</p>
+  </div>
+
+  <div class="intro">
+    <p>這份報告使用精確出生時間完成核心時相、人類圖概念層、東方排盤、占星基礎、易經、靈數與塔羅計算，再由八個彼此獨立的分析視角交叉核對。公開版已移除姓名、生日、分鐘級時間與出生地。</p>
+    <p>最值得留意的不是某一個漂亮標籤，而是多套資料共同指向的張力：<strong>內在形成得深，對外輸出較慢；環境催促展現時，容易在準備與行動之間拉扯。</strong></p>
+    <p>R. 目前正進入約十四至二十一歲的驗證期。這段時間的任務不是提早決定一生，而是透過安全、可撤回的小實驗，分辨哪些能力只是做得到，哪些方向即使遇到困難仍願意回去。</p>
+    <p>本報告主張自洽與導航，不主張預測準確。所有內容都是可被本人反駁的傾向假設，不是診斷、教育評量或命定判決；選擇權始終在本人與適當照顧者手中。</p>
+  </div>
+
+  <div class="sigwall">
+    <div class="sw-head">九 系 統 · 數 據 印 記 牆</div>
+    <div class="sw-sub">九格資料牆：六格為本次實算資料，三格誠實標示未計算；小字是原始摘要，下方是待本人校準的白話假設</div>
+    <div class="sigrid">
+      <div class="sigcell"><div class="sys">八字</div><div class="raw">辛卯｜辛丑｜辛巳｜癸巳</div><div class="say">重視精準與品質；先蓄力，決定後可能迅速投入。</div></div>
+      <div class="sigcell"><div class="sys">紫微斗數</div><div class="raw">命宮申｜紫微天府｜身宮在夫妻｜火六局</div><div class="say">有組織與資源感；一對一關係常成為認識自己的鏡子。</div></div>
+      <div class="sigcell"><div class="sys">人類圖</div><div class="raw">5/1｜3–60・27–50・32–54｜三中心定義</div><div class="say">先查清楚再解題；能在限制中找秩序，也要分清照顧與責任。</div></div>
+      <div class="sigcell"><div class="sys">西洋占星</div><div class="raw">太陽水瓶｜月亮摩羯｜當下太陽獅子</div><div class="say">想法需要自主，內在需要可靠；近期練習讓作品被安全地看見。</div></div>
+      <div class="sigcell"><div class="sys">生命靈數</div><div class="raw">生命數 9｜生日數 3</div><div class="say">容易看見整體需要，也需要替感受與創意找到表達出口。</div></div>
+      <div class="sigcell"><div class="sys">瑪雅曆</div><div class="raw">本次未計算</div><div class="say">瑪雅曆模組未進入現役引擎，因此不補寫、不猜測。</div></div>
+      <div class="sigcell"><div class="sys">吠陀占星</div><div class="raw">本次未計算</div><div class="say">吠陀月宿所需計算層尚未啟用，因此不以西洋資料冒充。</div></div>
+      <div class="sigcell"><div class="sys">北歐符文</div><div class="raw">本次未計算</div><div class="say">北歐符文未有決定性計算規格，本報告保留空白。</div></div>
+      <div class="sigcell"><div class="sys">塔羅本命牌</div><div class="raw">本命牌：隱者</div><div class="say">安靜不是退場；先照亮下一步，再決定向誰求助。</div></div>
+    </div>
+    <div class="sigcap">九格是閱讀介面，不是九格都必須硬塞答案。本次六格有實算資料、三格誠實留白；另以凱羅時相、易經與成長曲線貫穿全文。</div>
+  </div>
+
+  <nav class="toc">
+    <h4>這份報告會帶你走一趟 — 共九章 + 收尾環節</h4>
+    <ol>
+      <div class="phase">第一部 · 先把自己顧好（這是一切的根）</div>
+      <li><a href="#c1">深井不是停住，而是在地下把水養深</a></li>
+      <li><a href="#c2">從打地基到試方向：你正在進入可以驗證自己的年紀</a></li>
+      <li><a href="#c3">外面看向遠方，裡面先把事情做好</a></li>
+      <li><a href="#c4">界線不是牆，是讓力量有地方落下</a></li>
+      <div class="phase">第二部 · 顧好自己，才顧得了關係</div>
+      <li><a href="#c5">穩定動力與開放感受，如何同時存在</a></li>
+      <li><a href="#c6">東方盤面的沉穩骨架：可以觀察，不能拿來定罪</a></li>
+      <div class="phase">第三部 · 關係對了，事業財富才水到渠成</div>
+      <li><a href="#c7">把理想放進日常：九、三，以及那盞隱者的燈</a></li>
+      <li><a href="#c8">情緒像深井：不是沒有水，而是打上來需要時間</a></li>
+      <li><a href="#c9">窗口不是倒數計時：在適合的季節，把下一步做得更清楚</a></li>
+      <div class="phase">收尾 · 把九套系統收成一條路</div>
+      <li><a href="#clinic">系統會診：眾口同聲 vs 眾說紛紜</a></li>
+      <li><a href="#field">五運實戰摘要（可以馬上用）</a></li>
+      <li><a href="#now">此刻：你正站在哪裡 · 接下來這一年</a></li>
+      <li><a href="#letter">擺渡人的一封信</a></li>
+    </ol>
+  </nav>
+
+  <!-- ░░░░░░░░ 第一部 ░░░░░░░░ -->
+  <div class="sep"><span>第一部 · 先把自己顧好</span></div>
+
+  <!-- ① -->
+  <article class="chapter" id="c1">
+    <div class="ch-num">第一章</div>
+    <h2 class="ch-title display">深井不是停住，而是在地下把水養深</h2>
+    <p class="ch-lead">你的核心時相可以叫作「深井型」。這不是性格判決，也不是說你一定安靜、內向或不喜歡行動。它描述的是一種反覆出現的用力方式：重要的事來到面前時，你通常需要先往裡面走，理解、消化、觀察，等到心裡有了足夠踏實的感覺，才願意把答案拿到外面。
+
+有些人的節奏像煙火，點下去立刻就看見；你的節奏更像地下水。表面可能一時沒有變化，底下其實正在累積。真正要分辨的，不是你有沒有立刻交出成果，而是這段安靜究竟在醞釀，還是在逃避。前者會慢慢長出更清楚的選擇，後者則只是把同一件事一直往後放。這個差別，只有你從日常行動裡才能驗證。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>內在與外在，都偏向先收、再說</h3>
+      <p>你的內在節奏和外在方向，都落在「休藏」這一側。休藏的白話意思是：先把能量收回來，讓還沒有成熟的東西在裡面長完整。當別人很快說「我決定了」，你可能還在比較細節、觀察氣氛，或想知道自己是不是真的願意承擔這個選擇。</p><p>例如老師宣布分組報告，有人五分鐘內就搶了主題和工作，你可能先聽每個人的想法，回家後才發現哪個切入點最有意思。第二天你提出的版本，往往比當場反應更完整。這不是一定比較好，也不是故意拖慢；只是你的判斷常需要一段沉澱時間。</p><p>但「深」也有風險。當資訊已經足夠，你仍可能想再等等，擔心一開口就不能修改。這時休藏會從準備變成延後。你可以用一個很具體的標準判斷：如果一週後，你能說出新增了哪些觀察、刪掉了哪些選項，這段等待多半有作用；如果只是同一句「我還沒想好」重複出現，那就可能需要一個小行動，把水從井裡打上來。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>深井型真正要練的，是出口</h3>
+      <p>井有水，也要有桶。你的優勢不只是能想得深，而是有機會把零碎線索慢慢整理成自己的理解。你可能不喜歡在還沒弄懂時被催著表態，也未必會把每一步思考都說出來。因此，旁人有時只看見你沒有回應，卻不知道你腦中已經轉過很多層。</p><p>這個落差容易在家裡、學校或朋友之間造成誤會。別人問：「你到底要不要？」你心裡的真實答案可能是：「我正在判斷，但現在還不能確定。」如果你只沉默，對方可能把它解讀成不在乎、沒意見或故意不合作。你的功課不是逼自己立刻做出永久決定，而是先給一個暫時版本，例如：「我目前偏向 A，想再確認一件事，明天下午回覆。」</p><p>這句話很普通，卻像替井裝上一條繩子。它讓別人知道你沒有消失，也替自己留下思考空間。你不必一次把全部內心說完，只要讓外界看得見下一個節點。能說出「我現在知道什麼、還不知道什麼、何時再回答」，就是深井型很重要的成熟能力。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>現在不是比誰衝得快，而是分清什麼值得留下</h3>
+      <p>當下的大環境比較像盛夏：事情多、聲音大、大家都在展示成果，也容易讓人產生「我是不是太慢」的壓力。但你的方向仍偏向休藏，兩者並不完全同拍。這種落差通常不適合用更大的力氣硬推，因為你可能一邊答應很多事，一邊在心裡慢慢乾掉。</p><p>比較合適的方式，是把現在當成測試期。你仍然可以參加、嘗試、投稿、報名或認識新朋友，但先不要把每一次嘗試都當成終身選擇。比方說，你對畫畫、運動和程式都有興趣，不需要立刻宣布未來只能選其中一項。你可以各做一個兩週小計畫，再比較哪一件事讓你願意自己回去繼續。</p><p>到了 2026 年 12 月 21 日之後，方向季進入更明顯的收攏段落。那時適合把前面試過的東西重新整理：哪些只是當時好玩，哪些即使沒有人催，你還願意回去做。接近下一個生日的那段時間，可以再做一次複核。不是急著替人生定案，而是挑出一兩件值得再走深一點的事。</p>
+      <div class="step">
+        <div class="kicker">這一章的練習｜替深井裝一個小出口</div>
+        <p>找一件你最近「還在想」的事，拿一張紙分成三格。第一格寫「我已經知道的」，第二格寫「我還需要確認的」，第三格寫「我能做的最小測試」。最小測試要小到七天內能完成，例如問一位老師、試上一堂課、做一頁作品，或把選項講給可信任的人聽。</p><p>完成後，不用問「我是不是找到唯一正確答案」，只問三件事：我有沒有比七天前更清楚？哪個選項的吸引力變強或變弱？下一步是否值得再投入兩週？深井型不需要被逼著跳躍，但需要看得見水位正在改變。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>以前，你可能把「還沒想好」當成必須藏起來的狀態，怕別人覺得你慢，或怕一說出口就被要求立刻決定。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>練習時，把沉默改成有期限的暫時回答：「我目前怎麼看」「我還缺什麼」「我何時再回覆」。讓思考有出口，也讓等待能被檢查。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>如果你開始能用小測試換取真實資訊，就不必靠腦中無限預演。你的深度會留下來，但卡住的時間可能縮短。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>當別人催你快點決定時，你比較常出現哪一種反應：先沉默、先答應再後悔，還是能說出自己需要多少時間？最近有沒有一件事，可以用七天的小測試代替繼續空想？</p>
+      <p class="q-note">（這些問題不用急著答。寫下來，或就放著讓它在心裡發酵——真正的看見，是被一個好問題「問」出來的，不是被答案「餵」出來的。每一章結尾，我都會留一個這樣的問題給你。）</p>
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="chapter" id="c2">
+    <div class="ch-num">第二章</div>
+    <h2 class="ch-title display">從打地基到試方向：你正在進入可以驗證自己的年紀</h2>
+    <p class="ch-lead">成長不是每七年就突然換成另一個人。階段比較像學校換教室：以前練過的能力會一起帶進來，只是新的課題開始佔比較多位置。你的前十四年，大致走過「紮根」與「建構」；現在進入十四到二十一歲的「驗證期」。驗證的意思不是接受考官打分，而是開始用真實經驗檢查：哪些是家人、老師或同學替你安排的，哪些是你自己願意繼續的。
+
+這一段很容易同時出現兩種感覺。一方面，你可能想擁有更多自己的選擇；另一方面，你未必已經知道自己要什麼。這不是矛盾，也不是不成熟。驗證本來就要先試，才有資料可以判斷。對偏向深度與休藏的你來說，最合適的成長方式不是一次做出很大的宣告，而是讓每次小嘗試都留下可以回看的證據。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>零到七歲｜先確認世界能不能接住你</h3>
+      <p>「紮根期」主要建立的是安全感與基本信任：我提出需要時，有沒有人回應？犯錯之後，關係會不會還在？我能不能在熟悉的環境裡慢慢嘗試？這些問題不一定會被說出口，卻會透過每天的互動留在身體裡。</p><p>這份盤不能替你虛構童年，也不能斷定家裡發生過什麼。你可以從現在的反應倒回去校準。例如到了陌生場合，你是先觀察規則，還是很快加入？需要幫忙時，你能直接說，還是會撐到別人發現？這些都可能和早期形成的安全方式有關，但不是唯一原因。</p><p>對深井型而言，熟悉感常很重要。小時候若有固定的人、固定的睡前流程，或一個能安靜待著的角落，可能比較容易放鬆。相反地，如果環境一直變、回應沒有規律，你也可能更早學會把感受收進去。這不是要追究誰對誰錯，而是理解：你現在有時需要較長的適應時間，可能不是故意拒絕，而是身體正在確認這裡是否安全。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>七到十四歲｜把自己的做事方法一塊塊蓋起來</h3>
+      <p>「建構期」像開始搭房子的骨架。你逐漸學會讀書、合作、遵守時間，也開始比較：我擅長什麼？我在團體裡通常扮演什麼角色？這時外界的評價很容易變得重要，分數、名次、稱讚與批評，都可能被拿來當作「我是怎樣的人」的證明。</p><p>但能力和身份不是同一件事。某次考得不好，只能證明那一次的準備方式、理解程度或狀態沒有對上要求，不能證明你就是不會。某次被選為組長，也不代表你永遠都該負責收拾所有人的工作。建構期留下的標籤，到了現在需要重新檢查。</p><p>一個常見場景是分組作業。你可能因為想把事情做好，默默接下資料整理或最後修正；久了，別人就認定那是你的工作。另一種可能是，你不想在大家面前搶話，結果能力一直沒有被看見。請你回想：過去幾年裡，有沒有一個角色是別人常交給你的？你是真的喜歡，還是只是做得來、又不容易拒絕？這個差別，正是下一階段要驗證的內容。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>十四到二十一歲｜不是選定一生，而是累積自己的證據</h3>
+      <p>你現在站在驗證期的入口。這一階段帶著比較像春天的要求：冒出新芽，試著碰觸原本不熟悉的世界。偏偏你的核心節奏較像冬天，習慣先收、先想、先確認。兩種力量放在一起，可能出現一種拉扯：你知道應該開始試，卻又希望等到完全確定再走。</p><p>問題是，有些確定只能在行動後出現。你無法只靠想像知道自己喜不喜歡上台，也很難只看影片就確定一項運動是否適合。驗證期要的不是魯莽，而是可回頭的小實驗。比如對某個社團有興趣，可以先參加一次公開活動；想知道自己是否喜歡設計，可以先完成一張海報，而不是先問自己能不能把它當職業。</p><p>這一階段也會逐漸碰到同儕、家人和自己的不同期待。朋友都選的路，不一定是你的路；家人擔心的事，也不一定沒有道理。成熟不是反對所有建議，而是學會把建議當資料，再用自己的實驗補上證據。你可以說：「我知道你擔心什麼，所以我先試一個月，月底再一起看結果。」這句話同時保留了自主與責任。</p>
+      <div class="step">
+        <div class="kicker">這一章的練習｜建立一份「我試過」紀錄</div>
+        <p>選一個你正在好奇的方向，做一個十四天實驗。開始前寫下三件事：我為什麼想試、我擔心什麼、什麼現象會讓我願意繼續。十四天內至少留下三筆具體紀錄，不只寫心情，也寫行為，例如「沒人提醒時，我主動練了二十分鐘」「遇到困難後，我隔天仍想回去」。</p><p>結束後可以有三種答案：繼續、調整後再試、暫時放下。三種都算驗證成功，因為你得到的不是漂亮結論，而是真實資料。若結果不喜歡，也不代表浪費；你排除了一條不適合現在的路，替未來省下更大的成本。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>過去的你可能比較常依照熟悉規則前進，或把「做得好」誤認成「我一定要一直做」。別人給的角色，久了看起來像自己的身份。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>進入驗證期後，先不要急著推翻全部舊選擇。一次只測一件事，留下行為證據，也允許結果是「目前不適合」。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>當你累積多次測試，就會慢慢分得出：哪些能力只是能做到，哪些事情是遇到困難仍想回去。方向感會從經驗長出來，不必靠一次宣言證明。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>如果暫時不看分數、稱讚和別人的期待，過去一年裡，有哪件事是沒有人提醒，你仍會自己回去做的？又有哪個「大家以為你很適合」的角色，其實已經讓你有點累？</p>
+    </div>
+  </article>
+
+  <!-- ③ -->
+  <article class="chapter" id="c3">
+    <div class="ch-num">第三章</div>
+    <h2 class="ch-title display">外面看向遠方，裡面先把事情做好</h2>
+    <p class="ch-lead">西洋占星的基礎層可以先看三個畫面：太陽像你想成為的自己，月亮像壓力來時自然回去的安全方式，當下行運則像最近的天氣。這張盤的太陽落在水瓶、月亮落在摩羯，而目前的大環境帶有獅子座色彩。白話地說：你可能想保有自己的觀點，不喜歡只因為大家都這樣就照做；但內在需要安全時，又會傾向把自己管好、把責任完成。最近的環境則更鼓勵表達、創造和被看見。
+
+這三個部分不一定總是和諧。你可能腦中有不一樣的想法，心裡卻先問「這樣夠不夠可靠」；也可能有作品想拿出來，又擔心被注意之後要接受評論。占星在這裡不是替你下定義，而是提供三組可以觀察的傾向。若你讀了完全不像，也應以你的真實經驗為準。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>太陽水瓶｜你需要知道「為什麼」，不只知道「大家都這樣」</h3>
+      <p>水瓶座的太陽常把注意力放在觀點、規則與可能性。你未必會在每件事上公開反對，但當一條規定只有「以前就是這樣」的理由時，你可能比較難真正信服。你想知道它解決什麼問題，有沒有別的方法，以及這條規則是否對每個人都公平。</p><p>這種傾向在課堂上可能很明顯。例如全班都照範例做作業，你可能突然想到另一種呈現方式。若老師只要求完全照抄，你可能失去興趣；如果允許解釋自己的選擇，你反而願意花很多時間把版本做完整。這不表示你一定愛挑戰權威，而是理解理由後，你的合作通常會更真心。</p><p>水瓶的另一面是容易先站到觀察者的位置。當團體情緒很熱，你可能抽離一步，想看清楚事情到底怎麼回事。這能幫你避開盲目跟風，但也可能讓別人誤以為你冷淡。若你其實在乎，可以多補一句：「我不是沒感覺，我只是想先弄清楚。」讓思考不必被誤讀成距離。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>月亮摩羯｜不舒服時，你可能先撐住，再處理感受</h3>
+      <p>月亮摩羯描述的是一種內在安全策略：事情有秩序、責任有完成、自己沒有失控時，心裡比較安穩。遇到壓力，你可能不會第一時間表現脆弱，而是先問接下來該做什麼。這讓你在某些場合顯得可靠，但也可能把「需要休息」誤認成「我不夠努力」。</p><p>例如考試前很焦慮，有人會先找朋友說一說；你可能先排進度、整理講義，直到事情告一段落，才發現肩膀很緊、心情其實不好。做事確實能帶來控制感，卻不能永遠代替感受。若每次難過都只增加任務，情緒可能在很小的事件上突然跑出來。</p><p>你可以試著把感受也當成需要管理的資訊，但不用把它變成另一份功課。簡單說出「我現在很煩，還不知道原因」「我想自己待二十分鐘」就夠了。成熟不是永遠穩定，也不是什麼都自己扛；成熟包含知道何時應該找人、何時需要停一下。這一條尤其需要你自己驗證：當你累或不安時，是不是更容易變得嚴格、沉默，或只盯著結果？</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>當下獅子｜最近的練習，是讓作品先走到光裡</h3>
+      <p>目前的環境帶著獅子座的季節感，主題是創造、表達與被看見。這和你原本偏向深井、觀察、等成熟再公開的節奏有些不同。它不要求你突然變成舞台中心，而是在問：有沒有一件已經準備到六七成的東西，可以先讓可信任的人看見？</p><p>例如你寫了一段故事、做了一張圖、練了一首歌，原本想等到完全滿意才分享。獅子季的練習可以很小：先傳給一位朋友，並只問一個具體問題，如「哪一段最容易看懂？」不要一次請對方評價你有沒有天分。把作品和自我價值分開，你就比較能承受回饋。</p><p>太陽水瓶想保持獨特，月亮摩羯想交出可靠成果，當下獅子則催你站出來。三者合作時，會形成一個不錯的流程：先提出自己的看法，再把它做成有結構的作品，最後允許作品被看見。卡住時則可能變成：點子很多、標準很高、遲遲不發表。破解的方法不是降低所有標準，而是替不同版本取名——測試版可以不完整，正式版再慢慢修。</p>
+      <div class="step">
+        <div class="kicker">這一章的練習｜做一次「六成公開」</div>
+        <p>選一件已經完成六成的小作品，在安全範圍內分享給一個人。分享前先決定你要的回饋只有一項，例如「你看完記得哪一句」「哪裡看不懂」「你覺得節奏太快還是太慢」。不要問「你覺得我好不好」，因為那太大，也很難得到能使用的答案。</p><p>收到回覆後，先隔半小時再決定要不要修改。你可以接受有用的部分，也可以保留自己的選擇。被看見不等於把決定權交出去；真正的自主，是有能力聽取回饋，最後仍知道為什麼這樣做。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>你可能習慣先把想法留在腦中，等到夠完整、夠可靠，才願意公開。這保護了品質，也可能讓別人一直看不到你的進度。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>分享測試版時，只開放一個小範圍、一個具體問題。注意自己是因為內容真的需要修改，還是只因被看見而緊張。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>多做幾次後，你可能會發現：公開不必等於表演，回饋也不等於否定。想法能保有獨特，作品能逐步變穩，而你不必一次承受所有目光。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>當你有一個和大家不同的想法時，你通常會直接提出、先做成成果再說，還是乾脆放在心裡？最近有沒有一件完成六成的小作品，適合先讓一位可信任的人看見？</p>
+    </div>
+  </article>
+
+  <!-- ④ -->
+  <article class="chapter" id="c4">
+    <div class="ch-num">第四章</div>
+    <h2 class="ch-title display">界線不是牆，是讓力量有地方落下</h2>
+    <p class="ch-lead">這一章讀三個高訊號落點：本命太陽的節 60.5、潛意識太陽的大過 28.1，以及當下太陽的遯 33.2。它們不是預告，而是三種可觀察、也可被本人否認的傾向。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>一、節 60.5｜願意認同的規則，才守得長久</h3>
+      <p>第六十卦「節」談分寸、界線與有限資源的安排。九五古辭是：「甘節，吉；往有尚。」白話是：限制若合理，自己也真心認同，遵守它不只不苦，反而能讓事情順利推進。</p><p>這可能表現為：只要知道規則為何存在，她可以穩定照做；若要求只剩「因為大人說了算」，內在阻力可能升高。這不等於天生反抗，而是她可能很在意界線是否合理。可驗證的是：清楚說明目的與期限，是否比單純命令更有效？</p><p>「甘節」也提醒，有效自律不是把生活塞滿。適合的做法可能是只保留最重要的兩三條規則，定期檢查它們是否仍有用。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>二、大過 28.1｜重要的事，先把承接面鋪好</h3>
+      <p>第二十八卦「大過」帶有負荷超出平常、棟樑承重的意象。初六古辭是：「藉用白茅，無咎。」白話是：事情越重要，越要先鋪好基本承接面；多做一道準備，可以避開不必要的風險。</p><p>這不是災難預告。較實際的傾向是，面對重要或不能失敗的事，她可能先確認基礎、環境與補救方法。慎重運用得好是可靠；壓力太大時，也可能變成一直準備而不敢開始。判斷關鍵是準備有沒有改善結果。</p><p>底座可能是睡眠、基本知識、工具、可信任的大人或退出方案。她不需要只靠意志承受重量；先找到支撐，本身就是成熟行動。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>三、遯 33.2｜暫時退開，不等於認輸</h3>
+      <p>第三十三卦「遯」談退避與保存空間。六二古辭是：「執之用黃牛之革，莫之勝說。」其中「說」通「脫」。白話是：既然確認此刻需要界線，就先穩穩守住，不被外界拉回消耗之中。</p><p>這是當下時間訊號，不是永久人格。近期碰到爭執、資訊過量或越講越亂的局面，較有利的選項可能是先退出整理，再決定是否回應。健康版本不是冷戰，而是清楚說：「我需要停一下，晚點再談。」</p><p>可驗證的是：她近期是否需要降低雜訊才能聽見自己的判斷？若退出只讓焦慮升高，而找可信任的人釐清更有效，就不該把「遯」當成孤立自己的理由。</p>
+      <div class="step">
+        <div class="kicker">把三卦串成一個可操作順序</div>
+        <p>先用「大過」鋪底：需要哪些資訊、休息與支援？再用「節」定界：最重要的兩條規則是什麼？最後用「遯」保護空間：現場已無法思考時，要暫停多久、何時回來？可試行一週，再依結果調整。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>開始前寫下最低可行準備與今天不必做到的事，避免把慎重變成無限延後。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>若被規則卡住，先分辨它是在保護品質，還是已失去目的；一次只改一條界線。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>檢查準備是否減少返工、暫停是否幫助思考，再用結果修正做法。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>當一件事重要又有壓力時，你比較常先準備、先訂規則，還是先離開一下？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第二部 ░░░░░░░░ -->
+  <div class="sep"><span>第二部 · 顧好自己，才顧得了關係</span></div>
+
+  <!-- ⑤ -->
+  <article class="chapter" id="c5">
+    <div class="ch-num">第五章</div>
+    <h2 class="ch-title display">穩定動力與開放感受，如何同時存在</h2>
+    <p class="ch-lead">本章只做人類圖概念層對照，不重製系統原文，也不把圖當作醫療、教育或人格診斷。所有描述都應回到日常行為驗證。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>一、5/1｜先查清楚，再處理大家期待你解決的事</h3>
+      <p>5/1 可理解為「實際解題者／基礎調查者」。她可能想先知道規則、來源與理由，再提出可用辦法；外界也可能在她尚未答應前，就期待她收拾局面。</p><p>優點是研究扎實後，常能把複雜問題變成步驟。風險是別人的期待可能超過她真正承諾的範圍。答應前可先問：問題是什麼？資訊夠嗎？這真是我的責任嗎？</p><p>可驗證的是：她是否不喜歡毫無準備時被點名，卻在查清楚後很能說明方法？若不符合，就不宜只憑 profile 定型。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>二、三條通道｜啟動、照顧與向上成長的三股力</h3>
+      <p>3–60 可概念化為「在限制中形成新秩序」。開始新課程或新習慣時，她可能需要一段不整齊的適應期，之後才穩定；適應期不等於失敗。</p><p>27–50 可理解為照顧需要並辨認責任界線。她或許對安全、公平與誰需要幫忙較敏感，但有照顧傾向不代表要負責所有人。</p><p>32–54 可理解為辨認值得長期投入的方向，並希望能力有成長。它不保證成功，也不要求現在就選定未來；可用三個月的小實驗觀察興趣、基本功與身心狀態。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>三、三個穩定中心與六個開放中心｜有自己的動力，也容易讀到環境</h3>
+      <p>根部、直覺與薦骨中心有定義，可理解為壓力啟動、即時身體警覺與持續動力較可能形成固定路徑。這不代表精力永遠充足，睡眠與健康仍應依現實判斷。</p><p>另外六個中心開放，表示思考、自我定位、情緒氣氛、表達和意志證明等面向，可能較受環境影響。重要問題是：「這是我的感覺，還是我正在放大現場的感覺？」</p><p>十四歲本來就會試穿不同身份與興趣。只要保留安全界線與可信任回饋，變動可以是學習，不代表沒有自我。</p>
+      <div class="step">
+        <div class="kicker">用身體回應，但不把第一個反應當成命令</div>
+        <p>把選擇改成具體問題，例如「這週願不願意試一次？」先注意身體是靠近、放鬆，還是縮緊、想退出，再查資料與限制。身體提供線索，資料負責校正，決定權仍在本人與適當照顧者。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>答應請求前先確認範圍、期限與責任人，不把別人的期待直接當成承諾。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>環境情緒很強時先離開幾分鐘，等身體恢復，再判斷真正想說什麼。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>記錄哪些活動做完雖累但滿足，哪些只是被期待推著走，數週後再找規律。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你最常因為別人期待、想照顧對方，還是怕錯過機會而答應太快？</p>
+    </div>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="chapter" id="c6">
+    <div class="ch-num">第六章</div>
+    <h2 class="ch-title display">東方盤面的沉穩骨架：可以觀察，不能拿來定罪</h2>
+    <p class="ch-lead">四柱為辛卯、辛丑、辛巳、癸巳；紫微資料為命宮申、紫微天府同宮、身宮在夫妻宮、火六局。引擎十神計算尚未完成，因此不宣稱完整格局、喜用神或具體事件。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>一、三辛並見｜重視精準、品質與界線，但不等於冷淡</h3>
+      <p>四柱天干出現三個辛。辛在五行象徵中常借金屬經琢磨後的精細、辨別與品質感來理解。她可能對細節、措辭、整潔或「怎樣才算做好」較敏銳，也可能不喜歡粗糙與含糊的界線。</p><p>這不等於完美主義或冷淡。可觀察的是，她是否會反覆修正別人沒注意的地方，或被含糊批評後長時間整理每個字？若她其實很隨性，此象徵就應下修。</p><p>精準是工具，不是證明自己值得被喜歡的條件。比起稱讚「你好完美」，更適合提供明確品質標準，並允許初稿粗糙。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>二、丑與雙巳、癸水透出｜內在可能同時有蓄力與加速</h3>
+      <p>只做五行意象閱讀時，丑帶有收藏與慢慢成形的感覺，巳帶有熱度與啟動，癸水可比喻細微觀察。幾種節奏同時存在，可能表現為觀察很久，決定後突然加速。</p><p>雙巳不應被解讀成脾氣、災厄或必然事件。較安全的假設是：有興趣或感到緊急時，她的投入速度可能提高；若缺少停止點，也可能一下用力過多。</p><p>癸水只保留為發展假設：隨年齡增加，文字或安靜整理經驗可能成為資源。因十神引擎尚未完成，不能推論特定親屬、職業或結果。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>三、紫微天府坐命、身宮在夫妻｜組織感與關係鏡子</h3>
+      <p>紫微天府在申宮命宮，可在概念層理解為統整、資源安排與希望角色清楚。她或許能注意團體缺少哪個環節，但這不代表天生必須領導，更不能要求她替大家收拾。</p><p>身宮在夫妻宮，未成年報告不應預測婚姻。較合適的理解是，朋友、同學、老師等重要一對一關係，可能成為認識界線與價值的鏡子。她需要學會合作，但不把判斷權全部交出去。</p><p>火六局可作整體節奏象徵：成長可能需要興趣、熱度和可見行動；它不是速度保證，也不能用來斷定哪一年必然發生什麼。</p>
+      <div class="step">
+        <div class="kicker">把想做好改成一套不傷自己的品質流程</div>
+        <p>重要任務分三輪：第一輪完成骨架；第二輪檢查三個明確標準；第三輪請可信任的人回饋。遇到關係壓力時，分開寫下「對方期待」「我的意願」「共同責任」，不要混成同一件事。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>開始前先決定合格線，並確認事情是自己、共同或別人的責任。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>察覺突然加速時，檢查睡眠、吃飯與時間；熱度不能取代基本照顧。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>完成後不只找錯，也列一項做好的結構；若受他人反應影響，隔一晚再評估。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>你較認得哪種自己：一直修細節、觀察很久才突然行動，還是在一對一關係中更看清自己？</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 第三部 ░░░░░░░░ -->
+  <div class="sep"><span>第三部 · 關係對了，事業財富才水到渠成</span></div>
+
+  <!-- ⑦ -->
+  <article class="chapter" id="c7">
+    <div class="ch-num">第七章</div>
+    <h2 class="ch-title display">把理想放進日常：九、三，以及那盞隱者的燈</h2>
+    <p class="ch-lead">這一章不把數字或塔羅牌當成預言，而把它們當成三面不同角度的鏡子。生命數九，照的是「我在乎什麼」；生日數三，照的是「我怎麼讓別人知道」；隱者，照的是「當外面的聲音太多，我怎麼回到自己」。鏡子不會替人作決定，也不保證每一條都符合你。真正有用的讀法，是拿它去對照生活：你是否很容易注意到不公平？是否腦中有很多感受，說出口時卻需要一個安全的入口？是否偶爾想離開人群，不是討厭大家，而是需要安靜整理？如果不像，就把不像的地方留下來；反駁本身也是認識自己的方法。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>生命數九：看得見「不只我一個人」</h3>
+      <p>九的象徵，常把視線從自己推向更大的範圍。放進十四歲的生活，它不一定是什麼宏大使命，更可能只是一些很具體的小事：分組時注意到沒人選的同學；聽到一句玩笑，發現被笑的人其實不舒服；做決定時，不只想「我會不會贏」，也想「這樣公平嗎」。若這面鏡子吻合，你對氣氛與他人的處境可能比別人以為的更敏感。</p><p>但九也有一個容易疲累的位置：看到問題，不等於每個問題都要由你處理。當你很在意一件事，可能會把「我希望它變好」偷偷變成「我有責任讓它變好」。這兩句話看似接近，重量卻不同。前者保留選擇，後者可能讓你替全班、朋友，甚至家人的心情背書。可驗證的地方是：當身邊有人不開心時，你是否常先檢查自己做錯了什麼？如果答案是否定的，這一段就不必硬套；如果常常如此，你要練的不是少關心，而是分清楚「我能陪伴」和「我必須負責」。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 你心裡那個迴圈</div>
+      <h3>生日數三：表達不是表演，而是讓內在有出口</h3>
+      <p>三的象徵與表達、聯想、幽默和創造有關。它不代表一個人一定外向、愛站上台，反而可能出現在比較私人的地方：畫圖時比說話自在、寫訊息時比較知道自己要講什麼、熟人面前突然很有梗，或把複雜心情變成一句精準的比喻。你可以觀察：在安全的人旁邊，你是否比在陌生場合更活潑？如果是，三並沒有消失，只是它需要安全感才願意開門。</p><p>三的挑戰，是腦中的內容跑得比嘴巴快。想說的可能很多，真正說出來的只剩一句「還好」；或為了讓場面輕鬆，先用笑話帶過，等回到房間才發現自己其實有點受傷。這不是虛假，而是一種保護方法。只是保護用久了，別人會以為你真的沒事。比起逼自己一次說清楚，更適合的方式是先給一小句提示，例如：「我現在還沒整理好，但這件事對我有影響。」這句話沒有要求你立刻交出全部感受，卻能讓重要的人知道門並沒有關上。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>隱者：暫時離開熱鬧，是為了聽見自己的聲音</h3>
+      <p>隱者這張牌不是「孤單的命」，也不是叫人躲起來。它比較像夜路上的一盞手提燈：光不會一次照到很遠，但足夠看清下一步。對正在長大的你來說，隱者提醒的是，別人的評價、同學的速度、社群上的熱鬧，都可能太亮；亮到最後，反而看不見自己真正喜歡什麼。</p><p>你可能需要比別人多一點獨處時間，才能把一天裡收進來的感覺分類。這種獨處若健康，結束後通常會比較清楚、比較能回到人群；如果只是反覆責怪自己，越待越窄，那就不是隱者的燈，而是困住自己的迴圈。判斷方式很實際：安靜二十分鐘後，你有沒有更知道下一步要做什麼？若有，這段安靜在充電；若沒有，就可以換一種整理方式，例如散步、畫圖、找可信任的大人談五分鐘。隱者的重點從來不是「一個人撐」，而是先找到自己的聲音，再決定要向誰求助。</p>
+      <div class="step">
+        <div class="kicker">把三個象徵合在一起：關心，但不把全世界背走</div>
+        <p>九讓你看見更大的需要，三讓你把看見的事說出來，隱者則提醒你先確認那是不是自己真正相信的。三者合作時，可能形成一種很有力量的節奏：先安靜辨認，再選擇表達，最後只承擔自己能承擔的部分。可以從一件小事練起。下次遇到讓你在意的情況，先寫三行：我看見什麼、我感到什麼、我能做的一小步是什麼。第三行必須小到二十分鐘內能開始，例如詢問、整理資料、傳一則訊息，而不是「我要讓所有人都變好」。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>以前，你可能把敏感誤認成想太多，把想幫忙誤認成自己的義務，也可能等到完全想清楚才願意開口。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>練習時，先不急著判定自己對不對。把感受、事實與責任拆開：感受可以是真的，猜測仍要查證，責任則需要邊界。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>慢慢地，你仍然能關心很多事，卻不必每次都耗盡自己；你也能用自己的語言表達，而不是只有沉默或一次全部爆出來兩種選項。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>三個象徵裡，哪一個最像你：容易替整體著想的九、需要創作出口的三，還是必須安靜整理的隱者？又有哪一個最不像？請以最近一個月的真實例子來判斷，不必為了符合報告而點頭。</p>
+    </div>
+  </article>
+
+  <!-- ⑧ -->
+  <article class="chapter" id="c8">
+    <div class="ch-num">第八章</div>
+    <h2 class="ch-title display">情緒像深井：不是沒有水，而是打上來需要時間</h2>
+    <p class="ch-lead">你的情緒運作可以先用「深井」理解：感受下得深，輸出卻不一定快。別人問「你怎麼了」，你當下可能真的答不出來，不是故意不說，也不一定是在生氣；有時只是桶子還在往下。等你找到那個感受、替它取名、確認說出來是否安全，時間已經過了一段。這個比喻必須接受驗證：如果你通常能立刻辨認並直接說出心情，那麼深井就只適用於部分場景；如果你常在事情過後才想到「原來我那時很難過」，它就值得成為你的使用說明。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的天生設定</div>
+      <h3>深井的優點：你可能聽得見別人略過的細節</h3>
+      <p>感受深的人，往往不只接收一句話，也會接收到語氣、停頓、前後不一致，以及房間裡沒有人明說的變化。這可能讓你在閱讀、創作、觀察朋友時很細膩。別人只說「今天很煩」，你可能分得出那是累、委屈，還是害怕丟臉。這份細緻若有出口，會成為理解力；若沒有出口，則可能變成腦中一直重播。</p><p>深井型最常被誤會的地方，是沉默看起來像冷淡。其實裡面可能非常忙：一邊感受，一邊判斷對方會不會接受，一邊修改句子。可嘗試告訴親近的人：「我不是沒感覺，我需要晚一點回答。」這不是逃避，而是一個有期限的暫停。關鍵是要補上何時回來，例如晚餐後、明天放學，否則暫停很容易被彼此理解成消失。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 一個你一定要聽進去的好消息</div>
+      <h3>盛焰補位：需要的不是變吵，而是讓訊號早一點出現</h3>
+      <p>「盛焰」是這份報告用來描述互補能力的名字：它像一團看得見、感覺得到的火，願意先發出訊號、先試一次、先讓現場知道「我在這裡」。它不要求你變成最外向的人，也不是叫你每次都立刻作答。真正要補的是可見度，而不是音量。</p><p>例如分組討論時，深井可能想等答案完整再說；盛焰會允許自己先講半成品：「我有一個還沒想完的方向。」和朋友有摩擦時，深井可能先退回去整理；盛焰會留下一盞燈：「我現在有點亂，但不是不想理你。」遇到不合理要求時，深井可能先忍耐並理解對方；盛焰會先劃一條線：「這件事我需要想一下，現在不能答應。」這些都不是性格改造，而是增加一種新選項。你仍可慢慢想，只是不讓沉默替你傳遞錯誤訊息。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 那，接下來怎麼走</div>
+      <h3>關係與學習：同一套情緒速度，會長成兩種不同問題</h3>
+      <p>在關係裡，最可能出現的落差是：你以為自己正在整理，對方以為你在拒絕。若對方追問太快，你可能更難說；你越沉默，對方又越不安。打破迴圈的方法，不是誰逼誰改，而是建立簡短暗號。像「黃燈」可以表示：我需要時間，但關係沒有中斷；「紅燈」表示：現在真的不能繼續，等雙方冷靜再談。暗號必須由彼此同意，不能拿來永久跳過問題。</p><p>在學習場景裡，深井可能表現為吸收慢半拍，但理解一旦沉下去就很扎實。老師剛問問題時想不到，回家洗澡卻突然懂；閱讀時需要停留，考試限時則容易因為反覆確認而卡住。這條也要實測，不可只因為描述好聽就接受。你可以比較三次作業：第一次答案是否較慢，但修改後的內容是否更完整？若沒有，問題可能只是方法或基礎尚未熟悉，不必全部歸到情緒類型。</p><p>學習上的盛焰補位，是把「我不會」改成一個可行動的訊號：圈出第一個看不懂的步驟、先寫暫定答案、在下課前問一個問題。目標不是一次變厲害，而是縮短從卡住到求助之間的距離。</p>
+      <div class="step">
+        <div class="kicker">建立你的「回應時間表」</div>
+        <p>選一位可信任的大人或朋友，說明你的回應可能有三種速度：現在能答、需要十分鐘、需要隔天。約定好你可以直接報時間，不必先解釋全部原因。接著最重要的是守約：如果說隔天回，就在隔天用一句話重新開啟對話。這會讓別人知道，你的慢不是拒絕，而是一種處理方式；也讓你學會，時間需求可以被說出來，不必靠消失換取。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>以前，別人可能只看到你的安靜，而你也可能等到情緒累積很滿，才突然哭、發火，或完全不想再談。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>開始練習時，先用短句標示狀態，不要求自己立即完成深度談話。只要說出「有感覺、需要多久、何時回來」三件事。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>漸漸地，你的深度不必靠憋住來保護；關係中的人較能跟上你的節奏，而你在學習遇到卡點時，也比較早得到真正需要的協助。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>當你沉默時，內在最常是哪一種狀態：還不知道感受、知道但怕說錯、知道但不確定對方是否安全，還是其實只想結束對話？不同答案需要不同方法，請不要把所有沉默都解釋成同一件事。</p>
+    </div>
+  </article>
+
+  <!-- ⑨ -->
+  <article class="chapter" id="c9">
+    <div class="ch-num">第九章</div>
+    <h2 class="ch-title display">窗口不是倒數計時：在適合的季節，把下一步做得更清楚</h2>
+    <p class="ch-lead">這章提到兩個時間窗口：2026 年 12 月 21 日與 2027 年 1 月 20 日。它們不是「一定會發生大事」的預告，也不是錯過就沒機會的期限。比較實用的理解是，把它們當作兩個檢查點：前一個適合收束、整理與選出真正重要的方向；後一個適合把方向說清楚，讓一個小計畫被看見並開始運作。事件仍然取決於學校安排、家庭狀況、準備程度和你的選擇。日期只提供節奏，不替現實作保證。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 你的時機</div>
+      <h3>第一個窗口：2026 年 12 月 21 日，先整理，不急著證明</h3>
+      <p>接近年底時，最有價值的動作可能不是多開一個新目標，而是盤點：這學期哪些事真的讓你有精神？哪些事只是因為怕落後、怕讓人失望才一直做？可以把課業、興趣、朋友與休息各寫一項「保留」和一項「減量」。保留的不是最厲害的，而是你願意再投入三個月觀察的；減量也不代表永遠放棄，只代表先把空間拿回來。</p><p>這個窗口尤其適合完成一件拖著的小事，例如整理作品、補問一個觀念、向某人說清楚界線，或結束一個早已失去意義的承諾。判斷標準不是做完後有沒有立刻被稱讚，而是你的腦中是否少了一個持續佔位的分頁。如果那段時間剛好忙碌或身體不舒服，也不需要硬做；把檢查點往前後移一週，仍然有效。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 把整份報告，串成一條路</div>
+      <h3>第二個窗口：2027 年 1 月 20 日，讓一個方向開始被看見</h3>
+      <p>經過前一階段的整理，第二個窗口適合做一次小型公開：交出作品、報名活動、提出學習計畫、邀請同伴合作，或和家人談一個希望獲得的支持。所謂公開，不一定是發到網路；對一位重要的人清楚說明，也算是讓方向被看見。</p><p>請把規模控制在能承受的範圍。若想學一項新技能，不必宣布「我以後一定要成為誰」，可以只承諾四週、每週兩次；若想改善一段關係，不必保證從此不吵架，可以先提出一次二十分鐘的對話。這樣即使結果不如預期，你得到的仍是資料，而不是對自我價值的判決。窗口真正要推動的，是從心裡想很久，走到現實裡試一小步。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 你的第一步</div>
+      <h3>兩個窗口之間：用回饋修正，不用一次選對人生</h3>
+      <p>十四歲的選擇大多不是終身契約。喜歡的科目可能改變，朋友關係會重組，今天覺得適合的活動，三個月後也可能發現不合。這不是不夠堅定，而是資料變多了。從 12 月 21 日到 1 月 20 日之間，可以把自己當成小型研究者：提出一個猜想，做有限度嘗試，再看結果。</p><p>例如猜想「我不是不會，只是需要有人一起開始」，就找同學共讀兩次；猜想「我喜歡畫畫，但不喜歡被評分」，就完成一張只給自己看的作品，再完成一張請人回饋的作品，比較兩次感受。結論必須來自實際紀錄，而不是一天心情。你不必證明盤面是對的；盤面的責任只是提供問題，你的生活才有最後答案。</p>
+      <div class="step">
+        <div class="kicker">四項練習：每次只練一點，連續四週觀察</div>
+        <p>第一項是「三行感受記錄」。每天不用超過三分鐘，只寫：發生什麼、身體哪裡有感覺、我現在需要什麼。不要分析人格，也不要評分好壞。它練的是讓深井裡的水有名字。</p><p>第二項是「半成品發言」。每週至少一次，在安全的課堂、家庭或朋友場景中，說出一句尚未完全想好的看法，例如：「我不確定，但我目前想到的是……」它練的是盛焰的可見度，不是搶話。</p><p>第三項是「責任三圈」。遇到別人的問題時，在紙上畫三圈：我能直接做的、我能陪伴但不能代替的、完全不由我控制的。只從第一圈選一件小事。它幫助關心保有邊界。</p><p>第四項是「二十分鐘試作」。挑一個想做卻遲遲沒開始的任務，只做二十分鐘，時間到便停下並記錄：我想繼續、需要改方法，或其實沒興趣。連續四週後再決定要不要加碼。這些練習是自我觀察與生活整理，不是醫療或心理治療；如果情緒困擾持續影響睡眠、飲食、上學、安全，或出現傷害自己的想法，請直接告訴可信任的大人，並尋求合格專業人員協助。</p>
+      </div>
+    </section>
+
+    <div class="afterword">
+      <div class="aw-head">修煉後記 · 同一副牌，三種人生</div>
+      <div class="aw-step aw-before"><span class="lvl">修煉前的你</span>
+        <p>以前，你可能等到完全確定才開始，或把一個日期想成必須成功的考試；結果越重視，越不敢動。</p></div>
+      <div class="aw-step aw-during"><span class="lvl">正在修的你</span>
+        <p>進入窗口時，把任務縮成能觀察的版本：一個問題、一個小步、一個回顧日期。每週只問「我得到什麼新資料」，不急著替自己下結論。</p></div>
+      <div class="aw-step aw-after"><span class="lvl">修煉後的你</span>
+        <p>完成兩個檢查點後，你不一定會得到一個永久答案，但應該更清楚什麼值得繼續、什麼需要求助、什麼可以放下。能修正方向，本身就是成長，不是失敗。</p></div>
+    </div>
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>到了兩個窗口，請各自回答一次：我現在最想保留的是什麼？最想減量的是什麼？下一個能在二十分鐘內開始的動作是什麼？一個月後再回看：哪些判讀符合真實生活，哪些只是好聽卻不適用？選擇權始終在你手上。</p>
+    </div>
+  </article>
+
+  <!-- ░░░░░░░░ 收尾環節 ░░░░░░░░ -->
+  <div class="sep"><span>收尾 · 把九套系統收成一條路</span></div>
+
+  <!-- 系統會診 -->
+  <article class="chapter" id="clinic">
+    <div class="ch-num">系統會診</div>
+    <h2 class="ch-title display">眾口同聲 vs 眾說紛紜</h2>
+    <p class="ch-lead">我把本次有資料支持的系統與分析視角放在一起：先找不同證據反覆指向的主題，再保留彼此拉扯之處。共振提高的是值得驗證的優先度，不把任何說法升格成不可反駁的真相。</p>
+
+    <section class="clinic unison">
+      <div class="kicker">眾口同聲處 · 你的核心真相</div>
+      <h3>不同證據反覆指向，這幾條最值得優先校準</h3>
+      <div class="item">
+        <span class="t">深度先行，出口後到</span>
+        <p>時相的藏－藏、月亮摩羯、隱者象徵與情緒側寫都指向：她較可能先內化，再表達。這是共振假設，仍要由生活例子驗證。</p>
+      </div>
+      <div class="item">
+        <span class="t">合理界線比強硬命令有效</span>
+        <p>易經的節、三辛的品質感與人類圖的限制主題都支持：說清目的、期限與責任，比只要求服從更容易形成長久自律。</p>
+      </div>
+      <div class="item">
+        <span class="t">關心很深，責任需要分界</span>
+        <p>生命數九、照顧通道與紫微關係鏡子共同提醒：能看見別人的需要，不等於必須替別人完成他的人生。</p>
+      </div>
+      <div class="item">
+        <span class="t">成長靠小型驗證，不靠一次定案</span>
+        <p>驗證期、當下對極時相與深井慢啟動都適合七到十四天的小實驗，用作品、持續意願與真實回饋累積方向感。</p>
+      </div>
+    </section>
+
+    <section class="clinic discord">
+      <div class="kicker">眾說紛紜處 · 你的內在功課</div>
+      <h3>系統打架的地方，不是你壞了，是你此生要整合的功課</h3>
+      <div class="item">
+        <span class="t">想更新，也想確保可靠</span>
+        <p>水瓶式的新觀點與摩羯式的責任感可能互相拉扯。整合方式是先做測試版，讓創新有可承擔的範圍。</p>
+      </div>
+      <div class="item">
+        <span class="t">外界催展現，內在要沉澱</span>
+        <p>2026 年夏季外部節奏偏向被看見，核心方向卻仍在休藏。不是完全躲起來，也不是全面衝刺，而是有限公開、具體收回饋。</p>
+      </div>
+      <div class="item">
+        <span class="t">能照顧別人，也必須學會求助</span>
+        <p>可靠與敏感可能讓她先處理事情、晚點才說需要。成熟並非永遠自己扛，而是能及早發出可理解的求助訊號。</p>
+      </div>
+      <div class="item" style="border-top:1px dashed var(--border); margin-top:6px; padding-top:14px">
+        <span class="t">所以，請記住這句</span>
+        <p>深井不用變成煙火；只需要一個穩固的桶、一條可見的繩，和願意在井口耐心等她把水打上來的人。</p>
+      </div>
+    </section>
+  </article>
+
+  <!-- 五運實戰摘要 -->
+  <article class="chapter" id="field">
+    <div class="ch-num">五運實戰摘要</div>
+    <h2 class="ch-title display">可以馬上用的五個方向</h2>
+    <p class="ch-lead">道理講完了，這裡給你五段最落地的建議——事業、財富、關係、家庭、身心使命，每一段都是你今天就能拿去用的。</p>
+
+    <section class="card">
+      <div class="kicker">其一 · 事業（創業或轉職）</div>
+      <h3>學習與未來方向：先試作，再加碼</h3>
+      <p>現階段不需要用職業名稱定型。選一個方向做十四天試作，記錄是否主動回去、遇到困難是否仍願修改，再決定投入下一輪。</p><p>擅長深度、細節、研究與整理，不代表只能走安靜工作；真正要補的是展示中間成果與提問的能力。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其二 · 財富（理財與聚財）</div>
+      <h3>金錢：先學界線與紀錄，不談命定財運</h3>
+      <p>未成年階段最實際的財務功課，是分清想要與需要、為小目標做預算、理解網路消費與詐騙風險。盤面不能保證財富。</p><p>可以從一筆小額可管理預算開始：分成使用、儲存與分享三格，每月回看一次，而非用花錢證明自己或討好關係。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其三 · 關係（朋友、同事、伴侶）</div>
+      <h3>關係：慢回應可以說，沉默不要替你表態</h3>
+      <p>約定三種回應速度：現在能答、需要十分鐘、需要隔天。說出需要多久並按時回來，能降低別人把安靜誤認為拒絕的機率。</p><p>好的互補者會主動帶來溫度，又尊重她慢慢浮現；若有人用逼迫、羞辱或威脅換取回應，應向可信任大人求助。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其四 · 家庭</div>
+      <h3>家庭：給理由、選項與可回看的期限</h3>
+      <p>照顧者可以把命令改成清楚合約：為什麼要做、最低標準是什麼、何時回看。一次給兩個可接受選項，比無限開放或完全壓制更容易行動。</p><p>報告不應成為家長替孩子定義人格的工具。若本人說不像，應記錄反例並調整理解。</p>
+    </section>
+
+    <section class="card">
+      <div class="kicker">其五 · 身體健康 · 情緒管理 · 人生使命</div>
+      <h3>身心：先讀身體，再把需要說成一句話</h3>
+      <p>每天三分鐘記錄身體累、情緒滿、想說話三項分數；連續十四天後看規律。這是生活觀察，不是醫療診斷。</p><p>若情緒持續影響睡眠、飲食、上學、安全，或出現自傷念頭，請直接告訴可信任的大人並尋求合格專業協助，不以命盤取代照護。</p>
+    </section>
+  </article>
+
+  <!-- 此刻活層 -->
+  <article class="chapter" id="now">
+    <div class="ch-num">此刻</div>
+    <h2 class="ch-title display">你正站在哪裡 · 接下來這一年</h2>
+    <p class="ch-lead">前面講的，是「你永遠是誰」。這一段不一樣——它講「你現在站在哪、風往哪邊吹」。因為同樣一個人，站在不同的時間點，要做的事是不一樣的。這也是 Kairos 這個名字的意思：時機。</p>
+
+    <section class="card">
+      <div class="kicker">當下時相 · 待時與小試並行</div>
+      <h3>現在到 2026-12-20：守底、試作、不押滿</h3>
+      <p>維持學業、睡眠與既有承諾作為正軌；最多用兩成可用時間，做一項七到十四天可完成的小實驗。</p><p>若連續兩次推進都造成疲憊、衝突或進度倒退，把目標縮小、換場或換合作方式後再測。</p>
+      <div class="pull">等待不是什麼都不做，而是只做那些能增加清楚感、又不會把退路燒掉的事。</div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">接下來 12 個月 · 三個提醒</div>
+      <h3>兩個檢查點：先收攏，再複核</h3>
+      <p>2026-12-21：從試過的方向中選一項，完成可展示的小作品或實際體驗。</p><p>2027-01-20：用作品、持續意願、外部回饋三項檢查；至少兩項成立才加碼，不足則保留為興趣。</p><p>日期是節奏提示，不是命運期限；遇到考試、健康或家庭變動，可前後調整。</p>
+      <div class="step">
+        <div class="kicker">這一年，如果只抓一件事</div>
+        <p style="margin-bottom:0">只選一個小實驗，約定回顧日；以得到的新資料判斷進展，不以一次成敗判斷自己。</p>
+      </div>
+    </section>
+
+    <div class="ask">
+      <div class="q-head">擺 渡 人 問 你</div>
+      <p>最近最值得做的七天小測試是什麼？完成後，你要用哪三個可觀察證據決定繼續、調整或放下？</p>
+    </div>
+  </article>
+
+  <!-- 擺渡人的一封信 -->
+  <article class="chapter" id="letter">
+    <div class="ch-num">封印 · 一封信</div>
+    <h2 class="ch-title display">擺渡人的一封信</h2>
+    <p class="ch-lead">最後，我想脫下所有系統、所有分析，只用一個「真正看見你的人」的身分，寫幾句話給你。</p>
+
+    <div class="letter">
+      <div class="salute">給正在長大的 R.：</div>
+      <p class="lead-in">我不想用一張盤替你決定你是誰。十四歲的人，本來就應該還有很多尚未命名的部分。</p>
+      <p>這份報告裡反覆出現一口井。它不是要你永遠待在地下，而是提醒：你可能需要比較長的時間，才知道自己真正感到什麼、相信什麼、願意承擔什麼。這個節奏不必因別人的速度而羞愧。</p><p>但井也有自己的危險。水若永遠不上來，旁人只能看見一個安靜的洞口。他們可能猜錯你的意思，而你可能越來越覺得沒有人懂。你不需要一次說完全部，只要學會留下訊號：我有感覺；我需要多久；我會在什麼時候回來。</p><p>接下來幾年，你會遇到很多要求你趕快選邊、選科目、選朋友、選未來的聲音。有些建議值得聽，有些只是別人的焦慮。你不用用反對證明獨立，也不用用服從換取安全。把每個大問題縮小成一次可以回頭的試作，讓生活提供資料。</p><p>如果一件事做得不順，不要立刻把結果貼回自己身上。也許方法需要換，也許基礎還沒長好，也許這條路真的不適合現在。能夠修正，不是搖擺；願意承認不知道，也不是失敗。</p><p>你可能很會察覺別人的需要。請同時記得，理解一個人不等於負責修好他。能陪伴的就陪伴，不能承擔的要說，涉及安全的事交給可信任的大人。真正長久的善意，一定包含自己的界線。</p><p>盤面描述的是一種引力，不是一座牢籠。在某些日子你會很像深井，在另一些地方你可能明亮、好笑、衝得很快。那些都可以是你。你不必為了符合這份報告，刪掉任何真實的反例。</p><p>到了十二月底，請回看自己試過什麼；到了下一個一月，再決定哪一件事值得多走一步。不要問哪個選擇能保證成功，只問哪個選擇讓你願意在困難後回來修改第二版。</p><p>世界會催你快一點。你可以慢，但別消失。你可以深，但要記得把水送上來。你可以需要別人，也仍然保有自己的判斷。</p>
+      <p class="sign">願你在自己的速度裡，仍一步一步抵達外面的世界。<span class="sign-name">—— 擺渡人</span></p>
+    </div>
+  </article>
+
+  <footer class="foot">
+    <div class="logo">Kairos</div>
+    深度 v2・共九章 + 系統會診 + 五運實戰摘要 + 擺渡人的一封信。報告以現役引擎可驗證的六套資料（人類圖概念層／八字／紫微／占星／生命靈數／塔羅）計算，另由凱羅時相、易經與成長曲線交叉分析；未啟用的三套系統已明確留白，依「天道循環」順序排列：先顧好自己 → 再到關係家庭 → 才到事業財富。<br>
+    不主張預測準確，只幫你看清自己在什麼位置、勢往哪走、怎麼順。選擇權，永遠在你手上。改命靠行動，不靠知道。
+  </footer>
+
+</div>
+</body>
+</html>
