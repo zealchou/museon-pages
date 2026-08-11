@@ -1,0 +1,4180 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>商模十二力 B2.5 走查版</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: #f4f0ea; color: #202124; }
+    * { box-sizing: border-box; } body { margin: 0; } .shell { width: min(860px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 48px; }
+    header, .panel, footer { background: #fff; border: 1px solid #ddd6ce; border-radius: 12px; padding: 20px; } header { border-bottom: 4px solid #334e68; } h1, h2, h3 { margin: 0 0 12px; line-height: 1.25; } h1 { font-size: clamp(1.55rem, 4vw, 2.2rem); } h2 { font-size: 1.3rem; }
+    .eyebrow { margin: 0 0 8px; color: #52616b; font-size: .85rem; letter-spacing: .04em; } .notice, .hint { color: #5b6470; font-size: .92rem; } .lead { margin-top: 0; line-height: 1.6; } .progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; list-style: none; padding: 0; margin: 16px 0; font-size: .78rem; }
+    .progress li { background: #e8e3dd; padding: 8px; border-radius: 6px; color: #5e656a; } .progress .active { background: #334e68; color: #fff; font-weight: 700; } .cards, .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 18px 0; }
+    .card { padding: 16px; border: 1px solid #d5dce2; border-radius: 10px; min-height: 145px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; } .card p { margin: 0; color: #52616b; font-size: .9rem; } button, .cta { appearance: none; border: 0; border-radius: 7px; background: #334e68; color: #fff; padding: 11px 13px; cursor: pointer; text-align: left; font: inherit; text-decoration: none; display: inline-block; }
+    button:hover, .cta:hover { background: #243b53; } form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } label { display: grid; gap: 6px; font-weight: 600; } input, select { padding: 10px; border: 1px solid #aab5bf; border-radius: 6px; font: inherit; } form button { grid-column: 1 / -1; text-align: center; } .summary { background: #edf4f8; border-left: 4px solid #334e68; padding: 12px; } .verdict { font-size: 1.6rem; font-weight: 800; color: #243b53; } footer { margin-top: 16px; background: transparent; border: 0; padding: 0; color: #5b6470; } pre { white-space: pre-wrap; overflow-wrap: anywhere; } @media (max-width: 560px) { .shell { width: min(100% - 20px, 860px); padding-top: 14px; } form { grid-template-columns: 1fr; } .progress { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <div id="app" data-testid="app"></div>
+  <script>/**
+ * 商模十二力的 deterministic scoring core.
+ *
+ * This module intentionally has no DOM, storage, network, Kairos, or content
+ * imports.  Callers pass cards and a state in, then receive a new state out.
+ * B2.5 is responsible for displaying the returned planning data.
+ */
+
+const FORCE_IDS = Object.freeze([
+  "BF01", "BF02", "BF03", "BF04", "BF05", "BF06",
+  "BF07", "BF08", "BF09", "BF10", "BF11", "BF12",
+]);
+
+const LANE_ORDER = Object.freeze(["sprint", "sustain", "nurture", "foundation"]);
+
+const FORCE_LANES = Object.freeze({
+  BF01: "sprint", BF11: "sprint", BF12: "sprint",
+  BF09: "sustain", BF06: "sustain", BF04: "sustain",
+  BF07: "nurture", BF03: "nurture", BF08: "nurture",
+  BF02: "foundation", BF05: "foundation", BF10: "foundation",
+});
+
+const ANCHOR_TARGETS = Object.freeze({ strong: 4.5, middling: 3.0, weak: 1.5 });
+const FREQUENCY_LEVELS = Object.freeze([0.5, 1.5, 2.5, 3.5, 4.5]);
+const STABILITY_LEVELS = Object.freeze(["once", "occasional", "fixed"]);
+
+const LEARNING_RATE = 0.60;
+const SIGMA_MIN = 0.25;
+const CHOICE_WEIGHT = 0.45;
+const RECALL_WEIGHT = 0.70;
+const ANCHOR_WEIGHT = 1.00;
+const CARD_ID_RE = /^[a-z0-9-]{1,40}$/;
+const CORRECTION_FIELDS = new Set(["lane", "headline_force", "phi", "omega", "symptom"]);
+const CORRECTION_AT = new Set(["A", "B", "C", "conclusion"]);
+const CORRECTION_VIA = new Set(["option", "self_pick"]);
+
+function clone(value) {
+  return structuredClone(value);
+}
+
+function clampTheta(value) {
+  return Math.min(5, Math.max(0, value));
+}
+
+function compareForceId(left, right) {
+  return left.localeCompare(right, "en");
+}
+
+function compareCardId(left, right) {
+  return left.card_id.localeCompare(right.card_id, "en");
+}
+
+function requireForce(force) {
+  if (!FORCE_IDS.includes(force)) throw new Error(`unknown force: ${force}`);
+}
+
+function requireLane(lane) {
+  if (!LANE_ORDER.includes(lane)) throw new Error(`unknown lane: ${lane}`);
+}
+
+function forceEntry(state, force) {
+  requireForce(force);
+  const entry = state.forces?.[force];
+  if (!entry) throw new Error(`state is missing force: ${force}`);
+  return entry;
+}
+
+function setEvidence(entry) {
+  entry.evidence_ratio = entry.n_obs === 0 ? 0 : entry.w_sum / entry.n_obs;
+}
+
+function recordObservation(entry, weight) {
+  entry.n_obs += 1;
+  entry.w_sum += weight;
+  setEvidence(entry);
+}
+
+function anchorTarget(anchor) {
+  const target = ANCHOR_TARGETS[anchor];
+  if (target === undefined) throw new Error(`invalid theta anchor: ${anchor}`);
+  return target;
+}
+
+function normalizeStability(level) {
+  const aliases = {
+    "做過一兩次": "once",
+    "想到才做": "occasional",
+    "有固定週期": "fixed",
+  };
+  const normalized = aliases[level] ?? level;
+  if (!STABILITY_LEVELS.includes(normalized)) throw new Error(`invalid stability level: ${level}`);
+  return normalized;
+}
+
+function cardFor(state, cardOrId) {
+  const cardId = typeof cardOrId === "string" ? cardOrId : cardOrId?.card_id;
+  const card = state.cards.find((item) => item.card_id === cardId);
+  if (!card) throw new Error(`unknown card: ${cardId}`);
+  return card;
+}
+
+function assertCardShape(card) {
+  if (!card || typeof card !== "object") throw new Error("card must be an object");
+  if (typeof card.card_id !== "string" || !CARD_ID_RE.test(card.card_id)) throw new Error(`invalid card_id: ${card.card_id}`);
+  requireForce(card.force);
+  if (!new Set(["theta", "phi", "omega", "stability"]).has(card.card_kind)) throw new Error(`invalid card_kind: ${card.card_kind}`);
+
+  if (card.card_kind === "theta") {
+    anchorTarget(card.anchor);
+    if (!new Set(["r2", "r3"]).has(card.round_scope)) throw new Error(`invalid round_scope: ${card.round_scope}`);
+    if (!Number.isInteger(card.variant) || card.variant < 1) throw new Error(`invalid variant for ${card.card_id}`);
+    return;
+  }
+
+  if (Object.hasOwn(card, "anchor")) throw new Error(`${card.card_kind} card must not carry anchor: ${card.card_id}`);
+  if (card.card_kind === "phi" && ![0, 1, 2].includes(card.phi_level)) throw new Error(`invalid phi_level: ${card.card_id}`);
+  if (card.card_kind === "omega" && !["owner", "team", "none"].includes(card.omega_value)) throw new Error(`invalid omega_value: ${card.card_id}`);
+  if (card.card_kind === "stability") normalizeStability(card.stability_level);
+}
+
+function allCombinations(items, size = 3) {
+  const results = [];
+  for (let first = 0; first < items.length - 2; first += 1) {
+    for (let second = first + 1; second < items.length - 1; second += 1) {
+      for (let third = second + 1; third < items.length; third += 1) results.push([items[first], items[second], items[third]]);
+    }
+  }
+  return results;
+}
+
+function lexicalCombo(combo) {
+  return [...combo].sort(compareForceId).join("|");
+}
+
+function softmaxSpreadObjective(state, combo) {
+  const exponentials = combo.map((force) => Math.exp(forceEntry(state, force).theta));
+  const total = exponentials.reduce((sum, value) => sum + value, 0);
+  const maxSoftmax = Math.max(...exponentials.map((value) => value / total));
+  const sigmaSum = combo.reduce((sum, force) => sum + forceEntry(state, force).sigma, 0);
+  return sigmaSum * (1 - maxSoftmax);
+}
+
+function laneConstraint(roundScope, focusLane, firstAfterLaneOverride, level) {
+  if (roundScope === "r2") {
+    if (level === 0) return (combo) => new Set(combo.map((force) => FORCE_LANES[force])).size === 3;
+    if (level === 1) return (combo) => new Set(combo.map((force) => FORCE_LANES[force])).size >= 2;
+    return () => true;
+  }
+
+  if (!focusLane) throw new Error("r3 selection requires focus_lane");
+  if (firstAfterLaneOverride && level === 0) return (combo) => combo.every((force) => FORCE_LANES[force] === focusLane);
+  const adjustedLevel = firstAfterLaneOverride ? level - 1 : level;
+  if (adjustedLevel === 0) return (combo) => combo.filter((force) => FORCE_LANES[force] === focusLane).length >= 2;
+  if (adjustedLevel === 1) return (combo) => combo.filter((force) => FORCE_LANES[force] === focusLane).length >= 1;
+  return () => true;
+}
+
+function maxConstraintLevel(roundScope, firstAfterLaneOverride) {
+  if (roundScope === "r2") return 2;
+  return firstAfterLaneOverride ? 3 : 2;
+}
+
+function cardCandidatesForForce(state, force, roundScope) {
+  return state.cards.filter((card) => (
+    card.card_kind === "theta"
+    && card.force === force
+    && card.round_scope === roundScope
+    && !state.shown.card_ids.includes(card.card_id)
+  ));
+}
+
+function preferredCard(state, force, roundScope) {
+  const currentTheta = forceEntry(state, force).theta;
+  const candidates = cardCandidatesForForce(state, force, roundScope);
+  if (candidates.length === 0) return null;
+  return candidates.sort((left, right) => {
+    const distance = Math.abs(anchorTarget(right.anchor) - currentTheta) - Math.abs(anchorTarget(left.anchor) - currentTheta);
+    if (distance !== 0) return distance;
+    if (left.variant !== right.variant) return left.variant - right.variant;
+    return compareCardId(left, right);
+  })[0];
+}
+
+function markCardsShown(state, cards, triplet) {
+  const next = clone(state);
+  const ids = cards.map((card) => card.card_id);
+  if (new Set(ids).size !== ids.length) throw new Error("a triplet cannot repeat a card");
+  if (ids.some((id) => next.shown.card_ids.includes(id))) throw new Error("a shown card cannot be selected again");
+  next.shown.card_ids.push(...ids);
+  if (triplet) next.shown.triplets += 1;
+  for (const card of cards) {
+    next.shown.force_counts[card.force] += 1;
+    next.shown.lane_counts[FORCE_LANES[card.force]] += 1;
+  }
+  return next;
+}
+
+function correctionEvent(event) {
+  const keys = ["at", "round", "field", "system_value", "user_value", "via"];
+  if (!event || keys.some((key) => !Object.hasOwn(event, key))) throw new Error("correction must contain all six fields");
+  if (!CORRECTION_AT.has(event.at) || !CORRECTION_FIELDS.has(event.field) || !CORRECTION_VIA.has(event.via)) throw new Error("invalid correction enum");
+  if (!Number.isInteger(event.round) || event.round < 2 || event.round > 5) throw new Error("invalid correction round");
+  return Object.fromEntries(keys.map((key) => [key, event[key]]));
+}
+
+function applyCapabilitySettling(next) {
+  if (next.capability.phi_raw === null || next.capability.stability === null) return next;
+  const result = settlePhi(next.capability.phi_raw, next.capability.stability);
+  next.capability.phi = result.phi;
+  next.capability.inconsistent = result.inconsistent;
+  return next;
+}
+
+/** Creates the single B2 state boundary. */
+function createDiagnosisState({ cards = [], openingTriplet = [] } = {}) {
+  const ids = new Set();
+  for (const card of cards) {
+    assertCardShape(card);
+    if (ids.has(card.card_id)) throw new Error(`duplicate card_id: ${card.card_id}`);
+    ids.add(card.card_id);
+  }
+  if (openingTriplet.length > 0) validateOpeningTriplet(cards, openingTriplet);
+
+  const forceCounts = Object.fromEntries(FORCE_IDS.map((force) => [force, 0]));
+  const laneCounts = Object.fromEntries(LANE_ORDER.map((lane) => [lane, 0]));
+  return {
+    forces: Object.fromEntries(FORCE_IDS.map((force) => [force, {
+      theta: 2.5, sigma: 1.2, n_obs: 0, w_sum: 0, evidence_ratio: 0, deprioritized: false,
+    }])),
+    cards: clone(cards),
+    opening_triplet: [...openingTriplet],
+    shown: { card_ids: [], triplets: 0, force_counts: forceCounts, lane_counts: laneCounts },
+    focus_lane: null,
+    headline_force: null,
+    corrections: [],
+    debug: { lane_constraint_relaxed: [] },
+    capability: { phi_raw: null, stability: null, phi: null, omega: null, inconsistent: false, stability_skipped: false },
+    budget: { missing_stability_note: false, alignment_summary_variant: "full", conclusion_sections: [] },
+  };
+}
+
+/** Validates the content-owned, fixed first r2 triplet without owning its copy. */
+function validateOpeningTriplet(cards, openingTriplet) {
+  if (!Array.isArray(openingTriplet) || openingTriplet.length !== 3 || new Set(openingTriplet).size !== 3) {
+    throw new Error("opening_triplet must contain exactly three distinct card_id values");
+  }
+  const selected = openingTriplet.map((cardId) => cards.find((card) => card.card_id === cardId));
+  if (selected.some((card) => !card)) throw new Error("opening_triplet references an unknown card");
+  for (const card of selected) {
+    assertCardShape(card);
+    if (card.card_kind !== "theta" || card.round_scope !== "r2") throw new Error("opening_triplet must contain r2 theta cards");
+  }
+  if (new Set(selected.map((card) => FORCE_LANES[card.force])).size !== 3) throw new Error("opening_triplet must span three lanes");
+  return selected;
+}
+
+/** Selects the fixed opening cards and records their exposure. */
+function pickOpeningTriplet(state) {
+  const cards = validateOpeningTriplet(state.cards, state.opening_triplet);
+  return { state: markCardsShown(state, cards, true), cards, trace: { source: "opening_triplet", final_k: null, lane_constraint_relaxed: [] } };
+}
+
+/** Returns scores used by the deterministic theta card selector. */
+function tripletScores(state) {
+  const tripletCount = state.shown.triplets;
+  return Object.fromEntries(FORCE_IDS.map((force) => {
+    const lane = FORCE_LANES[force];
+    const laneUnderexposure = Math.max(0, 1 - state.shown.lane_counts[lane] / Math.max(1, (3 * tripletCount) / 4));
+    const exposure = state.shown.force_counts[force] / (1 + state.shown.force_counts[force]);
+    const focus = state.focus_lane === lane ? 1 : 0;
+    return [force, forceEntry(state, force).sigma + 0.35 * laneUnderexposure - 0.30 * exposure + 1.2 * focus];
+  }));
+}
+
+/**
+ * Deterministically picks three theta cards.  It expands K to 12 before
+ * relaxing lane constraints, and records every relaxation in state.debug.
+ */
+function pickTriplet(state, { roundScope, firstAfterLaneOverride = state.r3_first_pending === true } = {}) {
+  if (!new Set(["r2", "r3"]).has(roundScope)) throw new Error("pickTriplet requires roundScope r2 or r3");
+  const eligible = FORCE_IDS.filter((force) => preferredCard(state, force, roundScope) !== null);
+  if (eligible.length < 3) {
+    console.error(`B2 fail-loud: fewer than three ${roundScope} theta cards remain`);
+    return { state: clone(state), cards: [], trace: { fail_loud: "insufficient_cards", final_k: null, lane_constraint_relaxed: [] } };
+  }
+
+  const scores = tripletScores(state);
+  const ranked = [...eligible].sort((left, right) => scores[right] - scores[left] || compareForceId(left, right));
+  const relaxed = [];
+  let chosenForces = null;
+  let finalK = null;
+  let maxKAttempted = 0;
+  const kAttempts = [];
+  for (let level = 0; level <= maxConstraintLevel(roundScope, firstAfterLaneOverride); level += 1) {
+    const accepts = laneConstraint(roundScope, state.focus_lane, firstAfterLaneOverride, level);
+    for (let k = 6; k <= 12; k += 3) {
+      finalK = k;
+      maxKAttempted = Math.max(maxKAttempted, k);
+      kAttempts.push({ constraint_level: level, k });
+      const candidateForces = ranked.slice(0, Math.min(k, ranked.length));
+      const valid = allCombinations(candidateForces).filter(accepts);
+      if (valid.length === 0) continue;
+      chosenForces = valid.sort((left, right) => {
+        const objective = softmaxSpreadObjective(state, right) - softmaxSpreadObjective(state, left);
+        return objective || lexicalCombo(left).localeCompare(lexicalCombo(right), "en");
+      })[0];
+      break;
+    }
+    if (chosenForces) break;
+    if (level < maxConstraintLevel(roundScope, firstAfterLaneOverride)) relaxed.push({ round_scope: roundScope, from_level: level, to_level: level + 1 });
+  }
+
+  if (!chosenForces) {
+    console.error(`B2 fail-loud: no valid ${roundScope} triplet after constraint relaxation`);
+    return { state: clone(state), cards: [], trace: { fail_loud: "no_legal_triplet", final_k: finalK, max_k_attempted: maxKAttempted, k_attempts: kAttempts, lane_constraint_relaxed: relaxed } };
+  }
+  const cards = chosenForces.map((force) => preferredCard(state, force, roundScope));
+  const next = markCardsShown(state, cards, true);
+  next.debug.lane_constraint_relaxed.push(...relaxed);
+  if (roundScope === "r3" && firstAfterLaneOverride) next.r3_first_pending = false;
+  return { state: next, cards, trace: { final_k: finalK, max_k_attempted: maxKAttempted, k_attempts: kAttempts, lane_constraint_relaxed: relaxed } };
+}
+
+function pickCapabilityTriplet(state, force, cardKind, expectedValues, field) {
+  const targetForce = force ?? state.headline_force;
+  requireForce(targetForce);
+  const cards = state.cards
+    .filter((card) => card.force === targetForce && card.card_kind === cardKind && !state.shown.card_ids.includes(card.card_id))
+    .sort((left, right) => expectedValues.indexOf(left[field]) - expectedValues.indexOf(right[field]) || compareCardId(left, right));
+  if (cards.length !== 3 || new Set(cards.map((card) => card[field])).size !== 3) throw new Error(`need one ${cardKind} card for each level of ${targetForce}`);
+  return { state: markCardsShown(state, cards, true), cards };
+}
+
+function pickPhiTriplet(state, force = state.headline_force) {
+  return pickCapabilityTriplet(state, force, "phi", [0, 1, 2], "phi_level");
+}
+
+function pickOmegaTriplet(state, force = state.headline_force) {
+  return pickCapabilityTriplet(state, force, "omega", ["owner", "team", "none"], "omega_value");
+}
+
+function pickStabilityTriplet(state, force = state.headline_force) {
+  return pickCapabilityTriplet(state, force, "stability", STABILITY_LEVELS, "stability_level");
+}
+
+/** Applies one C-grade chosen/other theta-card observation group. */
+function applyChoice(state, chosen, others) {
+  const chosenCard = cardFor(state, chosen);
+  const otherCards = others.map((card) => cardFor(state, card));
+  if (chosenCard.card_kind !== "theta" || otherCards.length !== 2 || otherCards.some((card) => card.card_kind !== "theta")) {
+    throw new Error("applyChoice requires one theta chosen card and two theta others");
+  }
+  const ids = [chosenCard, ...otherCards].map((card) => card.card_id);
+  if (new Set(ids).size !== 3) throw new Error("applyChoice cards must be distinct");
+  const next = clone(state);
+  const chosenEntry = forceEntry(next, chosenCard.force);
+  const chosenTarget = anchorTarget(chosenCard.anchor);
+  chosenEntry.theta = clampTheta(chosenEntry.theta + LEARNING_RATE * CHOICE_WEIGHT * (chosenTarget - chosenEntry.theta));
+  chosenEntry.sigma = Math.max(SIGMA_MIN, chosenEntry.sigma * (1 - 0.350 * CHOICE_WEIGHT));
+  recordObservation(chosenEntry, CHOICE_WEIGHT);
+  for (const card of otherCards) {
+    const entry = forceEntry(next, card.force);
+    const target = anchorTarget(card.anchor);
+    entry.theta = clampTheta(entry.theta - 0.5 * LEARNING_RATE * CHOICE_WEIGHT * (target - entry.theta));
+    entry.sigma = Math.max(SIGMA_MIN, entry.sigma * (1 - 0.175 * CHOICE_WEIGHT));
+    recordObservation(entry, CHOICE_WEIGHT);
+  }
+  return next;
+}
+
+/** Applies an A-grade absolute frequency anchor. */
+function applyFrequencyAnchor(state, force, thetaAbs) {
+  requireForce(force);
+  if (!FREQUENCY_LEVELS.includes(thetaAbs)) throw new Error(`invalid frequency level: ${thetaAbs}`);
+  const next = clone(state);
+  const entry = forceEntry(next, force);
+  entry.theta = clampTheta(0.5 * entry.theta + 0.5 * thetaAbs);
+  entry.sigma = Math.max(SIGMA_MIN, entry.sigma * 0.60);
+  recordObservation(entry, ANCHOR_WEIGHT);
+  return next;
+}
+
+/** Applies a B-grade recalled-event observation. */
+function applyRecall(state, force, target) {
+  requireForce(force);
+  if (![0.5, 1.5, 2.5, 3.5, 4.5].includes(target)) throw new Error(`invalid recall target: ${target}`);
+  const next = clone(state);
+  const entry = forceEntry(next, force);
+  entry.theta = clampTheta(entry.theta + LEARNING_RATE * RECALL_WEIGHT * (target - entry.theta));
+  entry.sigma = Math.max(SIGMA_MIN, entry.sigma * (1 - 0.350 * RECALL_WEIGHT));
+  recordObservation(entry, RECALL_WEIGHT);
+  return next;
+}
+
+function evidenceRatio(state, force) {
+  return forceEntry(state, force).evidence_ratio;
+}
+
+function laneScores(state) {
+  return Object.fromEntries(LANE_ORDER.map((lane) => {
+    const forces = FORCE_IDS.filter((force) => FORCE_LANES[force] === lane);
+    return [lane, forces.reduce((sum, force) => sum + (3 - forceEntry(state, force).theta), 0) / forces.length];
+  }));
+}
+
+/** The lane recommendation used by alignment A, with the required tie breakers. */
+function recommendedLane(state) {
+  const scores = laneScores(state);
+  return [...LANE_ORDER].sort((left, right) => {
+    if (scores[right] !== scores[left]) return scores[right] - scores[left];
+    const leftMaxSigma = Math.max(...FORCE_IDS.filter((force) => FORCE_LANES[force] === left).map((force) => forceEntry(state, force).sigma));
+    const rightMaxSigma = Math.max(...FORCE_IDS.filter((force) => FORCE_LANES[force] === right).map((force) => forceEntry(state, force).sigma));
+    return rightMaxSigma - leftMaxSigma || LANE_ORDER.indexOf(left) - LANE_ORDER.indexOf(right);
+  })[0];
+}
+
+/** Applies alignment A, including its same-value/no-correction behavior. */
+function applyLaneOverride(state, newLane, { via = "option", systemValue = state.focus_lane ?? recommendedLane(state) } = {}) {
+  requireLane(newLane);
+  if (!CORRECTION_VIA.has(via)) throw new Error(`invalid correction via: ${via}`);
+  const next = clone(state);
+  next.focus_lane = newLane;
+  if (newLane === systemValue) return next;
+  for (const force of FORCE_IDS.filter((item) => FORCE_LANES[item] === newLane)) {
+    next.forces[force].theta = Math.min(next.forces[force].theta, 2.0);
+    next.forces[force].sigma = 1.2;
+  }
+  for (const force of FORCE_IDS.filter((item) => FORCE_LANES[item] === systemValue)) next.forces[force].deprioritized = true;
+  next.r3_first_pending = true;
+  next.corrections.push(correctionEvent({ at: "A", round: 2, field: "lane", system_value: systemValue, user_value: newLane, via }));
+  return next;
+}
+
+/** Deterministically selects a headline force unless alignment B has named one. */
+function selectHeadlineForce(state) {
+  if (state.headline_force !== null) return state.headline_force;
+  const candidates = FORCE_IDS.filter((force) => forceEntry(state, force).n_obs >= 2);
+  if (candidates.length === 0) return null;
+  return candidates.sort((left, right) => {
+    const leftEntry = forceEntry(state, left); const rightEntry = forceEntry(state, right);
+    return leftEntry.sigma - rightEntry.sigma || leftEntry.theta - rightEntry.theta || compareForceId(left, right);
+  })[0];
+}
+
+/** The alignment-B system choice: the least-certain force inside focus_lane. */
+function recommendedRootCause(state) {
+  if (state.focus_lane === null) throw new Error("root cause alignment requires focus_lane");
+  const candidates = FORCE_IDS.filter((force) => FORCE_LANES[force] === state.focus_lane);
+  return candidates.sort((left, right) => forceEntry(state, left).sigma - forceEntry(state, right).sigma || compareForceId(left, right))[0];
+}
+
+/** Applies alignment B.  Every option records the B-grade recall; only changes leave a correction. */
+function applyRootCauseOverride(state, force, { via = "option", systemValue = recommendedRootCause(state) } = {}) {
+  requireForce(force);
+  if (!CORRECTION_VIA.has(via)) throw new Error(`invalid correction via: ${via}`);
+  const next = applyRecall(state, force, 1.5);
+  next.headline_force = force;
+  if (systemValue !== null && systemValue !== force) {
+    next.corrections.push(correctionEvent({ at: "B", round: 3, field: "headline_force", system_value: systemValue, user_value: force, via }));
+  }
+  return next;
+}
+
+function appendCorrection(state, event) {
+  const next = clone(state);
+  next.corrections.push(correctionEvent(event));
+  return next;
+}
+
+/** Produces data for a future renderer without rendering copy or DOM in B2. */
+function correctionAudit(state) {
+  return {
+    count: state.corrections.length,
+    entries: state.corrections.map((event) => ({ ...event, text: `${event.system_value} → ${event.user_value}` })),
+  };
+}
+
+/** The complete 3 × 3 phi/stability settlement table. */
+function settlePhi(phiRaw, stabilityLevel) {
+  if (![0, 1, 2].includes(phiRaw)) throw new Error(`invalid phi_raw: ${phiRaw}`);
+  const stability = normalizeStability(stabilityLevel);
+  if (phiRaw === 0) return { phi: 0, inconsistent: stability === "fixed" };
+  if (phiRaw === 1) return { phi: stability === "fixed" ? 2 : 1, inconsistent: false };
+  return { phi: stability === "fixed" ? 2 : 1, inconsistent: false };
+}
+
+function applyPhiSelection(state, cardOrId) {
+  const card = cardFor(state, cardOrId);
+  if (card.card_kind !== "phi") throw new Error("expected phi card");
+  if (state.headline_force !== null && card.force !== state.headline_force) throw new Error("phi card must target the headline force");
+  const next = clone(state);
+  next.capability.phi_raw = card.phi_level;
+  next.capability.phi = card.phi_level;
+  next.capability.inconsistent = false;
+  return next;
+}
+
+function applyOmegaSelection(state, cardOrId) {
+  const card = cardFor(state, cardOrId);
+  if (card.card_kind !== "omega") throw new Error("expected omega card");
+  if (state.headline_force !== null && card.force !== state.headline_force) throw new Error("omega card must target the headline force");
+  const next = clone(state);
+  next.capability.omega = card.omega_value;
+  return next;
+}
+
+function applyStabilitySelection(state, cardOrId) {
+  const card = cardFor(state, cardOrId);
+  if (card.card_kind !== "stability") throw new Error("expected stability card");
+  if (state.headline_force !== null && card.force !== state.headline_force) throw new Error("stability card must target the headline force");
+  const next = clone(state);
+  next.capability.stability = normalizeStability(card.stability_level);
+  return applyCapabilitySettling(next);
+}
+
+/** Applies one or both alignment-C values and records only actual changes. */
+function applyCapabilityOverride(state, { phi, omega, via = "option" } = {}) {
+  if (!CORRECTION_VIA.has(via)) throw new Error(`invalid correction via: ${via}`);
+  if (phi !== undefined && ![0, 1, 2].includes(phi)) throw new Error(`invalid phi override: ${phi}`);
+  if (omega !== undefined && !["owner", "team", "none"].includes(omega)) throw new Error(`invalid omega override: ${omega}`);
+  const next = clone(state);
+  if (phi !== undefined && phi !== next.capability.phi) {
+    next.corrections.push(correctionEvent({ at: "C", round: 4, field: "phi", system_value: next.capability.phi, user_value: phi, via }));
+    next.capability.phi = phi;
+    next.capability.inconsistent = false;
+  }
+  if (omega !== undefined && omega !== next.capability.omega) {
+    next.corrections.push(correctionEvent({ at: "C", round: 4, field: "omega", system_value: next.capability.omega, user_value: omega, via }));
+    next.capability.omega = omega;
+  }
+  return next;
+}
+
+/** The pure 48-cell recommendation table, including all fallbacks. */
+function verdictFor(theta, phi, omega) {
+  if (theta >= 2.5 && theta < 3.5) return "MEASURE_FIRST";
+  if (theta < 2.5) {
+    if (phi === 0) return "CONSULT";
+    if (phi === 1 && omega === "owner") return "COACH";
+    if (phi === 1 && omega === "team") return "DELEGATE";
+    if (phi === 1 && omega === "none") return "ASSIGN";
+    if (phi === 2) return "SYSTEM";
+  }
+  if (theta >= 3.5) {
+    if (phi === 2) return "AMPLIFY";
+    if (phi === 0 || phi === 1) return "SUCCESSION_RISK";
+  }
+  return "MEASURE_FIRST";
+}
+
+/** The only production-facing verdict gateway: it cannot skip evidence rules. */
+function finalVerdict(state) {
+  const headline = selectHeadlineForce(state);
+  if (headline === null) return { code: "MEASURE_FIRST", overridden_by: "low_evidence" };
+  const entry = forceEntry(state, headline);
+  if (entry.evidence_ratio < 0.55 || entry.n_obs < 2) return { code: "MEASURE_FIRST", overridden_by: "low_evidence" };
+  return { code: verdictFor(entry.theta, state.capability.phi, state.capability.omega), overridden_by: null };
+}
+
+/** Looks up a B6-owned route by the evidence-safe verdict code. */
+function routeFor(state, routes, pastExperience) {
+  const result = finalVerdict(state);
+  const route = routes?.[result.code]?.[pastExperience];
+  if (!route) throw new Error(`missing route for ${result.code}/${pastExperience}`);
+  return { ...route, verdict: result };
+}
+
+/**
+ * Evaluates one named time checkpoint against an injected clock.  No wall
+ * clock is read here, so tests and the eventual UI can provide the same source.
+ */
+function budgetGuard({ checkpoint, now, startedAt = 0, optionalSections = [] } = {}) {
+  if (!new Set(["before_r4_cards", "before_alignment_c", "before_conclusion"]).has(checkpoint)) throw new Error("invalid budget checkpoint");
+  if (typeof now !== "function") throw new Error("budgetGuard requires an injected now function");
+  const elapsedMs = now() - startedAt;
+  if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error("invalid injected elapsed time");
+  const active = (
+    (checkpoint === "before_r4_cards" && elapsedMs >= 600_000)
+    || (checkpoint === "before_alignment_c" && elapsedMs >= 750_000)
+    || (checkpoint === "before_conclusion" && elapsedMs >= 840_000)
+  );
+  return {
+    checkpoint,
+    elapsed_ms: elapsedMs,
+    active,
+    skip_stability: checkpoint === "before_r4_cards" && active,
+    phi_uses_raw: checkpoint === "before_r4_cards" && active,
+    missing_stability_note: checkpoint === "before_r4_cards" && active,
+    alignment_summary_variant: checkpoint === "before_alignment_c" && active ? "short" : "full",
+    conclusion_sections: checkpoint === "before_conclusion"
+      ? optionalSections.map((section) => ({ ...section, collapsed: active }))
+      : [],
+  };
+}
+
+/** Applies a guard result to the engine's planning state without rendering it. */
+function applyBudgetGuard(state, guard) {
+  const next = clone(state);
+  if (guard.skip_stability) {
+    next.capability.stability_skipped = true;
+    next.capability.phi = next.capability.phi_raw;
+    next.capability.inconsistent = false;
+    next.budget.missing_stability_note = true;
+  }
+  if (guard.checkpoint === "before_alignment_c") next.budget.alignment_summary_variant = guard.alignment_summary_variant;
+  if (guard.checkpoint === "before_conclusion") next.budget.conclusion_sections = clone(guard.conclusion_sections);
+  return next;
+}
+</script>
+  <script>window.__B25_CONTENT__ = {
+  "version": "b2.5-local-walkthrough",
+  "force_labels": {
+    "BF01": "產品力",
+    "BF02": "累積力",
+    "BF03": "整合力",
+    "BF04": "共享力",
+    "BF05": "感受力",
+    "BF06": "感召力",
+    "BF07": "品牌力",
+    "BF08": "優化力",
+    "BF09": "社群力",
+    "BF10": "視覺力",
+    "BF11": "談判力",
+    "BF12": "轉換力"
+  },
+  "lane_labels": {
+    "sprint": "短期衝刺",
+    "sustain": "穩定抗跌",
+    "nurture": "長期拉高",
+    "foundation": "底盤貫穿"
+  },
+  "cards": [
+    {
+      "card_id": "bf01-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "產品力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf01-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "產品力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf01-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "產品力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf01-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "產品力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf01-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "產品力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf01-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "產品力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf01-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "產品力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf01-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "產品力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf01-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "產品力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf01-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF01",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "產品力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf01-phi-0",
+      "card_kind": "phi",
+      "force": "BF01",
+      "phi_level": 0,
+      "prompt": "產品力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf01-phi-1",
+      "card_kind": "phi",
+      "force": "BF01",
+      "phi_level": 1,
+      "prompt": "產品力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf01-phi-2",
+      "card_kind": "phi",
+      "force": "BF01",
+      "phi_level": 2,
+      "prompt": "產品力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf01-omega-owner",
+      "card_kind": "omega",
+      "force": "BF01",
+      "omega_value": "owner",
+      "prompt": "產品力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf01-omega-team",
+      "card_kind": "omega",
+      "force": "BF01",
+      "omega_value": "team",
+      "prompt": "產品力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf01-omega-none",
+      "card_kind": "omega",
+      "force": "BF01",
+      "omega_value": "none",
+      "prompt": "產品力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf01-stability-once",
+      "card_kind": "stability",
+      "force": "BF01",
+      "stability_level": "once",
+      "prompt": "產品力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf01-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF01",
+      "stability_level": "occasional",
+      "prompt": "產品力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf01-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF01",
+      "stability_level": "fixed",
+      "prompt": "產品力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf02-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "累積力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf02-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "累積力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf02-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "累積力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf02-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "累積力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf02-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "累積力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf02-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "累積力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf02-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "累積力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf02-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "累積力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf02-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "累積力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf02-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF02",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "累積力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf02-phi-0",
+      "card_kind": "phi",
+      "force": "BF02",
+      "phi_level": 0,
+      "prompt": "累積力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf02-phi-1",
+      "card_kind": "phi",
+      "force": "BF02",
+      "phi_level": 1,
+      "prompt": "累積力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf02-phi-2",
+      "card_kind": "phi",
+      "force": "BF02",
+      "phi_level": 2,
+      "prompt": "累積力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf02-omega-owner",
+      "card_kind": "omega",
+      "force": "BF02",
+      "omega_value": "owner",
+      "prompt": "累積力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf02-omega-team",
+      "card_kind": "omega",
+      "force": "BF02",
+      "omega_value": "team",
+      "prompt": "累積力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf02-omega-none",
+      "card_kind": "omega",
+      "force": "BF02",
+      "omega_value": "none",
+      "prompt": "累積力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf02-stability-once",
+      "card_kind": "stability",
+      "force": "BF02",
+      "stability_level": "once",
+      "prompt": "累積力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf02-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF02",
+      "stability_level": "occasional",
+      "prompt": "累積力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf02-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF02",
+      "stability_level": "fixed",
+      "prompt": "累積力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf03-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "整合力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf03-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "整合力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf03-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "整合力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf03-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "整合力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf03-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "整合力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf03-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "整合力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf03-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "整合力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf03-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "整合力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf03-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "整合力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf03-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF03",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "整合力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf03-phi-0",
+      "card_kind": "phi",
+      "force": "BF03",
+      "phi_level": 0,
+      "prompt": "整合力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf03-phi-1",
+      "card_kind": "phi",
+      "force": "BF03",
+      "phi_level": 1,
+      "prompt": "整合力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf03-phi-2",
+      "card_kind": "phi",
+      "force": "BF03",
+      "phi_level": 2,
+      "prompt": "整合力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf03-omega-owner",
+      "card_kind": "omega",
+      "force": "BF03",
+      "omega_value": "owner",
+      "prompt": "整合力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf03-omega-team",
+      "card_kind": "omega",
+      "force": "BF03",
+      "omega_value": "team",
+      "prompt": "整合力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf03-omega-none",
+      "card_kind": "omega",
+      "force": "BF03",
+      "omega_value": "none",
+      "prompt": "整合力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf03-stability-once",
+      "card_kind": "stability",
+      "force": "BF03",
+      "stability_level": "once",
+      "prompt": "整合力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf03-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF03",
+      "stability_level": "occasional",
+      "prompt": "整合力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf03-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF03",
+      "stability_level": "fixed",
+      "prompt": "整合力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf04-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "共享力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf04-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "共享力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf04-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "共享力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf04-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "共享力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf04-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "共享力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf04-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "共享力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf04-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "共享力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf04-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "共享力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf04-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "共享力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf04-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF04",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "共享力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf04-phi-0",
+      "card_kind": "phi",
+      "force": "BF04",
+      "phi_level": 0,
+      "prompt": "共享力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf04-phi-1",
+      "card_kind": "phi",
+      "force": "BF04",
+      "phi_level": 1,
+      "prompt": "共享力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf04-phi-2",
+      "card_kind": "phi",
+      "force": "BF04",
+      "phi_level": 2,
+      "prompt": "共享力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf04-omega-owner",
+      "card_kind": "omega",
+      "force": "BF04",
+      "omega_value": "owner",
+      "prompt": "共享力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf04-omega-team",
+      "card_kind": "omega",
+      "force": "BF04",
+      "omega_value": "team",
+      "prompt": "共享力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf04-omega-none",
+      "card_kind": "omega",
+      "force": "BF04",
+      "omega_value": "none",
+      "prompt": "共享力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf04-stability-once",
+      "card_kind": "stability",
+      "force": "BF04",
+      "stability_level": "once",
+      "prompt": "共享力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf04-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF04",
+      "stability_level": "occasional",
+      "prompt": "共享力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf04-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF04",
+      "stability_level": "fixed",
+      "prompt": "共享力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf05-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "感受力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf05-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "感受力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf05-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "感受力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf05-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "感受力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf05-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "感受力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf05-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "感受力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf05-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "感受力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf05-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "感受力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf05-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "感受力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf05-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF05",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "感受力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf05-phi-0",
+      "card_kind": "phi",
+      "force": "BF05",
+      "phi_level": 0,
+      "prompt": "感受力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf05-phi-1",
+      "card_kind": "phi",
+      "force": "BF05",
+      "phi_level": 1,
+      "prompt": "感受力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf05-phi-2",
+      "card_kind": "phi",
+      "force": "BF05",
+      "phi_level": 2,
+      "prompt": "感受力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf05-omega-owner",
+      "card_kind": "omega",
+      "force": "BF05",
+      "omega_value": "owner",
+      "prompt": "感受力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf05-omega-team",
+      "card_kind": "omega",
+      "force": "BF05",
+      "omega_value": "team",
+      "prompt": "感受力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf05-omega-none",
+      "card_kind": "omega",
+      "force": "BF05",
+      "omega_value": "none",
+      "prompt": "感受力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf05-stability-once",
+      "card_kind": "stability",
+      "force": "BF05",
+      "stability_level": "once",
+      "prompt": "感受力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf05-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF05",
+      "stability_level": "occasional",
+      "prompt": "感受力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf05-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF05",
+      "stability_level": "fixed",
+      "prompt": "感受力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf06-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "感召力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf06-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "感召力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf06-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "感召力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf06-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "感召力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf06-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "感召力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf06-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "感召力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf06-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "感召力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf06-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "感召力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf06-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "感召力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf06-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF06",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "感召力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf06-phi-0",
+      "card_kind": "phi",
+      "force": "BF06",
+      "phi_level": 0,
+      "prompt": "感召力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf06-phi-1",
+      "card_kind": "phi",
+      "force": "BF06",
+      "phi_level": 1,
+      "prompt": "感召力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf06-phi-2",
+      "card_kind": "phi",
+      "force": "BF06",
+      "phi_level": 2,
+      "prompt": "感召力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf06-omega-owner",
+      "card_kind": "omega",
+      "force": "BF06",
+      "omega_value": "owner",
+      "prompt": "感召力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf06-omega-team",
+      "card_kind": "omega",
+      "force": "BF06",
+      "omega_value": "team",
+      "prompt": "感召力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf06-omega-none",
+      "card_kind": "omega",
+      "force": "BF06",
+      "omega_value": "none",
+      "prompt": "感召力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf06-stability-once",
+      "card_kind": "stability",
+      "force": "BF06",
+      "stability_level": "once",
+      "prompt": "感召力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf06-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF06",
+      "stability_level": "occasional",
+      "prompt": "感召力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf06-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF06",
+      "stability_level": "fixed",
+      "prompt": "感召力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf07-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "品牌力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf07-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "品牌力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf07-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "品牌力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf07-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "品牌力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf07-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "品牌力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf07-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "品牌力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf07-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "品牌力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf07-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "品牌力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf07-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "品牌力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf07-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF07",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "品牌力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf07-phi-0",
+      "card_kind": "phi",
+      "force": "BF07",
+      "phi_level": 0,
+      "prompt": "品牌力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf07-phi-1",
+      "card_kind": "phi",
+      "force": "BF07",
+      "phi_level": 1,
+      "prompt": "品牌力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf07-phi-2",
+      "card_kind": "phi",
+      "force": "BF07",
+      "phi_level": 2,
+      "prompt": "品牌力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf07-omega-owner",
+      "card_kind": "omega",
+      "force": "BF07",
+      "omega_value": "owner",
+      "prompt": "品牌力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf07-omega-team",
+      "card_kind": "omega",
+      "force": "BF07",
+      "omega_value": "team",
+      "prompt": "品牌力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf07-omega-none",
+      "card_kind": "omega",
+      "force": "BF07",
+      "omega_value": "none",
+      "prompt": "品牌力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf07-stability-once",
+      "card_kind": "stability",
+      "force": "BF07",
+      "stability_level": "once",
+      "prompt": "品牌力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf07-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF07",
+      "stability_level": "occasional",
+      "prompt": "品牌力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf07-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF07",
+      "stability_level": "fixed",
+      "prompt": "品牌力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf08-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "優化力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf08-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "優化力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf08-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "優化力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf08-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "優化力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf08-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "優化力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf08-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "優化力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf08-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "優化力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf08-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "優化力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf08-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "優化力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf08-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF08",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "優化力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf08-phi-0",
+      "card_kind": "phi",
+      "force": "BF08",
+      "phi_level": 0,
+      "prompt": "優化力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf08-phi-1",
+      "card_kind": "phi",
+      "force": "BF08",
+      "phi_level": 1,
+      "prompt": "優化力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf08-phi-2",
+      "card_kind": "phi",
+      "force": "BF08",
+      "phi_level": 2,
+      "prompt": "優化力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf08-omega-owner",
+      "card_kind": "omega",
+      "force": "BF08",
+      "omega_value": "owner",
+      "prompt": "優化力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf08-omega-team",
+      "card_kind": "omega",
+      "force": "BF08",
+      "omega_value": "team",
+      "prompt": "優化力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf08-omega-none",
+      "card_kind": "omega",
+      "force": "BF08",
+      "omega_value": "none",
+      "prompt": "優化力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf08-stability-once",
+      "card_kind": "stability",
+      "force": "BF08",
+      "stability_level": "once",
+      "prompt": "優化力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf08-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF08",
+      "stability_level": "occasional",
+      "prompt": "優化力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf08-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF08",
+      "stability_level": "fixed",
+      "prompt": "優化力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf09-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "社群力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf09-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "社群力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf09-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "社群力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf09-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "社群力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf09-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "社群力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf09-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "社群力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf09-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "社群力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf09-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "社群力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf09-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "社群力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf09-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF09",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "社群力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf09-phi-0",
+      "card_kind": "phi",
+      "force": "BF09",
+      "phi_level": 0,
+      "prompt": "社群力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf09-phi-1",
+      "card_kind": "phi",
+      "force": "BF09",
+      "phi_level": 1,
+      "prompt": "社群力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf09-phi-2",
+      "card_kind": "phi",
+      "force": "BF09",
+      "phi_level": 2,
+      "prompt": "社群力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf09-omega-owner",
+      "card_kind": "omega",
+      "force": "BF09",
+      "omega_value": "owner",
+      "prompt": "社群力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf09-omega-team",
+      "card_kind": "omega",
+      "force": "BF09",
+      "omega_value": "team",
+      "prompt": "社群力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf09-omega-none",
+      "card_kind": "omega",
+      "force": "BF09",
+      "omega_value": "none",
+      "prompt": "社群力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf09-stability-once",
+      "card_kind": "stability",
+      "force": "BF09",
+      "stability_level": "once",
+      "prompt": "社群力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf09-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF09",
+      "stability_level": "occasional",
+      "prompt": "社群力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf09-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF09",
+      "stability_level": "fixed",
+      "prompt": "社群力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf10-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "視覺力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf10-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "視覺力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf10-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "視覺力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf10-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "視覺力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf10-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "視覺力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf10-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "視覺力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf10-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "視覺力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf10-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "視覺力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf10-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "視覺力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf10-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF10",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "視覺力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf10-phi-0",
+      "card_kind": "phi",
+      "force": "BF10",
+      "phi_level": 0,
+      "prompt": "視覺力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf10-phi-1",
+      "card_kind": "phi",
+      "force": "BF10",
+      "phi_level": 1,
+      "prompt": "視覺力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf10-phi-2",
+      "card_kind": "phi",
+      "force": "BF10",
+      "phi_level": 2,
+      "prompt": "視覺力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf10-omega-owner",
+      "card_kind": "omega",
+      "force": "BF10",
+      "omega_value": "owner",
+      "prompt": "視覺力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf10-omega-team",
+      "card_kind": "omega",
+      "force": "BF10",
+      "omega_value": "team",
+      "prompt": "視覺力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf10-omega-none",
+      "card_kind": "omega",
+      "force": "BF10",
+      "omega_value": "none",
+      "prompt": "視覺力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf10-stability-once",
+      "card_kind": "stability",
+      "force": "BF10",
+      "stability_level": "once",
+      "prompt": "視覺力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf10-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF10",
+      "stability_level": "occasional",
+      "prompt": "視覺力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf10-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF10",
+      "stability_level": "fixed",
+      "prompt": "視覺力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf11-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "談判力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf11-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "談判力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf11-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "談判力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf11-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "談判力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf11-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "談判力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf11-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "談判力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf11-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "談判力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf11-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "談判力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf11-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "談判力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf11-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF11",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "談判力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf11-phi-0",
+      "card_kind": "phi",
+      "force": "BF11",
+      "phi_level": 0,
+      "prompt": "談判力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf11-phi-1",
+      "card_kind": "phi",
+      "force": "BF11",
+      "phi_level": 1,
+      "prompt": "談判力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf11-phi-2",
+      "card_kind": "phi",
+      "force": "BF11",
+      "phi_level": 2,
+      "prompt": "談判力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf11-omega-owner",
+      "card_kind": "omega",
+      "force": "BF11",
+      "omega_value": "owner",
+      "prompt": "談判力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf11-omega-team",
+      "card_kind": "omega",
+      "force": "BF11",
+      "omega_value": "team",
+      "prompt": "談判力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf11-omega-none",
+      "card_kind": "omega",
+      "force": "BF11",
+      "omega_value": "none",
+      "prompt": "談判力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf11-stability-once",
+      "card_kind": "stability",
+      "force": "BF11",
+      "stability_level": "once",
+      "prompt": "談判力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf11-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF11",
+      "stability_level": "occasional",
+      "prompt": "談判力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf11-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF11",
+      "stability_level": "fixed",
+      "prompt": "談判力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    },
+    {
+      "card_id": "bf12-r2-strong-1",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "轉換力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf12-r2-strong-2",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "strong",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "轉換力：哪一項最接近現在？",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf12-r2-middling-1",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "轉換力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf12-r2-middling-2",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "middling",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "轉換力：哪一項最接近現在？",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf12-r2-weak-1",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 1,
+      "prompt": "轉換力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf12-r2-weak-2",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "weak",
+      "round_scope": "r2",
+      "variant": 2,
+      "prompt": "轉換力：哪一項最接近現在？",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf12-r3-weak-1",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "轉換力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf12-r3-middling-1",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "middling",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "轉換力：再追問一次根因。",
+      "option": "偶爾做到，但沒有固定節奏。"
+    },
+    {
+      "card_id": "bf12-r3-strong-1",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "strong",
+      "round_scope": "r3",
+      "variant": 1,
+      "prompt": "轉換力：再追問一次根因。",
+      "option": "有固定做法，結果大致穩定。"
+    },
+    {
+      "card_id": "bf12-r3-weak-2",
+      "card_kind": "theta",
+      "force": "BF12",
+      "anchor": "weak",
+      "round_scope": "r3",
+      "variant": 2,
+      "prompt": "轉換力：再追問一次根因。",
+      "option": "常常卡住，還沒有可重複的作法。"
+    },
+    {
+      "card_id": "bf12-phi-0",
+      "card_kind": "phi",
+      "force": "BF12",
+      "phi_level": 0,
+      "prompt": "轉換力：這件事的方法成熟度？",
+      "option": "還沒有可交接的方法。"
+    },
+    {
+      "card_id": "bf12-phi-1",
+      "card_kind": "phi",
+      "force": "BF12",
+      "phi_level": 1,
+      "prompt": "轉換力：這件事的方法成熟度？",
+      "option": "已有作法，但多半靠個人撐住。"
+    },
+    {
+      "card_id": "bf12-phi-2",
+      "card_kind": "phi",
+      "force": "BF12",
+      "phi_level": 2,
+      "prompt": "轉換力：這件事的方法成熟度？",
+      "option": "方法可由團隊穩定使用。"
+    },
+    {
+      "card_id": "bf12-omega-owner",
+      "card_kind": "omega",
+      "force": "BF12",
+      "omega_value": "owner",
+      "prompt": "轉換力：目前主要由誰承接？",
+      "option": "這件事必須由你親自承擔。"
+    },
+    {
+      "card_id": "bf12-omega-team",
+      "card_kind": "omega",
+      "force": "BF12",
+      "omega_value": "team",
+      "prompt": "轉換力：目前主要由誰承接？",
+      "option": "可交給團隊，但要有明確交接。"
+    },
+    {
+      "card_id": "bf12-omega-none",
+      "card_kind": "omega",
+      "force": "BF12",
+      "omega_value": "none",
+      "prompt": "轉換力：目前主要由誰承接？",
+      "option": "目前沒有合適的承接者。"
+    },
+    {
+      "card_id": "bf12-stability-once",
+      "card_kind": "stability",
+      "force": "BF12",
+      "stability_level": "once",
+      "prompt": "轉換力：這個做法有多穩定？",
+      "option": "只做過一兩次。"
+    },
+    {
+      "card_id": "bf12-stability-occasional",
+      "card_kind": "stability",
+      "force": "BF12",
+      "stability_level": "occasional",
+      "prompt": "轉換力：這個做法有多穩定？",
+      "option": "想到才做，沒有固定週期。"
+    },
+    {
+      "card_id": "bf12-stability-fixed",
+      "card_kind": "stability",
+      "force": "BF12",
+      "stability_level": "fixed",
+      "prompt": "轉換力：這個做法有多穩定？",
+      "option": "已有固定週期與檢查方式。"
+    }
+  ],
+  "symptoms": [
+    {
+      "card_id": "bf01-symptom-1",
+      "force": "BF01",
+      "rank": 1,
+      "text": "產品力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf01-symptom-2",
+      "force": "BF01",
+      "rank": 2,
+      "text": "產品力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf02-symptom-1",
+      "force": "BF02",
+      "rank": 1,
+      "text": "累積力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf02-symptom-2",
+      "force": "BF02",
+      "rank": 2,
+      "text": "累積力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf03-symptom-1",
+      "force": "BF03",
+      "rank": 1,
+      "text": "整合力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf03-symptom-2",
+      "force": "BF03",
+      "rank": 2,
+      "text": "整合力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf04-symptom-1",
+      "force": "BF04",
+      "rank": 1,
+      "text": "共享力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf04-symptom-2",
+      "force": "BF04",
+      "rank": 2,
+      "text": "共享力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf05-symptom-1",
+      "force": "BF05",
+      "rank": 1,
+      "text": "感受力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf05-symptom-2",
+      "force": "BF05",
+      "rank": 2,
+      "text": "感受力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf06-symptom-1",
+      "force": "BF06",
+      "rank": 1,
+      "text": "感召力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf06-symptom-2",
+      "force": "BF06",
+      "rank": 2,
+      "text": "感召力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf07-symptom-1",
+      "force": "BF07",
+      "rank": 1,
+      "text": "品牌力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf07-symptom-2",
+      "force": "BF07",
+      "rank": 2,
+      "text": "品牌力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf08-symptom-1",
+      "force": "BF08",
+      "rank": 1,
+      "text": "優化力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf08-symptom-2",
+      "force": "BF08",
+      "rank": 2,
+      "text": "優化力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf09-symptom-1",
+      "force": "BF09",
+      "rank": 1,
+      "text": "社群力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf09-symptom-2",
+      "force": "BF09",
+      "rank": 2,
+      "text": "社群力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf10-symptom-1",
+      "force": "BF10",
+      "rank": 1,
+      "text": "視覺力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf10-symptom-2",
+      "force": "BF10",
+      "rank": 2,
+      "text": "視覺力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf11-symptom-1",
+      "force": "BF11",
+      "rank": 1,
+      "text": "談判力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf11-symptom-2",
+      "force": "BF11",
+      "rank": 2,
+      "text": "談判力 還有別的卡點。"
+    },
+    {
+      "card_id": "bf12-symptom-1",
+      "force": "BF12",
+      "rank": 1,
+      "text": "轉換力 的判讀不像我。"
+    },
+    {
+      "card_id": "bf12-symptom-2",
+      "force": "BF12",
+      "rank": 2,
+      "text": "轉換力 還有別的卡點。"
+    }
+  ],
+  "opening_triplet": [
+    "bf01-r2-middling-1",
+    "bf09-r2-weak-1",
+    "bf07-r2-strong-1"
+  ],
+  "copy": {
+    "no_sell_reasons": {
+      "already_engaged": "你目前已有進行中的服務，本版不重複推薦。",
+      "insufficient_data": "目前資訊不足，先完成下一步資料蒐集。",
+      "foundation_first": "請先處理底盤，再評估後續方案。"
+    }
+  },
+  "routes": {
+    "CONSULT": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "COACH": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "DELEGATE": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "ASSIGN": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "SYSTEM": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "AMPLIFY": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "SUCCESSION_RISK": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    },
+    "MEASURE_FIRST": {
+      "never": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:no_one_watching": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:scale_mismatch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "course_no_effect:team_didnt_catch": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:price": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:no_fit": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "consultant_not_renewed:done_already": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      },
+      "currently_engaged": {
+        "products": [],
+        "no_sell_reason_code": "already_engaged"
+      },
+      "course_worked": {
+        "products": [
+          {
+            "id": "demo-product",
+            "name": "【示範內容，非正式】",
+            "kind": "workshop",
+            "one_liner": "用於驗證推薦頁流程的占位項目。",
+            "dont_buy_if": "這是示範內容，不是真的產品。",
+            "cta_url": "https://lin.ee/PLACEHOLDER",
+            "commitment": 1
+          }
+        ],
+        "no_sell_reason_code": ""
+      }
+    }
+  }
+}
+;</script>
+  <script>/* global createDiagnosisState, pickOpeningTriplet, pickTriplet, applyChoice,
+  applyFrequencyAnchor, applyRecall, recommendedLane, applyLaneOverride,
+  recommendedRootCause, applyRootCauseOverride, pickPhiTriplet, pickOmegaTriplet,
+  pickStabilityTriplet, applyPhiSelection, applyOmegaSelection,
+  applyStabilitySelection, applyCapabilityOverride, budgetGuard,
+  applyBudgetGuard, finalVerdict, correctionAudit, appendCorrection, routeFor,
+  FORCE_IDS, FORCE_LANES */
+
+(() => {
+  "use strict";
+
+  const content = window.__B25_CONTENT__;
+  const root = document.getElementById("app");
+  const startedAt = performance.now();
+  const now = () => performance.now();
+  const errors = window.__b25Errors = [];
+  window.addEventListener("error", (event) => errors.push(String(event.error?.stack ?? event.message)));
+  window.addEventListener("unhandledrejection", (event) => errors.push(String(event.reason?.stack ?? event.reason)));
+
+  const ROUNDS = [
+    ["r1", "第 1 輪：公司輪廓"], ["r2", "第 2 輪：廣泛掃描"], ["r3", "第 3 輪：聚焦追問"],
+    ["r4", "第 4 輪：可承接度"], ["r5", "第 5 輪：結論"], ["r6", "第 6 輪：推薦"],
+  ];
+  const FREQUENCY_CHOICES = [[0.5, "幾乎沒有"], [1.5, "很少發生"], [2.5, "偶爾做到"], [3.5, "常常做到"], [4.5, "已很穩定"]];
+  const PAST_MAIN = [
+    ["never", "從沒買過相關服務"], ["course_no_effect", "上過課但沒效果"], ["consultant_not_renewed", "找過顧問但沒續約"],
+    ["currently_engaged", "目前已有進行中的服務"], ["course_worked", "上過課而且有效"],
+  ];
+  const PAST_DETAILS = {
+    course_no_effect: [
+      ["course_no_effect:no_one_watching", "沒有人陪著落地"], ["course_no_effect:scale_mismatch", "內容跟規模不合"], ["course_no_effect:team_didnt_catch", "團隊沒有接住"],
+    ],
+    consultant_not_renewed: [
+      ["consultant_not_renewed:price", "費用壓力太高"], ["consultant_not_renewed:no_fit", "方法不適合"], ["consultant_not_renewed:done_already", "目標已完成"],
+    ],
+  };
+
+  const runtime = {
+    phase: "r1",
+    state: null,
+    company: null,
+    current: null,
+    r2Triplets: 0,
+    r3Triplets: 0,
+    openingForce: null,
+    dismissedSymptoms: [],
+    budgetChoice: null,
+    pastExperience: null,
+    actions: [],
+  };
+
+  function esc(value) {
+    return String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
+  }
+
+  function labelForce(force) {
+    return `${content.force_labels[force]}（${force}）`;
+  }
+
+  function labelLane(lane) {
+    return content.lane_labels[lane];
+  }
+
+  function phaseRound() {
+    return runtime.phase.slice(0, 2);
+  }
+
+  function renderShell(title, lead, body) {
+    const currentRound = phaseRound();
+    root.innerHTML = `<main class="shell">
+      <header><p class="eyebrow">B2.5｜本機流程走查版，不是正式產品</p><h1>商模十二力互動診斷</h1>
+      <p class="notice">占位卡只用於驗證流程；不會儲存資料、不會連線、不顯示凱羅段。</p></header>
+      <ol class="progress">${ROUNDS.map(([id, text]) => `<li class="${id === currentRound ? "active" : ""}">${esc(text)}</li>`).join("")}</ol>
+      <section class="panel" data-testid="phase-${esc(runtime.phase)}"><h2>${esc(title)}</h2><p class="lead">${esc(lead)}</p>${body}</section>
+      <footer><small data-testid="action-count">本次已完成 ${runtime.actions.length} 個互動步驟。</small></footer>
+    </main>`;
+  }
+
+  function button(action, label, value = "", testId = "") {
+    return `<button type="button" data-action="${esc(action)}" data-value="${esc(value)}"${testId ? ` data-testid="${esc(testId)}"` : ""}>${esc(label)}</button>`;
+  }
+
+  function record(action, detail) {
+    runtime.actions.push({ action, detail });
+  }
+
+  function smallestSigma(forces = FORCE_IDS) {
+    return [...forces].sort((left, right) => runtime.state.forces[left].sigma - runtime.state.forces[right].sigma || left.localeCompare(right, "en"))[0];
+  }
+
+  function focusForces() {
+    return FORCE_IDS.filter((force) => FORCE_LANES[force] === runtime.state.focus_lane);
+  }
+
+  function startR2Triplet() {
+    const result = runtime.r2Triplets === 0
+      ? pickOpeningTriplet(runtime.state)
+      : pickTriplet(runtime.state, { roundScope: "r2" });
+    if (result.cards.length !== 3) throw new Error(`R2 cannot produce a triplet: ${result.trace?.fail_loud ?? "unknown"}`);
+    runtime.state = result.state;
+    runtime.current = { cards: result.cards, round: "r2", ordinal: runtime.r2Triplets + 1 };
+    runtime.phase = "r2-cards";
+  }
+
+  function startR3Triplet() {
+    const result = pickTriplet(runtime.state, { roundScope: "r3" });
+    if (result.cards.length !== 3) throw new Error(`R3 cannot produce a triplet: ${result.trace?.fail_loud ?? "unknown"}`);
+    runtime.state = result.state;
+    runtime.current = { cards: result.cards, round: "r3", ordinal: runtime.r3Triplets + 1, trace: result.trace };
+    runtime.phase = "r3-cards";
+  }
+
+  function startCapability(kind) {
+    const picker = { phi: pickPhiTriplet, omega: pickOmegaTriplet, stability: pickStabilityTriplet }[kind];
+    const result = picker(runtime.state, runtime.state.headline_force);
+    runtime.state = result.state;
+    runtime.current = { cards: result.cards, kind };
+    runtime.phase = `r4-${kind}`;
+  }
+
+  function renderR1() {
+    renderShell("第 1 輪｜公司輪廓", "這些欄位只用來讓你走過表單；它們不進計分。", `
+      <form id="r1-form" data-testid="r1-form">
+        <label>產業<input name="industry" required value="顧問服務"></label>
+        <label>經營年數<input name="years" type="number" min="0" required value="3"></label>
+        <label>團隊人數<input name="headcount" type="number" min="1" required value="4"></label>
+        <label>最在意的數字<select name="metric_kind"><option>營收</option><option>轉換率</option><option>回購率</option></select></label>
+        <label>目前數字<input name="metric_value" type="number" min="0" required value="10"></label>
+        <button type="submit" data-testid="r1-submit">開始廣泛掃描</button>
+      </form>`);
+  }
+
+  function renderCards(round) {
+    const { cards, ordinal } = runtime.current;
+    renderShell(`第 ${round === "r2" ? "2" : "3"} 輪｜第 ${ordinal} 組三選一`, "選最接近現在的那張；這會真的改變後續選題與判讀。", `
+      <div class="cards">${cards.map((card) => `<article class="card"><p>${esc(labelForce(card.force))}</p><strong>${esc(card.option)}</strong>
+      ${button("choose-card", "選這張", card.card_id, `choice-${card.card_id}`)}</article>`).join("")}</div>`);
+  }
+
+  function renderRecall(title, force, nextAction, round) {
+    renderShell(title, `請回想 ${labelForce(force)} 最近一次的實際情況。`, `<p class="summary">這一題會以 B 級回想更新 ${esc(labelForce(force))}。</p>
+      <div class="choices">${FREQUENCY_CHOICES.map(([value, text]) => button(nextAction, text, `${force}|${value}`, `recall-${value}`)).join("")}</div>
+      <p class="hint">預設走查可選「偶爾做到」。</p>`);
+  }
+
+  function renderAlignmentA() {
+    const system = recommendedLane(runtime.state);
+    renderShell("第 2 輪｜對齊 A：先選哪條賽道", "系統先給一條建議；你可確認或改成自己的判斷。", `
+      <p class="summary">系統小結：先看「${esc(labelLane(system))}」。</p>
+      <div class="choices">${[system, ...Object.keys(content.lane_labels).filter((lane) => lane !== system)].map((lane, index) => button("align-a", index === 0 ? `確認：${labelLane(lane)}` : `改選：${labelLane(lane)}`, lane, `align-a-${lane}`)).join("")}</div>`);
+  }
+
+  function renderAlignmentB() {
+    const system = recommendedRootCause(runtime.state);
+    const candidates = [system, ...focusForces().filter((force) => force !== system)];
+    renderShell("第 3 輪｜對齊 B：哪一力是根因", "系統把焦點賽道內最需要確認的一力放在第一位。", `
+      <p class="summary">系統小結：${esc(labelForce(system))}。</p>
+      <div class="choices">${candidates.map((force, index) => button("align-b", index === 0 ? `確認：${labelForce(force)}` : `改選：${labelForce(force)}`, force, `align-b-${force.toLowerCase()}`)).join("")}</div>`);
+  }
+
+  function renderFrequencyAnchor() {
+    const force = runtime.state.headline_force;
+    renderShell("第 4 輪｜把頭條力落到真實頻率", `頭條暫定為 ${labelForce(force)}；請給一個絕對頻率。`, `<div class="choices">${FREQUENCY_CHOICES.map(([value, text]) => button("headline-anchor", text, String(value), `headline-anchor-${value}`)).join("")}</div>`);
+  }
+
+  function renderCapability(kind) {
+    const labels = { phi: "方法成熟度", omega: "主要承接者", stability: "穩定週期" };
+    renderShell(`第 4 輪｜${labels[kind]}`, `只問頭條 ${labelForce(runtime.state.headline_force)}。`, `<div class="cards">${runtime.current.cards.map((card) => `<article class="card"><strong>${esc(card.option)}</strong>${button("choose-capability", "選這張", card.card_id, `capability-${card.card_id}`)}</article>`).join("")}</div>`);
+  }
+
+  function renderAlignmentC() {
+    const short = runtime.state.budget.alignment_summary_variant === "short";
+    const systemPhi = runtime.state.capability.phi;
+    const systemOmega = runtime.state.capability.omega;
+    renderShell("第 4 輪｜對齊 C：方法與承接者", short ? "時間較緊，這裡顯示短版小結。" : "確認系統判讀，或改成你自己的組合。", `
+      <p class="summary">系統判讀：φ=${esc(systemPhi)}；ω=${esc(systemOmega)}。</p>
+      <div class="choices">${button("align-c", "確認系統判讀", "same", "align-c-same")}
+      ${[0, 1, 2].flatMap((phi) => ["owner", "team", "none"].map((omega) => button("align-c", `改為 φ=${phi}／ω=${omega}`, `${phi}|${omega}`, `align-c-${phi}-${omega}`))).join("")}</div>`);
+  }
+
+  function renderConclusion() {
+    const result = finalVerdict(runtime.state);
+    const headline = runtime.state.headline_force;
+    const ranking = [...FORCE_IDS].sort((a, b) => runtime.state.forces[a].theta - runtime.state.forces[b].theta || a.localeCompare(b, "en")).slice(0, 4);
+    const availableSymptoms = content.symptoms.filter((item) => item.force === headline && !runtime.dismissedSymptoms.includes(item.card_id));
+    const guard = budgetGuard({ checkpoint: "before_conclusion", now, startedAt, optionalSections: [{ id: "risk" }, { id: "journey" }] });
+    runtime.state = applyBudgetGuard(runtime.state, guard);
+    const corrections = correctionAudit(runtime.state);
+    renderShell("第 5 輪｜診斷結論", "這一頁只用 B2 的 evidence-safe 判定，不會重新計算或換掉頭條力。", `
+      <p class="verdict" data-testid="verdict">${esc(result.code)}${result.overridden_by ? `（${esc(result.overridden_by)}）` : ""}</p>
+      <p><strong>頭條力：</strong>${esc(labelForce(headline))}</p>
+      <p><strong>目前較弱的四力：</strong>${ranking.map(labelForce).map(esc).join("、")}</p>
+      <section><h3>症狀校正</h3>${availableSymptoms.length ? availableSymptoms.map((item) => `<p>${esc(item.text)} ${button("dismiss-symptom", "這句不像我", item.card_id, `symptom-${item.rank}`)}</p>`).join("") : "<p>這一力的陽春症狀卡已校正完畢。</p>"}</section>
+      <section><h3>你的改判紀錄（${corrections.count}）</h3><ul>${corrections.entries.map((entry) => `<li>${esc(entry.at)}：${esc(entry.text)}</li>`).join("") || "<li>尚未改判。</li>"}</ul></section>
+      <p class="hint">${runtime.state.budget.missing_stability_note ? "這一項我們沒問到穩定度，先以原始 φ 判讀。" : "穩定度已納入 φ 判讀。"}</p>
+      ${button("to-r6", "前往推薦頁", "", "to-r6")}`);
+  }
+
+  function renderBudget() {
+    renderShell("第 6 輪｜投入範圍", "這只影響未來推薦排序；本版先讓你完整走過選項。", `<div class="choices">${[
+      ["none", "暫不投入"], ["under_10k", "低於一萬元"], ["10k_50k", "一到五萬元"], ["50k_200k", "五到二十萬元"], ["over_200k", "高於二十萬元"],
+    ].map(([value, label]) => button("budget", label, value, `budget-${value}`)).join("")}</div>`);
+  }
+
+  function renderPastExperience(group = null) {
+    if (group) {
+      renderShell("第 6 輪｜補一個原因", "選一個最接近的原因，才能走到 72 格路由的實際格子。", `<div class="choices">${PAST_DETAILS[group].map(([value, label]) => button("past", label, value, `past-${value.replace(/[:_]/g, "-")}`)).join("")}</div>`);
+      return;
+    }
+    renderShell("第 6 輪｜過去經驗", "選一個最接近的選項；需要時會再問一個原因。", `<div class="choices">${PAST_MAIN.map(([value, label]) => button("past-main", label, value, `past-main-${value}`)).join("")}</div>`);
+  }
+
+  function renderRecommendation() {
+    const result = routeFor(runtime.state, content.routes, runtime.pastExperience);
+    const route = result;
+    const product = route.products[0];
+    renderShell("推薦頁｜流程走查完成", "這是 72 格中的一格占位路由，不代表正式產品或正式 CTA。", product ? `
+      <p data-testid="route-key"><strong>判定／經驗：</strong>${esc(result.verdict.code)}／${esc(runtime.pastExperience)}</p>
+      <h3>${esc(product.name)}</h3><p>${esc(product.one_liner)}</p><p><strong>不適合購買：</strong>${esc(product.dont_buy_if)}</p>
+      <a class="cta" href="${esc(product.cta_url)}" target="_blank" rel="noopener" data-testid="cta">前往 LINE（佔位連結，待替換）</a>` : `
+      <p data-testid="route-key"><strong>判定／經驗：</strong>${esc(result.verdict.code)}／${esc(runtime.pastExperience)}</p>
+      <p>${esc(content.copy.no_sell_reasons[route.no_sell_reason_code])}</p>`);
+  }
+
+  function render() {
+    if (runtime.phase === "r1") return renderR1();
+    if (runtime.phase === "r2-cards") return renderCards("r2");
+    if (runtime.phase === "r2-recall-opening") return renderRecall("第 2 輪｜回想一個實例", runtime.openingForce, "r2-recall-opening", "r2");
+    if (runtime.phase === "r2-recall-smallest") return renderRecall("第 2 輪｜再校準一力", smallestSigma(), "r2-recall-smallest", "r2");
+    if (runtime.phase === "r2-align") return renderAlignmentA();
+    if (runtime.phase === "r3-cards") return renderCards("r3");
+    if (runtime.phase === "r3-recall") return renderRecall("第 3 輪｜回想焦點賽道", smallestSigma(focusForces()), "r3-recall", "r3");
+    if (runtime.phase === "r3-align") return renderAlignmentB();
+    if (runtime.phase === "r4-anchor") return renderFrequencyAnchor();
+    if (runtime.phase === "r4-phi" || runtime.phase === "r4-omega" || runtime.phase === "r4-stability") return renderCapability(runtime.current.kind);
+    if (runtime.phase === "r4-align") return renderAlignmentC();
+    if (runtime.phase === "r5") return renderConclusion();
+    if (runtime.phase === "r6-budget") return renderBudget();
+    if (runtime.phase === "r6-past") return renderPastExperience();
+    if (runtime.phase.startsWith("r6-detail-")) return renderPastExperience(runtime.phase.slice("r6-detail-".length));
+    if (runtime.phase === "r6-recommendation") return renderRecommendation();
+    throw new Error(`unknown UI phase ${runtime.phase}`);
+  }
+
+  function chooseCard(cardId) {
+    const selected = runtime.current.cards.find((card) => card.card_id === cardId);
+    if (!selected) throw new Error("selected theta card is not in current triplet");
+    runtime.state = applyChoice(runtime.state, selected, runtime.current.cards.filter((card) => card.card_id !== cardId));
+    record("choose-card", cardId);
+    if (runtime.current.round === "r2") {
+      runtime.r2Triplets += 1;
+      if (runtime.r2Triplets === 1) {
+        runtime.openingForce = selected.force;
+        runtime.phase = "r2-recall-opening";
+      } else if (runtime.r2Triplets < 4) startR2Triplet();
+      else runtime.phase = "r2-recall-smallest";
+      return;
+    }
+    runtime.r3Triplets += 1;
+    if (runtime.r3Triplets === 1) runtime.phase = "r3-recall";
+    else if (runtime.r3Triplets < 4) startR3Triplet();
+    else runtime.phase = "r3-align";
+  }
+
+  function chooseCapability(cardId) {
+    const card = runtime.current.cards.find((item) => item.card_id === cardId);
+    if (!card) throw new Error("selected capability card is not in current triplet");
+    const kind = runtime.current.kind;
+    if (kind === "phi") runtime.state = applyPhiSelection(runtime.state, card);
+    if (kind === "omega") runtime.state = applyOmegaSelection(runtime.state, card);
+    if (kind === "stability") runtime.state = applyStabilitySelection(runtime.state, card);
+    record("choose-capability", cardId);
+    if (kind === "phi") startCapability("omega");
+    else if (kind === "omega") {
+      const guard = budgetGuard({ checkpoint: "before_alignment_c", now, startedAt });
+      runtime.state = applyBudgetGuard(runtime.state, guard);
+      if (runtime.state.capability.stability_skipped) runtime.phase = "r4-align";
+      else startCapability("stability");
+    } else {
+      runtime.phase = "r4-align";
+    }
+  }
+
+  function dispatch(action, value) {
+    if (action === "start") {
+      const form = document.getElementById("r1-form");
+      if (!form.reportValidity()) return;
+      const values = Object.fromEntries(new FormData(form));
+      runtime.company = values;
+      runtime.state = createDiagnosisState({ cards: content.cards, openingTriplet: content.opening_triplet });
+      record("start", values.industry);
+      startR2Triplet();
+    } else if (action === "choose-card") chooseCard(value);
+    else if (action === "r2-recall-opening") {
+      const [force, level] = value.split("|"); runtime.state = applyRecall(runtime.state, force, Number(level)); record(action, value); startR2Triplet();
+    } else if (action === "r2-recall-smallest") {
+      const [force, level] = value.split("|"); runtime.state = applyRecall(runtime.state, force, Number(level)); record(action, value); runtime.phase = "r2-align";
+    } else if (action === "align-a") {
+      runtime.state = applyLaneOverride(runtime.state, value); record(action, value); startR3Triplet();
+    } else if (action === "r3-recall") {
+      const [force, level] = value.split("|"); runtime.state = applyRecall(runtime.state, force, Number(level)); record(action, value); startR3Triplet();
+    } else if (action === "align-b") {
+      runtime.state = applyRootCauseOverride(runtime.state, value); record(action, value); runtime.phase = "r4-anchor";
+    } else if (action === "headline-anchor") {
+      runtime.state = applyFrequencyAnchor(runtime.state, runtime.state.headline_force, Number(value));
+      const guard = budgetGuard({ checkpoint: "before_r4_cards", now, startedAt });
+      runtime.state = applyBudgetGuard(runtime.state, guard);
+      record(action, value);
+      startCapability("phi");
+    } else if (action === "choose-capability") chooseCapability(value);
+    else if (action === "align-c") {
+      if (value !== "same") { const [phi, omega] = value.split("|"); runtime.state = applyCapabilityOverride(runtime.state, { phi: Number(phi), omega }); }
+      record(action, value); runtime.phase = "r5";
+    } else if (action === "dismiss-symptom") {
+      if (!runtime.dismissedSymptoms.includes(value)) {
+        runtime.dismissedSymptoms.push(value);
+        runtime.state = appendCorrection(runtime.state, { at: "conclusion", round: 5, field: "symptom", system_value: value, user_value: "not_me", via: "option" });
+      }
+      record(action, value);
+    } else if (action === "to-r6") { record(action, ""); runtime.phase = "r6-budget"; }
+    else if (action === "budget") { runtime.budgetChoice = value; record(action, value); runtime.phase = "r6-past"; }
+    else if (action === "past-main") {
+      record(action, value);
+      if (PAST_DETAILS[value]) runtime.phase = `r6-detail-${value}`;
+      else { runtime.pastExperience = value; runtime.phase = "r6-recommendation"; }
+    } else if (action === "past") { runtime.pastExperience = value; record(action, value); runtime.phase = "r6-recommendation"; }
+    else throw new Error(`unknown action ${action}`);
+  }
+
+  document.addEventListener("submit", (event) => {
+    if (event.target.id !== "r1-form") return;
+    event.preventDefault();
+    safely(() => dispatch("start", ""));
+  });
+  document.addEventListener("click", (event) => {
+    const target = event.target.closest("[data-action]");
+    if (!target) return;
+    safely(() => dispatch(target.dataset.action, target.dataset.value ?? ""));
+  });
+
+  function safely(work) {
+    try { work(); render(); }
+    catch (error) {
+      const text = String(error?.stack ?? error);
+      errors.push(text);
+      console.error(error);
+      root.innerHTML = `<main class="shell"><h1>流程暫停</h1><pre data-testid="runtime-error">${esc(text)}</pre></main>`;
+    }
+  }
+
+  window.__b25 = {
+    snapshot: () => ({ phase: runtime.phase, errors: [...errors], actions: [...runtime.actions], headline: runtime.state?.headline_force ?? null, corrections: runtime.state ? correctionAudit(runtime.state).count : 0, final: runtime.state ? finalVerdict(runtime.state) : null }),
+    content,
+  };
+  render();
+})();
+</script>
+</body>
+</html>
