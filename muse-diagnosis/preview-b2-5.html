@@ -11,7 +11,7 @@
     .eyebrow { margin: 0 0 8px; color: #52616b; font-size: .85rem; letter-spacing: .04em; } .notice, .hint { color: #5b6470; font-size: .92rem; } .lead { margin-top: 0; line-height: 1.6; } .progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; list-style: none; padding: 0; margin: 16px 0; font-size: .78rem; }
     .progress li { background: #e8e3dd; padding: 8px; border-radius: 6px; color: #5e656a; } .progress .active { background: #334e68; color: #fff; font-weight: 700; } .cards, .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 18px 0; }
     .card { padding: 16px; border: 1px solid #d5dce2; border-radius: 10px; min-height: 145px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; } .card p { margin: 0; color: #52616b; font-size: .9rem; } button, .cta { appearance: none; border: 0; border-radius: 7px; background: #334e68; color: #fff; padding: 11px 13px; cursor: pointer; text-align: left; font: inherit; text-decoration: none; display: inline-block; }
-    button:hover, .cta:hover { background: #243b53; } form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } label { display: grid; gap: 6px; font-weight: 600; } input, select { padding: 10px; border: 1px solid #aab5bf; border-radius: 6px; font: inherit; } form button { grid-column: 1 / -1; text-align: center; } .summary { background: #edf4f8; border-left: 4px solid #334e68; padding: 12px; } .verdict { font-size: 1.6rem; font-weight: 800; color: #243b53; } footer { margin-top: 16px; background: transparent; border: 0; padding: 0; color: #5b6470; } pre { white-space: pre-wrap; overflow-wrap: anywhere; } @media (max-width: 560px) { .shell { width: min(100% - 20px, 860px); padding-top: 14px; } form { grid-template-columns: 1fr; } .progress { grid-template-columns: repeat(2, 1fr); } }
+    button:hover, .cta:hover { background: #243b53; } form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } label { display: grid; gap: 6px; font-weight: 600; } input, select { padding: 10px; border: 1px solid #aab5bf; border-radius: 6px; font: inherit; } .metric-input { display: flex; align-items: center; gap: 8px; } .metric-input input { flex: 1; min-width: 0; } .metric-unit { background: #edf4f8; border: 1px solid #aab5bf; border-radius: 6px; padding: 10px; white-space: nowrap; } .metric-help { color: #52616b; font-weight: 400; line-height: 1.45; } form button { grid-column: 1 / -1; text-align: center; } .summary { background: #edf4f8; border-left: 4px solid #334e68; padding: 12px; } .verdict { font-size: 1.6rem; font-weight: 800; color: #243b53; } footer { margin-top: 16px; background: transparent; border: 0; padding: 0; color: #5b6470; } pre { white-space: pre-wrap; overflow-wrap: anywhere; } @media (max-width: 560px) { .shell { width: min(100% - 20px, 860px); padding-top: 14px; } form { grid-template-columns: 1fr; } .progress { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
@@ -3855,6 +3855,32 @@ function applyBudgetGuard(state, guard) {
       ["consultant_not_renewed:price", "費用壓力太高"], ["consultant_not_renewed:no_fit", "方法不適合"], ["consultant_not_renewed:done_already", "目標已完成"],
     ],
   };
+  const METRICS = Object.freeze({
+    last_month_customers: {
+      select_label: "上月來客數（位，上一個月成交的客人數）",
+      input_label: "上月來客數",
+      unit: "位",
+      help: "上一個月成交的客人數。",
+      placeholder: "例如 610",
+      quote: (value) => `以你說的上月 ${value} 位客人來看。`,
+    },
+    average_order_value: {
+      select_label: "客單價（元，平均一位客人一次消費多少）",
+      input_label: "客單價",
+      unit: "元",
+      help: "最近一個月，平均一位客人一次消費多少。",
+      placeholder: "例如 1500",
+      quote: (value) => `以你說的最近一個月客單價約 ${value} 元來看。`,
+    },
+    monthly_revenue: {
+      select_label: "月營收（元，最近一個月大概的營業額）",
+      input_label: "月營收",
+      unit: "元",
+      help: "最近一個月大概的營業額。",
+      placeholder: "例如 300000",
+      quote: (value) => `以你說的最近一個月月營收約 ${value} 元來看。`,
+    },
+  });
 
   const runtime = {
     phase: "r1",
@@ -3880,6 +3906,33 @@ function applyBudgetGuard(state, guard) {
 
   function labelLane(lane) {
     return content.lane_labels[lane];
+  }
+
+  function metricFor(kind) {
+    const metric = METRICS[kind];
+    if (!metric) throw new Error(`unknown R1 metric kind: ${kind}`);
+    return metric;
+  }
+
+  function displayNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? new Intl.NumberFormat("zh-TW", { maximumFractionDigits: 2 }).format(number) : String(value);
+  }
+
+  function companyMetricQuote() {
+    if (!runtime.company) return "";
+    const metric = metricFor(runtime.company.metric_kind);
+    return metric.quote(displayNumber(runtime.company.metric_value));
+  }
+
+  function syncMetricField() {
+    const select = document.getElementById("metric-kind");
+    if (!select) return;
+    const metric = metricFor(select.value);
+    document.getElementById("metric-value-label").textContent = metric.input_label;
+    document.getElementById("metric-value").placeholder = metric.placeholder;
+    document.getElementById("metric-unit").textContent = metric.unit;
+    document.getElementById("metric-help").textContent = metric.help;
   }
 
   function phaseRound() {
@@ -3940,15 +3993,16 @@ function applyBudgetGuard(state, guard) {
   }
 
   function renderR1() {
-    renderShell("第 1 輪｜公司輪廓", "這些欄位只用來讓你走過表單；它們不進計分。", `
+    renderShell("第 1 輪｜公司輪廓", "填一個有期間與單位的真實數字；它不進計分，會在結論逐字引用。", `
       <form id="r1-form" data-testid="r1-form">
         <label>產業<input name="industry" required value="顧問服務"></label>
         <label>經營年數<input name="years" type="number" min="0" required value="3"></label>
         <label>團隊人數<input name="headcount" type="number" min="1" required value="4"></label>
-        <label>最在意的數字<select name="metric_kind"><option>營收</option><option>轉換率</option><option>回購率</option></select></label>
-        <label>目前數字<input name="metric_value" type="number" min="0" required value="10"></label>
+        <label>真實數字類型<select id="metric-kind" name="metric_kind" data-testid="metric-kind">${Object.entries(METRICS).map(([value, metric]) => `<option value="${esc(value)}">${esc(metric.select_label)}</option>`).join("")}</select></label>
+        <label><span id="metric-value-label">上月來客數</span><span class="metric-input"><input id="metric-value" name="metric_value" type="number" inputmode="decimal" min="0" required value="610" placeholder="例如 610" aria-describedby="metric-help" data-testid="metric-value"><span id="metric-unit" class="metric-unit" data-testid="metric-unit">位</span></span><small id="metric-help" class="metric-help" data-testid="metric-help">上一個月成交的客人數。</small></label>
         <button type="submit" data-testid="r1-submit">開始廣泛掃描</button>
       </form>`);
+    syncMetricField();
   }
 
   function renderCards(round) {
@@ -4009,6 +4063,7 @@ function applyBudgetGuard(state, guard) {
     const corrections = correctionAudit(runtime.state);
     renderShell("第 5 輪｜診斷結論", "這一頁只用 B2 的 evidence-safe 判定，不會重新計算或換掉頭條力。", `
       <p class="verdict" data-testid="verdict">${esc(result.code)}${result.overridden_by ? `（${esc(result.overridden_by)}）` : ""}</p>
+      <p class="summary" data-testid="metric-reference">${esc(companyMetricQuote())}</p>
       <p><strong>頭條力：</strong>${esc(labelForce(headline))}</p>
       <p><strong>目前較弱的四力：</strong>${ranking.map(labelForce).map(esc).join("、")}</p>
       <section><h3>症狀校正</h3>${availableSymptoms.length ? availableSymptoms.map((item) => `<p>${esc(item.text)} ${button("dismiss-symptom", "這句不像我", item.card_id, `symptom-${item.rank}`)}</p>`).join("") : "<p>這一力的陽春症狀卡已校正完畢。</p>"}</section>
@@ -4157,6 +4212,9 @@ function applyBudgetGuard(state, guard) {
     const target = event.target.closest("[data-action]");
     if (!target) return;
     safely(() => dispatch(target.dataset.action, target.dataset.value ?? ""));
+  });
+  document.addEventListener("change", (event) => {
+    if (event.target.id === "metric-kind") syncMetricField();
   });
 
   function safely(work) {
