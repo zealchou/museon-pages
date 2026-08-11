@@ -3881,6 +3881,31 @@ function applyBudgetGuard(state, guard) {
       quote: (value) => `以你說的最近一個月月營收約 ${value} 元來看。`,
     },
   });
+  const UI_COPY = Object.freeze({
+    eyebrow: "互動診斷體驗",
+    notice: "此流程只在目前裝置中進行，不會儲存資料或連線。",
+    genericError: "暫時無法繼續，請重新開始。",
+    recommendation: "我們已整理出一個適合繼續討論的方向。",
+    nextStep: "如果你願意，我們可以先從目前最卡的一件事開始釐清。",
+    engaged: "你目前已有進行中的服務，先把焦點放在最需要推進的一步。",
+  });
+  const DISPLAY = Object.freeze({
+    verdict: {
+      CONSULT: "先一起釐清問題與優先順序",
+      COACH: "用陪跑方式建立可持續的節奏",
+      DELEGATE: "協助團隊接住並推進這件事",
+      ASSIGN: "先補上合適的承接安排",
+      SYSTEM: "把有效做法整理成可複製的流程",
+      AMPLIFY: "放大已經有效的做法",
+      SUCCESSION_RISK: "提早安排交接與延續",
+      MEASURE_FIRST: "先補齊觀察，再決定下一步",
+    },
+    capability: {
+      phi: { 0: "方法仍在摸索", 1: "已有做法，仍可調整", 2: "方法已可穩定運作" },
+      omega: { owner: "目前主要由你承擔", team: "團隊可以承接", none: "目前缺少承接者" },
+      stability: { once: "剛開始嘗試", occasional: "偶爾才會執行", fixed: "已有固定節奏" },
+    },
+  });
 
   const runtime = {
     phase: "r1",
@@ -3900,12 +3925,41 @@ function applyBudgetGuard(state, guard) {
     return String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
   }
 
-  function labelForce(force) {
-    return `${content.force_labels[force]}（${force}）`;
+  // Presentation boundary: renderers may receive raw engine values, but only
+  // these helpers may translate them into visible copy.
+  function displayForce(force) {
+    return content.force_labels[force] ?? "這項能力";
   }
 
-  function labelLane(lane) {
-    return content.lane_labels[lane];
+  function displayLane(lane) {
+    return content.lane_labels[lane] ?? "目前焦點";
+  }
+
+  function displayVerdict(result) {
+    return DISPLAY.verdict[result?.code] ?? "先釐清下一步";
+  }
+
+  function displayCapability(kind, value) {
+    return DISPLAY.capability[kind]?.[value] ?? "目前狀況待確認";
+  }
+
+  function displayCapabilitySummary(phi, omega) {
+    return `${displayCapability("phi", phi)}；${displayCapability("omega", omega)}。`;
+  }
+
+  function displayEvidenceNote(state) {
+    return state.budget.missing_stability_note
+      ? "這次先依目前掌握的回答整理方向，之後可以再補充細節。"
+      : "這個方向已綜合你剛才提供的回答。";
+  }
+
+  function displayCorrection(entry) {
+    if (entry.field === "lane") return `焦點由「${displayLane(entry.system_value)}」調整為「${displayLane(entry.user_value)}」。`;
+    if (entry.field === "headline_force") return `優先處理項目由「${displayForce(entry.system_value)}」調整為「${displayForce(entry.user_value)}」。`;
+    if (entry.field === "phi") return `方法狀況調整為「${displayCapability("phi", entry.user_value)}」。`;
+    if (entry.field === "omega") return `承接安排調整為「${displayCapability("omega", entry.user_value)}」。`;
+    if (entry.field === "symptom") return "已略過一項不符合你的描述。";
+    return "已依你的回答調整方向。";
   }
 
   function metricFor(kind) {
@@ -3942,11 +3996,11 @@ function applyBudgetGuard(state, guard) {
   function renderShell(title, lead, body) {
     const currentRound = phaseRound();
     root.innerHTML = `<main class="shell">
-      <header><p class="eyebrow">B2.5｜本機流程走查版，不是正式產品</p><h1>商模十二力互動診斷</h1>
-      <p class="notice">占位卡只用於驗證流程；不會儲存資料、不會連線、不顯示凱羅段。</p></header>
+      <header><p class="eyebrow">${esc(UI_COPY.eyebrow)}</p><h1>商模十二力互動診斷</h1>
+      <p class="notice">${esc(UI_COPY.notice)}</p></header>
       <ol class="progress">${ROUNDS.map(([id, text]) => `<li class="${id === currentRound ? "active" : ""}">${esc(text)}</li>`).join("")}</ol>
       <section class="panel" data-testid="phase-${esc(runtime.phase)}"><h2>${esc(title)}</h2><p class="lead">${esc(lead)}</p>${body}</section>
-      <footer><small data-testid="action-count">本次已完成 ${runtime.actions.length} 個互動步驟。</small></footer>
+      <footer><small data-testid="action-count">依照你的實際情況作答即可。</small></footer>
     </main>`;
   }
 
@@ -3993,7 +4047,7 @@ function applyBudgetGuard(state, guard) {
   }
 
   function renderR1() {
-    renderShell("第 1 輪｜公司輪廓", "填一個有期間與單位的真實數字；它不進計分，會在結論逐字引用。", `
+    renderShell("第 1 輪｜公司輪廓", "填一個有期間與單位的數字，幫我們理解你目前的狀況。", `
       <form id="r1-form" data-testid="r1-form">
         <label>產業<input name="industry" required value="顧問服務"></label>
         <label>經營年數<input name="years" type="number" min="0" required value="3"></label>
@@ -4007,50 +4061,50 @@ function applyBudgetGuard(state, guard) {
 
   function renderCards(round) {
     const { cards, ordinal } = runtime.current;
-    renderShell(`第 ${round === "r2" ? "2" : "3"} 輪｜第 ${ordinal} 組三選一`, "選最接近現在的那張；這會真的改變後續選題與判讀。", `
-      <div class="cards">${cards.map((card) => `<article class="card"><p>${esc(labelForce(card.force))}</p><strong>${esc(card.option)}</strong>
+    renderShell(`第 ${round === "r2" ? "2" : "3"} 輪｜第 ${ordinal} 組三選一`, "選最接近現在的那張，讓我們逐步聚焦。", `
+      <div class="cards">${cards.map((card) => `<article class="card"><p>${esc(displayForce(card.force))}</p><strong>${esc(card.option)}</strong>
       ${button("choose-card", "選這張", card.card_id, `choice-${card.card_id}`)}</article>`).join("")}</div>`);
   }
 
   function renderRecall(title, force, nextAction, round) {
-    renderShell(title, `請回想 ${labelForce(force)} 最近一次的實際情況。`, `<p class="summary">這一題會以 B 級回想更新 ${esc(labelForce(force))}。</p>
+    renderShell(title, `請回想 ${displayForce(force)} 最近一次的實際情況。`, `<p class="summary">你的回答會幫助我們理解目前的狀況。</p>
       <div class="choices">${FREQUENCY_CHOICES.map(([value, text]) => button(nextAction, text, `${force}|${value}`, `recall-${value}`)).join("")}</div>
-      <p class="hint">預設走查可選「偶爾做到」。</p>`);
+      <p class="hint">選最接近你真實感受的答案。</p>`);
   }
 
   function renderAlignmentA() {
     const system = recommendedLane(runtime.state);
-    renderShell("第 2 輪｜對齊 A：先選哪條賽道", "系統先給一條建議；你可確認或改成自己的判斷。", `
-      <p class="summary">系統小結：先看「${esc(labelLane(system))}」。</p>
-      <div class="choices">${[system, ...Object.keys(content.lane_labels).filter((lane) => lane !== system)].map((lane, index) => button("align-a", index === 0 ? `確認：${labelLane(lane)}` : `改選：${labelLane(lane)}`, lane, `align-a-${lane}`)).join("")}</div>`);
+    renderShell("第 2 輪｜對齊 A：先選哪個方向", "先選一個最值得聚焦的方向；你可以確認或調整。", `
+      <p class="summary">建議先看「${esc(displayLane(system))}」。</p>
+      <div class="choices">${[system, ...Object.keys(content.lane_labels).filter((lane) => lane !== system)].map((lane, index) => button("align-a", index === 0 ? `確認：${displayLane(lane)}` : `改選：${displayLane(lane)}`, lane, `align-a-${lane}`)).join("")}</div>`);
   }
 
   function renderAlignmentB() {
     const system = recommendedRootCause(runtime.state);
     const candidates = [system, ...focusForces().filter((force) => force !== system)];
-    renderShell("第 3 輪｜對齊 B：哪一力是根因", "系統把焦點賽道內最需要確認的一力放在第一位。", `
-      <p class="summary">系統小結：${esc(labelForce(system))}。</p>
-      <div class="choices">${candidates.map((force, index) => button("align-b", index === 0 ? `確認：${labelForce(force)}` : `改選：${labelForce(force)}`, force, `align-b-${force.toLowerCase()}`)).join("")}</div>`);
+    renderShell("第 3 輪｜對齊 B：最需要處理的是哪一項", "我們先把最需要確認的一項放在第一位。", `
+      <p class="summary">建議先處理：${esc(displayForce(system))}。</p>
+      <div class="choices">${candidates.map((force, index) => button("align-b", index === 0 ? `確認：${displayForce(force)}` : `改選：${displayForce(force)}`, force, `align-b-${force.toLowerCase()}`)).join("")}</div>`);
   }
 
   function renderFrequencyAnchor() {
     const force = runtime.state.headline_force;
-    renderShell("第 4 輪｜把頭條力落到真實頻率", `頭條暫定為 ${labelForce(force)}；請給一個絕對頻率。`, `<div class="choices">${FREQUENCY_CHOICES.map(([value, text]) => button("headline-anchor", text, String(value), `headline-anchor-${value}`)).join("")}</div>`);
+    renderShell("第 4 輪｜把重點落到真實頻率", `目前先聚焦在 ${displayForce(force)}；請選最接近的頻率。`, `<div class="choices">${FREQUENCY_CHOICES.map(([value, text]) => button("headline-anchor", text, String(value), `headline-anchor-${value}`)).join("")}</div>`);
   }
 
   function renderCapability(kind) {
     const labels = { phi: "方法成熟度", omega: "主要承接者", stability: "穩定週期" };
-    renderShell(`第 4 輪｜${labels[kind]}`, `只問頭條 ${labelForce(runtime.state.headline_force)}。`, `<div class="cards">${runtime.current.cards.map((card) => `<article class="card"><strong>${esc(card.option)}</strong>${button("choose-capability", "選這張", card.card_id, `capability-${card.card_id}`)}</article>`).join("")}</div>`);
+    renderShell(`第 4 輪｜${labels[kind]}`, `這一題聚焦在 ${displayForce(runtime.state.headline_force)}。`, `<div class="cards">${runtime.current.cards.map((card) => `<article class="card"><strong>${esc(card.option)}</strong>${button("choose-capability", "選這張", card.card_id, `capability-${card.card_id}`)}</article>`).join("")}</div>`);
   }
 
   function renderAlignmentC() {
     const short = runtime.state.budget.alignment_summary_variant === "short";
     const systemPhi = runtime.state.capability.phi;
     const systemOmega = runtime.state.capability.omega;
-    renderShell("第 4 輪｜對齊 C：方法與承接者", short ? "時間較緊，這裡顯示短版小結。" : "確認系統判讀，或改成你自己的組合。", `
-      <p class="summary">系統判讀：φ=${esc(systemPhi)}；ω=${esc(systemOmega)}。</p>
-      <div class="choices">${button("align-c", "確認系統判讀", "same", "align-c-same")}
-      ${[0, 1, 2].flatMap((phi) => ["owner", "team", "none"].map((omega) => button("align-c", `改為 φ=${phi}／ω=${omega}`, `${phi}|${omega}`, `align-c-${phi}-${omega}`))).join("")}</div>`);
+    renderShell("第 4 輪｜對齊 C：方法與承接安排", short ? "時間有限，先確認最重要的安排。" : "確認目前的安排，或改成更符合你的組合。", `
+      <p class="summary">目前建議：${esc(displayCapabilitySummary(systemPhi, systemOmega))}</p>
+      <div class="choices">${button("align-c", "確認這個安排", "same", "align-c-same")}
+      ${[0, 1, 2].flatMap((phi) => ["owner", "team", "none"].map((omega) => button("align-c", `改為：${displayCapabilitySummary(phi, omega)}`, `${phi}|${omega}`, `align-c-${phi}-${omega}`))).join("")}</div>`);
   }
 
   function renderConclusion() {
@@ -4061,26 +4115,26 @@ function applyBudgetGuard(state, guard) {
     const guard = budgetGuard({ checkpoint: "before_conclusion", now, startedAt, optionalSections: [{ id: "risk" }, { id: "journey" }] });
     runtime.state = applyBudgetGuard(runtime.state, guard);
     const corrections = correctionAudit(runtime.state);
-    renderShell("第 5 輪｜診斷結論", "這一頁只用 B2 的 evidence-safe 判定，不會重新計算或換掉頭條力。", `
-      <p class="verdict" data-testid="verdict">${esc(result.code)}${result.overridden_by ? `（${esc(result.overridden_by)}）` : ""}</p>
+    renderShell("第 5 輪｜診斷結論", "這是根據你剛才的回答整理出的下一步方向。", `
+      <p class="verdict" data-testid="verdict">${esc(displayVerdict(result))}</p>
       <p class="summary" data-testid="metric-reference">${esc(companyMetricQuote())}</p>
-      <p><strong>頭條力：</strong>${esc(labelForce(headline))}</p>
-      <p><strong>目前較弱的四力：</strong>${ranking.map(labelForce).map(esc).join("、")}</p>
-      <section><h3>症狀校正</h3>${availableSymptoms.length ? availableSymptoms.map((item) => `<p>${esc(item.text)} ${button("dismiss-symptom", "這句不像我", item.card_id, `symptom-${item.rank}`)}</p>`).join("") : "<p>這一力的陽春症狀卡已校正完畢。</p>"}</section>
-      <section><h3>你的改判紀錄（${corrections.count}）</h3><ul>${corrections.entries.map((entry) => `<li>${esc(entry.at)}：${esc(entry.text)}</li>`).join("") || "<li>尚未改判。</li>"}</ul></section>
-      <p class="hint">${runtime.state.budget.missing_stability_note ? "這一項我們沒問到穩定度，先以原始 φ 判讀。" : "穩定度已納入 φ 判讀。"}</p>
+      <p><strong>目前最需要處理：</strong>${esc(displayForce(headline))}</p>
+      <p><strong>接著值得留意：</strong>${ranking.map(displayForce).map(esc).join("、")}</p>
+      <section><h3>症狀校正</h3>${availableSymptoms.length ? availableSymptoms.map((item) => `<p>${esc(item.text)} ${button("dismiss-symptom", "這句不像我", item.card_id, `symptom-${item.rank}`)}</p>`).join("") : "<p>這一項的描述已全部略過。</p>"}</section>
+      <section><h3>你的調整紀錄（${corrections.count}）</h3><ul>${corrections.entries.map((entry) => `<li>${esc(displayCorrection(entry))}</li>`).join("") || "<li>目前沒有調整。</li>"}</ul></section>
+      <p class="hint">${esc(displayEvidenceNote(runtime.state))}</p>
       ${button("to-r6", "前往推薦頁", "", "to-r6")}`);
   }
 
   function renderBudget() {
-    renderShell("第 6 輪｜投入範圍", "這只影響未來推薦排序；本版先讓你完整走過選項。", `<div class="choices">${[
+    renderShell("第 6 輪｜投入範圍", "先選擇你目前可以接受的投入範圍。", `<div class="choices">${[
       ["none", "暫不投入"], ["under_10k", "低於一萬元"], ["10k_50k", "一到五萬元"], ["50k_200k", "五到二十萬元"], ["over_200k", "高於二十萬元"],
     ].map(([value, label]) => button("budget", label, value, `budget-${value}`)).join("")}</div>`);
   }
 
   function renderPastExperience(group = null) {
     if (group) {
-      renderShell("第 6 輪｜補一個原因", "選一個最接近的原因，才能走到 72 格路由的實際格子。", `<div class="choices">${PAST_DETAILS[group].map(([value, label]) => button("past", label, value, `past-${value.replace(/[:_]/g, "-")}`)).join("")}</div>`);
+      renderShell("第 6 輪｜補一個原因", "選一個最接近的原因，讓我們更了解你的經驗。", `<div class="choices">${PAST_DETAILS[group].map(([value, label]) => button("past", label, value, `past-${value.replace(/[:_]/g, "-")}`)).join("")}</div>`);
       return;
     }
     renderShell("第 6 輪｜過去經驗", "選一個最接近的選項；需要時會再問一個原因。", `<div class="choices">${PAST_MAIN.map(([value, label]) => button("past-main", label, value, `past-main-${value}`)).join("")}</div>`);
@@ -4090,12 +4144,11 @@ function applyBudgetGuard(state, guard) {
     const result = routeFor(runtime.state, content.routes, runtime.pastExperience);
     const route = result;
     const product = route.products[0];
-    renderShell("推薦頁｜流程走查完成", "這是 72 格中的一格占位路由，不代表正式產品或正式 CTA。", product ? `
-      <p data-testid="route-key"><strong>判定／經驗：</strong>${esc(result.verdict.code)}／${esc(runtime.pastExperience)}</p>
-      <h3>${esc(product.name)}</h3><p>${esc(product.one_liner)}</p><p><strong>不適合購買：</strong>${esc(product.dont_buy_if)}</p>
-      <a class="cta" href="${esc(product.cta_url)}" target="_blank" rel="noopener" data-testid="cta">前往 LINE（佔位連結，待替換）</a>` : `
-      <p data-testid="route-key"><strong>判定／經驗：</strong>${esc(result.verdict.code)}／${esc(runtime.pastExperience)}</p>
-      <p>${esc(content.copy.no_sell_reasons[route.no_sell_reason_code])}</p>`);
+    renderShell("推薦頁｜下一步", "根據你的回答，這裡是適合繼續討論的方向。", product ? `
+      <p data-testid="route-key" data-route-key="${esc(result.verdict.code)}/${esc(runtime.pastExperience)}">${esc(UI_COPY.recommendation)}</p>
+      <h3>下一步建議</h3><p>${esc(UI_COPY.nextStep)}</p>
+      <a class="cta" href="${esc(product.cta_url)}" target="_blank" rel="noopener" data-testid="cta">開始下一步</a>` : `
+      <p data-testid="route-key" data-route-key="${esc(result.verdict.code)}/${esc(runtime.pastExperience)}">${esc(UI_COPY.engaged)}</p>`);
   }
 
   function render() {
@@ -4220,10 +4273,10 @@ function applyBudgetGuard(state, guard) {
   function safely(work) {
     try { work(); render(); }
     catch (error) {
-      const text = String(error?.stack ?? error);
-      errors.push(text);
+      const detail = String(error?.stack ?? error);
+      errors.push(detail);
       console.error(error);
-      root.innerHTML = `<main class="shell"><h1>流程暫停</h1><pre data-testid="runtime-error">${esc(text)}</pre></main>`;
+      root.innerHTML = `<main class="shell"><h1>流程暫停</h1><p data-testid="runtime-error">${esc(UI_COPY.genericError)}</p></main>`;
     }
   }
 
