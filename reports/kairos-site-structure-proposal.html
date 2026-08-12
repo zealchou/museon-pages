@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>凱羅情緒盤・漫畫版網站結構提案</title>
+<style>
+:root{
+  --ivory:#F7F5F0; --cream:#EFE9DC; --paper:#FFFDF8;
+  --indigo:#181737; --gold:#B8923A; --gold-deep:#8a6a1e;
+  --ink:#27231F; --muted:#6b6459; --line:#e0d9c8;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
+  --max:920px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ivory);color:var(--ink);font-family:var(--sans);line-height:1.85;font-size:16px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+header.hero{background:linear-gradient(180deg,var(--indigo) 0%,#232150 100%);color:var(--ivory);padding:64px 0 48px}
+header.hero .kicker{font-family:var(--serif);letter-spacing:.4em;font-size:.8rem;color:var(--gold);margin-bottom:14px}
+header.hero h1{font-family:var(--serif);font-size:clamp(1.6rem,4.5vw,2.4rem);line-height:1.4;margin-bottom:14px}
+header.hero .meta{font-size:.85rem;color:rgba(247,245,240,.75)}
+main{padding:40px 0 80px}
+h2{font-family:var(--serif);font-size:1.45rem;margin:56px 0 18px;padding-bottom:10px;border-bottom:2px solid var(--gold);color:var(--indigo)}
+h3{font-family:var(--serif);font-size:1.12rem;margin:32px 0 12px;color:var(--gold-deep)}
+p{margin-bottom:14px}
+ul,ol{margin:0 0 16px 1.4em}
+li{margin-bottom:8px}
+strong{color:var(--indigo)}
+.lead{font-size:1.06rem;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);padding:18px 22px;border-radius:8px;margin-bottom:24px}
+.callout{background:var(--cream);border-radius:10px;padding:16px 20px;margin:18px 0;border:1px solid var(--line)}
+.callout.red{border-left:4px solid #a33}
+.callout.gold{border-left:4px solid var(--gold)}
+table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:.92rem;background:var(--paper);color:var(--ink)}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;color:var(--ink)}
+th{background:var(--cream);font-family:var(--serif);color:var(--indigo);white-space:nowrap}
+.tbl-scroll{overflow-x:auto;margin:0 -4px;padding:0 4px}
+.tag{display:inline-block;font-size:.72rem;padding:.1rem .55rem;border-radius:99px;border:1px solid var(--gold);color:var(--gold-deep);background:rgba(184,146,58,.08);white-space:nowrap;margin-right:4px}
+.tag.new{border-color:#7a4; color:#3f6b1e;background:rgba(120,170,70,.1)}
+.tag.keep{border-color:#579;color:#2c4a6e;background:rgba(80,120,170,.08)}
+.wire{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;margin:16px 0;font-size:.88rem}
+.wire .blk{border:1.5px dashed var(--gold);border-radius:8px;padding:10px 14px;margin:8px 0;background:rgba(184,146,58,.05)}
+.wire .blk.solid{border-style:solid;background:var(--cream)}
+.wire .blk small{color:var(--muted);display:block;margin-top:2px}
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0}
+@media(max-width:720px){.cols{grid-template-columns:1fr}}
+.cols .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:.9rem}
+.cols .card h4{font-family:var(--serif);color:var(--indigo);margin-bottom:8px;font-size:1rem}
+.arc{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}
+.arc span{font-family:var(--serif);background:var(--indigo);color:var(--ivory);border-radius:8px;padding:6px 14px;font-size:.85rem}
+.arc span.g{background:var(--gold);color:var(--indigo)}
+footer{background:var(--cream);border-top:1px solid var(--line);padding:28px 0;font-size:.82rem;color:var(--muted)}
+.small{font-size:.85rem;color:var(--muted)}
+.decision{background:var(--paper);border:2px solid var(--gold);border-radius:12px;padding:20px 24px;margin:20px 0}
+.decision h3{margin-top:0}
+.num{font-family:var(--serif);color:var(--gold-deep);font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">KAIROS ・ 結構提案</div>
+    <h1>凱羅情緒盤・漫畫版網站<br>首頁、章節與固定模板的整體設計</h1>
+    <div class="meta">2026-08-12 ｜ 給 Zeal 拍板 ｜ 依據：兩線實查研究 ＋ V3 九頁藍圖 ＋ 已驗收的漫畫 demo</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<p class="lead"><strong>一句話：整個網站做成「一部關於你的動畫的官方網站」</strong>——首頁是作品首頁，章節目錄是話數列表，每一章是一話。V3 九頁的內容全部進入新地圖（哪裡有合併、哪裡有調整，§4 逐條標明），你要求的工作、創業、愛情、配對<strong>四個議題成為三個新章</strong>（創業建議併入工作章，理由見決策 2），用既有的「個人／關係／創造」資料重新切出來，<strong>不必多算一次命</strong>。</p>
+
+<h2>〇、要拍板的七件事（先看這張，細節在後面各節）</h2>
+
+<div class="tbl-scroll"><table>
+<tr><th>#</th><th>決策</th><th>我的建議</th><th>依據</th></tr>
+<tr><td class="num">1</td><td>章節怎麼切、目錄放哪</td><td><strong>11 個單元、四部曲</strong>（序章＋9 章＋終章，見 §4）；<strong>章節目錄內嵌在首頁中段</strong>，不另開目錄頁</td><td>V3 九頁內容全進地圖（合併與調整逐條標明）＋三新章；全書走起承轉合；只有 11 個單元不值得多一層頁面</td></tr>
+<tr><td class="num">2</td><td>「創業」獨立成章嗎</td><td><strong>併入工作章</strong>，但給它一張醒目的「創業判定卡」（型態／時機／路線三問）</td><td>全部已查平台（台中韓）<strong>零家</strong>把創業獨立成章（機械證據：競品全站程式碼「創業」僅 4 次 vs「戀愛」52 次）——它永遠是事業章裡的提問</td></tr>
+<tr><td class="num">3</td><td>「適合的人」怎麼寫</td><td><strong>條件＋出沒場所＋行動指令</strong>路線（不用生肖、不用藝人比喻）</td><td>三家指名道姓路線實查比較（§7）；生肖配對沒有任何一家當主賣點</td></tr>
+<tr><td class="num">4</td><td>圖片預先生還是現生</td><td><strong>共用格全預生、客製格入庫預生</strong>——出報告時零生圖、純組裝</td><td>張數試算約 60 張一次性投資（§6）；品質可用批次驗收技能把關</td></tr>
+<tr><td class="num">5</td><td>素璃定版嗎</td><td>需要你一句話：<strong>定版成固定第二主角，或維持候選</strong></td><td>demo 的「轉」已在用她；技能裡目前標記為候選、不敢寫死</td></tr>
+<tr><td class="num">6</td><td>免費線切在哪</td><td><strong>首頁＋序章免費</strong>，第 1 章起摺疊；圖表章可加「圖形免費、分數上鎖」的鉤子</td><td>競品分界做法六型（§7）</td></tr>
+<tr><td class="num">7</td><td>要不要補「財運」章</td><td>研究發現它是市場核心六章之一（性格→<strong>錢</strong>→感情是各家最長的三塊），我們的地圖裡沒有。<strong>選項端給你</strong>：不加（維持情緒定位的純粹）或加在工作章之後</td><td>18 家章節總表；凱羅盤的資料能不能撐起財運敘事需先確認，我不預設能</td></tr>
+</table></div>
+
+<h2>一、研究了什麼（一分鐘版）</h2>
+<p>兩個研究員實查、非憑印象：<strong>命理線</strong>讀了 sajutight（直接競品）、科技紫微網、灵机（中國最大測算平台，40+ 商品）、測測等的實際頁面與章節目錄；<strong>動漫線</strong>拆了 6 個日本動畫官網的首頁區塊、Webtoon 平台的話數列表與閱讀頁（含逐張量測 4 部作品共 220 張切片圖的實際尺寸）、4 款視覺小說的章節選單，並掃了 GitHub 18 組關鍵字確認<strong>沒有現成模板可抄</strong>（版型得自己蓋——好消息是 demo 那版已經蓋好了）。</p>
+
+<h2>二、改變設計方向的發現</h2>
+
+<div class="callout gold"><strong>最大的一個：sajutight（直接競品）的 teaser 頁，本身就是一條「黑底、道士立繪、對話泡泡」的縱捲漫畫敘事。</strong>換句話說——<strong>市場已經驗證了「用漫畫講命理」這條路，但他們只拿它當賣藥的攤子</strong>：研究員把它的程式碼逐字拆開，發現 teaser 裡最「準」的那幾句（2028 年大翻轉、2027 年 8 月 16 日、在讀書會相遇）全是<strong>寫死的字串</strong>，「陳** 在 X 分鐘前購買」是亂數現編的，倒數計時永遠倒數到今晚。他們的漫畫只到收錢為止，付費後的報告回到傳統長文。<br><br><strong>我們的位置因此非常清楚：把漫畫做到付費牆之後</strong>——整份報告都是這部作品，而且每一句都是真的算出來的。「不編造」本身就是對比出來的賣點。</div>
+
+<div class="cols">
+  <div class="card"><h4>① 尺度要對標動畫官網，不是條漫</h4>真實條漫一話是 <strong>24～70 屏</strong>的長度——命理報告一章的字量撐不起、也不該撐。<strong>所以不採條漫尺度</strong>，改對標日本動畫官網的「單話頁」（一張主視覺＋幾段文＋下一話，約幾屏）。我們的 demo 一章約 5～6 屏，符合的是後者。</div>
+  <div class="card"><h4>② 四個新章＝舊資料換新問法</h4>V3 的資料本來就切成<strong>個人／關係／創造</strong>三條線（程式裡三個詞各命中 79／46／38 處）。愛情與配對＝「關係」線換成人生場景問法；工作與創業＝「創造」線換問法。<strong>是重新敘事，不是重新計算。</strong></div>
+  <div class="card"><h4>③ 角色頁有現成的業界慣例</h4>動畫官網的人物頁 5/5 家都用同一招：<strong>小頭像橫列＋點選看大立繪與介紹</strong>。這一格正好放凱羅、素璃、你的神獸——身分是「本作登場角色」，讀者一看就懂。</div>
+</div>
+
+<h2>三、網站三層結構</h2>
+
+<p>照動畫官網＋條漫平台的共同骨架：<strong>作品首頁 → 話數列表 → 單話閱讀頁</strong>。三層都有業界驗證過的區塊順序，不必發明。</p>
+
+<h3>第一層：首頁（＝這部作品的官網）</h3>
+<div class="wire">
+  <div class="blk solid"><strong>滿版主視覺 KV</strong>：你的神獸＋星穹場景（預生庫 8 張選 1）＋姓名標題疊字<small>動畫官網 5/5 家首頁第一屏都是滿版 KV</small></div>
+  <div class="blk"><strong>開場 400 字</strong>：擺渡人視角的結論（「朋友讀了會說：對，就是他」），情緒迴圈這個特色要寫在裡面<small>V3 首頁規格原樣保留（含情緒迴圈入首頁）；這段就是 INTRODUCTION</small></div>
+  <div class="blk"><strong>章節目錄</strong>：11 個單元的卡片格線（桌機 3 欄／手機 2 欄），每卡＝縮圖＋章名＋一行鉤子＋已讀標記<small>條漫話數列表＋動畫官網 STORY 頁的混合；未讀的第 1 章起顯示鎖</small></div>
+  <div class="blk"><strong>登場角色</strong>：凱羅／素璃／你的神獸——小頭像列＋大立繪切換<small>動畫官網 CHARACTER 頁慣例（5/5）；神獸那格顯示「你的」</small></div>
+  <div class="blk"><strong>凱羅盤扇形圖＋九大系統對照</strong>：每系統<strong>先列重要數據、再寫一段白話</strong>；分「九系統都同意」與「九系統拉扯」兩區<small>V3 首頁規格原樣保留（含「先數據後白話」的順序），給想看數據的人</small></div>
+  <div class="blk"><strong>分享鈕＋頁尾</strong><small>V3 已定案的兩張分享圖做法不變</small></div>
+</div>
+
+<h3>第二層：章節目錄（首頁內嵌，不另開頁）</h3>
+<p>報告只有 11 個單元，不需要獨立目錄頁——目錄就住在首頁中段。每張卡片帶<strong>已讀勾號</strong>與<strong>閱讀進度</strong>（條漫平台一話要 4 個狀態欄位：讀過沒、上次讀到哪、鎖、倒數——我們取前兩個＋鎖）。</p>
+
+<h3>第三層：單章閱讀頁（＝一話）</h3>
+<div class="wire">
+  <div class="blk solid"><strong>頁首</strong>：章數＋章名＋<strong>這個人的 192 型定位圖</strong>＋細進度條<small>定位圖是 V3 正本明定的「每頁頁首」元素，原樣保留；進度條用全瀏覽器都支援的保守做法</small></div>
+  <div class="blk"><strong>回收上一章的「合」</strong>：一格小圖或一句話，接住上一章的尾巴<small>連載四格漫的手法：上一話的結尾＝這一話的開頭，讀起來才是「一部作品」</small></div>
+  <div class="blk"><strong>本章主體</strong>：三種固定模板之一（§5）</div>
+  <div class="blk"><strong>本章結語＋引信</strong>：一句話埋下一章的鉤子</div>
+  <div class="blk solid"><strong>下一章 CTA</strong>：大按鈕「第 N 章 ・ 章名 →」<small>條漫頁尾慣例：更新提示＋下一話；我們簡化為單一大按鈕</small></div>
+</div>
+
+<h2>四、章節地圖（V3 九頁 → 11 單元四部曲）</h2>
+
+<p>整個網站是一個大的起承轉合；你要求新增的四章，正好全部落在「轉」——<strong>前半認識自己，後半把自己帶進人生現場</strong>，這就是「看漫畫但看的是自己的人生」的骨架。</p>
+
+<div class="arc"><span>起：相遇</span><span>承：內外之境</span><span class="g">轉：人生現場（四新章在這）</span><span>合：往前走</span></div>
+
+<div class="tbl-scroll"><table>
+<tr><th>單元</th><th>章名（暫定）</th><th>內容</th><th>資料來源</th><th>模板</th><th>狀態</th></tr>
+<tr><td class="num">序章</td><td>相遇</td><td>星穹觀測所、命盤三座標（現在 demo 的那一章）</td><td>命盤主結構</td><td>A 漫畫</td><td><span class="tag keep">已做出</span></td></tr>
+<tr><td class="num">1</td><td>你的原型</td><td>192 型：最外顯／最內隱／第三態</td><td>V3 頁一</td><td>A 漫畫</td><td><span class="tag keep">V3 保留</span></td></tr>
+<tr><td class="num">2</td><td>你的節奏</td><td>情緒迴圈＋過強過弱＋日常操練</td><td>V3 頁五＋六合併</td><td>B 圖表</td><td><span class="tag keep">V3 保留</span></td></tr>
+<tr><td class="num">3</td><td>外面的風</td><td>外境八方位＋對個人／關係／創造的影響</td><td>V3 頁二</td><td>B 圖表</td><td><span class="tag keep">V3 保留</span></td></tr>
+<tr><td class="num">4</td><td>裡面的海</td><td>內境八方位，同結構</td><td>V3 頁三</td><td>B 圖表</td><td><span class="tag keep">V3 保留</span></td></tr>
+<tr><td class="num">5</td><td>你的十二種能力</td><td>12 大 44 小功能，強 3 弱 3</td><td>V3 頁四</td><td>B 圖表</td><td><span class="tag keep">V3 保留</span></td></tr>
+<tr><td class="num">6</td><td>工作與事業</td><td>事業特質→合拍的環境→受不了的環境→未來時機；<strong>含「創業判定卡」分節，三格照市場驗證過的三問</strong>：①型態（深耕／跳點／自立門戶，你是哪型）②時機（<strong>接下來六個月</strong>是不是動的時候——資料的誠實範圍就是六個月，見下方紅框）③路線（留任・轉職・創業，哪條更合你的結構）</td><td>「創造」線＋44 功能強弱＋六個月軌跡</td><td>A＋B 混合</td><td><span class="tag new">新增</span></td></tr>
+<tr><td class="num">7</td><td>愛情</td><td>你在關係裡的樣子：需要什麼、給得出什麼、地雷在哪</td><td>「關係」線＋情緒迴圈</td><td>A 漫畫</td><td><span class="tag new">新增</span></td></tr>
+<tr><td class="num">8</td><td>適合的人</td><td>一張「緣分檔案卡」四欄（<strong>氣質・相處樣貌・會在哪類場合遇到・第一步行動</strong>）＋為什麼是這種人的互補解釋（單邊描寫，不是合婚）</td><td>「關係」線＋強弱互補推導</td><td>A 漫畫</td><td><span class="tag new">新增</span></td></tr>
+<tr><td class="num">9</td><td>接下來六個月</td><td>當下星空與命定軌跡的落差→<strong>回到凱羅九宮對照</strong>→往哪走（V3 頁七的三段結構原樣）</td><td>V3 頁七</td><td>B 圖表</td><td><span class="tag keep">V3 保留</span></td></tr>
+<tr><td class="num">終章</td><td>擺渡人的信</td><td>凱羅寫給你的一封信</td><td>V3 頁八</td><td>C 信件</td><td><span class="tag keep">V3 保留</span></td></tr>
+</table></div>
+
+<div class="callout red"><strong>🔴 誠實邊界（三條，寫在你拍板之前）：</strong>
+<ul style="margin-bottom:0">
+<li><strong>第 8 章是單邊描寫</strong>：「你適合怎樣的人」。真正的雙人合婚（兩張盤對算）目前沒有引擎，屬於未來商品，不在這一版。</li>
+<li><strong>創業判定卡的資料是「推導」不是「專算」</strong>：從創造線與時機資料推出來的判讀，不是另外算一套創業命盤——文案上不得吹成後者。</li>
+<li><strong>時機類承諾一律只到六個月</strong>：V3 的軌跡資料就是「接下來六個月」。競品敢寫「哪幾年可動、創業黃金期在幾歲」，我們目前的引擎撐不起多年版——第一版全站不出現「幾年後」「幾歲時」這種承諾；要做多年版是另一個引擎、另一次拍板。</li>
+<li><strong>第 1 章依賴的 192 型校準（V3 藍圖標記的老問題）還在</strong>，那一章的深度受它牽制。</li>
+</ul></div>
+
+<h2>五、固定漫畫模板（三種，蓋一次用到底）</h2>
+
+<div class="cols">
+  <div class="card"><h4>模板 A：漫畫敘事頁</h4>就是 demo 那套<strong>四拍</strong>（起承轉合各一格，滿版圖＋文字疊在圖上、對白框是網頁文字不烤進圖裡）。適合有「劇情」的章：序章、原型、工作、愛情、適合的人。<br><span class="small">每章 4 格＋可選 1 張章頭圖</span></div>
+  <div class="card"><h4>模板 B：圖表解讀頁</h4>上半是圖表（八方位、雷達、迴圈圖），<strong>凱羅以邊欄小立繪＋對白框在旁邊講解</strong>——鐵則：命盤和解讀必須同屏，不准讓讀者捲三屏去找解釋。適合：節奏、外境、內境、能力、六個月。<br><span class="small">每章 1～2 格凱羅小圖（從共用庫選，不用新畫）</span></div>
+  <div class="card"><h4>模板 C：信件頁</h4>終章專用：一張收尾圖＋一封直排感的信，沒有格子。凱羅在信末第一次也是唯一一次「交還決定權」（雙掌向上那格）。<br><span class="small">1 格</span></div>
+</div>
+
+<p>三種模板都吃同一套版心（內容欄寬固定、手機景格不裁人格可裁、亮色系疊字），已在 demo 驗證過。<strong>之後出每一份報告＝填字＋從圖庫抓圖，不再動版型。</strong></p>
+
+<h2>六、圖片策略與張數試算</h2>
+
+<p><strong>建議：全部預先生好入庫，出報告時零生圖。</strong>理由：品質可以用批次驗收技能一批一批把關（角色漂移直接退件重畫），出報告變成純組裝、又快又穩；客人之間的差異由文字與數據承擔，不靠圖。</p>
+
+<div class="tbl-scroll"><table>
+<tr><th>圖庫</th><th>內容</th><th>張數</th><th>性質</th></tr>
+<tr><td>共用場景庫</td><td>各章的「起」場景（觀測所、星圖、海、風徑…）</td><td>約 12</td><td>畫一次全員共用</td></tr>
+<tr><td>凱羅表情庫</td><td>十種情緒 ×（半身／特寫）——表情技能的十列表直接生</td><td>約 20</td><td>畫一次全員共用</td></tr>
+<tr><td>神獸客製庫</td><td>8 神獸 × 3 格（首頁 KV／第 8 章相遇格／終章同行格）</td><td>24</td><td>畫一次、按客人的神獸抓</td></tr>
+<tr><td>素璃庫（若定版）</td><td>引路、旁觀、回眸等固定動作</td><td>約 6</td><td>畫一次全員共用</td></tr>
+<tr><th>合計</th><td colspan="3"><strong>約 60 張一次性投資</strong>；之後每份報告 0 張新圖。想升級成「客人本人入畫」再開第二期。</td></tr>
+</table></div>
+
+<p class="small">產線就是這次蓋好的三支技能：分鏡技能出每格需求 → 表情技能組指令（帶定裝照錨定）→ 批次驗收技能判收退。</p>
+
+<h2>七、免費／付費分界（競品實查的三招）</h2>
+
+<ul>
+<li><strong>切線：首頁＋序章免費。</strong>首頁本身就是最強的 teaser——你的神獸 KV、400 字結論、九系統對照都看得到；序章給完整的漫畫體驗。第 1 章起上鎖。</li>
+<li><strong>鎖的形式用「中段摺疊」</strong>：章節卡片點得進去、看得到章頭圖與第一段，往下是「繼續閱讀完整報告」——中國最大測算平台的做法，付費前先讓人嚐到這一章跟我有關。</li>
+<li><strong>兩個便宜又有效的信任小件</strong>：①報告自標「本報告 N 字，預計閱讀 M 分鐘」（全部已查平台只有一家做，罕見且顯得有底氣）②配對／判定類內容用「分數＋等第＋類型名」三層呈現（例：87 分 → 優 → 並肩同行型），比單獨一個分數耐看。</li>
+</ul>
+
+<h3>直接競品 sajutight 的 teaser 逐段拆解（程式碼級實查）</h3>
+
+<p>它的免費頁是一條 17 段的縱捲敘事，順序值得整段記下來：</p>
+<div class="wire">
+  <div class="blk">①角色登場（道士立繪＋「有意思」）→ ②<strong>真的算出你的四柱並展示</strong>（免費給圖，圖就是信任）→ ③命中痛點（「你就是為這件事來的吧」）→ ④<strong>第一段真個人化短文</strong></div>
+  <div class="blk">⑤把痛點歸因到命格 → ⑥大運鉤子＋<strong>第二段真個人化短文</strong> → ⑦財運挑逗 → ⑧戀愛挑逗（給了一個精確到日的「相遇日期」）→ ⑨「供金準備好了嗎？」</div>
+  <div class="blk">⑩付費牆清單（8 條）→ ⑪價格（原價→折扣）→ ⑫貶低競品（「只看一年的膚淺命理」）→ ⑬<strong>份量宣稱</strong>（五萬字≈一本百頁書、要讀 2 小時）→ ⑭四章目錄卡（每張：章名＋挑釁副標＋4 條預覽）→ ⑮權威自述 → ⑯真實評價 → ⑰固定底部購買鈕</div>
+</div>
+
+<p><strong>學它的（四件）：</strong></p>
+<ul>
+<li><strong>免費命盤圖是最強的第一步</strong>——18 家裡幾乎每家都免費送那張圖，圖本身就是廣告。</li>
+<li><strong>份量要自己講出來</strong>：字數、頁數、閱讀時間，講了就顯得有底氣（它講五萬字、韓國同行講「200 頁以上」）。</li>
+<li><strong>章節卡的「兩層命名」</strong>：一個章名＋一句挑釁或共感的副標＋幾條預覽——我們的章節目錄卡直接套。</li>
+<li><strong>「鎖分數不鎖圖形」</strong>：它的職涯報告免費頁給完整雷達圖的形狀、把分數打上馬賽克——這招用在我們的凱羅盤與八方位圖上剛剛好。</li>
+</ul>
+<p><strong>不學的（三件，全是它被抓到造假的地方）：</strong>寫死的「精準日期」、亂數現編的「某某剛剛購買」、永遠倒數到今晚的假倒數。我們每一句都是真的算出來的，這是定位差異，不只是道德潔癖。</p>
+
+<h3>「適合的人」三條市場路線（決策 3 的依據）</h3>
+<div class="tbl-scroll"><table>
+<tr><th>路線</th><th>誰在用</th><th>做法</th><th>評估</th></tr>
+<tr><td>真實藝人當理想型</td><td>sajutight（最貴商品，原價 NT$4,600）</td><td>指定氣質群組＋列真人明星名字＋相遇地點（連同性戀版都有一整套）</td><td>最搶眼，但把別人的臉借來賣、與凱羅的世界觀不合</td></tr>
+<tr><td>直接給名字</td><td>科技紫微網（姓名神算）</td><td>「他的名字是ＯＯ」</td><td>最極端，可信度風險最高</td></tr>
+<tr><td><strong>條件＋場所＋行動指令</strong></td><td>灵机（真命情人）</td><td>描述對象的具體條件＋會在哪類場合出現＋要你採取的第一步（用戶證言：「照著常去圖書館，上週真的遇到了」）</td><td><strong>建議採用</strong>：給的是可行動的畫像，不造假、不借臉，且天然長成「緣分檔案卡」四欄</td></tr>
+</table></div>
+<p class="small">補一條反向證據：所有已查平台裡，「你適合屬 XX／某某類型人」這種類型標籤配對，<strong>0 家</strong>拿來當主賣點。</p>
+
+<h2>八、這份提案怎麼做的（方法與邊界）</h2>
+<ul>
+<li>命理線與動漫線各一名研究員實查（讀真實頁面、量真實圖檔、附網址與命中數），主控整合；章節地圖是我把研究對照 V3 藍圖後的設計判斷。</li>
+<li>V3 九頁規格是你逐條拍板過的，本提案不動它的資料流；<strong>有動到的三處全部標明</strong>：①頁五＋頁六合併成第 2 章 ②每頁頁首的 192 定位圖、首頁「先數據後白話」、頁七「回九宮對照」三個細部元素曾在初稿被壓縮，審計抓到後已逐一放回 ③新章的時機承諾統一收斂到六個月。除此之外若施工時發現任何 V3 元素放不進新版面，會回來問你，不默默刪。</li>
+<li>命理線最終涵蓋 18+ 個產品（韓台中＋西方性格測驗＋人類圖＋占星 App），競品 teaser 是程式碼級拆解；查無的項目（少數平台的付費目錄鎖在登入牆後）研究員已逐項列明原因，不影響本提案的結論。</li>
+<li>市場還有三個可日後取用的節奏技法，先記著不塞進第一版：<strong>重輕章交替</strong>（深章淺章輪流，配「每天讀 15 分鐘」的說法）、<strong>同一落點換語彙重講</strong>（同個結論在工作／愛情兩章用不同措辭出現，讀者覺得越讀越深而不覺重複——這正好合我們「同一資料換場景重切」的做法）、<strong>長報告裡放個人精讀頁</strong>（幾頁精華解決「長報告沒人讀完」）。</li>
+</ul>
+
+</main>
+
+<footer><div class="wrap">凱羅情緒盤・漫畫版網站結構提案 ｜ 2026-08-12 ｜ 七個決策點等 Zeal 拍板後開工</div></footer>
+
+</body>
+</html>
