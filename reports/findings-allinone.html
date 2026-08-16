@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AI 聲音克隆、繁體中文講稿與投影片自動對時講課影片的開源方案研究。" />
+  <title>投影片＋聲音克隆一站式方案深查與自建評估</title>
+    <style>
+      :root { color-scheme: light; --ink:#18232e; --muted:#5d6a76; --paper:#fffdf8; --line:#dfe5e8; --accent:#0c6b72; --soft:#e7f4f3; }
+      html { background:#eef2f3; }
+      body { max-width: 920px; margin: 0 auto; padding: 52px 28px 72px; background:var(--paper); color:var(--ink); font: 18px/1.82 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; }
+      h1,h2,h3 { line-height:1.35; color:#102d36; }
+      h1 { font-size:2.18rem; margin:0 0 .25rem; letter-spacing:.01em; }
+      h2 { font-size:1.48rem; margin:3rem 0 1rem; padding-top:1rem; border-top:2px solid var(--line); }
+      h3 { font-size:1.17rem; margin:2rem 0 .55rem; }
+      p, li { overflow-wrap:anywhere; }
+      ul,ol { padding-left:1.45em; }
+      li + li { margin-top:.42rem; }
+      a { color:var(--accent); text-decoration-thickness:1px; text-underline-offset:3px; }
+      strong { color:#0a5157; }
+      blockquote { margin:1.4rem 0; padding:.7rem 1rem; border-left:4px solid var(--accent); background:var(--soft); color:#29434a; }
+      hr { border:0; border-top:1px solid var(--line); margin:2.5rem 0; }
+      code { font-size:.9em; background:#eef3f4; padding:.08em .28em; border-radius:3px; }
+      @media (max-width:620px) { body { padding:30px 18px 48px; font-size:16px; } h1 { font-size:1.78rem; } h2 { font-size:1.32rem; } }
+      @media print { html,body { background:#fff; } body { max-width:none; padding:0; } a { color:inherit; } }
+    </style>
+    <style>
+      table { width:100%; border-collapse:collapse; margin:1.35rem 0 2rem; font-size:.88em; }
+      th, td { padding:.7rem .75rem; border:1px solid var(--line); vertical-align:top; text-align:left; }
+      th { background:var(--soft); color:#173f46; }
+      @media (max-width:620px) {
+        table { display:block; overflow-x:auto; white-space:normal; font-size:.82em; }
+        th, td { min-width:150px; padding:.55rem; }
+      }
+    </style>
+  </head>
+<body>
+<h1
+id="投影片逐字稿聲音克隆一站式方案深查與自建評估">投影片＋逐字稿＋聲音克隆：一站式方案深查與自建評估</h1>
+<p>研究日期：2026-08-16。本文接續 <code>findings.md</code> 與
+<code>findings_voice_clone.md</code>，不重複把其中已查過的工具當成新發現；新增查核重點是中文圈數位人專案、2025
+下半年至 2026 年仍有活動的候選，以及商業
+SaaS。這裡的「自己的聲音克隆」一律指取得聲音本人同意後的使用。</p>
+<h2 id="任務一更廣的一站式方案搜尋結果">1.
+任務一：更廣的一站式方案搜尋結果</h2>
+<h3 id="判定標準什麼才算真的符合">1.1 判定標準：什麼才算真的符合</h3>
+<p>本題很容易把三個各自存在的功能誤判成一套產品。因此以下採嚴格的三關：</p>
+<ol type="1">
+<li>能將 PPT/PDF
+的每張投影片和該頁講稿建立對應，或至少能可靠地逐頁匯入成場景。</li>
+<li>能把每段講稿用「使用者自己的克隆聲音」念出來，並依實際語音長度讓該頁停留，再輸出影片。</li>
+<li>若宣稱「本機／自架」，公開的安裝與程式碼必須能看出聲音克隆在本機可重現；只有「可填
+voice ID」或「可呼叫雲端 API」不算本機克隆。</li>
+</ol>
+<p>「有數位人」不是必要條件；它是額外畫面層。若只想要投影片加旁白，反而應避免為數位人承擔更多
+GPU、算圖與畫面品質風險。</p>
+<h3 id="搜尋範圍與查證方法">1.2 搜尋範圍與查證方法</h3>
+<p>本輪在 2026-08-16 進行繁中／簡中／英文交叉搜尋，涵蓋 GitHub
+搜尋與一般網頁搜尋，使用的核心查詢包括：<code>PPT 数字人 声音克隆 开源</code>、<code>PPT voice cloning avatar GitHub 2025/2026</code>、<code>Linly-Talker PPT</code>、<code>EchoMimic PPT</code>、<code>duix PPT 声音克隆</code>、<code>PPT/PDF to video voice clone</code>。</p>
+<p>對列入表格的開源候選，實際以 GitHub REST API 核對 repo 存在、非
+archived、預設分支與最近推送日期，並讀取其官方
+README、檔案樹與相關設計文件；特別搜尋
+<code>PPT</code>、<code>voice clone</code>、<code>render</code>、<code>video</code>。例如
+Easegen 的前後端 repo 於查核日仍可讀，最近推送分別為 2025-12-22 與
+2025-11-20。對 SaaS，只採其官方 Help
+Center／產品文件，而非導流文章。</p>
+<p>這是「文件與原始碼存在／能力聲明」的查證，不是把每一套系統安裝後的實機驗收；未經實跑的品質、中文腔調、價格與地區可用性一律不保證。</p>
+<h3 id="新發現的開源候選最接近但沒有一個被查證為完整本機一站式解">1.3
+新發現的開源候選：最接近，但沒有一個被查證為完整本機一站式解</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>候選與官方連結</th>
+<th>本次實際查到的能力</th>
+<th>對三關的結論</th>
+<th>為何不把它說成完整答案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/taoofagi/easegen-front">Easegen 前端</a>
+＋ <a href="https://github.com/taoofagi/easegen-admin">後端</a></td>
+<td>官方 README 寫明 3D 課程可上傳／解析 PPT、結合數位人、聲音、PPT
+投影片並產出課程影片；後端 README 另列 PPT Mode「自動解析 PPT
+生成課程影片」。其 <a
+href="https://github.com/taoofagi/easegen-front/blob/main/docs/PPT文件上传格式规范.md">PPT
+上傳規範</a> 明說只有 PPT 備註文字被辨識為講稿。repo 內的 <a
+href="https://github.com/taoofagi/easegen-front/blob/main/easegen-3d-lecture-system/docs/PPT讲解系统实现方案-v2.md">PPT
+講解設計</a> 則具體描述「取得下一段文字與投影片圖 → Fay TTS → 顯示該頁 →
+Xmov 數位人說話」的同步流程。</td>
+<td>投影片／講稿／數位人講解：<strong>有明確證據</strong>。本機可替換聲音克隆：<strong>未查證成立</strong>。</td>
+<td>這是本輪最值得試看的開源候選，但不是可直接交給非工程師安裝的單一桌面工具。README
+自己標示 2D 合成曾「維護中」；3D 文件依賴 Easegen API、Fay、Xmov
+SDK、WebSocket 與 OBS，PPT
+規範還指向外部服務文件。公開程式與文件沒有提供「把 Qwen3-TTS／GPT-SoVITS
+在本機訓練或克隆後，接入此 PPT
+流程」的可重現步驟。因此只能列為<strong>大型整合骨架／二次開發起點</strong>，不能宣稱符合本題的全本機一鍵方案。</td>
+</tr>
+<tr>
+<td><a
+href="https://github.com/duixcom/Duix-Avatar">Duix.Avatar</a></td>
+<td>官方 README 宣稱 Windows 可全離線運作，可用約 10
+秒素材建立形象與聲音克隆，以文字或音訊驅動數位人並產生影片；文件亦公開本機
+Docker API，聲音合成端點可接文字與 speaker UUID。</td>
+<td>本機聲音克隆＋數位人影片：<strong>有明確聲明</strong>。PPT
+匯入、逐頁講稿、按音長換頁：<strong>沒有找到</strong>。</td>
+<td>它是「數位人／克隆聲音」的一端，不是講課投影片編排器。README 和 API
+章節沒有 PPT、PowerPoint、slide
+或每頁時間線功能；若採用，仍要外加本報告第 2 節的投影片合成器。其 repo
+授權欄位是 <code>NOASSERTION</code>，另有模型社群授權
+PDF，商用前也需逐項讀授權。</td>
+</tr>
+<tr>
+<td><a
+href="https://github.com/Kedreamix/Linly-Talker">Linly-Talker</a></td>
+<td>官方 README 可核對到 GPT-SoVITS／CosyVoice 等克隆聲音選項、Gradio
+WebUI、圖片／影像數位人、字幕與音訊驅動的影片輸出。</td>
+<td>本機數位人＋聲音克隆：<strong>大致具備</strong>。PPT／投影片逐頁編排：<strong>沒有找到</strong>。</td>
+<td>產品目標是互動式數位人對話；README 與檔案說明沒有 PPT
+讀取、投影片和講稿配對、依音檔長度轉頁或投影片影片合成。因此只能作為可選的「講者小窗」元件，不能取代一站式講課工具。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/antgroup/echomimic">EchoMimic</a></td>
+<td>官方 repo
+是照片＋既有音訊驅動的人像動畫研究實作；可輸入圖片與音訊輸出說話影像，需
+CUDA／模型權重。</td>
+<td>數位人動畫：<strong>有</strong>。本機
+TTS／聲音克隆：<strong>無</strong>；PPT 流程：<strong>無</strong>。</td>
+<td>它不能由逐字稿生成自己的克隆聲音，也不讀投影片。要先在外部 TTS
+合成音訊，再把數位人影片與投影片在另一個工具合成；屬於零件而非候選產品。</td>
+</tr>
+<tr>
+<td><a
+href="https://github.com/YUANZHUO-BNU/metahuman_overview">metahuman_overview
+的「數字人學術匯報」示範</a></td>
+<td>README 確實展示「真人照片＋約 10 秒聲音＋原始
+PPT」的學術匯報成品，並把流程拆為逐頁產生講稿、以 CosyVoice／HeyGen
+克隆聲音、照片驅動數位人、最後再與 PPT 後製合成。</td>
+<td>概念驗證／工作配方：<strong>有</strong>。可直接部署的一站式
+repo：<strong>沒有</strong>。</td>
+<td>這是技術整理與示範流程，不是已封裝的安裝程式；作者也清楚把聲音克隆、數位人、後期合成分開處理。它反而佐證了本題缺的正是「最後把各模組固定串好」的一層。</td>
+</tr>
+</tbody>
+</table>
+<p>也檢查了 duix.ai／Duix-Mobile 的開源脈絡：目前公開 repo
+是邊緣端／行動數位人引擎，不是 PPT
+講課影片工作流，故不列為符合候選。搜尋結果中不少「PPT
+一鍵數位人課程」文章只連到 Easegen
+的前後端，或只展示商業平台，沒有新增可驗證的本機整合
+repo；這些未獨立列入以免重複計數。</p>
+<h3 id="商業-saas有兩個已由官方文件確認的雲端一站式選項">1.4 商業
+SaaS：有兩個已由官方文件確認的雲端一站式選項</h3>
+<p>若接受聲音樣本與渲染在供應商雲端進行，答案不再是「沒有」。下列兩項已由官方文件將
+PPT、逐頁腳本、個人克隆聲音和影片輸出串在同一產品流程中；它們都<strong>不是開源、不是本機／自架</strong>。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>服務</th>
+<th>官方查證與實際流程</th>
+<th>結論與注意事項</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="https://help.heygen.com/en/articles/13007313-ppt-pdf-to-video">HeyGen
+PPT/PDF to Video</a> ＋ <a
+href="https://help.heygen.com/en/articles/9834925-how-to-get-started-with-voices">Voice
+功能說明</a></td>
+<td>官方文件說可上傳 PPT/PDF，逐張成為可編輯場景；每個 Script Segment
+直接連到對應投影片，可修改講稿、停頓與旁白，再輸出 MP4。Voice
+文件明說可在 AI Studio 建立 Personal Voice Clone；Digital Twin FAQ
+也明說其 Video Avatar 帶 voice-cloning 功能。</td>
+<td><strong>符合「商業雲端一站式」</strong>：選自己的克隆聲音、每頁輸入／修改講稿、頁面作為場景輸出影片。它不是不經檢查的全自動：需要逐頁檢查講稿與聲音，且一次最多
+50
+張投影片、解析度／去浮水印／額度取決於方案。適合最不想寫程式、也想要數位人小窗的人。</td>
+</tr>
+<tr>
+<td><a
+href="https://help.deepbrain.io/en/articles/10348519-how-do-i-import-powerpoint-ppt-files-into-ai-studios">DeepBrain
+AI Studios：匯入 PPT</a> ＋ <a
+href="https://help.deepbrain.io/en/articles/9406565-how-do-i-create-a-voice-clone">建立
+Voice Clone</a></td>
+<td>官方 Help Center 指出匯入 PowerPoint 後每張變成一個
+scene，可自行加講稿／旁白；Docs-to-Video 也可由 PPT
+產生草稿、講稿、avatar 與旁白。其 Voice Clone 指引要求錄製 10–30
+秒樣本，生成後會出現在所有影片專案的 AI Voice 選單；官方 Docs-to-Video
+說明寫有 PPT/PPTX 至 MP4 的路徑。</td>
+<td><strong>符合「商業雲端一站式」</strong>：將自己的 clone 選為每個
+scene 的旁白，即可依場景輸出影片。原始 PPT
+的「手動匯入」不會神奇地替每頁生逐字稿，這其實是好事：可貼入既有講稿、避免
+AI 改寫教學內容。供應商文件提到其聲音克隆採 ElevenLabs
+技術，且非英語口音保留可能有限；繁中實際效果應先做短片。</td>
+</tr>
+</tbody>
+</table>
+<p>有些其他商業服務的行銷頁同時出現「PPT to Video」與「voice
+clone」字樣，例如
+Pictory；但本輪沒有找到足以直接證明「使用者克隆音可在其 PPT
+匯入的逐頁流程中使用」的官方步驟，所以<strong>不把它列為已確認符合</strong>。這比為了湊名單把相鄰能力拼成結論更可靠。</p>
+<h3 id="任務一明確結論">1.5 任務一明確結論</h3>
+<ul>
+<li><strong>嚴格的全本機／自架答案：仍未找到完整、成熟、非工程師點一點即可用的單一開源專案。</strong>本輪擴查新增的
+Easegen 最接近「PPT
+課程＋數位人」外殼，但其公開整合不是可驗證的本機開源聲音克隆＋PPT
+匯出成品；Duix.Avatar／Linly-Talker／EchoMimic 都只覆蓋其中一段。</li>
+<li><strong>雲端商業答案：找到了。</strong>HeyGen 與 DeepBrain AI
+Studios 已有可查證的 PPT 場景、講稿、個人聲音克隆、數位人與 MP4
+輸出工作流。若可接受帳號、用量費用與聲音素材上傳，先以 3–5
+張含繁中專有名詞的投影片做付費前試片，比自建更快。</li>
+<li><strong>若資料不得離開本機或要使用
+Qwen3-TTS：需要一次性自建整合。</strong>好消息是這不是要重做語音模型或影片編碼器，而是把成熟元件用固定規則接成一個小工具。</li>
+</ul>
+<h2 id="任務二自建自用版本評估">2. 任務二：自建自用版本評估</h2>
+<h3 id="最適合的定位">2.1 最適合的定位</h3>
+<p>目標不該是做一個通用 SaaS
+或自研數位人平台，而是做「固定輸入格式、一次按鈕輸出一支旁白投影片
+MP4」的小工具。第一版先不含數位人、不保留 PowerPoint
+動畫、不追求逐字字幕；這樣最容易反覆使用，也最符合真正需求的主幹。</p>
+<p>建議把「投影片」與「每頁講稿」視為兩份已對齊的資料，而不是讓程式猜哪句該換頁。人工分頁是這個工具最值得保留的人為關卡：講者知道在哪裡需要停頓、何時應換下一個概念，模型從版面文字猜切點通常不可靠。</p>
+<h3 id="模組可直接重用的工具程式量與風險">2.2
+模組、可直接重用的工具、程式量與風險</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>模組</th>
+<th>優先直接用的現成工具</th>
+<th>需自行寫的部分量級</th>
+<th>真正的難點／邊界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. PPTX/PDF 轉每頁圖片</td>
+<td>已安裝的 PowerPoint 或 LibreOffice 的無介面匯出；PDF 可用 Poppler 的
+<code>pdftoppm</code>，或先由 PowerPoint 匯出 PDF。</td>
+<td>約 20–50
+行的流程包裝與檔名／頁數檢查；不需要寫投影片渲染演算法。</td>
+<td>靜態圖片能穩定做影片；轉檔後<strong>不保證</strong>完整保留動畫、嵌入影片、特殊字型與切換效果。若這些是課程重點，應改用
+PowerPoint 原生錄製／匯出或另做專案。</td>
+</tr>
+<tr>
+<td>2. 逐字稿按投影片分段</td>
+<td>最穩定的「函式庫」是人工：每張一個 UTF-8
+純文字檔，檔名和頁碼相同；可用簡單驗證檢查頁數一一對上。</td>
+<td>約 20–40 行檢查與讀檔；不必寫 NLP 切段器。</td>
+<td>這不是可安全全自動化的工作。PPT
+備註若原本就是逐頁講稿，可直接轉出；否則需人工先決定頁界。長段要再按句子切成
+TTS 片段，否則遇到失敗很難只重跑一小段。</td>
+</tr>
+<tr>
+<td>3. 本機聲音克隆與逐段合成</td>
+<td><a href="https://github.com/QwenLM/Qwen3-TTS">Qwen3-TTS 官方
+repo</a> 已提供 Python <code>generate_voice_clone</code>、可重用的
+<code>create_voice_clone_prompt</code>，也明載批次輸入；不必自行訓練聲音模型。</td>
+<td>約 80–150
+行的呼叫、音檔命名、失敗重跑與日誌。第一版先由技術人員把模型環境裝好。</td>
+<td>Qwen3-TTS 的標準克隆需參考音檔與其正確逐字稿；可重用 prompt
+可避免每頁重算特徵。官方有批次能力，但不代表任意長講稿都應塞成一批；繁中多音字、英文縮寫、數字、專有名詞仍要抽聽。這也是硬體／CUDA／模型下載最可能卡住的一段。</td>
+</tr>
+<tr>
+<td>4. 量測實際語音長度</td>
+<td>FFmpeg 的 <code>ffprobe</code> 可直接讀每個 WAV/MP3 的實際
+duration；也可用 Python 標準庫讀 WAV。</td>
+<td>約 10–25 行；完全不需估算語速。</td>
+<td>要加固定前後緩衝（例如每頁開頭／結尾各一小段）並讓使用者可調；不能用「字數÷每分鐘字數」代替真實音長。若音檔格式／取樣率混雜，先統一為
+WAV 或 AAC。</td>
+</tr>
+<tr>
+<td>5. 投影片圖＋音檔合成 MP4</td>
+<td>FFmpeg 已能把靜態圖 loop 到音檔結束、串接片段、輸出 H.264/AAC；<a
+href="https://github.com/Zulko/moviepy">MoviePy</a>
+也能組影像、音訊與片段，但官方自己說它較慢。</td>
+<td>FFmpeg 路線約 80–150 行的清單建立、片段生成與最終串接；MoviePy 約
+120–220 行，較易讀但較慢。</td>
+<td>這是成熟的膠水工作，非影片演算法研發。需固定畫布比例（16:9 或
+9:16）、解析度、音量與轉場規則。先做無轉場版本最穩；淡入淡出、背景音、講者小窗都應列第二版。</td>
+</tr>
+<tr>
+<td>6. （可選）字幕</td>
+<td><a href="https://github.com/m-bain/whisperX">WhisperX</a>
+可對已生成音訊轉寫／對齊並輸出時間資訊；最終用 FFmpeg
+掛入或燒入字幕。</td>
+<td>約 30–80 行呼叫、SRT 合併與輸出；加上「用原稿逐句校對」的介面則多
+100–200 行。</td>
+<td>逐字時間戳比逐頁換頁難得多。中文斷詞、專名、英文與數字常需要人工校正；不要把
+WhisperX 初稿直接當正式字幕。沒有字幕不影響核心成片，故應放在 MVP
+之後。</td>
+</tr>
+<tr>
+<td>7. 給非工程師的操作層</td>
+<td>最初只做資料夾＋一個「產生影片」命令或捷徑；確定流程穩定後再以
+Gradio 做上傳頁面與狀態列。</td>
+<td>命令列／雙擊捷徑約 30–80 行；可靠 GUI 約 150–350
+行，另需錯誤訊息與安裝包裝。</td>
+<td>GUI
+本身最會膨脹成小產品：檔案選取、進度、取消、重新執行、錯誤提示、Windows/macOS
+相容都要處理。先讓技術人員把固定資料夾工作流驗證成功，再做按鈕，總成本最低。</td>
+</tr>
+</tbody>
+</table>
+<p>上述行數是膠水程式的合理估算，不含 Qwen、FFmpeg、WhisperX
+等外部專案本身，也不含第一次處理 GPU
+驅動、模型下載、跨平台安裝與測試的時間。</p>
+<h3 id="建議的-mvp以可重跑看得懂優先">2.3 建議的
+MVP：以「可重跑、看得懂」優先</h3>
+<p><strong>輸入格式（刻意簡單）：</strong></p>
+<ul>
+<li>一份 <code>lecture.pptx</code> 或
+<code>lecture.pdf</code>；第一版也允許直接交付已轉好的
+<code>slides/001.png</code>、<code>002.png</code>……，以避開轉檔相容性。</li>
+<li>一個 <code>scripts/</code> 資料夾，內含
+<code>001.txt</code>、<code>002.txt</code>……；每個檔案就是那一張投影片要念的內容。頁數與檔案數不合就停止並明白告訴使用者，不猜測。</li>
+<li>一段經本人同意的參考聲音
+<code>reference.wav</code>，以及該段聲音的正確文字稿
+<code>reference.txt</code>。</li>
+<li>一份容易改的設定：影片比例、解析度、每頁前後停留秒數、是否產字幕。它可以是表單或簡單設定檔，不必讓使用者碰程式碼。</li>
+</ul>
+<p><strong>一次執行時發生什麼：</strong></p>
+<ol type="1">
+<li>檢查每張投影片都有一份講稿；PPT/PDF
+尚未轉圖時先轉為固定頁碼圖片。</li>
+<li>Qwen3-TTS 先建立一次可重用的克隆
+prompt，逐頁（必要時逐句）產出聲音檔；可從中斷頁續跑，不應把已完成頁重做。</li>
+<li>用音檔的真實秒數加上設定緩衝，生成「第 N 頁停留多久」清單。</li>
+<li>FFmpeg 將每張圖片和對應旁白組成片段，再串成
+<code>output/lecture.mp4</code>；同時留存
+<code>output/durations.csv</code> 與每頁音檔，讓出錯時可定位。</li>
+<li>若啟用字幕，再額外得到
+<code>output/lecture.srt</code>；是否燒進影片由使用者決定。</li>
+</ol>
+<p><strong>使用者看到的操作：</strong>第一次由技術人員安裝好後，使用者只需替換
+PPT、逐頁文字和自己的參考錄音，點一次「產生影片」捷徑（或開啟小網頁按按鈕），最後到
+<code>output/</code> 取 MP4。第一支樣片建議只用 3–5
+張；人工聽完每一頁、看中段與尾頁後，再跑完整課程。</p>
+<h3 id="不應被低估的工作與風險">2.4 不應被低估的工作與風險</h3>
+<ol type="1">
+<li><strong>「自動換頁」本身不難；輸入品質才是難點。</strong>只要每頁音檔存在，讀真實秒數再換頁非常可靠。最常見問題是講稿沒按頁切好、上一頁留白太短、下一頁其實要先顯示再開口，這些要用每頁可調緩衝解決。</li>
+<li><strong>中文品質一定要實測，不要只看模型清單。</strong>繁中多音字、台灣地名、人名、英文術語、數字／單位與中英夾雜，都可能需要改寫標點、加讀音提示或分句。Qwen3-TTS
+有本機與批次 API，並不等於第一次就能把一小時講稿全部念得自然。</li>
+<li><strong>聲音克隆的環境不是「下載一個按鈕」就結束。</strong>需要相容的
+Python／PyTorch／CUDA、模型權重、足夠的本機運算資源與穩定的音訊格式。這部分應由技術人員固定成可重現環境；非工程師之後不應自行升級套件。</li>
+<li><strong>PPT 動畫是另一條需求線。</strong>本 MVP
+是每頁靜態畫面。若要逐項動畫、雷射筆、嵌入影片、講者小窗或數位人，會從「串接工具」升級為時間線／畫面合成專案；不要在第一版悄悄承諾它。</li>
+<li><strong>字幕不要和換頁綁在一起。</strong>換頁只需頁級音長；精準字幕需要詞／句級對齊與人工校對。把字幕設為第二階段，能避免它拖住核心輸出。</li>
+<li><strong>聲音是敏感素材。</strong>參考檔、克隆
+prompt、生成音檔應只保存在受控本機資料夾；工具應只允許處理本人或已取得可驗證同意的聲音。若改採
+SaaS，還需逐一讀其資料保留、訓練用途與刪除政策。</li>
+</ol>
+<h3 id="工作量與是否值得做明確結論">2.5
+工作量與是否值得做：明確結論</h3>
+<p>對「懂一點技術、或能請一次技術人員」的人，這個自用工具<strong>合理，而且值得做</strong>，前提是把範圍守在「靜態投影片＋每頁已分好的講稿＋本機克隆旁白＋MP4」。</p>
+<ul>
+<li>若投影片已是圖片、講稿已逐頁切好、只做無字幕的命令列原型：熟悉
+Python／GPU
+環境的人，<strong>一個下午到一天</strong>可做出可跑的樣片；這只是概念驗證，不等於交給非工程師長期使用。</li>
+<li>若要讓非工程師重複操作、可中斷續跑、會檢查頁數、保留音檔、給清楚錯誤訊息，並在一台實際電腦驗證
+Qwen3-TTS 與 FFmpeg：應當視為 <strong>1–3
+個工作天的小專案</strong>。</li>
+<li>若再加真正好用的 GUI、字幕校對、PPT
+動畫保留、數位人講者小窗、Windows/macOS
+都能安裝：已超出「一個下午腳本」，應找人做一個<strong>專門的小產品專案</strong>，而不是拿多個研究
+repo 硬拼。</li>
+</ul>
+<p>最務實的決策順序是：先用 HeyGen 或 DeepBrain 做一段 3–5
+頁雲端樣片，判斷「克隆聲音＋數位人」是否真的帶來價值；若資料必須留在本機，便按上述
+MVP
+做固定格式的自用工具。兩條路都不要以「全自動」取代最後的抽聽與抽看。</p>
+<h2 id="參考來源官方優先">參考來源（官方優先）</h2>
+<ul>
+<li><a href="https://github.com/taoofagi/easegen-front">Easegen
+Frontend</a>、<a
+href="https://github.com/taoofagi/easegen-admin">Easegen Admin</a>、<a
+href="https://github.com/taoofagi/easegen-front/blob/main/easegen-3d-lecture-system/docs/PPT讲解系统实现方案-v2.md">其
+PPT 講解設計文件</a></li>
+<li><a href="https://github.com/duixcom/Duix-Avatar">Duix.Avatar 官方
+repo</a>、<a
+href="https://github.com/Kedreamix/Linly-Talker">Linly-Talker 官方
+repo</a>、<a href="https://github.com/antgroup/echomimic">EchoMimic 官方
+repo</a>、<a
+href="https://github.com/YUANZHUO-BNU/metahuman_overview">metahuman_overview</a></li>
+<li><a
+href="https://help.heygen.com/en/articles/13007313-ppt-pdf-to-video">HeyGen
+PPT/PDF to Video 說明</a>、<a
+href="https://help.heygen.com/en/articles/9834925-how-to-get-started-with-voices">HeyGen
+Personal Voice Clone 說明</a></li>
+<li><a
+href="https://help.deepbrain.io/en/articles/10348519-how-do-i-import-powerpoint-ppt-files-into-ai-studios">DeepBrain
+PPT 匯入說明</a>、<a
+href="https://help.deepbrain.io/en/articles/9406565-how-do-i-create-a-voice-clone">DeepBrain
+Voice Clone 說明</a></li>
+<li><a href="https://github.com/QwenLM/Qwen3-TTS">Qwen3-TTS 官方
+repo（本機克隆、可重用 prompt 與批次推理）</a>、<a
+href="https://ffmpeg.org/">FFmpeg</a>、<a
+href="https://github.com/Zulko/moviepy">MoviePy</a>、<a
+href="https://github.com/m-bain/whisperX">WhisperX</a></li>
+</ul>
+<p>RESEARCH_DONE</p>
+</body>
+</html>
