@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AI 聲音克隆、繁體中文講稿與投影片自動對時講課影片的開源方案研究。" />
+  <title>AI 聲音克隆講課影片研究</title>
+    <style>
+      :root { color-scheme: light; --ink:#18232e; --muted:#5d6a76; --paper:#fffdf8; --line:#dfe5e8; --accent:#0c6b72; --soft:#e7f4f3; }
+      html { background:#eef2f3; }
+      body { max-width: 920px; margin: 0 auto; padding: 52px 28px 72px; background:var(--paper); color:var(--ink); font: 18px/1.82 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; }
+      h1,h2,h3 { line-height:1.35; color:#102d36; }
+      h1 { font-size:2.18rem; margin:0 0 .25rem; letter-spacing:.01em; }
+      h2 { font-size:1.48rem; margin:3rem 0 1rem; padding-top:1rem; border-top:2px solid var(--line); }
+      h3 { font-size:1.17rem; margin:2rem 0 .55rem; }
+      p, li { overflow-wrap:anywhere; }
+      ul,ol { padding-left:1.45em; }
+      li + li { margin-top:.42rem; }
+      a { color:var(--accent); text-decoration-thickness:1px; text-underline-offset:3px; }
+      strong { color:#0a5157; }
+      blockquote { margin:1.4rem 0; padding:.7rem 1rem; border-left:4px solid var(--accent); background:var(--soft); color:#29434a; }
+      hr { border:0; border-top:1px solid var(--line); margin:2.5rem 0; }
+      code { font-size:.9em; background:#eef3f4; padding:.08em .28em; border-radius:3px; }
+      @media (max-width:620px) { body { padding:30px 18px 48px; font-size:16px; } h1 { font-size:1.78rem; } h2 { font-size:1.32rem; } }
+      @media print { html,body { background:#fff; } body { max-width:none; padding:0; } a { color:inherit; } }
+    </style>
+  </head>
+<body>
+<h1 id="ai-聲音克隆講課影片研究">AI 聲音克隆講課影片研究</h1>
+<p>研究日期：2026-08-16（台灣）<br />
+研究範圍：只納入官方
+GitHub／模型文件可核實的專案；「開源」須分開看程式碼與模型權重授權。此處的「中文」通常指普通話／國語文字輸入，<strong>不等於已保證台灣腔、台語或所有繁體中文多音字都自然</strong>。</p>
+<h2 id="先給結論">先給結論</h2>
+<p>若要「以自己的聲音念繁中逐字稿，再讓投影片自動依語音換頁」，現成最接近一條龍的開源工具是
+<a href="https://github.com/hugohe3/ppt-master">PPT
+Master</a>：它會按每頁備註產生一段語音、把音檔嵌回該頁、以音長設換頁時間，並交給
+Windows PowerPoint 輸出 MP4。它能使用
+Qwen、CosyVoice、MiniMax、ElevenLabs
+的<strong>已建立克隆音色</strong>，但克隆本身在雲端服務完成，因此不是完全離線、也需要相應
+API／帳號。</p>
+<p>若「一定不要付費
+API、聲音與講稿不能離開自己的電腦」，最值得先試的引擎是
+<strong>Qwen3-TTS</strong>：官方支援中文、3
+秒快速克隆、Apache-2.0，且有本機 Web
+介面。不過「把每頁語音量時、嵌入投影片並輸出影片」仍需自行整合，或請技術人員替第一次流程設好。若最看重中文的可控發音與語速，<strong>IndexTTS-2.5</strong>
+是很強的第二選擇；它特別提供拼音與 0.5–2 倍時長控制，剛在 2026-08-10
+發布新版，但它採自訂模型授權，不可把它誤當成 Apache/MIT。</p>
+<h2 id="聲音克隆-tts-引擎清單">1. 聲音克隆 TTS 引擎清單</h2>
+<p>以下「近期活躍」以 2026-08-16 查 GitHub API
+的最後推送時間為準；不是以 star 數推論。</p>
+<h3 id="qwen3-tts-本機免費商用的首選起點">1) Qwen3-TTS —
+本機、免費商用的首選起點</h3>
+<ul>
+<li><strong>GitHub：</strong><a
+href="https://github.com/QwenLM/Qwen3-TTS">https://github.com/QwenLM/Qwen3-TTS</a></li>
+<li><strong>做法：</strong>Base 模型可從 <strong>3
+秒</strong>使用者參考音做快速零樣本克隆；若同時提供該段參考音的逐字文字，官方說明品質較佳。不是先訓練一個人的專屬模型才可用。</li>
+<li><strong>中文／繁中：</strong>官方列中文為支援語言，且提供 10
+種語言的克隆；對繁體字能否完全掌握台灣常見讀音，官方沒有做出「zh-TW」保證，必須用自己的講稿試聽。它的「中文」已是本研究中最直接、最新的官方支援之一。</li>
+<li><strong>授權：</strong>程式與官方 1.7B Base 權重皆標示
+<strong>Apache-2.0</strong>，通常可商用、修改與再散布，但仍要遵守法律與肖像／人格權；授權本身不替使用者取得他人聲音的同意。</li>
+<li><strong>非工程師友善度：</strong>官方提供本機 Web
+UI；第一次安裝模型仍是技術門檻。實務上建議有 NVIDIA
+GPU；不宜假設一般筆電 CPU 能舒適大量生成。</li>
+<li><strong>自然度／口碑：</strong>官方定位為穩定、表情豐富、可串流的
+TTS；其技術報告稱模型以逾五百萬小時、十種語言訓練。這是原廠主張，不等同台灣講課品質的獨立測評；應以自己的
+3–5 段講稿 A/B 試聽後決定。</li>
+<li><strong>維護狀態：</strong>2026-01 發布系列，官方 repo
+當日可讀且非封存。</li>
+</ul>
+<h3 id="indextts-2.5-中文發音與節奏控制的強勁候選">2) IndexTTS-2.5 —
+中文發音與節奏控制的強勁候選</h3>
+<ul>
+<li><strong>GitHub：</strong><a
+href="https://github.com/index-tts/index-tts">https://github.com/index-tts/index-tts</a></li>
+<li><strong>做法：</strong>單一參考音檔即可做 zero-shot
+克隆，不必先訓練；另可加一段情緒參考音分開控制情緒。官方未在本次查到的文件為「最低幾秒」下硬數字，因此不編造秒數；實務上仍應準備乾淨、連續的
+20–60 秒樣本。</li>
+<li><strong>中文／繁中：</strong>最新版明列支援中文，並提供<strong>拼音控制</strong>與
+<strong>0.5–2
+倍語音時長控制</strong>。對講課最有價值的是可在少數讀錯字時以拼音修正，也能稍微調整每頁節奏。繁中台灣國語仍需試聽驗收。</li>
+<li><strong>授權：</strong>採 <strong>bilibili Model Use License
+Agreement</strong>，不是
+MIT／Apache。一般個人與中小型商用可用，但若產品／服務月活超過一億或年營收超過人民幣十億元，必須另取得書面授權；並有法規、隱私與下游告知義務。商用前務必由實際使用單位讀完整授權。</li>
+<li><strong>非工程師友善度：</strong>有 WebUI，但初次安裝、下載權重、GPU
+驅動仍偏工程導向。適合「請人裝一次，之後在瀏覽器操作」的模式。</li>
+<li><strong>自然度／口碑：</strong>官方稱其為工業級 zero-shot TTS，且
+2026-08-10 的 2.5
+版仍持續改善中文拼音、速度與推論效率。這是最新且中文取向很明確的專案；本研究沒有找到獨立針對台灣講課語音的比較測試，故不宣稱它必定勝過
+Qwen。</li>
+<li><strong>維護狀態：</strong>2026-08-10 發布 2.5 版；官方特別聲明此
+repo 是唯一由核心團隊維護的官方管道。</li>
+</ul>
+<h3 id="gpt-sovits-中文社群成熟可零樣本也可少樣本微調">3) GPT-SoVITS —
+中文社群成熟、可零樣本也可少樣本微調</h3>
+<ul>
+<li><strong>GitHub：</strong><a
+href="https://github.com/RVC-Boss/GPT-SoVITS">https://github.com/RVC-Boss/GPT-SoVITS</a></li>
+<li><strong>做法：</strong>官方列出 <strong>5
+秒</strong>聲音樣本可立即零樣本 TTS；若要提高相似度與真實感，可用約
+<strong>1
+分鐘</strong>資料做少樣本微調。這很適合先快速試，再決定要不要做較像本人的版本。</li>
+<li><strong>中文／繁中：</strong>中文是核心支援語言，另含粵語、英、日、韓；專案也整合中文多音字相關模型。它對普通話中文很有實務基礎，但官方沒有承諾「繁中／台灣腔」會一次到位。</li>
+<li><strong>授權：</strong>程式 repo 是
+<strong>MIT</strong>。但預訓練權重與相依模型由多個來源下載，不能只看
+repo 的 MIT
+就斷定整套可商用；本次查證沒有找到一份能涵蓋所有預訓練資產的單一商用權利保證。要用於付費課程、公司內訓或公開營利影片時，應逐一核對所選權重與相依模型的權利。</li>
+<li><strong>非工程師友善度：</strong>有 WebUI、資料切段、去噪、ASR
+與文字校對等輔助；Windows
+有整合包。這是中文圈裡相對「裝好後可用」的一類，但安裝與
+GPU／模型下載仍不是純點幾下就完成。</li>
+<li><strong>自然度／口碑：</strong>長期熱門且功能完整；官方自稱推論速度高，並提供
+demo。自然度非常吃參考錄音品質、分段與所選版本，故建議用同一段講稿與
+Qwen／IndexTTS 比較，不以社群聲量替代試聽。</li>
+<li><strong>維護狀態：</strong>2026-07 仍有推送，非封存。</li>
+</ul>
+<h3 id="fish-speech-s2-高表情控制但商用不是免費路線">4) Fish Speech S2 —
+高表情控制，但商用不是免費路線</h3>
+<ul>
+<li><strong>GitHub：</strong><a
+href="https://github.com/fishaudio/fish-speech">https://github.com/fishaudio/fish-speech</a></li>
+<li><strong>做法：</strong>短參考樣本通常 <strong>10–30
+秒</strong>即可零樣本克隆，官方稱不須再微調；可用自然語言標記控制耳語、笑聲、情緒與專業播報口吻。</li>
+<li><strong>中文／繁中：</strong>官方列中文為高品質支援語言之一，文件本身有中文版本。繁中與台灣國語的精確程度仍須自測。</li>
+<li><strong>授權：</strong>程式碼與權重採 <strong>Fish Audio Research
+License</strong>；研究與非商用免費，但<strong>任何商用需要另簽授權</strong>。所以即使技術吸引人，也不適合把「開源」理解成可免費做營利課程。</li>
+<li><strong>非工程師友善度：</strong>官方有 WebUI 與 Docker 文件，但
+S2-Pro 是 4B 級模型，硬體與部署門檻高，通常需要 GPU／技術人員。</li>
+<li><strong>自然度／口碑：</strong>原廠公開多個基準數字，包含中文
+Seed-TTS Eval WER
+0.54%，並主張在多項比較居前。這些是供應商自報，足以說明它值得試聽，不能視作獨立中立保證。</li>
+<li><strong>維護狀態：</strong>2026-08 初仍有推送，非封存。</li>
+</ul>
+<h3 id="f5-tts-開源程式活躍中文英文模型可用但官方權重禁商用">5) F5-TTS —
+開源程式活躍、中文／英文模型可用，但官方權重禁商用</h3>
+<ul>
+<li><strong>GitHub：</strong><a
+href="https://github.com/SWivid/F5-TTS">https://github.com/SWivid/F5-TTS</a></li>
+<li><strong>做法：</strong>以參考語音帶出音色的 zero-shot
+TTS，不要求先微調；本次查到的官方資料沒有為主模型列出可可靠引用的最低樣本秒數，故標記為<strong>未查證</strong>，不把網路常見數字寫成事實。</li>
+<li><strong>中文／繁中：</strong>官方共享文件列有中英（zh &amp;
+en）模型與普通話延伸模型；繁中／台灣國語品質同樣要用試稿驗證。</li>
+<li><strong>授權：</strong>程式碼
+<strong>MIT</strong>，但官方預訓練模型因 Emilia 訓練資料，標示
+<strong>CC-BY-NC-4.0（非商用）</strong>。因此做個人非營利測試可考慮；要商業化不能因程式
+MIT 就誤判為可用。</li>
+<li><strong>非工程師友善度：</strong>有 Gradio
+WebUI／容器方案；仍需模型下載與通常為 GPU 的環境。</li>
+<li><strong>自然度／口碑：</strong>研究界與開源社群常將它視為高品質
+zero-shot TTS 候選；官方仍積極更新。這並非台灣中文講課的獨立排名。</li>
+<li><strong>維護狀態：</strong>2026-07 仍有推送，非封存。</li>
+</ul>
+<h3 id="openvoice-v2-介面與-mit-授權友善但不是本次持續更新首選">6)
+OpenVoice V2 — 介面與 MIT 授權友善，但不是本次「持續更新」首選</h3>
+<ul>
+<li><strong>GitHub：</strong><a
+href="https://github.com/myshell-ai/OpenVoice">https://github.com/myshell-ai/OpenVoice</a></li>
+<li><strong>做法：</strong>官方描述為「短音檔」即時、零樣本克隆；可分別控制音色、節奏、停頓與語調，不需先訓練。</li>
+<li><strong>中文／繁中：</strong>V2 原生支援 Chinese；其 Web
+介面文件同時註明中文目前只有預設
+style，情緒風格選項較少。未見繁中／台灣腔的特別承諾。</li>
+<li><strong>授權：</strong>V1／V2 都是
+<strong>MIT</strong>，官方明說可免費商用。MIT
+不等於允許複製他人聲音，聲音權利與不實冒充仍是使用者責任。</li>
+<li><strong>非工程師友善度：</strong>有 Gradio
+WebUI：上傳參考音、輸入文字、選語言、生成聲音。仍要先在本機安裝模型；GPU
+可大幅改善速度。</li>
+<li><strong>自然度／口碑：</strong>它是極具知名度的早期即時克隆方案，適合作為「快速、便宜、可商用」對照組；但當下中文講課自然度建議優先拿
+Qwen3-TTS、IndexTTS 與 GPT-SoVITS 比較。</li>
+<li><strong>維護狀態：</strong>查到最近程式推送為 2025-04，repo
+未封存，但更新頻率明顯低於前五個。因此保留為可用的比較方案，<strong>不把它列為
+2026 首選</strong>。</li>
+</ul>
+<h3 id="不列為本案主解的兩類工具">不列為本案主解的兩類工具</h3>
+<ul>
+<li><strong>RVC／Applio：</strong><a
+href="https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI">RVC</a>
+與 <a href="https://github.com/IAHispano/Applio">Applio</a>
+本質上是「語音轉語音／變聲」：先要有一段有人念好的內容，再把它換成目標音色。它不是直接將中文逐字稿
+TTS 成本人的聲音，所以不是本需求的主引擎；若先用另一個 TTS
+出聲再轉音色，會增加兩層失真與對時工作。</li>
+<li><strong>Coqui XTTS-v2：</strong><a
+href="https://github.com/coqui-ai/TTS">https://github.com/coqui-ai/TTS</a>
+的 XTTS-v2 仍可推論，官方列支援
+<code>zh-cn</code>，但本次查到程式最後推送為 2024-08，且模型採 Coqui
+Public Model License，並非目前中文首選；不建議在 2026
+新建流程時優先投入。</li>
+</ul>
+<h2 id="逐字稿-分段語音-投影片自動換頁對時怎麼做">2. 「逐字稿 → 分段語音
+→ 投影片自動換頁對時」怎麼做</h2>
+<h3 id="實務上的正確資料流">實務上的正確資料流</h3>
+<p>這不是把一大段講稿做成一支長音檔後硬猜換頁點。可靠作法是把「每一張投影片」當作一個有明確邊界的單位：</p>
+<ol type="1">
+<li><strong>逐頁寫講稿。</strong>每頁投影片對應一段真正要念出口的文字；標題、括號提示、網址與表格符號先改寫成可唸的白話。頁與頁交接處要有一句停頓或轉折，不要把一句話跨兩頁切斷。</li>
+<li><strong>建立自己的聲音檔案。</strong>錄一段安靜、無背景音樂、情緒平穩的樣本；雖有引擎可
+3–5 秒快速克隆，教學影片建議至少準備 30–90
+秒以便比較、挑出最穩定的片段。只用本人明確同意的錄音。</li>
+<li><strong>每頁各生成一段音檔。</strong>全程使用同一個聲音設定、語速與音訊格式。先抽驗最容易讀錯的專有名詞、數字、英文、繁體多音字與台灣地名；通過後才批量生成。</li>
+<li><strong>以每段音檔的實際長度作為該頁時間。</strong>每頁時長＝該頁音檔長度＋約
+0.5–1
+秒緩衝；不要用字數或人工預估分鐘數。換頁若有動畫，動畫時間也要納入。</li>
+<li><strong>把畫面與對應音檔配對輸出。</strong>可把語音嵌進對應投影片並設定自動前進，交由
+PowerPoint 匯出
+MP4；或將每頁圖像／動畫與該頁聲音依時長排進影片工具。最後以輸出的 MP4
+實際播放檢查每一頁，而非只檢查原始簡報。</li>
+<li><strong>最後再產生字幕（可選但推薦）。</strong>字幕最好從最後定稿音檔／影片對齊產生；否則每次改了一句講稿或重生一頁語音，字幕與換頁都可能漂移。</li>
+</ol>
+<h3 id="有沒有已經把整條串好的工具">有沒有已經把整條串好的工具？</h3>
+<p><strong>有，但要清楚它的邊界。</strong></p>
+<ol type="1">
+<li><p><strong><a href="https://github.com/hugohe3/ppt-master">PPT
+Master</a> —
+本研究找到最接近完整需求的開源方案。</strong>它讀取投影片備註，為每一頁生成語音，將音檔嵌回
+PPTX，按音長加上可設定的起始與尾端緩衝設定自動換頁，再由 Windows
+PowerPoint 輸出同步的 MP4。它能用 Qwen、CosyVoice、MiniMax、ElevenLabs
+已經克隆好的 voice ID；其中
+CosyVoice／部分服務可同時取得字詞時間，還能做字幕或按語句觸發動畫。</p>
+<p>邊界是：它不是把本機的 Qwen3-TTS／GPT-SoVITS
+直接接進去的通用插件；官方文件描述的是雲端供應商音色
+ID。因此它是「少工程、但有 API／帳號與 Windows PowerPoint
+依賴」的答案。若選 Qwen
+供應商，文件也說目前回傳音訊但沒有字詞時間；這不妨礙<strong>逐頁換頁</strong>，只限制精準逐字字幕／動畫同步。</p></li>
+<li><p><strong><a
+href="https://github.com/DH-Center-Tuebingen/ppt2video">ppt2video</a> —
+已有逐頁 TTS／投影片／影片的完整骨架，但不含聲音克隆。</strong>它從
+PowerPoint 備註產生 TTS、把投影片轉圖片、合成影片；使用
+Windows、PowerPoint、Microsoft 語音或
+Azure。它可作為流程參考，卻不能單獨滿足「AI
+模擬本人聲音」。近期更新較少，也不建議為新案當主方案。</p></li>
+</ol>
+<p><strong>誠實結論：</strong>截至本次查證，沒有找到一個「純本機、零付費
+API、非工程師點選、同時內建 Qwen／GPT-SoVITS 等開源聲音克隆與 PPT
+自動對時輸出」且成熟維護的單一 repo。要完全本機，就需把「TTS
+引擎」和「每頁音長排版／影片輸出」做一次整合；要少工程，就用 PPT Master
+加雲端克隆 voice ID。</p>
+<h2 id="針對台灣中文講課的具體推薦">3. 針對台灣中文講課的具體推薦</h2>
+<h3
+id="最推薦的低摩擦路線ppt-master-cosyvoice-或-qwen-的雲端克隆音色">最推薦的低摩擦路線：PPT
+Master + CosyVoice 或 Qwen 的雲端克隆音色</h3>
+<p>適用情境：重視「做完一份投影片就能得到影片」、可接受建立雲端帳號／依用量付費、且有
+Windows PowerPoint。</p>
+<ul>
+<li>先在 CosyVoice 或 Qwen
+的官方服務，以<strong>自己的</strong>樣本建立克隆音色。</li>
+<li>每張投影片的備註就是該頁講稿，PPT Master
+負責逐頁合成、插入、音長換頁與 MP4 匯出。</li>
+<li>若需要字幕、邊念邊出現重點、或精準文字級節奏，優先選文件明示可回傳時間戳的
+CosyVoice 音色；Qwen 路線可做逐頁換頁，但目前不提供同樣的字詞時間。</li>
+</ul>
+<p>理由：這條路將最容易出錯的「一頁一檔、量實際秒數、填回投影片、自動前進、輸出
+MP4」收斂成現成流程。代價是克隆樣本與講稿會依供應商設定送到雲端，且不能假裝是完全免費／離線。</p>
+<h3
+id="最推薦的本機免付費-api-路線qwen3-tts-一次性的本機整合">最推薦的本機、免付費
+API 路線：Qwen3-TTS + 一次性的本機整合</h3>
+<p>適用情境：講稿與聲音樣本不希望送雲端、願意準備有 GPU
+的電腦或請技術人員先設定一次。</p>
+<ul>
+<li>以 Qwen3-TTS 本機 WebUI 先建立／驗證自己的聲音克隆；它有中文支援、3
+秒快速克隆與 Apache-2.0 權重。</li>
+<li>將講稿按投影片分段批量產生；讓整合流程讀取每個音檔真正的長度，設定每頁播放時間，再合成最終影片。</li>
+<li>第一輪只拿 5
+張投影片做試片，檢查台灣常見讀音、英文名詞、停頓、音色一致性與換頁，再擴到全課。</li>
+</ul>
+<p>這條路的代價不是 API 費，而是部署與整合的人力。若 Qwen
+對特定繁中多音字不穩，再用 <strong>IndexTTS-2.5</strong> 做 A/B；Index
+的拼音與時長控制在教學內容很有用，但先確認其自訂授權是否符合使用情境。</p>
+<h3 id="不建議的起點">不建議的起點</h3>
+<ul>
+<li>不要先用
+RVC／Applio：它多了一層「先合成別人音色再轉成本人音色」的失真與工作。</li>
+<li>不要因為「程式碼 MIT」就直接宣稱可做商業課程：F5-TTS
+的官方權重是非商用；Fish Speech 需要商用授權；GPT-SoVITS
+的完整預訓練資產權利需逐項確認。</li>
+<li>不要一開始就做整堂課。先做 3–5
+頁含數字、英文、專有名詞的代表性段落；聽感合格再批量生成，才不會整支影片重工。</li>
+</ul>
+<h2 id="已知限制與風險">4. 已知限制與風險</h2>
+<h3 id="聲音權利倫理與素材保管">聲音權利、倫理與素材保管</h3>
+<ul>
+<li>本案是複製使用者自己的聲音，風險遠低於未經同意模仿名人、同事或客戶；但仍應保存「本人同意把這段錄音用於何種課程／平台」的紀錄，尤其日後交給助理或外包商處理時。</li>
+<li>聲音樣本、已建立的 voice profile／voice
+ID、原始逐字稿都可被濫用來冒充本人。將它們視同帳密：限制存取、不要丟進公開
+repo 或群組、結案後刪除不再需要的雲端樣本與本機副本。</li>
+<li>公開影片建議清楚標註「以本人授權之 AI
+語音合成」，特別是在內容可能被誤認為即時真人發言的場合。不得用來偽造同意、金融指示、身分驗證或對外承諾。</li>
+</ul>
+<h3 id="中文合成常見瑕疵">中文合成常見瑕疵</h3>
+<ul>
+<li><strong>繁簡與多音字：</strong>引擎說支援中文，不保證每個繁體字、姓名、地名、文言或跨中英夾雜都讀對。先把容易出錯字列入試稿；IndexTTS
+可用拼音輔助，其他引擎可改寫句子或加入可讀的分隔。</li>
+<li><strong>斷句與節奏：</strong>太長的句子、連續括號、投影片上的條列符號、縮寫與網址，會造成不自然停頓或漏念。逐字稿要寫成「耳朵聽得懂的句子」，不是直接朗讀投影片文字。</li>
+<li><strong>音色一致性：</strong>只有幾秒樣本時，個別頁可能有音高、情緒或速度漂移。使用同一段乾淨樣本、固定設定、先聽頭尾和最長頁；必要時改用較長樣本或少樣本微調。</li>
+</ul>
+<h3 id="對時的誤差來源">對時的誤差來源</h3>
+<ul>
+<li><strong>前導／尾端靜音：</strong>TTS
+產出常含開頭呼吸或結尾靜音；若以字數估算或只看波形，會讓換頁早／晚。要以實際音檔長度計時，並刻意留
+0.5–1 秒緩衝。</li>
+<li><strong>動畫與轉場：</strong>語音一開始就播，而畫面轉場還沒結束，觀眾會感覺「聲音跑在前面」。換頁前後要保留固定緩衝，並在最終
+MP4 實播確認。</li>
+<li><strong>影片輸出的畫格取整：</strong>PowerPoint／影片編碼器會把時長取到畫格；很多頁後，小誤差可能累積。PPT
+Master 文件也明示原生 MP4
+匯出可能產生每頁微小量化差異。因此要檢查成品中段與最後幾頁，而非只看第一頁。</li>
+<li><strong>重生未連帶更新：</strong>一旦改了一頁講稿、重新生成該頁語音，就必須重新量該頁時長、重新輸出影片與字幕；不要沿用舊的換頁秒數。</li>
+</ul>
+<h2 id="查證來源官方為主">查證來源（官方為主）</h2>
+<ul>
+<li><a href="https://github.com/QwenLM/Qwen3-TTS">Qwen3-TTS 官方
+GitHub</a>；<a
+href="https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-Base">Qwen 1.7B
+Base 官方模型卡（Apache-2.0）</a></li>
+<li><a href="https://github.com/index-tts/index-tts">IndexTTS 官方
+GitHub 與 2.5 版說明</a>；<a
+href="https://github.com/index-tts/index-tts/blob/main/LICENSE">其模型使用授權</a></li>
+<li><a href="https://github.com/RVC-Boss/GPT-SoVITS">GPT-SoVITS 官方
+GitHub</a>；<a
+href="https://github.com/RVC-Boss/GPT-SoVITS/blob/main/docs/cn/README.md">中文說明</a></li>
+<li><a href="https://github.com/fishaudio/fish-speech">Fish Speech 官方
+GitHub</a>；<a
+href="https://github.com/fishaudio/fish-speech/blob/main/LICENSE">Fish
+Audio Research License</a></li>
+<li><a href="https://github.com/SWivid/F5-TTS">F5-TTS 官方
+GitHub</a>；<a
+href="https://github.com/SWivid/F5-TTS/blob/main/src/f5_tts/infer/SHARED.md">官方模型授權表</a></li>
+<li><a href="https://github.com/myshell-ai/OpenVoice">OpenVoice 官方
+GitHub</a></li>
+<li><a href="https://github.com/hugohe3/ppt-master">PPT Master 官方
+GitHub</a>；<a
+href="https://github.com/hugohe3/ppt-master/blob/main/docs/audio-narration.md">其旁白／影片對時文件</a></li>
+<li><a href="https://github.com/DH-Center-Tuebingen/ppt2video">ppt2video
+官方 GitHub</a></li>
+</ul>
+<p>RESEARCH_DONE</p>
+</body>
+</html>
