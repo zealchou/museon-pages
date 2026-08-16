@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-Hant" xml:lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>投影片＋既有錄音：講課影片開源方案研究</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">:root {
+--paper: #FAF8F1;
+--warm-paper: #F2EEE5;
+--ink: #202321;
+--soft-ink: #454B48;
+--cinnabar: #B74B32;
+--moss: #63736E;
+}
+* { box-sizing: border-box; }
+html { background: var(--warm-paper); }
+body {
+max-width: 980px;
+margin: 0 auto;
+padding: 4.5rem clamp(1.25rem, 5vw, 4.5rem) 6rem;
+background: var(--paper);
+color: var(--ink);
+font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+font-size: 18px;
+line-height: 1.82;
+}
+h1, h2, h3 {
+color: var(--ink);
+line-height: 1.25;
+letter-spacing: .01em;
+}
+h1 {
+margin: 0 0 2.2rem;
+padding: 0 0 1.3rem;
+border-bottom: 3px solid var(--cinnabar);
+font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+font-size: clamp(2.05rem, 6vw, 3.55rem);
+font-weight: 600;
+}
+h2 {
+margin: 4.4rem 0 1.1rem;
+padding-top: .85rem;
+border-top: 1px solid #D7D0C4;
+font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+font-size: clamp(1.6rem, 4vw, 2.25rem);
+}
+h3 {
+margin: 2.75rem 0 .8rem;
+color: var(--deep-cinnabar, #8F3828);
+font-size: 1.3rem;
+}
+p, li { overflow-wrap: anywhere; }
+p { margin: 0 0 1.1rem; }
+strong { color: var(--deep-cinnabar, #8F3828); }
+a { color: #8F3828; text-underline-offset: .18em; }
+a:hover { color: var(--cinnabar); }
+blockquote {
+margin: 2rem 0;
+padding: 1rem 1.25rem;
+border-left: 4px solid var(--cinnabar);
+background: var(--warm-paper);
+}
+table {
+width: 100%;
+margin: 1.6rem 0 2.4rem;
+border-collapse: collapse;
+font-size: .91rem;
+line-height: 1.65;
+}
+th, td { padding: .85rem .8rem; vertical-align: top; border-bottom: 1px solid #D7D0C4; }
+th { background: #EEE8DD; color: var(--ink); text-align: left; font-weight: 700; }
+tr:nth-child(even) td { background: #FCFAF5; }
+ol, ul { padding-left: 1.45rem; margin: 0 0 1.4rem; }
+li { margin-bottom: .55rem; }
+hr { border: 0; border-top: 1px solid #D7D0C4; margin: 3rem 0; }
+@media (max-width: 680px) {
+body { padding: 2.5rem 1rem 4rem; font-size: 16px; }
+h2 { margin-top: 3.25rem; }
+table { display: block; overflow-x: auto; white-space: normal; font-size: .84rem; }
+th, td { min-width: 150px; padding: .7rem .6rem; }
+}
+@media print {
+body { max-width: none; padding: 0; font-size: 11pt; }
+a { color: inherit; }
+h2, h3 { break-after: avoid; }
+table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">投影片＋既有錄音：講課影片開源方案研究</h1>
+</header>
+<h1 id="投影片既有錄音講稿自動合成講課影片的開源可行方案">投影片＋既有錄音＋講稿：自動合成講課影片的開源可行方案</h1>
+<p>研究日期：2026-08-16。本文只列出已在 GitHub 實際核對過的專案；star
+數與最後 push 日期均為本日查 GitHub API 的近似快照，會隨時間變動。</p>
+<h2 id="先講結論">先講結論</h2>
+<p>有可行方案，但目前沒有一個成熟、完全不懂技術的人只要丟入「任意
+PPT/PDF＋一段長錄音＋逐字稿」就能可靠地自動判斷每一張該何時翻頁、再輸出漂亮課程影片的開源一鍵工具。</p>
+<p>最穩的實務做法是把問題拆成兩段：</p>
+<ol type="1">
+<li>先取得每張投影片的停留時間（最理想是每頁各一段錄音；否則要用講稿或播放器人工標出切頁時間）。</li>
+<li>以投影片畫面＋這些時間合成 MP4，再用語音辨識產生與校正字幕。</li>
+</ol>
+<p>若目前只有「一整段」錄音，逐字稿能幫忙校稿，但<strong>不會憑空告訴系統哪一句正好切到第幾頁</strong>。除非講稿本來就有每頁標記／時間碼，仍需人工確認切頁點；這是整個流程最常被低估的工作。</p>
+<h2 id="技術路線總覽">1. 技術路線總覽</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>路線</th>
+<th>輸入 → 輸出</th>
+<th>難度與適用情境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A. 靜態投影片＋既有音軌合成</td>
+<td>每頁投影片圖檔／PDF 頁面＋每頁音檔或切頁時間表 → 投影片依時長停留的
+MP4</td>
+<td>最務實、畫面最可控；「全自動」的前提是已有每頁音訊或時間表。</td>
+</tr>
+<tr>
+<td>B. 字幕自動對時與燒錄</td>
+<td>已有錄音或合成好的影片＋講稿 → SRT/VTT 字幕，或直接帶字幕的影片</td>
+<td>對本案價值最高的加強項；可自動起稿，但人要快速校對專有名詞與切行。</td>
+</tr>
+<tr>
+<td>C. 投影片旁加虛擬講者／數位人</td>
+<td>既有錄音＋一張肖像或一段講者正面影片（部分工具還要動作驅動影片）→
+會動嘴的講者畫面，再與投影片合成</td>
+<td>效果加分、但硬體與素材要求最高；不是本案的必要第一步。</td>
+</tr>
+<tr>
+<td>D. 免寫程式的 GUI／錄製工作流</td>
+<td>投影片、錄音、可選字幕 → 在時間軸或螢幕錄製介面手動完成 MP4</td>
+<td>自動化較少，卻最適合非工程師：可預覽、拖曳修正、避免腳本失敗。PowerPoint
+的「錄製／匯出影片」也屬此類，但不是開源 repo。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="可用的-github-專案與工具">2. 可用的 GitHub 專案與工具</h2>
+<h3 id="路線-a靜態投影片既有音軌合成">路線
+A：靜態投影片＋既有音軌合成</h3>
+<p>這一類的核心不是 AI，而是可靠地把「第 N
+張畫面要顯示多久」和音訊拼成影片。PDF／Keynote
+通常先轉為一頁一張圖；含動畫的 PPT 則應先在 PowerPoint／Keynote
+輸出成影片，否則動畫大多會消失。</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Repo</th>
+<th>功能與本案適合度</th>
+<th>規模與活躍度（2026-08-16 查）</th>
+<th>付費 API／本地性</th>
+<th>非工程師友善度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/FFmpeg/FFmpeg">FFmpeg/FFmpeg</a></td>
+<td>影音處理底座；可把每張投影片做成定長影片片段、接上既有音檔、加入轉場與字幕。它是最可靠的「引擎」，但不是課程影片專用
+App。</td>
+<td>約 6.3 萬 stars；2026-08-15 仍有 push，極活躍。</td>
+<td>可完全本地；本體主要 LGPL，若選用 GPL 元件／編碼器要另查授權。</td>
+<td>低：主要是命令列，通常需工程師或包裝成一鍵流程。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/remotion-dev/remotion">remotion-dev/remotion</a></td>
+<td>用 React
+排版與輸出影片；很適合把固定投影片、音軌、字幕與角落講者畫面做成可重複使用的模板。</td>
+<td>約 5.6 萬 stars；2026-08-16 仍有 push，活躍。</td>
+<td>本地渲染可行；<strong>非單純 OSI
+開源授權</strong>：個人、非營利與小型公司可免費，達條件的公司需公司授權，商用前應看其現行
+License。</td>
+<td>低：需
+JavaScript／React；適合請人做一次模板，之後由表單填素材。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Zulko/moviepy">Zulko/moviepy</a></td>
+<td>Python 影片合成函式庫，可把圖片、已有音檔、文字與字幕逐段組成
+MP4；比 FFmpeg 容易客製，但慢一些。</td>
+<td>約 1.5 萬 stars；2026-08-11 有 push；v2 已發布且仍維護。</td>
+<td>MIT、可全本地；通常透過 FFmpeg 編碼。</td>
+<td>低：需要 Python 程式；適合作為客製小工具的底層。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/DH-Center-Tuebingen/ppt2video">DH-Center-Tuebingen/ppt2video</a></td>
+<td>真正的「PPT → 圖片 → 音訊 → 影片」小型範例。原設計從投影片備註做
+TTS，<strong>不是直接吃既有錄音</strong>；可當流程參考，需改造才能符合本案。</td>
+<td>2 stars、僅 6 commits；最後 push 2025-03。存在且可讀，但不應當成
+2026 仍活躍的正式產品。</td>
+<td>Windows、已安裝 PowerPoint、FFmpeg；Azure Speech 模式需訂閱／API
+key，既有語音的情境可避開。</td>
+<td>低：Python 腳本，且僅 Windows。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>判讀：</strong>若有工程協助，FFmpeg 或 Remotion
+是長期可重複的選擇；若完全不想碰程式，請直接看路線
+D。<code>ppt2video</code>
+很貼題，但因維護與輸入模式都不理想，不列為推薦方案。</p>
+<h3 id="路線-b字幕自動對時與校正">路線 B：字幕自動對時與校正</h3>
+<p>這一類可讀取既有錄音，產出有時間碼的字幕。它不負責決定投影片翻頁，但非常適合作為影片合成之後的第二步。</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Repo</th>
+<th>功能與本案適合度</th>
+<th>規模與活躍度（2026-08-16 查）</th>
+<th>付費 API／本地性</th>
+<th>非工程師友善度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/openai/whisper">openai/whisper</a></td>
+<td>多語言語音辨識，可從錄音轉出逐字稿與段落時間碼，是字幕流程的基礎模型。可將使用者的講稿作為校稿參考。</td>
+<td>約 10.7 萬 stars；2026-07-28 有 push，活躍。</td>
+<td>MIT、模型可本地推論；下載模型後不必用付費 API。GPU 會明顯較快。</td>
+<td>低：官方主要是程式／命令列。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/m-bain/whisperX">m-bain/whisperX</a></td>
+<td>在 Whisper
+上加上詞級時間對齊與說話者分離；比一般段落時間碼更適合做逐字同步字幕。</td>
+<td>約 2.4 萬 stars；2026-07-13 有 push，近期活躍。</td>
+<td>BSD-2-Clause；辨識與對時可本地。使用說話者分離的附加模型時，可能需
+Hugging Face 帳號／接受其模型條款，但不是付費 API 的必需條件。</td>
+<td>低：Python／GPU 導向。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/SubtitleEdit/subtitleedit">SubtitleEdit/subtitleedit</a></td>
+<td>可視化建立、調整、轉換與燒錄字幕；支援本地或可選雲端的語音辨識，並能用波形精修時間。它是本案最值得非工程師優先試用的開源
+GUI。</td>
+<td>約 1.4 萬 stars；2026-08-16 有 push，活躍；2026 年的 v5
+為跨平台版。</td>
+<td>MIT；核心編輯、播放與本地功能可離線。若自行選用第三方雲端翻譯／STT，才會送出必要資料並受該服務計費／條款約束。</td>
+<td>高：有 Windows、macOS、Linux 安裝包與圖形介面。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>判讀：</strong>本案最實際的字幕組合是「Whisper 或 WhisperX
+先出初稿 → Subtitle Edit 以講稿與波形做人工校對 →
+將字幕掛入／燒入已完成的投影片影片」。即使講稿已經存在，也建議讓工具從真實錄音產生時間碼，因為人講話的停頓不會完全等同文字稿。</p>
+<h3 id="路線-c投影片虛擬講者數位人">路線
+C：投影片＋虛擬講者／數位人</h3>
+<p>這類工具只產出人物影片（或把人物嘴型對到音訊），<strong>還需要再用
+FFmpeg、Remotion 或 GUI
+剪輯器把人物放到投影片一角</strong>。請僅使用自己或取得明確同意的人像與聲音，並在課程發布情境中清楚標示合成內容。</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Repo</th>
+<th>功能與本案適合度</th>
+<th>規模與活躍度（2026-08-16 查）</th>
+<th>付費 API／本地性</th>
+<th>非工程師友善度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/KlingAIResearch/LivePortrait">KlingAIResearch/LivePortrait</a></td>
+<td>將來源肖像／肖像影片套用「驅動影片」的表情與頭部動作。畫面品質與控制力佳，<strong>但不是直接用音訊驅動嘴型</strong>；需另備一段驅動影片，或與
+lip-sync 工具串接。</td>
+<td>約 1.9 萬 stars；2026-06-01 有 push，仍可視為近期維護。</td>
+<td>MIT、可本地跑；模型下載與較好的 GPU 是實務門檻。</td>
+<td>中低：有 Gradio 介面與 Windows
+一鍵包的相關說明，但素材概念與安裝仍偏技術。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/TMElyralab/MuseTalk">TMElyralab/MuseTalk</a></td>
+<td>使用一段正面人物<strong>影片</strong>與音訊做高品質
+lip-sync；可拿使用者既有錄音做驅動，適合先錄一小段無聲或自然待機的講者鏡頭。</td>
+<td>約 6,400 stars；最後 push
+2025-09-26。專案與模型確實存在，但近一年未見更新，2026
+導入前應先在自己的 GPU 環境試跑，不把它稱為近期活躍。</td>
+<td>repo 的程式與模型說明採 MIT／可商用；可本地，但 NVIDIA
+GPU、依賴與權重下載是門檻。另仍須核對所有相依模型條款。</td>
+<td>低：腳本與環境設定為主；不適合第一次就交給完全非工程師。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenTalker/SadTalker">OpenTalker/SadTalker</a></td>
+<td>一張肖像＋音訊即可產生說話頭像，輸入形狀最貼近本案。</td>
+<td>約 1.4 萬 stars；最後 push 2024-06-26，並非 2026
+仍活躍維護的首選。</td>
+<td>README 說明為 Apache-2.0（附第三方例外）；可本地、需下載模型，通常需
+GPU。商用前仍須逐一核對模型與第三方元件。</td>
+<td>中低：有 Gradio WebUI／Windows 批次啟動，但舊版 Python/CUDA
+相依容易卡住。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Rudrabha/Wav2Lip">Rudrabha/Wav2Lip</a></td>
+<td>將一段人臉影片與任意音訊對嘴，是經典參考實作；可把既有錄音接到講者影片。</td>
+<td>約 1.3 萬 stars；最後 push 2025-06-22。仍有人使用，但不是最省心的
+2026 新專案選擇。</td>
+<td>開源版 README
+明定只限個人／研究／非商業用途；本地可跑但<strong>商業課程不可直接採用</strong>，商用需另洽其服務。</td>
+<td>低：Python／模型檔／GPU。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>判讀：</strong>數位人不是把「一張照片＋音檔」丟進去就零風險完成的功能。品質常受臉部角度、錄音清晰度、長時間累積漂移與
+GPU
+環境影響；就本案優先順序，應先做出沒有虛擬人但同步正確的版本，再加人物小窗測試。</p>
+<h3 id="路線-d免寫程式的-gui錄製與剪輯">路線 D：免寫程式的
+GUI／錄製與剪輯</h3>
+<p>這類工具不保證自動決定翻頁，但對非工程師更可靠：可以直接看著波形和時間軸微調，不必把錯誤藏在一串自動化腳本裡。若原檔是
+PowerPoint，Microsoft PowerPoint
+的內建「錄製」與「匯出影片」也是很常見的商業軟體路徑；它沒有符合本題要求的開源
+GitHub repo，故不列為開源代表。</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Repo</th>
+<th>功能與本案適合度</th>
+<th>規模與活躍度（2026-08-16 查）</th>
+<th>付費 API／本地性</th>
+<th>非工程師友善度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/obsproject/obs-studio">obsproject/obs-studio</a></td>
+<td>免費錄影、合成與直播工具；可在全螢幕投影片、講者攝影機、既有媒體來源間組場景。適合願意重播投影片並錄一次的方式，不是「把長錄音自動切頁」工具。</td>
+<td>約 7.5 萬 stars；2026-08-15 有 push，極活躍；2026-04
+有正式版發行。</td>
+<td>GPL-2.0、全本地，無 API 費。</td>
+<td>中高：介面成熟，但要練習場景與錄製流程。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/KDE/kdenlive">KDE/kdenlive</a></td>
+<td>開源非線性剪輯器；將投影片圖／影片、既有音檔、講者小窗與字幕放到時間軸，人工調整後匯出。</td>
+<td>約 5,500 stars；2026-08-16 有 push，活躍（GitHub 為
+mirror，主要開發在 KDE GitLab）。</td>
+<td>GPL-3.0、全本地。</td>
+<td>中高：有完整 GUI；比腳本容易檢查，學習成本是基本時間軸剪輯。</td>
+</tr>
+<tr>
+<td><a href="https://github.com/mltframework/shotcut">mltframework/shotcut</a></td>
+<td>跨平台開源剪輯器，適合把投影片、錄音、字幕和轉場以時間軸方式合成。</td>
+<td>約 1.5 萬 stars；2026-08-16 有 push；最新正式版為 2026-04。</td>
+<td>GPL-3.0、全本地。</td>
+<td>中高：GUI 友善，功能比「一鍵」多，首次仍要花時間熟悉時間軸。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="針對本案的具體推薦">3. 針對本案的具體推薦</h2>
+<h3 id="推薦一先做投影片既有錄音字幕不要先上數位人">推薦一：先做「投影片＋既有錄音＋字幕」，不要先上數位人</h3>
+<p>這是最適合目前素材、失敗成本最低的主線：</p>
+<ol type="1">
+<li>將投影片輸出為每頁圖片或靜態 PDF 頁面；若原檔依賴動畫，先用
+PowerPoint／Keynote 輸出成影片，並接受它不再是可自由重排的單張圖。</li>
+<li>建立切頁時間：最省事的是把錄音按投影片拆成多段；若只能提供一段長錄音，請在講稿標示「第幾頁從哪一句開始」，再人工檢查切頁。</li>
+<li>非工程師優先使用 Kdenlive 或 Shotcut
+將畫面和錄音放上時間軸；需要批量重複產片才請人以 FFmpeg／Remotion
+做模板化。</li>
+<li>以 Whisper／WhisperX 取得時間碼，再用 Subtitle Edit
+開啟影片與講稿校對、匯出或燒入字幕。</li>
+</ol>
+<p>理由：使用者已經錄好本人的聲音，真正有價值的是<strong>同步正確、聽得清楚、看得懂字幕</strong>；這條路不會為了不必要的
+AI 語音／人像而把專案變成 GPU 與授權問題。</p>
+<h3 id="推薦二若要講者感優先拍真人小窗虛擬人當第二階段實驗">推薦二：若要講者感，優先拍「真人小窗」；虛擬人當第二階段實驗</h3>
+<p>只要用手機拍一段正面講者影片，再用 Kdenlive／Shotcut 或 OBS
+做「投影片主畫面＋右下角真人小窗」，通常比單張照片生成數位人更自然、更可控。若確實不想露臉，才小規模測試
+SadTalker 或 MuseTalk；若課程涉及商業用途，避開開源
+Wav2Lip，並逐一重查模型與素材授權。</p>
+<h2 id="已知限制與常見坑">4. 已知限制與常見坑</h2>
+<ol type="1">
+<li><strong>一段長錄音沒有自動切頁的真實答案。</strong>
+語音辨識可給「何時說了什麼」，卻不知道「哪一頁應出現什麼」；要靠頁碼標記、每頁音檔、或人工校點。</li>
+<li><strong>講稿不是錄音的時間碼。</strong>
+即使文字完全一樣，語速、停頓、口誤與臨時補充都會讓字幕漂移；自動字幕必須至少人工抽查每頁起訖、專有名詞、中文斷行。</li>
+<li><strong>投影片動畫最容易丟失。</strong> 把 PPT/PDF
+轉成圖片後，只剩靜態頁面。要保留逐項動畫、嵌入影片與特效，應先用原生
+PowerPoint／Keynote 播放並輸出影片，或改成時間軸手動重建。</li>
+<li><strong>字幕可選「可切換」或「燒進畫面」。</strong> SRT/VTT
+可讓平台切換、修正容易；燒錄字幕最不會在播放器上跑版，卻不能再獨立關閉或改字。保留原始字幕檔是必要的。</li>
+<li><strong>多媒體授權不是只看 repo。</strong> FFmpeg
+的編碼選項、Remotion
+的公司授權門檻、開源模型權重、訓練資料、字型、投影片圖片、背景音樂都可能各有條款。尤其
+Wav2Lip 開源版明示不可商用。</li>
+<li><strong>數位人要有同意與揭露。</strong>
+使用真人臉、聲音或影片時取得明確同意；不要用未授權肖像，也不要讓觀眾誤認合成畫面是實拍。</li>
+<li><strong>本地 AI 的成本是硬體與時間而非 API 帳單。</strong> Whisper
+小模型可用 CPU 但慢；高品質字幕、MuseTalk／SadTalker 多半需要可用的
+NVIDIA GPU、模型下載空間與環境排錯時間。</li>
+<li><strong>先做 1–2 分鐘樣片。</strong> 先用 3–5
+張投影片驗證畫面比例、字體、字幕位置、切頁點、音量與輸出品質，再批次完成整堂課；這比做完一小時才發現問題便宜得多。</li>
+</ol>
+<h2 id="查證範圍與誠實邊界">5. 查證範圍與誠實邊界</h2>
+<ul>
+<li>已直接查核上述 14 個 GitHub repo 的存在、star 數、最後
+push、archived 狀態與 GitHub／README 的功能描述；數據是 2026-08-16
+快照。</li>
+<li>「活躍」僅表示近期有程式或發行活動，不等於作者保證支援所有作業系統、顯卡或商業用途。</li>
+<li>本報告沒有實際安裝、跑過每一個模型，也沒有替使用者的
+PPT／Keynote／錄音做過端到端樣片；最終工具選擇仍應先以一小段真實素材試作。</li>
+<li>來源主體為各 repo： <a href="https://github.com/FFmpeg/FFmpeg">FFmpeg</a>、<a href="https://github.com/remotion-dev/remotion">Remotion</a>、<a href="https://github.com/Zulko/moviepy">MoviePy</a>、<a href="https://github.com/openai/whisper">Whisper</a>、<a href="https://github.com/m-bain/whisperX">WhisperX</a>、<a href="https://github.com/SubtitleEdit/subtitleedit">Subtitle
+Edit</a>、<a href="https://github.com/KlingAIResearch/LivePortrait">LivePortrait</a>、<a href="https://github.com/TMElyralab/MuseTalk">MuseTalk</a>、<a href="https://github.com/OpenTalker/SadTalker">SadTalker</a>、<a href="https://github.com/Rudrabha/Wav2Lip">Wav2Lip</a>、<a href="https://github.com/obsproject/obs-studio">OBS Studio</a>、<a href="https://github.com/KDE/kdenlive">Kdenlive</a>、<a href="https://github.com/mltframework/shotcut">Shotcut</a>。</li>
+</ul>
+<p>RESEARCH_DONE</p>
+</body>
+</html>
