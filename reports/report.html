@@ -1,0 +1,138 @@
+<title>投影片＋AI模仿你的聲音唸稿＝自動合成上課影片：研究報告</title>
+<style>
+  :root{
+    --bg:#faf7f2; --card:#ffffff; --ink:#2b2621; --ink-soft:#5a5248;
+    --accent:#b23a2e; --accent-soft:#e7d9c9; --line:#e3d9c8;
+    --tag-bg:#f1e6d3; --good:#2f6b3e; --warn:#a3591b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1c1815; --card:#241f1b; --ink:#efe6d8; --ink-soft:#c9bdab;
+      --accent:#e08a72; --accent-soft:#3a2f26; --line:#3a3128;
+      --tag-bg:#332a20; --good:#7fd08f; --warn:#e0a45c;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c1815; --card:#241f1b; --ink:#efe6d8; --ink-soft:#c9bdab;
+    --accent:#e08a72; --accent-soft:#3a2f26; --line:#3a3128;
+    --tag-bg:#332a20; --good:#7fd08f; --warn:#e0a45c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    line-height:1.85; font-size:17px; margin:0; padding:0 1.1rem 5rem;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  header{padding:3rem 0 1.6rem; border-bottom:1px solid var(--line);}
+  header .kicker{color:var(--accent); font-weight:700; font-size:.85rem; letter-spacing:.06em; text-transform:uppercase;}
+  h1{font-size:1.7rem; line-height:1.4; margin:.5rem 0 .6rem;}
+  .meta{color:var(--ink-soft); font-size:.92rem;}
+  h2{font-size:1.28rem; margin-top:3rem; padding-top:.2rem; border-top:3px solid var(--accent-soft); display:flex; align-items:center; gap:.5rem;}
+  h3{font-size:1.08rem; margin-top:2rem; color:var(--ink);}
+  p{margin:0 0 1.1rem;}
+  .lead{font-size:1.08rem; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.3rem 1.4rem; margin:1.4rem 0 2rem;}
+  .lead b{color:var(--accent);}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.3rem 1.4rem; margin:1.1rem 0;}
+  .route-title{font-weight:700; font-size:1.05rem; margin-bottom:.4rem;}
+  .tag{display:inline-block; background:var(--tag-bg); color:var(--ink-soft); font-size:.78rem; padding:.15rem .6rem; border-radius:999px; margin-right:.35rem;}
+  .good{color:var(--good); font-weight:700;}
+  .warn{color:var(--warn); font-weight:700;}
+  table{width:100%; border-collapse:collapse; margin:1.2rem 0; font-size:.93rem;}
+  th,td{text-align:left; padding:.65rem .6rem; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{color:var(--ink-soft); font-weight:700; font-size:.85rem;}
+  tr:last-child td{border-bottom:none;}
+  ul,ol{padding-left:1.3rem; margin:0 0 1.1rem;}
+  li{margin-bottom:.5rem;}
+  .term{border-bottom:1px dashed var(--accent); cursor:help;}
+  .note{font-size:.88rem; color:var(--ink-soft); border-left:3px solid var(--accent-soft); padding:.2rem 0 .2rem .8rem; margin:1rem 0;}
+  a{color:var(--accent);}
+  footer{margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.85rem;}
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.2rem 1.4rem; margin:1.4rem 0;}
+  .toc a{display:block; padding:.25rem 0; color:var(--ink); text-decoration:none;}
+  .toc a:hover{color:var(--accent);}
+  @media (max-width:600px){
+    body{font-size:16px; padding:0 .9rem 4rem;}
+    h1{font-size:1.4rem;}
+    table{display:block; overflow-x:auto; white-space:nowrap;}
+  }
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="kicker">研究報告 · 供 Zeal 參考</div>
+  <h1>投影片＋AI模仿你的聲音唸稿＝自動合成上課影片</h1>
+  <div class="meta">2026-08-16　查證方式：三份獨立研究（技術路線、聲音克隆、連結真偽），文中列出的 GitHub 專案連結均已逐一核對</div>
+</header>
+
+<div class="lead">
+<b>結論先講：</b>可行，但這次查證範圍內，沒有找到「丟三個檔案進去、一鍵吐出成品」的傻瓜工具。實務上要拆成兩塊分開解決——
+「用 AI 模仿你的聲音把逐字稿唸出來」跟「投影片自動跟著語音換頁」，各自有成熟的開源做法，
+但接起來目前還是需要一次性的技術整合（可以自己弄一次，或請人設定一次，之後就能重複用）。
+</div>
+
+<div class="toc">
+<a href="#overview">① 這件事到底怎麼運作</a>
+<a href="#routeA">② 路線 A：最省工夫（連網、要付費）</a>
+<a href="#routeB">③ 路線 B：完全在自己電腦上跑（不花雲端 API 費、但有硬體與人力成本）</a>
+<a href="#engines">④ 聲音克隆引擎完整清單</a>
+<a href="#pitfalls">⑤ 常見雷區</a>
+<a href="#verify">⑥ 查證方式與可信度</a>
+</div>
+
+<h2 id="overview">① 這件事到底怎麼運作</h2>
+<p>你要的東西，拆開來看其實是兩個獨立步驟接在一起：</p>
+<ol>
+<li><b>把逐字稿變成「你的聲音」：</b>這叫<span class="term" title="用一小段你的錄音當樣本，AI 學會模仿你的音色，之後你打字它就能用你的聲音唸出來">聲音克隆（voice cloning）</span>。現在的技術只要幾秒到幾十秒的乾淨錄音樣本，就能讓 AI 抓住你的音色，不用像以前那樣錄好幾小時去「訓練」。</li>
+<li><b>讓投影片跟著語音自動換頁：</b>做法是把逐字稿按「每一張投影片」切成一段一段，每段各自生成一段語音，量出這段語音實際有多長，投影片就停留多久，再把畫面跟聲音接成一支影片。<b>不是</b>把整份講稿唸成一大條音檔再去用猜的方式對時——那樣誤差會很大。</li>
+</ol>
+<p>以本次查證範圍來說，還沒找到「兩步驟已經完全打包好、非工程師點一點就能用」的成熟開源工具。最接近的一套（見路線 A）用的是雲端服務幫你完成第一步；如果你堅持完全不上雲端、聲音樣本不離開自己電腦，第二步的「接起來」目前得請人設定一次（見路線 B）。</p>
+
+<h2 id="routeA">② 路線 A：最省工夫（要連網、依用量付費）</h2>
+<div class="card">
+<div class="route-title">PPT Master ＋ 雲端聲音克隆服務（例如 CosyVoice、Qwen）</div>
+<span class="tag">適合：想快速看到成品</span><span class="tag">需要：Windows＋PowerPoint</span><span class="tag">需要：雲端帳號</span>
+<p style="margin-top:.8rem">做法很直覺：先在雲端服務（CosyVoice 或 Qwen）用你自己的錄音建立一個「克隆音色」，接著把每張投影片的講稿寫進投影片的「備註」欄位，PPT Master 這個工具會自動幫每一頁生成語音、把語音塞回那一頁、依語音長度算出換頁時間，最後直接請 PowerPoint 輸出成一支 MP4 影片。</p>
+<p>這條路線<b>已經被獨立查證是真實存在、文件完整的正式專案</b>（GitHub 上有 1,669 次程式更新紀錄、4.7 萬人按讚，不是隨便的小專案；查證方式是核對頁面與文件是否真實存在，沒有實際安裝跑過，所以不代表「目前仍持續維護」）。代價是：聲音樣本跟講稿內容會送到雲端服務商那邊處理，不是完全離線；用量大時可能要付費。</p>
+</div>
+
+<h2 id="routeB">③ 路線 B：完全在自己電腦上跑（不花雲端 API 費、但有硬體與人力成本）</h2>
+<div class="card">
+<div class="route-title">Qwen3-TTS（本機安裝）＋ 找人設定一次「自動接投影片」的流程</div>
+<span class="tag">適合：聲音樣本不想上雲端</span><span class="tag">建議：搭配 NVIDIA 顯示卡（GPU，圖形運算晶片，能讓語音生成跑得夠快）</span><span class="tag">需要：技術人員設定一次</span>
+<p style="margin-top:.8rem">Qwen3-TTS 是目前查到中文支援最直接、且採用可免費商用的 Apache-2.0 授權的本機聲音克隆引擎，最快 3 秒錄音就能開始模仿你的聲音，而且有網頁操作介面，不用打指令；但正式用在教學內容，建議準備 30～90 秒乾淨錄音樣本、挑出最穩定的一段再用，效果會比只錄 3 秒好很多。它本身只負責「生成語音」，「把語音跟投影片換頁接起來、輸出成影片」這一步目前沒有現成的一鍵工具，需要另外整合一次（可以想成：裝修時水電要接一次管線，接完之後日常使用就很順）。這條路線省下的是雲端 API 費用，不是全部成本——電腦硬體與第一次整合設定的人力時間，仍是要花的代價。</p>
+<p>建議做法：先拿 5 頁左右的投影片試做一輪，特別留意中文破音字、英文專有名詞唸得順不順，滿意了再擴大到整份教材，比較不會整支影片重工。</p>
+<p>如果 Qwen3-TTS 對某些中文字的發音不夠準，另一個很值得比較的選項是 <b>IndexTTS-2.5</b>——它多了一個「拼音校正」功能，能手動修正唸錯的字，特別適合教學內容常出現的專有名詞。不過它的授權條款跟 Apache／MIT 不同，商業使用前要仔細看清楚（月活躍用戶超過一億或年營收超過十億人民幣才會觸發額外授權義務，一般個人與中小型使用通常沒問題）。</p>
+</div>
+
+<h2 id="engines">④ 聲音克隆引擎完整清單</h2>
+<p>下面是查證過、頁面與文件都真實存在的候選引擎，方便你或技術人員之後選用。更新頻率並不一致——前五個近期都還有更新，<b>OpenVoice V2 最近一次更新落在 2025-04</b>，明顯比其他候選慢，先列入比較但不建議當 2026 的首選。「好上手」欄位是對<b>不寫程式的人</b>而言。</p>
+<table>
+<tr><th>引擎</th><th>中文支援</th><th>能不能免費商用</th><th>好上手？</th></tr>
+<tr><td><b>Qwen3-TTS</b>（首選）</td><td>官方直接支援</td><td class="good">可以（Apache-2.0）</td><td>有網頁介面，但要人裝一次</td></tr>
+<tr><td>IndexTTS-2.5</td><td>官方支援，可校正發音</td><td class="warn">部分限制（見上方說明）</td><td>有網頁介面，要人裝一次</td></tr>
+<tr><td>GPT-SoVITS</td><td>中文圈很成熟</td><td class="warn">程式碼可以，但要另核對模型授權</td><td>中文圈裡相對好裝</td></tr>
+<tr><td>Fish Speech</td><td>支援，含情緒控制</td><td class="warn">商用需另外簽署授權（是否收費未查證）</td><td>需要技術人員部署</td></tr>
+<tr><td>F5-TTS</td><td>有中文模型</td><td class="warn">官方模型不可商用</td><td>需要技術人員部署</td></tr>
+<tr><td>OpenVoice V2</td><td>支援，但情緒選項少</td><td class="good">可以（MIT）</td><td>有網頁介面（更新較久沒動）</td></tr>
+</table>
+<div class="note">上面說的「中文支援」，官方通常指普通話／國語文字輸入，<b>不等於保證台灣腔、台語或每個繁體多音字都唸得自然</b>——這點沒有任何一家官方明確承諾，一定要用自己的講稿試聽過才能確認。以上「好上手」都仍需要第一次由懂電腦的人幫忙安裝設定；日常重複使用（打字生成語音）通常就是點網頁按鈕。RVC／Applio 這類「變聲」工具不建議用在這裡——它們是把「已經錄好的一段語音」轉換成別的音色，不是直接把文字唸出來，多繞一手反而增加失真跟麻煩。</div>
+
+<h2 id="pitfalls">⑤ 常見雷區</h2>
+<ul>
+<li><b>破音字跟專有名詞：</b>AI 唸中文不保證每個字都唸對，尤其是人名、地名、多音字。做法是先挑 3～5 頁最容易出錯的內容試聽，抓出問題字，再大量產生全部內容。</li>
+<li><b>對時誤差：</b>語音檔開頭結尾常有一小段安靜無聲，如果用「猜的秒數」對時會讓換頁早一點或晚一點。正確做法是量每段語音<b>實際的長度</b>，再多留 0.5～1 秒緩衝；不過這只是必要條件、不是保證完美——影片軟體輸出時仍會有微小誤差，多頁累積下來可能變明顯，所以做完一定要把整支影片從頭到尾（尤其中段跟最後幾頁）實際播放檢查一次，不能只看第一頁。改了任何一頁講稿、重新生成語音後，也要記得重新量時間、重新輸出，不能沿用舊的換頁秒數。</li>
+<li><b>聲音樣本要當機密保管：</b>克隆用的錄音樣本、生成好的「聲音檔案」跟逐字稿，都可能被拿去冒充你講話，建議當成帳號密碼一樣保管——不要放到公開的地方，用不到了就刪除。如果影片會公開播放，建議在影片裡清楚註明「經本人授權的 AI 語音合成」，避免被誤認成即時真人發言。</li>
+<li><b>授權細節要看清楚：</b>「開源」不等於「什麼都能免費拿去賣錢」。上面表格已經標出哪些引擎商用會有限制，正式對外使用前建議再讓技術人員逐一核對一次授權條款原文。</li>
+</ul>
+
+<h2 id="verify">⑥ 查證方式與可信度</h2>
+<p>這份報告不是單一次查詢的結果，而是經過「先研究、再獨立查證」兩階段：兩輪查證合計核對了 <b>25 筆連結紀錄</b>（去除重複後是 24 個不同的 GitHub 專案），逐一確認頁面真的存在、功能描述與研究內容吻合、沒有被標記「已停止維護」。第一輪（投影片技術路線）沒有核對授權條款；第二輪（聲音克隆）額外多核對了每個 repo 實際的授權標示，發現備選工具 Coqui 有一處標示問題——它的程式碼授權實際是 MPL-2.0，跟報告原本寫的「模型授權」不是同一個東西，兩者容易被混為一談（不影響上面兩條主推薦路線）。</p>
+<p class="note"><b>查證的邊界要說清楚：</b>這兩輪查證做的是「頁面、文件、授權標示是否真實存在、內容是否吻合」，<b>沒有實際安裝、跑過任何一個引擎，也沒有拿你的簡報或錄音實際做出一支成品影片</b>——效果好不好、跑起來順不順，仍需要你或技術人員親自試過才知道。技術背景資料（含各引擎授權的連結與重點摘要，不是逐字收錄的完整授權原文）保存在原始研究檔案中，如果之後要正式對外使用聲音克隆，建議把授權條款交給技術人員或法務點開連結、逐字再核對一次。</p>
+
+<footer>
+本報告由 Claude CLI 調度背景研究（codex terra high）產出並獨立查證後彙整。技術路線研究、聲音克隆研究、兩輪連結查證共四份原始文件留存備查。
+</footer>
+
+</div>
