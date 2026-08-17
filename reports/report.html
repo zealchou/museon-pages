@@ -1,163 +1,666 @@
-<title>投影片＋AI模仿你的聲音唸稿＝自動合成上課影片：研究報告</title>
-<style>
-  :root{
-    --bg:#faf7f2; --card:#ffffff; --ink:#2b2621; --ink-soft:#5a5248;
-    --accent:#b23a2e; --accent-soft:#e7d9c9; --line:#e3d9c8;
-    --tag-bg:#f1e6d3; --good:#2f6b3e; --warn:#a3591b;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#1c1815; --card:#241f1b; --ink:#efe6d8; --ink-soft:#c9bdab;
-      --accent:#e08a72; --accent-soft:#3a2f26; --line:#3a3128;
-      --tag-bg:#332a20; --good:#7fd08f; --warn:#e0a45c;
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Qwen3.8-27B：GB10 vLLM 部署版本選擇研究</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
     }
-  }
-  :root[data-theme="dark"]{
-    --bg:#1c1815; --card:#241f1b; --ink:#efe6d8; --ink-soft:#c9bdab;
-    --accent:#e08a72; --accent-soft:#3a2f26; --line:#3a3128;
-    --tag-bg:#332a20; --good:#7fd08f; --warn:#e0a45c;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
-    line-height:1.85; font-size:17px; margin:0; padding:0 1.1rem 5rem;
-  }
-  .wrap{max-width:760px; margin:0 auto;}
-  header{padding:3rem 0 1.6rem; border-bottom:1px solid var(--line);}
-  header .kicker{color:var(--accent); font-weight:700; font-size:.85rem; letter-spacing:.06em; text-transform:uppercase;}
-  h1{font-size:1.7rem; line-height:1.4; margin:.5rem 0 .6rem;}
-  .meta{color:var(--ink-soft); font-size:.92rem;}
-  h2{font-size:1.28rem; margin-top:3rem; padding-top:.2rem; border-top:3px solid var(--accent-soft); display:flex; align-items:center; gap:.5rem;}
-  h3{font-size:1.08rem; margin-top:2rem; color:var(--ink);}
-  p{margin:0 0 1.1rem;}
-  .lead{font-size:1.08rem; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.3rem 1.4rem; margin:1.4rem 0 2rem;}
-  .lead b{color:var(--accent);}
-  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.3rem 1.4rem; margin:1.1rem 0;}
-  .route-title{font-weight:700; font-size:1.05rem; margin-bottom:.4rem;}
-  .tag{display:inline-block; background:var(--tag-bg); color:var(--ink-soft); font-size:.78rem; padding:.15rem .6rem; border-radius:999px; margin-right:.35rem;}
-  .good{color:var(--good); font-weight:700;}
-  .warn{color:var(--warn); font-weight:700;}
-  table{width:100%; border-collapse:collapse; margin:1.2rem 0; font-size:.93rem;}
-  th,td{text-align:left; padding:.65rem .6rem; border-bottom:1px solid var(--line); vertical-align:top;}
-  th{color:var(--ink-soft); font-weight:700; font-size:.85rem;}
-  tr:last-child td{border-bottom:none;}
-  ul,ol{padding-left:1.3rem; margin:0 0 1.1rem;}
-  li{margin-bottom:.5rem;}
-  .term{border-bottom:1px dashed var(--accent); cursor:help;}
-  .note{font-size:.88rem; color:var(--ink-soft); border-left:3px solid var(--accent-soft); padding:.2rem 0 .2rem .8rem; margin:1rem 0;}
-  a{color:var(--accent);}
-  footer{margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.85rem;}
-  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.2rem 1.4rem; margin:1.4rem 0;}
-  .toc a{display:block; padding:.25rem 0; color:var(--ink); text-decoration:none;}
-  .toc a:hover{color:var(--accent);}
-  @media (max-width:600px){
-    body{font-size:16px; padding:0 .9rem 4rem;}
-    h1{font-size:1.4rem;}
-    table{display:block; overflow-x:auto; white-space:nowrap;}
-  }
-</style>
-
-<div class="wrap">
-
-<header>
-  <div class="kicker">研究報告 · 供 Zeal 參考</div>
-  <h1>投影片＋AI模仿你的聲音唸稿＝自動合成上課影片</h1>
-  <div class="meta">2026-08-16　查證方式：三份獨立研究（技術路線、聲音克隆、連結真偽），文中列出的 GitHub 專案連結均已逐一核對</div>
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style>
+    :root { color-scheme: light; }
+    body { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; color: #19212b; background: #fbfcfe; font: 18px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif; }
+    h1, h2, h3 { color: #102a43; line-height: 1.25; }
+    h1 { font-size: 2rem; margin: .2rem 0 1.25rem; }
+    h2 { font-size: 1.45rem; margin-top: 2.5rem; padding-bottom: .35rem; border-bottom: 1px solid #d9e2ec; }
+    h3 { font-size: 1.15rem; margin-top: 1.8rem; }
+    p, li { overflow-wrap: anywhere; }
+    a { color: #0969da; }
+    table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; font-size: .88rem; line-height: 1.55; }
+    th, td { border: 1px solid #cbd5e1; padding: .6rem; text-align: left; vertical-align: top; }
+    th { background: #eaf2fb; }
+    code { padding: .1rem .28rem; border-radius: .2rem; background: #eef2f7; font-size: .9em; }
+    blockquote { margin: 1rem 0; padding: .2rem 1rem; border-left: 4px solid #8bb8e8; background: #f0f6fc; }
+    @media (max-width: 600px) { body { padding: 1rem .85rem 2rem; font-size: 16px; } h1 { font-size: 1.55rem; } h2 { font-size: 1.25rem; } }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Qwen3.8-27B：GB10 vLLM 部署版本選擇研究</h1>
 </header>
-
-<div class="lead">
-<b>結論先講：</b>可行，但這次查證範圍內，沒有找到「丟三個檔案進去、一鍵吐出成品」的傻瓜工具。實務上要拆成兩塊分開解決——
-「用 AI 模仿你的聲音把逐字稿唸出來」跟「投影片自動跟著語音換頁」，各自有成熟的開源做法，
-但接起來目前還是需要一次性的技術整合（可以自己弄一次，或請人設定一次，之後就能重複用）。
-</div>
-
-<div class="toc">
-<a href="#overview">① 這件事到底怎麼運作</a>
-<a href="#routeA">② 路線 A：最省工夫（連網、要付費）</a>
-<a href="#routeB">③ 路線 B：完全在自己電腦上跑（不花雲端 API 費、但有硬體與人力成本）</a>
-<a href="#engines">④ 聲音克隆引擎完整清單</a>
-<a href="#pitfalls">⑤ 常見雷區</a>
-<a href="#verify">⑥ 查證方式與可信度</a>
-<a href="#allinone">⑦ 有沒有全部串好的懶人包？自己接一個划算嗎</a>
-</div>
-
-<h2 id="overview">① 這件事到底怎麼運作</h2>
-<p>你要的東西，拆開來看其實是兩個獨立步驟接在一起：</p>
-<ol>
-<li><b>把逐字稿變成「你的聲音」：</b>這叫<span class="term" title="用一小段你的錄音當樣本，AI 學會模仿你的音色，之後你打字它就能用你的聲音唸出來">聲音克隆（voice cloning）</span>。現在的技術只要幾秒到幾十秒的乾淨錄音樣本，就能讓 AI 抓住你的音色，不用像以前那樣錄好幾小時去「訓練」。</li>
-<li><b>讓投影片跟著語音自動換頁：</b>做法是把逐字稿按「每一張投影片」切成一段一段，每段各自生成一段語音，量出這段語音實際有多長，投影片就停留多久，再把畫面跟聲音接成一支影片。<b>不是</b>把整份講稿唸成一大條音檔再去用猜的方式對時——那樣誤差會很大。</li>
-</ol>
-<p>以本次查證範圍來說，還沒找到「兩步驟已經完全打包好、非工程師點一點就能用」的成熟開源工具。最接近的一套（見路線 A）用的是雲端服務幫你完成第一步；如果你堅持完全不上雲端、聲音樣本不離開自己電腦，第二步的「接起來」目前得請人設定一次（見路線 B）。</p>
-
-<h2 id="routeA">② 路線 A：最省工夫（要連網、依用量付費）</h2>
-<div class="card">
-<div class="route-title">PPT Master ＋ 雲端聲音克隆服務（例如 CosyVoice、Qwen）</div>
-<span class="tag">適合：想快速看到成品</span><span class="tag">需要：Windows＋PowerPoint</span><span class="tag">需要：雲端帳號</span>
-<p style="margin-top:.8rem">做法很直覺：先在雲端服務（CosyVoice 或 Qwen）用你自己的錄音建立一個「克隆音色」，接著把每張投影片的講稿寫進投影片的「備註」欄位，PPT Master 這個工具會自動幫每一頁生成語音、把語音塞回那一頁、依語音長度算出換頁時間，最後直接請 PowerPoint 輸出成一支 MP4 影片。</p>
-<p>這條路線<b>已經被獨立查證是真實存在、文件完整的正式專案</b>（GitHub 上有 1,669 次程式更新紀錄、4.7 萬人按讚，不是隨便的小專案；查證方式是核對頁面與文件是否真實存在，沒有實際安裝跑過，所以不代表「目前仍持續維護」）。代價是：聲音樣本跟講稿內容會送到雲端服務商那邊處理，不是完全離線；用量大時可能要付費。</p>
-</div>
-
-<h2 id="routeB">③ 路線 B：完全在自己電腦上跑（不花雲端 API 費、但有硬體與人力成本）</h2>
-<div class="card">
-<div class="route-title">Qwen3-TTS（本機安裝）＋ 找人設定一次「自動接投影片」的流程</div>
-<span class="tag">適合：聲音樣本不想上雲端</span><span class="tag">建議：搭配 NVIDIA 顯示卡（GPU，圖形運算晶片，能讓語音生成跑得夠快）</span><span class="tag">需要：技術人員設定一次</span>
-<p style="margin-top:.8rem">Qwen3-TTS 是目前查到中文支援最直接、且採用可免費商用的 Apache-2.0 授權的本機聲音克隆引擎，最快 3 秒錄音就能開始模仿你的聲音，而且有網頁操作介面，不用打指令；但正式用在教學內容，建議準備 30～90 秒乾淨錄音樣本、挑出最穩定的一段再用，效果會比只錄 3 秒好很多。它本身只負責「生成語音」，「把語音跟投影片換頁接起來、輸出成影片」這一步目前沒有現成的一鍵工具，需要另外整合一次（可以想成：裝修時水電要接一次管線，接完之後日常使用就很順）。這條路線省下的是雲端 API 費用，不是全部成本——電腦硬體與第一次整合設定的人力時間，仍是要花的代價。</p>
-<p>建議做法：先拿 5 頁左右的投影片試做一輪，特別留意中文破音字、英文專有名詞唸得順不順，滿意了再擴大到整份教材，比較不會整支影片重工。</p>
-<p>如果 Qwen3-TTS 對某些中文字的發音不夠準，另一個很值得比較的選項是 <b>IndexTTS-2.5</b>——它多了一個「拼音校正」功能，能手動修正唸錯的字，特別適合教學內容常出現的專有名詞。不過它的授權條款跟 Apache／MIT 不同，商業使用前要仔細看清楚（月活躍用戶超過一億或年營收超過十億人民幣才會觸發額外授權義務，一般個人與中小型使用通常沒問題）。</p>
-</div>
-
-<h2 id="engines">④ 聲音克隆引擎完整清單</h2>
-<p>下面是查證過、頁面與文件都真實存在的候選引擎，方便你或技術人員之後選用。更新頻率並不一致——前五個近期都還有更新，<b>OpenVoice V2 最近一次更新落在 2025-04</b>，明顯比其他候選慢，先列入比較但不建議當 2026 的首選。「好上手」欄位是對<b>不寫程式的人</b>而言。</p>
+<h1
+id="qwen38-27bgb10dgx-sparksm-121以-vllm-部署的版本選擇研究">Qwen3.8-27B：GB10（DGX
+Spark／SM 12.1）以 vLLM 部署的版本選擇研究</h1>
+<p>研究日期：2026-08-17（Asia/Taipei）<br />
+目標平台：NVIDIA GB10 / DGX Spark、Grace Blackwell、compute capability
+12.1、單機 vLLM。<br />
+範圍：只使用公開網頁、Hugging Face 模型卡／檔案清單、vLLM 官方文件與公開
+GitHub、Reddit
+討論；<strong>沒有讀取、修改或啟動本機模型檔與服務</strong>。</p>
+<h2 id="可直接採用的結論">可直接採用的結論</h2>
+<p>**首選先用目前已完整下載的 <code>nvidia/Qwen3.8-27B-NVFP4</code>，以
+vLLM 的新版本（官方 Qwen3.8 recipe 最低為 vLLM 0.17.0，GB10 實例則為
+0.27.1）和 FP8 KV cache 做「不開 MTP」基線測試；若遇到 sm_121 的
+FlashInfer/CUTLASS <code>cudaErrorNoKernelImageForDevice</code>，再加
+<code>--linear-backend marlin</code>。**理由是 NVFP4 是 Blackwell 對應的
+4-bit 浮點格式，體積約 22 GB、最符合 GB10 的記憶體頻寬限制，且已有
+Qwen3.8 NVFP4 在 GB10 + vLLM 成功啟動的公開自報；vLLM 官方 Qwen3.8
+recipe 也把 NVFP4 列為單 GPU 的低延遲路徑。<a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">官方 recipe</a> <a
+href="https://www.reddit.com/r/LocalLLM/comments/1voh2nw/qwen3827bnvfp4_on_a_dgx_spark/">社群
+GB10 實測</a></p>
+<p>但這不是「已由 NVIDIA/vLLM 官方在 GB10 認證的最佳組合」：官方 recipe
+的硬體欄只標示 GB300 已驗證，未標 GB10；而本次公開查詢時
+<code>https://huggingface.co/nvidia/Qwen3.8-27B-NVFP4</code> 回傳 HTTP
+401，無法取得該 <strong>特定 NVIDIA checkpoint</strong> 的公開 model
+card
+或量化設定。因此結論的證據強度是<strong>中等</strong>，不是無條件結論。若
+NVFP4 在本機長時間測試不穩或 kernel fallback 造成問題，改用官方
+<code>Qwen/Qwen3.8-27B-FP8</code> 是最可辯護的
+fallback：它有官方模型卡、官方宣稱 vLLM 相容，且已有 GB10 + vLLM
+的公開實測。<a href="https://huggingface.co/Qwen/Qwen3.8-27B-FP8">官方
+FP8 模型卡</a> <a
+href="https://www.reddit.com/r/LocalLLM/comments/1voi148/qwen3827bfp8_on_dgx_spark_8_toks_single_stream_62/">GB10
+FP8 實測</a></p>
+<h2 id="先釐清版本的邊界">先釐清「版本」的邊界</h2>
+<p>Hugging Face 搜尋
+<code>Qwen3.8-27B</code>（2026-08-17）會回傳大量衍生模型、uncensored
+merge、MLX、EXL3、OpenVINO、GPTQ/AWQ 與數十種 GGUF
+檔。以下不是聲稱列盡所有 fork；而是列出<strong>原始 Qwen checkpoint
+與主流量化格式中，能以公開來源確認且和 NVIDIA + vLLM 選型有關的代表性
+repo</strong>。同一格式的第三方量化結果、校準集、是否保留
+MTP/vision、量化 config
+都可能不同，不能把名稱相同的「NVFP4」或「AWQ」當成位元一致的模型。</p>
+<p>表中的「repo 總大小」是研究當下從 Hugging Face API 的
+<code>siblings[].size</code> 加總；GGUF repo
+同時放多個檔，故改列單一常用檔案大小而非整個
+repo。下載後的實際磁碟用量還會受 tokenizer、MTP、vision
+projector、檔案系統及快取影響。</p>
+<h2 id="已知-checkpoint量化格式一覽">已知 checkpoint／量化格式一覽</h2>
 <table>
-<tr><th>引擎</th><th>中文支援</th><th>能不能免費商用</th><th>好上手？</th></tr>
-<tr><td><b>Qwen3-TTS</b>（首選）</td><td>官方直接支援</td><td class="good">可以（Apache-2.0）</td><td>有網頁介面，但要人裝一次</td></tr>
-<tr><td>IndexTTS-2.5</td><td>官方支援，可校正發音</td><td class="warn">部分限制（見上方說明）</td><td>有網頁介面，要人裝一次</td></tr>
-<tr><td>GPT-SoVITS</td><td>中文圈很成熟</td><td class="warn">程式碼可以，但要另核對模型授權</td><td>中文圈裡相對好裝</td></tr>
-<tr><td>Fish Speech</td><td>支援，含情緒控制</td><td class="warn">商用需另外簽署授權（是否收費未查證）</td><td>需要技術人員部署</td></tr>
-<tr><td>F5-TTS</td><td>有中文模型</td><td class="warn">官方模型不可商用</td><td>需要技術人員部署</td></tr>
-<tr><td>OpenVoice V2</td><td>支援，但情緒選項少</td><td class="good">可以（MIT）</td><td>有網頁介面（更新較久沒動）</td></tr>
+<thead>
+<tr>
+<th>格式與代表 repo（HF 來源）</th>
+<th style="text-align: right;">公開可核對的大小</th>
+<th>已知量化／精度特性</th>
+<th>vLLM 狀態與啟動注意事項</th>
+<th>對 GB10 + vLLM 的判讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原生 BF16：<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B"><code>Qwen/Qwen3.8-27B</code></a></td>
+<td style="text-align: right;">repo 約 55.59 GB；vLLM recipe 稱權重約
+51.7 GiB</td>
+<td>官方 Transformers 權重，未另量化；27B dense hybrid-attention，內含
+vision 與 MTP head</td>
+<td><strong>官方明載相容 vLLM</strong>；官方 recipe 要求 vLLM ≥
+0.17.0。262K 原生 context；延伸 1M 需
+<code>VLLM_ALLOW_LONG_MAX_MODEL_LEN=1</code> 與
+<code>--hf-overrides</code>，不是一般啟動的必要條件。<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B">模型卡</a> <a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">recipe</a></td>
+<td>可跑但不優先：在 GB10
+上重量較大、解碼偏記憶體頻寬受限；此結論是格式/體積推論，<strong>未查到此
+BF16 版本的 GB10 vLLM benchmark</strong>。</td>
+</tr>
+<tr>
+<td>官方 FP8：<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B-FP8"><code>Qwen/Qwen3.8-27B-FP8</code></a></td>
+<td style="text-align: right;">repo 約 30.89 GB；recipe 稱權重約 28.7
+GiB；GB10 使用者回報載入約 27.6 GiB</td>
+<td>官方 fine-grained/block FP8，block size
+128；模型卡稱指標幾乎與原模型相同</td>
+<td><strong>官方明載相容 vLLM</strong>；recipe 的示例使用
+<code>--kv-cache-dtype fp8 --reasoning-parser qwen3</code>。MTP
+為選配：<code>--speculative-config '{"method":"mtp","num_speculative_tokens":3}'</code>。<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B-FP8">模型卡</a> <a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">recipe</a></td>
+<td>最佳保守 fallback：官方來源與 GB10 vLLM
+社群數據都存在，但單流解碼未必快。不要把 FP8 cache scale
+警告當成已驗證無品質影響。</td>
+</tr>
+<tr>
+<td>使用者已下載的 NVIDIA NVFP4：<a
+href="https://huggingface.co/nvidia/Qwen3.8-27B-NVFP4"><code>nvidia/Qwen3.8-27B-NVFP4</code></a></td>
+<td style="text-align: right;">使用者提供：22 GB、完整驗證；公開 API
+此時 HTTP 401</td>
+<td><strong>無法從公開 model card 核實</strong>其精確 W4A4/W4A16
+混合配置、校準方式、是否量化 lm_head/MTP</td>
+<td>repo 不公開可讀，故不能以官方文件宣稱其「vLLM
+原生支援」或特定旗標；只能以同格式公開 checkpoint
+與本機啟動驗證決定</td>
+<td>**首選候選，而非已被公開資料完全證明的首選。**它最省重下載、大小與
+Blackwell NVFP4 方向一致；部署前須驗證 config、自動量化偵測、SM121
+kernel 與輸出品質。</td>
+</tr>
+<tr>
+<td>NVFP4（vLLM recipe 指定）：<a
+href="https://huggingface.co/Inferact/Qwen3.8-27B-NVFP4"><code>Inferact/Qwen3.8-27B-NVFP4</code></a></td>
+<td style="text-align: right;">repo 約 26.40 GB（約 24.6 GiB）</td>
+<td>混合 NVFP4 checkpoint；vLLM 官方 recipe 將它標為「NVFP4
+(W4A4)」</td>
+<td><strong>官方 vLLM recipe 直接給 TP1
+啟動例</strong>：<code>--max-model-len 262144 --kv-cache-dtype fp8 --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder</code>；recipe
+基線 vLLM ≥ 0.17.0。<a
+href="https://huggingface.co/Inferact/Qwen3.8-27B-NVFP4">repo</a> <a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">recipe</a></td>
+<td>公開證據最完整的 NVFP4 vLLM 參考 checkpoint；若本機 NVIDIA repo
+不能載入，可優先考慮它，而不是任意 NVFP4 fork。官方 recipe 仍未直接標
+GB10 驗證。</td>
+</tr>
+<tr>
+<td>NVFP4（Unsloth Dynamic V3）：<a
+href="https://huggingface.co/unsloth/Qwen3.8-27B-NVFP4"><code>unsloth/Qwen3.8-27B-NVFP4</code></a></td>
+<td style="text-align: right;">repo 約 23.44 GB（約 21.8 GiB）</td>
+<td>Unsloth 模型卡稱 Dynamic V3.0；模型卡明說 lm_head 為 FP8</td>
+<td>模型卡明說 <strong>只支援 vLLM、不支援 SGLang</strong>（因 SGLang
+不能載入 FP8 lm_head）。公開 GB10 issue 顯示此 repo 能在 SM121 nightly
+vLLM 啟動，但該 issue 是 Anthropic <code>/v1/messages</code> 的 template
+bug，不是吞吐測試。<a
+href="https://huggingface.co/unsloth/Qwen3.8-27B-NVFP4">repo</a> <a
+href="https://github.com/vllm-project/vllm/issues/52489">GB10
+issue</a></td>
+<td>尺寸優勢明顯，也是可行備選；但格式與本機 NVIDIA checkpoint
+不保證相同，且其 vLLM-only 限制是部署鎖定。</td>
+</tr>
+<tr>
+<td>NVFP4（ModelOpt 混合）：<a
+href="https://huggingface.co/RadixArk/Qwen3.8-27B-NVFP4"><code>RadixArk/Qwen3.8-27B-NVFP4</code></a></td>
+<td style="text-align: right;">repo 約 21.95 GB（約 20.4 GiB）</td>
+<td>卡片明載：MLP <code>gate/up/down</code> 與 lm_head 為 dynamic NVFP4
+W4A4（group 16）；attention 為 FP8；MTP/vision 保留 BF16；在 GB300
+量化/驗證</td>
+<td>卡片提供的是 <strong>SGLang</strong> 指令，未提供 vLLM 啟動或 vLLM
+驗證；雖同為 ModelOpt，不應擅自當成 vLLM 可無旗標載入。<a
+href="https://huggingface.co/RadixArk/Qwen3.8-27B-NVFP4">模型卡</a></td>
+<td>不列為本題 vLLM 首選：它有 GB300（非
+GB10）驗證與清楚量化說明，但欠缺 Qwen3.8 + vLLM 的直接證據。</td>
+</tr>
+<tr>
+<td>AWQ INT4：<a
+href="https://huggingface.co/cyankiwi/Qwen3.8-27B-AWQ-INT4"><code>cyankiwi/Qwen3.8-27B-AWQ-INT4</code></a></td>
+<td style="text-align: right;">repo 約 21.04 GB（約 19.6 GiB）</td>
+<td>4-bit AWQ 衍生 checkpoint</td>
+<td>卡片沿用上游「相容 vLLM」說明，但未給此特定 checkpoint 的 vLLM
+版本/旗標或 GB10 驗證；所以只能列為「格式可能由 vLLM 支援」，不是此 repo
+已驗證。<a
+href="https://huggingface.co/cyankiwi/Qwen3.8-27B-AWQ-INT4">repo</a> <a
+href="https://docs.vllm.ai/en/latest/features/quantization/">vLLM
+quantization 索引</a></td>
+<td>不建議因體積小就取代 NVFP4：沒有 GB10 Qwen3.8 AWQ 的直接證據，且 AWQ
+並不等於可利用 GB10 原生 FP4 tensor core。</td>
+</tr>
+<tr>
+<td>AWQ INT4（Quark）：<a
+href="https://huggingface.co/amd/Qwen3.8-27B-Quark-AWQ-INT4-W4A16"><code>amd/Qwen3.8-27B-Quark-AWQ-INT4-W4A16</code></a></td>
+<td style="text-align: right;">repo 約 19.54 GB（約 18.2 GiB）</td>
+<td>INT4 weights / BF16 activations、group 128、AWQ；卡片的自測 GSM8K 為
+90.67% vs base 93.33%（97.7% recovery）</td>
+<td>卡片明說需支援 <code>W4A16Int4</code> 的 Quark-compatible
+runtime，並連到仍為 open 的 <a
+href="https://github.com/vllm-project/vllm/pull/48606">vLLM PR
+#48606</a>；不能說所有正式 vLLM 發行版均穩定支援。<a
+href="https://huggingface.co/amd/Qwen3.8-27B-Quark-AWQ-INT4-W4A16">repo</a></td>
+<td>不採用：主要針對 AMD Quark；公開證據不足以支持 GB10 NVIDIA
+vLLM。</td>
+</tr>
+<tr>
+<td>AWQ W4A16（另一例）：<a
+href="https://huggingface.co/philbert440/Qwen3.8-27B-W4A16-AWQ"><code>philbert440/Qwen3.8-27B-W4A16-AWQ</code></a></td>
+<td style="text-align: right;">repo 約 19.56 GB</td>
+<td>W4A16 AWQ，另含約 0.85 GB MTP weights</td>
+<td>卡片未提供可核實的 GB10 + vLLM 指令／版本；只可作 AWQ
+供應者不同的例子。<a
+href="https://huggingface.co/philbert440/Qwen3.8-27B-W4A16-AWQ">repo</a></td>
+<td>同上，不以名稱相近就推定等效。</td>
+</tr>
+<tr>
+<td>GPTQ W4A16：<a
+href="https://huggingface.co/Vishva007/Qwen3.8-27B-W4A16-AutoRound-GPTQ"><code>Vishva007/Qwen3.8-27B-W4A16-AutoRound-GPTQ</code></a></td>
+<td style="text-align: right;">repo 約 20.05 GB（約 18.7 GiB）</td>
+<td>AutoRound 產生的 4-bit weights / 16-bit activations，group 64</td>
+<td>卡片給 <code>vllm serve ... --quantization gptq</code>
+的示例；但這是第三方說法，未提供 GB10 實測。vLLM 官方 quantization
+索引列有 GPTQModel 支援，但不等於每個 AutoRound export 都相容。<a
+href="https://huggingface.co/Vishva007/Qwen3.8-27B-W4A16-AutoRound-GPTQ">repo</a>
+<a href="https://docs.vllm.ai/en/latest/features/quantization/">vLLM
+quantization</a></td>
+<td>可作除錯／容量實驗，不是推薦的 Blackwell 原生路徑。</td>
+</tr>
+<tr>
+<td>GGUF：<a
+href="https://huggingface.co/ggml-org/Qwen3.8-27B-GGUF"><code>ggml-org/Qwen3.8-27B-GGUF</code></a>、<a
+href="https://huggingface.co/unsloth/Qwen3.8-27B-GGUF"><code>unsloth/Qwen3.8-27B-GGUF</code></a>、<a
+href="https://huggingface.co/bartowski/Qwen3.8-27B-GGUF"><code>bartowski/Qwen3.8-27B-GGUF</code></a></td>
+<td style="text-align: right;">例：ggml-org Q4_K_M 18.97 GB、Q8_0 28.60
+GB、BF16 53.81 GB；Unsloth Q4_K_M 17.11 GB；各 repo 有多檔</td>
+<td>llama.cpp/gguf 量化族（Q2–Q8、IQ 等）；格式與 AWQ/NVFP4
+不可直接以「4-bit」比較品質</td>
+<td>vLLM 文件有 <a
+href="https://docs.vllm.ai/en/latest/features/quantization/gguf/">GGUF
+支援頁</a>，但模型釋出方主指向 llama.cpp；本次<strong>查不到 Qwen3.8
+GGUF 在 GB10 以 vLLM 的公開驗證</strong>。</td>
+<td>不符合「以 vLLM 為架構」的首選。GGUF 可能是 llama.cpp
+的好方案，但不能把另一個 runtime 的結果冒充為 vLLM 結果。</td>
+</tr>
+<tr>
+<td>MXFP4：<a
+href="https://huggingface.co/Inferact/Qwen3.8-27B-MXFP4"><code>Inferact/Qwen3.8-27B-MXFP4</code></a></td>
+<td style="text-align: right;">repo
+存在；本次未對其全檔案做大小採計</td>
+<td>OCP microscaling FP4，與 NVIDIA NVFP4 不是同格式</td>
+<td><strong>vLLM 官方 Qwen3.8 recipe 明示 Nvidia 裝置的 MXFP4 linear
+method 尚缺，不能如預期載入；建議在 Nvidia 用 NVFP4。</strong><a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">recipe
+troubleshooting</a></td>
+<td>排除。這是直接針對 Nvidia/vLLM 的官方 warning。</td>
+</tr>
+<tr>
+<td>非 vLLM 目標格式：MLX、OpenVINO、EXL3 等</td>
+<td style="text-align: right;">多種</td>
+<td>為 Apple/Intel/ExLlama 等 runtime 打包</td>
+<td>不屬此 NVIDIA GB10 + vLLM 的部署格式；未逐一展開</td>
+<td>排除，避免把「HF 上有」誤解成「適合 vLLM」。</td>
+</tr>
+</tbody>
 </table>
-<div class="note">上面說的「中文支援」，官方通常指普通話／國語文字輸入，<b>不等於保證台灣腔、台語或每個繁體多音字都唸得自然</b>——這點沒有任何一家官方明確承諾，一定要用自己的講稿試聽過才能確認。以上「好上手」都仍需要第一次由懂電腦的人幫忙安裝設定；日常重複使用（打字生成語音）通常就是點網頁按鈕。RVC／Applio 這類「變聲」工具不建議用在這裡——它們是把「已經錄好的一段語音」轉換成別的音色，不是直接把文字唸出來，多繞一手反而增加失真跟麻煩。</div>
-
-<h2 id="pitfalls">⑤ 常見雷區</h2>
+<h3 id="關於-nvidiaqwen38-27b-nvfp4-的特別說明">關於
+<code>nvidia/Qwen3.8-27B-NVFP4</code> 的特別說明</h3>
+<p>使用者已明確提供本機狀態：checkpoint 位於
+<code>/home/zealchou/models/Qwen3.8-27B-NVFP4</code>、22
+GB、下載完整。這份報告不重新檢查該路徑，以遵守「只查外部公開資料」限制。公開端能連到
+repo URL，但 API/頁面回應 401；因此下列敘述都沒有把
+Inferact、Unsloth、RadixArk 的 model card 當成 NVIDIA checkpoint
+的事實來源。它們僅是<strong>同格式的相容性與風險旁證</strong>。</p>
+<h2 id="vllm-版本旗標與部署風險">vLLM 版本、旗標與部署風險</h2>
+<h3 id="官方可確認的基線">官方可確認的基線</h3>
 <ul>
-<li><b>破音字跟專有名詞：</b>AI 唸中文不保證每個字都唸對，尤其是人名、地名、多音字。做法是先挑 3～5 頁最容易出錯的內容試聽，抓出問題字，再大量產生全部內容。</li>
-<li><b>對時誤差：</b>語音檔開頭結尾常有一小段安靜無聲，如果用「猜的秒數」對時會讓換頁早一點或晚一點。正確做法是量每段語音<b>實際的長度</b>，再多留 0.5～1 秒緩衝；不過這只是必要條件、不是保證完美——影片軟體輸出時仍會有微小誤差，多頁累積下來可能變明顯，所以做完一定要把整支影片從頭到尾（尤其中段跟最後幾頁）實際播放檢查一次，不能只看第一頁。改了任何一頁講稿、重新生成語音後，也要記得重新量時間、重新輸出，不能沿用舊的換頁秒數。</li>
-<li><b>聲音樣本要當機密保管：</b>克隆用的錄音樣本、生成好的「聲音檔案」跟逐字稿，都可能被拿去冒充你講話，建議當成帳號密碼一樣保管——不要放到公開的地方，用不到了就刪除。如果影片會公開播放，建議在影片裡清楚註明「經本人授權的 AI 語音合成」，避免被誤認成即時真人發言。</li>
-<li><b>授權細節要看清楚：</b>「開源」不等於「什麼都能免費拿去賣錢」。上面表格已經標出哪些引擎商用會有限制，正式對外使用前建議再讓技術人員逐一核對一次授權條款原文。</li>
+<li>vLLM 官方 Qwen3.8 recipe 為原生 BF16、官方 FP8 和 Inferact NVFP4
+都標示 <strong>vLLM ≥ 0.17.0</strong>；它把 Qwen3.8-27B 描述為 64 層中
+48 層 linear attention 的 hybrid model、含 vision tower 與 built-in
+MTP，並給 NVFP4 TP1 指令。<a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">官方 recipe</a></li>
+<li>262,144 token 是原生 context。只跑原生長度不需要額外 RoPE
+flag。若真要 1M，官方 Qwen 模型卡要求
+<code>VLLM_ALLOW_LONG_MAX_MODEL_LEN=1</code> 及 Qwen 指定的 nested
+<code>text_config</code>/YaRN override；這會提高 KV cache
+壓力，不能用「權重只 22GB」推定可行。<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B">官方 BF16 模型卡</a></li>
+<li>官方 NVFP4 sample 固定 FP8 KV cache；不要一開始為了省 KV
+空間切換到未驗證的低 bit KV。官方 FP8 sample 亦用 FP8 KV cache。<a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">官方 recipe</a></li>
+<li>官方 recipe 的 MTP 是選配
+<code>--speculative-config '{"method":"mtp","num_speculative_tokens":3}'</code>，不是
+model 能載入的必要條件。應先量基線，再以 MTP 1/2/3 分開驗證，不應把 MTP
+開啟後的故障誤判為 checkpoint 不能跑。<a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">官方 recipe</a></li>
 </ul>
-
-<h2 id="verify">⑥ 查證方式與可信度</h2>
-<p>這份報告不是單一次查詢的結果，而是經過「先研究、再獨立查證」兩階段：兩輪查證合計核對了 <b>25 筆連結紀錄</b>（去除重複後是 24 個不同的 GitHub 專案），逐一確認頁面真的存在、功能描述與研究內容吻合、沒有被標記「已停止維護」。第一輪（投影片技術路線）沒有核對授權條款；第二輪（聲音克隆）額外多核對了每個 repo 實際的授權標示，發現備選工具 Coqui 有一處標示問題——它的程式碼授權實際是 MPL-2.0，跟報告原本寫的「模型授權」不是同一個東西，兩者容易被混為一談（不影響上面兩條主推薦路線）。</p>
-<p class="note"><b>查證的邊界要說清楚：</b>這兩輪查證做的是「頁面、文件、授權標示是否真實存在、內容是否吻合」，<b>沒有實際安裝、跑過任何一個引擎，也沒有拿你的簡報或錄音實際做出一支成品影片</b>——效果好不好、跑起來順不順，仍需要你或技術人員親自試過才知道。技術背景資料（含各引擎授權的連結與重點摘要，不是逐字收錄的完整授權原文）保存在原始研究檔案中，如果之後要正式對外使用聲音克隆，建議把授權條款交給技術人員或法務點開連結、逐字再核對一次。</p>
-
-<h2 id="allinone">⑦ 有沒有全部串好的懶人包？自己接一個划算嗎</h2>
-
-<div class="card">
-<div class="route-title">如果可以接受用雲端服務：有，已查證兩個現成的商業工具</div>
-<p style="margin-top:.8rem"><b>HeyGen</b> 跟 <b>DeepBrain AI Studios</b> 都做到了「上傳 PPT → 自動變成一頁一頁的分鏡 → 每頁可填/改講稿 → 選你自己克隆好的聲音當旁白 → 直接輸出 MP4」，整條流程官方文件都寫明白、也已查證頁面內容真實不誇大。這比自己接省事很多。</p>
-<p>代價：要花錢（依方案與用量計費）、聲音樣本要上傳給對方雲端保管、HeyGen 一次最多處理 50 張投影片。繁體中文的口音與唸法效果如何，官方沒有保證，正式用之前建議先花小錢做 3～5 頁試片。</p>
-</div>
-
-<div class="card">
-<div class="route-title">如果堅持完全在自己電腦上做、不上雲端：沒有找到懶人包，但自己接一個是合理的</div>
-<p style="margin-top:.8rem">另外深查了幾個中文圈標榜「數位人講課」的開源專案（Easegen、Duix.Avatar、Linly-Talker 等），逐一核對後發現<b>都只做到一半</b>：Easegen 這類能讀懂 PPT、串好講解流程，但公開的程式與文件裡，沒有查到「怎麼把本機的聲音克隆接進這條流程」的具體做法（不是已證實一定要接雲端，只是這次沒找到本機接法的公開步驟）；Duix.Avatar、Linly-Talker 這類聲音克隆做得很完整，但這次沒有查到它們有讀懂 PPT 的功能。沒有一個是「聲音克隆＋投影片，兩者都在自己電腦上打包好」的現成工具。</p>
-<p>好消息是：<b>要自己接一個，方向是合理的。</b>每一塊零件（投影片轉圖片、Qwen3-TTS 生成語音、量音檔長度、把畫面跟聲音合成影片）都是現成、成熟的工具，缺的是「找人把這幾塊照固定順序串起來一次」——可以想成傢俱零件都買好了，還是需要請人實際組裝，而且組裝過程有幾個真正要花心力的地方，不是插上去就好：<b>①環境要先裝好</b>（Python、GPU 相關驅動、模型下載，這步最容易卡住，不是「下載一個按鈕」就結束）；<b>②中文唸法一定要實際聽過、抓出唸錯的字修正</b>，不能只看模型清單就相信效果；<b>③聲音樣本要當成機密素材管理</b>，只能存在受控的電腦資料夾裡。</p>
-<table>
-<tr><th>想做到什麼程度</th><th>大概要花多久</th><th>前提</th></tr>
-<tr><td>只是先做出一個「能動的樣子」給技術人員自己測試</td><td>半天到一天</td><td>投影片已經轉成圖片、講稿已經逐頁切好、不做字幕，而且是熟悉 Python／GPU 環境的人來做</td></tr>
-<tr><td>做到你自己能重複操作、出錯有提示、能接著失敗的地方重跑，不用每次找技術人員</td><td>約 1～3 個工作天</td><td>包含在一台真實電腦上把 Qwen3-TTS 與 FFmpeg 都跑通、驗證過；<b>不含</b>第一次裝 GPU 驅動、下載模型、跨平台相容測試的時間，這些常是額外變數</td></tr>
-<tr><td>再加上漂亮的操作畫面、自動字幕、保留 PPT 動畫效果、虛擬講者畫面</td><td>已經是一個正式的小專案，不建議一開始就求這麼多</td><td>—</td></tr>
-</table>
-</div>
-
-<div class="lead">
-<b>建議的判斷順序：</b>先用 HeyGen 或 DeepBrain 花一點小錢，做 3～5 頁的雲端試片，實際聽聽看「你的克隆聲音＋效果」滿不滿意——如果滿意、也不介意聲音樣本上雲端，很可能就不必再花力氣自己開發了。如果試過之後覺得資料一定要留在自己電腦上，再往「自己接一個」的方向找人評估（工期與前提見上表），範圍守住「投影片＋已經分好頁的講稿＋本機克隆旁白＋輸出影片」這個核心，不要一開始就想把字幕、動畫、虛擬講者通通做進去。
-</div>
-
-<footer>
-本報告由 Claude CLI 調度背景研究（codex terra high）產出並獨立查證後彙整。技術路線研究、聲音克隆研究、一站式方案深查、三輪連結查證共六份原始文件留存備查。
-</footer>
-
-</div>
+<h3 id="gb10--sm121-直接證據與其他-blackwell-嚴格分開">GB10 / SM121
+直接證據（與其他 Blackwell 嚴格分開）</h3>
+<ol type="1">
+<li><p>一篇 Reddit 使用者自報稱，在 <strong>DGX Spark / GB10 / sm_121 /
+vLLM 0.27.1</strong> 成功跑
+<code>Inferact/Qwen3.8-27B-NVFP4</code>，但自動選到的 FlashInfer CUTLASS
+NVFP4 kernel 因 wheel 沒有 sm_121 image，在 memory profiling 階段出現
+<code>cudaErrorNoKernelImageForDevice</code>；作者以
+<code>--linear-backend marlin</code> 繞過。其測量為 NVFP4 基線約 9.6–9.7
+tok/s，MTP n=3 的有效吞吐約 18
+tok/s。這是<strong>單一使用者、未獨立複現的自報</strong>，仍是最直接的
+Qwen3.8 NVFP4 + GB10 + vLLM 證據。<a
+href="https://www.reddit.com/r/LocalLLM/comments/1voh2nw/qwen3827bnvfp4_on_a_dgx_spark/">原貼</a></p></li>
+<li><p>另一篇 Reddit 使用者自報在 <strong>DGX Spark / GB10 / 128GB
+unified memory</strong> 以專用 ARM64/CUDA 13 vLLM image 跑
+<code>Qwen/Qwen3.8-27B-FP8</code>：單一 stream 8.13 tok/s、併發 8
+aggregate 61.61 tok/s、單請求 decode 約 7.77 tok/s；載入約 27.6
+GiB。作者同時記錄 <code>--kv-cache-dtype fp8</code> 對缺少部分 Q/K/V
+scale 的 warning，vLLM 以 scale 1.0
+fallback。這證明可跑與該測試下的效能，<strong>不證明 FP8 KV
+的品質已驗證</strong>。<a
+href="https://www.reddit.com/r/LocalLLM/comments/1voi148/qwen3827bfp8_on_dgx_spark_8_toks_single_stream_62/">原貼</a></p></li>
+<li><p><code>unsloth/Qwen3.8-27B-NVFP4</code> 的公開 vLLM issue 提供
+GB10、aarch64、CUDA 13.0、vLLM <code>0.27.2rc1</code> 與 SM
+<code>12.1a</code> 的環境資訊，且該模型已進入服務請求處理；但 issue
+的根因是 Anthropic <code>/v1/messages</code> 對
+<code>tool_reference</code> content 的通用轉換錯誤，<strong>不可拿來當
+throughput、MTP 或長時間穩定性的驗證</strong>。<a
+href="https://github.com/vllm-project/vllm/issues/52489">issue
+#52489</a></p></li>
+<li><p>另有公開 Unsloth 社群 config 直接給 DGX Spark + vLLM 的 NVFP4
+參數：TP=1、262K、<code>--max-num-seqs 4</code>、<code>--gpu-memory-utilization 0.50</code>、FP8
+KV、MTP n=2、Qwen reasoning/tool parsers；它可作起始設定參考，但不是官方
+benchmark，也沒有處理上條 sm_121 kernel workaround。<a
+href="https://www.reddit.com/r/unsloth/comments/1vobqk6/qwen3827b_serving_configs_dgx_spark_vllm_nvfp4/">原貼</a></p></li>
+</ol>
+<h3 id="其他-blackwell-的相關心得僅供參考非-gb10-直接驗證">其他
+Blackwell 的相關心得：僅供參考，非 GB10 直接驗證</h3>
+<ul>
+<li>RTX 5090（SM120）的 Qwen3.8 NVFP4 使用者在 vLLM 0.27.1 回報：MTP +
+<code>turboquant_4bit_nc</code>/<code>turboquant_3bit_nc</code> KV cache
+在長 prompt 會 silent repetition collapse，FP8 KV rows 正常；這不是
+GB10，也不能保證 SM121 同樣發生，但足以支持「GB10 先用 FP8
+KV、不要一開始配低位 KV + MTP」這個保守測試順序。<a
+href="https://github.com/vllm-project/vllm/issues/52475">vLLM issue
+#52475</a></li>
+<li>RTX PRO 6000 Blackwell（SM120）的 ModelOpt NVFP4 回報在 sustained
+CUDA-graph load 發生 illegal memory access/wedge，而同 base model 的 FP8
+在該作者 35 小時/10,282 completions 測試中未見該錯誤；作者建議可試
+<code>VLLM_DISABLED_KERNELS=FlashInferCutlassNvFp4LinearKernel</code> 或
+<code>--enforce-eager</code>，但兩者不是完整修復。硬體、checkpoint
+與負載均不同於 GB10，故只能列為 NVFP4 長時間 soak test
+的風險訊號，<strong>不是 GB10 結論</strong>。<a
+href="https://github.com/vllm-project/vllm/issues/52540">vLLM issue
+#52540</a></li>
+</ul>
+<h3 id="qwen36-27b-同系列對照只能作歷史風險參考">Qwen3.6-27B
+同系列對照：只能作歷史風險參考</h3>
+<p>使用者提到本機已有 Qwen3.6 的 NVFP4、AWQ-INT4、官方
+FP8/BF16。公開資料確有上一代在 GB10 的 NVFP4
+載入問題：<code>nvidia/Qwen3.6-27B-NVFP4</code> 曾在 GB10 / sm_121 的
+vLLM 0.23.1rc nightly 出現 weight-loading shape error；該 issue 已
+closed，但本文沒有追溯其修復是否涵蓋 Qwen3.8，也不把它解讀成 Qwen3.8
+會失敗。<a href="https://github.com/vllm-project/vllm/issues/47215">vLLM
+issue #47215</a></p>
+<p>同樣地，Qwen3.6 FP8 在 GB10 的公開 issue 曾有 sustained inference 下
+CUDA stream wedge 報告；它提醒 GB10 + hybrid-attention + vLLM 需要 soak
+test，<strong>不是 Qwen3.8 FP8 已失敗的證據</strong>。<a
+href="https://github.com/vllm-project/vllm/issues/43885">vLLM issue
+#43885</a></p>
+<h2
+id="建議的決策與驗證順序不在本機執行">建議的決策與驗證順序（不在本機執行）</h2>
+<h3 id="建議版本排序">建議版本排序</h3>
+<ol type="1">
+<li><strong>先部署現有
+<code>nvidia/Qwen3.8-27B-NVFP4</code></strong>：只要其 config 被現有
+vLLM 正確辨識且 30–60 分鐘 soak
+與代表性任務輸出通過，就不值得為了「也許某個 fork 更快」重新下載。其
+22GB 已在本機、適合 Blackwell 的壓縮方向也最明確。</li>
+<li><strong>若 NVFP4 不能穩定載入／kernel 報錯／品質測試失敗，改用
+<code>Qwen/Qwen3.8-27B-FP8</code></strong>：這是品質、來源完整性與 vLLM
+文件三者最平衡的 fallback。它比 NVFP4 大約多 6–9 GiB 級權重空間，但在
+128GB unified memory
+平台仍有較大餘裕；此為由檔案大小得出的容量推論，不是 GB10
+原廠保證。</li>
+<li>**若目標不是 vLLM，而是單使用者互動，可另行評估 GGUF +
+llama.cpp；本題不選 GGUF。**現有 GGUF 在其他 runtime 的表現不能回答 vLLM
+選型。</li>
+<li>**暫不選 AWQ/GPTQ/MXFP4。**AWQ/GPTQ 未有足夠的 Qwen3.8 + GB10 + vLLM
+證據；MXFP4 則被 vLLM 官方 Qwen3.8 recipe 明示在 Nvidia
+未如預期可載入。</li>
+</ol>
+<h3 id="對-nvfp4-的最小安全啟動策略">對 NVFP4 的最小安全啟動策略</h3>
+<p>這是一份建議的<strong>測試順序</strong>，不是已在本機執行過的命令：</p>
+<ol type="1">
+<li>使用 vLLM 0.27.1 以上或包含 Qwen3.8/SM121 修補的同等新
+image；官方最低版本 0.17.0 只代表模型支援，不代表 GB10 kernel coverage
+已充分成熟。<a href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">官方
+recipe</a> <a
+href="https://www.reddit.com/r/LocalLLM/comments/1voh2nw/qwen3827bnvfp4_on_a_dgx_spark/">GB10
+社群環境</a></li>
+<li>首輪採
+TP=1、<code>--max-model-len 262144</code>、<code>--kv-cache-dtype fp8</code>，且<strong>先不開
+MTP</strong>。以短 prompt、長 prompt、工具呼叫、thinking on/off
+各測一次並保存輸出。</li>
+<li>若啟動記錄顯示 FlashInfer CUTLASS NVFP4 的 sm_121 kernel image
+錯誤，才加入 <code>--linear-backend marlin</code>；不要無證據地固定該
+flag，因為不同 build 的 kernel coverage 可能已不同。<a
+href="https://www.reddit.com/r/LocalLLM/comments/1voh2nw/qwen3827bnvfp4_on_a_dgx_spark/">GB10
+社群 workaround</a></li>
+<li>基線通過後，再依序測 MTP 1、2、3；在 MTP 測試階段保留 FP8
+KV，避免同時改兩個變因。RTX 5090 的公開 bug 顯示低位 TurboQuant KV 與
+MTP 的組合可能 silent corruption。<a
+href="https://github.com/vllm-project/vllm/issues/52475">issue
+#52475</a></li>
+<li>最少做 30–60 分鐘具併發與長 prompt 的
+soak；若用於常駐服務，延長到工作負載所需的時長。其他 Blackwell 的 NVFP4
+CUDA-graph 問題表明「能啟動」不足以判定可長期服務。<a
+href="https://github.com/vllm-project/vllm/issues/52540">issue
+#52540</a></li>
+</ol>
+<h2 id="查無與證據限制">查無與證據限制</h2>
+<ul>
+<li>**查無 NVIDIA/vLLM 官方針對 <code>nvidia/Qwen3.8-27B-NVFP4</code> +
+GB10/DGX Spark 的公開 benchmark、model card 或支援矩陣。**該 HF URL
+在本次查詢回 401，故無法驗證其 checkpoint config。</li>
+<li>**查無 Qwen3.8-27B AWQ-INT4、GPTQ 或 GGUF 在 GB10 上以 vLLM
+部署的可重現公開 benchmark。**GGUF 有公開模型與 vLLM
+格式文件，但未找到這個模型/硬體/runtime 的三者交集。</li>
+<li>官方 vLLM Qwen3.8 recipe 的公開硬體 metadata 列的是 GB300
+verified，而不是 GB10；因此不能把它寫成 GB10 官方驗證。<a
+href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">官方 recipe</a></li>
+<li>本次查詢範圍：Hugging Face model search/API 與 model cards、vLLM
+官方 recipe/quantization docs、<code>vllm-project/vllm</code> GitHub
+issue/PR search、Reddit 的 <code>Qwen3.8-27B</code> + <code>vLLM</code>
++ <code>NVFP4</code> + <code>GB10</code>/<code>DGX Spark</code>，以及
+Qwen3.6-27B
+的同型關鍵字對照。使用的主關鍵字包括：<code>"Qwen3.8-27B"</code>,
+<code>"Qwen3.8-27B" vLLM</code>, <code>"Qwen3.8-27B" NVFP4</code>,
+<code>"Qwen3.8-27B" "DGX Spark"</code>, <code>Qwen3.8-27B sm_121</code>,
+<code>Qwen3.6-27B GB10 NVFP4 FP8</code>。</li>
+</ul>
+<h2 id="來源索引">來源索引</h2>
+<ul>
+<li><a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen BF16 model
+card</a></li>
+<li><a href="https://huggingface.co/Qwen/Qwen3.8-27B-FP8">Qwen 官方 FP8
+model card</a></li>
+<li><a href="https://recipes.vllm.ai/Qwen/Qwen3.8-27B">vLLM 官方 Qwen3.8
+recipe</a></li>
+<li><a href="https://docs.vllm.ai/en/latest/features/quantization/">vLLM
+quantization 文件索引</a></li>
+<li><a
+href="https://docs.vllm.ai/en/latest/features/quantization/gguf/">vLLM
+GGUF 文件</a></li>
+<li><a href="https://huggingface.co/Inferact/Qwen3.8-27B-NVFP4">Inferact
+NVFP4</a>、<a
+href="https://huggingface.co/unsloth/Qwen3.8-27B-NVFP4">Unsloth
+NVFP4</a>、<a
+href="https://huggingface.co/RadixArk/Qwen3.8-27B-NVFP4">RadixArk
+NVFP4</a></li>
+<li><a
+href="https://huggingface.co/cyankiwi/Qwen3.8-27B-AWQ-INT4">cyankiwi
+AWQ-INT4</a>、<a
+href="https://huggingface.co/amd/Qwen3.8-27B-Quark-AWQ-INT4-W4A16">AMD
+Quark AWQ</a>、<a
+href="https://huggingface.co/Vishva007/Qwen3.8-27B-W4A16-AutoRound-GPTQ">AutoRound
+GPTQ</a></li>
+<li><a href="https://huggingface.co/ggml-org/Qwen3.8-27B-GGUF">ggml-org
+GGUF</a>、<a
+href="https://huggingface.co/unsloth/Qwen3.8-27B-GGUF">Unsloth
+GGUF</a>、<a
+href="https://huggingface.co/bartowski/Qwen3.8-27B-GGUF">bartowski
+GGUF</a></li>
+<li><a
+href="https://www.reddit.com/r/LocalLLM/comments/1voh2nw/qwen3827bnvfp4_on_a_dgx_spark/">GB10
+NVFP4 Reddit 實測</a>、<a
+href="https://www.reddit.com/r/LocalLLM/comments/1voi148/qwen3827bfp8_on_dgx_spark_8_toks_single_stream_62/">GB10
+FP8 Reddit 實測</a>、<a
+href="https://www.reddit.com/r/unsloth/comments/1vobqk6/qwen3827b_serving_configs_dgx_spark_vllm_nvfp4/">GB10
+vLLM config</a></li>
+<li><a href="https://github.com/vllm-project/vllm/issues/52489">vLLM
+Qwen3.8 + GB10 template issue</a>、<a
+href="https://github.com/vllm-project/vllm/issues/52475">RTX 5090 MTP/KV
+issue</a>、<a
+href="https://github.com/vllm-project/vllm/issues/52540">RTX PRO 6000
+NVFP4 soak issue</a>、<a
+href="https://github.com/vllm-project/vllm/issues/47215">Qwen3.6 NVFP4
+GB10 history</a></li>
+</ul>
+<p><strong>一句話結論：這台 GB10 以 vLLM 跑
+Qwen3.8-27B，先用已下載且完整的
+<code>nvidia/Qwen3.8-27B-NVFP4</code>（FP8 KV、先不開 MTP；遇 sm_121
+kernel image 問題才加 <code>--linear-backend marlin</code>）；它是最貼近
+Blackwell 與現有 22GB 資產的選擇，但因缺少該 NVIDIA checkpoint 的公開
+GB10 官方驗證，若 soak/品質測試不過，就換官方
+<code>Qwen/Qwen3.8-27B-FP8</code>，而不是改投缺乏 GB10 vLLM 證據的
+AWQ/GPTQ/GGUF。</strong></p>
+</body>
+</html>
