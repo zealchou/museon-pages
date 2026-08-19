@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模型退場／替換簡化提案</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --card-bg: #ffffff;
+    --text: #2a2a28;
+    --text-soft: #5a5a56;
+    --accent: #a6602f;
+    --accent-soft: #f1e3d3;
+    --line: #e5e0d8;
+    --good: #3d7a4a;
+    --bad: #b3452f;
+    --warn: #b8862b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+  header {
+    margin-bottom: 32px;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 20px;
+  }
+  h1 {
+    font-size: 26px;
+    margin: 0 0 8px;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .meta {
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+  .tag {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    margin-right: 6px;
+  }
+  h2 {
+    font-size: 21px;
+    margin: 40px 0 14px;
+    padding-top: 8px;
+    color: var(--text);
+    border-left: 5px solid var(--accent);
+    padding-left: 12px;
+  }
+  h3 {
+    font-size: 18px;
+    margin: 24px 0 10px;
+    color: var(--text);
+  }
+  p { margin: 0 0 14px; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 16px 0;
+  }
+  .conclusion {
+    background: var(--accent-soft);
+    border-left: 5px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .term {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .term-note {
+    color: var(--text-soft);
+    font-size: 15px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .badge-good { color: var(--good); font-weight: 700; }
+  .badge-bad { color: var(--bad); font-weight: 700; }
+  .badge-warn { color: var(--warn); font-weight: 700; }
+  .decision-box {
+    background: #fff7ea;
+    border: 2px dashed var(--warn);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .decision-box h3 {
+    margin-top: 0;
+    color: var(--warn);
+  }
+  ul, ol {
+    padding-left: 22px;
+    margin: 0 0 14px;
+  }
+  li { margin-bottom: 6px; }
+  .plan-label {
+    display: inline-block;
+    font-weight: 700;
+    background: var(--text);
+    color: #fff;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  .plan-label.rec { background: var(--good); }
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--text-soft);
+    font-size: 13px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1b19;
+      --card-bg: #262422;
+      --text: #eae7e1;
+      --text-soft: #a8a29a;
+      --accent: #e0965a;
+      --accent-soft: #3a2c1f;
+      --line: #3a3733;
+      --good: #7fc98c;
+      --bad: #e08a76;
+      --warn: #e0b568;
+    }
+    .decision-box { background: #2e2717; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>模型退場／替換簡化提案</h1>
+  <div class="meta">
+    <span class="tag">內部工具架構</span>
+    <span class="tag">供 Zeal 拍板</span><br><br>
+    日期：2026-08-19　來源：strategy-lens（fable 5，策略層小幫手）分析
+  </div>
+</header>
+
+<div class="conclusion">
+結論：今天退場三顆本地模型時，重複改了 8 處以上設定＋約 10 支測試檔，這個「換一顆模型要動一大堆地方」的老毛病，之前已經治過一半（設定檔那層），今天發現病灶擴散到「測試檔」這一層，而且擴散的原因是「同一個模型名字，出現在測試檔裡的意圖不一樣，但沒人分得出來」。建議方案：把判斷從「事後猜」搬到「寫入時就分類」，讓換模型時電腦看得懂哪些該跟著改、哪些不用。
+</div>
+
+<h2>發生了什麼事</h2>
+
+<p>
+今天退場 Qwythos-9B、Huihui-35B、qwen36-27b-awq 三顆舊模型、全部換成現在常駐的 Qwen3.8-27B-NVFP4，
+真正動手改的地方遠比想像中散：一份設定總表（<span class="term">registry.json</span>
+<span class="term-note">（記著「誰坐哪個位置」的正本設定檔）</span>）內部就有 6 個子區塊要同步改，
+再加上一份程式裡另外重複維護的角色清單、對外的服務門牌設定、4 份角色說明檔，
+以及一支負責檢查這些有沒有兜起來的「檢查器」自己內部的邏輯也要跟著改。
+</p>
+
+<p>
+這件事其實不是第一次發生——2026-08-03 就已經在抱怨「每次換模型要改一大堆地方」，
+當時蓋了那支檢查器（<span class="term">seats.mjs</span>）去治這個病，
+而且真的治好了「設定檔」那一層。<b>但今天發現，同一種病在「測試檔」這一層完全沒被治到</b>——
+至少 10 支測試檔裡各自用不同方式把模型名字寫死在測試內容裡，換模型時，
+沒有任何機關幫忙分辨「這條測試該跟著改」還是「這條測試只是剛好抄到一個真名字，換什麼字串都無所謂」。
+結果就是每次都要一支一支測試檔用人腦重新判讀，判錯的代價是：
+把該保護的判斷條件誤改壞，或是逼未來每次換模型都要多改一堆其實無關的測試。
+</p>
+
+<h2>為什麼會這樣（診斷）</h2>
+
+<div class="card">
+<p><b>發現一：有一份「兩邊各自維護一份事實」的舊設計，其中一邊其實已經快沒人在走了。</b><br>
+程式裡有兩份「誰負責做什麼」的清單，一份在設定總表，一份寫死在程式碼裡（叫
+<span class="term">ROLE_CONTRACTS</span>），兩份要靠人工對照著改，
+沒有機制自動同步。實測掃過之後發現，那份寫死在程式碼裡的清單，
+現在只剩下 2 個地方還在用它，而且其中一條路對著現在的正式設定會直接報錯、跑不起來——
+換句話說，這條路已經接近死路了。<br>
+⇒ 該做的不是幫它蓋一個自動同步機制（那是給快死的東西裝心律調節器），
+而是明確宣告這份清單「除役」或「凍結不再對帳」，讓 Zeal 拍板選哪一種。
+</p>
+</div>
+
+<div class="card">
+<p><b>發現二：「這個模型名字寫在測試裡是什麼意思」，事後沒辦法用電腦猜出來，但寫的當下其實答得出來。</b><br>
+掃過去這批測試檔案裡的真實模型名字，可以分成三種完全不同的性質，長得卻一模一樣：
+</p>
+<ul>
+<li><b>純粹湊巧抄到的範例資料</b>——這種測試根本不在乎模型叫什麼名字，換模型時不該逼人跟著改</li>
+<li><b>「現在誰坐這個位置就驗誰」的活動式判斷</b>——這種本來就該隨模型換而換，是設計上刻意的行為</li>
+<li><b>「Zeal 明確裁決釘死」的規則</b>——這種換模型時反而應該亮紅燈提醒人「這裡有一條舊裁決，要不要跟著改」</li>
+</ul>
+<p>
+三種混在同一批檔案裡、外觀完全一樣，只能靠人一支一支讀才分得出來。
+</p>
+</div>
+
+<h2>建議方案：三通道分類法（甲案）</h2>
+
+<p>
+核心想法：<b>不要等事後才去猜這個模型名字是什麼意思，讓「寫測試的當下」就把答案標記清楚</b>。
+做法是規定，任何測試檔裡如果要出現真實模型名字，必須來自三個固定管道之一：
+</p>
+
+<div class="table-scroll">
+<table>
+<tr><th>管道</th><th>用途</th><th>換模型時會發生什麼</th></tr>
+<tr>
+  <td><b>假名範例</b><br><span class="term-note">統一放一份只用假名字的範例資料</span></td>
+  <td>純粹湊巧、無所謂用什麼名字的測試</td>
+  <td class="badge-good">完全不用動——這是釜底抽薪，讓大多數測試檔根本不含真名字</td>
+</tr>
+<tr>
+  <td><b>自動跟隨</b><br><span class="term-note">測試自己去讀正本設定，不寫死名字</span></td>
+  <td>「現在誰在職就驗誰」這種活動判斷</td>
+  <td class="badge-good">自動跟著換，不用改測試本身</td>
+</tr>
+<tr>
+  <td><b>裁決釘死</b><br><span class="term-note">集中放一份「Zeal 裁決紀錄」清單，每條註明日期和理由</span></td>
+  <td>Zeal 明確拍板要鎖死的規則</td>
+  <td class="badge-warn">應該亮紅燈——紅燈直接指到那條裁決，人只需要回答「新裁決是什麼」，不用再考古</td>
+</tr>
+</table>
+</div>
+
+<p>
+再配一支「檢查器」——建議直接擴充現有那支 seats.mjs，而不是另外蓋一支新的
+（理由：兩支檢查器之間又需要一份「彼此同步」的契約，那正是在製造下一個同樣的病）。
+檢查器的判斷方式可以完全自動化：把設定總表裡所有出現過的模型名字（含已退役的）當成一份自動更新的關鍵字清單，
+只要測試檔裡出現這些字、卻不是來自上面三個管道之一，就亮紅燈。
+</p>
+
+<h2>另外兩個比較過但不建議的做法</h2>
+
+<div class="card">
+<p><span class="plan-label">方案乙</span><b>設定總表自動產生一切</b>（測試、設定檔、角色說明檔全部自動生成，不用人手動改）</p>
+<p class="term-note">
+否決理由：①現有很多檔案裡的手寫註解本身就是重要的「為什麼這樣改」的紀錄，自動產生器必然會壓掉這些說明；
+②要教會產生器「哪些檔案該怎麼改」，等於要把大量判斷寫成規則，而每一條規則都是新的潛在缺陷，
+違反「判斷留給有判斷力的那一層、腳本只做機械動作」的既有原則。
+</p>
+</div>
+
+<div class="card">
+<p><span class="plan-label">方案丙</span><b>只寫一份規範文件，不蓋任何檢查機關</b></p>
+<p class="term-note">
+成本最低，但沒有任何機制強制遵守——寫了規範卻沒人去讀、沒有東西擋人，是曾經真實發生過的教訓
+（另一個專案的施工藍圖白紙黑字寫了 30 條驗收規則，結果開工時一條都沒讀，連退三次件）。
+<br>它比較適合的用法是：<b>當作甲案的「第一步」</b>——先把三通道的規範定下來，
+把現有 10 支測試檔案手動搬過去分類好，觀察這套分類法在下一次真正換模型時好不好用，
+確認可行之後，第二步再蓋檢查器把它焊死，而不是一次就把一個沒實戰驗證過的規則焊死。
+</p>
+</div>
+
+<h2>建議走法</h2>
+
+<ol>
+<li><b>第一批（純資料整理，不寫新程式）</b>：建立假名範例檔＋裁決紀錄檔，把現有 10 支測試檔案裡的模型名字分類搬過去；那份「快死的舊清單」先貼上除役或凍結標籤（等 Zeal 選哪一種）；順便建一份「每顆模型的物理規格登記表」，把換模型時常常要重新量測的數字（記憶體用量、模型能撐的視窗大小等）集中記一份，每個數字附上「怎麼量出來的」，不再散落在各測試檔案裡各自維護。</li>
+<li><b>第二批（真正蓋檢查器）</b>：等第一批的分類規則真的撐過一次真實換模型之後，再把它焊進 seats.mjs 自動掃描。刻意分兩批的理由：這是「模型身分散落」這個老問題底下第二座機關，在規則被真實驗證好用之前就焊死，等於冒著蓋出第三個新病灶的風險。</li>
+</ol>
+
+<div class="decision-box">
+<h3>需要 Zeal 拍板的兩件事</h3>
+<ol>
+<li><b>那份快死的舊角色清單（ROLE_CONTRACTS）</b>——選「貼標籤凍結、留在原地不再對帳」，還是「整份搬到專門放退役東西的地方」？前者省事，後者更乾淨但工比較大，而且要動一個已經宣告不維護的地方。</li>
+<li><b>第二批檢查器要不要等一次真實換模型再蓋</b>，還是現在兩批一起做？一起做省一輪等待，但代價是把檢查機關焊在一套還沒被實戰驗證過的分類規則上。</li>
+</ol>
+</div>
+
+<h2>誠實盤點：哪些機器擋得住、哪些還是要靠人</h2>
+
+<div class="table-scroll">
+<table>
+<tr><th>項目</th><th>機器能不能真的擋住</th><th>還留給人判斷的部分</th></tr>
+<tr><td>測試檔裡出現真模型名字沒歸類</td><td class="badge-good">能——自動比對名單，違規就亮紅燈</td><td>模型名字第一次出現時如果還沒進正本設定，掃不到（機率很小）</td></tr>
+<tr><td>三通道分類選對了沒有</td><td class="badge-warn">半能——選錯大多會被擋下</td><td>唯一漏洞：把「該釘死的裁決」誤寫成「自動跟隨」，換模型時它會悄悄跟著換而不亮燈——這格機器判不出來，要靠寫的人自己謹慎</td></tr>
+<tr><td>物理規格登記表存在與否</td><td class="badge-good">能——缺這個區塊就亮燈</td><td>裡面的數字對不對，機器判不了，只能把「重新量一次」的成本壓到一條指令</td></tr>
+<tr><td>舊清單有沒有貼上除役標籤</td><td class="badge-good">能——名單機械可查</td><td>「該不該除役」本身是裁決，不是檢查</td></tr>
+<tr><td>方案丙（若單獨採用不升級）</td><td class="badge-bad">完全不能——沒有任何機器強制</td><td>全部靠讀到的人自律，這正是不建議單獨用它的原因</td></tr>
+</table>
+</div>
+
+<footer>
+本提案由 strategy-lens（fable 5）分析、Claude CLI 整理發布。技術用語已配白話說明。
+</footer>
+
+</div>
+</body>
+</html>
