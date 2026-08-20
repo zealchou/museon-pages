@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qwen3-TTS／GB10 新線索查證報告</title>
+  <style>
+    :root { --ink:#172033; --muted:#5d687a; --paper:#fffdf9; --bg:#f2f5f8; --line:#dce3ea; --ok:#146c43; --warn:#a76700; --bad:#b42318; --accent:#215fc2; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; line-height:1.72; font-size:17px; }
+    main { width:min(940px, calc(100% - 32px)); margin:32px auto 64px; background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:clamp(24px,5vw,62px); box-shadow:0 10px 30px rgb(26 42 60 / 7%); }
+    h1 { font-size:clamp(28px,5vw,43px); line-height:1.2; margin:0 0 12px; letter-spacing:-.035em; }
+    h2 { margin:46px 0 14px; padding-top:4px; font-size:25px; line-height:1.35; border-top:1px solid var(--line); }
+    h3 { margin:28px 0 8px; font-size:20px; }
+    p { margin:12px 0; }
+    .meta, .small { color:var(--muted); font-size:14px; }
+    .lead { font-size:20px; line-height:1.65; }
+    .verdict { margin:25px 0; padding:18px 20px; border-left:5px solid var(--bad); background:#fff1f0; border-radius:8px; font-size:19px; }
+    .tag { display:inline-block; border-radius:999px; padding:2px 9px; margin-right:6px; font-size:13px; font-weight:700; vertical-align:1px; }
+    .ok { color:var(--ok); background:#e8f6ee; }.warn { color:var(--warn); background:#fff4d6; }.bad { color:var(--bad); background:#ffebe9; }
+    table { width:100%; border-collapse:collapse; margin:16px 0 22px; font-size:15px; }
+    th,td { padding:12px; vertical-align:top; text-align:left; border:1px solid var(--line); }
+    th { background:#edf3fb; }
+    code { padding:1px 5px; border-radius:4px; background:#eef1f5; font-size:.9em; overflow-wrap:anywhere; }
+    a { color:var(--accent); text-decoration-thickness:1px; text-underline-offset:2px; overflow-wrap:anywhere; }
+    ul { padding-left:1.25em; } li { margin:7px 0; }
+    .sources li { margin:10px 0; }
+    @media (max-width:620px) { body { font-size:16px; } main { width:100%; margin:0; border-radius:0; border:none; padding:24px 18px 46px; } table { font-size:14px; } th,td { padding:9px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Qwen3-TTS／GB10 新線索查證報告</h1>
+    <p class="meta">查證日期：2026-08-20（Asia/Taipei）｜範圍：使用者提供之 Faster-Qwen3-TTS、CUDA Graph、Mamba 依賴、Unsloth NVFP4 與 GGUF 主張</p>
+    <p class="lead">結論先說：這批線索並非全假；NVIDIA 論壇文、社群專案、ARM64 Docker image 與 llama.cpp 的 Qwen3-TTS GGUF 支援都真實存在。但它們<strong>不能直接轉成「現在就安裝」的指令</strong>：3 倍與「全部 CUDA Graph」被誇大，Mamba/causal_conv1d 的依賴主張錯置，Unsloth NVFP4 沒有 Qwen3-TTS 的官方支援證據。唯一可作為後續候選實驗的是獨立的 Faster-Qwen3-TTS Docker 路線；它不是現有官方 <code>qwen_tts.Qwen3TTSModel.generate_voice_clone()</code> 的原地加速。</p>
+    <div class="verdict"><strong>決策：</strong>現在不要依這批文字安裝 Unsloth、NVFP4、Mamba 或 causal_conv1d；也不要把 GGUF 當成既有 Python API 的量化替換。若之後要測 Faster-Qwen3-TTS，應把它當作隔離的替代服務／benchmark 實驗，先固定 image digest、同一句料與官方 baseline 做 AB 測試；本次工作單不執行安裝。</div>
+  </header>
+
+  <h2>快速判定表</h2>
+  <table>
+    <thead><tr><th>使用者線索</th><th>查證結果</th><th>可否據此安裝</th></tr></thead>
+    <tbody>
+      <tr><td>NVIDIA 論壇與 <code>mARTin-B78/dgx-spark-faster-qwen3-tts</code> 存在</td><td><span class="tag ok">屬實</span>連結、repo、ARM64 Docker tags 均可開啟；但都是社群作者內容，非 NVIDIA 官方支援宣告。</td><td>不可直接採信為生產依據；可列為後續隔離試驗候選。</td></tr>
+      <tr><td>「LLM 與音訊生成完全編譯成 CUDA Graph」「3 倍」</td><td><span class="tag warn">部分屬實／過度表述</span>有 CUDA Graph，但只捕獲解碼熱路徑；可變長 prefill 與 waveform decode 仍走一般 Python/PyTorch 路徑。GB10 的已發布 1.7B 數字是 1.9× RTF、1.7× TTFA，不是 3×。</td><td>不可把它當成已證實的 3×、端到端保證。</td></tr>
+      <tr><td>Qwen3-TTS 依賴 <code>causal_conv1d</code>、<code>mamba-ssm</code></td><td><span class="tag bad">不實</span>官方 <code>pyproject.toml</code> 未列兩者；官方程式碼亦無該兩套件匯入。模型含普通 PyTorch <code>nn.Conv1d</code>，不等於外部的 <code>causal-conv1d</code> package。</td><td>不要為此模型編譯／安裝這兩套件。</td></tr>
+      <tr><td>Unsloth NVFP4 支援 Qwen3-TTS</td><td><span class="tag bad">查無官方支援；反證存在</span>Unsloth 對 Qwen3-TTS 的支援仍是一張公開、未關閉的 feature request，標為 roadmap/help wanted。</td><td>不要安裝作為 Qwen3-TTS 方案。</td></tr>
+      <tr><td>GGUF／llama.cpp 支援 Qwen3-TTS</td><td><span class="tag ok">屬實，但屬替代引擎</span>llama.cpp 已合併 Qwen3-TTS 支援，官方 README 有含 reference audio 的 <code>llama-tts</code> 用法。</td><td>不能當作現有 <code>qwen_tts</code> API 的量化替換；是否在 GB10 更快仍未由所給 Reddit 貼文證實。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>1. NVIDIA 論壇、專案與 Docker image 是否真實？</h2>
+  <p><span class="tag ok">真實存在</span><a href="https://forums.developer.nvidia.com/t/three-times-voiceclone-voicedesign-customvoice-faster-qwen3-tts-for-nvidia-dgx-spark-gb10/370530">指定的 NVIDIA Developer Forums 貼文</a>可正常開啟。它是帳號 <code>martinB78</code> 發在 DGX Spark/GB10 社群板的部署 playbook，目的為把 upstream Faster-Qwen3-TTS 包成 4 個 OpenAI-compatible HTTP 服務：VoiceClone（8020）、VoiceDesign（8021）、CustomVoice（8022）與 streaming VoiceClone（8023）。這是 NVIDIA 託管的論壇，不代表 NVIDIA 對作者程式碼、效能或相容性背書。</p>
+  <p>貼文與其 <a href="https://github.com/mARTin-B78/dgx-spark-faster-qwen3-tts">GitHub repo</a>均連得到 <code>mARTin-B78/dgx-spark-faster-qwen3-tts</code>。repo 的定位是「DGX Spark fixes plus packaging」：Dockerfile 基於 CUDA 13.0.2，安裝 PyTorch <code>cu130</code> wheel，然後 clone upstream <a href="https://github.com/andimarafioti/faster-qwen3-tts">andimarafioti/faster-qwen3-tts</a> 並套一個 server patch；它不是 Qwen 官方分支，也不是為 sm_121 新寫／編譯的自訂 CUDA kernel 分支。</p>
+  <p><span class="tag ok">Docker image 亦存在</span><a href="https://hub.docker.com/r/martinb78/faster-qwen3-tts-dgx-spark">Docker Hub repository</a>可開啟，tag metadata 顯示 ARM64 image；repo 文件列出 <code>martinb78/faster-qwen3-tts-dgx-spark:latest</code>（三種非 streaming 模式）與 <code>:latest-streaming</code>。論壇早期寫的 <code>v4</code> 與另一個 streaming repo/tag 已被後續內容調整，故原始貼文中的 image 名稱不是穩定介面，不能照舊字串盲拉。</p>
+  <p>重要的是，該 repo 自己寫明「Flash Attention on SM 121 – avoided; uses CUDA graphs instead」。所以這條線索<strong>沒有推翻</strong>「暫時不要安裝 flash-attn」這個既有結論；它選的是避開 FlashAttention 的另一條路。</p>
+
+  <h2>2. CUDA Graph 與「3 倍」是否有 benchmark？</h2>
+  <p><span class="tag warn">有作者發布的具體 benchmark，非純口號；但不是獨立驗證，也不是 3×。</span>Upstream README 的「Results」表列出 1.7B、DGX Spark（GB10）一組數字：baseline RTF 1.01、TTFA 661 ms；CUDA Graph RTF 1.87、TTFA 400 ms，表中速度差為 <strong>1.9× RTF / 1.7× TTFA</strong>。0.6B 的同硬體數字是 2.2× / 2.0×。測量方法寫明包含 tokenization 與 inference，RTF 是音訊秒數／生成秒數，TTFA 使用 streaming、<code>chunk_size=8</code>；repo 也提供 <code>benchmark.sh</code>。</p>
+  <p>因此，「加速存在」有可重跑的作者級佐證；但「3 倍」在 GB10 1.7B 的公開表格中不成立。更不能把其他硬體（例如 RTX 4090）的 5× 數字移植成 GB10 結論。已查資料也未提供 GB10 的原始 JSON、driver 版本、PyTorch exact build、完整測試語料或第三方重現結果；可信度應定為<strong>待本機 AB 重跑的社群 benchmark</strong>，不是採購／生產保證。</p>
+  <h3>「完全編譯為 CUDA Graph」的程式碼核對</h3>
+  <p>此句不符合程式碼。上游 <a href="https://github.com/andimarafioti/faster-qwen3-tts/blob/main/faster_qwen3_tts/talker_graph.py">talker_graph.py</a> 明確只 capture「single-token decode step」；<a href="https://github.com/andimarafioti/faster-qwen3-tts/blob/main/faster_qwen3_tts/predictor_graph.py">predictor_graph.py</a> capture code predictor 的 15-step loop。相反地，<a href="https://github.com/andimarafioti/faster-qwen3-tts/blob/main/faster_qwen3_tts/streaming.py">streaming.py</a> 明說可變長 <code>PREFILL</code>「still uses HF forward」，而 <a href="https://github.com/andimarafioti/faster-qwen3-tts/blob/main/faster_qwen3_tts/model.py">model.py</a> 在 graph loop 以外呼叫 <code>speech_tokenizer.decode(...)</code> 產生 waveform。更精確的說法是：它以 StaticCache + <code>torch.cuda.CUDAGraph</code> 降低 autoregressive decode 的 Python/kernel-launch overhead；不是把完整文本前處理與音訊解碼「完全編譯」成一張 CUDA Graph。</p>
+
+  <h2>3. Qwen3-TTS-12Hz-1.7B-Base 是否依賴 Mamba？</h2>
+  <p><span class="tag bad">否。</span>Qwen 官方 <a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/pyproject.toml">pyproject.toml</a> 的 runtime dependencies 是 <code>transformers==4.57.3</code>、<code>accelerate</code>、<code>gradio</code>、<code>librosa</code>、<code>torchaudio</code>、<code>soundfile</code>、<code>sox</code>、<code>onnxruntime</code>、<code>einops</code>；其中沒有 <code>mamba-ssm</code> 或 <code>causal-conv1d</code>。</p>
+  <p>再讀官方 <a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/qwen_tts/core/models/modeling_qwen3_tts.py">modeling_qwen3_tts.py</a> 可見 Talker 是 self-attention、RoPE、MLP、RMSNorm 的 Transformer；12Hz tokenizer 檔使用的是原生 <code>torch.nn.Conv1d</code>／<code>ConvTranspose1d</code> 與其自家 <code>Qwen3TTSTokenizerV2CausalConvNet</code> 類別。名稱帶 CausalConvNet 不等於外部 <code>causal-conv1d</code> extension；整個官方 tree 對 <code>mamba</code>、<code>causal_conv1d</code> 都沒有匯入。原文把「某些 Mamba/SSM 模型常見的外掛」張冠李戴到 Qwen3-TTS。</p>
+  <p>所以在既有的官方 <code>generate_voice_clone()</code> 環境上，為了「避免慢速 Python fallback」去手動編譯這兩個 package 沒有依據，也不能合理預期會加速。</p>
+
+  <h2>4. Unsloth NVFP4、GGUF 是否明確支援這個 TTS 模型？</h2>
+  <h3>Unsloth NVFP4</h3>
+  <p><span class="tag bad">沒有。</span>Unsloth 的 <a href="https://unsloth.ai/blog/qwen3">Qwen3 公告</a>說的是 2025 年的 Qwen3 文字 LLM、微調與其 Qwen3 GGUF；它沒有把 Qwen3-TTS 列為支援模型。更直接的反證是 Unsloth 官方 GitHub 的 <a href="https://github.com/unslothai/unsloth/issues/3951">issue #3951</a>：它是「Add FT support for the Qwen3-TTS model」的公開 feature request，狀態仍為 Open，標籤為「pending on roadmap」與「help wanted」，沒有關聯 PR。這至少排除「Unsloth 已明確支援 Qwen3-TTS NVFP4」這個說法。</p>
+  <h3>GGUF／llama.cpp</h3>
+  <p><span class="tag ok">有支援，但不是 Qwen 官方 Python 套件的格式支援。</span><a href="https://github.com/ggml-org/llama.cpp/pull/26254">llama.cpp PR #26254</a> 已於 2026-08-04 merge；它明列 Qwen3-TTS Base，支援 <code>--tts-speaker-file</code>，並示範下載 <code>ggml-org/Qwen3-TTS-12Hz-1.7B-Base-GGUF</code>。目前 <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/tts/README.md">llama.cpp TTS README</a> 也保留同一組 voice-cloning 用法。</p>
+  <p>這表示「Qwen3-TTS 可以透過 GGUF／llama.cpp 做 TTS、且含 reference audio」是可查證的；但它需要換成 <code>llama-tts</code> runtime 與 GGUF model/mmproj 資產，不能丟進 <code>Qwen3TTSModel.from_pretrained()</code> 或沿用 <code>generate_voice_clone()</code>。使用者貼的 Reddit 關於 Qwen3 27B 的 GGUF、speculative decoding、CUDA graphs 是文字 LLM 個案，並未證明 Qwen3-TTS-1.7B Base 在 DGX Spark 的吞吐量或品質，故不能用作這個 TTS 工作負載的證據。</p>
+
+  <h2>5. 最終分類與可行決策</h2>
+  <table>
+    <thead><tr><th>分類</th><th>內容</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag ok">真實可查</span></td><td>NVIDIA forum 貼文、mARTin-B78 repo、ARM64 Docker images；Faster-Qwen3-TTS 的 CUDA Graph decode；llama.cpp 已合併 Qwen3-TTS GGUF / voice clone 支援。</td></tr>
+      <tr><td><span class="tag warn">有條件可查</span></td><td>Faster-Qwen3-TTS 作者發布 GB10 benchmark（1.7B 約 1.9× RTF）；有測試腳本與定義，但沒有本機／第三方重現證據，且適用的是替代 API/service 路線。</td></tr>
+      <tr><td><span class="tag bad">不實或誤導</span></td><td>「全部文本與音訊都編譯進 CUDA Graph」、「GB10 3×」；Qwen3-TTS 依賴 Mamba/causal_conv1d；Unsloth NVFP4 已支援 Qwen3-TTS；拿 Qwen3 LLM 的 GGUF Reddit 數字當作 TTS 成效。</td></tr>
+    </tbody>
+  </table>
+  <p><strong>現在能不能照這批資訊裝東西？不能。</strong>尤其不能裝 Unsloth/NVFP4、<code>mamba-ssm</code>、<code>causal-conv1d</code>，也不能因這些文字恢復安裝 FlashAttention。未來若要探索加速，唯一資訊量足夠的候選是 mARTin/upstream Faster-Qwen3-TTS；但它必須是新的、隔離的 Docker API 實驗，且須以現有官方環境做 baseline，固定模型、reference audio/transcript、輸入文本、dtype、warmup、版本與 image digest，並同時比較 RTF、TTFA、聲音品質／克隆相似度與輸出錯誤率。AB 結果出來之前，不應替換目前批次管線。</p>
+
+  <h2>來源與查證範圍</h2>
+  <ul class="sources">
+    <li><a href="https://forums.developer.nvidia.com/t/three-times-voiceclone-voicedesign-customvoice-faster-qwen3-tts-for-nvidia-dgx-spark-gb10/370530">NVIDIA Developer Forums：指定貼文</a>（實際內容、repo/image 連結、社群作者身份）</li>
+    <li><a href="https://github.com/mARTin-B78/dgx-spark-faster-qwen3-tts">mARTin-B78/dgx-spark-faster-qwen3-tts</a>、<a href="https://raw.githubusercontent.com/mARTin-B78/dgx-spark-faster-qwen3-tts/main/Dockerfile">Dockerfile 原始碼</a>、<a href="https://hub.docker.com/r/martinb78/faster-qwen3-tts-dgx-spark">Docker Hub</a>（包裝方式、可取得映像）</li>
+    <li><a href="https://github.com/andimarafioti/faster-qwen3-tts">andimarafioti/faster-qwen3-tts</a>、<a href="https://raw.githubusercontent.com/andimarafioti/faster-qwen3-tts/main/README.md">README 原始碼</a>、<a href="https://github.com/andimarafioti/faster-qwen3-tts/blob/main/BLOG.md">BLOG.md</a>（benchmark、graph 範圍與方法）</li>
+    <li><a href="https://github.com/QwenLM/Qwen3-TTS">Qwen 官方 Qwen3-TTS repo</a>、<a href="https://raw.githubusercontent.com/QwenLM/Qwen3-TTS/main/pyproject.toml">pyproject.toml 原始碼</a>、<a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/qwen_tts/core/models/modeling_qwen3_tts.py">模型程式碼</a>（依賴與架構）</li>
+    <li><a href="https://unsloth.ai/blog/qwen3">Unsloth Qwen3 公告</a>、<a href="https://github.com/unslothai/unsloth/issues/3951">Unsloth issue #3951</a>（Qwen3 LLM 與 Qwen3-TTS 支援狀態的區分）</li>
+    <li><a href="https://github.com/ggml-org/llama.cpp/pull/26254">llama.cpp PR #26254</a>、<a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/tts/README.md">llama.cpp TTS README</a>（GGUF Qwen3-TTS 支援）</li>
+  </ul>
+  <p class="small">方法說明：本報告逐一開啟使用者提供連結，讀取 repo、Docker manifest metadata、官方 Qwen 依賴與模型程式碼，以及 Unsloth/llama.cpp 第一方頁面。本次未下載 image、未安裝 package、未改動 TTS 執行環境；「查無支援」的判定限定於上述官方文件與公開官方 issue，而非宣稱全網不存在任何非官方 fork。</p>
+</main>
+</body>
+</html>
