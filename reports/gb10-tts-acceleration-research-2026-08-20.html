@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GB10 × Qwen3-TTS 推論加速相容性研究</title>
+<style>
+:root{--ink:#17202a;--muted:#596673;--line:#d9e0e6;--paper:#fff;--wash:#f5f8fa;--accent:#0b5e92;--warn:#8a4310;--good:#0b6b49}*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:17px/1.75 system-ui,-apple-system,"Noto Sans TC","PingFang TC",sans-serif}main{max-width:920px;margin:32px auto;background:var(--paper);padding:48px 54px 64px;box-shadow:0 2px 16px #24374612}h1{font-size:2rem;line-height:1.25;margin:0 0 .35rem}h2{font-size:1.32rem;margin:2.4rem 0 .65rem;padding-top:.3rem;border-top:1px solid var(--line)}h3{font-size:1.05rem;margin:1.5rem 0 .35rem}.sub,.meta{color:var(--muted)}.callout{padding:15px 18px;border-left:4px solid var(--accent);background:#eff8fd;margin:1.2rem 0}.warn{border-color:#ca6b20;background:#fff7ef}.good{border-color:var(--good);background:#effaf5}table{border-collapse:collapse;width:100%;font-size:.94rem;margin:1rem 0}th,td{border:1px solid var(--line);padding:10px;vertical-align:top;text-align:left}th{background:#f1f5f7}code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.87em}pre{white-space:pre-wrap;padding:14px;background:#19232c;color:#eaf1f5;border-radius:6px;overflow:auto}a{color:var(--accent);word-break:break-word}.source{font-size:.93rem;color:var(--muted)}li{margin:.45rem 0}.tag{display:inline-block;border-radius:99px;padding:2px 9px;background:#eef2f4;color:#40505d;font-size:.82rem}footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}@media(max-width:640px){main{margin:0;padding:28px 20px}body{font-size:16px}h1{font-size:1.65rem}table{font-size:.83rem}th,td{padding:7px}}
+</style>
+</head>
+<body><main>
+<p class="meta">研究日期：2026-08-20　｜　範圍：只查證；未安裝套件、未變更既有虛擬環境或專案原始檔</p>
+<h1>GB10 × Qwen3-TTS：推論加速套件相容性研究</h1>
+<p class="sub">目標環境：Linux aarch64、NVIDIA GB10（sm_121）、Driver 580.159.03、Python 3.12.3、現有 PyTorch 2.9.0+cu130；用途為 Qwen3-TTS 批次語音克隆推論。</p>
+
+<div class="callout good"><strong>一句話建議：</strong>現在<strong>不要安裝 FlashAttention</strong>；先在獨立 venv 測試官方 ARM64 的 <code>torch==2.13.0+cu130</code>，確認短篇 Qwen3‑TTS 推論正確且不再出現 capability 警告，再決定是否切換。FlashAttention 的 GB10/aarch64 正式 wheel 目前不存在，而上游 sm_121 支援仍是未合併 PR，不能把它當可靠的加速修復。</div>
+
+<h2>結論總表</h2>
+<table><thead><tr><th>問題</th><th>可查證結論</th><th>決策</th></tr></thead><tbody>
+<tr><td>GB10 的 CUDA / PyTorch</td><td>NVIDIA 的 DGX Spark 支援基線是 CUDA Toolkit 13.0；目前 DGX Spark 發行版為 CUDA 13.0.2、Driver 580.159.03。PyTorch 2.12/2.13 的官方 ARM64 CUDA 13 wheel 支援表列 Blackwell <code>12.0+PTX</code>，而 <code>torch-2.13.0+cu130-cp312-…-aarch64.whl</code> 已正式供應。</td><td>可在<strong>新 venv</strong>測試 PyTorch 2.13.0+cu130。</td></tr>
+<tr><td>「正式 sm_121」的含義</td><td>PyTorch 官方矩陣沒有逐字列出 <code>sm_121</code>，而是列 <code>12.0+PTX</code>；這是正式 wheel 的 Blackwell 前向相容路徑，不是每個 sm_121 專用 cubin 都已逐一驗證的承諾。</td><td>把它視為比 2.9.0 更正確的候選，仍須真實 TTS smoke test。</td></tr>
+<tr><td>FlashAttention 現成 wheel</td><td>PyPI 最新 flash-attn 2.8.3.post1 發布物只有 source distribution；官方 issue 亦明列 <code>linux_aarch64 + sm121</code> 沒有預編譯 wheel。</td><td><strong>不裝。</strong></td></tr>
+<tr><td>從原始碼編譯</td><td>有人在相同 GB10 / CUDA 13.0 / PyTorch 2.9 / aarch64 組合回報可編譯 2.8.3，但官方 repo 的 sm_121 PR 仍為 Open，未合併、未發行、無正式 CI/發佈保證。</td><td>不作生產方案；僅限日後可接受實驗與回退成本時再評估。</td></tr>
+<tr><td>預期速度</td><td>FlashAttention-2 論文的 3–10×是 attention kernel（多含訓練）基準，不能外推成完整 TTS 3–10×。Qwen3‑TTS 官方只說 FlashAttention 2 可減少 GPU 記憶體，沒有發表 GB10 的端到端 RTF；一份非官方 RTX 3090 社群基準只看到官方 backend 約 10% 改善。</td><td>不可把「10 分鐘/頁」歸因為只少裝 flash-attn，更不能承諾 2–4×。</td></tr>
+</tbody></table>
+
+<h2>1. NVIDIA 建議的 CUDA 與 PyTorch；PyTorch 是否支援 sm_121？</h2>
+<p>NVIDIA 的 DGX Spark Porting Guide 把 CUDA Toolkit 列為「Supported」、最低 13.0；DGX Spark 目前 release note 的基準正是 Driver 580.159.03 與 CUDA Toolkit 13.0.2。這與本機既有驅動相符，故<strong>不建議為此研究另行升級系統 CUDA/driver</strong>。<span class="source">來源：<a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/porting/dependencies.html">NVIDIA DGX Spark Porting Guide</a>；<a href="https://docs.nvidia.com/dgx/dgx-spark/release-notes.html">DGX Spark Release Notes</a></span></p>
+<p>正式答案是：<strong>有可供 aarch64 + Python 3.12 安裝的官方 PyTorch CUDA 13.0 wheel</strong>。PyTorch 下載索引列出 2.10、2.11、2.12、2.12.1、2.13 的 CPython 3.12 / manylinux aarch64 wheel；2.13.0 的精確檔名也在索引中。其官方 release 矩陣對 Linux aarch64、CUDA 13.0.2 標示 Blackwell <code>10.0, 11.0, 12.0+PTX</code>。因此官方表述是「12.0+PTX」而非「原生 sm_121 cubin」；PTX 路徑是較新小版本 GPU 的正式前向相容機制，但仍必須以你的 Qwen3-TTS 做 correctness / performance smoke test。<span class="source">來源：<a href="https://github.com/pytorch/pytorch/blob/main/RELEASE.md">PyTorch RELEASE.md（aarch64 CUDA support matrix）</a>；<a href="https://download.pytorch.org/whl/cu130/torch/">官方 cu130 wheel index</a></span></p>
+<p>相較之下，現用 torch 2.9 的官方相容矩陣把 CUDA 13.0 列為 experimental；你已實測其 runtime 警告上限是 12.0。因此研究建議的升級目標是<strong>正式釋出的 2.13.0+cu130</strong>，不是 nightly，也不是自行編 PyTorch。<span class="source">來源：<a href="https://github.com/pytorch/pytorch/blob/main/RELEASE.md">PyTorch release compatibility matrix</a>；<a href="https://github.com/pytorch/pytorch/releases">PyTorch 2.13.0 release</a></span></p>
+
+<h2>2. FlashAttention：沒有可直接裝的 GB10/aarch64 wheel</h2>
+<p><strong>目前沒有現成方案，建議先不裝。</strong>PyPI 的最新 release <code>flash-attn 2.8.3.post1</code> 僅公布 <code>.tar.gz</code> source distribution，沒有 wheel；官方 upstream issue 對 GB10 明寫「precompiled wheels unavailable for linux_aarch64 + sm121」。這直接排除了「對目前 venv 執行普通 <code>pip install flash-attn</code>，得到已驗證 ARM/GB10 二進位檔」這條路。<span class="source">來源：<a href="https://pypi.org/pypi/flash-attn/json">PyPI release metadata</a>；<a href="https://github.com/Dao-AILab/flash-attention/issues/1969">FlashAttention 官方 issue #1969</a></span></p>
+<p>原始碼編譯並非不可能，但不能描述成正式支援：在該 issue 有使用者回報以 GB10、CUDA 13.0、PyTorch 2.9、Ubuntu 24.04 aarch64 編譯成功 FA 2.8.3；另一方面，為 sm_121 加入正式 build 邏輯的 upstream PR #2257 仍是 <em>Open</em>，沒有 maintainer review 或 merged release。PR 的討論也指出 CUDA 13.0 接受 <code>compute_121</code>/<code>sm_121</code> gencode，但這只是編譯旗標可用，並不是 Qwen3-TTS 的端到端相容性或正確性證明。<span class="source">來源：<a href="https://github.com/Dao-AILab/flash-attention/issues/1969">官方 issue #1969（同組合成功回報）</a>；<a href="https://github.com/Dao-AILab/flash-attention/pull/2257">官方 PR #2257（仍 Open）</a></span></p>
+<p>時間也不能誠實地給出「GB10 要幾分鐘」的數字：上游 README 僅給一般性說明──64 核機器、安裝 ninja 時 3–5 分鐘；沒有 ninja 時可能長達約 2 小時，並建議記憶體受限時 <code>MAX_JOBS=4</code>。GB10 的 ARM CPU、可用記憶體、編譯器、torch ABI 與 CUDA toolkit 都會改變結果；官方沒有 GB10 build-time benchmark。風險包含建置失敗、耗盡 unified memory、ABI 不符、import/執行時 kernel mismatch，及即便 import 成功仍可能產生錯誤輸出。<span class="source">來源：<a href="https://github.com/Dao-AILab/flash-attention">FlashAttention 官方 README（requirements、ninja、MAX_JOBS）</a>；<a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/overview.html">NVIDIA：GB10 UMA 架構說明</a></span></p>
+
+<h2>3. 純推論可能加速多少？</h2>
+<p>只能給<strong>條件式數量級</strong>，不能承諾完整 Qwen3-TTS 批次加速 2–4×。FlashAttention-2 論文測得 attention kernel 對標準 PyTorch attention 為 3–10×，並提到特定 LLM decoding kernel 最多 7×；但那些是 A100、特定 sequence length/head dimension 的 kernel/訓練基準，不是 GB10、不是 Qwen3-TTS、也不是整頁語音生成。端到端 TTS 還包含自回歸 token 生成、音訊 tokenizer/decoder、Python 排程與 I/O。<span class="source">來源：<a href="https://openreview.net/pdf?id=mZn2Xyh9Ec">FlashAttention-2 論文，第 4 節 benchmark</a></span></p>
+<p>Qwen3-TTS 官方文件只建議 FA2 用於降低 GPU 記憶體，並要求 fp16 或 bf16；它沒有發布 GB10 端到端速度數字。可作為<strong>非官方、不同硬體</strong>的參考，一份 RTX 3090 / 1.7B CustomVoice、五次 warm-run 的社群測試從 RTF 0.97 到 0.87，約 10% 改善。故合理決策是：FA2 若日後可穩定使用，預期可能是「小至中等」改善；目前沒有來源可支持它單獨把 10 分鐘/頁降為數分鐘。<span class="source">來源：<a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/README.md">Qwen3-TTS 官方 README（FA2、dtype）</a>；<a href="https://github.com/oseibonsu/qwen3-tts/blob/main/BENCHMARK_RESULTS.md">非官方 RTX 3090 benchmark（僅供量級參考）</a></span></p>
+<div class="callout warn"><strong>額外的實查發現：</strong>目前批次腳本已做到「模型只載入一次」，但載入呼叫未傳 <code>attn_implementation="flash_attention_2"</code>。Qwen 官方 Base voice-clone 範例有傳此參數；因此未來若 FA2 變成可驗證方案，還必須改成顯式啟用才會嘗試走該 backend。這是程式行為觀察，不是本次建議你現在修改的指令。<span class="source">來源：本機唯讀檢視 <code>scripts/synthesize_deck_narration.py</code>；<a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/README.md">Qwen 官方 Base 範例</a></span></div>
+
+<h2>4. 升級風險與穩妥做法</h2>
+<ul>
+<li><strong>不要就地覆蓋現有 <code>.venv</code>。</strong>Qwen 官方本身建議 fresh isolated environment，以避免既有套件衝突；其 package 又把 <code>transformers==4.57.3</code> 與 <code>accelerate==1.12.0</code> 鎖定，故 pip resolver 的改動可能使可運作環境失效。<span class="source">來源：<a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/README.md">Qwen 官方安裝建議</a>；<a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/pyproject.toml">Qwen3-TTS pyproject 依賴</a></span></li>
+<li><strong>先升 PyTorch，暫時不混入 FlashAttention 原始碼編譯。</strong>這將問題切成兩個可回退實驗：先驗證正式 ARM64 torch wheel 是否消除 capability 不匹配且能正確合成；只有前者成功、且速度仍不足時，才有理由考慮高風險 FA2 試驗。<span class="source">來源：<a href="https://github.com/pytorch/pytorch/blob/main/RELEASE.md">PyTorch 官方 support matrix</a>；<a href="https://github.com/Dao-AILab/flash-attention/pull/2257">FA2 sm_121 PR 狀態</a></span></li>
+<li><strong>把 correctness 放在 throughput 前面。</strong>成功 import 或 GPU 使用率不等於產物正確；新環境應以同一段短文本、同一段 reference audio，檢查是否成功出 WAV、音檔可解碼、可人工聽辨，並比較每頁耗時與 RTF。這是因為 NVIDIA 明示 GB10 是 UMA，而 FA2 sm_121 尚未進正式 release。<span class="source">來源：<a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/overview.html">NVIDIA GB10 UMA 架構</a>；<a href="https://github.com/Dao-AILab/flash-attention/issues/1969">FA2 GB10 upstream issue</a></span></li>
+</ul>
+
+<h2>5. 可複製的「安全測試」指令</h2>
+<p>以下指令<strong>不是要求現在執行</strong>；它們是日後要測試時的最小、可回退流程。它們建立新環境，完全不寫入或刪除既有 <code>/home/zealchou/lecture-voice-pipeline/.venv</code>。選用 torch 2.13.0 是因為官方有 CPython 3.12 aarch64 cu130 wheel，且官方矩陣已列 Blackwell <code>12.0+PTX</code>。<span class="source">來源：<a href="https://download.pytorch.org/whl/cu130/torch/">官方 torch cu130 index</a>；<a href="https://github.com/pytorch/pytorch/blob/main/RELEASE.md">官方架構支援矩陣</a></span></p>
+<pre><code># 0) 在專案旁建立「獨立測試」環境；不碰現用 .venv
+cd /home/zealchou/lecture-voice-pipeline
+python3.12 -m venv .venv-gb10-torch213-test
+source .venv-gb10-torch213-test/bin/activate
+python -m pip install --upgrade pip
+
+# 1) 安裝官方 aarch64 / CUDA 13.0 PyTorch wheel。
+#    只切換測試 venv 的 torch；系統 driver/CUDA 不變。
+python -m pip install --index-url https://download.pytorch.org/whl/cu130 \
+  'torch==2.13.0+cu130' 'torchaudio==2.11.0+cu130'
+
+# 2) 安裝 Qwen 官方 runtime；其依賴含 transformers==4.57.3。
+python -m pip install --upgrade qwen-tts
+
+# 3) 只做硬體與版本檢查（不下載/生成模型）。
+python - &lt;&lt;'PY'
+import platform, torch
+print('machine =', platform.machine())
+print('torch =', torch.__version__)
+print('cuda =', torch.version.cuda)
+print('available =', torch.cuda.is_available())
+print('device =', torch.cuda.get_device_name(0))
+print('capability =', torch.cuda.get_device_capability(0))
+print('arch list =', torch.cuda.get_arch_list())
+PY
+</code></pre>
+<p>第 1 步中的 TorchAudio 2.11 是官方宣告「可與 torch 2.11 及所有未來版本（2.12、2.13…）相容」的最後獨立 TorchAudio release，且官方 cu130 索引提供 CPython 3.12 aarch64 wheel。<span class="source">來源：<a href="https://docs.pytorch.org/audio/stable/installation.html">TorchAudio 2.11 installation / compatibility</a>；<a href="https://download.pytorch.org/whl/cu130/torchaudio/">官方 cu130 TorchAudio index</a></span></p>
+<p><strong>不要執行下列命令：</strong><code>pip install flash-attn</code>。在本平台它會進入原始碼建置，並非取得已驗證 wheel；上游對 sm_121 的修補仍未合併。Qwen 文件中的 <code>MAX_JOBS=4 pip install ...</code> 是一般性編譯提示，不構成 GB10/aarch64 生產相容性保證。<span class="source">來源：<a href="https://pypi.org/pypi/flash-attn/json">PyPI metadata</a>；<a href="https://github.com/Dao-AILab/flash-attention/pull/2257">Open PR #2257</a>；<a href="https://github.com/QwenLM/Qwen3-TTS/blob/main/README.md">Qwen 安裝說明</a></span></p>
+
+<h2>建議的驗證順序（不含 FlashAttention）</h2>
+<ol>
+<li>以新 venv 先跑「相同模型、相同 reference audio、相同短段文字」一回，確認無 sm_121 warning、WAV 可解碼且可聽。</li>
+<li>再跑 3 次 warm run，記錄「模型載入後的純生成秒數 / 產出 WAV 秒數（RTF）」；不要把第一次載入模型與下載權重混入每頁速度。</li>
+<li>只有正確性與穩定性都通過，且加速足以支撐切換時，才計畫遷移既有工作流程。若測試環境無改善，應先 profile TTS 生成、reference-audio 前處理和 I/O，而不是編譯未正式支援的 FlashAttention。</li>
+</ol>
+<footer>研究邊界：本報告不宣稱已在此 GB10 實機安裝或 benchmark 任何新套件；所有「可用」皆區分為官方供應的 wheel、官方支援矩陣，或明確標示為社群回報。</footer>
+</main></body></html>
