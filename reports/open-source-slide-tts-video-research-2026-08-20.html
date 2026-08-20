@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>開源方案調查：投影片＋TTS 旁白自動輸出 MP4</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+<style>body{margin:0;background:#F2EEE5;color:#202321;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;font-size:18px;line-height:1.8}main{max-width:980px;margin:0 auto;padding:48px 28px 72px}header{border-left:6px solid #B74B32;padding:12px 0 12px 22px;margin:12px 0 44px}h1,h2,h3{font-family:"Noto Serif TC","Songti TC",serif;line-height:1.35;color:#202321}h1{font-size:2.25rem;margin:0 0 .25rem}h2{font-size:1.65rem;margin-top:3rem;padding-top:1rem;border-top:1px solid #cfc7ba}h3{font-size:1.25rem;margin-top:2rem}p,li{max-width:78ch}a{color:#8F3828;text-underline-offset:3px}blockquote{margin:1.8rem 0;padding:1rem 1.25rem;border-left:4px solid #B74B32;background:#FAF8F1}code,pre{font-family:"SFMono-Regular",Consolas,monospace}pre{padding:1rem;overflow:auto;background:#202321;color:#FAF8F1;border-radius:6px;font-size:.86em;line-height:1.55}table{display:block;overflow-x:auto;border-collapse:collapse;margin:1.2rem 0 2rem;background:#FAF8F1;font-size:.9em}th,td{border:1px solid #cfc7ba;padding:.7rem;vertical-align:top;min-width:12rem}th{background:#e8e1d5;text-align:left;color:#202321}@media(max-width:600px){body{font-size:16px}main{padding:28px 16px 48px}h1{font-size:1.8rem}h2{font-size:1.4rem}table{font-size:.85em}th,td{min-width:10rem;padding:.55rem}}</style></head>
+<body><main><header><div>開源方案調查 · 2026-08-20</div></header>
+<header id="title-block-header">
+</header>
+<h1
+id="開源方案調查投影片tts-旁白自動輸出-mp4">開源方案調查：投影片＋TTS
+旁白自動輸出 MP4</h1>
+<p>日期：2026-08-20（Asia/Taipei）<br />
+研究目的：替現有本地 Qwen3-TTS
+聲音克隆管線，尋找「投影片畫面＋旁白時間軸 →
+MP4」的可用開源基底，而不是重新實作影音合成器。</p>
+<blockquote>
+<p>先講結論：最適合直接接入的是 <strong><a
+href="https://github.com/mifi/editly">Editly</a></strong>。它能直接吃「圖片序列、整段
+Qwen3-TTS WAV、每頁起訖秒數」，以每頁 clip 的 <code>duration</code>
+加上全域 <code>audioFilePath</code> 輸出
+MP4；所缺的僅是把既有時間表編譯成 JSON5。若改為「每頁一個 Qwen
+WAV」，可選 <strong><a
+href="https://github.com/yanndebray/montaigne">Montaigne</a></strong>
+的純合成段，或直接使用 FFmpeg。沒有找到一套夠成熟、又能同時原生處理本地
+Qwen3-TTS、中文句級對齊、HTML/PPTX/PDF
+三種投影片輸入、及可驗證翻頁時間的完整專案。</p>
+</blockquote>
+<h2 id="搜尋範圍與方法">1. 搜尋範圍與方法</h2>
+<h3 id="問題拆解與判準">問題拆解與判準</h3>
+<p>把需求拆成兩個不可混淆的層次：</p>
+<ol type="1">
+<li><strong>時間軸產生</strong>：由逐字稿與 Qwen3-TTS
+產物決定句子／頁面的起訖秒數。</li>
+<li><strong>畫面合成</strong>：依頁面起訖秒數顯示投影片，將旁白混入，輸出
+H.264/AAC MP4。</li>
+</ol>
+<p>本報告只把「實際能做第 2 層、或明確含第 1＋2 層」的專案列為候選。純
+ASR、純字幕、純 TTS、只做 PPTX 產生而沒有影片輸出者均排除。</p>
+<h3 id="檢索方式">檢索方式</h3>
+<ul>
+<li>使用的英文關鍵字（12
+組組合）：<code>PPTX TTS narration video generator open source</code>、<code>slides audio ffmpeg video</code>、<code>images audio duration ffmpeg slideshow</code>、<code>slide timing ffmpeg presentation video</code>、<code>Marp voiceover video</code>、<code>presentation PDF images audio video</code>、<code>PPTX Qwen TTS video export</code>
+等。</li>
+<li>來源：GitHub repository 搜尋結果與各 repository
+README／原始碼／安裝文件；GitHub REST API 的
+<code>pushed_at</code>、<code>stargazers_count</code>、<code>license</code>
+欄位；必要時再讀到實際的合成實作檔。</li>
+<li>約檢視 10 個 GitHub 倉庫，最後保留 7 個候選。每一個下列 GitHub
+主網址均以 HTTP GET 驗證為
+<strong>200</strong>（2026-08-20）；星數為同一時間點的 API
+快照，會隨時間變動。</li>
+</ul>
+<h3 id="重要界線">重要界線</h3>
+<p>「旁白時長驅動投影片」不等於「逐字稿自動得到可靠的中文句級／字級時間點」。多數候選只會：</p>
+<ul>
+<li>讀取現成音檔的 <code>ffprobe</code> 時長；或</li>
+<li>對每頁文字呼叫其指定 TTS，再以每頁音檔長度決定翻頁。</li>
+</ul>
+<p>因此，若 Qwen3-TTS
+一次產出整段旁白，仍要有一個時間表來源（例如逐句生成後累加時長、或以
+ASR／forced alignment 對齊）。這是上游資料問題，不應藏進 MP4
+合成器裡。</p>
+<h2 id="候選方案清單">2. 候選方案清單</h2>
+<h3 id="a.-輕量級圖片序列音檔-影片">A. 輕量級：圖片序列＋音檔 →
+影片</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>專案</th>
+<th>GitHub、更新與熱度</th>
+<th>實際能力與本案吻合度</th>
+<th>授權與安裝複雜度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Editly</strong></td>
+<td><a
+href="https://github.com/mifi/editly">mifi/editly</a>；最後程式推送
+<strong>2025-05-12</strong>；約 <strong>5.5k stars</strong></td>
+<td>Node.js 的宣告式影音編排器，底層為 FFmpeg。每個 <code>clips[]</code>
+可指定 <code>duration</code>、圖片 layer，頂層可指定整段
+<code>audioFilePath</code>，也可加任意時間點音軌。<strong>直接符合</strong>：把頁面
+<code>end - start</code> 填為每個 clip 時長、把全段 Qwen WAV 放入
+<code>audioFilePath</code> 即可輸出 MP4。須自行檢查「最後頁 end ≈
+音檔時長」；它不會產生逐字稿時間點。</td>
+<td><strong>MIT</strong>。需 Node.js、FFmpeg 與 FFprobe；Linux 可能要補
+headless-gl 系統相依。無 GPU、無雲端服務需求。最適合做正式合成層。</td>
+</tr>
+<tr>
+<td><strong>videoshow</strong></td>
+<td><a
+href="https://github.com/h2non/videoshow">h2non/videoshow</a>；最後程式推送
+<strong>2026-01-21</strong>；約 <strong>900 stars</strong></td>
+<td>Node.js 封裝 FFmpeg 的圖片 slideshow
+工具，支援一段音檔、每張圖片物件的 <code>loop</code>
+秒數、轉場與字幕。<strong>直接符合核心輸入</strong>：圖片物件的
+<code>loop</code> 可由每頁起訖秒數換算，<code>.audio()</code> 可放全段
+Qwen 音檔。比 Editly 簡單，但排版／合成控制較少，且 README
+要求圖片同尺寸。</td>
+<td><strong>MIT</strong>。需 Node.js、FFmpeg；若要字幕／MP3 功能，FFmpeg
+需含 libass、libmp3lame。無 GPU、無雲端。適合快速 MVP。</td>
+</tr>
+<tr>
+<td><strong>FFmpeg Video Slideshow Scripts</strong></td>
+<td><a
+href="https://github.com/tanersener/ffmpeg-video-slideshow-scripts">tanersener/ffmpeg-video-slideshow-scripts</a>；最後程式推送
+<strong>2023-07-16</strong>；約 <strong>500 stars</strong></td>
+<td>Bash 範本集合，提供圖片／影片序列、畫面停留秒數、轉場與輸出
+H.264。<strong>部分符合</strong>：可當視覺軌模板，但原設計不是「單一旁白＋每頁時間表」的完整介面，需補一個
+FFmpeg 音訊 mux 與依頁時長產生設定的薄包裝。適合想完全掌控 filter
+graph，而非直接導入的情況。</td>
+<td><strong>MIT</strong>（倉庫主程式）；注意示例素材／少數附帶資產另有授權，產品僅應使用自己的投影片與音檔。純
+Bash＋FFmpeg，無 GPU、無雲端。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="a-類判讀">A 類判讀</h4>
+<p>三者都不處理「句子時間點怎麼來」，但這反而吻合本案：Qwen3-TTS
+已在本地，時間表可以是本管線的明確契約，而不必被另一套雲端 TTS
+綁死。成熟度與可維護性排序為 <strong>Editly &gt; videoshow &gt; Bash
+範本</strong>。</p>
+<h3 id="b.-較完整的簡報講者-有旁白影片端到端專案">B.
+較完整的「簡報／講者 → 有旁白影片」端到端專案</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>專案</th>
+<th>GitHub、更新與熱度</th>
+<th>實際能力與本案吻合度</th>
+<th>授權與安裝複雜度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PPT Master</strong></td>
+<td><a
+href="https://github.com/hugohe3/ppt-master">hugohe3/ppt-master</a>；最後程式推送
+<strong>2026-08-19</strong>；約 <strong>48k stars</strong></td>
+<td>能從講者備註產生<strong>逐頁</strong>旁白，並把音檔嵌回
+PPTX；文件列有 Qwen TTS backend，也提供現成每頁音檔目錄的
+<code>--recorded-narration audio</code>。可利用 PowerPoint
+的原生影片輸出保留轉場／物件動畫。<strong>部分符合</strong>：若輸入是
+PPTX 且可把 Qwen
+音檔按頁命名，適合；但不是「圖片序列＋整段音檔＋外部起訖秒數」直入。其
+Qwen 路徑指向 DashScope 的雲端 API，不是現有本地 Qwen3-TTS。</td>
+<td><strong>MIT</strong>。基礎需 Python 3.10+；原生 MP4 匯出另要求
+<strong>Windows PowerPoint 2016+</strong>。內建 TTS 可能需要雲端
+API；若只餵既有逐頁音檔則不需 GPU／雲端，但仍受 Windows PowerPoint
+限制。</td>
+</tr>
+<tr>
+<td><strong>Montaigne</strong></td>
+<td><a
+href="https://github.com/yanndebray/montaigne">yanndebray/montaigne</a>；最後程式推送
+<strong>2026-03-02</strong>；約 <strong>2 stars</strong></td>
+<td>Python 工具鏈可由 PDF／PPTX 抽頁、產生講稿／TTS，並有
+<code>essai video --images slides/ --audio audio/</code>。其
+<code>video.py</code> 確實以 <code>page_*.png</code> 配對
+<code>slide_*.wav/mp3</code>，用 FFprobe
+取得<strong>每頁音檔實際時長</strong>後各自成片再
+concat。<strong>接近直接符合</strong>：將 Qwen
+每頁輸出命名為該規格即可；但不吃「一段總音檔＋頁面
+start/end」，也未見句級對齊與圖片／音檔數量不一致的硬失敗檢查（以較短一側為準）。</td>
+<td><strong>MIT</strong>。需 Python 3.10+、FFmpeg；完整腳本／翻譯預設用
+Gemini，TTS 可用 Gemini／ElevenLabs，另有 Coqui 本地選項（後者才可能需要
+GPU）。用它的純影片函式加 Qwen 音檔不需雲端。成熟度低，先做 smoke
+test。</td>
+</tr>
+<tr>
+<td><strong>videoascode</strong></td>
+<td><a
+href="https://github.com/grokify/videoascode">grokify/videoascode</a>；最後程式推送
+<strong>2026-08-13</strong>；約 <strong>3 stars</strong></td>
+<td>Go 工具將 Marp Markdown、旁白和 FFmpeg
+合成影片：逐頁錄製並以音檔時長決定畫面時長，最後
+concat。<code>vac slides video --manifest ...</code> 可跳過
+TTS、讀預先生成的音訊 manifest。<strong>需簡單改接</strong>：要把 Qwen
+逐頁音檔與 metadata 轉成它期待的 manifest；投影片原生輸入限 Marp
+Markdown，不是既有 PPTX／PDF。</td>
+<td><strong>MIT</strong>。需 Go 建置、FFmpeg、Marp
+CLI；實作路徑還會用瀏覽器錄製（macOS 可能需螢幕錄製權限）。內建 TTS 是
+ElevenLabs，使用預先音訊 manifest 後可不呼叫雲端；無 GPU。</td>
+</tr>
+<tr>
+<td><strong>slidemovie</strong></td>
+<td><a
+href="https://github.com/sekika/slidemovie">sekika/slidemovie</a>；最後程式推送
+<strong>2026-07-11</strong>；約 <strong>1 star</strong></td>
+<td>Markdown 寫投影片與 <code>notes</code> 旁白，轉
+PPTX、渲染投影片、TTS、再輸出 MP4；也有 incremental
+build。<strong>部分符合</strong>：很適合從零做 Markdown
+課程，但公開文件只描述由其 <code>multiai-tts</code>
+產音，未找到可直接餵本地既有 Qwen WAV＋外部頁面時間表的入口；替換 TTS
+層才可接入。</td>
+<td><strong>MIT</strong>。需
+Python、FFmpeg、Pandoc、LibreOffice、Poppler、ImageMagick；預設 TTS 需
+Google／OpenAI／Azure API，或本地 VOICEVOX 服務。無 GPU
+是可行的，但依賴較多且專案尚新。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="b-類判讀">B 類判讀</h4>
+<ul>
+<li>若成品要保留 <strong>PowerPoint 原生動畫／轉場</strong>，而且可在
+Windows PowerPoint 匯出，PPT Master 是唯一具明確原生 PPTX
+音訊／影片流程、且社群規模明顯較大的候選。</li>
+<li>若成品本質上是「每頁靜態投影片＋旁白」，Montaigne 與 videoascode
+都不值得取代 Editly：前者可借用逐頁音檔慣例，後者還引入 Marp
+與瀏覽器錄製。</li>
+<li>這一類專案整體都很新（除 PPT Master
+外），不應把它們當作本地生產依賴而不先跑一份 3–5 頁代表投影片。</li>
+</ul>
+<h2 id="與既有-qwen3-tts-管線的接法與明確推薦">3. 與既有 Qwen3-TTS
+管線的接法與明確推薦</h2>
+<h3 id="推薦一正式主路徑-qwen3-tts-editly">推薦一：正式主路徑 —
+Qwen3-TTS + Editly</h3>
+<p><strong>推薦度：最高。</strong> 原因不是它「最像
+AI」，而是資料契約剛好吻合，而且避免再引入第二個 TTS 供應商。</p>
+<p>輸入契約可固定為：</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;audio&quot;</span><span class="fu">:</span> <span class="st">&quot;audio/narration.wav&quot;</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;slides&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="dt">&quot;image&quot;</span><span class="fu">:</span> <span class="st">&quot;slides/001.png&quot;</span><span class="fu">,</span> <span class="dt">&quot;start&quot;</span><span class="fu">:</span> <span class="fl">0.0</span><span class="fu">,</span> <span class="dt">&quot;end&quot;</span><span class="fu">:</span> <span class="fl">28.42</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="dt">&quot;image&quot;</span><span class="fu">:</span> <span class="st">&quot;slides/002.png&quot;</span><span class="fu">,</span> <span class="dt">&quot;start&quot;</span><span class="fu">:</span> <span class="fl">28.42</span><span class="fu">,</span> <span class="dt">&quot;end&quot;</span><span class="fu">:</span> <span class="fl">61.08</span><span class="fu">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>薄轉接層只負責：</p>
+<ol type="1">
+<li>驗證頁面排序、<code>start &lt; end</code>、相鄰頁面不重疊／不留未宣告空洞。</li>
+<li>驗證最後一頁 <code>end</code> 與 <code>ffprobe(narration.wav)</code>
+時長在容許誤差內。</li>
+<li>輸出 Editly JSON5：每頁一個 image
+clip，<code>duration = end - start</code>，全域
+<code>audioFilePath</code> 指向 Qwen WAV。</li>
+<li>交給 Editly／FFmpeg 編碼 MP4，再以 FFprobe 回讀總時長、影像／音訊
+stream 與解析度。</li>
+</ol>
+<p>這不是重寫合成器；只是把已算好的時間表翻譯成成熟編排器的設定。它支援
+HTML 投影片時，只要先以 Chromium／Playwright 依固定 viewport 截成
+PNG；PPTX／PDF
+則先渲染成同一份有序圖片序列。三種來源到合成層的資料型別因此一致。</p>
+<h3
+id="推薦二有逐頁-qwen-音檔時-montaigne-的純影片段或直接-ffmpeg">推薦二：有逐頁
+Qwen 音檔時 — Montaigne 的純影片段或直接 FFmpeg</h3>
+<p>若 Qwen3-TTS 本來就是每頁或每句個別輸出，將每頁音檔合併為該頁
+WAV，再依 <code>page_001.png</code>／<code>slide_01.wav</code>
+的規格使用 Montaigne 的 <code>generate_video()</code>，可省掉建立 Editly
+設定。不過應先補兩道外部驗證：圖片數量＝音檔數量、依檔名索引一對一配對；因為原實作以排序後的最短列表處理，少檔可能被靜默截斷。</p>
+<p>若只需要靜態投影片、無轉場與複雜 overlay，直接使用 FFmpeg
+亦可；但建議將命令生成、輸入驗證與輸出 probe
+留成可測試的小工具，而不是在 shell 裡散落拼字串。</p>
+<h3 id="有條件選項ppt-master">有條件選項：PPT Master</h3>
+<p>僅在下列條件都成立時採用：既有來源主要是
+PPTX、必須保留原生轉場／物件動畫、可提供 Windows +
+PowerPoint，且能將本地 Qwen 音檔整理為每頁音檔目錄。否則它的 PowerPoint
+與雲端 Qwen API 假設，會讓目前 Linux／本地 Qwen3-TTS 管線變複雜。</p>
+<h3 id="沒有找到的部分誠實邊界">沒有找到的部分（誠實邊界）</h3>
+<p>在本次約 12 組關鍵字、10 個 GitHub
+倉庫的搜尋範圍內，<strong>沒有找到成熟且可直接使用</strong>的開源專案，同時滿足以下四項：</p>
+<ol type="1">
+<li>原生支援本地 Qwen3-TTS 聲音克隆；</li>
+<li>自動產生可審計的繁中句級／字級時間戳；</li>
+<li>直接接受 HTML、PPTX、PDF 三種既有投影片；</li>
+<li>以外部逐頁起訖秒數、單段旁白產出影片，且對長度不一致有硬性驗證。</li>
+</ol>
+<p>相關搜尋字包括
+<code>Qwen TTS PPTX video export</code>、<code>slides audio ffmpeg video</code>、<code>PPTX TTS narration video generator open source</code>、<code>Marp voiceover video</code>。這不是「沒有任何工具」，而是現有工具通常只覆蓋合成，或綁定自己的雲端
+TTS／投影片格式。最小、可控的缺口是時間表／manifest
+轉接與驗證，不是另造一套影片引擎。</p>
+<h2 id="來源與驗證紀錄">4. 來源與驗證紀錄</h2>
+<ul>
+<li><a href="https://github.com/mifi/editly#readme">Editly
+README</a>：<code>clips[].duration</code>、圖片
+layer、<code>audioFilePath</code> 與安裝需求。</li>
+<li><a href="https://github.com/h2non/videoshow#readme">videoshow
+README</a>：每張 image 的 <code>loop</code> 秒數與
+<code>.audio()</code>。</li>
+<li><a
+href="https://github.com/tanersener/ffmpeg-video-slideshow-scripts#readme">FFmpeg
+Video Slideshow Scripts README</a>：圖片停留秒數、FFmpeg 前提與 MIT
+條款。</li>
+<li><a
+href="https://github.com/hugohe3/ppt-master/blob/main/docs/audio-narration.md">PPT
+Master
+音訊／影片文件</a>：逐頁音檔、<code>--recorded-narration</code>、Qwen
+音訊能力與 Windows PowerPoint MP4 限制。</li>
+<li><a href="https://github.com/yanndebray/montaigne#readme">Montaigne
+README</a> 與 <a
+href="https://github.com/yanndebray/montaigne/blob/main/montaigne/video.py">video.py</a>：<code>--images</code>／<code>--audio</code>
+介面與依音檔長度成片的實作。</li>
+<li><a
+href="https://github.com/grokify/videoascode/blob/main/cmd/vac/slides_video.go">videoascode
+slides video 指令</a>：預生成 audio manifest 入口與相依工具。</li>
+<li><a href="https://github.com/sekika/slidemovie#readme">slidemovie
+README</a> 與 <a
+href="https://sekika.github.io/slidemovie/installation/">安裝文件</a>：Markdown/PPTX/TTS/MP4
+流程及外部工具／API 相依。</li>
+<li>GitHub API 快照：各 repo 的
+<code>https://api.github.com/repos/&lt;owner&gt;/&lt;repo&gt;</code>，用於本報告的
+<code>pushed_at</code>、star 數及宣告授權交叉核對；上表所有 repo URL 於
+2026-08-20 均 HTTP 200。</li>
+</ul>
+</main></body>
+</html>
