@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2026-08-21" />
+  <title>Face-ID 保留生圖開源方案研究</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">:root{--paper:#F2EEE5;--paper-light:#FAF8F1;--ink:#202321;--soft:#454B48;--line:#CFC7BA;--red:#B74B32;--red-deep:#8F3828;--moss:#63736E}html{background:var(--paper);color:var(--ink);-webkit-text-size-adjust:100%}body{margin:0;background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;font-size:18px;line-height:1.78;color:var(--ink)}main{max-width:1040px;margin:0 auto;padding:54px 34px 92px}header#title-block-header{margin:0 0 44px;padding:6px 0 8px 24px;border-left:5px solid var(--red);text-align:left}header#title-block-header .subtitle{color:var(--moss);font-size:.98rem;letter-spacing:.03em}.title{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(2rem,5vw,3.25rem);line-height:1.22;letter-spacing:.01em;margin:.25rem 0 .6rem}.date{font-size:.9rem;color:var(--soft)}h1,h2,h3{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:var(--ink);line-height:1.35}h1{font-size:2.05rem;margin:4.2rem 0 1.25rem;padding-top:1.2rem;border-top:1px solid var(--line)}h2{font-size:1.45rem;margin:2.7rem 0 1rem}h3{font-size:1.17rem;margin:2rem 0 .7rem}p,li{max-width:78ch}p{margin:1rem 0}strong{color:var(--red-deep)}a{color:var(--red-deep);text-decoration-thickness:1px;text-underline-offset:3px}a:visited{color:#6d483f}blockquote{margin:2rem 0;padding:1.1rem 1.35rem;border-left:4px solid var(--red);background:var(--paper-light);font-family:"Noto Serif TC","Songti TC",serif}blockquote p{margin:0}table{width:100%;display:block;overflow-x:auto;border-collapse:collapse;background:var(--paper-light);margin:1.3rem 0 2.2rem;font-size:.87rem;line-height:1.58;font-variant-numeric:tabular-nums}th,td{border:1px solid var(--line);padding:.75rem;vertical-align:top;min-width:12rem}th{background:#E8E1D5;font-weight:700;text-align:left}th:first-child,td:first-child{min-width:15rem}ul,ol{padding-left:1.45rem}li{margin:.42rem 0}hr{border:0;border-top:1px solid var(--line);margin:3rem 0}code{font-family:"SFMono-Regular",Consolas,monospace;font-size:.88em;background:#E8E1D5;padding:.08em .25em;border-radius:3px}@media (max-width:600px){body{font-size:16px;line-height:1.72}main{padding:32px 17px 62px}header#title-block-header{margin-bottom:32px;padding-left:16px}.title{font-size:2rem}h1{font-size:1.63rem;margin-top:3.2rem}h2{font-size:1.3rem}h3{font-size:1.12rem}table{font-size:.82rem}th,td{padding:.55rem;min-width:10rem}blockquote{margin:1.4rem 0;padding:.9rem 1rem}}@media print{html,body{background:#fff}main{max-width:none;padding:18mm}.title{font-size:28pt}a{color:var(--ink);text-decoration:none}table{font-size:8.8pt}h1,h2,h3{break-after:avoid}p,li{orphans:3;widows:3}}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Face-ID 保留生圖開源方案研究</h1>
+<p class="subtitle">供 Zeal 真人 YouTube
+縮圖照片生成使用｜公開資料查證版</p>
+<p class="date">2026-08-21</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#先講決策" id="toc-先講決策">先講決策</a>
+<ul>
+<li><a href="#研究範圍與判讀方法" id="toc-研究範圍與判讀方法">研究範圍與判讀方法</a></li>
+<li><a href="#候選總表" id="toc-候選總表">候選總表</a></li>
+<li><a href="#逐案重點" id="toc-逐案重點">逐案重點</a></li>
+<li><a href="#授權三層必須同時過而不是只看-github-license" id="toc-授權三層必須同時過而不是只看-github-license">授權：三層必須同時過，而不是只看
+GitHub LICENSE</a></li>
+<li><a href="#對本機的相容性結論" id="toc-對本機的相容性結論">對本機的相容性結論</a></li>
+<li><a href="#建議的落地路線不在本次執行" id="toc-建議的落地路線不在本次執行">建議的落地路線（不在本次執行）</a></li>
+<li><a href="#時間與成本量級規劃估計非本機實測" id="toc-時間與成本量級規劃估計非本機實測">時間與成本量級（規劃估計，非本機實測）</a></li>
+<li><a href="#最終推薦與不選其他方案的理由" id="toc-最終推薦與不選其他方案的理由">最終推薦與不選其他方案的理由</a></li>
+<li><a href="#主要來源" id="toc-主要來源">主要來源</a></li>
+<li><a href="#未驗證事項清單" id="toc-未驗證事項清單">未驗證事項清單</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="先講決策">先講決策</h1>
+<p><strong>技術首選：PhotoMaker V2 + SDXL。</strong>
+它最貼近這個需求：可直接吃 1 張、也可融合 1–5 張真人參考照；官方明列最低
+11 GB GPU 記憶體；對「單張輸入、亞洲臉」宣稱特別改善，並有官方
+ControlNet / T2I-Adapter 範例可控制姿勢與構圖。它不需要先替 Zeal 訓練
+LoRA，適合先生成多套封面候選。</p>
+<p><strong>但不能直接批准商用上線。</strong> PhotoMaker V2 明示依賴
+InsightFace；InstantID、PuLID 與 IP-Adapter FaceID 也都使用 InsightFace
+的公開人臉模型。InsightFace
+官方說明：程式碼可商用，但其公開預訓練模型與相關訓練資料僅限「非商業研究」。所以「repo
+是 Apache-2.0」不等於整條生成鏈可用於商業頻道或未來
+SaaS。要走商用，先取得 InsightFace
+對所用模型的商業授權，或讓法務／工程確認一套有明確商用權重、且能實際替代該人臉
+encoder
+的方案。<strong>在此之前，只能把這些方案當內部概念驗證。</strong></p>
+<blockquote>
+<p>給 Zeal
+的白話版：這不是把一張臉硬貼到別人身上，而是先抓住「這是誰」的臉部特徵，再依提示詞重畫成不同表情、服裝、姿勢和背景。用
+3–5 張清楚、不同角度的自拍，理論上足以做出一組可挑的 YouTube
+封面人像；但每張仍要人工挑選，因為牙齒、手、側臉、眼神和文字背景都可能失真。真正的第一關不是
+GPU，而是人臉辨識權重的商業授權。</p>
+</blockquote>
+<h2 id="研究範圍與判讀方法">研究範圍與判讀方法</h2>
+<ul>
+<li>本報告只做公開資料調查，沒有安裝、下載或執行任何模型。</li>
+<li>「最後更新」一律指 GitHub 預設分支的<strong>最近一筆 commit
+日期</strong>，而不是 repo 網頁的 metadata 更新時間；查詢日期為
+2026-08-21。</li>
+<li>「官方 VRAM」只抄官方 README
+明載的數字。若沒有數字，明確寫「官方未公布」；不以社群貼文或其他 GPU
+的實測代填。</li>
+<li>「品質」優先列官方
+demo、論文或官方比較；它們多為作者自評或挑選範例，<strong>不當成獨立排名</strong>。</li>
+<li>本機已知為 NVIDIA GB10、driver 580.159.03、CUDA 13.0、PyTorch
+2.9.0+cu130、compute capability 12.1。各候選官方文件多寫較舊
+PyTorch/CUDA；本機實際可用 VRAM
+仍查無，因此本報告不宣稱任何方案「一定跑得動」。</li>
+</ul>
+<h2 id="候選總表">候選總表</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>方案（官方 repo；最近 commit）</th>
+<th>使用範圍：VRAM、參考照、底模</th>
+<th>公開品質證據與本機風險</th>
+<th>授權與商業判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="https://github.com/TencentARC/PhotoMaker">PhotoMaker
+V2</a></strong>；2024-10-31</td>
+<td><strong>最低 11 GB</strong>（官方）。<strong>1 張可用，1–5
+張更適合</strong>；官方說單張、亞洲臉提升，多張仍更好。只支援 SDXL
+系底模（可換任何以 SDXL 為基礎的模型）；<strong>非 FLUX</strong>。</td>
+<td>官方 V2 比較頁與 demo：與 V1、IP-Adapter FaceID Plus V2、InstantID
+同底模比較；但每法取 4 張中最佳 1 張，屬作者展示。官方僅要求 PyTorch
+≥2.0，未驗 CUDA 13／PyTorch 2.9／SM 12.1；需隔離環境 smoke test。</td>
+<td>repo LICENSE：Apache-2.0（含第三方例外）；V2 README 明示須遵守
+InsightFace 授權，V2 Hugging Face 卡標
+Apache-2.0。<strong>暫不放行商用</strong>：InsightFace
+公開預訓練模型為非商業研究；SDXL 另有 OpenRAIL++ 使用條件。</td>
+</tr>
+<tr>
+<td><strong><a href="https://github.com/instantX-research/InstantID">InstantID</a></strong>；2024-07-18</td>
+<td><strong>官方未公布確切 GB 數字</strong>；提供 CPU offload、VAE
+tiling。<strong>單張</strong>，程式只取最大臉的 embedding /
+landmarks。主線為 SDXL；有 Kolors 實驗版本，<strong>沒有官方 FLUX
+路徑</strong>。</td>
+<td>官方比較圖宣稱比既有 tuning-free 方法有更高 fidelity
+且保留文字可編輯性；有 HF demo，非獨立評比。2024 的 custom SDXL pipeline
+未驗 CUDA 13、PyTorch 2.9 或 SM 12.1；onnxruntime / InsightFace ABI
+風險高。</td>
+<td>repo Apache-2.0；官方 README 自己明說 checkpoints 為 research
+purposes only，且所需 InsightFace
+臉部模型為非商業研究。<strong>不可作商用候選</strong>。</td>
+</tr>
+<tr>
+<td><strong><a href="https://github.com/ToTheBeginning/PuLID">PuLID</a></strong>；2025-07-31</td>
+<td><strong>官方未公布確切 GB 數字</strong>；只說 FLUX-dev FP8 目標為
+consumer GPU，需 PyTorch ≥2.4.1。官方 demo
+為<strong>一張</strong>；多張融合方式查無。支援 SDXL 與 PuLID-FLUX，2025
+commit 加 FLUX.1-Krea-dev。</td>
+<td>官方稱 SDXL v1.1 改善自然度、姿勢／表情／光線可編輯性；PuLID-FLUX
+v0.9.1 自稱 ID similarity 約增 5 個百分點。皆為作者說法。雖最低 PyTorch
+較新，仍未驗 CUDA 13、PyTorch 2.9、GB10 SM 12.1；FLUX 加重 VRAM
+變因。</td>
+<td>repo Apache-2.0；PuLID HF 權重標 Apache-2.0，但 pipeline 直接載入
+InsightFace <code>antelopev2</code>。<strong>暫不放行</strong>；若用
+FLUX.1-dev，底模本身也非商業。</td>
+</tr>
+<tr>
+<td><strong><a href="https://github.com/tencent-ailab/IP-Adapter">IP-Adapter
+FaceID</a></strong>；2024-06-28</td>
+<td><strong>官方未公布確切 GB 數字</strong>。<strong>單張</strong> face
+image / embedding；FaceID 有 SD 1.5 與 SDXL（含 Plus
+V2）；<strong>非官方 FLUX 支援</strong>。</td>
+<td>有官方 notebook；FaceID Plus V2 標為 experimental。PhotoMaker V2
+也選它作官方比較對手。README pin
+<code>diffusers==0.22.1</code>，是五者中最舊的相依提示；對 CUDA 13 /
+PyTorch 2.9 風險偏高。</td>
+<td>repo Apache-2.0；FaceID weights <code>h94/IP-Adapter-FaceID</code>
+未見可辨識 license metadata，且流程使用 InsightFace /
+<code>antelopev2</code>。<strong>不放行</strong>。</td>
+</tr>
+<tr>
+<td><strong><a href="https://github.com/modelscope/facechain">FaceChain
+FACT</a></strong>；2025-06-06</td>
+<td>官方驗證環境 <strong>NVIDIA A10 24 GB</strong>；README 說 jemalloc
+可將記憶體由 30 GB 以上壓到 20 GB 以下，非 GB10 保證。FACT 宣稱<strong>1
+張</strong>、約 10 秒；可接 ControlNet / LoRA，未見官方 FLUX 支援。</td>
+<td>官方宣稱 1 張、10 秒、可做多場景肖像；論文含實驗，但非第三方
+production 評比。官方只驗 Python 3.8/3.10、torch 2.0、CUDA 11.7、A10
+24G；與本機落差最大，風險<strong>高</strong>。</td>
+<td>repo Apache-2.0，但需下載多個 ModelScope
+人臉辨識、偵測、解析、融合與 FACT
+權重。這次未取得每項可核對商用條款，<strong>未驗證／不放行</strong>。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="逐案重點">逐案重點</h2>
+<h3 id="photomaker-v2-推薦的技術起點但先過授權關">1. PhotoMaker V2 —
+推薦的技術起點，但先過授權關</h3>
+<p>PhotoMaker 的優勢剛好對應縮圖工作：它不需要先耗時訓練個人 LoRA，能以
+ID image stack 融合多張自拍；官方 V2 明說單張與亞洲臉的 identity
+fidelity 有改進，仍鼓勵多張照片。它亦提供 ControlNet / T2I-Adapter
+的姿勢、深度、邊緣控制範例，對「同一人，但換成驚訝表情／思考姿勢／工作室背景」非常實用。</p>
+<p>選它不是因為它「宣稱一定最好」，而是因為五者中它同時具備明列的 11 GB
+下限、明確多照片工作流、SDXL 擴充控制與為此用途做過的官方比較。先用 3–5
+張不同角度、無濾鏡、單人、臉部約佔畫面 20–60% 的照片建 identity
+stack；若只給 1 張也可以開始，但側臉、笑容和特定表情會更不穩。</p>
+<p><strong>不能忽略的反面</strong>：其 V2 README 直接說依賴
+InsightFace。因此若 Zeal 的目標包含 YouTube 商業頻道或
+SaaS，工程排程之前要先走「權重授權確認」；不是安裝時勾選 license
+就解決。</p>
+<h3 id="instantid-單張很方便但官方已把商業紅線寫出來">2. InstantID —
+單張很方便，但官方已把商業紅線寫出來</h3>
+<p>InstantID 把 identity embedding 和臉部 landmarks 接進
+SDXL，單張就能做出不同風格與背景；它也能配 LCM 加速與
+Multi-ControlNet。可是官方 README 的 disclaimer 直接寫明：InsightFace
+face models 為 non-commercial research，InstantID 發布的 checkpoints
+也是 research purposes
+only。這使它適合研究對照，不適合本案的商用候選。</p>
+<h3 id="pulid-畫質與-flux-路徑有吸引力卻增加兩層授權硬體不確定性">3.
+PuLID — 畫質與 FLUX 路徑有吸引力，卻增加兩層授權／硬體不確定性</h3>
+<p>PuLID 是五者中最近仍有功能 commit 的專案，且能接 SDXL 或 FLUX。其
+V1.1 官方說明強調在風格、視角、表情、光線改動下保持 ID，也特別列了幾個
+SDXL 社群底模；PuLID-FLUX 的 prompt-following 與影像品質潛力高。</p>
+<p>但本案不能把「FLUX」當捷徑：PuLID pipeline 使用 InsightFace 的
+<code>antelopev2</code>；若選官方常見的
+FLUX.1-dev，又會多一個底模非商業授權。即使改
+FLUX.1-schnell（Apache-2.0），PuLID
+對該組合的官方支援與品質仍未在本次查證中確認。對 GB10
+而言，它是第二階段、先解法務和記憶體後才值得評估的路線。</p>
+<h3 id="ip-adapter-faceid-可作歷史基準不作新建首選">4. IP-Adapter FaceID
+— 可作歷史基準，不作新建首選</h3>
+<p>IP-Adapter 是許多工作流的基礎，FaceID Plus V2 有 SDXL 版本，也常能在
+ComfyUI 找到整合。但官方 repo 的 FaceID 更新集中在 2023–2024 初，README
+pin 的 diffusers 也較舊；FaceID weights 未找到清楚可商用 license，還需要
+InsightFace。對新 GPU / 新 PyTorch，除錯成本比 PhotoMaker V2
+高，沒有抵銷授權風險的獨特優勢。</p>
+<h3 id="facechain-fact-功能方向相符工程相容性與權重條款都未清">5.
+FaceChain FACT — 功能方向相符，工程相容性與權重條款都未清</h3>
+<p>FaceChain FACT 的「一張、十秒、ControlNet／LoRA
+相容」很貼近縮圖素材需求，且專案較晚仍有維護。但官方認證環境停在 CUDA
+11.7、PyTorch 2.0 與 A10 24G；它還會串多個 ModelScope
+模型。這次沒有取得每一個下游權重的可商用條款，因此只能列為待審實驗候選，不能列為商用替代。</p>
+<h2 id="授權三層必須同時過而不是只看-github-license">授權：三層必須同時過，而不是只看
+GitHub LICENSE</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>層</th>
+<th>這次的結果</th>
+<th>實務動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案程式碼</td>
+<td>多數是 Apache-2.0；PhotoMaker 為 Apache-2.0 加第三方例外。</td>
+<td>保留 LICENSE / NOTICE；這一層通常不是主阻塞。</td>
+</tr>
+<tr>
+<td>人臉 encoder / embeddings</td>
+<td>PhotoMaker V2、InstantID、PuLID、IP-Adapter FaceID 都直接碰到
+InsightFace 公開預訓練模型。InsightFace
+官方：公開模型／訓練資料僅供非商業研究。</td>
+<td><strong>商用前向 InsightFace 取得對應模型的商用授權，或以可商用
+encoder 完成可重現替代驗證。</strong> 不能只換 Python 套件名稱。</td>
+</tr>
+<tr>
+<td>生成底模與輸出用途</td>
+<td>SDXL base 是 OpenRAIL++，並非 Apache；FLUX.1-dev 是
+Non-Commercial；FLUX.1-schnell 為 Apache-2.0。下游寫實 checkpoint / LoRA
+也各有條款。</td>
+<td>把實際下載的每個 checkpoint、VAE、LoRA、ControlNet 都列入 SBOM /
+license log；未讀條款不得上線。</td>
+</tr>
+</tbody>
+</table>
+<p>這是工程風險備註，不構成法律意見。真正要販售
+SaaS、代客生成或大規模投放前，應讓有權決策者或法務依最後選用的「確切檔案版本」複核。</p>
+<h2 id="對本機的相容性結論">對本機的相容性結論</h2>
+<p>本機已知 CUDA 13.0 / PyTorch 2.9.0+cu130 / SM
+12.1，但沒有候選官方文件針對這個組合驗證。GB10 與官方驗證 GPU
+不同，且本機可用 VRAM 尚未取得；所以所有「最低
+VRAM」僅是候選官方文件的資料，不能推論為本機可跑。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>項目</th>
+<th>已知</th>
+<th>風險處置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CUDA / PyTorch</td>
+<td>只有 PhotoMaker 與 PuLID 寫 PyTorch 最低版本；FaceChain 明確停在
+CUDA 11.7 / torch 2.0。</td>
+<td>施工時建立<strong>獨立 conda/venv</strong>，不要污染現有 TTS
+環境；先做 1 張 1024px inference smoke test。</td>
+</tr>
+<tr>
+<td>GB10 SM 12.1</td>
+<td>使用者已指出當前 PyTorch 官方驗證只到 12.0。</td>
+<td>先驗 torch CUDA 可用、模型載入、單張推理、重複 10 張；任一 CUDA
+kernel / xformers / ONNX Runtime 問題即停下研究修正。</td>
+</tr>
+<tr>
+<td>VRAM</td>
+<td>本機真實可用量查無。</td>
+<td>施工第一步只量測，不先聲稱能跑；從 SDXL fp16、單張、1024px、batch=1
+開始。必要時啟用 CPU offload / VAE tiling，但速度會下降。</td>
+</tr>
+<tr>
+<td>參考照品質</td>
+<td>不是硬體問題，卻直接影響 identity。</td>
+<td>先建立 Zeal 3–5 張「乾淨臉部集」：正面、左右
+30–45°、自然笑、不同光線；不要混入墨鏡、強濾鏡、多人或過度裁切。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="建議的落地路線不在本次執行">建議的落地路線（不在本次執行）</h2>
+<h3 id="gate-0先決定能否合法商用">Gate 0：先決定能否合法商用</h3>
+<ol type="1">
+<li>確認用途：只在 Zeal 自有頻道內部用、還是會提供 SaaS／代客服務。</li>
+<li>若有商用可能，先對 InsightFace 詢問 <code>antelopev2</code>
+或實際採用 face encoder 的商業條件；同時保存書面回覆。</li>
+<li>建一份「實際檔案清單」：PhotoMaker V2 adapter、SDXL
+base、VAE、scheduler、ControlNet、任何寫實 checkpoint / LoRA、face
+encoder。每項記 repo、revision、license、取得日期。</li>
+<li>Gate 0 沒過，只可做不對外、不變現的概念驗證；不包裝
+SaaS、不拿生成圖作商業縮圖。</li>
+</ol>
+<h3 id="gate-1隔離式技術驗證">Gate 1：隔離式技術驗證</h3>
+<ol type="1">
+<li>建立新的 PhotoMaker V2 / SDXL 獨立環境；安裝其 requirements、PyTorch
+相容組合與必要的 diffusers / accelerate / transformers。不要改既有
+lecture voice pipeline 的 Python 環境。</li>
+<li>下載<strong>已審核</strong>的 SDXL base 與 PhotoMaker V2
+adapter；若需要姿勢控制，再加一個已審核的 SDXL
+ControlNet。此階段不下載「看到就拿」的 CivitAI checkpoint。</li>
+<li>用一張已獲 Zeal 授權的正面照，固定 1024×1024、batch=1，生成 1 張
+smoke test；記錄載入時間、peak VRAM（若可讀）、耗時、CUDA
+warnings、輸出檔案 hash。</li>
+<li>若成功，再用 3–5 張參考照測 4 組封面
+prompt（驚訝、沉思、講解、微笑），每組生成 4
+張；不以單一好圖判定成功。</li>
+</ol>
+<h3 id="gate-2縮圖品質與人像安全驗收">Gate
+2：縮圖品質與人像安全驗收</h3>
+<ol type="1">
+<li>人工檢查：五官結構、膚色、牙齒、耳朵、眼鏡、手部、側臉、文字留白與是否像
+Zeal。</li>
+<li>對每張獲選照片留下 reference
+set、prompt、seed、模型與版本；這是日後重現、下架或改圖的最低可追溯性。</li>
+<li>生成圖只當「照片素材」。YouTube
+標題、箭頭、字級和品牌元素仍由縮圖排版流程處理，不要求生圖模型一次畫對文字。</li>
+<li>若 1–5
+張照片仍不穩，不要立刻堆更多控制器；先補拍清楚的側臉、笑容、室內／室外光線，再評估是否需訓練專屬
+LoRA。</li>
+</ol>
+<h2 id="時間與成本量級規劃估計非本機實測">時間與成本量級（規劃估計，非本機實測）</h2>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 40%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>階段</th>
+<th style="text-align: right;">估計量級</th>
+<th>依據與限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收集 3–5 張合格參考照</td>
+<td style="text-align: right;">30–60 分鐘</td>
+<td>人工拍攝與挑選；不是模型耗時。</td>
+</tr>
+<tr>
+<td>授權／權重清單釐清</td>
+<td style="text-align: right;">數小時到數週</td>
+<td>外部授權回覆不可預測，是商用最長的不確定項。</td>
+</tr>
+<tr>
+<td>初次下載與環境安裝</td>
+<td style="text-align: right;">數十分鐘到數小時</td>
+<td>取決於模型大小、網路與相依衝突；本次未安裝，沒有本機數據。</td>
+</tr>
+<tr>
+<td>已載入後一張 1024px 圖</td>
+<td style="text-align: right;"><strong>十幾秒到數分鐘，未驗證</strong></td>
+<td>PhotoMaker 官方曾提 V100 使用 fp16 可到約 14 秒／圖；不能外推為 GB10
+實測。CPU offload 能降低 VRAM 壓力但通常增加時間。</td>
+</tr>
+<tr>
+<td>第一輪 16 張候選＋人工選片</td>
+<td style="text-align: right;">半天內可完成（前提是 Gate 0/1 通過）</td>
+<td>含 prompt 微調與人工判讀；不是「按一下就得到可上片縮圖」。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="最終推薦與不選其他方案的理由">最終推薦與不選其他方案的理由</h2>
+<p><strong>選 PhotoMaker V2 + SDXL，條件是先讓 InsightFace
+商業權利過關。</strong></p>
+<ul>
+<li>相對 InstantID：PhotoMaker V2 更明確支援多張 identity
+stack，官方最小 VRAM 有數字，且有多圖／姿勢控制的落地範例；InstantID
+官方還明寫 checkpoint 僅供研究。</li>
+<li>相對 PuLID：PuLID 有更現代的 FLUX 潛力，但對本案反而多了 FLUX.1-dev
+非商業、未公開 VRAM 與多張支援未證實等變因。它可當授權後的第二輪畫質
+benchmark，不是第一個要施工的方案。</li>
+<li>相對 IP-Adapter FaceID：PhotoMaker V2 吸收了更成熟的 identity stack
+體驗；IP-Adapter FaceID
+的依賴較舊、權重條款較不清，較適合當比較基準。</li>
+<li>相對 FaceChain
+FACT：它的產品方向有吸引力，但本機環境落差最大、下載鏈更長，且權重商用條款尚未逐項確認。</li>
+</ul>
+<p>一句話：<strong>先把 PhotoMaker V2
+做成「有權重授權帳本、可重現、只生人物照片素材」的小型本地試驗；授權未清前，別把任何
+Face-ID 開源 demo 當可商用產品。</strong></p>
+<h2 id="主要來源">主要來源</h2>
+<ol type="1">
+<li><a href="https://github.com/TencentARC/PhotoMaker">PhotoMaker 官方
+repo</a> — V2 功能、11 GB 最低 VRAM、SDXL 使用方式與最近 commit。</li>
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/README_pmv2.md">PhotoMaker
+V2 官方說明</a> —
+單張／亞洲臉改善、多張較佳、官方比較方法、ControlNet/T2I-Adapter、InsightFace
+授權提醒。</li>
+<li><a href="https://huggingface.co/TencentARC/PhotoMaker-V2">PhotoMaker
+V2 model card</a> — adapter 權重 metadata（Apache-2.0）。</li>
+<li><a href="https://github.com/instantX-research/InstantID">InstantID
+官方 repo</a> — 單張流程、SDXL、記憶體 offload、官方研究用途 disclaimer
+與最近 commit。</li>
+<li><a href="https://huggingface.co/InstantX/InstantID">InstantID model
+card</a> — 權重 metadata（Apache-2.0）。</li>
+<li><a href="https://github.com/ToTheBeginning/PuLID">PuLID 官方
+repo</a> 與 <a href="https://github.com/ToTheBeginning/PuLID/blob/main/docs/pulid_v1.1.md">PuLID
+v1.1 文件</a> — SDXL／FLUX 支援、PyTorch 最低版本、官方品質說法與最近
+commit。</li>
+<li><a href="https://huggingface.co/guozinan/PuLID">PuLID model card</a>
+— adapter 權重 metadata（Apache-2.0）。</li>
+<li><a href="https://github.com/tencent-ailab/IP-Adapter">IP-Adapter
+官方 repo</a> 與 <a href="https://huggingface.co/h94/IP-Adapter-FaceID">FaceID 權重 repo</a>
+— SD1.5／SDXL FaceID、相依版本與權重 metadata 缺口。</li>
+<li><a href="https://github.com/modelscope/facechain">FaceChain 官方
+repo</a> 與 <a href="https://arxiv.org/abs/2410.12312">FACT 論文</a> —
+一張／10 秒的主張、ControlNet／LoRA、官方 A10 24G 與 CUDA 11.7 / torch
+2.0 驗證環境、最近 commit。</li>
+<li><a href="https://github.com/deepinsight/insightface?tab=readme-ov-file#license">InsightFace
+官方授權說明</a> — 程式碼
+MIT，但公開預訓練模型／訓練資料僅限非商業研究；此為本報告商業閘門的主要依據。</li>
+<li><a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0">SDXL
+base model card</a> — OpenRAIL++ license metadata。</li>
+<li><a href="https://huggingface.co/black-forest-labs/FLUX.1-dev">FLUX.1-dev
+model card</a> 與 <a href="https://huggingface.co/black-forest-labs/FLUX.1-schnell">FLUX.1-schnell
+model card</a> — 分別為非商業與 Apache-2.0 的底模條款。</li>
+</ol>
+<h2 id="未驗證事項清單">未驗證事項清單</h2>
+<ul>
+<li>GB10 真實可用 VRAM、該機型在 1024px SDXL 下的峰值
+VRAM、單張耗時。</li>
+<li>CUDA 13.0 + PyTorch 2.9.0+cu130 + SM 12.1
+對每一候選的完整推理穩定性。</li>
+<li>InsightFace 對
+<code>antelopev2</code>／實際採用模型的商業授權報價與流程。</li>
+<li>FaceChain 所有下游 ModelScope 權重的精確
+license，以及它們可否組合用於 SaaS。</li>
+<li>用 Zeal 實際 1 張與 3–5 張照片時，PhotoMaker V2
+的身分相似度和縮圖可用率；這必須在授權 Gate
+通過後，以盲挑與人工審片測試。</li>
+</ul>
+</body>
+</html>
