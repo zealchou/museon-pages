@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>One Muse YouTube 視覺系統｜縮圖與頻道橫幅設計規格</title>
+  <style>
+    :root {
+      --paper: #F2EEE5;
+      --paper-light: #FAF8F1;
+      --ink: #202321;
+      --ink-soft: #454B48;
+      --cinnabar: #B74B32;
+      --cinnabar-deep: #8F3828;
+      --moss: #63736E;
+      --line: #D8D2C7;
+      --white: #FFFFFF;
+      --max: 1100px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper-light);
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 17px;
+      line-height: 1.78;
+    }
+    main { max-width: var(--max); margin: 0 auto; padding: 72px 32px 112px; }
+    h1, h2, .serif {
+      font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+    }
+    h1 { margin: 14px 0 22px; max-width: 940px; font-size: clamp(2.25rem, 6vw, 4.55rem); line-height: 1.08; letter-spacing: -.025em; }
+    h2 { margin: 76px 0 22px; padding-left: 18px; border-left: 5px solid var(--cinnabar); font-size: clamp(1.65rem, 3.2vw, 2.35rem); line-height: 1.3; }
+    h3 { margin: 36px 0 12px; font-size: 1.2rem; line-height: 1.4; }
+    p { margin: 0 0 17px; }
+    a { color: var(--cinnabar-deep); }
+    .eyebrow { color: var(--cinnabar-deep); font-size: .78rem; font-weight: 900; letter-spacing: .15em; }
+    .lede { max-width: 840px; color: var(--ink-soft); font-size: 1.16rem; }
+    .meta { color: var(--moss); font-size: .9rem; }
+    .verdict {
+      margin: 34px 0 0;
+      padding: 26px 28px;
+      border-left: 6px solid var(--cinnabar);
+      background: var(--paper);
+      font-size: 1.05rem;
+    }
+    .verdict strong { display: block; margin-bottom: 6px; color: var(--cinnabar-deep); font-size: 1.16rem; }
+    .decision-grid, .two-col, .token-grid { display: grid; gap: 18px; }
+    .decision-grid { grid-template-columns: repeat(3, 1fr); margin-top: 28px; }
+    .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .token-grid { grid-template-columns: repeat(4, 1fr); }
+    .card { padding: 22px 24px; border: 1px solid var(--line); background: #FFFDF8; }
+    .card .label, .number { color: var(--cinnabar-deep); font-size: .76rem; font-weight: 900; letter-spacing: .11em; }
+    .card h3 { margin-top: 8px; }
+    .card p:last-child { margin-bottom: 0; }
+    .token { min-height: 128px; padding: 16px; border: 1px solid rgba(32,35,33,.13); }
+    .swatch { height: 56px; margin-bottom: 12px; border: 1px solid rgba(32,35,33,.13); }
+    .token code { display: block; font-size: .93rem; font-weight: 800; }
+    .token small { color: var(--ink-soft); }
+    table { width: 100%; margin: 22px 0 30px; border-collapse: collapse; font-size: .94rem; }
+    th, td { padding: 15px 13px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--moss); font-size: .8rem; font-weight: 900; letter-spacing: .04em; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
+    ul, ol { margin: 12px 0 24px; padding-left: 1.35em; }
+    li { margin: 8px 0; }
+    .rule { margin-top: 28px; padding: 19px 22px; border: 1px solid var(--line); background: var(--paper); }
+    .rule b { color: var(--cinnabar-deep); }
+    .wireframe-wrap { margin: 28px 0 18px; }
+    .wireframe-caption { margin-top: 12px; color: var(--moss); font-size: .86rem; }
+    .thumb-wireframe {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: linear-gradient(90deg, var(--paper) 0 62.5%, var(--ink-soft) 62.5% 100%);
+    }
+    .thumb-wireframe::after {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(32,35,33,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(32,35,33,.055) 1px, transparent 1px);
+      background-size: 10% 10%;
+      content: ""; pointer-events: none;
+    }
+    .thumb-rail { position: absolute; z-index: 2; left: 60%; top: 0; width: 1.25%; height: 100%; background: var(--cinnabar); }
+    .thumb-copy { position: absolute; z-index: 3; left: 6.25%; top: 9%; width: 48.5%; }
+    .thumb-copy .series { display: inline-block; padding: 5px 10px; color: var(--paper-light); background: var(--cinnabar-deep); font-size: clamp(9px, 1.5vw, 19px); font-weight: 900; letter-spacing: .06em; }
+    .thumb-copy .sample-title { margin-top: 8%; font-size: clamp(25px, 6.6vw, 76px); font-weight: 950; line-height: 1.02; letter-spacing: -.06em; }
+    .thumb-copy .sample-title em { color: var(--cinnabar-deep); font-style: normal; }
+    .portrait-placeholder {
+      position: absolute; z-index: 1; right: 3.1%; bottom: 0; width: 32%; height: 87%;
+      display: grid; place-items: center; padding: 18px;
+      border: 2px dashed rgba(250,248,241,.72); border-bottom: 0;
+      color: var(--paper-light); background: rgba(32,35,33,.26); text-align: center; font-size: clamp(10px, 1.5vw, 18px); font-weight: 800;
+    }
+    .icon-placeholder {
+      position: absolute; z-index: 4; left: 49.7%; top: 75.6%; width: 8.75%; aspect-ratio: 1;
+      display: grid; place-items: center; border-radius: 50%; color: var(--paper-light); background: var(--cinnabar);
+      font-size: clamp(10px, 1.5vw, 17px); font-weight: 900; text-align: center;
+    }
+    .banner-wireframe {
+      position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+      border: 1px solid var(--line); background: var(--paper);
+    }
+    .banner-wireframe::before {
+      position: absolute; left: -5%; top: 19%; width: 46%; height: 60%; border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(99,115,110,.16), rgba(99,115,110,0) 68%); content: "";
+    }
+    .banner-wireframe::after {
+      position: absolute; right: -3%; bottom: 9%; width: 33%; height: 8%; transform: rotate(-8deg);
+      background: linear-gradient(90deg, transparent, rgba(183,75,50,.22), transparent); content: "";
+    }
+    .safe-zone {
+      position: absolute; z-index: 2; left: 19.8047%; top: 35.3125%; width: 60.3906%; height: 29.375%;
+      border: 2px dashed var(--cinnabar); background: rgba(250,248,241,.5);
+    }
+    .safe-label { position: absolute; left: 1.5%; top: 2%; color: var(--cinnabar-deep); font-size: clamp(8px, 1.1vw, 13px); font-weight: 900; }
+    .banner-copy { position: absolute; left: 4.7%; top: 20%; width: 54%; }
+    .banner-copy .brand { font-size: clamp(8px, 1.35vw, 17px); font-weight: 900; letter-spacing: .11em; }
+    .banner-copy .tagline { margin-top: 4%; font-family: "Noto Serif TC", serif; font-size: clamp(16px, 3.4vw, 43px); font-weight: 800; line-height: 1.14; letter-spacing: -.03em; }
+    .banner-copy .proof { margin-top: 4%; color: var(--moss); font-size: clamp(8px, 1.25vw, 16px); font-weight: 800; }
+    .banner-photo {
+      position: absolute; right: 2.4%; bottom: 0; width: 31.5%; height: 96%; display: grid; place-items: center;
+      padding: 10px; border: 2px dashed var(--ink-soft); border-bottom: 0; color: var(--ink-soft); background: rgba(99,115,110,.1);
+      text-align: center; font-size: clamp(8px, 1.15vw, 14px); font-weight: 800;
+    }
+    .callout { margin: 28px 0; padding: 24px 26px; color: var(--paper-light); background: var(--ink); }
+    .callout strong { color: #E8A08E; }
+    .yes { display: inline-block; margin-right: 8px; padding: 3px 9px; color: var(--paper-light); background: var(--cinnabar); font-size: .78rem; font-weight: 900; }
+    .checklist { columns: 2; column-gap: 38px; }
+    .checklist li { break-inside: avoid; }
+    .plain-summary { margin-top: 76px; padding: 34px 36px; border: 2px solid var(--cinnabar); background: var(--paper); }
+    .plain-summary h2 { margin-top: 0; }
+    .foot { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--moss); font-size: .86rem; }
+    @media (max-width: 780px) {
+      body { font-size: 16px; }
+      main { padding: 46px 18px 76px; }
+      h2 { margin-top: 56px; }
+      .decision-grid, .two-col, .token-grid { grid-template-columns: 1fr; }
+      .token-grid { grid-template-columns: repeat(2, 1fr); }
+      .checklist { columns: 1; }
+      table, thead, tbody, tr, th, td { display: block; width: 100%; }
+      thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      tr { padding: 15px 0; border-bottom: 1px solid var(--line); }
+      td { padding: 5px 0; border: 0; }
+      td::before { display: block; color: var(--moss); font-size: .76rem; font-weight: 900; content: attr(data-label); }
+      .card, .verdict, .callout, .plain-summary { padding: 20px; }
+    }
+    @media print {
+      body { background: #fff; font-size: 11pt; }
+      main { max-width: none; padding: 0; }
+      .card, .verdict, .callout, .plain-summary { break-inside: avoid; }
+      h2, h3 { break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">ONE MUSE · YOUTUBE VISUAL SYSTEM</div>
+  <h1>先被看見，再被記住</h1>
+  <p class="lede">「報價策略」影片封面縮圖＋頻道橫幅的整套視覺構思。這是一份可直接交給後續製圖者的規格，不是最終圖片，也不包含任何 AI 生成或修改的 Zeal 臉孔。</p>
+  <p class="meta">版本 1.0｜2026-08-21｜畫布座標一律從左上角 <code>(0,0)</code> 起算；右界與下界採不含端點。</p>
+
+  <div class="verdict">
+    <strong>主方案裁決</strong>
+    縮圖採「暖紙左欄＋Zeal 真實照片右欄＋朱砂圖示」的高對比固定範本；橫幅採「暖紙＋受控水彩潑墨＋Zeal 真實照片」。兩者共用暖紙、墨色、朱砂與字體家族，但依媒介分工：縮圖銳利、橫幅留白。
+  </div>
+
+  <div class="decision-grid">
+    <div class="card"><div class="label">縮圖的工作</div><h3>0.5 秒內看懂</h3><p>先讀到主張，再認出 Zeal，最後用一個圖示理解本集題目。</p></div>
+    <div class="card"><div class="label">橫幅的工作</div><h3>10 秒內記住</h3><p>知道 One Muse 幫誰、相信什麼，並留下一句可複述的定位語。</p></div>
+    <div class="card"><div class="label">品牌差異</div><h3>暖的精準</h3><p>不用深藍＋亮黃，也不靠配件認人；用暖紙、墨黑、朱砂與乾淨留白建立識別。</p></div>
+  </div>
+
+  <h2 id="brand-system">一套跨縮圖與橫幅共用的品牌骨架</h2>
+  <p>One Muse 的辨識不靠每張都堆相同裝飾，而是固定四個關係：暖紙是主要空間、墨色負責結論、朱砂只標一個決定、灰綠只做次要資訊。縮圖可以更硬、更快；橫幅可以更靜、更有呼吸，但不能各自長成兩個品牌。</p>
+
+  <div class="token-grid">
+    <div class="token"><div class="swatch" style="background:#F2EEE5"></div><code>#F2EEE5</code><small>暖紙｜主背景</small></div>
+    <div class="token"><div class="swatch" style="background:#FAF8F1"></div><code>#FAF8F1</code><small>淺紙｜反白、留白</small></div>
+    <div class="token"><div class="swatch" style="background:#202321"></div><code>#202321</code><small>主墨｜標題、深色結構</small></div>
+    <div class="token"><div class="swatch" style="background:#454B48"></div><code>#454B48</code><small>柔墨｜照片底、次文字</small></div>
+    <div class="token"><div class="swatch" style="background:#B74B32"></div><code>#B74B32</code><small>朱砂｜圖示、唯一重點</small></div>
+    <div class="token"><div class="swatch" style="background:#8F3828"></div><code>#8F3828</code><small>深朱砂｜紙面重點字</small></div>
+    <div class="token"><div class="swatch" style="background:#63736E"></div><code>#63736E</code><small>苔灰綠｜證據、輔助層</small></div>
+    <div class="token"><div class="swatch" style="background:#D8D2C7"></div><code>#D8D2C7</code><small>紙邊線｜規格、分隔</small></div>
+  </div>
+
+  <div class="rule"><b>對比已驗算：</b><code>#202321</code> 在 <code>#F2EEE5</code> 上為 13.70:1；深朱砂 <code>#8F3828</code> 在暖紙上為 6.56:1。小字與主標都足夠清楚。亮朱砂 <code>#B74B32</code> 主要用於大面積圖示底，不拿來排細小正文。</div>
+
+  <h3>字體系統</h3>
+  <table>
+    <thead><tr><th>角色</th><th>主字體</th><th>用法</th><th>護欄</th></tr></thead>
+    <tbody>
+      <tr><td data-label="角色">縮圖標題</td><td data-label="主字體"><b>Noto Sans TC Black 900</b></td><td data-label="用法">2 行用 118px；3 行用 94px；行高 1.00–1.04；字距 -2% 至 -4%。</td><td data-label="護欄">不得低於 90px；不用細體、不用明體、不靠粗描邊救重疊。</td></tr>
+      <tr><td data-label="角色">系列標籤／證據列</td><td data-label="主字體"><b>Noto Sans TC Bold 700</b></td><td data-label="用法">縮圖 28–32px；橫幅 29–32px。</td><td data-label="護欄">全部保持短句；不塞聯絡方式與多個 CTA。</td></tr>
+      <tr><td data-label="角色">橫幅定位句</td><td data-label="主字體"><b>Noto Serif TC Bold 700</b></td><td data-label="用法">68px、兩行、行高 1.12，營造 One Muse 的編輯感。</td><td data-label="護欄">只在橫幅與長內容使用；不拿去做小尺寸縮圖主標。</td></tr>
+    </tbody>
+  </table>
+  <p class="meta">Noto Sans TC／Noto Serif TC 可作為開源可商用主選。交付成品前仍需在實際排版工具內確認所安裝版本與授權檔；若改用思源黑體／思源宋體，粗細與行高照本規格，不混搭第三套中文字體。</p>
+
+  <h2 id="thumbnail">封面縮圖範本｜1280 × 720px</h2>
+  <p>保留 Gary Chen 已證明好用的資訊結構：左側短標題、右側真人、一個主題圖示、整系列固定版型。但不沿用深藍背景、黃色關鍵字、同一配件或黑邊大字；One Muse 以暖紙與朱砂形成自己的視覺記憶。</p>
+
+  <div class="wireframe-wrap">
+    <div class="thumb-wireframe" role="img" aria-label="One Muse YouTube 縮圖構圖示意：左文字、右真人照片、朱砂圓形圖示">
+      <div class="thumb-rail"></div>
+      <div class="thumb-copy">
+        <span class="series">ONE MUSE · 報價策略 03</span>
+        <div class="sample-title">同一個案子<br>為何差 <em>四倍</em></div>
+      </div>
+      <div class="icon-placeholder">主題<br>圖示</div>
+      <div class="portrait-placeholder">使用 Zeal 提供的真實照片<br>不生成、不修改臉孔</div>
+    </div>
+    <div class="wireframe-caption">此圖只示意區域與閱讀順序，不是成品，也不是對未提供照片內容的想像。</div>
+  </div>
+
+  <h3>精確區域與座標</h3>
+  <table>
+    <thead><tr><th>區域</th><th>座標（px）</th><th>比例／對齊</th><th>執行規則</th></tr></thead>
+    <tbody>
+      <tr><td data-label="區域">完整畫布</td><td data-label="座標"><code>x 0–1280 / y 0–720</code></td><td data-label="比例／對齊">16:9</td><td data-label="執行規則">sRGB；最終 JPG／PNG 必須小於 2MB。</td></tr>
+      <tr><td data-label="區域">暖紙文字場</td><td data-label="座標"><code>x 0–800 / y 0–720</code></td><td data-label="比例／對齊">寬 62.5%</td><td data-label="執行規則">固定 <code>#F2EEE5</code>；保持無紋理或極低紋理，讓文字本身成立。</td></tr>
+      <tr><td data-label="區域">照片場</td><td data-label="座標"><code>x 800–1280 / y 0–720</code></td><td data-label="比例／對齊">寬 37.5%</td><td data-label="執行規則">只放 Zeal 提供的真實照片；可裁切、去背與做整體色調校正，不得生成或重繪臉孔。</td></tr>
+      <tr><td data-label="區域">朱砂分界</td><td data-label="座標"><code>x 768–784 / y 0–720</code></td><td data-label="比例／對齊">固定 16px</td><td data-label="執行規則">用 <code>#B74B32</code>；照片可在其後方延伸 32px，人物不得壓過標題。</td></tr>
+      <tr><td data-label="區域">系列標籤</td><td data-label="座標"><code>x 80–520 / y 64–112</code></td><td data-label="比例／對齊">左對齊</td><td data-label="執行規則">格式固定為「ONE MUSE · 系列名 01」；28–32px Bold。</td></tr>
+      <tr><td data-label="區域">主標題</td><td data-label="座標"><code>x 80–700 / y 150–510</code></td><td data-label="比例／對齊">620×360；左對齊</td><td data-label="執行規則">總計 10–16 個中文字；2–3 行；每行 4–7 字；每張只標 2–5 字深朱砂重點。</td></tr>
+      <tr><td data-label="區域">主題圖示</td><td data-label="座標"><code>x 636–748 / y 544–656</code></td><td data-label="比例／對齊">112×112 圓形</td><td data-label="執行規則">朱砂底、淺紙線稿；只放一個概念，不放文字、不用 emoji。</td></tr>
+      <tr><td data-label="區域">人物可用框</td><td data-label="座標"><code>x 824–1240 / y 58–720</code></td><td data-label="比例／對齊">靠右、底對齊</td><td data-label="執行規則">臉部完整保留在 <code>x 900–1192 / y 90–330</code>；若真實照片無法安全套入，換照片或重裁，不移動文字欄。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>標題與圖示的換集規則</h3>
+  <table>
+    <thead><tr><th>影片</th><th>縮圖短標題建議</th><th>唯一重點字</th><th>主題圖示</th></tr></thead>
+    <tbody>
+      <tr><td data-label="影片">第一講｜成本與存活</td><td data-label="縮圖短標題建議">你算的不是工時<br>是公司能不能活</td><td data-label="唯一重點字">能不能活</td><td data-label="主題圖示">三層成本方塊＋一條損益基準線；不要用錢袋或滿版硬幣。</td></tr>
+      <tr><td data-label="影片">第二講｜結果價值</td><td data-label="縮圖短標題建議">客戶買的不是工時<br>是破局後的結果</td><td data-label="唯一重點字">結果</td><td data-label="主題圖示">靶心＋穿過中心的箭；只保留靶心、箭身、箭頭三個形。</td></tr>
+      <tr><td data-label="影片">第三講｜價格走廊</td><td data-label="縮圖短標題建議">同一個案子<br>為何差四倍</td><td data-label="唯一重點字">四倍</td><td data-label="主題圖示">兩條垂直護欄＋左右雙向箭頭；代表上下界與走廊。</td></tr>
+      <tr><td data-label="影片">第四講｜因果報價</td><td data-label="縮圖短標題建議">讓客戶看懂錢<br>九成不砍價</td><td data-label="唯一重點字">不砍價</td><td data-label="主題圖示">三行明細文件＋單一勾號；代表每一筆錢都有理由。</td></tr>
+    </tbody>
+  </table>
+  <p class="meta">圖示家族固定：圓形底 112px、線寬 8px、圓角端點、最多 4 個幾何零件。禁止照片式小圖、3D 圖示、彩色 emoji 與圖示內文字。</p>
+
+  <h3>每月 6–8 支的套版機制</h3>
+  <div class="two-col">
+    <div class="card"><div class="label">鎖定，不准每集重設</div><ul><li>1280×720 畫布與 62.5／37.5 分欄</li><li>暖紙、主墨、朱砂三個主色</li><li>系列標籤與主標題左緣 80px</li><li>朱砂分界、圖示尺寸、人物靠右</li><li>Noto Sans TC Black／Bold 字級</li></ul></div>
+    <div class="card"><div class="label">每集只換四件事</div><ol><li>Zeal 提供的真實照片</li><li>系列名與集數</li><li>10–16 字的縮圖短標題</li><li>同一家族的主題圖示</li></ol><p>超字時先從 2 行改 3 行；仍超過就重寫短標，不得把字縮到 90px 以下。</p></div>
+  </div>
+
+  <div class="callout"><strong>縮圖不使用水彩潑墨。</strong>縮圖在首頁與推薦欄通常只剩很小面積；低對比水洗、破碎輪廓與大量細節會削弱主標與人臉。One Muse 的水彩辨識留給橫幅與長內容，縮圖只保留「暖紙留白＋朱砂一點」這個品牌靈魂。</div>
+
+  <h2 id="banner">頻道橫幅｜2560 × 1440px</h2>
+  <p>橫幅的核心不是把所有履歷塞進去，而是讓第一次來的人記住一句話，再用一列證據相信它。所有文字、品牌名與臉孔都進中央安全區；安全區外只留紙、墨、水與可被裁掉的氣氛。</p>
+
+  <div class="wireframe-wrap">
+    <div class="banner-wireframe" role="img" aria-label="One Muse 頻道橫幅構圖示意，中央虛線框為所有裝置安全區">
+      <div class="safe-zone">
+        <div class="safe-label">1546 × 423 全裝置安全區</div>
+        <div class="banner-copy">
+          <div class="brand">ONE MUSE · AI 商業顧問／教練</div>
+          <div class="tagline">把專業說清楚，<br>把價值報出來。</div>
+          <div class="proof">29年創業實戰｜18年顧問教練｜服務200+企業</div>
+        </div>
+        <div class="banner-photo">使用 Zeal 提供的真實照片<br>臉孔完整留在安全區</div>
+      </div>
+    </div>
+    <div class="wireframe-caption">虛線安全區之外，任何內容都必須能被裁掉而不影響理解；上圖的水色僅代表氣氛層。</div>
+  </div>
+
+  <h3>安全區與構圖座標</h3>
+  <table>
+    <thead><tr><th>區域</th><th>座標（px）</th><th>放什麼</th><th>禁止事項</th></tr></thead>
+    <tbody>
+      <tr><td data-label="區域">完整畫布</td><td data-label="座標"><code>x 0–2560 / y 0–1440</code></td><td data-label="放什麼">暖紙 <code>#F2EEE5</code>、紙紋、淡苔灰綠水洗、單一朱砂乾筆。</td><td data-label="禁止事項">外圍不得放文字、Logo、臉、必要手勢或 CTA。</td></tr>
+      <tr><td data-label="區域">全裝置安全區</td><td data-label="座標"><code>x 507 / y 508.5 / w 1546 / h 423</code></td><td data-label="放什麼">One Muse 名稱、定位句、證據列、Zeal 真實照片的完整臉孔。</td><td data-label="禁止事項">幾何中心精確對齊畫布；工具若只收整數，y 取 509。不得讓任一關鍵元素跨界。</td></tr>
+      <tr><td data-label="區域">安全區內縮護欄</td><td data-label="座標"><code>x 571–1989 / y 543–897</code></td><td data-label="放什麼">文字與臉的優先落點；上下各留 34.5px，左右各留 64px。</td><td data-label="禁止事項">不把字貼邊；身體可觸底，臉不可。</td></tr>
+      <tr><td data-label="區域">品牌列</td><td data-label="座標"><code>x 579–1120 / y 552–600</code></td><td data-label="放什麼">「ONE MUSE · AI 商業顧問／教練」，30px Sans Bold。</td><td data-label="禁止事項">沒有正式 Logo 檔時，只做文字排版，不自行發明 Logo。</td></tr>
+      <tr><td data-label="區域">定位句</td><td data-label="座標"><code>x 579–1395 / y 620–774</code></td><td data-label="放什麼">「把專業說清楚，把價值報出來。」68px Serif Bold，分兩行。</td><td data-label="禁止事項">不再加第二句願景、不加連結、不加更新頻率。</td></tr>
+      <tr><td data-label="區域">記憶點／證據列</td><td data-label="座標"><code>x 579–1440 / y 812–862</code></td><td data-label="放什麼">「29年創業實戰｜18年顧問教練｜服務200+企業」，29–32px Sans Bold。</td><td data-label="禁止事項">不拆成三張卡、不用徽章堆疊。</td></tr>
+      <tr><td data-label="區域">真人照片</td><td data-label="座標"><code>x 1518–2015 / y 520–931</code></td><td data-label="放什麼">Zeal 提供的真實照片，靠右、底對齊。</td><td data-label="禁止事項">臉部須在 <code>x 1600–1935 / y 545–750</code>；不水彩化、不補臉、不讓筆觸穿過臉。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>橫幅要不要用 editorial-ink-watercolor？</h3>
+  <div class="verdict">
+    <strong><span class="yes">建議使用</span>但只用「受控的抽象轉場」，不用水彩人像。</strong>
+    理由有三個：第一，橫幅不承擔小尺寸點擊，可用留白與材質建立 One Muse 的溫度；第二，它能把 YouTube 與 One Muse 其他編輯型資產接回同一個品牌語言；第三，Zeal 的真實照片已負責人與信任，水彩只需負責空氣、節奏與記憶，不必再畫第二個人。
+  </div>
+  <table>
+    <thead><tr><th>水彩層</th><th>具體規格</th><th>位置與角色</th></tr></thead>
+    <tbody>
+      <tr><td data-label="水彩層">紙面留白</td><td data-label="具體規格">全畫布 70–80% 保持 <code>#F2EEE5</code>／<code>#FAF8F1</code> 可見。</td><td data-label="位置與角色">先保留文字與臉的真實空間，不用半透明白幕補救。</td></tr>
+      <tr><td data-label="水彩層">苔灰綠水洗</td><td data-label="具體規格"><code>#63736E</code>，視覺濃度約 8–14%，邊緣有暈染與顆粒。</td><td data-label="位置與角色">主要在安全區外左上／左下，進入安全區時不得碰文字。</td></tr>
+      <tr><td data-label="水彩層">墨色骨架</td><td data-label="具體規格"><code>#202321</code>，一筆有進筆、壓力、乾裂與收筆的破碎弧線。</td><td data-label="位置與角色">環抱但不穿過人物；外緣可被裝置裁切。</td></tr>
+      <tr><td data-label="水彩層">朱砂決策點</td><td data-label="具體規格"><code>#B74B32</code>，只佔全畫布 1–4%，單一乾筆或不完整印記。</td><td data-label="位置與角色">放在文字與照片之間的空白，不複製縮圖圓形圖示。</td></tr>
+    </tbody>
+  </table>
+  <p><b>直接退件的情況：</b>把 Zeal 照片套成水彩肖像、用 AI 補或重畫臉、滿版隨機潑墨、文字壓在臉上、用白色半透明霧遮住失控背景、在安全區外放任何必要文字、把中文字直接生成進圖裡。</p>
+
+  <h2 id="handoff">後續製圖交棒規格</h2>
+  <h3>模板圖層</h3>
+  <table>
+    <thead><tr><th>模板</th><th>鎖定圖層</th><th>可替換元件</th><th>輸出</th></tr></thead>
+    <tbody>
+      <tr><td data-label="模板">縮圖</td><td data-label="鎖定圖層"><code>BG_PAPER</code>、<code>PHOTO_FIELD</code>、<code>CINNABAR_RAIL</code>、<code>TITLE_2L</code>、<code>TITLE_3L</code>、<code>ICON_TILE</code>、<code>EXPORT_GUIDE</code></td><td data-label="可替換元件"><code>PHOTO_TRUE</code>、<code>SERIES_LABEL</code>、<code>TITLE_TEXT</code>、<code>ICON_SYMBOL</code></td><td data-label="輸出">1280×720，sRGB，優先 JPG 品質 88–92%；若 PNG 仍小於 2MB也可用。</td></tr>
+      <tr><td data-label="模板">橫幅</td><td data-label="鎖定圖層"><code>BG_PAPER</code>、<code>SAFE_ZONE_1546x423</code>、<code>WORDMARK_TEXT</code>、<code>TAGLINE</code>、<code>PROOF_LINE</code>、<code>EXPORT_GUIDE</code></td><td data-label="可替換元件"><code>PHOTO_TRUE</code>、<code>INK_WASH_ORIGINAL</code></td><td data-label="輸出">2560×1440，sRGB，PNG 或高品質 JPG；上傳前實機預覽各裝置裁切。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>落地前驗收</h3>
+  <ul class="checklist">
+    <li>縮圖檔案精確為 1280×720、16:9、少於 2MB。</li>
+    <li>縮圖在 160×90 預覽仍能先讀到主標，再辨識人物與圖示。</li>
+    <li>主標只有 2–3 行；最小字級不低於 90px；重點字只有一組。</li>
+    <li>照片只來自 Zeal 提供的真實素材；無 AI 臉、無生成文字。</li>
+    <li>四個可換欄位以外的版型位置與色碼未被改動。</li>
+    <li>橫幅精確為 2560×1440；安全區指南精確為 1546×423 且置中。</li>
+    <li>橫幅的名稱、定位句、證據列與完整臉孔全在 <code>x 507 / y 508.5 / w 1546 / h 423</code>。</li>
+    <li>安全區外全部是「裁掉也沒關係」的紙、墨、水與裝飾。</li>
+    <li>桌機、手機、平板與電視預覽沒有裁臉、壓字或文字貼邊。</li>
+    <li>水彩沒有穿過文字或臉，沒有用白霧遮罩補救壞構圖。</li>
+  </ul>
+
+  <div class="rule"><b>可機械檢查：</b>像素尺寸、長寬比、檔案大小、色碼、文字框與安全區座標。<br><b>必須人工看：</b>Zeal 照片是否自然、表情是否符合主題、160×90 時的第一眼順序、水彩是否有生命而非隨機潑墨、整體是否仍像 One Muse。這些審美判斷目前沒有程式能代替。</div>
+
+  <h2 id="assets">真正落地還缺的素材</h2>
+  <ol>
+    <li><b>先用現有專業照做第一版：</b>使用 Zeal 已提供的真實照片作為首張範本測試，不生成替代臉。</li>
+    <li><b>補一組 4–6 張真實照片：</b>建議同一光線、同一鏡位、長邊至少 2000px，頭頂與雙側保留可裁空間；拍攝需求可包含中性、解說、提問、肯定等不同溝通狀態。這是未來素材需求，不代表這些照片目前已存在。</li>
+    <li><b>提供正式識別檔：</b>若已有 One Muse Logo／字標，交 SVG 或透明 PNG；若沒有，就先用本規格的文字字標，不另發明新 Logo。</li>
+    <li><b>確認製圖工具：</b>Canva、Figma 或 Photoshop 擇一建立唯一主模板；後續每集只複製主模板，不從舊成品反覆另存新檔。</li>
+    <li><b>首批先做兩張 A/B：</b>版型完全不變，只比較兩個「短標題寫法」或兩張真實照片；不要一次同時換色、換字、換構圖，否則看不出是哪個變因有效。</li>
+  </ol>
+
+  <section class="plain-summary">
+    <h2 id="summary">給 Zeal 的白話總結</h2>
+    <p>這套設計的想法很簡單：<b>影片封面要先搶到注意，頻道橫幅再讓人記住 One Muse。</b>所以封面不走柔和水彩，而是用大字、你的真實照片和一個簡單圖示；每支片只換照片、短標題、集數和圖示，其他都固定。長期看，觀眾不用讀頻道名，光看暖米色、墨黑和朱砂紅，就知道這是 One Muse。</p>
+    <p>跟 Gary Chen 的差異是：我們借的是「固定模板、左字右人、每集一個圖示」這個有效結構，不借他的深藍、亮黃、同一頂帽子和黑邊字。One Muse 的感覺會更像一位有方法、但不冰冷的顧問：清楚、有份量，也留得住人味。</p>
+    <p>橫幅建議用水彩潑墨，但只當氣氛，不把你畫成水彩，也不讓筆觸蓋住字或臉。真正開工前，先用你已有的專業照做第一版；最好再補 4–6 張同一光線、不同溝通狀態的真實照片，以及正式 Logo 檔。這樣每月 6–8 支影片就能穩定套版，不必每次重新設計。</p>
+  </section>
+
+  <div class="foot">設計依據：使用者提供的 YouTube 技術限制、One Muse 現有品牌視覺正典與 editorial-ink-watercolor 原則。本文只定義構圖與交棒標準，不宣稱任何縮圖點擊率結果，也不包含最終成品圖。</div>
+</main>
+</body>
+</html>
