@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2026-08-21" />
+  <title>人臉身份保留生圖：商用替代路線研究</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">:root{--paper:#F2EEE5;--paper-light:#FAF8F1;--ink:#202321;--soft:#454B48;--line:#CFC7BA;--red:#B74B32;--red-deep:#8F3828;--moss:#63736E}html{background:var(--paper);color:var(--ink);-webkit-text-size-adjust:100%}body{margin:0;background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;font-size:18px;line-height:1.78;color:var(--ink)}main{max-width:1040px;margin:0 auto;padding:54px 34px 92px}header#title-block-header{margin:0 0 44px;padding:6px 0 8px 24px;border-left:5px solid var(--red);text-align:left}header#title-block-header .subtitle{color:var(--moss);font-size:.98rem;letter-spacing:.03em}.title{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(2rem,5vw,3.25rem);line-height:1.22;letter-spacing:.01em;margin:.25rem 0 .6rem}.date{font-size:.9rem;color:var(--soft)}h1,h2,h3{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:var(--ink);line-height:1.35}h1{font-size:2.05rem;margin:4.2rem 0 1.25rem;padding-top:1.2rem;border-top:1px solid var(--line)}h2{font-size:1.45rem;margin:2.7rem 0 1rem}h3{font-size:1.17rem;margin:2rem 0 .7rem}p,li{max-width:78ch}p{margin:1rem 0}strong{color:var(--red-deep)}a{color:var(--red-deep);text-decoration-thickness:1px;text-underline-offset:3px}a:visited{color:#6d483f}blockquote{margin:2rem 0;padding:1.1rem 1.35rem;border-left:4px solid var(--red);background:var(--paper-light);font-family:"Noto Serif TC","Songti TC",serif}blockquote p{margin:0}table{width:100%;display:block;overflow-x:auto;border-collapse:collapse;background:var(--paper-light);margin:1.3rem 0 2.2rem;font-size:.87rem;line-height:1.58;font-variant-numeric:tabular-nums}th,td{border:1px solid var(--line);padding:.75rem;vertical-align:top;min-width:12rem}th{background:#E8E1D5;font-weight:700;text-align:left}th:first-child,td:first-child{min-width:15rem}ul,ol{padding-left:1.45rem}li{margin:.42rem 0}hr{border:0;border-top:1px solid var(--line);margin:3rem 0}code{font-family:"SFMono-Regular",Consolas,monospace;font-size:.88em;background:#E8E1D5;padding:.08em .25em;border-radius:3px}@media (max-width:600px){body{font-size:16px;line-height:1.72}main{padding:32px 17px 62px}header#title-block-header{margin-bottom:32px;padding-left:16px}.title{font-size:2rem}h1{font-size:1.63rem;margin-top:3.2rem}h2{font-size:1.3rem}h3{font-size:1.12rem}table{font-size:.82rem}th,td{padding:.55rem;min-width:10rem}blockquote{margin:1.4rem 0;padding:.9rem 1rem}}@media print{html,body{background:#fff}main{max-width:none;padding:18mm}.title{font-size:28pt}a{color:var(--ink);text-decoration:none}table{font-size:8.8pt}h1,h2,h3{break-after:avoid}p,li{orphans:3;widows:3}}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">人臉身份保留生圖：商用替代路線研究</h1>
+<p class="subtitle">授權可核對、InsightFace-free
+路線｜公開資料查證版</p>
+<p class="date">2026-08-21</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#人臉身份保留生圖商用替代路線研究" id="toc-人臉身份保留生圖商用替代路線研究">人臉身份保留生圖：商用替代路線研究</a>
+<ul>
+<li><a href="#結論先行" id="toc-結論先行">結論先行</a></li>
+<li><a href="#判定規則與範圍" id="toc-判定規則與範圍">判定規則與範圍</a>
+<ul>
+<li><a href="#本案的三層授權檢查" id="toc-本案的三層授權檢查">本案的三層授權檢查</a></li>
+<li><a href="#已查證候選數與否定結論範圍" id="toc-已查證候選數與否定結論範圍">已查證候選數與否定結論範圍</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#路線-a不依賴-insightface-的商用友善身份保留方案" id="toc-路線-a不依賴-insightface-的商用友善身份保留方案">路線 A：不依賴
+InsightFace 的商用友善身份保留方案</a>
+<ul>
+<li><a href="#候選比較表" id="toc-候選比較表">候選比較表</a></li>
+<li><a href="#a1-ip-adapter-原版不碰-insightface但要分清楚openai-clip與官方實際使用的-openclip" id="toc-a1-ip-adapter-原版不碰-insightface但要分清楚openai-clip與官方實際使用的-openclip">A1.
+IP-Adapter 原版：不碰 InsightFace，但要分清楚「OpenAI
+CLIP」與官方實際使用的 OpenCLIP</a>
+<ul>
+<li><a href="#官方實作與權重鏈" id="toc-官方實作與權重鏈">官方實作與權重鏈</a></li>
+<li><a href="#授權精確判讀" id="toc-授權精確判讀">授權精確判讀</a></li>
+<li><a href="#對本案效果的現實預期" id="toc-對本案效果的現實預期">對本案效果的現實預期</a></li>
+</ul></li>
+<li><a href="#a2-photomaker-v1前案錯誤不可沿用到-v1" id="toc-a2-photomaker-v1前案錯誤不可沿用到-v1">A2. PhotoMaker
+V1：前案錯誤不可沿用到 V1</a>
+<ul>
+<li><a href="#v1-的官方證據鏈" id="toc-v1-的官方證據鏈">V1
+的官方證據鏈</a></li>
+<li><a href="#商用判定與邊界" id="toc-商用判定與邊界">商用判定與邊界</a></li>
+</ul></li>
+<li><a href="#a3-mediapipe-face-landmarker可替代偵測對齊不可替代身份條件" id="toc-a3-mediapipe-face-landmarker可替代偵測對齊不可替代身份條件">A3.
+MediaPipe Face Landmarker：可替代偵測／對齊，不可替代身份條件</a></li>
+<li><a href="#a4-dlib-resnet權重-cc0但不是立即可替換的生圖插件" id="toc-a4-dlib-resnet權重-cc0但不是立即可替換的生圖插件">A4. dlib
+ResNet：權重 CC0，但不是立即可替換的生圖插件</a></li>
+<li><a href="#a5-3d-重建候選技術路徑不同但本案不該以它繞過授權" id="toc-a5-3d-重建候選技術路徑不同但本案不該以它繞過授權">A5. 3D
+重建候選：技術路徑不同，但本案不該以它繞過授權</a>
+<ul>
+<li><a href="#deca" id="toc-deca">DECA</a></li>
+<li><a href="#3ddfa_v2" id="toc-3ddfa_v2">3DDFA_V2</a></li>
+<li><a href="#emoca" id="toc-emoca">EMOCA</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#路線-b先建立自有多視角參考資料再使用外觀參考生成" id="toc-路線-b先建立自有多視角參考資料再使用外觀參考生成">路線
+B：先建立自有多視角參考資料，再使用外觀參考生成</a>
+<ul>
+<li><a href="#b1-遊戲捏臉character-creator-在捕捉什麼" id="toc-b1-遊戲捏臉character-creator-在捕捉什麼">B1. 遊戲捏臉／character
+creator 在捕捉什麼？</a>
+<ul>
+<li><a href="#是否仍可能用到被限制的模型" id="toc-是否仍可能用到被限制的模型">是否仍可能用到被限制的模型？</a></li>
+</ul></li>
+<li><a href="#b2-3d-實作候選比較表" id="toc-b2-3d-實作候選比較表">B2. 3D
+實作候選比較表</a>
+<ul>
+<li><a href="#為何不建議現在先做-3d-臉資料庫" id="toc-為何不建議現在先做-3d-臉資料庫">為何不建議現在先做 3D
+臉資料庫</a></li>
+</ul></li>
+<li><a href="#b3-reference-sheet--角色設定圖工作流" id="toc-b3-reference-sheet--角色設定圖工作流">B3. Reference Sheet /
+角色設定圖工作流</a>
+<ul>
+<li><a href="#可行工作流不做身份辨識" id="toc-可行工作流不做身份辨識">可行工作流（不做身份辨識）</a></li>
+<li><a href="#是否能繞開-insightface-授權" id="toc-是否能繞開-insightface-授權">是否能繞開 InsightFace
+授權？</a></li>
+<li><a href="#效果會打折嗎會但折在哪裡" id="toc-效果會打折嗎會但折在哪裡">效果會打折嗎？會，但折在哪裡？</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#硬體相容性與實作前驗收僅規劃不執行" id="toc-硬體相容性與實作前驗收僅規劃不執行">硬體相容性與實作前驗收（僅規劃，不執行）</a></li>
+<li><a href="#單一建議採用-photomaker-v1--私有多視角-reference-sheet暫不做-3d-重建" id="toc-單一建議採用-photomaker-v1--私有多視角-reference-sheet暫不做-3d-重建">單一建議：採用
+PhotoMaker V1 + 私有多視角 Reference Sheet；暫不做 3D 重建</a></li>
+<li><a href="#官方來源" id="toc-官方來源">官方來源</a></li>
+</ul>
+</nav>
+<h1 id="人臉身份保留生圖商用替代路線研究">人臉身份保留生圖：商用替代路線研究</h1>
+<p>日期：2026-08-21<br />
+狀態：研究完成；<strong>未安裝、未執行、未下載任何模型或私人照片</strong><br />
+資料截止：2026-08-21<br />
+前案：<a href="face_id_preserving_image_generation_research_2026-08-21.md">人臉身份保留生圖研究</a></p>
+<h2 id="結論先行">結論先行</h2>
+<p><strong>有一條可行、可商用且不使用 InsightFace
+預訓練權重的路線：PhotoMaker V1 + 已授權的 Zeal 多視角參考照 +
+SDXL。</strong> PhotoMaker V1 的官方程式碼是自有的「stacked ID
+embedding」：它以微調的 OpenCLIP 視覺編碼器和融合層處理多張輸入圖；官方
+V1 demo 明說「we do not perform face
+detection」。目前主分支的程式也明確把 V1 與採用
+<code>CLIPInsightfaceExtendtoken</code> 的 V2 分開。因此不能把 V2 的
+InsightFace 限制回溯套到 V1。<a href="https://huggingface.co/TencentARC/PhotoMaker/blob/main/README.md">官方
+V1 model card</a> 標示 <code>license: apache-2.0</code>，程式庫 LICENSE
+的原文則是：&gt; “PhotoMaker is licensed under the Apache License
+Version 2.0 except for the third-party components listed below.”</p>
+<p>這不是說「任何模型都已經無條件可商用」。最終成品仍須逐項遵守底模、VAE、LoRA、ControlNet
+的條款；SDXL base 的 CreativeML Open RAIL++-M <strong>允許商用與
+SaaS</strong>，但不是
+MIT/Apache，且保留特定使用限制與轉授義務。本研究的「可行」是指：**目前可公開核對的核心鏈中，沒有
+InsightFace 的非商用預訓練人臉辨識權重，且 PhotoMaker V1 adapter
+的官方權重條款為 Apache-2.0；若選用 SDXL 原廠底模並遵守其 RAIL
+條款，可作本案商業素材用途。**這不是法律意見；實作前仍要保留每個實際檔案
+revision 的條款快照。</p>
+<p>相比之下，若標準是「所有核心權重都只採 MIT／Apache／BSD，連 Open RAIL
+類使用限制也不要」，<strong>本次查證範圍內沒有一條已驗證且即插即用的高身份保留生圖完整鏈</strong>：PhotoMaker
+V1 需要 SDXL 系底模；官方 SDXL 權重是 Open RAIL++-M 而非
+MIT／Apache。這是「嚴格全寬鬆」的未滿足，不是 InsightFace 阻塞。</p>
+<p>最終單一建議見本文最後一節：<strong>先落地 PhotoMaker V1 + 9
+張照片整理成多視角 reference sheet；不要採用
+V2、FaceID、InstantID、PuLID 或 3D 重建方案。</strong></p>
+<hr />
+<h2 id="判定規則與範圍">判定規則與範圍</h2>
+<h3 id="本案的三層授權檢查">本案的三層授權檢查</h3>
+<table>
+<thead>
+<tr>
+<th>層級</th>
+<th>必須檢查的物件</th>
+<th>本案判定方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>程式碼</td>
+<td>repo、套件、推理 glue</td>
+<td>必須有官方 LICENSE；MIT／Apache-2.0／Boost 可進入候選。</td>
+</tr>
+<tr>
+<td>預訓練權重／模型資產</td>
+<td>人臉
+encoder、adapter、landmarker、3DMM、底模、VAE、LoRA、ControlNet</td>
+<td>不能從程式碼 LICENSE
+推論；每個實際下載檔都需有官方條款。未找到則標記「授權不明，暫不建議」。</td>
+</tr>
+<tr>
+<td>訓練資料與用途聲明</td>
+<td>模型卡、資料來源、官方限制</td>
+<td>就算權重檔標寬鬆，若官方明文限定
+research／non-commercial，仍不放行。資料來源未授權並不會因權重標 MIT
+自動變得無風險，需如實記錄。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>商業判定的用語：</strong>「可進入商用實作」表示官方公開條款沒有商業禁止、但仍須守所有下游條款；不是保證法律上零風險。「不放行」表示找到明文非商業條款或實際權重授權未明。「不適用」表示技術不是身份生圖方案，僅能做前處理或品質輔助。</p>
+<h3 id="已查證候選數與否定結論範圍">已查證候選數與否定結論範圍</h3>
+<p>本次逐項查證 <strong>7 個路線 A 候選</strong>：IP-Adapter
+原版、PhotoMaker V1、MediaPipe Face Landmarker、dlib ResNet
+face-recognition、DECA、3DDFA_V2、EMOCA；另在路線 B 檢查 Reference Sheet
+工作流與上述三個 3D 重建實作。查證範圍是各專案官方 GitHub
+README／LICENSE、官方 Hugging Face model card、Google
+官方文件／模型卡與官方專案頁；沒有下載二進位或私有模型。</p>
+<p>在這個範圍內，結論不是「沒有乾淨方案」，而是：<strong>有
+InsightFace-free 的 PhotoMaker V1；但沒有被查證為「全核心權重皆
+MIT／Apache／BSD」的完整生成鏈。</strong></p>
+<hr />
+<h1 id="路線-a不依賴-insightface-的商用友善身份保留方案">路線 A：不依賴
+InsightFace 的商用友善身份保留方案</h1>
+<h2 id="候選比較表">候選比較表</h2>
+<table>
+<thead>
+<tr>
+<th>候選</th>
+<th>技術原理／用途</th>
+<th>授權原文（官方）</th>
+<th>是否依賴 InsightFace</th>
+<th>商業判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PhotoMaker V1</strong></td>
+<td>多張 ID 圖先通過自有微調 OpenCLIP 視覺 encoder；把每張 ID embedding
+與 prompt 的 class-token embedding 融合成 stacked ID embedding，再餵入
+SDXL diffusion pipeline。</td>
+<td>repo：「<strong>PhotoMaker is licensed under the Apache License
+Version 2.0 except for the third-party components listed
+below.</strong>」；官方 adapter model
+card：<code>license: apache-2.0</code>。</td>
+<td><strong>否。</strong> V1 <code>PhotoMakerIDEncoder</code> 只用
+<code>CLIPVisionModelWithProjection</code>；官方 V1 demo：「<strong>we
+do not perform face detection</strong>」。</td>
+<td><strong>可進入商用實作（首選）</strong>。adapter 已有
+Apache-2.0；仍必須逐項接受 SDXL 與額外元件條款。</td>
+</tr>
+<tr>
+<td><strong>IP-Adapter 原版（非 FaceID）</strong></td>
+<td>CLIP／OpenCLIP image prompt embedding 經 22M adapter 注入 diffusion
+cross-attention。一般版抓整張圖外觀；Plus 讀 patch
+embedding，較貼近參考圖。</td>
+<td>repo Apache-2.0；官方 weights
+card：<code>license: apache-2.0</code>；其指定 OpenCLIP ViT-H model
+card：<code>license: mit</code>。</td>
+<td><strong>否。</strong> 官方模型表明確為 OpenCLIP global／patch
+embedding；沒有 FaceID embedding。</td>
+<td><strong>可作次選／對照</strong>。但指定的 LAION OpenCLIP card
+同時說任何 deployed use「out of
+scope」；這是非約束性用途警示，仍不應把它當最穩妥商用主線。</td>
+</tr>
+<tr>
+<td><strong>MediaPipe Face Landmarker</strong></td>
+<td>臉偵測 + 478 個 3D landmarks + 52
+blendshape；可量測、裁切、旋正和標記參考照，不能產出 identity embedding
+或生圖。</td>
+<td>官方 Face Mesh V2 model card：「<strong>LICENSED UNDER Apache
+License, Version 2.0</strong>」。</td>
+<td><strong>否。</strong> 是 landmark / blendshape 模型，而非 embedding
+recognizer。</td>
+<td><strong>可當前處理輔助</strong>，不能單獨替代身份生圖 encoder。</td>
+</tr>
+<tr>
+<td><strong>dlib ResNet face recognition v1</strong></td>
+<td>29-conv ResNet 把臉映射至 128-d 向量，可做相似度比較；不是 diffusion
+身份注入器。</td>
+<td>dlib：Boost Software License；原文授權可「use, reproduce, display,
+distribute, execute」；dlib-models 為
+CC0-1.0，作者說模型「<strong>released them into the public
+domain</strong>」。</td>
+<td><strong>否。</strong> 但它仍是人臉辨識模型，功能類別與 InsightFace
+接近。</td>
+<td><strong>權重條款表面可用；暫不建議作本案主鏈。</strong> 沒有已查證的
+PhotoMaker／IP-Adapter V1 官方整合，且其訓練含 FaceScrub、VGGFace
+與網路抓取圖，資料權利需另行法務評估。</td>
+</tr>
+<tr>
+<td><strong>DECA</strong></td>
+<td>從單張影像回歸 3DMM／FLAME 的
+shape、expression、pose、albedo、lighting 和細節 displacement；可產出
+mesh/參數。</td>
+<td>「<strong>Any other use, in particular any use for commercial …
+purposes is prohibited.</strong>」並提供商業授權聯絡信箱。</td>
+<td>不是 InsightFace；但其官方流程另列 face-alignment、FAN、VGGFace2
+identity loss 等依賴。</td>
+<td><strong>不放行</strong>：條款同時限制
+code、model、data、mesh、scripts。</td>
+</tr>
+<tr>
+<td><strong>3DDFA_V2</strong></td>
+<td>FaceBoxes 偵測 + 3DMM parameter regression；輸出 dense 3D
+alignment、mesh、pose、UV texture。</td>
+<td>repo MIT：「<strong>deal in the Software without restriction … sell
+copies</strong>」。</td>
+<td><strong>否。</strong> 官方 README 寫它採 FaceBoxes，而非 dlib。</td>
+<td><strong>授權不明，暫不建議。</strong> repo 是 MIT，但 README
+僅說釋出 pre-trained weight，未為確切權重／FaceBoxes
+模型給獨立商用條款；訓練為 300W-LP，資料條款未在 repo 交代。</td>
+</tr>
+<tr>
+<td><strong>EMOCA</strong></td>
+<td>單張臉部 3D 重建，著重表情，建立在 DECA／FLAME 之上。</td>
+<td>「<strong>This code and model are available for non-commercial
+scientific research purposes</strong>」；更明確禁止 commercial
+product、commercial service、commercial artefacts。</td>
+<td>不是 InsightFace；EMOCA v2 使用部分 MediaPipe landmarks，亦承接
+DECA。</td>
+<td><strong>不放行</strong>。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a1-ip-adapter-原版不碰-insightface但要分清楚openai-clip與官方實際使用的-openclip">A1.
+IP-Adapter 原版：不碰 InsightFace，但要分清楚「OpenAI
+CLIP」與官方實際使用的 OpenCLIP</h2>
+<h3 id="官方實作與權重鏈">官方實作與權重鏈</h3>
+<p>IP-Adapter 原版不是 FaceID 變體。官方 repo 將其定義為 image prompt
+adapter；一般版把 image encoder 的全域 embedding 當條件，Plus 版用 patch
+embedding。官方 weights model card 對原版列出：</p>
+<ul>
+<li><code>ip-adapter_sd15.bin</code>：「use global image embedding from
+OpenCLIP-ViT-H-14 as condition」；</li>
+<li><code>ip-adapter-plus_sd15.bin</code>：「use patch image embeddings
+… closer to the reference image」；</li>
+<li>SDXL 版則使用 OpenCLIP ViT-bigG 或 ViT-H。</li>
+</ul>
+<p>程式也直接載入 <code>CLIPVisionModelWithProjection</code> 和
+<code>CLIPImageProcessor</code>；在這條正常 image-prompt 路徑沒有
+InsightFace import、沒有臉部偵測，也沒有 512-d face
+embedding。請勿誤選名稱含 <code>FaceID</code>
+的權重；它們是另一條受前案阻塞的路。</p>
+<h3 id="授權精確判讀">授權精確判讀</h3>
+<ul>
+<li><strong>IP-Adapter 程式碼：Apache-2.0。</strong> 條款第 2
+節原文授與「<strong>perpetual, worldwide, non-exclusive, no-charge,
+royalty-free, irrevocable copyright license</strong>」。</li>
+<li><strong>官方 IP-Adapter weights：Apache-2.0。</strong> model card
+YAML 為 <code>license: apache-2.0</code>。</li>
+<li><strong>OpenAI CLIP 程式碼：MIT。</strong> OpenAI LICENSE
+原文：「<strong>Permission is hereby granted, free of charge … to deal
+in the Software without restriction</strong>」，並列出
+<code>use, copy, modify, merge, publish, distribute, sublicense, and/or sell</code>。</li>
+<li><strong>但 IP-Adapter 官方 demo 實際指定的不是 OpenAI CLIP
+權重。</strong> 是 LAION 的 OpenCLIP ViT-H／bigG；其官方 model card YAML
+為 <code>license: mit</code>。同一張 model card 又寫「<strong>Any
+deployed use case of the model - whether commercial or not - is
+currently out of
+scope.</strong>」這是官方用途／安全告示，並非同一文件中的 license
+禁止條款；但對「真正商用友善」的內部標準而言，它足以讓 IP-Adapter
+原版退為次選。</li>
+</ul>
+<h3 id="對本案效果的現實預期">對本案效果的現實預期</h3>
+<p>它能保留髮型、眼鏡、衣著、色調和臉部大輪廓；但 CLIP
+的一般圖像語義並不是專為人臉 identity metric 設計。提高
+<code>scale</code> 會貼近原照與姿勢／prompt 拉扯，降低
+<code>scale</code> 則會增加人物漂移。官方 README 也警告預設 CLIP
+processor 是 center
+crop，非正方形圖可能遺失中央以外內容。因此它適合「reference sheet +
+多輪人工挑圖」而不適合宣稱單張就穩定復現五官。</p>
+<h2 id="a2-photomaker-v1前案錯誤不可沿用到-v1">A2. PhotoMaker
+V1：前案錯誤不可沿用到 V1</h2>
+<h3 id="v1-的官方證據鏈">V1 的官方證據鏈</h3>
+<ol type="1">
+<li><a href="https://huggingface.co/TencentARC/PhotoMaker/blob/main/README.md">V1
+model card</a> 明載兩個 state-dict parts：<code>id_encoder</code>
+是「finetuned OpenCLIP-ViT-H-14 and a few fuse
+layers」，<code>lora_weights</code> 作用在 UNet attention；YAML 是
+<code>license: apache-2.0</code>。</li>
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/photomaker/model.py">V1
+encoder 原始碼</a> 的類別是
+<code>PhotoMakerIDEncoder(CLIPVisionModelWithProjection)</code>；它把多張
+<code>id_pixel_values</code> 的 visual embedding 合併為
+<code>stacked_id_embeds</code>，沒有 InsightFace import。</li>
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/gradio_demo/app.py">官方
+V1 demo</a> 固定 <code>pm_version=&quot;v1&quot;</code>，並逐張直接
+<code>load_image()</code>；其操作說明逐字寫：「<strong>Although we do
+not perform face detection, the face in the uploaded image should occupy
+the majority of the image.</strong>」這直接回答本研究的「是否仍依賴
+InsightFace 偵測／對齊」：官方 V1 工作流沒有。</li>
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/photomaker/pipeline.py">同一主分支
+pipeline</a> 只在 V2 分支選用
+<code>PhotoMakerIDEncoder_CLIPInsightfaceExtendtoken</code>；V1 分支選用
+<code>PhotoMakerIDEncoder</code>。這是可以重現的版本分界，而不是名稱猜測。</li>
+</ol>
+<h3 id="商用判定與邊界">商用判定與邊界</h3>
+<p>PhotoMaker V1 是這次找到最符合目的的方案：它直接服務「多張同一人照片
+→ 不訓練 LoRA 的客製化肖像」，也不需 FaceID
+encoder。它不是完全免除其他權重治理：</p>
+<ul>
+<li>官方 README 指定它接任何基於 SDXL 的 base
+model；選擇時要固定使用原廠 SDXL base
+或另一個<strong>另有明確商用權利</strong>的 SDXL compatible
+checkpoint。</li>
+<li>SDXL 官方 LICENSE 的原文允許「<strong>host for Third Party remote
+access purposes (e.g.
+software-as-a-service)</strong>」，但同時要求把使用限制帶給後手；它並非
+Apache-2.0。其條款也說「<strong>The Data is not licensed under this
+License</strong>」。</li>
+<li>不加來歷不明的 RealVisXL、CivitAI
+checkpoint、VAE、ControlNet、LoRA；每一個都會成為新的權利節點。YouTube
+自用可先以 PhotoMaker V1 adapter + SDXL 原廠 base + 官方 VAE
+的最小鏈開始。</li>
+</ul>
+<p><strong>結論：</strong>在「不使用 InsightFace」這一題，V1
+可放行；在「所有關聯模型均為寬鬆 license」這一題，需如實標示 SDXL 為
+Open RAIL++-M，而非粉飾成 Apache。</p>
+<h2 id="a3-mediapipe-face-landmarker可替代偵測對齊不可替代身份條件">A3.
+MediaPipe Face Landmarker：可替代偵測／對齊，不可替代身份條件</h2>
+<p><a href="https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker">Google
+Face Landmarker 官方文件</a>列出 bundle 組成：face
+detector、FaceMesh-V2、blendshape predictor；輸出為 <strong>478 個 3D
+landmarks</strong> 和 <strong>52 個 blendshape scores</strong>。其 <a href="https://storage.googleapis.com/mediapipe-assets/Model%20Card%20MediaPipe%20Face%20Mesh%20V2.pdf">Face
+Mesh V2 model card</a>的授權欄原文為「<strong>LICENSED UNDER Apache
+License, Version 2.0</strong>」。</p>
+<p>它可乾淨地做下列工作：確認九張照片的單一臉／臉大小、以眼角和鼻尖推導
+crop
+與旋正、記錄正臉／左／右四分之三角度、排除閉眼／強遮擋照，或在未來把同一張多視角
+sheet 的臉放在一致位置。它不會輸出「這個人是 Zeal」的 recognition
+embedding，亦不會自行生成新圖。</p>
+<p>因此它可拼進<strong>參考照品質控制鏈</strong>：<code>MediaPipe landmarker → 人工核對/裁切 → PhotoMaker V1</code>。它不是「把
+InsightFace embedding 換成 MediaPipe
+embedding」；後者不存在，硬接只會另造未驗證技術。</p>
+<h2 id="a4-dlib-resnet權重-cc0但不是立即可替換的生圖插件">A4. dlib
+ResNet：權重 CC0，但不是立即可替換的生圖插件</h2>
+<p><a href="https://github.com/davisking/dlib">dlib</a>是 Boost Software
+License；官方 README 的白話結論為「<strong>use dlib however you like,
+even in closed source commercial software</strong>」。其 <a href="https://github.com/davisking/dlib-models">dlib-models 官方
+repo</a>為 CC0-1.0，作者對模型檔的原文是「<strong>anyone can do whatever
+they want with these model files as I&#39;ve released them into the public
+domain</strong>」。<code>dlib_face_recognition_resnet_model_v1</code> 是
+29-conv ResNet，約 300 萬張臉、7,485 identities 訓練；README
+明列資料來自 FaceScrub、VGG 和網路抓取。</p>
+<p>這使它和 InsightFace
+不同授權，卻仍是<strong>臉部辨識</strong>模型。它可在未來用作本地「生成結果與參考照的相似度排序」的研究工具；但本次沒有找到官方
+PhotoMaker V1／原版 IP-Adapter 直接以 dlib embedding 取代其 conditioning
+的實作或權重。因此不能把「dlib 可商用」錯推成「可直接替換 InsightFace
+且身份保留一樣好」。此外，CC0 是模型發布者的權利聲明，不能替
+FaceScrub、VGGFace、爬取圖的上游資料權利作保證。</p>
+<h2 id="a5-3d-重建候選技術路徑不同但本案不該以它繞過授權">A5. 3D
+重建候選：技術路徑不同，但本案不該以它繞過授權</h2>
+<h3 id="deca">DECA</h3>
+<p><a href="https://deca.is.tue.mpg.de/">DECA
+官方專案頁</a>說它由單張圖回歸 identity-specific detail、generic
+expression，並預測 shape、albedo、expression、pose、illumination 和
+displacement map。這是 3DMM/FLAME 參數回歸，不是 InsightFace face
+embedding。</p>
+<p>然而 <a href="https://github.com/yfeng95/DECA/blob/master/LICENSE">DECA
+LICENSE</a>把「Model &amp; Software」明確擴及「3D meshes, software, and
+scripts」，且原文禁止「<strong>incorporation in a commercial product,
+use in a commercial service, or production of other artefacts for
+commercial
+purposes</strong>」。所以即使只用它產生臉形資料，再用別的生成器畫圖，仍不符合本案。</p>
+<h3 id="3ddfa_v2">3DDFA_V2</h3>
+<p><a href="https://github.com/cleardusk/3DDFA_V2">3DDFA_V2</a>的 repo
+LICENSE 是 MIT，原文允許「<strong>use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell</strong>」。README 指出其使用
+FaceBoxes 偵測器、回歸 3DMM 參數，可輸出 dense alignment、3D、pose、UV
+texture；訓練資料是 300W-LP。</p>
+<p>但 repo 的 MIT 明確覆蓋「Software」，README 雖提到 released
+pretrained weights，卻沒有在找到的官方文字中對
+<code>weights/mb1_120x120.pth</code>、FaceBoxes 權重或 300W-LP
+另作可商用權利聲明。因此遵守本研究「查不到就不假設」規則：<strong>授權不明，暫不建議商用</strong>。不要因為程式碼
+MIT 就把模型與訓練資料也標 MIT。</p>
+<h3 id="emoca">EMOCA</h3>
+<p><a href="https://github.com/radekd91/emoca/tree/release/EMOCA_v2">EMOCA
+官方 README</a>說其接受單張 in-the-wild 影像，重建含表情細節的 3D
+face；v2 採用了部分 MediaPipe landmarks，並建立在 DECA 上。可是 <a href="https://github.com/radekd91/emoca/blob/release/EMOCA_v2/LICENSE">LICENSE</a>與
+DECA 同類：只授予 non-commercial scientific
+research／education／artistic projects，且明文禁止 commercial
+product/service/artefacts。<strong>不放行。</strong></p>
+<hr />
+<h1 id="路線-b先建立自有多視角參考資料再使用外觀參考生成">路線
+B：先建立自有多視角參考資料，再使用外觀參考生成</h1>
+<h2 id="b1-遊戲捏臉character-creator-在捕捉什麼">B1. 遊戲捏臉／character
+creator 在捕捉什麼？</h2>
+<p>「捏臉」通常不是在資料庫中認出某個人，而是在一個有限的臉部形狀空間中找參數。核心是
+<strong>3D Morphable Face Model（3DMM）</strong>：</p>
+<ol type="1">
+<li>先以許多已對齊的 3D 臉掃描建立平均 mesh，以及
+shape、expression、texture 的主成分 basis。</li>
+<li>從一張或多張照片取得 2D
+landmarks／輪廓、姿態與可見紋理；估計相機內外參與光線。</li>
+<li>最佳化或以神經網路回歸一組係數：<code>shape α + expression β + texture γ + pose + camera + light</code>，使渲染後的
+2D 臉與照片吻合。</li>
+<li>遊戲 UI 的鼻高、顴骨、下巴、眼距滑桿，通常就是這些 blendshape／morph
+target／3DMM 係數的可讀化控制；它不等同一個跨照片比對身份的向量。</li>
+</ol>
+<p>DECA 的官方描述正是這條路：從單張圖回歸 person-specific detail 和
+expression-dependent detail；3DDFA_V2 的官方 README 則把輸出稱為「3dmm
+parameters
+inference」。兩者皆可看作捏臉參數來源，但它們<strong>不是</strong>
+InsightFace 的 ArcFace 類身份辨識模型。</p>
+<h3 id="是否仍可能用到被限制的模型">是否仍可能用到被限制的模型？</h3>
+<p><strong>不是同一類模型，也不必然依賴
+InsightFace；但每個實作仍有自己的 encoder、landmarker、3D head
+model、訓練資料與權重條款。</strong></p>
+<ul>
+<li>幾何路徑可用 MediaPipe landmarks（Apache-2.0）或 FaceBoxes
+做臉框，再以 3DMM 參數化和 renderer 擬合；此資料流不需要 InsightFace
+embedding。</li>
+<li>一些研究型 3D reconstruction 方法為了 identity loss、crop
+或表情估計，會引入 VGGFace2、FAN、face-alignment
+或其他預訓練網路。那是另一組依賴，不能因為「不是
+InsightFace」就省略審查。</li>
+<li>本次三個實作的結果是：DECA、EMOCA 明確非商業；3DDFA_V2 程式碼
+MIT、實際 weights 權利未明。故它們不適合本案現在的商業素材工作流。</li>
+</ul>
+<h2 id="b2-3d-實作候選比較表">B2. 3D 實作候選比較表</h2>
+<table>
+<thead>
+<tr>
+<th>實作</th>
+<th>可提供的參數／產物</th>
+<th>與 InsightFace 的關係</th>
+<th>官方授權／資料證據</th>
+<th>本案判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DECA</strong></td>
+<td>單圖 shape／expression／pose／albedo／light＋detail
+displacement，可輸出可動畫 mesh。</td>
+<td>不以 InsightFace 為核心；但官方列 VGGFace2 identity loss
+等相關依賴。</td>
+<td>LICENSE 明確將 model、data、software、mesh 全列入且限非商業。</td>
+<td>不放行。</td>
+</tr>
+<tr>
+<td><strong>3DDFA_V2</strong></td>
+<td>FaceBoxes + 3DMM 回歸，dense face alignment、3D mesh、pose、UV
+texture。</td>
+<td>官方說用 FaceBoxes 取代 dlib；非 InsightFace。</td>
+<td>repo MIT；README 指 weight <code>mb1_120x120.pth</code> 並說訓練於
+300W-LP，但未找到 weight／資料的商用聲明。</td>
+<td>授權不明，暫不建議。</td>
+</tr>
+<tr>
+<td><strong>EMOCA</strong></td>
+<td>單圖臉部 3D capture，強調 emotion／expression detail。</td>
+<td>非 InsightFace；v2 使用部分 MediaPipe landmarks，但又承接
+DECA。</td>
+<td>README／LICENSE 明說 code and model 僅 non-commercial scientific
+research。</td>
+<td>不放行。</td>
+</tr>
+<tr>
+<td><strong>MediaPipe Face Landmarker</strong></td>
+<td>478 landmarks、52 blendshapes、face transformation
+matrix；可作對齊與選圖 QC。</td>
+<td>不辨識身份，不產生 3DMM identity mesh。</td>
+<td>官方 model card Apache-2.0。</td>
+<td>可作輔助；不是 3D reconstruction 的完整替代。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="為何不建議現在先做-3d-臉資料庫">為何不建議現在先做 3D
+臉資料庫</h3>
+<p>九張照片足以整理多視角 reference
+sheet，但不保證足以重建可作高寫實生圖的完整 3D
+頭部：側面耳朵、髮際、顎線、頸部、鏡頭焦距和光照都會造成不確定性。就算
+3D mesh 成功，從 mesh 回到真實、像 Zeal 的 2D 縮圖，還要一個 image
+generator；那個 generator 仍須接 reference / identity
+conditioning。這等於多加一層授權與品質風險，未解決目前真正阻塞。</p>
+<p>所以 3DMM
+是未來「可控角度、角色資產、動畫」的研究方向，不是本案第一個商業落地步驟。</p>
+<h2 id="b3-reference-sheet--角色設定圖工作流">B3. Reference Sheet /
+角色設定圖工作流</h2>
+<h3 id="可行工作流不做身份辨識">可行工作流（不做身份辨識）</h3>
+<ol type="1">
+<li><strong>盤點與人工挑選。</strong> 只在私有
+<code>assets/zeal-photos/</code> 內操作；挑出正面、左/右
+30–45°、左/右近側、自然笑、嘴閉合、不同光線；排除多人、濾鏡、強逆光、墨鏡、嚴重遮擋與過度廣角。</li>
+<li><strong>選圖／裁切輔助（可選）。</strong> 用 MediaPipe Face
+Landmarker 標出視角、臉部在畫面比例、眼睛是否可見；由人確認，再作一致化
+crop。這一步沒有建立或保存人臉辨識向量。</li>
+<li><strong>建立私有 reference sheet。</strong>
+將六到九格照片排成前、左右四分之三、側面和表情欄；保留原始照片、版本、拍攝／授權紀錄，但不放到
+git、不發布到公開報告。</li>
+<li><strong>生成。</strong> 將同一 reference sheet 或少量精選 reference
+圖提供給 PhotoMaker V1；若要對照，可用原版 IP-Adapter Plus（非
+FaceID）生成相同 prompt。姿勢／構圖控制應優先用有清楚授權的 pose/depth
+conditioning 元件；對 YouTube
+縮圖只生人物，文字與品牌排版由後段處理。</li>
+<li><strong>人工選片與可追溯性。</strong> 每張採用圖保存
+prompt、seed、reference-sheet revision、adapter/base/vae/control version
+與其 license URL；不要把模型的「長得像」當成身分驗證。</li>
+</ol>
+<h3 id="是否能繞開-insightface-授權">是否能繞開 InsightFace 授權？</h3>
+<p><strong>能，前提是實際選用的是 PhotoMaker V1 或 IP-Adapter
+原版權重，而不是其 FaceID／V2 變體，且不在自訂節點裡額外下載
+InsightFace。</strong>
+這條路不是把人臉辨識偷換名稱，而是把「多張外觀照片 → 視覺特徵條件」輸入
+diffusion adapter。</p>
+<p>乾淨鏈路可以寫成：</p>
+<p><code>私有原照 →（可選）MediaPipe landmarks / 人工裁切 → 私有 reference sheet → PhotoMaker V1 ID encoder → SDXL base → 人工選圖/排版</code>。</p>
+<p>在這條鏈中沒有 InsightFace 的預訓練權重。若改為
+<code>PhotoMaker V2</code>、<code>InstantID</code>、<code>PuLID</code>
+或 <code>IP-Adapter FaceID</code>，就不再是這條鏈。</p>
+<h3 id="效果會打折嗎會但折在哪裡">效果會打折嗎？會，但折在哪裡？</h3>
+<table>
+<thead>
+<tr>
+<th>面向</th>
+<th>FaceID embedding 方案</th>
+<th>Reference Sheet + PhotoMaker V1 / 原版 IP-Adapter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>身份錨定</td>
+<td>專用臉部 embedding，通常對眼距、鼻形、臉型有較強約束。</td>
+<td>由 OpenCLIP＋stacked image condition 表示外觀；V1 有多照融合，但不是
+face verification loss。</td>
+</tr>
+<tr>
+<td>多角度／姿勢</td>
+<td>仍可能失真，但 embedding 對角度變化較直接。</td>
+<td>多視角來源可減少漂移；極端側臉、手遮臉、誇張表情較不穩。</td>
+</tr>
+<tr>
+<td>五官細節</td>
+<td>理論上較有利於保持五官相似。</td>
+<td>能保住大輪廓、髮型、眼鏡和服飾語義；瞳形、鼻翼、牙齒等細節要靠多張候選與人工挑圖。</td>
+</tr>
+<tr>
+<td>授權</td>
+<td>前案五候選皆因 InsightFace 權重受阻。</td>
+<td>可完全避開 InsightFace；但必須守
+adapter、OpenCLIP、底模與所有附加元件條款。</td>
+</tr>
+<tr>
+<td>縮圖實用性</td>
+<td>高 fidelity 潛力，但目前不可商用。</td>
+<td>對「人像在一側、文字與視覺符號另排」的縮圖可接受；不要承諾每張都像真人攝影。</td>
+</tr>
+</tbody>
+</table>
+<p>PhotoMaker V1 比原版 IP-Adapter
+更適合本案，因其原始設計就是「一或多張人像 + trigger word 的
+personalization」，官方也建議多張輸入提升 ID fidelity。IP-Adapter
+原版可作 A/B 對照，不能取代 V1 的主定位。</p>
+<hr />
+<h1 id="硬體相容性與實作前驗收僅規劃不執行">硬體相容性與實作前驗收（僅規劃，不執行）</h1>
+<p>本機是 NVIDIA GB10、CUDA 13.0、PyTorch 2.9.0+cu130，且 compute
+capability 12.1
+可能高於部分候選的已驗證範圍。本研究沒有安裝或跑推理，故不能宣稱「可跑」。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>已查到的官方資訊</th>
+<th>對 GB10 的判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PhotoMaker V1</td>
+<td>README 要求 PyTorch ≥2.0，並稱最低 GPU memory 11G；官方舊建議含
+PyTorch/SDXL 的版本世代。</td>
+<td><strong>相容性未知。</strong> 需要隔離環境 smoke test；不可從 11G
+或舊 V100 數字外推 GB10。</td>
+</tr>
+<tr>
+<td>IP-Adapter 原版</td>
+<td>README pin <code>diffusers==0.22.1</code>，為較早版本。</td>
+<td><strong>風險較高。</strong> CUDA 13 / torch 2.9 / SM 12.1 與舊
+diffusers stack 可能衝突。</td>
+</tr>
+<tr>
+<td>MediaPipe</td>
+<td>可跑 CPU／TFLite；只是準備照，不是生成瓶頸。</td>
+<td>GPU 相容性不是必要條件；仍需在實作階段驗實際套件。</td>
+</tr>
+<tr>
+<td>DECA／EMOCA／3DDFA_V2</td>
+<td>多為舊 PyTorch/CUDA
+世代；更重要的是前兩者非商業、後者權重不明。</td>
+<td>不因硬體好就放行。</td>
+</tr>
+</tbody>
+</table>
+<p>若未來批准施工，最低驗收順序應為：</p>
+<ol type="1">
+<li>建<strong>隔離</strong>環境，不污染現有講課影片產線；先確認 PyTorch
+CUDA 可用與 SM 12.1 的實際支援。</li>
+<li>建授權 BOM：精確 repo／revision／SHA、LICENSE
+URL、adapter、base、VAE、任何
+ControlNet/LoRA、下載日期；只要一項無公開商用條款即停止。</li>
+<li>只用 Zeal
+已授權、私有照片；第一輪固定一張小批次生成，記錄顯存、耗時、warning、輸出
+hash。</li>
+<li>用多個
+prompt、不同角度、不同表情，人工盲挑可用率；不是挑到一張好圖就宣稱身份保留成功。</li>
+<li>所有上線圖先經 Zeal 本人批准；生成圖不要擅自表述為實拍照。</li>
+</ol>
+<hr />
+<h1 id="單一建議採用-photomaker-v1--私有多視角-reference-sheet暫不做-3d-重建">單一建議：採用
+PhotoMaker V1 + 私有多視角 Reference Sheet；暫不做 3D 重建</h1>
+<p><strong>建議現在採用的唯一主線：PhotoMaker V1 + SDXL 原廠 base + 私有
+Zeal 多視角 reference sheet；MediaPipe
+僅作可選的裁切／選圖輔助。</strong></p>
+<p>理由是它同時滿足目前最重要的三件事：</p>
+<ol type="1">
+<li><strong>避開已確認的 InsightFace 非商業權重。</strong> V1 官方程式與
+demo 都證明它不使用 face detection，也沒有 V2 的
+<code>CLIPInsightfaceExtendtoken</code>。</li>
+<li><strong>授權可核對。</strong> PhotoMaker V1 adapter 官方 model card
+標 Apache-2.0；SDXL 的 Open RAIL++-M 明確允許商用與
+SaaS，但須接受其使用限制；這比「只因 repo 是 Apache
+就假定整條鏈可商用」更誠實。</li>
+<li><strong>直接對應 YouTube 縮圖需求。</strong> 多張 reference 加
+stacked embedding 比一般 IP-Adapter 更為人像 customization
+設計，且無需把九張照片拿去訓練自訂人臉辨識器或建立 3D avatar。</li>
+</ol>
+<p>下一步不是下載模型，而是先完成一張私有的「參考照資料卡」：為九張照片標記角度、表情、遮擋、光線與可用性，並選定
+4–6 張作 V1 identity set。接著在得到允許後，建立授權 BOM；只有 BOM
+每個權重都被核對、且 GB10 隔離環境 smoke test
+成功，才進行小批次生成驗證。</p>
+<p><strong>不建議</strong>把 3DMM／捏臉資料庫作為現階段替代：DECA 與
+EMOCA 明文不可商用；3DDFA_V2 權重及訓練資料商用權利未明；而且 3D mesh
+不會自動變成可商用、像真人的縮圖素材。也不建議 PhotoMaker
+V2、InstantID、PuLID、IP-Adapter FaceID；它們會重新把 InsightFace
+授權問題帶回來。</p>
+<blockquote>
+<p>本文件是工程／授權資料整理，不是法律意見。若日後由自用行銷素材擴張為代客、SaaS
+或大規模廣告投放，應由法務針對<strong>實際下載的檔案版本與使用方式</strong>再確認。</p>
+</blockquote>
+<hr />
+<h1 id="官方來源">官方來源</h1>
+<ol type="1">
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/LICENSE">TencentARC
+/ PhotoMaker repository LICENSE</a> — 專案 Apache-2.0 與 third-party
+exception 原文。</li>
+<li><a href="https://huggingface.co/TencentARC/PhotoMaker/blob/main/README.md">PhotoMaker
+V1 official model card</a> — <code>license: apache-2.0</code>、V1
+<code>id_encoder</code>／<code>lora_weights</code>。</li>
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/photomaker/model.py">PhotoMaker
+V1 encoder</a>與<a href="https://github.com/TencentARC/PhotoMaker/blob/main/gradio_demo/app.py">官方
+demo</a> — stacked embedding、<code>pm_version=&quot;v1&quot;</code>、不做 face
+detection。</li>
+<li><a href="https://github.com/TencentARC/PhotoMaker/blob/main/photomaker/pipeline.py">PhotoMaker
+pipeline</a> — V1 encoder 與 V2 <code>CLIPInsightfaceExtendtoken</code>
+的程式分支。</li>
+<li><a href="https://github.com/tencent-ailab/IP-Adapter">IP-Adapter
+repository</a>與<a href="https://github.com/tencent-ailab/IP-Adapter/blob/main/LICENSE">LICENSE</a>
+— Apache-2.0、image-prompt 技術與 OpenCLIP 指定。</li>
+<li><a href="https://huggingface.co/h94/IP-Adapter/blob/main/README.md">IP-Adapter
+official model card</a> — Apache-2.0 weights、global/patch OpenCLIP
+embedding。</li>
+<li><a href="https://github.com/openai/CLIP/blob/main/LICENSE">OpenAI
+CLIP LICENSE</a>與<a href="https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/blob/main/README.md">LAION
+OpenCLIP ViT-H official model card</a> — MIT 條款與 deployed-use
+notice。</li>
+<li><a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/main/LICENSE.md">SDXL
+base official LICENSE</a> — CreativeML Open
+RAIL++-M、SaaS／輸出／限制原文。</li>
+<li><a href="https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker">Google
+MediaPipe Face Landmarker guide</a>與<a href="https://storage.googleapis.com/mediapipe-assets/Model%20Card%20MediaPipe%20Face%20Mesh%20V2.pdf">Face
+Mesh V2 model card</a> — 478 landmarks、52 blendshapes、Apache-2.0 model
+asset。</li>
+<li><a href="https://github.com/davisking/dlib/blob/master/LICENSE.txt">dlib
+LICENSE</a>與<a href="https://github.com/davisking/dlib-models">dlib-models official
+README</a> — Boost Software License、CC0 model、ResNet
+與訓練資料描述。</li>
+<li><a href="https://github.com/yfeng95/DECA/blob/master/README.md">DECA
+README</a>、<a href="https://github.com/yfeng95/DECA/blob/master/LICENSE">DECA
+LICENSE</a>、<a href="https://deca.is.tue.mpg.de/">DECA official project
+page</a> — 單圖 3DMM／detail 原理與非商業條款。</li>
+<li><a href="https://github.com/cleardusk/3DDFA_V2/blob/master/readme.md">3DDFA_V2
+README</a>與<a href="https://github.com/cleardusk/3DDFA_V2/blob/master/LICENSE">LICENSE</a>
+— FaceBoxes、3DMM parameter、300W-LP、MIT code。</li>
+<li><a href="https://github.com/radekd91/emoca/tree/release/EMOCA_v2">EMOCA
+README</a>與<a href="https://github.com/radekd91/emoca/blob/release/EMOCA_v2/LICENSE">LICENSE</a>
+— 3D capture 原理、DECA 依賴與非商業條款。</li>
+</ol>
+</body>
+</html>
