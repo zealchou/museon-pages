@@ -1,0 +1,283 @@
+<title>講課影片產線｜目前整條工作流</title>
+<style>
+  :root{
+    --paper:#F2EEE5;
+    --paper-light:#FAF8F1;
+    --ink:#202321;
+    --soft-ink:#454B48;
+    --line:#DAD3C4;
+    --cinnabar:#B74B32;
+    --deep-cinnabar:#8F3828;
+    --amber:#9C6B12;
+    --amber-bg:#F4E9D2;
+    --green:#3F6B4A;
+    --green-bg:#E1EBE1;
+    --card-bg:var(--paper-light);
+    --shadow:0 1px 2px rgba(32,35,33,0.06), 0 6px 20px rgba(32,35,33,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#1B1D1B;
+      --paper-light:#242624;
+      --ink:#EDE8DC;
+      --soft-ink:#B9B3A4;
+      --line:#3A3C38;
+      --cinnabar:#E2775A;
+      --deep-cinnabar:#F0977C;
+      --amber:#D9A94B;
+      --amber-bg:#3A2F16;
+      --green:#8FBF9C;
+      --green-bg:#1E2E22;
+      --card-bg:#242624;
+      --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1B1D1B;
+    --paper-light:#242624;
+    --ink:#EDE8DC;
+    --soft-ink:#B9B3A4;
+    --line:#3A3C38;
+    --cinnabar:#E2775A;
+    --deep-cinnabar:#F0977C;
+    --amber:#D9A94B;
+    --amber-bg:#3A2F16;
+    --green:#8FBF9C;
+    --green-bg:#1E2E22;
+    --card-bg:#242624;
+    --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    line-height:1.7;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 96px;}
+
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:0.08em;
+    color:var(--cinnabar);
+    font-weight:700;
+    text-transform:uppercase;
+  }
+  h1{
+    font-size:clamp(28px,4vw,38px);
+    margin:10px 0 6px;
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+  }
+  .subtitle{color:var(--soft-ink);font-size:16px;margin:0 0 32px;}
+  .meta{
+    display:flex;gap:18px;flex-wrap:wrap;
+    font-size:13px;color:var(--soft-ink);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:12px 0;margin-bottom:36px;
+  }
+
+  h2{
+    font-size:20px;
+    margin:44px 0 14px;
+    padding-bottom:8px;
+    border-bottom:2px solid var(--ink);
+  }
+
+  p{color:var(--ink);}
+  .lead{font-size:16px;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 20px;
+    margin:18px 0 8px;
+    font-size:13.5px;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:7px;}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none;}
+  .dot.done{background:var(--green);}
+  .dot.pending{background:var(--amber);}
+  .dot.support{background:var(--soft-ink);}
+
+  .diagram-card{
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:20px;
+    overflow-x:auto;
+    margin:18px 0 8px;
+  }
+  .diagram-card pre.mermaid{margin:0;min-width:640px;}
+
+  .stage-note{
+    font-size:13.5px;color:var(--soft-ink);
+    margin:0 0 28px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+    margin:14px 0 8px;
+  }
+  th,td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  th{
+    font-size:12px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--soft-ink);
+    font-weight:600;
+  }
+  .pill{
+    display:inline-block;
+    font-size:12px;
+    font-weight:600;
+    padding:2px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .pill.done{background:var(--green-bg);color:var(--green);}
+  .pill.pending{background:var(--amber-bg);color:var(--amber);}
+
+  .table-scroll{overflow-x:auto;}
+
+  footer{
+    margin-top:56px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:12.5px;
+    color:var(--soft-ink);
+  }
+
+  @media (max-width:520px){
+    .wrap{padding:32px 16px 72px;}
+    .meta{flex-direction:column;gap:4px;}
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="eyebrow">Lecture Voice Pipeline</div>
+  <h1>目前整條工作流長什麼樣子</h1>
+  <p class="subtitle">從投影片＋逐字稿＋聲音樣本，到 YouTube 上一支有縮圖、有字幕的講課影片——三段流程的現況地圖。</p>
+
+  <div class="meta">
+    <span>製圖日期：2026-08-23</span>
+    <span>對照依據：docs/BLUEPRINT_v1.md、docs/PROJECT_NOTEBOOK.md 續一～續六十一</span>
+    <span>狀態：四講已上線 YouTube，縮圖已完成第二輪修正</span>
+  </div>
+
+  <p class="lead">整條產線分三段：<strong>①內容製作</strong>把素材變成一支影片，<strong>②YouTube 上架配套</strong>把影片變成一個公開頁面，<strong>③人像視覺素材</strong>是還沒正式併入產出的輔助支線。下面的圖照實際做到的狀態畫，不是理想藍圖。</p>
+
+  <div class="legend">
+    <span><i class="dot done"></i>已完成並驗證過</span>
+    <span><i class="dot pending"></i>已知缺口，待處理（不阻塞現況）</span>
+    <span><i class="dot support"></i>輔助支線，尚未併入正式產出</span>
+  </div>
+
+  <div class="diagram-card">
+<pre class="mermaid">
+flowchart TD
+    A1["投影片 PPTX / PDF"]:::doneNode
+    A2["逐字稿或參考文章"]:::doneNode
+    A3["Zeal 聲音樣本（已核准參考片段）"]:::doneNode
+
+    subgraph PROD["① 內容製作"]
+        direction TB
+        B1["投影片轉逐頁圖片"]:::doneNode
+        B2["逐字稿工作台<br/>空白處才 AI 輔助起草，來源可追溯"]:::doneNode
+        B3{{"Zeal 人工核准逐字稿<br/>核准後改字即作廢"}}:::doneNode
+        B4["逐頁聲音克隆<br/>Qwen3-TTS，本地 GPU"]:::doneNode
+        B5["用實際音長算逐頁停留時間<br/>目標 15–18 分鐘"]:::doneNode
+        B6["影片組裝<br/>1080p MP4"]:::doneNode
+        B7{{"技術檢查 ＋ Zeal 試看放行"}}:::doneNode
+    end
+
+    subgraph PUB["② YouTube 上架配套"]
+        direction TB
+        C1["產字幕 SRT ＋ 說明文案 metadata"]:::doneNode
+        C2["上傳 YouTube"]:::doneNode
+        C3["說明欄／分類／播放清單優化<br/>對標 Gary Chen 頻道結構"]:::doneNode
+        C4["縮圖設計 ＋ 上傳<br/>依真實封面分析轉譯的規格"]:::doneNode
+        C5["字幕語言標籤誤標 en<br/>待 Zeal 於 Studio 手動修正"]:::pendingNode
+    end
+
+    subgraph FACE["③ 人像視覺素材（輔助支線）"]
+        direction TB
+        D1["訓練照片逐張篩選"]:::supportNode
+        D2["本地 LoRA 訓練<br/>v1 → v5 迭代"]:::supportNode
+        D3["目視比對驗收<br/>Zeal：沒差，先這樣"]:::supportNode
+    end
+
+    A1 --> B1
+    A2 --> B2
+    B1 --> B2
+    B2 --> B3
+    A3 --> B4
+    B3 --> B4
+    B4 --> B5
+    B5 --> B6
+    B6 --> B7
+    B7 --> C1
+    C1 --> C2
+    C2 --> C1b(( ))
+    C2 -.-> C5
+    C2 --> C3
+    C2 --> C4
+    D1 --> D2 --> D3
+    D3 -. 未來可能提供素材 .-> C4
+
+    style C1b fill:none,stroke:none
+
+    classDef doneNode fill:#E1EBE1,stroke:#3F6B4A,color:#233626,stroke-width:1.2px;
+    classDef pendingNode fill:#F4E9D2,stroke:#9C6B12,color:#4A360A,stroke-width:1.2px;
+    classDef supportNode fill:#ECEAE4,stroke:#7A756A,color:#3A362E,stroke-width:1.2px;
+</pre>
+  </div>
+  <p class="stage-note">虛線＝還沒真的接上、只是設計上的未來可能性；實線＝已經真的跑過至少一次。</p>
+
+  <h2>①内容製作：現在做到哪</h2>
+  <p>依 <code>docs/BLUEPRINT_v1.md</code> 的 M1～M9 設計，四講（成本／價值／價格走廊／因果報價）都已完整走過一輪：投影片轉圖 → 逐字稿（先擴寫到 15 分鐘以上，Zeal 現場給過三則具體回饋，逐頁配術語白話解釋）→ Zeal 人工核准 → 用他本人的克隆聲音逐頁合成 → 依實際音長組裝成 MP4 → 技術檢查通過後放行。</p>
+
+  <h2>②YouTube 上架配套：現在做到哪</h2>
+  <p>四支影片（Q1～Q4）都已上傳，各自有字幕、說明欄（仿 Gary Chen 頻道的「痛點→時間戳→CTA」結構）、分類與播放清單。縮圖這條線這次 session 走了三輪修正：先發現實作跟已核准的規格有落差（混了水彩、人像壓字）→ 改回規格 → 上傳 → Zeal 看了真實頻道畫面覺得那條朱砂分隔線突兀 → 拿掉重傳，目前四張已是最新版本。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>缺口</th><th>狀態</th><th>備註</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>字幕語言標籤誤標 <code>en</code>（內容其實是中文）</td>
+        <td><span class="pill pending">待處理</span></td>
+        <td>兩種 API 修法都試過並失敗，只能 Zeal 到 YouTube Studio 網頁手動刪除重傳。</td>
+      </tr>
+      <tr>
+        <td>GPU smoke test 腳本不支援純離線本機路徑</td>
+        <td><span class="pill pending">待處理</span></td>
+        <td>不影響現況，機器目前連得到網，留給未來要支援離線部署時再補。</td>
+      </tr>
+      <tr>
+        <td>語速校正值曾用合成占位聲音算</td>
+        <td><span class="pill done">已解決</span></td>
+        <td>已用 Zeal 真人錄音重算，兩次差異僅 2.7%，不影響任何已核准逐字稿。</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>③人像視覺素材：一條還沒正式接上的支線</h2>
+  <p>這是這次 session 花最多力氣的部分，但目前<strong>還沒有任何正式縮圖或影片用到它</strong>——現有四張縮圖用的是 Zeal 既有的一張職業照，不是 LoRA 生成的臉。訓練照片從 27 張篩到 37 張，模型跑了 v1 到 v5 五輪，v4 的眼睛、v5 的鼻子嘴巴各有優勢，也試過把兩版權重各半融合，結果比較像 v5、沒有明顯保留 v4 的特質。Zeal 的結論是「沒差，先這樣吧」——這條線目前收斂在這裡，之後若要正式用在縮圖或影片素材上，需要再重新啟動。</p>
+
+  <footer>
+    本圖依 <code>docs/BLUEPRINT_v1.md</code> 與 <code>docs/PROJECT_NOTEBOOK.md</code>（續一至續六十一）逐條核對後繪製，反映 2026-08-23 當下實際完成的狀態，不是尚未施工的理想藍圖。
+  </footer>
+
+</div>
