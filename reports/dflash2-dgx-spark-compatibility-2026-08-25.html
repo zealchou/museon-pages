@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>dFlash 2 × NVIDIA DGX Spark 相容性查證</title>
+  <style>
+    :root { --ink:#17212b; --muted:#596674; --paper:#fbfaf7; --line:#dce2e8; --accent:#086c8d; --good:#176b45; --warn:#9a5b00; --bad:#a23a35; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#edf1f3; font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif; }
+    main { max-width:960px; margin:30px auto; padding:clamp(24px,5vw,64px); background:var(--paper); box-shadow:0 8px 35px rgba(31,53,67,.1); }
+    h1,h2,h3 { line-height:1.3; letter-spacing:.01em; } h1 { font-size:clamp(29px,5vw,46px); margin:.1em 0 .25em; } h2 { margin:2.4em 0 .6em; padding-top:.2em; border-top:1px solid var(--line); font-size:1.55em; } h3 { margin:1.45em 0 .35em; font-size:1.1em; }
+    p { margin:.65em 0; } .kicker { color:var(--accent); font-weight:700; letter-spacing:.12em; font-size:.82em; } .date { color:var(--muted); }
+    .verdict { margin:1.5em 0 2em; padding:1.25em 1.35em; border-left:5px solid var(--good); background:#edf8f2; font-size:1.08em; }
+    .verdict strong { color:var(--good); } .caution { padding:1em 1.2em; background:#fff6e8; border-left:4px solid #d98b18; margin:1em 0; }
+    .danger { padding:1em 1.2em; background:#fff0ef; border-left:4px solid var(--bad); margin:1em 0; }
+    table { width:100%; border-collapse:collapse; margin:1em 0 1.3em; font-size:.94em; } th,td { text-align:left; vertical-align:top; padding:.75em .7em; border-bottom:1px solid var(--line); } th { color:#23435a; background:#eef4f6; } code { padding:.1em .3em; background:#edf0f2; border-radius:3px; font-size:.9em; overflow-wrap:anywhere; } a { color:#006b91; text-underline-offset:2px; } ul,ol { padding-left:1.25em; } li { margin:.4em 0; } .small { color:var(--muted); font-size:.9em; } .tag { display:inline-block; padding:.1em .48em; border-radius:999px; font-size:.78em; font-weight:700; white-space:nowrap; } .yes { background:#dff3e7; color:#176b45; } .partial { background:#fff0cf; color:#825000; } .no { background:#f9dfdc; color:#983630; }
+    @media print { body{background:#fff} main{margin:0;box-shadow:none;max-width:none} a{color:#000} }
+  </style>
+</head>
+<body>
+<main>
+  <div class="kicker">技術查證報告</div>
+  <h1>dFlash 2 能否跑在 NVIDIA DGX Spark？</h1>
+  <p class="date">查證日期：2026-08-25　｜　範圍：只做文件與外部實測查證；未在任何機器安裝或執行。</p>
+
+  <section class="verdict">
+    <strong>結論：可以試跑，但不是「現有任意 vLLM 直接加一個參數」的等級。</strong><br>
+    已找到公開的單機 DGX Spark／GB10／aarch64 vLLM 配方及量測，也有 vLLM 主線 PR 的 GB10 實測紀錄；因此硬體與 ARM64 並非已知阻斷點。真正的門檻是：必須使用含 DFlash 2 支援的新版／主線 vLLM，配對公開的 DFlash 2 草稿模型，並為 GB10 明確選擇可用的 attention backend 與保守的統一記憶體上限。若目前服務不是 Qwen3.8-27B，則不能把這個 Qwen 專用草稿模型套到任意目標模型上。
+  </section>
+
+  <h2>給創辦人的白話版</h2>
+  <p><strong>dFlash 2 是「投機解碼」加速器。</strong>主模型每次本來只生一個 token；它多帶一個很小的「草稿模型」，先平行猜一小段，主模型一次驗收。猜中多個就等於一次主模型運算產出多個 token；猜錯不會改寫答案，只是那段少被採用，所以速度增益會隨工作內容變動。</p>
+  <p>相較第一代 DFlash，第二代多了兩個小機制：讓相鄰草稿 token 彼此參考的局部動態卷積，以及從每個位置的多個候選 token 選出連貫路徑的 selector。這是在提高「一次猜的一整段有多少會被主模型收下」，不是更換主模型或降低答案精度。官方稱驗證機制可維持目標模型的輸出分布。<a href="https://inco.ai/blog/dflash2/">Inco 官方文章</a>、<a href="https://github.com/vllm-project/vllm/pull/52816">vLLM PR #52816</a></p>
+
+  <h2>1. dFlash 2 是什麼、效果多大</h2>
+  <table>
+    <thead><tr><th>問題</th><th>答案與證據</th></tr></thead>
+    <tbody>
+      <tr><td>解決什麼</td><td>傳統投機解碼的草稿模型也要逐 token 生成；DFlash 先把一個 block 的位置全部平行猜出，再讓大模型整段驗證。DFlash 2 則改善「個別 token 看似合理、合在一起卻不通順」與 block 尾端猜測變差兩個問題。<a href="https://inco.ai/blog/dflash2/">官方原理說明</a></td></tr>
+      <tr><td>官方宣稱</td><td>相對 DFlash，每次驗證可多產出逾 20%，cycle latency 約增加 1%，在其 benchmark 的增益為 16–25%；Qwen3.8-27B + SGLang、batch 1 為一般自回歸解碼的 2.7–3.4×。這是供應商 benchmark，不是 Spark 的保證值。<a href="https://inco.ai/blog/dflash2/">官方數字</a></td></tr>
+      <tr><td>為何未必每個請求都快</td><td>加速取決於草稿接受率；官方也說工作負載不同。公開 GB10 A/B 中，一般新寫程式碼是 +39.2%，但高度可從 prompt 複製的編輯幾乎持平，且另一種 DSpark 草稿反而更快。<a href="https://github.com/gitcommit90/qwen38-27b-dgx-spark">GB10 配方的 benchmark</a></td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. 支援範圍與版本現況</h2>
+  <table>
+    <thead><tr><th>項目</th><th>查證結果</th><th>對 Spark 的意義</th></tr></thead>
+    <tbody>
+      <tr><td>已公開的 DFlash 2 模型</td><td><span class="tag partial">限定配對</span> 官方開源庫列出目前 DFlash 2 checkpoint 為 <code>Qwen3.8-27B</code> 與 <code>Muse-Glimmer-30B</code>；不是任意模型的通用加速開關。<a href="https://github.com/z-lab/dflash">z-lab/dflash README</a></td><td>若你的目標不是 Qwen3.8-27B，這份 Qwen 草稿不可直接套用；要等相同 target 的 DFlash2 drafter。</td></tr>
+      <tr><td>vLLM</td><td><span class="tag yes">可用，剛併主線</span> Inco 的安裝指令原本指定 vLLM PR #52816；該 PR 已於 2026-08-21 merge 到 <code>main</code>。它新增 <code>DFlash2DraftModel</code>、局部卷積與 selector，且要求 V2 model runner，否則可能靜默走回 DFlash 1 行為。<a href="https://inco.ai/blog/dflash2/">官方指令</a>、<a href="https://github.com/vllm-project/vllm/pull/52816">PR merge 與 V2 說明</a></td><td>不能假定已發布的舊 vLLM image 已含功能；需確認 image 的 commit/版本真的包含 PR #52816。</td></tr>
+      <tr><td>SGLang</td><td><span class="tag partial">可用，但公開 build 尚未完整收錄</span> Inco 提供從 main 安裝的 DFLASH 指令；SGLang 的 DGX Spark 驗證 issue 指出當時公開 build 尚未直接附 DFLASH2，採用 pinned image 加 PR patch。<a href="https://inco.ai/blog/dflash2/">官方指令</a>、<a href="https://github.com/sgl-project/sglang/issues/35860">SGLang issue #35860</a></td><td>是可行的替代路，但若現有服務是 vLLM，無需為此先換引擎。</td></tr>
+      <tr><td>llama.cpp / Ollama / oMLX</td><td><span class="tag partial">尚非全部穩定版</span> 官方文章給 llama.cpp PR #27342、Ollama branch 與 oMLX 路徑；截至查證時 llama.cpp PR #27342 仍為 Open。<a href="https://inco.ai/blog/dflash2/">官方操作頁</a>、<a href="https://github.com/ggml-org/llama.cpp/pull/27342">llama.cpp PR 狀態</a></td><td>不是現有 vLLM 服務的最短路徑。</td></tr>
+      <tr><td>CUDA / GPU 架構</td><td><span class="tag yes">CUDA Blackwell 實績存在</span> Inco 的 vLLM 路徑是 NVIDIA CUDA；DGX Spark 是 ARM64 CPU + 整合 Blackwell GPU + 128GB 統一記憶體。<a href="https://docs.nvidia.com/dgx/dgx-spark/system-overview.html">NVIDIA Spark 規格</a></td><td>CPU 是 ARM64 不妨礙 GPU CUDA 路徑；但容器必須是 aarch64 variant，且底層 kernels 必須涵蓋 SM121。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. 與 GB10／DGX Spark 的相容性判定</h2>
+  <h3>硬體與 ARM64：有實測，不只是推論</h3>
+  <p>DGX Spark 的已知條件為 ARM64 CPU、整合 Blackwell GPU、128GB 統一記憶體。<a href="https://docs.nvidia.com/dgx/dgx-spark/system-overview.html">NVIDIA 官方系統說明</a> 一個公開配方明列使用 <code>vllm/vllm-openai:v0.27.1-aarch64</code>，在 aarch64 GB10 以 DFlash 2 運行；另一個 SGLang 官方 GitHub issue 也列出「DGX Spark / NVFP4 / DFLASH2 / single」組合與實測。<a href="https://github.com/gitcommit90/qwen38-27b-dgx-spark">aarch64 vLLM 配方</a>、<a href="https://github.com/sgl-project/sglang/issues/35860">SGLang 驗證條目</a></p>
+  <p><strong>但：</strong>Inco 官方文章沒有對 DGX、GB10、ARM 或 aarch64 做明確支援宣告。因此正確表述是「已有可重現社群實測與上游開發紀錄」，不是「Inco 已發布 Spark 官方支援矩陣」。</p>
+
+  <h3>最重要的具體限制</h3>
+  <ol>
+    <li><strong>版本：</strong>DFlash 2 的 vLLM 功能 8/21 才併到主線。舊穩定 image 即使已有 DFlash 1，也不會自動有 DFlash 2 的 selector／卷積；要確認包含 PR #52816，並確認啟用 V2 model runner。<a href="https://github.com/vllm-project/vllm/pull/52816">vLLM PR #52816</a></li>
+    <li><strong>模型配對：</strong>草稿模型必須和主模型架構／tokenizer 對應。對目前公開 Qwen 路線，是 <code>incoai/Qwen3.8-27B-DFlash2</code> 配 <code>Qwen3.8-27B</code>，不是可給任一 vLLM 模型使用的附掛包。<a href="https://inco.ai/blog/dflash2/">Inco 的 vLLM 範例</a></li>
+    <li><strong>GB10 attention backend：</strong>在 stock aarch64 vLLM 0.26.0 上，DFlash 的非 causal attention 自動選到 FlashAttention2，會在 SM121 device-side assert；issue 指出需顯式指定 backend 作為 workaround。公開成功配方採 FlashInfer。<a href="https://github.com/vllm-project/vllm/issues/50707">vLLM issue #50707</a>、<a href="https://github.com/sgl-project/sglang/issues/35860">SGLang Spark 實測設定</a></li>
+    <li><strong>統一記憶體：</strong>GB10 的 CPU/GPU 共用同一池，KV cache、草稿模型、CUDA graph 與 autotune 都會吃同一份記憶體。成功的 Spark 配方要求保留充足 headroom；不能照離散 GPU 的 GPU-memory-utilization 直覺照抄。<a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/dgx-spark-porting-guide.pdf">NVIDIA UMA 說明</a>、<a href="https://github.com/sgl-project/sglang/issues/35860">Spark 實測的 memory caveat</a></li>
+    <li><strong>量化與 LM head：</strong>DFlash 2 使用 target 的 LM head 產生候選；某些 NVFP4／量化 head 會被拒絕或需要後續 quant mapping 修正。公開成功配方使用「整體 NVFP4、但 DFlash-facing LM head 未量化」的 checkpoint 來避開此問題。<a href="https://github.com/gitcommit90/qwen38-27b-dgx-spark">配方說明</a>、<a href="https://github.com/vllm-project/vllm/pull/52816">上游量化問題討論</a></li>
+  </ol>
+
+  <h2>4. 找到的 DGX Spark／GB10 實測</h2>
+  <table>
+    <thead><tr><th>來源層級</th><th>發現</th><th>可信度與限制</th></tr></thead>
+    <tbody>
+      <tr><td>vLLM 上游 PR</td><td>PR #52816 的討論記錄：GB10／SM121、TP=1、NVFP4 target、<code>k=7</code>、FlashInfer／FP8 KV cache；BF16 draft 報 41.3 tok/s，FP8 draft 報 43.8 tok/s。PR 已 merge。<a href="https://github.com/vllm-project/vllm/pull/52816">來源</a></td><td><span class="tag yes">最高</span> 上游專案的公開開發紀錄；是 PR 討論實測，不是官方 release benchmark。</td></tr>
+      <tr><td>公開 vLLM 配方</td><td>gitcommit90 的 repo 專為「Qwen3.8-27B + DFlash 2 on DGX Spark」；指定 aarch64 image、PR patch，並公布 Qwen NVFP4 的新寫程式碼 44.46 tok/s、接受率 64.4%。<a href="https://github.com/gitcommit90/qwen38-27b-dgx-spark">README</a>、<a href="https://github.com/gitcommit90/qwen38-27b-dgx-spark/blob/main/bench_results_dflash2.json">原始 benchmark JSON</a></td><td><span class="tag partial">中高</span> 有可讀設定與原始數據，但屬社群配方，未由 Inco/NVIDIA 獨立背書。</td></tr>
+      <tr><td>SGLang 上游 issue</td><td>官方 sglang repo 的 issue 列出實機 GB10（ASUS Ascent GX10、128GB 統一記憶體）DFlash2 cell，並記錄 vLLM 之外的 SGLang 實測與安全的 <code>flashinfer</code>／memory 設定。<a href="https://github.com/sgl-project/sglang/issues/35860">來源</a></td><td><span class="tag partial">中</span> issue 標題寫 verified，但該 cell 當時仍是「Final Verification In Progress」；可當可重現證據，不能說成正式 released support。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. 對這台「正在跑 vLLM」的建議</h2>
+  <p><strong>答案拆成兩層：</strong></p>
+  <ul>
+    <li><strong>能不能在 GB10 裝來用？可以，條件式可行。</strong>已有同硬體、同 ARM64、同 vLLM 類型的公開實測；不是 CPU 架構或統一記憶體本身不相容。</li>
+    <li><strong>能不能直接對現有服務原地開啟？不能直接保證。</strong>必須先確認現有 target 是否為 Qwen3.8-27B，現有 vLLM build 是否含 8/21 合併的 DFlash2 code，現有量化 checkpoint 的 LM head 是否相容，以及 backend/memory 設定是否是 GB10 安全值。</li>
+  </ul>
+  <div class="caution"><strong>最小、低風險試跑前置：</strong>使用獨立 image／不同 port，不覆寫既有生產 vLLM；選 Qwen3.8-27B target + <code>incoai/Qwen3.8-27B-DFlash2</code>；以含 PR #52816 的 vLLM main/後續正式 release 或已驗證 patch 建置；明確選 Spark 已驗證的 attention backend；把統一記憶體配額先設保守，確認單流輸出、接受率與 host 可用記憶體，再談併入正式服務。這是研究建議，不代表本次已安裝或驗證你的既有環境。</div>
+  <div class="danger"><strong>不建議：</strong>在目前生產服務上直接 pip upgrade 或替換 container；也不要把 DFlash2 drafter 套到不同家族的 target。DFlash 2 不是無條件、通用的 vLLM runtime toggle。</div>
+
+  <h2>6. 否定結論與搜尋範圍</h2>
+  <p><strong>沒有找到「Inco 官方明示支援 DGX Spark／GB10／ARM64」的聲明。</strong>這個否定只針對官方明示，不是說無人跑過：在 Inco dFlash2 文章內對 <code>DGX</code>、<code>GB10</code>、<code>ARM</code>、<code>aarch64</code> 共 4 個字串檢索皆為 0 命中；z-lab/dflash README 對 <code>aarch64</code> 亦為 0。相反地，本報告上節列出了 3 條 GB10 實測證據。<a href="https://inco.ai/blog/dflash2/">Inco 文章</a>、<a href="https://github.com/z-lab/dflash">z-lab README</a></p>
+  <p><strong>沒有宣稱「所有 DFlash2 target 都可在 Spark 跑」。</strong>公開 DFlash2 checkpoint 目前僅明列 Qwen3.8-27B、Muse-Glimmer-30B；因此其他模型一律視為待確認。<a href="https://github.com/z-lab/dflash">支援模型清單</a></p>
+  <p class="small">查詢方法：共 15 條針對性網頁搜尋（Inco／z-lab、vLLM PR &amp; issues、SGLang、NVIDIA Developer Forum、GitHub）與 9 次一手頁面文字檢索；主要檢索詞包含「DFlash 2 aarch64」、「DFlash 2 DGX Spark」、「DFlash2 GB10」、「incoai/Qwen3.8-27B-DFlash2 DGX Spark」、「vLLM DFlash2 SM121」。未把搜尋不到的內容包裝成相容性結論。</p>
+
+  <h2>來源</h2>
+  <ol>
+    <li><a href="https://inco.ai/blog/dflash2/">Inco AI — DFlash 2: Keep Drafting Parallel</a>（原理、官方數字、各引擎操作入口）</li>
+    <li><a href="https://github.com/z-lab/dflash">z-lab/dflash</a>（已公開 checkpoint 與框架支援範圍）</li>
+    <li><a href="https://github.com/vllm-project/vllm/pull/52816">vLLM PR #52816</a>（DFlash2 實作已 merge、V2 runner 要求、GB10 實測與量化限制）</li>
+    <li><a href="https://docs.nvidia.com/dgx/dgx-spark/system-overview.html">NVIDIA DGX Spark System Overview</a>、<a href="https://docs.nvidia.com/dgx/dgx-spark-porting-guide/dgx-spark-porting-guide.pdf">Porting Guide</a>（ARM64／Blackwell／UMA 規格）</li>
+    <li><a href="https://github.com/gitcommit90/qwen38-27b-dgx-spark">gitcommit90/qwen38-27b-dgx-spark</a>（公開 aarch64 vLLM 配方與 benchmark）</li>
+    <li><a href="https://github.com/sgl-project/sglang/issues/35860">SGLang issue #35860</a>（GB10 DFlash2 實測與設定 caveat）</li>
+    <li><a href="https://github.com/vllm-project/vllm/issues/50707">vLLM issue #50707</a>（GB10 stock attention auto-select 的已知故障）</li>
+  </ol>
+</main>
+</body>
+</html>
