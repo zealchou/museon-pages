@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SoundOn 公開 API、MCP、上傳與 YouTube 匯入方式查證報告">
+  <title>SoundOn API／MCP 與 Podcast 上傳方式查證</title>
+  <style>
+    :root { --ink:#16202a; --muted:#5f6d79; --paper:#fffdf8; --line:#dfe6e8; --accent:#086d72; --soft:#eaf6f4; --warn:#fff3d8; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#f4f6f5; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif; font-size:18px; line-height:1.75; }
+    main { width:min(920px, calc(100% - 32px)); margin:0 auto; padding:40px 0 72px; }
+    article { background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:clamp(24px,5vw,56px); box-shadow:0 8px 28px rgba(22,32,42,.06); }
+    h1,h2,h3 { line-height:1.32; color:#102f33; }
+    h1 { font-size:clamp(30px,5vw,44px); margin:0 0 10px; letter-spacing:-.03em; }
+    h2 { font-size:clamp(24px,3.5vw,30px); margin:48px 0 14px; padding-top:6px; border-top:1px solid var(--line); }
+    h3 { font-size:22px; margin:28px 0 8px; }
+    p,li { max-width:74ch; }
+    .meta { margin:0; color:var(--muted); font-size:16px; }
+    .lead { font-size:20px; margin:28px 0; }
+    .answer { border-left:5px solid var(--accent); padding:18px 20px; background:var(--soft); border-radius:0 12px 12px 0; }
+    .caution { background:var(--warn); padding:16px 20px; border-radius:12px; }
+    a { color:#006d73; text-decoration-thickness:1px; text-underline-offset:3px; overflow-wrap:anywhere; }
+    table { display:block; width:100%; overflow-x:auto; border-collapse:collapse; font-size:16px; margin:18px 0; }
+    th,td { padding:13px; border:1px solid var(--line); vertical-align:top; min-width:140px; text-align:left; }
+    th { background:#f1f5f4; color:#21484b; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9em; background:#edf1f1; padding:.1em .3em; border-radius:4px; }
+    .tag { display:inline-block; color:#07565b; background:#dff3ef; padding:2px 9px; border-radius:999px; font-size:14px; font-weight:700; }
+    footer { color:var(--muted); font-size:15px; margin-top:36px; }
+    @media print { body { background:white; } main { width:100%; padding:0; } article { box-shadow:none; border:0; } }
+  </style>
+</head>
+<body>
+<main>
+<article>
+  <p class="tag">公開資料查證報告</p>
+  <h1>SoundOn API／MCP 與 Podcast 上傳方式查證</h1>
+  <p class="meta">查證日期：2026 年 8 月 28 日（Asia/Taipei）｜範圍：公開文件與公開目錄；未登入帳號、未執行真實上傳</p>
+
+  <p class="lead">本報告區分三件容易混淆的事：<strong>外部程式可直接發布</strong>、<strong>在 SoundOn 後台設定的自動同步／排程</strong>、以及<strong>RSS 對收聽平台的後續更新</strong>。後兩者不是可供 AI agent 呼叫的 SoundOn 發布 API。</p>
+
+  <section class="answer">
+    <strong>結論摘要：</strong>在下列已列明的官方文件、官方 MCP Registry 與公開 GitHub 搜尋範圍內，<strong>查無</strong>能讓外部工具／AI agent 直接上傳音檔、建立或發布 SoundOn 集數的公開 SoundOn API，也查無 SoundOn MCP server。官方已證實的發布入口是 SoundOn <strong>網頁版 Hosting 後台</strong>；可用的非手動持續匯入方式則是先在後台設定的 <strong>YouTube Playlist 匯入</strong>。這是有範圍的查無結論，不等於聲稱不存在未公開介面。</section>
+
+  <h2>① 公開 API 或 MCP：查證結果</h2>
+  <h3>公開 API（供外部建立／上傳／發布集數）</h3>
+  <p><strong>查無公開文件。</strong>SoundOn 說明中心以 <code>API</code> 搜尋，當日有 <strong>2 筆</strong>結果；兩篇都在說明<strong>由 Apple Podcast Connect 產生的 Apple API 金鑰</strong>，再由使用者把金鑰檔上傳到 SoundOn 後台，並不是 SoundOn 對外提供的集數上傳 API。兩篇的操作也都回到「單集列表 → 新增單集」的後台頁面。來源：<a href="https://support.soundon.fm/zh-TW/?q=API">SoundOn Help Center：API 搜尋（2 筆）</a>、<a href="https://support.soundon.fm/zh-TW/articles/10428952-%E5%9C%A8-soundon-hosting-%E5%BE%8C%E5%8F%B0%E4%B8%B2%E6%8E%A5-apple-podcasts-%E8%A8%82%E9%96%B1%E6%9C%8D%E5%8B%99">Apple Podcasts 訂閱服務串接</a>、<a href="https://support.soundon.fm/zh-TW/articles/15188872-%E5%A6%82%E4%BD%95%E4%B8%8A%E5%82%B3-apple-podcast-%E8%A8%82%E9%96%B1%E7%8D%A8%E5%AE%B6%E5%96%AE%E9%9B%86">Apple 訂閱獨家單集上傳</a>。</p>
+
+  <h3>MCP（Model Context Protocol）</h3>
+  <p><strong>查無 SoundOn MCP server。</strong>SoundOn 說明中心以 <code>MCP</code> 搜尋為 <strong>0 筆</strong>；官方 MCP Registry 的 <code>search=SoundOn</code> 回應 <code>metadata.count: 0</code>；GitHub repositories 以 <code>SoundOn MCP</code> 搜尋回應 <code>total_count: 0</code>。來源：<a href="https://support.soundon.fm/zh-TW/?q=MCP">SoundOn Help Center：MCP 搜尋（0 筆）</a>、<a href="https://registry.modelcontextprotocol.io/v0.1/servers?search=SoundOn&amp;limit=100">官方 MCP Registry 查詢（0 筆）</a>、<a href="https://api.github.com/search/repositories?q=SoundOn%20MCP&amp;per_page=100">GitHub repository 查詢（0 筆）</a>。官方 Registry 的查詢參數與結果欄位可見於其<a href="https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/api/official-registry-api.md">官方 API 說明</a>。</p>
+
+  <div class="caution"><strong>否定結論的範圍與計數：</strong>本次查了 SoundOn 說明中心（<code>API</code> 2 筆、<code>MCP</code> 0 筆）、官方 MCP Registry（SoundOn 0 筆）、GitHub repository 搜尋（<code>SoundOn MCP</code> 0 筆），並檢視 SoundOn 官方上傳／匯入文件。這些證據足以支持「在公開文件與公開目錄內查無」；不把它擴張為「所有未公開或未被索引的端點絕對不存在」。</div>
+
+  <h2>② 沒有 API／MCP 時，有哪些自動化上傳管道？</h2>
+  <table>
+    <thead><tr><th>方式</th><th>是否可免每集手動上傳</th><th>證據與邊界</th></tr></thead>
+    <tbody>
+      <tr><td><strong>YouTube Playlist 匯入</strong></td><td>是，但須先在 SoundOn Hosting 後台完成匯入設定。</td><td>官方支援匯入所有或個別 Playlist；完成後，新上傳至 YouTube 的集數會持續自動匯入。同步檢查頻率為每 36–48 小時，另有處理延遲。私人 Playlist／私人影片不會被匯入，Premier 不在自動同步類型內。<a href="https://support.soundon.fm/zh-TW/articles/4535653-%E5%A6%82%E4%BD%95%E5%BE%9E-youtube-%E5%8C%AF%E5%85%A5%E7%AF%80%E7%9B%AE">官方 YouTube 匯入說明</a></td></tr>
+      <tr><td><strong>SoundOn 後台排程</strong></td><td>不免上傳；可在已上傳後設定未來上線時間。</td><td>SoundOn 官方功能頁說明可設定未來發布時間；這是後台排程，不是外部工具送檔的介面。<a href="https://podcasters.soundon.fm/features/distribution/">官方多平台上架／排程頁</a></td></tr>
+      <tr><td><strong>RSS 對收聽平台更新</strong></td><td>不免向 SoundOn 上傳；免重複到每個收聽平台手動發布。</td><td>至少一集已發布後可提交 RSS；各平台通過後，後台上傳的新集數會同步。每一個收聽平台只需首次手動提交一次。<a href="https://support.soundon.fm/zh-TW/articles/6951212-%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E6%96%B0%E9%9B%86%E6%95%B8">官方建立新集數說明</a></td></tr>
+    </tbody>
+  </table>
+  <p><strong>Zapier／Make／IFTTT：</strong>本次在三者的官方目錄檢視入口及定向搜尋中，沒有取得可證明「建立 SoundOn 集數」或「上傳音檔到 SoundOn」的整合頁，故<strong>查無可驗證的官方或第三方直接上傳整合</strong>。查詢詞為 <code>SoundOn Zapier Make IFTTT integration podcast upload</code>、<code>site:zapier.com/apps "SoundOn"</code>、<code>site:make.com/en/integrations "SoundOn"</code>、<code>site:ifttt.com SoundOn</code>；可作證的 SoundOn 專用發布整合頁為 <strong>0 筆</strong>。檢視入口：<a href="https://zapier.com/apps">Zapier App Directory</a>、<a href="https://www.make.com/en/integrations">Make App Integrations</a>、<a href="https://ifttt.com/explore/services">IFTTT Services</a>。這代表本次沒有找到可驗證的方案，並非對這三個市場的永恆、絕對否定；若日後有整合上架，應以該整合的實際動作頁與 SoundOn 授權文件重新確認。</p>
+  <p>Zapier、Make 或 IFTTT 的通用 webhook／HTTP 功能本身<strong>不能替代</strong>目的端 API：Zapier 明示 webhook/API 動作需要目的端 API URL 與（如有）認證資訊；本次沒有找到可公開引用的 SoundOn 集數上傳端點。來源：<a href="https://help.zapier.com/hc/en-us/articles/44391650357005-Send-API-requests-in-Zap-workflows">Zapier API Request 前提</a>。</p>
+
+  <h2>③ YouTube 音軌要怎麼沿用為 Podcast？</h2>
+  <h3>優先選擇：官方 YouTube 匯入，而非自行從影片抽音檔</h3>
+  <p>若影片／頻道由你控制，SoundOn 已提供 YouTube 匯入流程：在 Hosting 首頁選「匯入 Podcast」→「YouTube 匯入」，依指示以頻道資訊驗證，再選擇全部或個別 Playlist。對這個流程，官方沒有要求你先輸出純音檔或先轉 MP3；因此在<strong>此官方匯入路徑</strong>下，本報告查到的文件沒有列出使用者須手動轉檔的步驟。來源：<a href="https://support.soundon.fm/zh-TW/articles/4535653-%E5%A6%82%E4%BD%95%E5%BE%9E-youtube-%E5%8C%AF%E5%85%A5%E7%AF%80%E7%9B%AE">官方 YouTube 匯入說明</a>。</p>
+  <p>但已匯入的既有集數不會因 YouTube 後續修改而再次同步；官方要求回到先前匯入的單集音檔更新。新上傳影片才會持續自動匯入，且需預留 36–48 小時的抓取週期和處理時間。來源同上。</p>
+
+  <h3>若改走手動上傳：必須重新輸出「真正的 MP3」</h3>
+  <ul>
+    <li>SoundOn 目前只接受 <strong>MP3</strong>，單檔須 <strong>小於 250 MB</strong>，長度未限制。</li>
+    <li>官方建議：<strong>44,100 Hz</strong> 取樣頻率、<strong>16 或 24 bit</strong>、<strong>192 kbps</strong>。</li>
+    <li>不能把 <code>.aac</code>／<code>.m4a</code> 只改副檔名為 <code>.mp3</code>；必須是實際轉出的 MP3。官方 FAQ 亦提醒，假 MP3 可能造成平台播放問題。</li>
+  </ul>
+  <p>來源：<a href="https://support.soundon.fm/zh-TW/articles/4133006-%E4%B8%8A%E5%82%B3%E9%9F%B3%E6%AA%94%E6%9C%89%E8%A6%8F%E6%A0%BC%E9%99%90%E5%88%B6%E5%97%8E-%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%89%8B%E6%A9%9F%E4%B8%8A%E5%82%B3%E5%97%8E">官方音檔規格</a>、<a href="https://support.soundon.fm/zh-TW/articles/9392590-soundon-%E5%B8%B8%E8%A6%8B%E5%95%8F%E9%A1%8C-faq">官方 FAQ</a>、<a href="https://support.soundon.fm/zh-TW/articles/5657120-%E7%82%BA%E4%BB%80%E9%BA%BC%E5%96%AE%E9%9B%86%E5%9C%A8-apple-%E6%9C%89%E5%87%BA%E7%8F%BE-%E4%BD%86%E6%98%AF%E6%8C%89%E4%B8%8B%E6%92%AD%E6%94%BE%E9%8D%B5%E7%84%A1%E6%B3%95%E6%92%AD%E6%94%BE">官方播放排錯</a>。</p>
+  <div class="caution"><strong>音質資訊的誠實邊界：</strong>本次查到的 SoundOn YouTube 匯入文件沒有說明匯入後使用的音訊 codec、bitrate、是否重新編碼，或是否保留原始音質。因此不宣稱「直接匯入一定保留原音質」或「一定會降質」。若音質控制是必要條件，能被官方規格直接支持的路徑是：從你持有的原始製作檔另行輸出符合上述 MP3 參數的純音檔，再用網頁後台上傳。</div>
+
+  <h2>④ 若走手動：SoundOn 官方上傳流程</h2>
+  <ol>
+    <li>使用<strong>網頁版 Hosting 平台</strong>（官方說明：不能用手機上傳）。</li>
+    <li>進入「單集列表」，按右上「＋新增單集」或側欄的「＋」。</li>
+    <li>先上傳符合規格的真實 MP3。</li>
+    <li>填寫必填資料：標題、描述、上架類型，以及是否同意動態廣告置入；可選擇季／集、預計發佈時間與單集封面。</li>
+    <li>選擇「暫存草稿」或「儲存」正式發布。</li>
+    <li>至少有一集已發布後，才可把節目的 RSS 提交到收聽平台；通過後，各平台會隨 SoundOn 後台的新集數更新。</li>
+  </ol>
+  <p>來源：<a href="https://support.soundon.fm/zh-TW/articles/6951212-%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E6%96%B0%E9%9B%86%E6%95%B8">SoundOn：如何建立新集數？</a>、<a href="https://support.soundon.fm/zh-TW/articles/4133006-%E4%B8%8A%E5%82%B3%E9%9F%B3%E6%AA%94%E6%9C%89%E8%A6%8F%E6%A0%BC%E9%99%90%E5%88%B6%E5%97%8E-%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%89%8B%E6%A9%9F%E4%B8%8A%E5%82%B3%E5%97%8E">SoundOn：音檔規格／裝置限制</a>。</p>
+
+  <h2>可採取的決策</h2>
+  <p><strong>要由 agent 直接送檔發布：</strong>目前沒有可查證的 SoundOn API／MCP 可採用，不能把瀏覽器自動化或未文件化請求當成官方支援方案。</p>
+  <p><strong>來源本來就是 YouTube：</strong>採官方 YouTube 匯入，接受設定後的同步週期與既有集數不回同步的限制。</p>
+  <p><strong>要可控音質且每集內容不同：</strong>輸出真實 MP3（< 250 MB；建議 44.1 kHz、16/24 bit、192 kbps）後，以網頁後台手動上傳並視需要排程。</p>
+
+  <h2>查證方法與限制</h2>
+  <p>優先使用 SoundOn 官方 Help Center 與官方產品頁；MCP 採官方 Registry；自動化平台採 Zapier、Make、IFTTT 官方目錄。已檢視的定向搜尋詞：<code>SoundOn podcast hosting public API documentation</code>、<code>SoundOn podcast MCP server</code>、<code>site:soundon.fm API OR MCP</code>、<code>SoundOn Zapier Make IFTTT integration podcast upload</code>、<code>site:zapier.com/apps "SoundOn"</code>、<code>site:make.com/en/integrations "SoundOn"</code>、<code>site:ifttt.com SoundOn</code>。未登入 SoundOn、未做實際上傳，也未探測私有或未文件化端點。</p>
+
+  <footer>本報告僅整理公開技術與流程資訊；平台功能、格式與整合目錄可能更新，實作前請重新開啟本文所列官方來源確認。</footer>
+</article>
+</main>
+</body>
+</html>
