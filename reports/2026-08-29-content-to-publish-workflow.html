@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>從討論主題到三平台上架｜ONE MUSE 內容產線</title>
+  <style>
+    :root {
+      --paper: #f2eee5;
+      --paper-light: #faf8f1;
+      --surface: #fffdf8;
+      --ink: #202321;
+      --ink-soft: #4b514e;
+      --ink-faint: #747a76;
+      --line: #d8d0c1;
+      --line-strong: #b8ae9c;
+      --cinnabar: #b74b32;
+      --cinnabar-deep: #8f3828;
+      --moss: #63736e;
+      --moss-pale: #e7ece8;
+      --ochre: #9b6a2d;
+      --ochre-pale: #f3e8d6;
+      --zeal: #73352b;
+      --zeal-pale: #f3dfda;
+      --shadow: 0 14px 34px rgba(51, 42, 31, .08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 7%, rgba(183, 75, 50, .06), transparent 24rem),
+        linear-gradient(180deg, var(--paper-light) 0, var(--paper) 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
+        "Microsoft JhengHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    button { font: inherit; }
+    code {
+      overflow-wrap: anywhere;
+      color: #343936;
+      background: #ece7dc;
+      border-radius: 5px;
+      padding: .08em .35em;
+      font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      font-size: .83em;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 56px 0 80px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
+      gap: 48px;
+      align-items: end;
+      padding: 18px 0 42px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--cinnabar-deep);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 15ch;
+      margin-bottom: 18px;
+      font-family: "Iowan Old Style", "Noto Serif TC", "Songti TC", serif;
+      font-size: clamp(2.3rem, 5.2vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -.045em;
+      line-height: 1.06;
+      text-wrap: balance;
+    }
+
+    .lead {
+      max-width: 48rem;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: clamp(1.02rem, 1.7vw, 1.25rem);
+    }
+
+    .hero-note {
+      padding: 24px 26px;
+      background: rgba(255, 253, 248, .72);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cinnabar);
+      border-radius: 4px var(--radius) var(--radius) 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-note strong { display: block; margin-bottom: 6px; font-size: 1.08rem; }
+    .hero-note p { margin: 0; color: var(--ink-soft); font-size: .94rem; }
+
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 18px;
+      padding: 22px 0 12px;
+    }
+
+    .legend-title { margin-right: 4px; font-weight: 800; }
+    .legend-item, .type-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .legend-item { padding: 8px 12px; border: 1px solid transparent; }
+    .legend-item::before, .type-chip::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      content: "";
+      flex: 0 0 auto;
+    }
+
+    .auto { background: var(--moss-pale); border-color: #c7d2cb; color: #43544d; }
+    .auto::before { background: var(--moss); }
+    .approval { background: var(--ochre-pale); border-color: #dfc69f; color: #704d22; }
+    .approval::before { background: var(--ochre); }
+    .zeal-only { background: var(--zeal-pale); border-color: #d6afa5; color: var(--zeal); }
+    .zeal-only::before { background: var(--cinnabar); }
+
+    .legend-note {
+      flex-basis: 100%;
+      margin: 2px 0 0;
+      color: var(--ink-faint);
+      font-size: .83rem;
+    }
+
+    .toolbar { display: flex; justify-content: flex-end; padding: 8px 0 18px; }
+    .toolbar button {
+      cursor: pointer;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 8px 15px;
+      font-size: .84rem;
+      font-weight: 750;
+    }
+    .toolbar button:hover, .toolbar button:focus-visible {
+      border-color: var(--cinnabar);
+      outline: 3px solid rgba(183, 75, 50, .13);
+      outline-offset: 2px;
+    }
+
+    .quality-shell {
+      position: relative;
+      margin: 4px 0 36px;
+      padding: 22px;
+      background: rgba(255, 253, 248, .58);
+      border: 1px dashed var(--cinnabar);
+      border-radius: 22px;
+    }
+    .quality-shell::before {
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      content: "橫跨每一步的品質護欄";
+      padding: 2px 10px;
+      color: var(--cinnabar-deep);
+      background: var(--paper-light);
+      font-size: .76rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+    }
+    .quality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .quality-gate {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .quality-gate.conditional { grid-column: 1 / -1; }
+
+    .flow { position: relative; }
+    .stage {
+      position: relative;
+      margin: 0 0 34px;
+      padding: 30px clamp(18px, 3vw, 34px) 34px;
+      background: rgba(255, 253, 248, .72);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    .stage-head {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    .stage-no {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      color: var(--paper-light);
+      background: var(--ink);
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+    .stage-kicker { margin: 1px 0 3px; color: var(--cinnabar-deep); font-size: .76rem; font-weight: 850; letter-spacing: .12em; }
+    .stage h2 { margin: 0 0 4px; font-family: "Iowan Old Style", "Noto Serif TC", serif; font-size: clamp(1.45rem, 2.7vw, 2.1rem); line-height: 1.25; }
+    .stage-head p { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+
+    .node-list { display: grid; gap: 28px; width: min(820px, 100%); margin: 0 auto; }
+    .node-wrap { position: relative; }
+    .node-wrap:not(:last-child)::after {
+      position: absolute;
+      left: 50%;
+      bottom: -25px;
+      width: 2px;
+      height: 20px;
+      content: "";
+      background: var(--line-strong);
+      transform: translateX(-50%);
+    }
+    .node-wrap:not(:last-child)::before {
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      bottom: -28px;
+      content: "";
+      border: 5px solid transparent;
+      border-top-color: var(--line-strong);
+      transform: translateX(-50%);
+    }
+
+    .flow-node {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left-width: 6px;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    .flow-node[data-type="auto"] { border-left-color: var(--moss); }
+    .flow-node[data-type="approval"] { border-left-color: var(--ochre); }
+    .flow-node[data-type="zeal"] { border-left-color: var(--cinnabar); }
+    .flow-node:hover { border-color: var(--line-strong); box-shadow: 0 10px 24px rgba(51, 42, 31, .08); transform: translateY(-1px); }
+
+    .node-toggle {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      width: 100%;
+      padding: 17px 18px;
+      color: inherit;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+    .node-toggle:focus-visible { outline: 3px solid rgba(183, 75, 50, .2); outline-offset: -3px; }
+    .step-index {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: var(--cinnabar-deep);
+      font-family: Georgia, serif;
+      font-size: .91rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .node-heading { min-width: 0; }
+    .node-heading h3 { margin: 0 0 2px; font-size: 1rem; line-height: 1.35; }
+    .node-heading p { margin: 0; color: var(--ink-soft); font-size: .87rem; }
+    .tech { display: block; margin-top: 5px; color: var(--ink-faint); font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: .75rem; overflow-wrap: anywhere; }
+    .node-action { display: grid; justify-items: end; gap: 8px; }
+    .type-chip { padding: 6px 9px; white-space: nowrap; }
+    .chevron { width: 22px; height: 22px; color: var(--ink-faint); transition: transform .2s ease; }
+    .node-toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+    .node-detail { padding: 0 18px 18px 68px; color: var(--ink-soft); }
+    .node-detail[hidden] { display: none; }
+    .node-detail p { margin-bottom: 12px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .detail-box {
+      padding: 12px 14px;
+      background: #f5f1e8;
+      border-radius: 10px;
+      font-size: .86rem;
+    }
+    .detail-box b { display: block; margin-bottom: 2px; color: var(--ink); font-size: .76rem; letter-spacing: .06em; }
+    .honesty {
+      margin-top: 10px;
+      padding: 10px 12px;
+      color: #624d2c;
+      background: #f6eddd;
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px 9px 9px 4px;
+      font-size: .84rem;
+    }
+
+    .stage-connector {
+      display: grid;
+      place-items: center;
+      min-height: 88px;
+      margin: -34px 0 0;
+      color: var(--ink-soft);
+      text-align: center;
+    }
+    .handoff {
+      position: relative;
+      z-index: 2;
+      width: min(720px, calc(100% - 36px));
+      padding: 14px 20px;
+      background: var(--ink);
+      color: var(--paper-light);
+      border-radius: 999px;
+      font-size: .86rem;
+      box-shadow: var(--shadow);
+    }
+    .handoff strong { color: #f1c6b9; }
+
+    .branch-intro { text-align: center; margin: 4px auto 22px; color: var(--ink-soft); font-size: .9rem; }
+    .platform-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .platform-lane { position: relative; display: grid; grid-template-rows: auto auto; align-content: start; gap: 16px; }
+    .platform-lane::before {
+      position: absolute;
+      z-index: 0;
+      top: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      content: "";
+      background: var(--line-strong);
+    }
+    .platform-label { position: relative; z-index: 1; margin: 0; text-align: center; font-weight: 850; letter-spacing: .04em; }
+    .platform-lane .node-toggle { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+    .platform-lane .node-action { grid-column: 1 / -1; width: 100%; display: flex; align-items: center; justify-content: space-between; padding-left: 50px; }
+    .platform-lane .node-detail { padding-left: 18px; }
+    .human-finish {
+      position: relative;
+      padding: 14px 15px;
+      color: var(--zeal);
+      background: var(--zeal-pale);
+      border: 1px solid #d6afa5;
+      border-radius: 13px;
+      font-size: .86rem;
+      font-weight: 760;
+      text-align: center;
+    }
+    .human-finish::before {
+      position: absolute;
+      top: -17px;
+      left: 50%;
+      width: 2px;
+      height: 16px;
+      content: "";
+      background: var(--cinnabar);
+    }
+    .human-finish span { display: block; margin-bottom: 2px; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+
+    .closing {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      margin-top: 30px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line-strong);
+    }
+    .closing h2 { margin: 0 0 5px; font-family: "Iowan Old Style", "Noto Serif TC", serif; font-size: 1.55rem; }
+    .closing p { margin: 0; color: var(--ink-soft); }
+    .seal {
+      display: grid;
+      place-items: center;
+      width: 74px;
+      height: 74px;
+      color: var(--cinnabar-deep);
+      border: 3px double var(--cinnabar);
+      border-radius: 13px 17px 12px 15px;
+      font-family: "Iowan Old Style", "Noto Serif TC", serif;
+      font-size: .78rem;
+      font-weight: 800;
+      line-height: 1.15;
+      text-align: center;
+      transform: rotate(-2deg);
+    }
+    .meta-foot { margin-top: 22px; color: var(--ink-faint); font-size: .76rem; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 24px; }
+      .hero-note { max-width: 36rem; }
+      .platform-grid { grid-template-columns: 1fr; gap: 30px; }
+      .platform-lane::before { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .page { width: min(100% - 24px, 1180px); padding-top: 28px; }
+      h1 { font-size: clamp(2.05rem, 11vw, 3rem); }
+      .quality-grid { grid-template-columns: 1fr; }
+      .quality-gate.conditional { grid-column: auto; }
+      .stage { padding: 22px 12px 26px; border-radius: 18px; }
+      .stage-head { gap: 12px; }
+      .stage-no { width: 44px; height: 44px; font-size: 1.1rem; }
+      .node-toggle { grid-template-columns: auto minmax(0, 1fr); gap: 10px; padding: 14px 12px; }
+      .node-action { grid-column: 1 / -1; width: 100%; display: flex; align-items: center; justify-content: space-between; padding-left: 46px; }
+      .node-detail { padding: 0 12px 14px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .type-chip { white-space: normal; }
+      .handoff { border-radius: 16px; }
+      .closing { grid-template-columns: 1fr; }
+      .seal { width: 62px; height: 62px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; padding: 0; }
+      .toolbar { display: none; }
+      .node-detail[hidden] { display: block; }
+      .stage, .flow-node, .hero-note { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">ONE MUSE · CLIENT WORKFLOW MAP · 2026.08.29</p>
+        <h1>從一個討論主題，到三個平台真正上線</h1>
+        <p class="lead">AI 負責查資料、寫稿、配音、對齊與打包；Zeal 保留方向、內容與公開發布的最後決定權。點開任一步驟，就能看到它實際交出什麼。</p>
+      </div>
+      <aside class="hero-note" aria-label="流程核心原則">
+        <strong>不是無人看管的全自動。</strong>
+        <p>「AI 全自動」只表示：前一道人工核可通過後，該步驟可由 skill 或腳本執行。整條產線仍由人類在關鍵節點決策。</p>
+      </aside>
+    </header>
+
+    <section class="legend-bar" aria-label="圖例">
+      <span class="legend-title">圖例</span>
+      <span class="legend-item auto">AI 全自動</span>
+      <span class="legend-item approval">AI 產出，待人工核可</span>
+      <span class="legend-item zeal-only">只有 Zeal 能做</span>
+      <p class="legend-note">節點左側色條與展開後的「責任類型」使用同一分類；紅色小卡是平台公開前不可代理的人工最後一哩。</p>
+    </section>
+
+    <div class="toolbar">
+      <button id="toggle-all" type="button" aria-pressed="false">展開全部細節</button>
+    </div>
+
+    <section class="quality-shell" aria-label="橫跨全程的品質護欄">
+      <div class="quality-grid">
+        <article class="quality-gate flow-node" data-step="15" data-type="approval">
+          <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-15">
+            <span class="step-index">15</span>
+            <span class="node-heading">
+              <h3>每一批開工前：先確認方向與範圍</h3>
+              <span class="tech">frame-admission-gate</span>
+            </span>
+            <span class="node-action">
+              <span class="type-chip approval">AI 檢查，主控裁決</span>
+              <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </button>
+          <div class="node-detail" id="detail-15" hidden>
+            <p><strong>施工前檢查</strong>（動手前先確認「做的方向對不對、資料怎麼流、範圍會不會失控」），不是產線中的某一站，而是每一批工作的入口護欄。</p>
+            <div class="detail-grid"><div class="detail-box"><b>輸出物</b>可施工／退回補充的明確判斷</div><div class="detail-box"><b>責任類型</b>AI 先檢查，主控依證據決定是否放行</div></div>
+          </div>
+        </article>
+
+        <article class="quality-gate flow-node" data-step="16" data-type="approval">
+          <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-16">
+            <span class="step-index">16</span>
+            <span class="node-heading">
+              <h3>每一份交件前：另一顆模型重新找碴</h3>
+              <span class="tech">post-construction-audit · 獨立 AI 找碴棒</span>
+            </span>
+            <span class="node-action">
+              <span class="type-chip approval">AI 複核，主控驗證</span>
+              <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </button>
+          <div class="node-detail" id="detail-16" hidden>
+            <p><strong>獨立驗收</strong>（不讓製作者自己替自己打分）會重跑驗證、逐條對照承諾，主控還會再檢查每個 finding 是否有證據，並主動抽查模型沒提到的地方。</p>
+            <div class="detail-grid"><div class="detail-box"><b>輸出物</b>可重現的問題清單或放行證據</div><div class="detail-box"><b>責任類型</b>另一顆 AI 找碴；最後裁決不外包</div></div>
+          </div>
+        </article>
+
+        <article class="quality-gate conditional flow-node" data-step="17" data-type="approval">
+          <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-17">
+            <span class="step-index">17</span>
+            <span class="node-heading">
+              <h3>長文文案加驗：讀起來是否順暢</h3>
+              <span class="tech">zhprose · 條件式文案檢查</span>
+            </span>
+            <span class="node-action">
+              <span class="type-chip approval">AI 產出，待人工核可</span>
+              <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </button>
+          <div class="node-detail" id="detail-17" hidden>
+            <p><strong>可讀性檢查</strong>（抓拗口、過度書面或難懂的長文句子）只用在長文說明，不是每一個技術步驟都跑。</p>
+            <div class="detail-grid"><div class="detail-box"><b>輸出物</b>長文的可讀性問題與修改建議</div><div class="detail-box"><b>責任類型</b>AI 提出檢查結果；人工核可是否採用</div></div>
+            <div class="honesty">查證邊界：在本次已掃描的 <code>~/.claude/skills/</code> 檔案清單中未找到名為 <code>zhprose</code> 的 skill；因此只依工作單呈現用途，細節標記為待確認。</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="flow">
+      <section class="stage" aria-labelledby="stage-1-title">
+        <header class="stage-head">
+          <span class="stage-no">1</span>
+          <div><p class="stage-kicker">CONTENT STRATEGY</p><h2 id="stage-1-title">內容策劃端</h2><p>MuseBizMix：從「想談什麼」一路做到已核可的逐字稿與投影片圖片。</p></div>
+        </header>
+        <div class="node-list">
+          <div class="node-wrap">
+            <article class="flow-node" data-step="1" data-type="zeal">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-1">
+                <span class="step-index">01</span><span class="node-heading"><h3>先決定這一輪要談什麼</h3><p>把 4～5 個候選講題放上桌</p><span class="tech">人工輸入 · 候選講題清單</span></span>
+                <span class="node-action"><span class="type-chip zeal-only">只有 Zeal 能定方向</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-1" hidden><p>客戶、團隊與 Zeal 可以一起討論題目，但最後由 Zeal 決定哪些主題值得進入內容產線；AI 不自行替品牌決定要說什麼。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>候選講題清單與本輪主題範圍</div><div class="detail-box"><b>責任類型</b>只有 Zeal 能做最後取捨</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="2" data-type="auto">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-2">
+                <span class="step-index">02</span><span class="node-heading"><h3>先查自己有什麼，只補真正缺的</h3><p>知識庫覆蓋度查核 → 缺口研究</p><span class="tech">coverage-gap-research-forge · pipeline/search.py</span></span>
+                <span class="node-action"><span class="type-chip auto">AI 全自動</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-2" hidden><p><strong>向量資料庫查詢</strong>（不是逐字搜尋，而是找「意思相近」的既有資料）先用本機知識庫判斷每題深度；只有薄弱的題目才交給 AI 做外部研究，避免重查與憑空補料。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>覆蓋度結果；缺口研究筆記存入 <code>knowledge/04_process/</code></div><div class="detail-box"><b>責任類型</b>AI 執行查核與研究；研究後仍要過獨立審計</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="3" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-3">
+                <span class="step-index">03</span><span class="node-heading"><h3>把一批講題排成有推進感的系列</h3><p>每一講各自完整，合起來又有起承轉合</p><span class="tech">four-lecture-series-forge</span></span>
+                <span class="node-action"><span class="type-chip approval">AI 產出，待人工核可</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-3" hidden><p>系列 skill 會定義每一講回答的單一問題、核心命題、彼此關係，以及人類／Agent 交付物。這一階段只談架構，不先做整份簡報。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>系列因果鏈、講次分工、每講核心問題</div><div class="detail-box"><b>責任類型</b>AI 提案；Zeal 確認系列分工才往下</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="4" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-4">
+                <span class="step-index">04</span><span class="node-heading"><h3>先做一講的可討論骨架</h3><p>先排認知順序，再決定每頁要說什麼</p><span class="tech">gary-chen-presentation-engine</span></span>
+                <span class="node-action"><span class="type-chip approval">Zeal 骨架關卡</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-4" hidden><p><strong>Reveal Beats</strong>（一頁不是一次塞滿，而是分 2～4 拍逐步揭露）會搭配因果鏈、白話名詞、案例與行動。骨架方向一定先給 Zeal 看過；未明確確認，不准先寫完整內容或做視覺。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>章節、逐頁順序、每頁離場記憶與揭露節奏</div><div class="detail-box"><b>責任類型</b>AI 產出；Zeal 明確說「可以製作」才放行</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="5" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-5">
+                <span class="step-index">05</span><span class="node-heading"><h3>骨架通過後，才補成完整逐字稿</h3><p>寫到可以實際講、可以逐頁配音</p><span class="tech">逐字稿 Markdown · docs/scripts/ 與交接用 script.md</span></span>
+                <span class="node-action"><span class="type-chip approval">Zeal 逐字稿關卡</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-5" hidden><p>AI 依已確認的大綱補出完整段落，並把數字、案例與受眾處境連起來。逐字稿一定要由 Zeal 親自看過；沒有核可，就不能送進配音。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>完整逐字稿；頁次與段落可供下游解析</div><div class="detail-box"><b>責任類型</b>AI 撰寫；Zeal 核可文字與說法</div></div><div class="honesty">路徑現況：MuseBizMix 目前可見 <code>docs/scripts/</code> 講稿；全流程 skill 另規定定稿後交接成後製專案的 <code>lectures/&lt;系列&gt;/qN/script.md</code>。兩者是上游稿件與下游正式輸入的交界。</div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="6" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-6">
+                <span class="step-index">06</span><span class="node-heading"><h3>用固定品牌語言做投影片視覺</h3><p>暖紙底、大量留白，硃砂紅只做小面積決策錨點</p><span class="tech">editorial-ink-watercolor</span></span>
+                <span class="node-action"><span class="type-chip approval">AI 生成，人工目視</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-6" hidden><p><strong>選擇性完成</strong>（只畫最需要被看見的局部，其餘讓紙張與觀者補完）是品牌固定視覺語法。AI 生成插圖或底圖後，仍需人工看構圖、留白、裁切與文字可讀性。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>每講專屬的封面、插圖與投影片底圖</div><div class="detail-box"><b>責任類型</b>AI 生成；審美與品牌適切性由人把關</div></div><div class="honesty">規則漂移已誠實記錄：<code>four-lecture-series-forge</code> 仍寫舊的 Garytus 視覺路由；較新的全流程 skill 已指定本 skill。本圖採用較新的完整產線規則。</div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="7" data-type="auto">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-7">
+                <span class="step-index">07</span><span class="node-heading"><h3>把已完成的簡報網頁轉成逐頁圖片</h3><p>每頁截成後製可直接使用的 1920×1080 畫面</p><span class="tech">render_deck_slides.py</span></span>
+                <span class="node-action"><span class="type-chip auto">AI 全自動</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-7" hidden><p>腳本會讀入 <code>deck.html</code>，逐頁打開最終揭露狀態，再用無頭瀏覽器截成 PNG 與 JPG。這是<strong>網頁轉投影片圖片</strong>，不是建立 <code>deck.html</code> 本身。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b><code>page_01.png/.jpg</code> 等逐頁畫面</div><div class="detail-box"><b>責任類型</b>輸入確認後由腳本自動截圖</div></div><div class="honesty">實查差異：腳本位於 <code>lecture-voice-pipeline/scripts/</code>；本次沒有查到一支同名腳本在 MuseBizMix，也沒有由該腳本證實 <code>deck.html</code> 的組裝方式。</div></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="stage-connector" aria-label="跨團隊交接">
+        <div class="handoff"><strong>跨團隊交接</strong>　只把已核可的逐字稿與投影片素材交給後製專案；內容方向不在後製端重寫。</div>
+      </div>
+
+      <section class="stage" aria-labelledby="stage-2-title">
+        <header class="stage-head">
+          <span class="stage-no">2</span>
+          <div><p class="stage-kicker">VOICE &amp; VIDEO PRODUCTION</p><h2 id="stage-2-title">後製端</h2><p>lecture-voice-pipeline：把文字與畫面做成可上架影片，不改寫內容主張。</p></div>
+        </header>
+        <div class="node-list">
+          <div class="node-wrap">
+            <article class="flow-node" data-step="8" data-type="auto">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-8">
+                <span class="step-index">08</span><span class="node-heading"><h3>逐頁合成 AI 旁白</h3><p>先降低繁體誤讀，再逐段回聽比對</p><span class="tech">synthesize_deck_narration.py · pronunciation_lexicon.json</span></span>
+                <span class="node-action"><span class="type-chip auto">AI 全自動</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-8" hidden><p>已核可逐字稿會分頁、再切成約 50 字的小段送入語音模型。送入配音前先轉簡體字（只改語音輸入，畫面與字幕仍保持繁體）；少數難唸詞再用讀音表替換。每段以語音辨識回查，預設最多嘗試 3 次。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>逐頁 WAV 與記錄每段結果的 <code>manifest.json</code></div><div class="detail-box"><b>責任類型</b>逐字稿核可後，自動配音、比對與重試</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="9" data-type="auto">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-9">
+                <span class="step-index">09</span><span class="node-heading"><h3>全堂配音平均必須達 95%</h3><p>沒過硬底線，就退回重處理</p><span class="tech">audit_narration_accuracy.py</span></span>
+                <span class="node-action"><span class="type-chip auto">AI 全自動硬閘門</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-9" hidden><p>腳本讀取每一段的語音辨識比對分數，計算整堂平均；低於 0.95 會回報 <code>AUDIT_FAILED</code> 並以失敗狀態退出，不能把「差不多」當成完成。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>全堂平均、低分段落清單、通過／失敗結果</div><div class="detail-box"><b>責任類型</b>機械計算；人耳仍可補做抽聽</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="10" data-type="auto">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-10">
+                <span class="step-index">10</span><span class="node-heading"><h3>用真正的聲音抓字幕時間</h3><p>每句從幾秒開始、幾秒結束，不用字數比例猜</p><span class="tech">align_narration_timings.py · Whisper 強制對齊</span></span>
+                <span class="node-action"><span class="type-chip auto">AI 全自動</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-10" hidden><p><strong>強制對齊</strong>（先讓語音辨識真正聽過音檔，再把逐字稿句子扣回時間軸）會檢查整頁與逐句的聲音錨點；對不上、倒退、超界或短到讀不完就整頁擋下。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>每頁 <code>page_NN.align.json</code> 真實時間軸</div><div class="detail-box"><b>責任類型</b>AI 聽寫、程式計算與驗證</div></div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="11" data-type="auto">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-11">
+                <span class="step-index">11</span><span class="node-heading"><h3>把投影片與旁白合成完整影片</h3><p>每頁畫面停留到旁白唸完，再銜接下一頁</p><span class="tech">assemble_deck_video.py · ffmpeg</span></span>
+                <span class="node-action"><span class="type-chip auto">AI 全自動</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-11" hidden><p><strong>ffmpeg</strong>（影音檔的組裝工具）會把每頁 JPG 與對應 WAV 做成片段，補 1 秒換頁停頓，再串成 1920×1080 MP4。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>完整 MP4 影片</div><div class="detail-box"><b>責任類型</b>素材齊全後由腳本自動組裝</div></div><div class="honesty">實查修正：這支腳本沒有把字幕燒進 MP4；字幕在下一步產成 SRT，隨 YouTube 上傳成獨立字幕軌。</div></div>
+            </article>
+          </div>
+
+          <div class="node-wrap">
+            <article class="flow-node" data-step="12" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-12">
+                <span class="step-index">12</span><span class="node-heading"><h3>準備 YouTube 素材，只先上傳私人版本</h3><p>字幕、標題／說明設定與私密預覽一次備齊</p><span class="tech">generate_youtube_assets.py · upload_private.sh</span></span>
+                <span class="node-action"><span class="type-chip approval">AI 產出，Zeal 看過</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-12" hidden><p>資產器依逐字稿與真實對齊檔產出繁體 SRT 字幕，並驗證上傳設定；上傳腳本會先檢查 <code>privacyStatus</code> 必須是 <code>private</code>，且禁止帶自動公開時間，才把影片、字幕與封面送到 YouTube。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b><code>lecture.srt</code>、<code>metadata.json</code>、YouTube 私人預覽</div><div class="detail-box"><b>責任類型</b>AI／腳本準備並私密上傳；Zeal 看完整支片</div></div><div class="honesty">標題與說明的具體撰寫來源未由這支腳本證實；腳本會讀既有 <code>config.json</code>、驗證後寫出 metadata。圖上因此不宣稱它會自行創作文案。</div></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="stage-connector" aria-hidden="true"><div class="handoff"><strong>同一份核可內容，分成三種媒介</strong>　影片、社群貼文與 Podcast 音檔各自打包，但不臨時改寫核心主張。</div></div>
+
+      <section class="stage" aria-labelledby="stage-3-title">
+        <header class="stage-head">
+          <span class="stage-no">3</span>
+          <div><p class="stage-kicker">THREE-PLATFORM DELIVERY</p><h2 id="stage-3-title">上架三平台</h2><p>AI 把最後一哩準備好；真正公開、貼文或建立平台帳號，仍由 Zeal 執行。</p></div>
+        </header>
+        <p class="branch-intro">↓　一份已核可內容，從這裡分成三條平台支線　↓</p>
+        <div class="platform-grid">
+          <div class="platform-lane">
+            <p class="platform-label">YouTube</p>
+            <article class="flow-node" data-type="approval" aria-label="YouTube 平台結果">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-youtube">
+                <span class="step-index">YT</span><span class="node-heading"><h3>私人影片等待最終檢看</h3><p>影片、字幕、封面與設定已送到後台</p></span>
+                <span class="node-action"><span class="type-chip approval">AI 產出，待人工核可</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-youtube" hidden><p>腳本刻意不刪舊片、不把任何影片轉公開；先讓 Zeal 從觀眾角度完整看過。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>YouTube 後台中的私人預覽影片</div><div class="detail-box"><b>責任類型</b>AI／腳本交出預覽；Zeal 核可後親手公開</div></div></div>
+            </article>
+            <div class="human-finish"><span>Zeal only</span>Zeal 親手把私人影片轉成公開</div>
+          </div>
+
+          <div class="platform-lane">
+            <p class="platform-label">Skool</p>
+            <article class="flow-node" data-step="13" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-13">
+                <span class="step-index">13</span><span class="node-heading"><h3>從既有講稿組成貼文草稿</h3><p>直接抽開場、重點、行動與收尾，不另寫一套文案</p><span class="tech">skool_post.py</span></span>
+                <span class="node-action"><span class="type-chip approval">AI 產出，待人工核可</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-13" hidden><p>腳本從已存在的 <code>script.md</code> 與交付物檔案抽取原句，組成可複製的 Markdown，並攔下內部術語；任何必要欄位抽不到就停止，不用 AI 猜一句補上。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b><code>*.skool-post.md</code> 貼文草稿</div><div class="detail-box"><b>責任類型</b>AI／腳本組裝；Zeal 最終閱讀</div></div></div>
+            </article>
+            <div class="human-finish"><span>Zeal only</span>Zeal 手動複製貼上到 Skool</div>
+          </div>
+
+          <div class="platform-lane">
+            <p class="platform-label">SoundOn</p>
+            <article class="flow-node" data-step="14" data-type="approval">
+              <button class="node-toggle" type="button" aria-expanded="false" aria-controls="detail-14">
+                <span class="step-index">14</span><span class="node-heading"><h3>把旁白打包成 Podcast 音檔</h3><p>合併、標準化音量、轉 MP3、嵌入封面與標籤</p><span class="tech">podcast_package.py</span></span>
+                <span class="node-action"><span class="type-chip approval">AI 產出，待人工核可</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+              </button>
+              <div class="node-detail" id="detail-14" hidden><p>腳本按頁序合併 WAV，以兩階段 <strong>loudnorm</strong>（先量測、再把音量校到 Podcast 常用的 -16 LUFS）輸出 128 kbps 單聲道 MP3，可嵌入節目封面與 ID3 標籤，並依頁面標題列出章節時間。</p><div class="detail-grid"><div class="detail-box"><b>輸出物</b>MP3、<code>shownotes_draft.md</code>、打包報告</div><div class="detail-box"><b>責任類型</b>AI／腳本打包；人工改寫節目說明並核可</div></div><div class="honesty">實查修正：shownotes 是機械擷取草稿，腳本明文要求發布前由人改寫；平台帳號與上傳皆未自動化。</div></div>
+            </article>
+            <div class="human-finish"><span>Zeal only</span>Zeal 建立／管理帳號並手動上傳 SoundOn</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="closing" aria-label="流程總結">
+      <div><h2>AI 做苦工，人做關鍵決定。</h2><p>每個可自動化環節都有清楚輸入與輸出；每個涉及品牌方向、內容承諾與公開發布的關卡，都保留在人手上。</p></div>
+      <div class="seal" aria-hidden="true">人<br>定<br>方向</div>
+    </section>
+    <p class="meta-foot">本圖依 2026-08-29 本機 skill、腳本與接線文件查證製作。點擊節點可展開／收合；未能由程式碼證實之處已直接標為待確認。</p>
+  </main>
+
+  <script>
+    (() => {
+      const toggles = [...document.querySelectorAll('.node-toggle')];
+      const allButton = document.getElementById('toggle-all');
+
+      function setExpanded(button, expanded) {
+        const target = document.getElementById(button.getAttribute('aria-controls'));
+        button.setAttribute('aria-expanded', String(expanded));
+        target.hidden = !expanded;
+      }
+
+      toggles.forEach((button) => {
+        button.addEventListener('click', () => {
+          const expanded = button.getAttribute('aria-expanded') === 'true';
+          setExpanded(button, !expanded);
+          const allOpen = toggles.every((item) => item.getAttribute('aria-expanded') === 'true');
+          allButton.setAttribute('aria-pressed', String(allOpen));
+          allButton.textContent = allOpen ? '收合全部細節' : '展開全部細節';
+        });
+      });
+
+      allButton.addEventListener('click', () => {
+        const shouldExpand = allButton.getAttribute('aria-pressed') !== 'true';
+        toggles.forEach((button) => setExpanded(button, shouldExpand));
+        allButton.setAttribute('aria-pressed', String(shouldExpand));
+        allButton.textContent = shouldExpand ? '收合全部細節' : '展開全部細節';
+      });
+    })();
+  </script>
+</body>
+</html>
