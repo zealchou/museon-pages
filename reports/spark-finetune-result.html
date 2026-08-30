@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DGX Spark（GB10）微調：NVIDIA 官方資料查證</title>
+  <style>
+    :root { --ink:#17212b; --muted:#5d6872; --line:#dfe5e8; --paper:#fffdf9; --bg:#f3f5f3; --accent:#256a56; --soft:#edf6f1; }
+    * { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.75 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif; }
+    main { max-width:980px; margin:32px auto; padding:42px clamp(22px,5vw,64px) 64px; background:var(--paper); box-shadow:0 1px 16px #182a2020; }
+    h1 { font-size:clamp(30px,5vw,48px); line-height:1.2; margin:0 0 8px; letter-spacing:-.03em; } h2 { margin:46px 0 16px; padding-top:12px; border-top:1px solid var(--line); font-size:26px; line-height:1.35; } h3 { margin:30px 0 10px; font-size:20px; }
+    p,li { max-width:75ch; } .meta { color:var(--muted); margin:0 0 26px; } .lead { padding:20px 22px; border-left:5px solid var(--accent); background:var(--soft); font-size:19px; }
+    a { color:#075f96; text-decoration-thickness:1px; text-underline-offset:3px; } table { width:100%; border-collapse:collapse; margin:18px 0 24px; font-size:15px; } th,td { padding:11px 10px; border:1px solid var(--line); vertical-align:top; text-align:left; } th { background:#eef3f1; } code { padding:1px 4px; border-radius:3px; background:#edf0f1; font: .9em ui-monospace,SFMono-Regular,Menlo,monospace; } .note { color:var(--muted); } .done { margin-top:42px; padding:12px 16px; background:#e5f3ea; color:#165436; font-family:ui-monospace,monospace; font-weight:700; } @media (max-width:700px) { main { margin:0; padding-top:30px; } table { display:block; overflow-x:auto; white-space:normal; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>DGX Spark（GB10）微調：NVIDIA 官方資料查證</h1>
+  <p class="meta">查證日期：2026-08-30（Asia/Taipei）｜只採 NVIDIA 一手來源｜未安裝、下載模型或執行訓練</p>
+  <h2>1. 結論</h2>
+  <p class="lead">NVIDIA 所稱的 DGX Spark 微調，是從預訓練模型出發，以你的資料做 full SFT 或 LoRA／QLoRA／PEFT，讓模型適應特定領域、格式、行為或風格；不是量化。官方已有 NeMo AutoModel 與 PyTorch + PEFT 的 Spark Playbooks，並推薦 Unsloth。既有 ModelOpt 主要是 PTQ/NVFP4；同套件可做 QAT/蒸餾，但不是一般 SFT/LoRA 的預設工具。</p>
+  <p>NVIDIA 產品頁明示可微調至 70B；官方可操作案例則是 3B full SFT、8B full SFT／LoRA，以及 70B QLoRA。最穩妥的首步是依 NeMo recipe 用 20 steps、短 context、小 batch 驗證資料與訓練管線，而非直接長跑。</p>
+
+  <h2>2. 官方原文引用</h2>
+  <table><thead><tr><th>官方來源</th><th>原文短摘</th><th>可確定的意思</th></tr></thead><tbody>
+    <tr><td><a href="https://www.nvidia.com/en-us/products/workstations/dgx-spark/">DGX Spark 產品頁</a></td><td>“Fine-tune AI models up to 70 billion parameters.”</td><td>產品行銷明示 70B 微調主張，並連到 128 GB 統一記憶體。</td></tr>
+    <tr><td><a href="https://docs.nvidia.com/dgx/dgx-spark/hardware.html">DGX Spark User Guide</a></td><td>“prototype, deploy, and fine-tune large AI models on their desktop.”</td><td>官方文件將微調列為正式桌面端用例。</td></tr>
+    <tr><td><a href="https://developer.nvidia.com/blog/how-nvidia-dgx-sparks-performance-enables-intensive-ai-tasks/">NVIDIA 技術部落格</a></td><td>“full fine-tuning, LoRA, and QLoRA.”</td><td>NVIDIA 實測三種微調方法。</td></tr>
+    <tr><td><a href="https://blogs.nvidia.com/blog/rtx-ai-garage-fine-tuning-unsloth-dgx-spark/">NVIDIA Unsloth 部落格</a></td><td>“focused training session”</td><td>以特定工作流範例讓模型學習新模式、適應工作。</td></tr>
+    <tr><td><a href="https://developer.nvidia.com/blog/bringing-ai-closer-to-the-edge-and-on-device-with-gemma-4/">NVIDIA Gemma 4 文章</a></td><td>“supervised fine-tuning and LoRA techniques”</td><td>明確指向 NeMo AutoModel 從 Hugging Face checkpoint 做 SFT/LoRA。</td></tr>
+  </tbody></table>
+  <p>Build 網站把 fine tuning（NeMo、PyTorch、Unsloth）和「以 Model Optimizer 量化 NVFP4」列在不同類別；這與 <a href="https://nvidia.github.io/Model-Optimizer/getting_started/1_overview.html">ModelOpt 官方總覽</a>的 PTQ/QAT／Distillation 分類一致。</p>
+
+  <h2>3. 推薦工具鏈</h2>
+  <table><thead><tr><th>工具</th><th>NVIDIA 官方對 Spark 的實際定位</th><th>角色</th></tr></thead><tbody>
+    <tr><td>NeMo AutoModel</td><td><a href="https://build.nvidia.com/spark/nemo-fine-tune/instructions">DGX Spark NeMo Playbook</a>直接提供 full SFT、LoRA、QLoRA。</td><td>首選起點；LLM/VLM，ARM64/Blackwell recipe，使用 <code>nemo-automodel</code> 容器。</td></tr>
+    <tr><td>PyTorch + HF PEFT/TRL/bitsandbytes</td><td><a href="https://github.com/NVIDIA/dgx-spark-playbooks/blob/main/nvidia/pytorch-fine-tune/README.md">官方 Playbook</a>要求安裝這些套件，並提供 3B full、8B LoRA、70B QLoRA。</td><td>PEFT 是外部開源套件，但被 NVIDIA Spark 教學明確採用；適合直接掌控 Python 訓練碼。</td></tr>
+    <tr><td>Unsloth</td><td><a href="https://blogs.nvidia.com/blog/rtx-ai-garage-fine-tuning-unsloth-dgx-spark/">NVIDIA 官方部落格</a>推薦並連到 DGX Spark 指南。</td><td>第三方、較低記憶體的 fine-tuning framework。</td></tr>
+    <tr><td>ModelOpt</td><td><a href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/gpt-oss/README.md">官方 QAT 範例</a>以 <code>mtq.quantize</code> 後接一般訓練，或用 <code>QATSFTTrainer</code>。</td><td>與 PTQ/NVFP4 是同一 Python 套件、不同訓練功能；可做 QAT／蒸餾，但不是一般 SFT/LoRA 必要項。</td></tr>
+  </tbody></table>
+  <p><strong>精確區分：</strong>PTQ 是訓練後壓縮；QAT 讓量化誤差進入訓練以恢復精度；蒸餾是教師訓練學生。ModelOpt 的 20B full-QAT 官方例子需要 8×80 GB GPU，不能照抄到單台 Spark。</p>
+
+  <h2>4. 實際流程與門檻</h2>
+  <ol>
+    <li>選 full SFT、LoRA 或 QLoRA。NVIDIA 對入門資料量的建議：PEFT 100–1,000 對，full fine-tuning 1,000+ 對；它不是品質保證。</li>
+    <li>整理資料。官方 PyTorch 範例採 <code>instruction</code>／<code>input</code>／<code>output</code>，串為一個 <code>text</code> 欄位，預設 512 samples；並沒有 Spark 專用的唯一 JSON 格式。</li>
+    <li>準備 CUDA 12+、Python 3.10+、Docker，並取得受限權重的 Hugging Face token／授權。NeMo Playbook 最低列 32 GB system RAM；Spark 實際為 128 GB UMA。</li>
+    <li>以 YAML recipe 載入基座 checkpoint，先用官方的短跑參數：20 steps、packed sequence 1024；70B QLoRA 用 micro-batch 1。</li>
+    <li>檢查 checkpoint 的 model、optimizer、dataloader 等產物，再以目標任務的保留測資評估。官方頁有 checkpoint 檢查，但沒有通用資料切分／品質門檻。</li>
+  </ol>
+  <p><strong>時間與記憶體：</strong>NeMo Playbook 的 setup + initial run 為 45–90 分鐘，PyTorch 為 30–45 分鐘，實際訓練依模型而變。官方效能文章的正文與表格 tokens/s 相差約 6–7 倍且未解釋，故不應拿它換算本機工時。</p>
+
+  <h2>5. 這台機器的可行性</h2>
+  <table><thead><tr><th>規模／方法</th><th>官方 Spark 證據</th><th>保守解讀</th></tr></thead><tbody>
+    <tr><td>3B full SFT</td><td>技術部落格 benchmark</td><td>已有單 Spark full fine-tuning 案例。</td></tr>
+    <tr><td>8B full SFT</td><td>NeMo 的 Qwen3-8B、batch 1、1024、20-step recipe</td><td>最適合首個端到端 smoke test。</td></tr>
+    <tr><td>8B LoRA</td><td>NeMo recipe + benchmark</td><td>官方直接支持，較 full SFT 輕量。</td></tr>
+    <tr><td>70B QLoRA</td><td>產品頁、NeMo recipe、benchmark</td><td>70B 主張對應 QLoRA，不是 70B full fine-tuning。</td></tr>
+    <tr><td>27B／35B LoRA</td><td>沒有同架構、同設定的官方 Spark recipe</td><td>值得驗證，但不是官方保證；需從小 batch、短 context、少 steps 實測。</td></tr>
+  </tbody></table>
+  <p>你報告的 119.7 GiB 是名目 128 GB UMA 的實際可用值。官方沒有針對這個值公布各模型的安全餘量；CPU/GPU 共用池會受權重載入、資料、cache 與背景程式影響。</p>
+
+  <h2>6. 沒查到的部分</h2>
+  <ul>
+    <li>Qwen3.8-27B、Ornith 35B 或目前實際 checkpoint 的官方 Spark recipe、batch、峰值記憶體、tokens/s、總工時。</li>
+    <li>單 Spark 70B full fine-tuning 案例；官方 70B 示範是 QLoRA。</li>
+    <li>官方通用的品質保證資料量、資料切分策略、過擬合門檻或訓練 SLA。</li>
+    <li>專為單台 GB10 的 ModelOpt LLM QAT／distillation 教學；相反地，GPT-OSS 20B full-QAT 範例需 8×80 GB。</li>
+    <li>「NVFP4/PTQ checkpoint 可直接沿用 PTQ 流程做泛用微調」的官方承諾。</li>
+  </ul>
+  <p class="note">本報告刻意未以論壇、個人部落格或社群數據補足這些缺口。</p>
+  <h2>主要一手來源</h2>
+  <ul><li><a href="https://www.nvidia.com/en-us/products/workstations/dgx-spark/">DGX Spark 產品頁</a></li><li><a href="https://docs.nvidia.com/dgx/dgx-spark/hardware.html">DGX Spark User Guide</a></li><li><a href="https://developer.nvidia.com/blog/how-nvidia-dgx-sparks-performance-enables-intensive-ai-tasks/">DGX Spark 技術效能文章</a></li><li><a href="https://build.nvidia.com/spark/nemo-fine-tune/instructions">NeMo Spark Playbook</a></li><li><a href="https://github.com/NVIDIA/dgx-spark-playbooks/blob/main/nvidia/pytorch-fine-tune/README.md">PyTorch Spark Playbook</a></li><li><a href="https://nvidia.github.io/Model-Optimizer/getting_started/1_overview.html">ModelOpt 官方總覽</a></li></ul>
+  <p class="done">SPARK_FINETUNE_SEARCH_DONE</p>
+</main>
+</body>
+</html>
