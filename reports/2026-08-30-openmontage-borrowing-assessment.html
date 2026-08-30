@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenMontage 可借鏡性評估</title>
+<style>
+  :root {
+    --bg: #FAF7F0;
+    --paper: #FFFFFF;
+    --ink: #262220;
+    --ink-soft: #5B554F;
+    --rule: #E4DCCF;
+    --accent: #AE452F;
+    --accent-soft: #F3E3DC;
+    --good: #3F6B4C;
+    --good-bg: #EAF1EA;
+    --bad: #8C4A3B;
+    --bad-bg: #F7EBE6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+    line-height: 1.85;
+    font-size: 17px;
+  }
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+  header {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: 30px;
+    margin: 0 0 12px;
+    line-height: 1.4;
+  }
+  .meta {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--ink);
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 18px 22px;
+    margin: 0 0 40px;
+    border-radius: 2px;
+  }
+  h2 {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin: 48px 0 20px;
+  }
+  h3 {
+    font-size: 19px;
+    margin: 28px 0 10px;
+  }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 1.4em; }
+  li { margin-bottom: 8px; }
+  a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--rule); }
+  a:hover { text-decoration-color: var(--accent); }
+  code {
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 0.88em;
+    background: var(--rule);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .term {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 14.5px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 4px 0 18px;
+    color: var(--ink-soft);
+  }
+  .term b { color: var(--ink); }
+  .term-inline {
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1px dotted var(--accent);
+  }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin: 0 0 18px;
+  }
+  .card.good { border-left: 4px solid var(--good); }
+  .card.caution { border-left: 4px solid var(--bad); }
+  .tag {
+    display: inline-block;
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .tag.good { background: var(--good-bg); color: var(--good); }
+  .tag.caution { background: var(--bad-bg); color: var(--bad); }
+  .no-box {
+    background: var(--bad-bg);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 0 0 18px;
+  }
+  .no-box li::marker { color: var(--bad); }
+  .rec {
+    counter-reset: rec;
+  }
+  .rec-item {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    padding-left: 60px;
+  }
+  .rec-item::before {
+    counter-increment: rec;
+    content: counter(rec);
+    position: absolute;
+    left: 18px;
+    top: 20px;
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .rec-item h3 { margin-top: 0; }
+  .where {
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .conclusion {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 28px 26px;
+    border-radius: 10px;
+    margin-top: 48px;
+  }
+  .conclusion h2 {
+    color: #E8CDBE;
+    border-bottom-color: rgba(255,255,255,0.15);
+    margin-top: 0;
+  }
+  .conclusion p { margin: 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <p class="eyebrow">MuseBizMix ・ 技術借鏡評估</p>
+  <h1>OpenMontage 有沒有我們可以借鏡的地方？</h1>
+  <p class="meta">2026-08-30 ｜ 查證對象：<a href="https://github.com/calesthio/OpenMontage" target="_blank" rel="noopener">github.com/calesthio/OpenMontage</a>｜ 對照：講課影片產線（lecture-voice-pipeline）與 AutoClip</p>
+</header>
+
+<p class="lede">結論：<b>有借鏡之處，但不是整包搬過來用</b>。真正值得拿的是它「成片前檢查、留存中間紀錄、關鍵步驟一定要人核准」這套做事紀律；它龐大的多模型製片框架、短影音節奏、自動配樂，都不適合我們的講課長片。</p>
+
+<h2>這套東西實際在做什麼</h2>
+<p>OpenMontage 不是一顆「丟影片進去、自動吐出精華片段」的工具，它比較像是一套「讓 AI 當製片統籌」的作業流程規範：AI 助手照一份劇本（用 <span class="term-inline">YAML</span> 寫的管線設定檔）一步步走——研究題材、寫腳本、規劃分鏡、找素材、剪輯、合成、發布，每一步都要留下紀錄，關鍵幾步還強制要有人點頭才能繼續。</p>
+<div class="term"><b>YAML 是什麼</b>：一種用縮排（空格）排版的設定檔寫法，讓「第一步做什麼、第二步做什麼」這種流程可以寫成人看得懂、機器也讀得懂的清單，不必整個藏在程式碼裡。</div>
+<p>它最貼近我們情境的兩條產線：<code>talking-head</code>（處理「有人對著鏡頭講話」的原始影片）跟 <code>clip-factory</code>（從長內容裡挑出多支短片）。但它不是「從逐字稿和投影片直接合成一支完整講課長片」的現成替代品——那件事我們自己的產線本來就在做，而且做得更貼合需求。</p>
+
+<h2>技術上用了什麼</h2>
+<p>核心是 Python（讀流程設定、驗證產物格式、管進度存檔），影片合成端用 Node.js 生態（主要是 React + Remotion，一種用網頁技術做動態影片合成的做法），最陽春的剪接則交給 FFmpeg（業界最常見的影音處理工具，我們自己的產線應該也在用）。轉寫用的是 faster-whisper——跟我們現在用的 Whisper 是同一個家族，只是換了一個跑得更快的實作版本。</p>
+<p>它的架構設計理念是「AI 自己做決定，程式只負責執行跟把關」，不是把所有邏輯寫死在程式裡。這點對我們沒有直接可用之處（我們的產線本來就是這樣運作），但它把「每一步該檢查什麼、什麼時候一定要人核准」寫得很清楚，這部分值得參考。</p>
+
+<h2>值得借鏡的五件事</h2>
+
+<div class="card good">
+  <span class="tag good">高度推薦</span>
+  <h3>A. 成片上傳前，先跑一次「機器自己能查的檢查」</h3>
+  <p>OpenMontage 在上傳前會自動確認：影片播不播得動、時長對不對、有沒有聲音、隨機抽幾個畫面看看是不是全黑或空白。我們現在的流程裡沒看到這一關——是直接剪完就上傳。這不用引進任何新工具，就是幫成片多加一份「體檢報告」，體檢過關才准上傳。</p>
+</div>
+
+<div class="card good">
+  <span class="tag good">推薦</span>
+  <h3>B. 字幕裡的專有名詞、品牌名要有一份「修正對照表」</h3>
+  <p>Whisper 轉出來的逐字稿，遇到英文縮寫、品牌名、專業術語常常會聽錯字。OpenMontage 的做法是額外維護一份「錯字→正確寫法」的對照表，套用時可回溯查證，並把「機器信心不夠高的字」挑出來讓人特別看一眼。我們已經有強制對齊字幕（逐句核對時間點），可以在那之後加這一關，抓的是「字有沒有寫對」而不是「時間點準不準」。</p>
+</div>
+
+<div class="card">
+  <span class="tag good">與 AutoClip 互補，非取代</span>
+  <h3>C. 短片候選要有「一張審核卡」，不是機器直接說了算</h3>
+  <p>它挑短片候選時，每一支都要附「開頭有沒有抓住人、單獨看講不講得通、適合哪個平台」這些理由，讓人核准或退回。這剛好接在 Zeal 之後打算改造的 AutoClip 後面——AutoClip 負責用 AI 找出候選片段，這張「審核卡」的格式可以借來用，讓人在最後一關看得到「AI 為什麼選這一段」，不是照單全收。</p>
+</div>
+
+<div class="card">
+  <span class="tag caution">有條件借鏡</span>
+  <h3>D. 直式短片自動裁切、抓停頓</h3>
+  <p>把橫式講者影片自動裁成直式（給 Reels/Shorts 用），跟自動抓「講話中間的停頓」去剪掉或加速。<b>這兩項只適合真人入鏡的短片場景</b>——我們主講課長片是投影片配音為主，臉部追蹤用不上；亂剪停頓還可能破壞上課該有的思考節奏，不建議用在主片上。</p>
+</div>
+
+<div class="card good">
+  <span class="tag good">推薦（借做法，不借工具）</span>
+  <h3>E. 每一講都留一份「這一講做到哪」的統一紀錄</h3>
+  <p>它把逐字稿、腳本、分鏡、素材清單、成片檢查、上傳紀錄都存成固定格式的檔案，方便追蹤跟續跑。我們目前逐字稿、字幕、投影片、成片、上傳結果都有產出，但沒有一份「這一講的總表」串起來。不需要引進整套系統，做一份輕量版（每講記一份：腳本版本、字幕對齊結果、成片體檢結果、上傳紀錄、誰核准的）就夠用。</p>
+</div>
+
+<h2>誠實列出：不建議借鏡的部分</h2>
+<div class="no-box">
+  <ul>
+    <li><b>不要整包搬過來用。</b>它的目標是「什麼影片都能做」的通用製片系統，我們只需要「把講課內容穩定做成長片並上架」，整包導入只會把單純的事變複雜。</li>
+    <li><b>不要把短影音的節奏套進課程長片。</b>「開頭三秒抓住人」「快速跳接」是給社群短片用的，用在課程上會犧牲該有的停頓與思考空間。</li>
+    <li><b>不要為了它有配樂功能就替課程加背景音樂。</b>目前沒有這個需求，教學配音加音樂反而會有聽感、版權、音量平衡的額外麻煩。</li>
+    <li><b>不要直接複製它的程式碼。</b>這個 repo 用的是 <span class="term-inline">AGPL-3.0</span> 授權——後面會解釋這是什麼意思。</li>
+    <li><b>不要把品質判斷全部交給 AI 自己打勾。</b>它自己的設計都還保留人工核准關卡，我們更應該保留「人親自看幾眼畫面、聽幾秒聲音」再放行上傳。</li>
+  </ul>
+</div>
+
+<div class="term"><b>AGPL-3.0 授權是什麼</b>：開源世界裡最嚴格的一種「使用說明書」，比常見的 MIT 授權嚴格很多。簡單說：如果你拿它的程式碼去改、去用，甚至只是把改過的版本放到伺服器上讓別人用（不用真的「賣」出去），你也得公開你自己改過的原始碼。所以看它的做法、學它的流程規劃可以，但要複製貼上它的程式碼，得先確認授權問題，不能當成「反正是開源就能隨便搬」。</div>
+
+<h2>具體可以怎麼做（三條建議）</h2>
+<div class="rec">
+  <div class="rec-item">
+    <div class="where">位置：剪輯合成完成之後、上傳 YouTube 之前</div>
+    <h3>加一份「上傳前體檢報告」</h3>
+    <p>每支成片自動產出：能不能播、時長對不對、有沒有聲音、字幕時間有沒有超出影片長度，並自動抽幾個畫面存下來給人看一眼。體檢沒過，不准進到上傳那一步。這是純機械檢查，可以直接寫成腳本自動跑；畫面好不好看、字幕會不會被擋住，還是要人親自看過。</p>
+  </div>
+  <div class="rec-item">
+    <div class="where">位置：Whisper 強制對齊完成之後、正式字幕檔產出之前</div>
+    <h3>建立一份可回溯的「字幕修正表」</h3>
+    <p>把品牌名、英文縮寫、專業術語的常見錯字整理成一份表，每次產字幕時自動套用，並列出「機器信心不夠、需要人確認」的字讓人看一眼再放行。這樣可以保留我們現有的時間對齊優勢，只補上「字有沒有寫對」這一塊。</p>
+  </div>
+  <div class="rec-item">
+    <div class="where">位置：AutoClip 改造完成、開始從長片挑短片候選之後</div>
+    <h3>做一張「短片候選審核卡」</h3>
+    <p>每個候選片段附上：開始結束時間、開頭那句話、獨立看講不講得通、適合的平台跟比例、需不需要補充說明，讓人核准或退回。這樣可以讓 AutoClip 挑片段這件事變得「看得懂為什麼」，不用另外再蓋一套選片邏輯。</p>
+  </div>
+</div>
+
+<div class="conclusion">
+  <h2>總結一句話</h2>
+  <p>OpenMontage 值得拿的不是它的工具或框架本身，是它「成片一定要體檢、每一步留紀錄、關鍵決定一定要人點頭」這套紀律。這三件事我們現有產線都還沒有，補上去成本不高，但能明顯降低「東西上架了才發現有問題」的風險。</p>
+</div>
+
+<footer>
+  查證方式：派任務給 codex（terra 模型，high 力度）實際讀取 OpenMontage 的 README、AGENT_GUIDE、
+  管線設定檔與關鍵程式碼原始碼，並對照 AutoClip 既有的 DESIGN.md／CHANGELOG.md 做定位比較，
+  沒有下載安裝或執行任何程式碼。完整原始查證報告存於本機
+  <code>lecture-voice-pipeline/logs/openmontage_research_report.md</code>（含所有原始連結出處）。
+</footer>
+
+</div>
+</body>
+</html>
