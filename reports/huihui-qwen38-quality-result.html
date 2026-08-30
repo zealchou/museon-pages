@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Huihui Qwen3.8-27B-abliterated：一般品質與運作穩定性查證</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style>
+    :root { --ink:#18212b; --muted:#52616f; --paper:#fffdf9; --accent:#075985; --line:#d9e2e8; --callout:#eaf6fb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#edf2f5; color:var(--ink); font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; font-size:18px; line-height:1.8; }
+    main { max-width:940px; margin:32px auto; padding:42px 56px 56px; background:var(--paper); box-shadow:0 4px 28px #14212b18; }
+    #title-block-header { display:none; }
+    h1 { font-size:2.1rem; line-height:1.3; color:#083344; margin:0 0 .65rem; letter-spacing:.01em; }
+    h2 { margin:2.5rem 0 1rem; padding-top:.5rem; border-top:2px solid var(--line); color:var(--accent); font-size:1.45rem; line-height:1.45; }
+    h3 { margin:1.6rem 0 .55rem; font-size:1.15rem; color:#164e63; }
+    p { margin:.7rem 0; }
+    h1 + p { color:var(--muted); font-size:.93rem; }
+    h2 + p:first-letter { }
+    strong { color:#102f3d; }
+    a { color:#0369a1; text-decoration-thickness:1px; text-underline-offset:3px; }
+    a:hover { color:#0c4a6e; }
+    ul, ol { padding-left:1.5em; }
+    li { margin:.3rem 0; }
+    table { width:100%; border-collapse:collapse; margin:1.2rem 0; font-size:.9rem; line-height:1.6; }
+    th { background:#dceff7; color:#0c4a6e; text-align:left; }
+    th, td { border:1px solid var(--line); padding:.65rem .75rem; vertical-align:top; }
+    code { background:#eef2f4; border-radius:4px; padding:.08em .3em; font-size:.88em; overflow-wrap:anywhere; }
+    hr { border:0; border-top:1px solid var(--line); margin:2rem 0; }
+    @media (max-width:700px) { body { font-size:16px; } main { margin:0; padding:24px 20px 36px; box-shadow:none; } h1 { font-size:1.7rem; } table { font-size:.8rem; } th,td { padding:.48rem; } }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Huihui
+Qwen3.8-27B-abliterated：一般品質與運作穩定性查證</h1>
+</header>
+<h1 id="huihui-qwen38-27b-abliterated一般品質與運作穩定性查證">Huihui
+Qwen3.8-27B-abliterated：一般品質與運作穩定性查證</h1>
+<p>查證日期：2026-08-30（Asia/Taipei）<br />
+範圍：只查公開模型卡、原始研究與公開社群討論；<strong>未下載、安裝或啟動任何模型</strong>。不比較硬碟大小或
+tokens/sec。</p>
+<h2 id="結論">【結論】</h2>
+<p><strong>對 <code>huihui-ai/Huihui-Qwen3.8-27B-abliterated</code>
+本身，目前沒有公開、同設定下與原版 <code>Qwen/Qwen3.8-27B</code>
+配對的品質 benchmark，所以沒有具體證據可證明「沒變差」；已知
+abliteration
+在其他模型上可近乎持平，但也確實會依手法與模型而造成推理、真實性／不確定性表達或決策傾向的副作用，故不能把它當成原版扣掉拒答機制而已。</strong></p>
+<p>實務判讀：若目標是正式的一般問答、推理、指令遵循與 agent
+決策品質，現有公開證據不足以把這顆列為「與原版等價」；較合理的定位是「可能可用、但尚未被證明等價」，並需以同一套工作負載做配對驗證。這不是因為已查到它必然比較差，而是因為<strong>模型專屬比較資料缺席</strong>，而通論又顯示影響不是固定為零。</p>
+<h2 id="這顆模型專屬的證據">【這顆模型專屬的證據】</h2>
+<h3 id="1-主模型卡有技術描述沒有原版對照-benchmark">1.
+主模型卡：有技術描述，沒有原版對照 benchmark</h3>
+<ul>
+<li><a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated">Huihui
+主模型卡</a> 明確稱其為以 abliteration 製作的無護欄版，且自稱是「crude,
+proof-of-concept」實作。最新說明稱只處理第 <strong>18–51
+層</strong>，其餘未動；原版模型卡記載 Qwen3.8-27B 有 64
+層，故按此說法是修改 34 層、保留 30 層。MTP 與 vision 未修改。<a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated">主模型卡</a>；<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B">原版架構</a></li>
+<li>這張卡<strong>沒有</strong>列出
+MMLU、IFBench／IFEval、GPQA、GSM8K、HumanEval 等任何「無護欄版 vs
+原版」的分數；也沒有公布
+prompt、seed、解碼參數與可重跑評測。相反地，原版卡本身有多項成績（例如
+IFBench 79.5），但沒有同欄的 Huihui 分數，因此不能相減得出品質差異。<a
+href="https://huggingface.co/Qwen/Qwen3.8-27B">原版 benchmark
+表</a></li>
+<li>卡內「Latest update」說最新只改第 18–51 層，但較下方 Note 仍寫「前
+15 層未改」；這看起來像舊版文字未完全同步。NVFP4
+維護者比對權重後稱新修訂撤回了第 15–17 與 52–63
+層的改動，與「18–51」較一致。這是版本脈絡，不是品質測試。<a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated">Huihui
+卡</a>；<a
+href="https://huggingface.co/sakamakismile/Huihui-Qwen3.8-27B-abliterated-NVFP4">NVFP4
+卡</a></li>
+<li>作者只連到 <code>remove-refusals-with-transformers</code>
+這類以拒答方向做權重正交化的工具，沒有披露本次使用的校準資料、每層強度、方向選擇、KL／困惑度、或任何
+<strong>post-abliteration healing</strong>
+微調。嚴格說，只能說「模型卡未描述
+healing」，不能據此斷言一定沒有做過。<a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated">模型卡</a>；<a
+href="https://github.com/Sumandora/remove-refusals-with-transformers">所連工具</a></li>
+</ul>
+<h3 id="2-nvfp4-衍生版只有小型版本間探針不能代替原版對照">2. NVFP4
+衍生版：只有小型版本間探針，不能代替原版對照</h3>
+<ul>
+<li><a
+href="https://huggingface.co/sakamakismile/Huihui-Qwen3.8-27B-abliterated-NVFP4">sakamakismile
+的 NVFP4 卡</a> 說它只是 Huihui 權重的量化版；因此它無法另行證明
+abliteration 對一般能力的影響。</li>
+<li>該卡以 8 個
+probe（算術、多步機率、程式、嚴格格式、日文、翻譯、無護欄行為、認識論謙遜）比較「前一版
+Huihui」與「縮窄為 18–51 層的新版
+Huihui」：兩版可機械判定的項目都通過，文字項目主觀上相近。這只支持「該作者的小樣本未觀察到新舊無護欄修訂的品質差異」；<strong>不是</strong>與未改原版
+Qwen3.8 的比較，也不是標準 benchmark。</li>
+<li>同一卡報告舊 NVFP4 修訂在 <code>reasoning_effort: xhigh</code> 的
+9-case gate 有 1 次 <code>&lt;think&gt;</code> 不停止、重複文字到 token
+預算用完；新版為 9/9
+正常停止。這是唯一查到的、針對這個衍生版本的運作穩定性訊號，但樣本很小、由量化維護者自行測試，且不能把根因唯一歸給
+abliteration（新版同時換了上游權重與重新量化）。它足以說明「修訂版／runtime
+組合曾出現過思考失控，最新版小樣本已不再出現」，不足以宣稱長期穩定性已證明。</li>
+<li>同卡也提醒長篇單檔 JS 生成在<strong>原版</strong>測試中約 14 次有
+1–2 次漏右括號；這是原版的已知瑕疵，不是無護欄版退化證據，勿誤列為
+abliteration 副作用。</li>
+</ul>
+<h3 id="3-模型專屬證據小結">3. 模型專屬證據小結</h3>
+<table>
+<thead>
+<tr>
+<th>問題</th>
+<th>目前證據</th>
+<th>可下的結論</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一般知識／推理／指令遵循是否比原版差？</td>
+<td>無公開配對 benchmark</td>
+<td><strong>未知，不能說沒差。</strong></td>
+</tr>
+<tr>
+<td>最新縮窄層數是否較舊 Huihui 修訂好？</td>
+<td>8-probe 無差異；9-case xhigh gate 從 1 次失敗變 0 次</td>
+<td>只有很弱的「該 gate 較穩」訊號。</td>
+</tr>
+<tr>
+<td>是否做了 healing？</td>
+<td>模型卡未述</td>
+<td><strong>未查到，不等於確認沒有。</strong></td>
+</tr>
+<tr>
+<td>NVFP4 是否額外證明品質保留？</td>
+<td>只有量化作者的小探針</td>
+<td><strong>沒有。</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="abliteration技術通論">【abliteration技術通論】</h2>
+<h3 id="先釐清它不是單一固定處方">先釐清：它不是單一固定處方</h3>
+<p>abliteration 通常是先用有害／無害指令的 activation
+差找出「拒答方向」，再用 activation intervention
+或讓權重對此方向正交化，讓模型較難寫入該方向；不是重新預訓練。原始機制研究顯示，13
+個開放聊天模型的拒答可由窄的一維方向介導，並報告其手術對多數能力影響小。<a
+href="https://papers.neurips.cc/paper_files/paper/2024/hash/f545448535dfde4f9786555403ab7c49-Abstract-Conference.html">Arditi
+et al., NeurIPS 2024</a></p>
+<p>但「一維方向」不等於「與所有一般能力完全正交」。結果取決於：基底模型、取樣的
+harmful／harmless
+prompts、挑了哪些層、修改哪些矩陣、強度與是否做後續修復。因此，沒有可通用的「拆護欄一定不降品質」或「一定會胡說」結論。</p>
+<h3
+id="一般知識邏輯推理指令遵循資料顯示可近似持平也可下滑">一般知識、邏輯推理、指令遵循：資料顯示可近似持平，也可下滑</h3>
+<ul>
+<li><strong>原始同行評審研究（較強的正面證據，但不是
+Huihui/Qwen3.8）：</strong> Arditi 等人對較早的 Qwen chat
+模型做正交化後，Qwen-14B 的 MMLU 是 +0.2 pp、GSM8K -1.0 pp；Qwen-7B 則是
+MMLU -2.0 pp、GSM8K -6.3 pp。也就是多數一般 benchmark
+小幅變動、但數學推理可明顯較敏感；TruthfulQA 在 Qwen-7B/-14B 分別
+-3.7/-4.0
+pp。這支持「可相當保留能力」，也直接反駁「絕不影響推理／真實性」的說法。<a
+href="https://papers.neurips.cc/paper_files/paper/2024/file/f545448535dfde4f9786555403ab7c49-Paper-Conference.pdf">NeurIPS
+論文附錄 Table 6</a></li>
+<li><strong>跨工具比較（預印本，非 Huihui/Qwen3.8）：</strong> 16 個
+7B–14B instruction 模型中，數學 GSM8K 的變化範圍是 <strong>+1.51 至
+-18.81 個百分點</strong>；較保守的一次式方法平均約 -0.13/-0.28
+pp，但更激進或不相容的工具可有更大漂移。這是「手法品質差異很大」的直接量化證據。<a
+href="https://arxiv.org/abs/2512.13655">Young, 2025,
+arXiv:2512.13655</a></li>
+<li><strong>另一組 Qwen 對照（預印本，Qwen2.5-7B 而非
+Qwen3.8）：</strong> abliteration 後 GPQA -1.1、MMLU +0.3、MUSR
++1.7、IFEval +0.6、HumanEval -0.6、GSM8K -1.9、MATH 0.0
+pp。核心能力大致局部變動而非全面崩壞，但方向混合；TruthfulQA
+62.9→60.2，表示「一般會不會更容易胡說」不能一概排除，至少在這個 Qwen
+家族／方法裡真實性分數變差。研究者也明說副作用有家族相依性。<a
+href="https://arxiv.org/abs/2604.18510">Kabir &amp; Tiganj, 2026,
+arXiv:2604.18510</a></li>
+</ul>
+<h3 id="運作穩定性與非安全情境行為">運作穩定性與非安全情境行為</h3>
+<ul>
+<li>上述 Qwen2.5/Llama 研究把 abliteration
+定位為較局部的修改，整體副作用通常比有害 SFT
+小，但在不同家族上不一致；它並<strong>沒有</strong>證明所有無關情境都不受影響。<a
+href="https://arxiv.org/abs/2604.18510">Kabir &amp; Tiganj,
+2026</a></li>
+<li>一份較新的預印本以沒有拒答觸發的固定決策任務，配對比較 Qwen3-30B-A3B
+與
+Gemma：兩家族的無護欄版都更常選樂觀答案、理由更長、在自我批評裡較少明示不確定性；Qwen
+的表達信心上升、Gemma 則相反。作者控制了 checkpoint、推論堆疊與
+prompt，但這是特定金融決策任務、單一預印本，<strong>不等於 Huihui
+會同樣發生</strong>。它的價值是反駁「副作用只會在敏感題發生」這個假設。<a
+href="https://arxiv.org/abs/2607.17427">Fafuła, 2026,
+arXiv:2607.17427</a></li>
+<li>所以「話變多／更果斷／少說不知道」是<strong>可能的行為漂移</strong>，不是已對
+Huihui 證實的診斷；「更容易答錯／幻覺變多」也尚無 Huihui
+專屬資料。應把真實性、校準（信心與正確率）及長推理停止狀況列入自己的驗收，而非只看有沒有拒答。</li>
+</ul>
+<h3 id="粗暴-abliteration-與-healing較精準做法">粗暴 abliteration 與
+healing／較精準做法</h3>
+<ul>
+<li>有直接的社群實驗例子：Maxime Labonne 對 Llama-3 8B 類模型的早期
+abliteration 曾看到各 benchmark 下滑；後續以 DPO preference
+fine-tuning「healing」後，回收了大多數下滑，但 GSM8K
+沒有完全恢復。這是單一作者專案，不足以保證其他模型可復現，卻確實說明「先切再修」與「只切不修」可能不同。<a
+href="https://huggingface.co/blog/mlabonne/abliteration">作者的實驗報告</a></li>
+<li>這也和跨工具研究一致：減少不相關層與以較低分布漂移為目標的手法，往往比全面／激進處理更能保留能力；但其成效仍需以同一原版的
+benchmark 驗證。<a href="https://arxiv.org/abs/2512.13655">Young,
+2025</a></li>
+<li><strong>套回 Huihui：</strong> 最新 18–51
+層策略看起來是刻意縮窄修改範圍、追求保留表現；但卡中沒有 paired
+benchmark 或 healing
+記錄，所以只能說「設計意圖較保守」，不能說「品質已被修復或與原版等價」。</li>
+</ul>
+<h2 id="社群心得">【社群心得】</h2>
+<p>以下全是非獨立評測，僅作使用訊號，不可升格為品質結論。</p>
+<ul>
+<li>Huihui 模型頁 Discussion #2 有使用者稱快速測試「看起來比 Heretic
+好」，並以圖表示其 KL
+較小；討論沒有完整數字、測試集、解碼參數或與原版的可重跑成績，故不能採作一般能力證據。<a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated/discussions/2">Hugging
+Face Discussion #2</a></li>
+<li>NVFP4
+維護者的公開小測試是本報告能找到、最接近具體模型的品質心得：新舊無護欄修訂的
+8 probes 未見差異，且其 9-case <code>xhigh</code> 終止 gate
+在新版全過。它是維護者自測、樣本小，應視為「值得納入本機驗證清單」而非結論。<a
+href="https://huggingface.co/sakamakismile/Huihui-Qwen3.8-27B-abliterated-NVFP4">NVFP4
+模型卡</a></li>
+<li>MLX 轉換者表示其 oQ4e 量化在個人測試中保留了「幾乎」Q8
+品質；該說法比較的是量化精度、不是無護欄版對原版，且無公開 task
+分數，因此不回答本題的 abliteration 品質問題。<a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated/discussions/4">Discussion
+#4</a></li>
+</ul>
+<h2 id="沒查到的部分">【沒查到的部分】</h2>
+<ol type="1">
+<li><strong>沒有找到</strong> Huihui 27B 無護欄版相對原版 Qwen3.8-27B
+的公開、配對、可重跑
+benchmark：一般知識、推理、IFBench／IFEval、程式、幻覺／真實性都沒有。</li>
+<li><strong>沒有找到</strong> 作者披露的 abliteration 完整 recipe：對比
+prompt 集、拒答方向選擇、層／矩陣的具體投影強度、KL／困惑度、random
+seed、或 calibration 評測。</li>
+<li><strong>沒有找到</strong> 證明此模型有 post-abliteration DPO/SFT
+healing 的作者紀錄；只能說模型卡未寫，不能倒推不存在。</li>
+<li><strong>沒有找到</strong> NVFP4 與原版 BF16 在相同 prompt、同 chat
+template、同解碼參數下的品質對照。NVFP4 卡的測試是新舊 Huihui
+修訂間比較，並且混合了上游修訂與量化版這兩個變因。</li>
+<li><strong>沒有找到</strong> 這顆模型在長期
+production、一般任務下的故障率／胡說率／推理卡死率統計。卡內的 xhigh
+gate 只有 9 案，不足以外推。</li>
+</ol>
+<p>若要把「未知」縮小為可採購／可上線決策，最低限度應在<strong>原版與
+Huihui 同量化、同 runtime、同 chat template、同
+<code>reasoning_effort</code>、同
+seed／解碼設定</strong>下，對自家一般任務做配對評測：事實問答正確率與引用、數學／邏輯、嚴格格式指令、程式測試通過率、長任務停止／重複率，以及校準（答錯時是否承認不確定）。這是建議的驗收設計，不是本次已執行的測試。</p>
+<p>HUIHUI_QUALITY_SEARCH_DONE</p>
+</body>
+</html>
