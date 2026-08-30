@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>NVIDIA NVFP 格式與 GB10 自行量化可行性查證</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">NVIDIA NVFP 格式與 GB10 自行量化可行性查證</h1>
+</header>
+<h1 id="nvidia-nvfp-格式與-gb10-自行量化可行性查證">NVIDIA NVFP 格式與
+GB10 自行量化可行性查證</h1>
+<p>日期：2026-08-30（Asia/Taipei）<br />
+範圍：只查
+NVIDIA／OCP／工具維護者的一手文件與官方原始碼；不安裝工具、不下載權重、不實測量化。</p>
+<h2 id="結論">1. 【結論】</h2>
+<p><strong>截至本次查證，NVIDIA 正式命名且發布的是
+<code>NVFP4</code>；沒有找到 NVIDIA 正式格式名稱 <code>NVFP6</code> 或
+<code>NVFP8</code>。</strong> 使用者很可能把 Blackwell 硬體的「FP6
+支援」、OCP 的
+<strong><code>MXFP6</code>／<code>MXFP8</code></strong>，或一般
+<strong>FP8（E4M3／E5M2）</strong>，混成了「NVFP6／NVFP8」。</p>
+<p><strong>這台 GB10 理論上能自行把 27B 級 Hugging Face 模型做成
+NVFP4。</strong> 原因是它是 Blackwell、compute capability
+12.1、ARM64（aarch64/SBSA）、119.7 GiB 統一記憶體；這同時符合 NVIDIA
+Model Optimizer 的 Linux/aarch64、CUDA 12/13 與 NVFP4 Blackwell
+部署條件。實際開跑前仍須確認安裝中的 CUDA
+toolkit、PyTorch、ModelOpt/容器與推論 runtime
+版本相容，並停止或限縮其他吃統一記憶體的模型服務。</p>
+<p>「NVFP6／NVFP8」不是把 NVFP4 的 bit 數從 4 改成 6/8
+就能得到的同一格式：NVFP4 的縮放規則（16 值一組、FP8 E4M3 區塊
+scale、再加每 tensor FP32 scale）是該格式定義的一部分。</p>
+<h2 id="格式家族全貌">2. 【格式家族全貌】</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>名稱</th>
+<th>是否為正式名稱／誰定義</th>
+<th>元素與縮放方式</th>
+<th>與 NVFP4 的關係與實務判讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NVFP4</strong></td>
+<td><strong>是。NVIDIA</strong> 為 Blackwell 引入的正式名稱。</td>
+<td>元素為 FP4 E2M1；每 <strong>16</strong> 個值共用一個 <strong>FP8
+E4M3</strong> scale，另有每 tensor 的 FP32 第二層 scale；有效約 4.5
+bits/value。</td>
+<td>NVIDIA 自家的 FP4 格式。Model Optimizer 的 <code>nvfp4</code> 是主要
+DIY PTQ 路徑；官方明說部署的 NVFP4 inference 需要 Blackwell 與
+TensorRT-LLM 1.2+。 <a
+href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">NVIDIA
+技術說明</a>；<a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">ModelOpt
+支援矩陣</a></td>
+</tr>
+<tr>
+<td><strong>MXFP4</strong></td>
+<td><strong>是。OCP MX v1.0</strong> 公開標準。</td>
+<td>FP4 E2M1；每 <strong>32</strong> 個值共用一個
+<strong>E8M0</strong>（純 2 的冪）scale。</td>
+<td>與 NVFP4 都是 block/microscaling
+FP4，但<strong>不是同一個二進位格式、縮放規格或 checkpoint
+格式</strong>。Blackwell 可支援兩者；ModelOpt 文件也將
+<code>mxfp4_mlp_weight_only</code> 與 NVFP4 分開。 <a
+href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP
+MX 規格</a>；<a
+href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">NVIDIA
+比較表</a></td>
+</tr>
+<tr>
+<td><strong>MXFP6</strong></td>
+<td><strong>是。OCP MX v1.0</strong> 公開標準。</td>
+<td>6-bit 元素有 E3M2、E2M3 兩種；32 值一組 E8M0 scale。</td>
+<td>這是最可能被誤叫成「NVFP6」的東西。它是 <strong>MX/OCP</strong>
+格式，不是 NVIDIA 已發布的 <code>NVFP6</code>。Blackwell 的確支援
+FP6／MX block-scaled 路徑，但截至查閱日，ModelOpt 的公開 PTQ recipe
+清單沒有 <code>nvfp6</code> 或 <code>mxfp6</code>
+一般使用者入口；不能把硬體支援直接等同於成熟的 DIY 量化＋推論工作流。 <a
+href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP
+MX 規格</a>；<a
+href="https://developer.nvidia.com/blog/floating-point-8-an-introduction-to-efficient-lower-precision-ai-training/">NVIDIA
+FP8/Blackwell 說明</a>；<a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/modelopt_recipes/ptq.md">ModelOpt
+recipes</a></td>
+</tr>
+<tr>
+<td><strong>MXFP8</strong></td>
+<td><strong>是。OCP MX v1.0</strong> 公開標準。</td>
+<td>FP8 E4M3 或 E5M2 變體；32 值一組 E8M0 scale。</td>
+<td>是 OCP microscaling 的 8-bit 成員，並非 NVFP4 的「8-bit
+版」。ModelOpt、Transformer Engine、LLM Compressor 都以
+<strong>MXFP8</strong> 明確稱呼它。 <a
+href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP
+MX 規格</a>；<a
+href="https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.8/user-guide/examples/fp8_primer.html">Transformer
+Engine</a></td>
+</tr>
+<tr>
+<td><strong>FP8（一般 FP8）</strong></td>
+<td><strong>是。業界通用名稱</strong>；NVIDIA Hopper/Transformer Engine
+明列 E4M3、E5M2。</td>
+<td>E4M3 偏精度、E5M2 偏動態範圍；「一般 FP8」常採每 tensor FP32
+scale，與 MX 的 block scale 不同。</td>
+<td><strong>不應稱作 <code>NVFP8</code>。</strong> NVIDIA 官方文件把它叫
+FP8，並把 NVFP4、MXFP8 分開列出。NVFP4 內部雖用 FP8 E4M3 當區塊
+scale，但那不會使 FP8 變成 NVFP8。 <a
+href="https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.8/user-guide/examples/fp8_primer.html">NVIDIA
+Transformer Engine FP8 primer</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="命名的可驗證結論">命名的可驗證結論</h3>
+<ol type="1">
+<li>NVIDIA 的 NVFP4 官方文章把 Blackwell 的三種主要
+<strong>4-bit</strong> 格式列成 FP4、MXFP4、NVFP4；並沒有列出 NVFP6 或
+NVFP8。 <a
+href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">官方表
+1</a></li>
+<li>OCP 的 MX v1.0 明確列出
+<code>MXFP8</code>、<code>MXFP6</code>、<code>MXFP4</code>；OCP 也確認
+NVIDIA 是共同制定者之一。這可解釋為何常在 NVIDIA/Blackwell 文章裡看見 MX
+名稱，但它仍是開放的 OCP 家族。 <a
+href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP
+規格</a>；<a
+href="https://www.opencompute.org/blog/amd-arm-intel-meta-microsoft-nvidia-and-qualcomm-standardize-next-generation-narrow-precision-data-formats-for-ai">OCP
+公告</a></li>
+<li>本次在 NVIDIA Developer、NVIDIA
+Docs、NVIDIA/Model-Optimizer、Transformer Engine 與 CUTLASS
+的正式文件中，以精確字串搜尋
+<code>NVFP6</code>、<code>NVFP8</code>，沒有找到把它們定義成 NVIDIA
+資料格式的條目；相對地，這些文件直接使用
+NVFP4、MXFP4/6/8、FP8。這是<strong>有範圍的否定結論</strong>：它足以支持「不要把
+NVFP6/NVFP8 當成目前正式產品格式」，但不能用來預言未來 NVIDIA
+不會取這種名字。</li>
+</ol>
+<h2 id="自己量化需要什麼">3. 【自己量化需要什麼】</h2>
+<h3
+id="首選工具nvidia-model-optimizer原-tensorrt-model-optimizer">首選工具：NVIDIA
+Model Optimizer（原 TensorRT Model Optimizer）</h3>
+<p>這是 NVIDIA 官方直接推薦的 NVFP4 路徑。它可做 post-training
+quantization（PTQ），也可在需要品質補救時走 quantization-aware
+training（QAT）。Hugging Face PTQ 範例提供
+<code>nvfp4</code>／<code>nvfp4_mlp_only</code>／<code>nvfp4_experts_only</code>／<code>nvfp4_omlp_only</code>
+presets，輸出 Unified Hugging Face checkpoint，可供 TensorRT-LLM、vLLM
+或 SGLang 使用。 <a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">官方
+README 與 PTQ 範例</a></p>
+<p>建議流程如下：</p>
+<ol type="1">
+<li>準備原始 Hugging Face BF16/FP16 checkpoint、足夠磁碟與一個隔離
+Python/container 環境。</li>
+<li>使用 NVIDIA 建議的 TensorRT-LLM container，或 Linux 上安裝
+<code>nvidia-modelopt[hf]</code> 加範例 requirements。 <a
+href="https://nvidia.github.io/Model-Optimizer/getting_started/_installation_for_Linux.html">安裝文件</a></li>
+<li>選 recipe：若追求最大壓縮，為完整 W4A4 的
+<code>nvfp4_default</code>；若先追求可用性／品質，NVIDIA 建議 dense 27B
+優先試 <code>nvfp4_mlp_only</code> 或
+<code>nvfp4_omlp_only</code>，讓敏感的 attention QKV 留在高精度。 <a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/modelopt_recipes/ptq.md">recipe
+說明</a></li>
+<li>跑 calibration forward pass，量測 activation 範圍、決定 scale，然後
+export checkpoint。官方範例的典型 calibration 是 <strong>128–512
+samples</strong>，預設資料混用 <code>cnn_dailymail</code> 與
+<code>nemotron-post-training-dataset-v2</code>；若模型用在特定語言、長上下文、工具呼叫或多模態，應以代表該用途的資料覆蓋校準與後續品質驗收。
+<a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">官方
+PTQ 說明</a></li>
+<li>用目標 runtime
+載入，做輸出品質、長度、工具格式及目標負載的測試；量化成功只代表檔案產生，不代表特定模型／特定
+runtime 的品質已驗收。</li>
+</ol>
+<p>官方簡化 API 是
+<code>mtq.quantize(model, mtq.NVFP4_DEFAULT_CFG, forward_loop)</code>；實務上用其
+<code>hf_ptq.py</code> 或 YAML recipe 比較容易重現。 <a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">API
+範例</a></p>
+<h3 id="可用替代llm-compressorvllm-project">可用替代：LLM
+Compressor（vLLM Project）</h3>
+<p><code>llmcompressor</code> 是 vLLM Project 維護的另一條 PTQ
+路徑，輸出 <code>compressed-tensors</code> checkpoint，公開列出
+NVFP4、MXFP4、MXFP8 與 calibration／disk offloading 支援。其文件把 NVFP4
+定義為 group-size 16、FP8 scale，並寫明 W4A4 NVFP4 要用 calibration
+dataset；支援目標是 Blackwell SM100+。 <a
+href="https://github.com/vllm-project/llm-compressor">LLM Compressor
+README</a>；<a
+href="https://github.com/vllm-project/llm-compressor/blob/main/docs/guides/compression_schemes.md">compression
+schemes</a></p>
+<p>它是有效的替代，不是 NVIDIA
+官方的主文件路徑；最重要的取捨是<strong>輸出 checkpoint 格式與 runtime
+相容性</strong>。若現有服務已穩定吃 ModelOpt
+<code>MIXED_PRECISION</code> 格式，優先用 ModelOpt；若部署明確走
+vLLM/compressed-tensors，LLM Compressor
+值得比較。無論哪一條，<code>MXFP6</code>
+目前都不是兩者公開文件中「一般團隊一條命令可量化」的同等成熟選項。</p>
+<h3 id="軟硬體需求以及舊卡能否做">軟硬體需求，以及舊卡能否做</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>項目</th>
+<th>官方可確認的要求／界線</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS／CPU 架構</td>
+<td>Model Optimizer Linux 支援
+<strong>x86_64、aarch64（SBSA）</strong>；所以 ARM64 本身不是阻礙。</td>
+</tr>
+<tr>
+<td>Python／CUDA／PyTorch</td>
+<td>ModelOpt 目前列 Python &gt;=3.10,&lt;3.15、CUDA <strong>12.x 或
+13.x</strong>、PyTorch &gt;=2.8；TensorRT-LLM &gt;=1.0 與 TensorRT
+&gt;=10.0 是選配／部署相關。 <a
+href="https://nvidia.github.io/Model-Optimizer/getting_started/_installation_for_Linux.html">安裝文件</a></td>
+</tr>
+<tr>
+<td>產檔時的加速</td>
+<td>ModelOpt 的 NVFP4 Triton accelerated kernels 要 <strong>compute
+capability &gt;=
+8.9</strong>；不符合時，文件沒有說格式無法表示，但不具備這條加速路徑。其
+Changelog 也記錄某些 NVFP4 scale search 會在 CPU/Triton 不可用時
+fallback。 <a
+href="https://nvidia.github.io/Model-Optimizer/getting_started/_installation_for_Linux.html">安裝文件</a>；<a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/CHANGELOG.rst">Changelog</a></td>
+</tr>
+<tr>
+<td>官方支援的 NVFP4 推論</td>
+<td>ModelOpt 支援矩陣明確寫 <strong>NVFP4 inference requires Blackwell
+GPUs and TensorRT-LLM
+v1.2+</strong>。這是「部署加速／正式支援」要求，不等價於「任何舊卡絕不可能算出一份檔案」。
+<a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">支援矩陣註腳</a></td>
+</tr>
+</tbody>
+</table>
+<p>因此嚴格回答是：<strong>Blackwell 是 NVFP4
+的官方硬體推論目標；官方文件沒有把「正確產生 NVFP4 checkpoint」寫成
+Blackwell-only 的硬門檻。</strong> 舊 GPU 可能可跑部分 PTQ/CPU
+fallback，卻沒有原生 NVFP4 Tensor Core
+推論，且相容性與速度不是本報告建議承諾的路徑。若目標是「產出後就在本機高效使用」，應在
+Blackwell 上做。</p>
+<h3 id="記憶體磁碟與大概工時">記憶體、磁碟與大概工時</h3>
+<p>以下先把<strong>可精算的靜態容量</strong>和<strong>不能由參數數量精算的峰值</strong>分開：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>項目</th>
+<th>27B 的計算／證據</th>
+<th>意義</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始 BF16 權重下限</td>
+<td>27e9 × 2 bytes = <strong>54.0 GB decimal = 50.3 GiB</strong>。</td>
+<td>這只是權重本體；不含
+tokenizer、視覺塔、暫存、Python/PyTorch、activations。</td>
+</tr>
+<tr>
+<td>全模型 NVFP4 的理想權重下限</td>
+<td>NVFP4 為 4-bit value + 每 16 值 8-bit scale = <strong>4.5
+bits/value</strong>；27e9 × 4.5/8 = <strong>15.19 GB decimal = 14.14
+GiB</strong>，另有 per-tensor FP32 scale。</td>
+<td>實際檔會較大：常會留
+<code>lm_head</code>、embeddings、norm、vision/MTP 或 attention
+的一部分在 BF16/FP8。</td>
+</tr>
+<tr>
+<td>磁碟下限（原檔 + 理想量化輸出）</td>
+<td>約 <strong>69.19 GB decimal = 64.45
+GiB</strong>，未含下載快取、暫存與保留兩份輸出。</td>
+<td>建議實務上預留遠高於此數字的空間，而不是邊量邊清原檔。</td>
+</tr>
+<tr>
+<td>PTQ 峰值統一記憶體</td>
+<td><strong>沒有 NVIDIA 公開的「Qwen3.8-27B on GB10」峰值數字。</strong>
+除了原始權重，峰值受 calibration 的 batch/seq
+length、attention、模型實作、是否寫出輸出、是否有其他服務佔用所影響。ModelOpt
+提供 <code>--low_memory_mode</code>（僅 FP8/NVFP4 + max calibration）與
+sequential device map 來降低需要量。 <a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">官方說明</a></td>
+<td>不能把 14.14 GiB 量化檔大小誤當成量化過程的所需記憶體。</td>
+</tr>
+<tr>
+<td>可比工時證據</td>
+<td>NVIDIA 的 Jetson AI Lab 官方教學，在 <strong>Jetson Thor
+T5000</strong> 對 <strong>Qwen3.6-27B</strong>、base weights 已
+cache、<code>calib_size=512</code> 的 NVFP4 PTQ 報告 <strong>「just over
+14 minutes」</strong>，export 92 秒。 <a
+href="https://github.com/NVIDIA-AI-IOT/jetson-ai-lab/blob/main/src/content/tutorials/model-optimization/modelopt-on-jetson.mdx">NVIDIA
+官方教學</a></td>
+<td>這是同級 27B 的有價值參考，<strong>不是 GB10
+benchmark</strong>；不可直接承諾 GB10 也是 14 分鐘。ModelOpt
+第一次使用還可能先編譯 kernels，官方說可能花幾分鐘。</td>
+</tr>
+</tbody>
+</table>
+<p>實務排程可把「原始權重已在本機、先小校準驗通」視為首輪前提，預留至少數十分鐘的維護視窗；若用較長
+8K/32K 校準序列、MSE/local-Hessian recipe、品質評測或遇到 ARM64
+wheel／runtime 編譯問題，時間會顯著增加。這是保守作業建議，不是 NVIDIA
+對 GB10 的速度承諾。</p>
+<h2 id="這台機器的可行性判斷">4. 【這台機器的可行性判斷】</h2>
+<p>使用者提供的條件：GB10 / DGX Spark、ARM64、統一記憶體 119.7
+GiB、compute capability 12.1、driver 580.159.03。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>比對項目</th>
+<th>判定</th>
+<th>依據與限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blackwell / NVFP4 tensor core</td>
+<td><strong>通過</strong></td>
+<td>NVIDIA 將 DGX Spark 明定為 GB10 Grace Blackwell、第五代 Tensor
+Cores、FP4 支援。 <a
+href="https://docs.nvidia.com/dgx/dgx-spark/hardware.html">DGX Spark
+硬體文件</a></td>
+</tr>
+<tr>
+<td>目標 GPU 架構</td>
+<td><strong>通過</strong></td>
+<td>ModelOpt 對 NVFP4 inference 的正式要求是 Blackwell；GB10 就是
+Blackwell。 <a
+href="https://github.com/NVIDIA/Model-Optimizer/blob/main/examples/hf_ptq/README.md">ModelOpt
+支援矩陣</a></td>
+</tr>
+<tr>
+<td>compute capability</td>
+<td><strong>通過</strong></td>
+<td>使用者的 12.1 高於 ModelOpt NVFP4 Triton acceleration 所需
+&gt;=8.9；NVIDIA 的 TensorRT for RTX 文件也明指 GB10 是 compute
+capability 12.1。 <a
+href="https://nvidia.github.io/Model-Optimizer/getting_started/_installation_for_Linux.html">ModelOpt
+安裝文件</a>；<a
+href="https://docs.nvidia.com/deeplearning/tensorrt-rtx/latest/index.html">NVIDIA
+TensorRT 文件</a></td>
+</tr>
+<tr>
+<td>ARM64/aarch64</td>
+<td><strong>通過（理論）</strong></td>
+<td>ModelOpt Linux 支援表明列 aarch64 (SBSA)。這不能自動保證每個第三方
+wheel 都有 ARM64 build，因此優先採 NVIDIA 的 TensorRT-LLM container。 <a
+href="https://nvidia.github.io/Model-Optimizer/getting_started/_installation_for_Linux.html">安裝文件</a></td>
+</tr>
+<tr>
+<td>CUDA / driver</td>
+<td><strong>大致通過，須以實際 toolkit 確認</strong></td>
+<td>ModelOpt 要 CUDA 12.x/13.x。NVIDIA DGX Spark 目前 release notes 列
+driver 580.159.03、CUDA Toolkit 13.0.2；使用者的 driver
+正相同。不過「compute capability 12.1」不是 toolkit
+版本，仍需在真的要開跑時檢查容器/host 的 <code>torch.version.cuda</code>
+與 CUDA ABI。 <a
+href="https://docs.nvidia.com/dgx/dgx-spark/release-notes.html">DGX
+Spark release notes</a></td>
+</tr>
+<tr>
+<td>119.7 GiB 統一記憶體</td>
+<td><strong>可行但要控管</strong></td>
+<td>單看 27B BF16 權重下限 50.3 GiB，名義上尚有約 <strong>69.4
+GiB</strong>；但那不是可自由使用的 VRAM，OS、桌面、其他
+container／vLLM、calibration activation 與 allocator
+都在同一池。量化時應先停止既有大型服務，先用短 sequence / 小 calibration
+驗通，必要時用 <code>--low_memory_mode</code>。NVIDIA 的產品規格為 128
+GB coherent unified memory，與使用者目前可見的 119.7 GiB
+不矛盾（後者是可用量）。 <a
+href="https://www.nvidia.com/en-us/products/workstations/dgx-spark/">DGX
+Spark 規格</a></td>
+</tr>
+<tr>
+<td>27B 模型整體結論</td>
+<td><strong>可做，建議先做小規模驗證再跑正式 PTQ</strong></td>
+<td>硬體規格不是阻礙；最大的風險是實際模型架構（vision/MTP/remote
+code）、所選 runtime
+版本、校準長度及統一記憶體爭用。這些不能從「27B」單一數字推導。</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="建議的低風險啟動順序尚未執行">建議的低風險啟動順序（尚未執行）</h3>
+<ol type="1">
+<li>以 NVIDIA TensorRT-LLM 的 aarch64/SBSA 相容版本建立<strong>獨立
+container/venv</strong>，核對
+Python、<code>torch.version.cuda</code>、GPU 名稱及 capability。</li>
+<li>先用 ModelOpt 的一個短 calibration、短 context 的 NVFP4 recipe
+驗證：模型能載入、能 export、目標 vLLM/TRT-LLM 能讀回。</li>
+<li>再選擇代表真實工作負載的 128–512 sample calibration；若品質優先，從
+<code>nvfp4_mlp_only</code>／<code>nvfp4_omlp_only</code>
+開始，而非直接全模型 W4A4。</li>
+<li>對 BF16 基線與 NVFP4 結果至少比較：固定題集、工具/JSON
+格式、中文、長輸入、推理與實際 serving；若失真，再調整 recipe 或以
+FP8/BF16 保留敏感模組。</li>
+</ol>
+<h2 id="沒查到的部分">5. 【沒查到的部分】</h2>
+<ul>
+<li><strong>沒有查到</strong> NVIDIA 對「Qwen3.8-27B 在 GB10 用 ModelOpt
+量 NVFP4」的官方峰值記憶體、tokens/s 或完工時間。報告只引用 Qwen3.6-27B
+在 Jetson Thor T5000 的官方 14 分鐘案例，沒有把它冒充成 GB10 成績。</li>
+<li><strong>沒有查到</strong> NVIDIA 正式發布或定義名為
+<code>NVFP6</code>、<code>NVFP8</code> 的格式規格、ModelOpt
+config、Transformer Engine recipe 或產品支援表。這份否定結論的搜尋範圍是
+NVIDIA Developer/Docs、NVIDIA/Model-Optimizer、Transformer
+Engine、CUTLASS 與 OCP MX 文件；在此範圍中精確名稱命中數為
+<strong>0</strong>。未宣稱能預測未來命名。</li>
+<li><strong>沒有查到</strong> 一條與 NVFP4 一樣成熟、由 ModelOpt/LLM
+Compressor 公開主推的一般 <code>MXFP6</code> PTQ + 推論指令。MXFP6 作為
+OCP 格式存在，Blackwell/CUTLASS 也可提及相應 block-scaled
+primitive，但標準存在不等於一般團隊已有端到端部署保證。</li>
+<li>本報告沒有實測目前這台機器的可用 RAM、已佔用的 unified
+memory、磁碟餘量、已裝 PyTorch/CUDA 版本、目標模型授權、或目標 runtime
+對特定 Qwen3.8 checkpoint
+的相容性；因此「可行」是<strong>依官方需求與使用者提供規格作出的理論判定</strong>，不是已完成量化的宣稱。</li>
+</ul>
+<p>NVFP_FORMAT_SEARCH_DONE</p>
+</body>
+</html>
