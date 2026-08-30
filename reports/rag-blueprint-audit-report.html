@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MuseAGI RAG 藍圖審計報告</title>
+<style>
+  :root {
+    --bg: #faf8f4;
+    --card-bg: #ffffff;
+    --text: #2a2622;
+    --text-dim: #6b6459;
+    --accent: #b8542f;
+    --accent-soft: #f2e4d8;
+    --ok: #2f6b4f;
+    --ok-bg: #e6f2ec;
+    --warn: #9a6b1a;
+    --warn-bg: #faf1de;
+    --border: #e6ddd0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    line-height: 1.75;
+    padding: 0 16px 60px;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  header {
+    padding: 40px 0 24px;
+    border-bottom: 3px solid var(--accent);
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: 1.65rem;
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+  .meta {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+  .verdict {
+    background: var(--ok-bg);
+    border: 1px solid var(--ok);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin: 24px 0 32px;
+  }
+  .verdict .label {
+    font-size: 0.85rem;
+    color: var(--ok);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .verdict .big {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ok);
+  }
+  section { margin-bottom: 36px; }
+  h2 {
+    font-size: 1.15rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 12px;
+    margin: 0 0 16px;
+  }
+  h3 {
+    font-size: 1rem;
+    color: var(--accent);
+    margin: 22px 0 8px;
+  }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 0.92rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th { background: var(--accent-soft); font-weight: 700; }
+  code {
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    word-break: break-all;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .ev-yes {
+    display: inline-block;
+    background: var(--ok-bg);
+    color: var(--ok);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-right: 8px;
+  }
+  .note-box {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 14px 0;
+  }
+  .note-box .title { font-weight: 700; color: var(--warn); margin-bottom: 6px; }
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 480px) {
+    h1 { font-size: 1.35rem; }
+    table { font-size: 0.85rem; }
+    th, td { padding: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>MuseAGI RAG 藍圖審計報告</h1>
+  <div class="meta">獨立設計審查（Claude Opus 親自執行，未外包）｜ 2026-08-30</div>
+</header>
+
+<div class="verdict">
+  <div class="label">審計結論</div>
+  <div class="big">ALLOW —— 可以動工，沒有阻塞級問題</div>
+</div>
+
+<section>
+<h2>這份報告在審什麼</h2>
+<p>
+Zeal 先前核准了 MuseAGI RAG（本地知識搜尋系統）的三項工程迭代，codex sol 畫出一份 A～G 七大項、
+八個施工批次（RAG-B0～B8）的施工藍圖。Zeal 之後追加兩個要求：「多方共用」（本地模型／舊
+Museon／Claude CLI／Codex CLI／Claude App 都要能查到這套 RAG）跟「MuseGrade（未來商用安裝版）
+裝機即用」，要求補進同一份藍圖，並指定<strong>「讓 opus 去審計對齊」</strong>——依家規，
+設計文件本身合不合理的審查要主控本人親自做，不外包給 codex 或本地模型。
+</p>
+<p>
+codex sol 已經把補件（H 節「多消費者共用訪問層設計」、I 節「MuseGrade 可攜式打包考量」）
+寫進同一份藍圖檔案，本報告是這份補件的獨立審計結果。
+</p>
+</section>
+
+<section>
+<h2>我實際查證了什麼（不是照單全收藍圖自己的說法）</h2>
+<p>藍圖裡每個關鍵技術宣稱，我都直接對 MuseAGI 現在的真實程式碼下指令核對過，不是只讀藍圖文字：</p>
+
+<div class="card">
+<table>
+<tr><th>藍圖宣稱</th><th>查證方式</th><th>結果</th></tr>
+<tr><td><code>/rag/query</code> 這個新路徑目前不存在</td><td>對真實程式碼全文搜尋</td><td><span class="ev-yes">確認屬實</span>命中 0 筆</td></tr>
+<tr><td>檢索邏輯只有一個正式入口 <code>retrieve_and_rerank</code></td><td>逐一列出所有呼叫這個函式的地方</td><td><span class="ev-yes">確認屬實</span>只有這一個函式定義＋固定幾個已知呼叫點，沒有第二套邏輯</td></tr>
+<tr><td>本地模型的呼叫程式（<code>provider_local.py</code>）目前沒有偷偷加檢索邏輯</td><td>搜尋該檔案有沒有跟 RAG 相關的字眼</td><td><span class="ev-yes">確認屬實</span>命中 0 筆</td></tr>
+<tr><td>既有的桌面版身分驗證機制真的存在、可以擴充</td><td>確認該機制的程式檔案真實存在</td><td><span class="ev-yes">確認屬實</span></td></tr>
+<tr><td>系統接線地圖正本文件確實存在</td><td>確認檔案存在且非空</td><td><span class="ev-yes">確認屬實</span>16.5KB，8月23日更新</td></tr>
+<tr><td>新批次（RAG-B9）依賴的舊批次（RAG-B4）內容跟依賴理由對得上</td><td>核對 RAG-B4 原始定義</td><td><span class="ev-yes">確認屬實</span>B4 正是「撤權／版本／同意」相關批次，B9 要等它先做完才能對外開放資料，邏輯成立</td></tr>
+<tr><td>兩份文件檔案（草稿版與正式合併版）內容有沒有落差</td><td>逐字比對兩份檔案的補件內容</td><td><span class="ev-yes">確認屬實</span>完全一致，無漂移</td></tr>
+</table>
+</div>
+</section>
+
+<section>
+<h2>「多方共用」這個要求，設計上是怎麼回應的</h2>
+<p>
+藍圖沒有為了交差而假裝「全部都接好了」——它把「共用」拆成兩層講清楚：
+</p>
+<ul>
+<li><strong>基礎設施層（這批真的會蓋）：</strong>在既有的常駐服務上，新開一個乾淨的查詢入口
+（一個轉接口，本身不重新實作檢索邏輯，只是把同一套邏輯開放給不同程式呼叫），
+外加最基本的身分驗證。這一層蓋完，任何懂得怎麼發 HTTP 請求的工具都「可以查到」。</li>
+<li><strong>各消費者實際串接（有些這批做、有些明講交給以後）：</strong></li>
+</ul>
+<div class="card">
+<table>
+<tr><th>消費者</th><th>本批狀態</th><th>誠實邊界</th></tr>
+<tr><td>Claude CLI / Codex CLI</td><td>可直接用（附操作範例）</td><td>要它「每次真的會主動查」還需另外接進各自的工作流，不算這批範圍；資料送進雲端模型前的外送同意，仍是各自的責任</td></tr>
+<tr><td>MuseAGI 自己內建的本地模型問答</td><td>本來就已經有（既有流程本就是先查資料再問模型）</td><td>—</td></tr>
+<tr><td>外部本地模型（Ornith／Qwen 等由其他程式驅動的）</td><td>入口做好，接線本身要由驅動那些模型的程式自己來接</td><td>明講「介面可接」不等於「已經接好」，不誇大</td></tr>
+<tr><td>舊 Museon／商用 MuseON</td><td>只做介面，兩個 repo 都不動一行程式碼</td><td>正本上鎖，等 Zeal 明確指定要接哪一套、另開授權才動手</td></tr>
+<tr><td>Claude Desktop</td><td>技術上可行但要另外裝擴充套件，本批先不做</td><td>需要 Zeal 另外知情同意私人資料會進 Claude 雲端</td></tr>
+<tr><td>Claude.ai 網頁版</td><td>本批明確排除</td><td>需要對外公開的安全基礎建設，是完全不同量級的工程，藍圖誠實寫明「做不到」而不是硬掰</td></tr>
+</table>
+</div>
+<p>
+這個拆法我認可：真正屬於 MuseAGI 自己能控制的部分（入口、驗證、既有本地問答）確實做到，
+碰到「別人的系統」「別人的 repo」「需要 Zeal 額外授權」的部分，誠實列成「以後再做」，
+沒有為了滿足「都可以 RAG 到」這句話就假裝已經做完。
+</p>
+</section>
+
+<section>
+<h2>「MuseGrade 裝機即用」這個要求，設計上是怎麼回應的</h2>
+<p>
+藍圖明講：這批<strong>不動 MuseGrade 一行程式碼</strong>，只做兩件事——
+①盤點目前有哪些「使用者要自己開 Terminal 手動設定才能跑起來」的環節，逐項寫清楚
+「這批先不修、原因是什麼」；②在這批新寫的程式裡先避開幾個一旦寫死、以後會變成搬家障礙的雷
+（例如不要把開發機的檔案路徑寫死在程式裡）。
+</p>
+<p>
+真正的「使用者裝完就能用」——自動下載模型、進度條、授權檢查——藍圖列成 MuseGrade 未來自己的
+安裝流程要做的事，不是這批的產出，也沒有假裝已經做到。
+</p>
+</section>
+
+<section>
+<h2>發現的問題</h2>
+<div class="note-box">
+<div class="title">只有一個非阻塞的小問題</div>
+新增的兩個施工批次（RAG-B9、RAG-B10）跟原本 A～G 藍圖既有的八個批次，標題階層寫法不一致
+（新的兩個少縮進一層）。純粹是文件格式，不影響內容或能不能施工，順手就能修，不影響「可以動工」的結論。
+</div>
+<p>沒有找到會擋施工的問題：沒有邏輯矛盾、沒有誇大宣稱、每一條規則都講得出用什麼機制強制、
+驗收條件寫得出可執行的紅綠測試、使用者視角場景沒有夾帶內部程式碼用語。</p>
+</section>
+
+<section>
+<h2>下一步</h2>
+<p>
+審計通過，可以開始施工，從批次 <strong>RAG-B0</strong>（准入條件與現況鎖定）開始。
+依 MuseAGI 專案自己訂的規矩：<strong>有寫入權限的施工步驟，一定要 Zeal 本人在場才能動手</strong>——
+這不是我這次審計加的新限制，是這個專案原本就有的紅線。等你有空、人在場，跟我說一聲就開工。
+</p>
+</section>
+
+<footer>
+本報告為 Claude Opus 親自執行的獨立設計審查，未外包給 codex 或本地模型（依家規「設計類審查」條款）。
+所有查證指令與真實輸出保留在對話紀錄中，可回溯核對。
+</footer>
+
+</div>
+</body>
+</html>
