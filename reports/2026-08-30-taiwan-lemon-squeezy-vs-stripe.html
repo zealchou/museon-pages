@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="台灣個人開發者選擇 Lemon Squeezy 與 Stripe 的官方文件查證報告">
+  <title>MuseGrade 收費平台查證：Lemon Squeezy vs Stripe</title>
+  <style>
+    :root { --paper:#f7f3ea; --paper2:#fffdf8; --ink:#202321; --soft:#505853; --line:#d8d1c4; --red:#b74b32; --moss:#63736e; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", sans-serif; line-height:1.75; font-size:17px; }
+    main { max-width:1040px; margin:auto; padding:36px 24px 72px; }
+    header { border-top:5px solid var(--red); padding:40px 0 26px; max-width:980px; }
+    .eyebrow { color:var(--red); font-weight:700; letter-spacing:.08em; font-size:.82rem; }
+    h1,h2,h3 { font-family:"Noto Serif TC", "Songti TC", "PMingLiU", serif; line-height:1.3; }
+    h1 { font-size:clamp(2rem,5vw,3.5rem); margin:.18em 0; letter-spacing:.02em; }
+    h2 { font-size:1.75rem; margin:2.5rem 0 .7rem; padding-top:.65rem; border-top:1px solid var(--line); }
+    h3 { font-size:1.22rem; margin:1.6rem 0 .35rem; }
+    p { margin:.7rem 0; }
+    .lede { font-size:1.12rem; max-width:760px; color:var(--soft); }
+    .meta { color:var(--soft); font-size:.92rem; }
+    .callout { background:var(--paper2); border-left:4px solid var(--red); padding:18px 20px; margin:24px 0; box-shadow:0 5px 18px rgba(32,35,33,.05); }
+    .decision { background:#eaf0eb; border-left-color:var(--moss); }
+    a { color:#8f3828; text-decoration-thickness:1px; text-underline-offset:3px; }
+    a:hover { color:#5d2117; }
+    ul,ol { padding-left:1.35rem; }
+    li+li { margin-top:.35rem; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.6rem; background:var(--paper2); font-size:.95rem; }
+    th,td { border:1px solid var(--line); padding:12px; vertical-align:top; text-align:left; }
+    th { background:#eee8dc; font-weight:700; }
+    .tag { display:inline-block; border:1px solid var(--moss); color:#3f5650; padding:1px 8px; border-radius:999px; font-size:.8rem; font-weight:700; }
+    .source-list li { overflow-wrap:anywhere; }
+    .fine { font-size:.9rem; color:var(--soft); }
+    .no-claim { color:#7b2f20; font-weight:700; }
+    footer { border-top:1px solid var(--line); margin-top:3rem; padding-top:1rem; color:var(--soft); font-size:.9rem; }
+    @media (max-width:640px) { main { padding:24px 16px 48px; } body { font-size:16px; } table { font-size:.87rem; } th,td { padding:9px; } .table-wrap { overflow-x:auto; } }
+    @media print { body { background:#fff; } main { max-width:none; padding:0; } a { color:inherit; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">MUSEGRADE · 官方文件查證</div>
+    <h1>台灣個人開發者的收費平台選擇：<br>Lemon Squeezy vs Stripe</h1>
+    <p class="lede">情境：One Muse／MuseGrade 為台灣個人或小型工作室、沒有美國實體與美國銀行帳戶，要向全球使用者販售桌面 App 的一次性授權與訂閱服務。</p>
+    <p class="meta">查證日期：2026-08-30（Asia/Taipei）｜範圍：官方網站、官方文件與官方支援文件。沒有官方明確資訊之處，本文明示「查無官方明確資訊」。這不是稅務、法律或會計意見。</p>
+  </header>
+
+  <section class="callout decision">
+    <h2 style="border:0;padding:0;margin:.1rem 0 .55rem">先給結論</h2>
+    <p><strong>在「台灣個人、無美國實體／銀行帳戶」這個前提下，Lemon Squeezy 是有官方直接路徑的選擇：</strong>其銀行撥款支援國名單明列 Taiwan，並明確接受軟體／SaaS 與訂閱；相反地，Stripe 的直接可用國家清單未列 Taiwan。<a href="https://docs.lemonsqueezy.com/help/getting-started/supported-countries">Lemon Squeezy：Supported Countries</a>；<a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">Lemon Squeezy：Activate Your Store</a>；<a href="https://stripe.com/global">Stripe：Global availability</a></p>
+    <p>代價是 Lemon Squeezy 的交易費率較高、訂閱銷售還有額外 0.5% 費用，且資金在銷售後有 13 天保留期；它以 Merchant of Record（MoR）交換跨境間接稅、退款、爭議與 PCI 的處理責任。<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">Lemon Squeezy：Fees</a>；<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Lemon Squeezy：Getting Paid</a>；<a href="https://docs.lemonsqueezy.com/help/payments/merchant-of-record">Lemon Squeezy：Merchant of Record</a></p>
+  </section>
+
+  <section>
+    <h2>1. Lemon Squeezy：台灣賣家是否能申請？流程與材料</h2>
+    <p><span class="tag">官方明確支援</span> Lemon Squeezy 的「銀行撥款支援國」清單直接列出 <strong>Taiwan</strong>；同頁亦說明，商家可在能接收其支援國之銀行或 PayPal 撥款時使用服務。這是「撥款支援」的明確證據，不是對每一個申請案預先保證核准。<a href="https://docs.lemonsqueezy.com/help/getting-started/supported-countries">官方 Supported Countries</a></p>
+    <ol>
+      <li>以電子郵件／密碼、Google 或 Twitter 註冊並驗證電子郵件；建立商店名稱與子網域。新帳號先處於 Test mode。<a href="https://docs.lemonsqueezy.com/guides/getting-started">官方 Getting Started</a></li>
+      <li>在 Settings → Payouts 連結台灣銀行帳戶或已驗證的 PayPal 帳戶。官方表示，銀行帳戶連結時可能要求身分驗證。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">官方 Getting Paid</a></li>
+      <li>申請開通 live mode：填寫一份關於商業與客戶的短問卷，並完成身分驗證；官方說典型審核時間為 2–3 個工作天，且每個商店會接受 KYC／KYB 與產品合規檢查。<a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">官方 Activate Your Store</a></li>
+      <li>身分驗證需填個人資料、上傳政府核發身分證件照片。非美國個人／實體還須完成 W-8 稅務表，填名稱、稅務分類與居住國；未完成時撥款可能被停用。<a href="https://docs.lemonsqueezy.com/help/getting-started/verify-your-identity">官方 Verify Your Identity</a>；<a href="https://docs.lemonsquee.com/help/tax-forms">官方 Tax Forms</a></li>
+    </ol>
+    <p><strong>產品適配：</strong>官方將可由 Lemon Squeezy 履約的數位商品列為通常可核准的類型，並明確把使用訂閱或授權金鑰履約的 SaaS／軟體公司列為通常允許的例子；這與 MuseGrade 的一次性授權＋訂閱桌面 App 相符。<a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">官方 Activate Your Store</a></p>
+    <p class="no-claim">查無官方明確資訊：Lemon Squeezy 沒有公開「台灣個人申請必定核准」或一份窮盡的台灣專用文件清單。官方只明載身分資料、政府證件、問卷與非美國人的 W-8；重新驗證時還可能要求其他相關文件。<a href="https://docs.lemonsqueezy.com/help/getting-started/verify-your-identity">官方 Verify Your Identity</a></p>
+  </section>
+
+  <section>
+    <h2>2. MoR 模式：好處、限制與台灣撥款</h2>
+    <p>Lemon Squeezy 明確表示自己是 MoR。依其定義，終端客戶是向 MoR 購買；MoR 對收款、銷售稅、退款／拒付與 PCI 合規負責。<a href="https://docs.lemonsqueezy.com/help/payments/merchant-of-record">官方 Merchant of Record</a></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>對台灣賣家的實際意義</th><th>官方可支持的結論</th><th>邊界／限制</th></tr></thead>
+      <tbody>
+        <tr><td>跨境間接稅</td><td>由 Lemon Squeezy 作為 MoR 處理銷售稅、VAT 等交易責任，並在平台費描述中表示稅務成本由其處理。<a href="https://docs.lemonsqueezy.com/help/payments/merchant-of-record">MoR</a>；<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">Fees</a></td><td>這是<strong>買家交易的間接稅</strong>責任轉移；官方文件沒有宣稱替台灣賣家處理其在台灣的所得稅、營所稅或記帳申報。因此不應把「MoR」解讀為免除台灣本地稅務義務。</td></tr>
+        <tr><td>不用美國銀行帳戶</td><td>台灣在銀行撥款支援清單，且可選銀行或 PayPal 撥款。<a href="https://docs.lemonsqueezy.com/help/getting-started/supported-countries">Supported Countries</a>；<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Getting Paid</a></td><td>仍需通過 KYC／KYB、身分驗證與 W-8；缺件可造成撥款暫停。<a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">Activate</a>；<a href="https://docs.lemonsqueezy.com/help/tax-forms">Tax Forms</a></td></tr>
+        <tr><td>撥款幣別</td><td>官方同頁說銀行撥款以 USD 進行；若銀行撥款選擇非 USD 幣別，會以撥款時的市場中間價轉為所選／本地幣別。PayPal 撥款一律 USD。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Getting Paid</a></td><td>官方未列出台灣各銀行可收的幣別、扣費或 TWD 入帳保證；實際應在 Payouts 設定頁確認可選幣別與帳戶資料。</td></tr>
+        <tr><td>週期與最低額</td><td>撥款在每月 1 日與 15 日建立；銷售淨額保留 13 天，14／28 日可撥。進入銀行通常還要 1–5 天；最低門檻為 USD 50，未達會遞延。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Getting Paid</a></td><td>這不是即時現金流；啟動期與小額月收入要把 13 天保留、半月週期和 USD 50 門檻納入營運金規劃。</td></tr>
+        <tr><td>撥款費</td><td>官方 Fees 頁把「經 Stripe 的銀行撥款」列為：美國以外銀行每筆撥款 1%；PayPal 美國以外帳戶為 3%、每筆上限 USD 30。<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">Fees</a></td><td>官方同時說實際撥款處理／換匯費依方法、地區與結算幣別而變；不要把 1% 以外的銀行端費用假設為零。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Getting Paid</a></td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>MoR 也帶來顧客識別的取捨：</strong>買家信用卡帳單會顯示 <code>LEMSQZY*STORE</code>，不是純 One Muse／MuseGrade 名稱；官方因此建議把該說明提供給對扣款有疑問的客戶。<a href="https://docs.lemonsqueezy.com/help/getting-started/statement-descriptor">官方 Statement Descriptor</a></p>
+  </section>
+
+  <section>
+    <h2>3. Lemon Squeezy 的目前費率</h2>
+    <p>基本平台費是<strong>每筆訂單總額的 5% + USD 0.50</strong>；官方明載基數是 total order value，範例也把 VAT 納入總額後才計費。可能另加：非美國交易 +1.5%、PayPal 交易 +1.5%、訂閱付款 +0.5%。<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">官方 Fees</a>；<a href="https://www.lemonsqueezy.com/pricing">官方 Pricing</a></p>
+    <div class="callout">
+      <p><strong>對 MuseGrade 的費率公式：</strong></p>
+      <ul>
+        <li>一次性購買：<code>5% + $0.50 +（若為非美國交易則 1.5%）+（若使用 PayPal 則 1.5%）</code>。</li>
+        <li>訂閱：在上述基礎再加 <code>0.5%</code>；例如非美國、非 PayPal 的訂閱卡交易，公式為 <code>7.0% + $0.50</code>。</li>
+        <li>台灣銀行撥款另依官方費率表為每筆撥款 1%，並可能有官方所述的處理或換匯費差異。<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">Fees</a></li>
+      </ul>
+      <p class="fine">公式是依官方列出的「可能加收」項目相加，實際訂單仍以 Dashboard／結帳時適用費用為準。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Stripe：台灣賣家的官方直接支援與可行路徑</h2>
+    <p><span class="tag">直接帳號：無台灣條目</span> Stripe 的全球可用國家／地區清單未列 Taiwan；該頁說明，只有當 Stripe 支援你的國家／地區時，才能向世界各地客戶銷售。故以「台灣個人或台灣實體、無其他受支援國實體與銀行帳戶」為前提，本文查到的 Stripe 官方資料<strong>沒有直接開 Stripe Payments 收款帳號的路徑</strong>。<a href="https://stripe.com/global">官方 Global availability</a></p>
+    <p>Stripe 官方對「在與主要營業國不同的國家開帳號」的要求，是該國的合法實體、稅號、可收信的實體地址、電話、政府身分證件、營運網站，以及該國的實體銀行帳戶（非虛擬帳戶）；且該國須為 Stripe 支援的處理國家。<a href="https://support.stripe.com/questions/requirements-to-open-a-stripe-account-in-another-country">官方跨國開戶要求</a></p>
+    <h3>官方揭示的替代方案：Stripe Atlas</h3>
+    <p>Stripe Atlas 可讓非美國創辦人設立 Delaware LLC 或 C corporation、申請 EIN，並在公司成立後申請其合作銀行帳戶與 Stripe Payments。Atlas 初始費用為 USD 500（含第一年 registered agent），之後 registered agent 為每年 USD 100；Stripe 也明說 Atlas／銀行合作夥伴各自審核資格，並不保證能核准 Stripe Payments 或銀行帳戶。<a href="https://docs.stripe.com/atlas">官方 Stripe Atlas</a>；<a href="https://docs.stripe.com/atlas/signup">官方 Atlas 申請與費用</a>；<a href="https://docs.stripe.com/atlas/payments-business-bank">官方 Atlas 銀行帳戶</a></p>
+    <p class="no-claim">「台灣賣家常用第三方代收、借用他人帳號或其他非 Stripe 方式」：查無 Stripe 官方文件可證實其普遍性或把它列為合規開戶方法。官方可證實的替代路徑是<strong>先建立受支援國實體（例如 Atlas 的美國公司）並符合該國開戶條件</strong>；不應把第三方帳戶當作本報告可背書的方案。<a href="https://support.stripe.com/questions/requirements-to-open-a-stripe-account-in-another-country">官方跨國開戶要求</a>；<a href="https://docs.stripe.com/atlas/signup">官方 Atlas</a></p>
+    <h3>MoR 的比較補充</h3>
+    <p>標準 Stripe Payments 是由商家自己擔任 MoR、自己負責交易合規、稅務、退款與拒付；Stripe 另有處於 Public preview 的 <em>Managed Payments</em>，才會由 Stripe 擔任 MoR，處理間接稅、詐欺、爭議與交易支援。這不改變前述「台灣不在直接支援清單」的帳號前提。<a href="https://stripe.com/resources/more/merchant-of-record">Stripe：MoR 與標準 Payments 的差異</a>；<a href="https://docs.stripe.com/payments/managed-payments">Stripe Managed Payments 文件</a></p>
+    <p class="fine">值得注意的官方更新：Stripe 的 Managed Payments 支援文件說，2026-04-06 前可能在文件上看到 LemonSqueezy LLC，之後的 MoR 服務實體為 Sold through Link, LLC，兩者指向同一底層 MoR 服務。這是法律／服務實體說明，不足以單獨推論 Lemon Squeezy 與所有 Stripe 產品在功能、資格或費率上完全相同。<a href="https://support.stripe.com/questions/why-is-sold-through-link-llc-the-legal-entity-on-my-invoice-for-stripe-managed-payments-fees">Stripe 官方支援說明</a></p>
+  </section>
+
+  <section>
+    <h2>5. 對照表：以此情境可執行的選項</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>面向</th><th>Lemon Squeezy（台灣個人直接）</th><th>Stripe（須先有受支援國，例如美國 Atlas 實體）</th></tr></thead>
+      <tbody>
+        <tr><td>台灣直接申請</td><td>銀行撥款清單列 Taiwan；仍須逐店 KYC／KYB 審核。<a href="https://docs.lemonsqueezy.com/help/getting-started/supported-countries">來源</a> <a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">來源</a></td><td>全球支援清單未列 Taiwan；官方沒有台灣直接 Payments 開戶說明。<a href="https://stripe.com/global">來源</a></td></tr>
+        <tr><td>申請門檻</td><td>帳號、商店、商業／客戶問卷、政府 ID、非美國人 W-8、銀行／已驗證 PayPal。<a href="https://docs.lemonsqueezy.com/guides/getting-started">來源</a> <a href="https://docs.lemonsqueezy.com/help/getting-started/verify-your-identity">來源</a> <a href="https://docs.lemonsqueezy.com/help/tax-forms">來源</a></td><td>若使用 Atlas：美國公司＋EIN＋銀行申請；Atlas USD 500 起且不保證 Payments／銀行核准。<a href="https://docs.stripe.com/atlas/signup">來源</a> <a href="https://docs.stripe.com/atlas/payments-business-bank">來源</a></td></tr>
+        <tr><td>一次性卡片費</td><td>基礎 5% + $0.50；非美國交易另 +1.5%。<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">來源</a></td><td>此欄僅以官方 USD 標準費率作條件比較：國內卡 2.9% + $0.30，國際卡另 +1.5%，換匯另 +1%。帳戶國／合約可能不同。<a href="https://stripe.com/pricing">來源</a></td></tr>
+        <tr><td>訂閱額外費</td><td>訂閱付款另 +0.5%。<a href="https://docs.lemonsqueezy.com/help/getting-started/fees">來源</a></td><td>Stripe Billing 按用量方案為 Billing volume 的 0.7%，另加 Payments 的處理費。<a href="https://stripe.com/billing/pricing">來源</a></td></tr>
+        <tr><td>稅務／MoR</td><td>原生 MoR；處理銷售稅、退款／拒付與 PCI 的交易責任。<a href="https://docs.lemonsqueezy.com/help/payments/merchant-of-record">來源</a></td><td>標準 Payments 下商家是 MoR；Managed Payments（Public preview）才由 Stripe 擔任 MoR。<a href="https://stripe.com/resources/more/merchant-of-record">來源</a> <a href="https://docs.stripe.com/payments/managed-payments">來源</a></td></tr>
+        <tr><td>撥款速度</td><td>13 天保留；每月 1／15 建立，14／28 可撥；銀行通常再 1–5 天。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">來源</a></td><td>取決於帳戶國與設定。Stripe 可設手動／每日／每週／每月；以美國標準 T+2 為例，資金可用後的手動撥款通常同日或其他情況 1 個工作天，但這不是台灣帳戶的承諾。<a href="https://docs.stripe.com/payouts">來源</a></td></tr>
+        <tr><td>買家付款方式（訂閱）</td><td>卡、Apple Pay、Google Pay、PayPal；官方特別說訂閱目前僅支援這四類。<a href="https://docs.lemonsqueezy.com/help/checkout/payment-methods">來源</a></td><td>付款方式由帳戶資格、幣別與交易流程決定；PayPal 僅供 EU（除匈牙利）、Liechtenstein、Norway、UK、Switzerland 的 Stripe 帳戶啟用，故美國 Atlas 帳戶不應預設可收 PayPal。<a href="https://docs.stripe.com/payments/checkout/payment-methods">來源</a> <a href="https://docs.stripe.com/payments/paypal/activate">來源</a></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>6. MuseGrade 的建議與需先避開的陷阱</h2>
+    <h3>建議</h3>
+    <p><strong>維持選擇 Lemon Squeezy，作為第一階段全球銷售的主要收費層。</strong>這是依情境做出的判斷：它同時滿足台灣銀行撥款、數位軟體／訂閱適配、MoR 與多種常見支付方式；而標準 Stripe 要先解決「非支援國」的實體／銀行門檻。這是基於上述官方事實的決策推論，不是 Lemon Squeezy 對任何個案的核准保證。<a href="https://docs.lemonsqueezy.com/help/getting-started/supported-countries">Lemon Squeezy 支援國</a>；<a href="https://docs.lemonsqueezy.com/help/checkout/payment-methods">Lemon Squeezy 付款方式</a>；<a href="https://stripe.com/global">Stripe 支援國</a></p>
+    <p>Stripe 的較低標準 Payments／Billing 費率，只有在創辦人願意且適合承擔美國實體、銀行、持續法遵與「自己是 MoR」的工作時，才是值得重新試算的第二階段選項；這裡不把 Atlas 當作單純的付款工具，因為官方明示它是在成立公司、取得 EIN 與申請銀行帳戶。<a href="https://docs.stripe.com/atlas/signup">Stripe Atlas</a>；<a href="https://stripe.com/resources/more/merchant-of-record">Stripe MoR 說明</a></p>
+    <h3>上線前檢核清單</h3>
+    <ol>
+      <li><strong>把審核包當成產品上市資料：</strong>網站、產品頁、價格、退款政策、隱私權／服務條款、桌面 App 的交付與授權流程都要可公開檢視並與問卷一致。官方說明每個商店都因 MoR 身分接受 KYC／KYB、產品與可接受使用政策檢查，審核也可能因風險評估或產品／國家支援而延長或遭拒。<a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">Activate Your Store</a></li>
+      <li><strong>不要把撥款當作即時可用收入：</strong>預留 13 天＋半月週期＋銀行 1–5 天；月收入低於 USD 50 還會遞延。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Getting Paid</a></li>
+      <li><strong>為退款／拒付留緩衝：</strong>退款會從下一筆撥款扣除（平台費不退）；Lemon Squeezy 可在購買後 60 天內自行退款以防拒付；多次拒付可能造成帳號暫停，並會自下一筆撥款扣退款金額（扣除平台費）及 USD 15 爭議費。<a href="https://docs.lemonsqueezy.com/help/payments/refunds-chargebacks">Refunds and Chargebacks</a></li>
+      <li><strong>訂閱支付方式別過度承諾：</strong>雖然一次性結帳可呈現卡、PayPal、Apple Pay、Google Pay、Alipay、WeChat Pay、Cash App Pay 與銀行扣款等方式，訂閱目前官方只列卡、Apple Pay、Google Pay、PayPal；結帳頁也會依裝置和地區顯示可用方式。<a href="https://docs.lemonsqueezy.com/help/checkout/payment-methods">Payment Methods</a></li>
+      <li><strong>App 權限要以事件為準：</strong>官方列出訂閱建立、更新、取消、成功付款與退款等 webhook 事件。MuseGrade 應在伺服端驗證事件後更新授權狀態，並用取消、失敗付款、退款的事件處理降級／撤銷；不可只靠用戶端「付款成功」畫面決定永久授權。事件清單是官方事實；後一句是為降低狀態不同步而作的工程建議。<a href="https://docs.lemonsqueezy.com/help/webhooks/event-types">Webhook Event Types</a></li>
+      <li><strong>台灣本地稅務另行確認：</strong>MoR 的官方承諾範圍是終端交易的間接稅與付款責任；本文未找到官方文件替賣家處理台灣本地所得／營所稅的承諾。保留 reverse invoice、撥款紀錄與退款紀錄，再向台灣會計／稅務專業人員確認申報方式。<a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Getting Paid（reverse invoice）</a>；<a href="https://docs.lemonsqueezy.com/help/payments/merchant-of-record">MoR 範圍</a></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>官方來源索引</h2>
+    <ul class="source-list">
+      <li><a href="https://docs.lemonsqueezy.com/help/getting-started/supported-countries">Lemon Squeezy — Supported Countries</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/getting-started/activate-your-store">Lemon Squeezy — Activate Your Store</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/getting-started/verify-your-identity">Lemon Squeezy — Verify Your Identity</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/tax-forms">Lemon Squeezy — Tax Forms</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/getting-started/getting-paid">Lemon Squeezy — Getting Paid</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/getting-started/fees">Lemon Squeezy — Fees</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/payments/merchant-of-record">Lemon Squeezy — Merchant of Record</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/checkout/payment-methods">Lemon Squeezy — Payment Methods</a></li>
+      <li><a href="https://docs.lemonsqueezy.com/help/payments/refunds-chargebacks">Lemon Squeezy — Refunds and Chargebacks</a></li>
+      <li><a href="https://stripe.com/global">Stripe — Global availability</a></li>
+      <li><a href="https://support.stripe.com/questions/requirements-to-open-a-stripe-account-in-another-country">Stripe Support — Requirements to open an account in another country</a></li>
+      <li><a href="https://docs.stripe.com/atlas/signup">Stripe Docs — How to incorporate your company (Atlas)</a></li>
+      <li><a href="https://stripe.com/pricing">Stripe — Pricing &amp; Fees</a>；<a href="https://stripe.com/billing/pricing">Stripe Billing — Pricing</a>；<a href="https://docs.stripe.com/payouts">Stripe Docs — Receive payouts</a></li>
+      <li><a href="https://stripe.com/resources/more/merchant-of-record">Stripe — What is a Merchant of Record?</a>；<a href="https://docs.stripe.com/payments/managed-payments">Stripe Docs — Managed Payments</a></li>
+    </ul>
+  </section>
+
+  <footer>本報告只使用官方來源；文內的「建議／推論」均明確標記，未把社群經驗、第三方文章或舊資料當作官方事實。</footer>
+</main>
+</body>
+</html>
