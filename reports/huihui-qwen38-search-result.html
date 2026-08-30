@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-Hant" xml:lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Huihui Qwen3.8 無護欄模型查證結果</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* Report readability overrides */
+    html { background: #f5f3ee; }
+    body {
+      max-width: 1120px;
+      box-sizing: border-box;
+      padding: 42px 34px 56px;
+      color: #20201e;
+      background: #fffdf8;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+    h1, h2, h3 { color: #263b47; line-height: 1.3; }
+    h1 { border-bottom: 3px solid #b7794a; padding-bottom: .45em; }
+    h2 { border-bottom: 1px solid #d9d1c7; padding-bottom: .35em; margin-top: 2.2em; }
+    h3 { margin-top: 1.8em; }
+    a { color: #0b5d78; }
+    code { background: #f1eee7; padding: .08em .25em; border-radius: 3px; overflow-wrap: anywhere; }
+    table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: .9em; line-height: 1.55; }
+    th { background: #e9e3d8; color: #243945; }
+    th, td { border: 1px solid #d5cec3; padding: .55em .65em; vertical-align: top; }
+    blockquote { border-left-color: #b7794a; color: #4b4a46; }
+    @media (max-width: 600px) {
+      body { font-size: 16px; padding: 22px 16px 36px; }
+      table { font-size: .82em; }
+    }
+  </style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#huihui-qwen3.8-無護欄模型查證結果"
+id="toc-huihui-qwen3.8-無護欄模型查證結果">Huihui Qwen3.8
+無護欄模型查證結果</a>
+<ul>
+<li><a href="#結論" id="toc-結論">【結論】</a></li>
+<li><a href="#找到的版本清單"
+id="toc-找到的版本清單">【找到的版本清單】</a>
+<ul>
+<li><a href="#huihui-官方-repohf-api-確認"
+id="toc-huihui-官方-repohf-api-確認">Huihui 官方 repo（HF API
+確認）</a></li>
+<li><a href="#官方-gguf逐一可下載主模型檔"
+id="toc-官方-gguf逐一可下載主模型檔">官方
+GGUF：逐一可下載主模型檔</a></li>
+<li><a href="#補充已查證到的第三方-nvfp4-轉檔非-huihui-官方"
+id="toc-補充已查證到的第三方-nvfp4-轉檔非-huihui-官方">補充：已查證到的第三方
+NVFP4 轉檔（非 Huihui 官方）</a></li>
+</ul></li>
+<li><a href="#查證過程" id="toc-查證過程">【查證過程】</a></li>
+<li><a href="#沒查到的部分"
+id="toc-沒查到的部分">【沒查到的部分】</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="huihui-qwen3.8-無護欄模型查證結果">Huihui Qwen3.8
+無護欄模型查證結果</h1>
+<p>查證時間：2026-08-30（Asia/Taipei）<br />
+資料範圍：Hugging Face 官方 API 與各 repo
+的官方模型卡；未下載、安裝或啟動任何模型。</p>
+<h2 id="結論">【結論】</h2>
+<p>有：截至查證當下，<code>huihui-ai</code> 官方帳號有 <strong>2
+個</strong>針對 <strong>Qwen/Qwen3.8-27B</strong>
+的公開無護欄（abliterated／uncensored）repo；合計提供未量化 safetensors
+1 組，以及官方 GGUF 的 25 個主模型檔案變體（另有 1 個 BF16 視覺
+projector）。所有單一檔案都低於本機 119.7 GiB
+可用統一記憶體，初步判斷可單獨載入；實際仍須保留 runtime、KV cache
+與系統記憶體，尤其 262k context 不能由檔案大小保證。</p>
+<h2 id="找到的版本清單">【找到的版本清單】</h2>
+<h3 id="huihui-官方-repohf-api-確認">Huihui 官方 repo（HF API
+確認）</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>模型名稱／repo 路徑</th>
+<th>底層基礎模型</th>
+<th>上傳後最後更新（API <code>lastModified</code>）／狀態</th>
+<th>可下載格式／實際檔案總大小（API siblings 加總）</th>
+<th>GB10 119.7 GiB 初判</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated">Huihui-Qwen3.8-27B-abliterated</a></td>
+<td><code>Qwen/Qwen3.8-27B</code></td>
+<td>2026-08-24 03:47:39 UTC；公開、非 gated；模型卡未標示
+WIP，只有「Latest update」</td>
+<td>未量化 <code>safetensors</code>：18 個 shard 合計
+<strong>55,563,006,216 B（51.75 GiB）</strong>；含設定、tokenizer 等整個
+repo siblings 為 55,586,059,962 B。<code>config.json</code> 的
+<code>torch_dtype</code> 為 null，故 API／config 未能確認是 BF16 或
+FP16。</td>
+<td><strong>可望裝得下</strong>（模型檔 51.75 GiB）；但載入後記憶體、KV
+cache、context 長度未實測。</td>
+</tr>
+<tr>
+<td><a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF">Huihui-Qwen3.8-27B-abliterated-GGUF</a></td>
+<td><code>Qwen/Qwen3.8-27B</code></td>
+<td>2026-08-27 06:05:52 UTC；公開、非 gated；模型卡未標示
+WIP，標題為「Latest update 4」</td>
+<td>GGUF：下表 25 個主模型檔；另有 <code>mmproj-model-bf16.gguf</code>
+<strong>931,145,888 B（0.87 GiB）</strong>。全部 GGUF
+檔（含每種替代量化，不代表一次必須全下載）合計 525,868,002,176 B。</td>
+<td><strong>可望裝得下</strong>每一個單一 GGUF；最大主模型
+<code>bf16.gguf</code> 為 50.90 GiB，仍須預留 runtime/KV cache。</td>
+</tr>
+</tbody>
+</table>
+<p>兩個官方 repo 的模型卡都以 <code>base_model: Qwen/Qwen3.8-27B</code>
+標示來源，並標記
+<code>abliterated</code>、<code>uncensored</code>。官方原始 repo
+的模型卡稱此為以 abliteration 產生的 uncensored version；最新說明指出只
+ablate 第 18–51 層，MTP 與 vision 未修改。</p>
+<h3 id="官方-gguf逐一可下載主模型檔">官方 GGUF：逐一可下載主模型檔</h3>
+<p>以下大小是各單一 <code>.gguf</code> siblings 的精確位元組數及換算
+GiB（1 GiB = 1,073,741,824 B），不是 HF 網頁上的約略
+GB；所有下列單檔均低於 119.7
+GiB，因此初判都是「可望裝得下」。<code>*_L</code> 與 <code>UD-*</code>
+是作者在模型卡中另行說明的非標準／部分 ablation
+量化變體，不把它們誤當成普通 K-quant 的同義名稱。</p>
+<table>
+<thead>
+<tr>
+<th>GGUF 格式／檔名</th>
+<th style="text-align: right;">實際檔案大小</th>
+<th>GB10 初判</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UD-IQ2_S</code></td>
+<td style="text-align: right;">8,424,398,848 B（7.85 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-Q2_K_XL</code></td>
+<td style="text-align: right;">10,011,909,024 B（9.32 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q2_K</code></td>
+<td style="text-align: right;">10,864,592,160 B（10.12 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-IQ3_XXS</code></td>
+<td style="text-align: right;">11,021,122,464 B（10.26 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-IQ3_S</code></td>
+<td style="text-align: right;">11,952,901,024 B（11.13 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-Q3_K_XL</code></td>
+<td style="text-align: right;">13,326,125,984 B（12.41 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q3_K</code></td>
+<td style="text-align: right;">13,500,736,800 B（12.57 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-IQ4_XS</code></td>
+<td style="text-align: right;">14,403,496,864 B（13.41 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q4_K</code></td>
+<td style="text-align: right;">16,810,714,400 B（15.66 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q2_K_L</code></td>
+<td style="text-align: right;">17,219,597,600 B（16.04 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-Q4_K_XL</code></td>
+<td style="text-align: right;">17,378,626,464 B（16.19 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q3_K_L</code></td>
+<td style="text-align: right;">18,688,238,880 B（17.40 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q5_K</code></td>
+<td style="text-align: right;">19,535,701,280 B（18.19 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-Q5_K_XL</code></td>
+<td style="text-align: right;">20,673,612,704 B（19.25 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q4_K_L</code></td>
+<td style="text-align: right;">20,915,090,720 B（19.48 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q5_K_L</code></td>
+<td style="text-align: right;">22,869,046,560 B（21.30 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q6_K</code></td>
+<td style="text-align: right;">22,430,999,840 B（20.89 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-Q6_K_XL</code></td>
+<td style="text-align: right;">24,826,588,064 B（23.12 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q6_K_L</code></td>
+<td style="text-align: right;">24,945,124,640 B（23.23 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-DW-Q6_K_L</code></td>
+<td style="text-align: right;">23,945,415,584 B（22.30 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-DW-Q8_K_L</code></td>
+<td style="text-align: right;">27,250,826,144 B（25.38 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q8_0</code></td>
+<td style="text-align: right;">29,047,084,320 B（27.05 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>UD-Q8_K_XL</code></td>
+<td style="text-align: right;">31,457,991,680 B（29.30 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>Q8_0_L</code></td>
+<td style="text-align: right;">38,779,180,320 B（36.12 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+<tr>
+<td><code>bf16</code></td>
+<td style="text-align: right;">54,657,733,920 B（50.90 GiB）</td>
+<td>可望裝得下</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="補充已查證到的第三方-nvfp4-轉檔非-huihui-官方">補充：已查證到的第三方
+NVFP4 轉檔（非 Huihui 官方）</h3>
+<p>這列不計入上方「Huihui 官方 2 repo」數量，但因本機既有模型也是
+NVFP4，特別列出。它的模型卡明確標示
+<code>base_model: huihui-ai/Huihui-Qwen3.8-27B-abliterated</code>、<code>base_model_relation: quantized</code>，故可確認是官方無護欄版的第三方量化衍生品，而非
+Huihui 官方發布。</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>模型名稱／repo 路徑</th>
+<th>底層基礎模型</th>
+<th>更新／狀態</th>
+<th>量化格式／實際檔案大小</th>
+<th>GB10 初判</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="https://huggingface.co/sakamakismile/Huihui-Qwen3.8-27B-abliterated-NVFP4">sakamakismile/Huihui-Qwen3.8-27B-abliterated-NVFP4</a></td>
+<td><code>huihui-ai/Huihui-Qwen3.8-27B-abliterated</code>（再上游為
+<code>Qwen/Qwen3.8-27B</code>）</td>
+<td>2026-08-24 11:01:03 UTC；公開、非 gated；未標 WIP</td>
+<td>NVFP4 W4A4（group 16）：<code>model.safetensors</code>
+19,709,883,808 B + BF16 MTP head 849,400,424 B = <strong>20,559,284,232
+B（19.15 GiB）</strong>；整 repo siblings 20,589,623,483 B。</td>
+<td><strong>可望裝得下</strong>；實際相容性與可用 context 未測。</td>
+</tr>
+</tbody>
+</table>
+<p>Huihui 官方兩個 repo 本身沒有出現官方 NVFP4、FP8、AWQ 或 GPTQ
+repo／檔案；上述 NVFP4 是第三方發佈。這不等於 HF
+全站不存在其他人的量化或改版，而是本報告不把它們誤報為「Huihui
+官方版本」。</p>
+<h2 id="查證過程">【查證過程】</h2>
+<ol type="1">
+<li>於 2026-08-30 直接呼叫 HF Models API：
+<ul>
+<li><a
+href="https://huggingface.co/api/models?author=huihui-ai&amp;search=qwen3.8&amp;full=true&amp;limit=100"><code>/api/models?author=huihui-ai&amp;search=qwen3.8&amp;full=true&amp;limit=100</code></a>
+回傳正好 2 個官方 Qwen3.8 repo。</li>
+<li><a
+href="https://huggingface.co/api/models?author=huihui-ai&amp;full=true&amp;limit=1000"><code>/api/models?author=huihui-ai&amp;full=true&amp;limit=1000</code></a>
+完整列舉 181 個模型，再以名稱檢查
+<code>Qwen3.8</code>／<code>Qwen3-8</code>。其中 <code>Qwen3-8B</code>
+是舊的 Qwen3 8B 命名，不能混同於新版 <code>Qwen3.8</code>；本結論只計
+literal <code>Qwen3.8</code> 的兩個 repo。</li>
+</ul></li>
+<li>對兩個官方 repo 分別呼叫含 blobs 的 API，逐一加總
+<code>siblings[].size</code>：
+<ul>
+<li><a
+href="https://huggingface.co/api/models/huihui-ai/Huihui-Qwen3.8-27B-abliterated?blobs=true"><code>/api/models/huihui-ai/Huihui-Qwen3.8-27B-abliterated?blobs=true</code></a></li>
+<li><a
+href="https://huggingface.co/api/models/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF?blobs=true"><code>/api/models/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF?blobs=true</code></a>
+並讀取兩者 <a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated/raw/main/README.md"><code>README.md</code></a>
+與 GGUF <a
+href="https://huggingface.co/huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF/raw/main/README.md">README.md</a>，確認
+base model、abliteration 說明、更新文字與未標 WIP 的狀態。</li>
+</ul></li>
+<li>因已找到官方 Huihui 版本，使用者工作單第 3
+步的「若官方沒有才擴大」條件未觸發；但仍對指定常見作者的完整模型清單與精確
+<code>search=qwen3.8</code> 做反查：
+<ul>
+<li><code>mlabonne</code>：178 個模型；精確 Qwen3.8 搜尋 0。</li>
+<li><code>failspy</code>：33 個模型；精確 Qwen3.8 搜尋 0。</li>
+<li><code>SicariusSicariiStuff</code>：565 個模型；精確 Qwen3.8 搜尋 0。
+三個可重現 API URL 分別為
+<code>https://huggingface.co/api/models?author=&lt;帳號&gt;&amp;search=qwen3.8&amp;full=true&amp;limit=100</code>，及同
+URL 去除 <code>search</code>、<code>limit=1000</code>
+的完整列舉版。</li>
+</ul></li>
+<li>作為 NVFP4 的有用補充，以 HF 全站 <code>search=Qwen3.8</code>
+發現並再以 <a
+href="https://huggingface.co/api/models/sakamakismile/Huihui-Qwen3.8-27B-abliterated-NVFP4?blobs=true"><code>blobs=true</code>
+API</a> 驗證 <code>sakamakismile</code> 的第三方衍生
+repo。未對其他第三方作者做「所有社群衍生物」的宣稱或窮舉，因官方版本已存在，且使用者規定的擴大搜尋條件未成立。</li>
+</ol>
+<h2 id="沒查到的部分">【沒查到的部分】</h2>
+<ul>
+<li>未找到 Huihui 官方的 Qwen3.8 NVFP4、FP8、AWQ、GPTQ
+檔案／repo；這是對兩個官方 repo 的 API 結果，不是對全 Hugging Face
+的否定結論。</li>
+<li>原始 <code>safetensors</code> repo 的 <code>config.json</code> 沒有
+<code>torch_dtype</code> 值，HF API 的 siblings 也不提供 tensor
+dtype；因此不能只憑約 55.56 GB 檔案大小把它確定報成 BF16 或 FP16。</li>
+<li>「未標示 WIP」只表示本次取得的模型卡／API metadata 沒有 WIP
+字樣；不能外推為作者保證穩定或已完成品質驗證。</li>
+<li>「可望裝得下」只比較單一模型檔與 119.7 GiB
+統一記憶體，沒有啟動實測，沒有估算使用的 runtime、KV cache、context
+長度、CPU/GPU 記憶體保留與同機常駐模型。</li>
+</ul>
+<p>HUIHUI_QWEN38_SEARCH_DONE</p>
+</body>
+</html>
