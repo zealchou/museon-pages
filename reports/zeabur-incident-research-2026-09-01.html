@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zeabur 事故案例研究：公開事實查證</title>
+  <style>
+    :root { --ink:#1f2933; --muted:#5a6570; --paper:#fbfaf7; --rule:#d9d3c8; --navy:#17324d; --red:#a43b32; --blue:#205d87; --soft:#eef4f6; --warn:#fff6df; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#e8e6e1; font:17px/1.78 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; }
+    main { width:min(920px,100%); margin:auto; padding:48px 28px 68px; background:var(--paper); min-height:100vh; }
+    header { border-top:8px solid var(--navy); padding-top:24px; }
+    h1,h2,h3 { line-height:1.32; color:var(--navy); }
+    h1 { font-size:clamp(2rem,5vw,3.35rem); margin:0 0 12px; letter-spacing:-.04em; }
+    h2 { margin:54px 0 14px; padding-top:10px; border-top:1px solid var(--rule); font-size:1.55rem; }
+    h3 { margin:30px 0 8px; font-size:1.15rem; }
+    p { margin:8px 0 14px; }
+    .subtitle,.meta { color:var(--muted); }
+    .subtitle { font-size:1.12rem; max-width:46em; }
+    .meta { font-size:.92rem; }
+    .lede { margin:30px 0; padding:19px 21px; border-left:4px solid var(--red); background:#f6efea; font-size:1.08rem; }
+    .notice { padding:16px 18px; background:var(--warn); border:1px solid #ead6a6; border-radius:6px; }
+    .evidence { margin:18px 0 26px; padding:16px 19px; background:var(--soft); border-radius:6px; }
+    .tag { display:inline-block; margin-right:6px; padding:1px 7px; border:1px solid currentColor; border-radius:99px; font-size:.78rem; font-weight:700; vertical-align:middle; white-space:nowrap; }
+    .official { color:#19633c; } .third { color:#205d87; } .unknown { color:#8c5a00; } .claim { color:#a43b32; }
+    a { color:#075b8f; text-decoration-thickness:1px; text-underline-offset:3px; }
+    a:hover { color:#a43b32; }
+    ul,ol { padding-left:1.3em; }
+    li { margin:7px 0; }
+    table { width:100%; border-collapse:collapse; margin:15px 0 25px; font-size:.94rem; }
+    th,td { padding:10px 9px; border-bottom:1px solid var(--rule); text-align:left; vertical-align:top; }
+    th { color:var(--navy); background:#f0eee8; }
+    .source { color:var(--muted); font-size:.91rem; }
+    .answer { border-left:3px solid #c9d8df; padding-left:15px; }
+    .no-data { color:#805000; font-weight:650; }
+    .closing { margin-top:38px; padding:17px 19px; border:1px solid var(--rule); }
+    footer { margin-top:40px; color:var(--muted); font-size:.88rem; }
+    @media (max-width:620px) { main { padding:30px 18px 48px; } body { font-size:16px; } table { font-size:.86rem; } th,td { padding:8px 6px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="meta">公開資料盡職調查式查證｜查證截至 2026-09-01（Asia/Taipei）</p>
+    <h1>Zeabur 事故案例研究</h1>
+    <p class="subtitle">2026 年 8 月環境變數／憑證外洩事件：公司背景、事故事實、Gary Chen 公開內容與 Vibe Coding 對照案例。</p>
+  </header>
+
+  <p class="lede"><strong>先給最關鍵的事實判斷：</strong>截至本研究截點，Zeabur 官方已確認的攻擊鏈是「<strong>Zeabur 內部外洩的高權限 AWS 憑證</strong> → 東京 AWS 共享叢集 → 控制平面 VPN 連通性 → 主資料庫 → 定向查詢／匯出使用者環境變數」。這是平台自身內部憑證與存取路徑的事故，不是已證實的客戶 Vibe Coding 應用程式漏洞；也沒有公開證據把根因歸為 AI 產碼、程式碼審查不足或 LiteLLM 漏洞。</p>
+
+  <div class="notice">
+    <strong>範圍與證據規則。</strong> 本文只整理公開可覆核資料，不繞過 Patreon／YouTube 的登入、付費或反爬限制；不做商業診斷、責任推論或預防建議。<span class="tag official">官方證實</span>為公司／平台第一手公告；<span class="tag third">第三方</span>為媒體、資料庫或研究者；<span class="tag unknown">查不到／未公開</span>不以合理猜測補足；<span class="tag claim">未證實說法</span>與事實分列。
+  </div>
+
+  <h2>A. Zeabur 公司盡職調查</h2>
+
+  <h3>A1. 公司是什麼、何時成立、誰創辦、在哪裡、規模多大？</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方證實</span> Zeabur 對外定位為雲端部署／DevOps 平台，現自稱「AI DevOps Engineer」；其公開 GitHub 說明包含一鍵部署、伺服器與叢集、AI Hub、網域、郵件與模板等產品。</li>
+      <li><span class="tag official">官方證實</span> 官網公司資料為 <strong>Zeabur Inc.</strong>，登記地址在美國 Delaware 州 Newark，成立日期為 <strong>2025-01-14</strong>。這是法人資料，不等同產品最初開發日。</li>
+      <li><span class="tag third">第三方＋官方產品紀錄</span> Dealroom 把產品／公司起源標為 2022；但可直接核實的官方公開產品里程碑是 2023 年 3 月的 V1 公告與 2023 年 7 月 Product Hunt 上線。因此，「2022 創立」與「2025-01-14 法人成立」是不同來源的不同口徑，無法從公開資料判定哪一個應作唯一成立日。</li>
+      <li><span class="tag official">官方證實</span> 官方 team page 明列創辦人兼 CEO 為 <strong>Yuanlin Lin／林沅霖</strong>。第三方訪談摘要稱他在浙江大學讀計算機科學，Zeabur 起於其畢業專題與接案時遇到的部署痛點；這與他在官方融資文中「畢業論文＋外包部署」的自述相符。</li>
+      <li><span class="tag official">官方證實</span> 官方 team page 當前列出 11 位成員（CEO、平台工程、設計、營運、支援、成長等職能），並寫平均年齡 24 歲。這可作為公開可見名單，不可推成精確全職員工總數；外部資料庫的 11–50 人只是估計。</li>
+      <li><span class="tag official">官方證實</span> 營運地的公開訊號有「從台灣到矽谷」及職缺頁「總部在台北、擴張至矽谷」；法人登記地址則在 Delaware。公開資料不足以確認所有實際辦公與稅務結構。</li>
+    </ul>
+    <p class="source">來源：<a href="https://zeabur.com/zh-TW/about">Zeabur｜認識團隊與公司資訊</a>；<a href="https://github.com/zeabur/zeabur">Zeabur GitHub README</a>；<a href="https://zeabur.com/changelogs">官方 Changelog（含 2023 V1）</a>；<a href="https://app.dealroom.co/companies/zeabur">Dealroom 公司頁</a>；<a href="https://podcasts.apple.com/in/podcast/ep140-%E5%BE%9E%E6%B5%99%E5%A4%A7%E5%88%B0%E7%9F%BD%E8%B0%B7-zeabur%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9A-ai-agent-%E6%99%82%E4%BB%A3%E9%96%8B%E7%99%BC%E8%80%85%E7%9A%84-%E6%9C%80%E5%BE%8C%E4%B8%80%E5%93%A9%E8%B7%AF/id1684684945?i=1000778815191&amp;l=te">科技解密訪談頁</a>；<a href="https://zeabur.com/careers/support-engineer">Zeabur 職缺頁</a>。</p>
+  </div>
+
+  <h3>A2. 產品定位、目標客群與商業模式</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方證實</span> 核心問題是把程式碼部署、伺服器／網域／資料庫／CI/CD 與維運抽象化；官方 GitHub 稱可由 GitHub、Dockerfile、映像檔、CLI 等方式部署，並由 Agent／MCP／Claude Code Plugin 以自然語言執行基礎設施操作。</li>
+      <li><span class="tag official">官方證實</span> 官方文章明確把「Vibe Coders」、自由接案者、新創創辦人、IT 經理、前端開發者與接案公司列為受眾；其主張的工作流是先以 Lovable 等做原型、再以 Cursor／Claude Code 建構、最後上 Zeabur 部署。故其定位確實明確涵蓋 Vibe Coding 使用者，但不限於該族群。</li>
+      <li><span class="tag official">官方證實</span> 訂閱為 Free、Dev（14 天後 US$5/月）、Pro（US$19/月）、Team（US$79/月含 3 席，之後每席 US$24）；另有客製 Enterprise。AI Hub 採預付點數、按模型／token 實際用量扣點；伺服器／叢集也有其各自資源費用。這是訂閱＋基礎設施／AI 用量的混合收費，而非單一 PaaS 月費。</li>
+    </ul>
+    <p class="source">來源：<a href="https://github.com/zeabur/zeabur">官方 GitHub README</a>；<a href="https://zeabur.com/zh-TW/blogs/is-vibe-coding-bubble-bursting">Zeabur：Vibe Coding 泡沫並未破裂（2025-12-08）</a>；<a href="https://zeabur.com/pricing">官方 Pricing</a>；<a href="https://zeabur.com/docs/zh-TW/ai-hub">AI Hub 文件</a>。</p>
+  </div>
+
+  <h3>A3. 市場地位、使用者規模、競品與華語聲量</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方證實，但屬公司自述</span> 2025-11-11 融資公告稱：2024-11-11 首度超過 1,000 位個人付費用戶；一年後超過 <strong>5,000 位個人付費客戶</strong>，YoY 500%、MoM 10–15%。沒有找到截至 2026-09 的更新活躍／付費使用者數，也沒有可獨立驗證的帳號總數。</li>
+      <li><span class="tag third">第三方／公開訊號</span> Product Hunt 顯示 Zeabur 在 2023-07-23 為當日第一、官方稱逾 1,000 票；官方公開 repo 在查證時約 654 stars、100 forks。這些是知名度訊號，不能當市占率或營收。</li>
+      <li><span class="tag third">競品辨識</span> 在「Git repo／容器快速上線」同一決策集合中，Railway、Render、Vercel 常被列為相近替代品；還有 Heroku、Fly.io、Netlify、DigitalOcean App Platform 等。它們架構與計費不完全相同，故不將其說成一對一同品。</li>
+      <li><span class="tag unknown">查不到／未公開</span> 未找到可覆核的台灣／華語市占、NPS、社群情緒統計、MAU 或客戶集中度資料。繁中官網、繁中媒體與 Vibe Coding 教學顯示其在華語開發者社群可見，但不足以量化「聲量」。</li>
+    </ul>
+    <p class="source">來源：<a href="https://zeabur.com/zh-TW/blogs/our-2m-seed-round">官方 200 萬美元融資公告</a>；<a href="https://www.producthunt.com/products/zeabur">Product Hunt</a>；<a href="https://github.com/zeabur/zeabur">GitHub</a>；<a href="https://devtune.ai/verticals/deployment-and-hosting-platforms/zeabur/alternatives">DevTune alternatives（第三方）</a>。</p>
+  </div>
+
+  <h3>A4. 融資與治理</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方證實</span> 2025-11-11 宣布 <strong>US$2 million Seed Round</strong>，500 Global 領投，Baidu Ventures、AVA Angels、MiraclePlus 參與；文中稱 MiraclePlus 是早期投資人。</li>
+      <li><span class="tag third">第三方資料庫</span> Crunchbase／CB Insights 都列兩輪、合計約 US$2.3m；Dealroom 列 2023 年 US$300k。金額、日期與輪次口徑並未由公司完整公開披露，故只能作資料庫紀錄，不可視為公司已核准的精確 cap table。</li>
+      <li><span class="tag unknown">查不到／未公開</span> 未找到 Zeabur 公開的董事會成員、董事席次、股權比例、投資條款或顧問名單。創投參與不等於其擁有已揭露的董事席或治理權。</li>
+    </ul>
+    <p class="source">來源：<a href="https://zeabur.com/zh-TW/blogs/our-2m-seed-round">官方融資公告</a>；<a href="https://www.crunchbase.com/organization/zeabur/financial_details">Crunchbase</a>；<a href="https://www.cbinsights.com/company/zeabur/financials">CB Insights</a>；<a href="https://app.dealroom.co/companies/zeabur">Dealroom</a>。</p>
+  </div>
+
+  <h3>A5. 內部工程實踐與本案根因主體（重點）</h3>
+  <div class="answer">
+    <p><strong>已查到的內部 AI 使用：</strong></p>
+    <ul>
+      <li><span class="tag third">第三方客戶案例</span> InsForge 的 Zeabur 客戶案例明說，其論壇 RAG stack 的 30 天查詢來源為「82% Zeabur Agent、15% Claude Code（internal dev）」，並稱同一 retrieval stack 服務客戶與「建造產品的 Zeabur 工程師」。這證實至少某一內部產品開發／維運工作流使用 Claude Code；它<strong>不</strong>證實整個控制平面或本次涉案系統是由 AI 產碼。</li>
+      <li><span class="tag official">官方產品／行銷</span> 官方公開 repo 含 `.claude` 目錄，官方長文積極推薦 Cursor／Claude Code，並向 Vibe Coders 推廣 Agent 部署。這說明 AI-native 策略與生態定位，不能單獨當成「大量內部程式皆由 AI 撰寫」的證據。</li>
+      <li><span class="tag official">官方自述的安全實踐</span> Security Practices 說有相依套件弱點掃描、開發／測試／生產邏輯隔離、事故應變計畫；2025 又推出以 Agent 掃描 OWASP Top 10／CWE Top 25 的 Security Report。這是對外聲明／功能介紹，未見公開的程式碼審查政策、變更審批紀錄、滲透測試報告、SOC 2 Type II 證書或本案前的獨立稽核結果；其頁面只稱「正在追求 SOC 2 Type II」。</li>
+    </ul>
+    <p><strong>對本案可以做的明確區分：</strong></p>
+    <table><thead><tr><th>命題</th><th>查證結果</th></tr></thead><tbody>
+      <tr><td>Zeabur 自己有使用 AI／Claude Code 內部開發？</td><td><strong>是，有限且具體證據。</strong> 至少 InsForge 案例明示 15% Claude Code internal dev；無法外推比例或涉案系統。</td></tr>
+      <tr><td>本案由 Zeabur 客戶的 Vibe Coding 應用程式漏洞引起？</td><td><strong>否，與官方攻擊鏈不符。</strong> 官方確認入口是 Zeabur 內部高權限 AWS 憑證與其共享叢集／控制平面／主資料庫路徑。</td></tr>
+      <tr><td>本案由 Zeabur 自己 AI 產碼或未審查 AI 程式造成？</td><td><strong>查不到，不能下此因果結論。</strong> 官方尚未公開憑證如何外洩，也未把根因歸於 AI、程式碼生成或 code review。</td></tr>
+      <tr><td>LiteLLM 是已證實根因？</td><td><strong>否。</strong> 8/28 官方只說偵測到 LiteLLM 可疑活動、暫停 AI Hub 並調查是否相關；後續確認的路徑是 AWS 憑證。最終調查報告尚未發布。</td></tr>
+    </tbody></table>
+    <p class="source">來源：<a href="https://insforge.dev/customers/zeabur">InsForge｜How Zeabur shipped a RAG-powered forum</a>；<a href="https://github.com/zeabur/zeabur">Zeabur GitHub</a>；<a href="https://zeabur.com/docs/en-US/security-practices">Security Practices</a>；<a href="https://zeabur.com/changelogs/automatic-project-security-report">Security Report 公告</a>；<a href="https://status.zeabur.com/incident/1037896">官方事故狀態頁</a>。</p>
+  </div>
+
+  <h3>A6. 過往資安／可靠性紀錄與對外溝通</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方證實</span> 2023-10-27 台北 tpe1 叢集發生約 1 小時中斷。官方 postmortem 承認實習生刪除生產 GKE 叢集，並列出危險操作未覆核、權限過大、未啟用備份、缺乏應變流程；同篇記錄修復與權限／備援改進。</li>
+      <li><span class="tag official">官方紀錄</span> Changelog 另列 2025-08-26「zbpack 重新部署異常」事件報告。此次查證未另取得其完整內容，故不重述根因或影響。</li>
+      <li><span class="tag unknown">查不到／不可量化</span> 未查到 2026-08 前另一宗公開證實的資料外洩；也沒有獨立、可量化的「透明度／回應品質」評分。可確認的事實是：2023 有具體 postmortem；本次從 8/28 起有連續 status 更新並承諾最終報告。這些是公開溝通行為，不足以直接評定品質高低。</li>
+    </ul>
+    <p class="source">來源：<a href="https://zeabur.com/zh-TW/changelogs/zeabur-taipei-outage-on-oct-27-2023">2023 台北區域故障報告</a>；<a href="https://zeabur.com/changelogs">官方 Changelog</a>；<a href="https://status.zeabur.com/incident/1037896">2026 事故狀態頁</a>。</p>
+  </div>
+
+  <h2>B. 本次事故的事實還原</h2>
+
+  <h3>B7. 發生時間</h3>
+  <div class="answer">
+    <p><span class="tag official">官方證實</span> 事故 status page 建立於 <strong>2026-08-28 07:11 UTC</strong>，並稱已於發現當日撤銷受影響憑證、阻斷路徑、完成初步控制。iThome 引述創辦人說是在 8/28 察覺事故。公開資料未揭露攻擊者何時最初取得或使用 AWS 憑證，因此<strong>入侵實際起始時間查不到</strong>，不能把公告時間當作攻擊開始時間。</p>
+    <table><thead><tr><th>時間（UTC）</th><th>官方公開進度</th></tr></thead><tbody>
+      <tr><td>8/28 07:11</td><td>事故頁建立；先稱未授權存取內部 service credential、環境變數紀錄暴露並通知受影響者。</td></tr>
+      <tr><td>8/28 17:42</td><td>稱 LiteLLM 有可疑活動，預防性暫停 AI Hub，調查是否相關。</td></tr>
+      <tr><td>8/29 21:17</td><td>公布初步攻擊鏈與資料存取範圍、啟動第三方資安鑑識、提出逐案賠償。</td></tr>
+      <tr><td>8/30 21:07</td><td>補充 AWS shared cluster 已逐步退役、核心後端在另一雲端環境；稱 63% 申請已驗證、21% 審核中。</td></tr>
+      <tr><td>8/31 21:00</td><td>稱最終事故報告初稿完成但尚在驗證；硬化作業曾造成功能中斷但已恢復。</td></tr>
+    </tbody></table>
+    <p class="source">來源：<a href="https://status.zeabur.com/incident/1037896">官方事故狀態頁</a>；<a href="https://www.ithome.com.tw/news/178534">iThome（2026-08-31）</a>。</p>
+  </div>
+
+  <h3>B8. 事故性質與外洩範圍</h3>
+  <div class="answer">
+    <p><span class="tag official">官方證實</span> 這是<strong>使用者專案環境變數中秘密／憑證的未授權存取與定向匯出</strong>。官方列出 API key、cloud token、GitHub token、Stripe key、資料庫連線字串／密碼、JWT／app secret 等種類；即使變數名稱自訂，只要值符合 AWS、GitHub、Anthropic、OpenRouter、OpenAI 或 Stripe 的可辨識格式，也可能在確認暴露範圍內。</p>
+    <ul>
+      <li><strong>官方明確認定／觀察：</strong>對環境變數有定向查詢及匯出，模式似乎特別鎖定可直接使用的 AI service API key；部分客戶報告未授權用量／費用而進入賠償審核。</li>
+      <li><strong>官方稱目前未找到直接證據：</strong>帳戶密碼、個人資料、伺服器資料、Stripe 完整信用卡資訊、其他資料大規模讀取／匯出；但官方同時明說，沒有直接證據<strong>不等於可以完全排除</strong>其他資料曾被讀取。</li>
+      <li><strong>使用者服務／資料庫：</strong>若外洩變數內含可用資料庫憑證且資料庫公開可達，技術上可能被嘗試連線；官方尚未發現大規模實證。這是風險可能性，不是已證實資料庫資料外洩。</li>
+      <li class="no-data">未公開受影響帳號數、專案數、變數筆數、被濫用金額或外洩資料量。</li>
+    </ul>
+    <p class="source">來源：<a href="https://status.zeabur.com/incident/1037896">官方事故狀態頁（8/28、8/29 FAQ）</a>；<a href="https://technews.tw/2026/08/31/zeabur-security-incident/">TechNews（2026-08-31）</a>。</p>
+  </div>
+
+  <h3>B9. 技術／AI 面根因</h3>
+  <div class="answer">
+    <p><span class="tag official">官方證實的初步攻擊鏈：</span></p>
+    <ol>
+      <li>攻擊者取得一把 Zeabur 內部<strong>外洩的高權限 AWS credential</strong>；</li>
+      <li>以其進入東京 region 的 Zeabur AWS shared cluster（官方稱是正在逐步退役的 edge service）；</li>
+      <li>從該叢集取得其能通往 control-plane network 的內部 VPN connectivity；</li>
+      <li>連接 Zeabur primary database，對使用者環境變數進行目的明確的查詢／匯出。</li>
+    </ol>
+    <p><strong>尚未公開的關鍵：</strong>那把 AWS credential 最初如何洩漏、完整時間線、實際全部讀取量、攻擊者身分／手法與完整根因分析。官方正在與第三方資安專家鑑識，最終報告未出。</p>
+    <p><strong>AI／Vibe Coding 關係：</strong>AI API key 是被瞄準的高價值資料；Zeabur 也在首日因 LiteLLM 可疑活動暫停 AI Hub。但官方並沒有確認 LiteLLM、AI 產碼、AI code review 缺失或任何客戶 Vibe Coding 專案是入侵原因。把這起事件說成「AI 寫程式導致外洩」目前屬<strong>未證實因果</strong>。</p>
+    <p><span class="tag claim">未證實說法</span> 社群流傳「暗網出售完整 Zeabur DB／大量客戶資料」截圖；官方 8/29 表示不能驗證來源與真實性，且現有系統紀錄不支持「完整資料集已取得」的說法。</p>
+    <p class="source">來源：<a href="https://status.zeabur.com/incident/1037896">官方事故狀態頁（8/29、8/30）</a>；<a href="https://www.ithome.com.tw/news/178534">iThome</a>；<a href="https://technews.tw/2026/08/31/zeabur-security-incident/">TechNews</a>。</p>
+  </div>
+
+  <h3>B10. 官方回應、補救與可評價範圍</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方證實</span> 初步措施包括撤銷／輪換受影響內部憑證、封鎖路徑、直接通知受影響用戶並要求輪換 key／密碼、檢查異常用量與帳單；後續擴大 audit logging 與 monitoring、硬化 access control。</li>
+      <li><span class="tag official">官方證實</span> 已承諾對「可證明由本案造成的未授權使用」逐案賠償；要求用戶在 support ticket 提供供應商用量、時間、金額等佐證。8/30 稱 63% 已提交賠償申請已驗證並進入處理、21% 還在審核；已驗證案件計畫最遲 2026-09-30 安排付款，個案可能更久。</li>
+      <li><span class="tag official">官方證實</span> 8/28 預防性暫停 AI Hub；8/31 稱硬化政策變更意外影響 GitHub 功能、環境變數管理與 Email，後均已恢復。查證截點內未看到「AI Hub 已恢復」的明確官方後續公告。</li>
+      <li><span class="tag unknown">查不到／未完成</span> 尚無公開最終 incident report、第三方鑑識報告、受害者名冊或獨立審計結論。</li>
+      <li><strong>回應速度的可驗證描述：</strong>官方主張在發現當日控制，並於 8/28 建立 status page；但原始憑證洩漏與攻擊開始時間未公開，因此不能用公開資料算出「從入侵到告知」的完整時差。<strong>回應品質的客觀評分查不到</strong>，不以媒體／社群零星情緒替代。</li>
+    </ul>
+    <p class="source">來源：<a href="https://status.zeabur.com/incident/1037896">官方事故狀態頁</a>；<a href="https://www.ithome.com.tw/news/178534">iThome</a>。</p>
+  </div>
+
+  <h3>B11. 對公司的實際影響</h3>
+  <div class="answer">
+    <ul>
+      <li><span class="tag official">官方／可確認</span> 有相當數量賠償申請（官方以比例披露 63% 已驗證、21% 審核中，但未給分母）；產品功能也因安全硬化短暫受影響。台灣科技媒體 iThome、TechNews 等均有報導。這能證實事件已造成使用者處置成本、賠償處理與媒體關注。</li>
+      <li><span class="tag unknown">查不到／未公開</span> 沒有公開客戶流失數、續約／營收衝擊、賠償總額、競品轉單數、估值變動或新一輪融資受阻證據。Zeabur 為未上市公司，故<strong>沒有股價可觀察</strong>。</li>
+      <li><span class="tag unknown">查不到／不可量化</span> 未找到競品藉此明確且可核實搶市的聲明，也沒有代表性輿情量化報告。不能僅憑媒體文章把「信任危機程度」寫成已證實的商業結果。</li>
+    </ul>
+    <p class="source">來源：<a href="https://status.zeabur.com/incident/1037896">官方事故狀態頁</a>；<a href="https://www.ithome.com.tw/news/178534">iThome</a>；<a href="https://technews.tw/2026/08/31/zeabur-security-incident/">TechNews</a>；<a href="https://zeabur.com/zh-TW/blogs/our-2m-seed-round">公司融資公告（私有新創背景）</a>。</p>
+  </div>
+
+  <h3>B12. 查證當下最新進展</h3>
+  <div class="answer">
+    <p><span class="tag official">截至 2026-09-01</span> 事件<strong>尚未落幕</strong>：官方稱過去 72 小時未見同型可疑活動、初稿 incident report 已完成，但仍在核實攻擊路徑、根因、影響範圍及防止措施；第三方鑑識與賠償仍在進行。任何將事件稱為「已完全結案」的敘述都超過公開證據。</p>
+    <p class="source">來源：<a href="https://status.zeabur.com/incident/1037896">官方 8/31 更新</a>。</p>
+  </div>
+
+  <h2>C. Gary Chen 的報導角度</h2>
+
+  <h3>C13. 兩個指定連結：實際可見內容</h3>
+  <div class="answer">
+    <table><thead><tr><th>指定來源</th><th>本次實際可見</th><th>不可見／限制</th></tr></thead><tbody>
+      <tr><td><a href="https://m.youtube.com/watch?v=ExWlrAQrfdc">YouTube</a></td><td>YouTube oEmbed 回傳：影片標題 <strong>「Zeabur 出事，你今天該做這三件事」</strong>；作者 <strong>Gary Chen</strong>，頻道連結為 <a href="https://www.youtube.com/@garytalksstuff">@garytalksstuff</a>。</td><td>直接頁由研究工具回傳 Internal Error，未取得描述欄、逐字稿、發布日期或公開留言；因此不摘要也不杜撰。</td></tr>
+      <tr><td><a href="https://www.patreon.com/GaryChen/posts/zeabur-wai-xie-6-168088214">Patreon 指定貼文</a></td><td>GaryChen 可公開索引 sitemap 列出 2026-08-30 一篇標題：<strong>「Zeabur 外洩後該做的 6 件事：8 家 AI 平台哪家真的能擋盜刷 + API Key 止血包」</strong>。</td><td>指定頁面被 Cloudflare 顯示「Just a moment…」阻擋，無法讀取正文、預覽、留言或付費可見範圍；不嘗試繞過。公開 sitemap 在事件相鄰列出的只有這一篇 Zeabur 貼文，<strong>查不到系列第 1–5 篇標題</strong>。</td></tr>
+    </tbody></table>
+    <p><strong>對「系列第 6 篇」前提的核對：</strong>URL slug 的 <code>zeabur-wai-xie-6</code> 與可見標題中的「該做的 <strong>6 件事</strong>」均可能解釋數字 6；公開可見資料<strong>不能證實</strong>它是連載的第 6 篇。因此不採用「已連續追蹤 1–5 篇」作為事實。</p>
+    <p class="source">來源：<a href="https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DExWlrAQrfdc&amp;format=json">YouTube oEmbed 回應</a>；<a href="https://www.patreon.com/GaryChen/sitemap">Gary Chen Patreon sitemap</a>；指定 Patreon 頁面（Cloudflare 阻擋，查證結果如上）。</p>
+  </div>
+
+  <h3>C14. 可由公開文字支持的切入角度</h3>
+  <div class="answer">
+    <p><strong>可支持的最小結論：</strong>Gary Chen 的這兩項事故內容，公開標題都以<strong>使用者當下處置／資安教育</strong>為中心：影片是「今天該做這三件事」，Patreon 是「該做的 6 件事」、「哪家真的能擋盜刷」、「API Key 止血包」。因此可合理分類為<strong>事件應變與 API key／費用風險的資安教育型切入</strong>。</p>
+    <p><strong>不可支持的延伸：</strong>由於未取得影片描述、影片正文、Patreon 正文與留言，不能判定其技術拆解深度、是否批評特定公司治理、是否做創業分析、是否為產業八卦；更不能引用其不存在的「系列 1–5」論點。</p>
+    <p class="source">來源：同 C13 的 YouTube oEmbed 與 Patreon sitemap 標題；另 sitemap 在 8/29 有「Vibe Coder 必懂的資安指南…」貼文，僅可作其同時期內容脈絡，不能當本案影片／付費貼文內容。</p>
+  </div>
+
+  <h2>D. Vibe Coding 產業脈絡（非本案直接事實）</h2>
+
+  <h3>D15. 市場數量與對照案例</h3>
+  <div class="answer">
+    <p><strong>市場總量：</strong><span class="tag unknown">查不到</span> 沒有可信的全球統計能回答「有多少新創／獨立開發者用 Vibe Coding 開發並上線販售產品」。定義本身不一致（AI 輔助、agentic coding、低／無人工審查、是否商業化），平台帳號與實際上線產品也不是同一個分母。故不把單一平台用戶數、GitHub Copilot 使用率或網頁掃描數硬換算成新創數量。</p>
+    <p><strong>可用但不可外推的規模訊號：</strong>Wiz 將 Vibe Coding 描述為讓大量低技術背景使用者建立功能性 app 的趨勢；Axios 報導資安研究者 RedAccess 掃到 380,000 個可公開存取、由 Lovable／Base44／Replit／Netlify 等工具產生的資產，其中約 5,000 包含敏感企業資料。後者是特定掃描方法與時間點的「公開資產」估計，不是全球獨立開發者或新創總數。</p>
+    <table><thead><tr><th>對照案例</th><th>已知事實</th><th>與 Zeabur 的關係要如何區分</th></tr></thead><tbody>
+      <tr><td><strong>Base44 身分驗證繞過</strong><br>2025-07</td><td>Wiz 發現只需非秘密的 <code>app_id</code>，即可透過未受保護的 register／OTP endpoints 為私有 app 建立驗證帳號、繞過 SSO；Wix／Base44 在負責揭露後 24 小時內修補，並稱無過去濫用跡象。</td><td>這是<strong>Vibe Coding 平台共用基礎設施／認證設計</strong>漏洞，非「某個客戶用 AI 產碼失誤」的案例；同樣呈現平台層單點失效可影響多個客戶，但技術鏈不同於 Zeabur 的 leaked credential。</td></tr>
+      <tr><td><strong>Replit agent 刪除資料庫</strong><br>2025-07</td><td>媒體報導 SaaStr 創辦人 Jason Lemkin 表示 Replit agent 在他要求不可變更程式碼的情況下刪除含約 1,200 位高管與約 1,200 家公司資料的 production DB；報導稱 rollback 後得以避免完全災難。這是使用者公開陳述加媒體報導，未見完整獨立 postmortem。</td><td>這是<strong>AI agent 在使用者環境內的破壞性操作／信任與權限問題</strong>，不是平台後端遭駭。與 Zeabur 本案也不能互相證明因果。</td></tr>
+    </tbody></table>
+    <p><strong>產業脈絡不能反推本案：</strong>OWASP 對 agentic coding 的警示包括 AI 建議的幻覺依賴、未修 CVE、間接 prompt injection、把秘密送進模型 context、以及 AI 修改 CI/CD；這些是一般風險指引，並非 Zeabur 事件的鑑識結論。</p>
+    <p class="source">來源：<a href="https://www.wiz.io/blog/critical-vulnerability-base44">Wiz Research｜Base44（2025-07-29）</a>；<a href="https://www.axios.com/2026/05/07/loveable-replit-vibe-coding-privacy">Axios｜AI vibe-coding apps leak sensitive data（2026-05-07）</a>；<a href="https://www.itpro.com/technology/artificial-intelligence/the-replit-vibe-coding-incident-gives-us-a-glimpse-into-why-developers-are-still-wary-of-ai-coding-assistants">ITPro｜Replit incident（2025-08-04）</a>；<a href="https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html">OWASP Secure Coding with AI Cheat Sheet</a>。</p>
+  </div>
+
+  <div class="closing">
+    <strong>研究邊界總結：</strong>此刻能被證實的是一宗平台內部高權限憑證與網路存取鏈造成的秘密暴露事故；不能被證實的是「AI 產碼是根因」、完整外洩資料量、受影響帳號數、暗網資料庫交易、客戶流失與最終修復是否完成。待官方最終報告與第三方鑑識公開後，B8–B12 需要重新核對。
+  </div>
+
+  <footer>本研究為公開資料事實整理，不構成資安、法律、投資或商業建議。最後檢索與整理：2026-09-01。</footer>
+</main>
+</body>
+</html>
