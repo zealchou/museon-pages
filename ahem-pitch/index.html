@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分身有術 ｜ Ahem — FUTUREMODE 決賽簡報</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF8F3;
+  --ink:#1A1815;
+  --ink-soft:#4A443C;
+  --ink-faint:#8B8378;
+  --cinnabar:#C0563A;
+  --amber:#C8963E;
+  --teal:#2B6C8F;
+  --stage:#0C0B0A;
+  --tech:"Chakra Petch","Noto Sans TC",system-ui,sans-serif;
+  --brush:"Ma Shan Zheng","Noto Sans TC",serif;
+  --han:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--stage);
+  color:var(--ink);
+  font-family:var(--han);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── 舞台：永遠維持 16:9 ── */
+#stage{
+  position:relative;
+  width:min(100vw, calc(100vh * 16 / 9));
+  height:min(100vh, calc(100vw * 9 / 16));
+  background:var(--paper);
+  overflow:hidden;
+  box-shadow:0 0 80px rgba(0,0,0,.6);
+}
+
+/* ── 單張投影片 ── */
+.slide{
+  position:absolute;inset:0;
+  opacity:0;visibility:hidden;
+  transition:opacity .45s ease;
+  background:var(--paper);
+}
+.slide.on{opacity:1;visibility:visible}
+
+.art{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  background-repeat:no-repeat;
+  background-color:var(--paper);
+}
+/* 圖還沒到位時，用紙色＋一道斜掃當底，不會開天窗 */
+.art::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 38%,rgba(26,24,21,.05) 46%,transparent 54%);
+}
+
+/* 掃描線：賽博龐克訊號，但很淡，不破壞紙感 */
+#stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:60;
+  background:repeating-linear-gradient(0deg,rgba(26,24,21,.035) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply;
+}
+
+/* ── 文字區塊：每張放的位置不同，對準圖上留白 ── */
+.copy{position:absolute;z-index:10;display:flex;flex-direction:column;}
+.p-left    {left:5.5%;  top:50%;  transform:translateY(-50%); width:38%;}
+.p-bottom  {left:6%;    bottom:6%;                            width:88%;}
+.p-right   {right:5.5%; top:50%;  transform:translateY(-50%); width:44%;}
+.p-top     {left:6%;    top:8%;                               width:60%;}
+.p-topleft {left:6%;    top:9%;                               width:52%;}
+.p-topwide {left:6%;    top:7%;                               width:88%;}
+.p-center  {left:50%;   bottom:4%; transform:translateX(-50%); width:70%; align-items:center; text-align:center;}
+
+/* ── 字級系統：大反差，科技豪邁 ── */
+.kicker{
+  font-family:var(--tech);
+  font-weight:600;
+  font-size:1.35vw;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin-bottom:1.1em;
+  display:flex;align-items:center;gap:.9em;
+}
+.kicker::before{content:"";width:2.6vw;height:2px;background:var(--teal);flex:none}
+.p-center .kicker::before{display:none}
+
+.title{
+  font-family:var(--han);
+  font-weight:900;
+  font-size:6.2vw;
+  line-height:1.02;
+  letter-spacing:.02em;
+  color:var(--ink);
+}
+.title.mega{font-size:9vw;line-height:.94}
+.title .rd{color:var(--cinnabar)}
+
+.sub{
+  font-family:var(--han);
+  font-weight:500;
+  font-size:2vw;
+  line-height:1.6;
+  color:var(--ink-soft);
+  margin-top:1.1em;
+  letter-spacing:.05em;
+}
+
+.rule{height:3px;background:var(--ink);width:4.5vw;margin:1.5em 0 1.2em}
+.rule.rd{background:var(--cinnabar)}
+
+/* 條列 */
+.list{margin-top:1.4em;display:flex;flex-direction:column;gap:.95em}
+.li{
+  display:flex;align-items:baseline;gap:1em;
+  font-family:var(--han);font-weight:500;
+  font-size:2.5vw;line-height:1.5;color:var(--ink);
+  opacity:1;transition:opacity .4s ease, transform .4s ease;
+}
+.li b{font-weight:900}
+.li .n{
+  font-family:var(--tech);font-weight:700;font-size:1.8vw;
+  color:var(--cinnabar);letter-spacing:.06em;flex:none;
+  min-width:2.2vw;
+}
+.li .ask{
+  font-family:var(--han);font-weight:900;color:var(--cinnabar);
+  white-space:nowrap;
+}
+/* 逐條浮現 */
+.build .li{opacity:.14;transform:translateY(.25em)}
+.build .li.shown{opacity:1;transform:none}
+
+/* 三行痛點橫排 */
+.trio{display:flex;gap:2.6%;margin-top:.6em}
+.trio .cell{
+  flex:1;border-top:3px solid var(--ink);padding-top:1em;
+  opacity:.14;transition:opacity .4s ease,transform .4s ease;transform:translateY(.3em);
+}
+.trio .cell.shown{opacity:1;transform:none}
+.trio .cell .n{font-family:var(--tech);font-weight:700;font-size:1.6vw;letter-spacing:.2em;color:var(--cinnabar)}
+.trio .cell .t{font-family:var(--han);font-weight:700;font-size:2.1vw;line-height:1.4;margin-top:.4em;color:var(--ink)}
+.trio .cell .a{font-family:var(--han);font-weight:900;font-size:2.5vw;color:var(--cinnabar);margin-top:.35em}
+
+/* 大數字 */
+.stat{display:flex;align-items:flex-end;gap:1.6vw;margin-top:.5em}
+.stat .num{
+  font-family:var(--tech);font-weight:700;
+  font-size:10vw;line-height:.9;color:var(--ink);padding-right:.06em;
+}
+.stat .num.rd{color:var(--cinnabar)}
+.stat .unit{font-family:var(--han);font-weight:900;font-size:2.9vw;line-height:2.1;color:var(--ink-soft)}
+.stat .pre{font-family:var(--han);font-weight:700;font-size:2.2vw;line-height:2.9;color:var(--ink-faint);margin-left:1.2vw}
+
+/* 四種會議 */
+.chips{display:flex;gap:.7vw;margin-top:1.3em;flex-wrap:wrap}
+.chip{
+  font-family:var(--han);font-weight:700;font-size:1.95vw;
+  padding:.35em .9em;border:2px solid var(--ink);color:var(--ink);
+  letter-spacing:.06em;
+}
+
+/* 影片頁 */
+.videowrap{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center}
+.videowrap video{width:100%;height:100%;object-fit:contain;background:#000}
+.videowrap video::cue{font-size:1.5vw;font-family:var(--han);background:rgba(0,0,0,.72)}
+.vhint{
+  position:absolute;left:0;right:0;bottom:2.2%;z-index:20;text-align:center;
+  font-family:var(--tech);font-weight:600;font-size:.95vw;letter-spacing:.36em;
+  text-transform:uppercase;color:rgba(251,248,243,.5);
+}
+
+/* 封底 */
+.p-center .title.mega{font-family:var(--brush);font-size:10.5vw;font-weight:400;letter-spacing:.06em;line-height:1}
+.teamline{
+  font-family:var(--tech);font-weight:700;font-size:1.6vw;
+  letter-spacing:.5em;text-transform:uppercase;color:var(--ink-soft);
+  margin-top:1.2em;
+}
+
+/* ── 底部 HUD ── */
+#hud{
+  position:absolute;left:0;right:0;bottom:0;z-index:70;
+  display:flex;align-items:center;gap:1.4vw;
+  padding:.85vw 1.6vw;
+  font-family:var(--tech);font-weight:600;font-size:.92vw;letter-spacing:.2em;
+  color:var(--ink-faint);
+  background:linear-gradient(0deg,rgba(12,11,10,.82),rgba(12,11,10,0));
+  color:rgba(251,248,243,.62);
+  pointer-events:none;
+  opacity:0;transition:opacity .25s ease;
+}
+#hud.on{opacity:1}
+#hud .seg{display:flex;align-items:center;gap:.55em}
+#hud .dot{width:.42vw;height:.42vw;border-radius:50%;background:var(--ink-faint);opacity:.32}
+#hud .dot.on{opacity:1;background:var(--cinnabar);transform:scale(1.35)}
+#clock{margin-left:auto;font-size:1.15vw;letter-spacing:.12em;color:rgba(251,248,243,.9)}
+#clock.over{color:var(--cinnabar)}
+#budget{color:var(--teal)}
+.slide.dark ~ #hud{color:rgba(251,248,243,.55);background:linear-gradient(0deg,rgba(0,0,0,.75),transparent)}
+
+/* 開場提示，幾秒後自己淡掉 */
+#boot{
+  position:absolute;left:50%;bottom:4%;transform:translateX(-50%);z-index:75;
+  font-family:var(--tech);font-weight:600;font-size:.92vw;letter-spacing:.22em;
+  color:rgba(251,248,243,.78);background:rgba(12,11,10,.72);
+  padding:.7em 1.5em;border-radius:2em;white-space:nowrap;
+  animation:bootfade 6s ease forwards;pointer-events:none;
+}
+@keyframes bootfade{0%,68%{opacity:1}100%{opacity:0;visibility:hidden}}
+
+/* ── 講稿抽屜 ── */
+#notes{
+  position:absolute;right:0;top:0;bottom:0;width:31%;z-index:80;
+  background:rgba(16,15,14,.96);color:#E8E2D8;
+  padding:2.6vw 2.2vw;overflow:auto;
+  transform:translateX(101%);transition:transform .32s ease;
+  font-family:var(--han);
+}
+#notes.on{transform:none}
+#notes h4{
+  font-family:var(--tech);font-weight:700;font-size:.95vw;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:1.4em;
+}
+#notes p{font-size:1.15vw;line-height:1.85;font-weight:400;color:#E8E2D8}
+#notes .t{
+  font-family:var(--tech);font-size:1vw;letter-spacing:.2em;color:var(--teal);
+  margin-bottom:1em;display:block;
+}
+#notes .hintbox{
+  margin-top:2.2em;padding-top:1.4em;border-top:1px solid rgba(232,226,216,.2);
+  font-size:.92vw;line-height:1.9;color:#9A928699;
+}
+#notes .hintbox b{color:var(--amber);font-weight:700}
+
+/* 手機直式：把舞台縮成可捲的閱讀版 */
+@media (max-aspect-ratio:1/1) and (max-width:820px){
+  body{overflow:auto;display:block;background:var(--paper)}
+  #stage{width:100%;height:auto;box-shadow:none}
+  .slide{position:relative;opacity:1;visibility:visible;aspect-ratio:16/9;border-bottom:1px solid rgba(26,24,21,.12)}
+  .title{font-size:7.4vw}.title.mega{font-size:11vw}
+  .sub{font-size:2.8vw}.li{font-size:3vw}.li .n{font-size:2.6vw}
+  .kicker{font-size:2vw}.trio .cell .t{font-size:2.6vw}.trio .cell .a{font-size:3vw}
+  .stat .num{font-size:15vw}.stat .unit{font-size:4vw}.chip{font-size:2.6vw}
+  #hud,#notes{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- ① 封面 -->
+  <section class="slide on" data-sec="40">
+    <div class="art" style="background-image:url('art/01-cover.png')"></div>
+    <div class="copy p-left">
+      <div class="kicker">FUTUREMODE 2026</div>
+      <div class="title mega">分身<br>有術</div>
+      <div class="rule rd"></div>
+      <div class="title" style="font-size:4vw">Ahem</div>
+      <div class="sub">會在該說話的時候<br>開口的 AI 會議主席</div>
+    </div>
+  </section>
+
+  <!-- ② 影片 -->
+  <section class="slide dark" data-sec="94">
+    <div class="videowrap">
+      <video id="film" playsinline preload="auto" controls poster="poster.jpg">
+        <source src="ahem-highlight.mp4" type="video/mp4">
+        <track src="narration.vtt" kind="subtitles" srclang="zh-TW" label="中文" default>
+      </video>
+    </div>
+  </section>
+
+  <!-- ③ 三個「有沒有」 -->
+  <section class="slide build" data-sec="45">
+    <div class="art" style="background-image:url('art/02-pain.png')"></div>
+    <div class="copy p-bottom">
+      <div class="kicker">你們有遇過就大聲說「有」</div>
+      <div class="trio">
+        <div class="cell"><div class="n">01</div><div class="t">話題飄走了<br>就再也回不來</div><div class="a">有沒有？</div></div>
+        <div class="cell"><div class="n">02</div><div class="t">話講到一半被切掉<br>那個想法永遠消失</div><div class="a">有沒有？</div></div>
+        <div class="cell"><div class="n">03</div><div class="t">「大家都同意吧」<br>沒人講話就當通過</div><div class="a">有沒有？</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 人會累 -->
+  <section class="slide" data-sec="25">
+    <div class="art" style="background-image:url('art/03-human.png')"></div>
+    <div class="copy p-right">
+      <div class="kicker">就算你學會了怎麼開會</div>
+      <div class="title" style="font-size:4.9vw">人沒辦法<br>每次都當好<span class="rd">主席</span></div>
+      <div class="rule"></div>
+      <div class="sub">身體不舒服 ／ 忙碌焦慮 ／ 心情不好</div>
+      <div class="title" style="font-size:3.1vw;margin-top:.7em">所以主席最適合交給誰？</div>
+    </div>
+  </section>
+
+  <!-- ⑤ 我們自己的數字 -->
+  <section class="slide" data-sec="25">
+    <div class="art" style="background-image:url('art/04-proof.png')"></div>
+    <div class="copy p-top">
+      <div class="kicker">這次黑客松，你算過開會花了多久嗎</div>
+      <div class="stat">
+        <div class="num">3</div><div class="unit">次會議</div>
+        <div class="pre">不到</div>
+        <div class="num rd">3</div><div class="unit">小時</div>
+      </div>
+      <div class="rule"></div>
+      <div class="sub">我們團隊，全程由 Ahem 主持</div>
+    </div>
+  </section>
+
+  <!-- ⑥ Ahem 做的四件事 -->
+  <section class="slide build" data-sec="40">
+    <div class="art" style="background-image:url('art/05-what.png')"></div>
+    <div class="copy p-topleft">
+      <div class="kicker">Ahem 為你做的四件事</div>
+      <div class="list">
+        <div class="li"><span class="n">01</span><span>話題飄了，<b>當場擋回來</b></span></div>
+        <div class="li"><span class="n">02</span><span>有人被切話，<b>把原話還回去</b></span></div>
+        <div class="li"><span class="n">03</span><span>下結論前，<b>先問沒出聲的人</b></span></div>
+        <div class="li"><span class="n">04</span><span>散會同一刻，<b>決議與待辦已寫好</b></span></div>
+      </div>
+      <div class="rule rd"></div>
+      <div class="sub" style="margin-top:0">而它更常做的，是不說話。<br>
+        <span style="color:var(--cinnabar);font-weight:900">整場想了 14 次，只開口 3 次。</span></div>
+    </div>
+  </section>
+
+  <!-- ⑦ 帶回你的生活 -->
+  <section class="slide" data-sec="20">
+    <div class="art" style="background-image:url('art/06-takeaway.png')"></div>
+    <div class="copy p-topwide">
+      <div class="kicker">就在今天</div>
+      <div class="title" style="font-size:4.7vw">帶著 Ahem<span class="rd">，</span>回到你的生活</div>
+      <div class="chips">
+        <div class="chip">家庭會議</div><div class="chip">校務會議</div>
+        <div class="chip">董事會議</div><div class="chip">幹部會議</div>
+      </div>
+      <div class="sub">把省下來的時間，還給事業與家庭。</div>
+    </div>
+  </section>
+
+  <!-- ⑧ 封底 破框 -->
+  <section class="slide" data-sec="10">
+    <div class="art" style="background-image:url('art/07-closing.png')"></div>
+    <div class="copy p-center">
+      <div class="title mega">分身有術</div>
+      <div class="teamline">Ahem</div>
+    </div>
+  </section>
+
+  <div id="hud">
+    <div class="seg" id="dots"></div>
+    <div class="seg" id="pageno">01 / 08</div>
+    <div class="seg" id="budget">本頁 40s</div>
+    <div id="clock">00:00 / 05:00</div>
+  </div>
+
+  <div id="boot">← → 換頁　空白鍵 下一步　N 講稿　H 計時列　F 全螢幕</div>
+
+  <aside id="notes">
+    <h4>講稿</h4>
+    <span class="t" id="ntime"></span>
+    <p id="ntext"></p>
+    <div class="hintbox">
+      <b>←→</b> 換頁　<b>空白鍵</b> 下一步<br>
+      <b>N</b> 開關講稿　<b>H</b> 開關底部計時列<br>
+      <b>T</b> 計時開始／暫停　<b>R</b> 歸零　<b>F</b> 全螢幕
+    </div>
+  </aside>
+
+</div>
+
+<script>
+const NOTES = [
+ "據統計，人類最害怕的是演講。而據我長期觀察，另一個最害怕的，就是開會。\n\n學校沒有在教開會，但我們從小就不斷地跟人大量溝通——開會是再正常不過的事情。可是「議而不決、決而不行、行而無果」，卻是放眼各團隊、各企業普遍都在遇到的問題。",
+ "（播影片。94 秒，讓它跑完，不要講話。）\n\n播完接一句：這不是模擬，這是一場真實會議的精華。",
+ "不信，我隨便講幾個問題——你們如果有遇過，就在台下大聲地說「有」！\n\n（每喊完一個停 2 秒等台下回應，再按空白鍵出下一個）\n\n一、話題飄走了，就再也回不來——有沒有？\n二、話講到一半被切掉，那個想法永遠消失——有沒有？\n三、主管說「大家都同意吧」，沒人講話就當通過——有沒有？",
+ "就算我們學會了如何開會，人也會因為身體健康、忙碌焦慮、心情不好等問題，而無法時時專注做好會議主席的角色。\n\n所以——開會的主席，最適合交給誰？\n\nAhem！",
+ "台下的每個人，這次在 FUTUREMODE 黑客松的比賽都辛苦了。你們有沒有算過，開會討論花了多少時間？\n\n我們團隊，透過 Ahem 只開了三次會，開會的時間加起來沒有超過三小時。",
+ "這就是 Ahem 能為各位做到的事情。\n\n（唸四點，一點一按空白鍵）\n一、話題飄了，當場擋回來。\n二、有人被切話，把原話還回去。\n三、要下結論前，先問沒出聲的人。\n四、散會的同一刻，決議與待辦已經寫好。\n\n而它更常做的，是不說話。那場會它想了十四次，只開口三次——忍住，是設計，不是故障。",
+ "就在今天，你們就可以帶著 Ahem 回到你的生活。開家庭會議、校務會議、董事會議、幹部會議，讓你們的生活與 Ahem 一起智能。\n\n把省下來的時間，更專注在事業上、家庭上打拼！",
+ "我們是——\n\n分身有術！Ahem！\n\n愛你們！"
+];
+
+const slides=[...document.querySelectorAll('.slide')];
+const dots=document.getElementById('dots');
+const pageno=document.getElementById('pageno');
+const budget=document.getElementById('budget');
+const clock=document.getElementById('clock');
+const notes=document.getElementById('notes');
+const ntext=document.getElementById('ntext');
+const ntime=document.getElementById('ntime');
+
+slides.forEach(()=>dots.insertAdjacentHTML('beforeend','<span class="dot"></span>'));
+const dotEls=[...dots.children];
+
+// 每頁的累積起始秒數
+let acc=0; const starts=slides.map(s=>{const a=acc;acc+=+s.dataset.sec;return a;});
+const pad=n=>String(n).padStart(2,'0');
+const mmss=s=>pad(Math.floor(s/60))+':'+pad(Math.floor(s%60));
+
+let i=0, step=0;
+function stepsOf(n){
+  const s=slides[n];
+  if(!s.classList.contains('build')) return 0;
+  return s.querySelectorAll('.li,.trio .cell').length;
+}
+function render(){
+  slides.forEach((s,n)=>s.classList.toggle('on',n===i));
+  dotEls.forEach((d,n)=>d.classList.toggle('on',n===i));
+  pageno.textContent=pad(i+1)+' / '+pad(slides.length);
+  budget.textContent='本頁 '+slides[i].dataset.sec+'s ・ 累積 '+mmss(starts[i]);
+  const items=[...slides[i].querySelectorAll('.li,.trio .cell')];
+  items.forEach((el,n)=>el.classList.toggle('shown', !slides[i].classList.contains('build') || n<step));
+  ntext.textContent=NOTES[i]||'';
+  ntime.textContent='第 '+pad(i+1)+' 頁 ・ 建議 '+slides[i].dataset.sec+' 秒 ・ 從 '+mmss(starts[i])+' 開始';
+  // 走到影片頁自動播；離開就停下並倒回開頭
+  const film=document.getElementById('film');
+  if(film){ if(i===1){ film.currentTime=0; film.play().catch(()=>{}); } else { film.pause(); film.currentTime=0; } }
+}
+function go(d){
+  if(d>0){
+    if(slides[i].classList.contains('build') && step<stepsOf(i)){step++;render();return;}
+    if(i<slides.length-1){i++;step=0;render();}
+  }else{
+    if(slides[i].classList.contains('build') && step>0){step--;render();return;}
+    if(i>0){i--;step=stepsOf(i);render();}
+  }
+}
+
+// 計時器
+let t=0,timer=null;
+function tick(){t++;clock.textContent=mmss(t)+' / 05:00';clock.classList.toggle('over',t>300);}
+function toggleTimer(){ if(timer){clearInterval(timer);timer=null;} else {timer=setInterval(tick,1000);} }
+
+addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
+  else if(k==='n'){notes.classList.toggle('on');}
+  else if(k==='h'){document.getElementById('hud').classList.toggle('on');}
+  else if(k==='t'){toggleTimer();}
+  else if(k==='r'){t=0;clock.textContent='00:00 / 05:00';clock.classList.remove('over');}
+  else if(k==='f'){document.documentElement.requestFullscreen?.();}
+  else if(k==='home'){i=0;step=0;render();}
+});
+addEventListener('click',e=>{ if(e.target.closest('video,#notes')) return; go(1); });
+
+// 網址帶 #3 就直接跳到第 3 頁（現場救援用，也方便逐頁檢查）
+function fromHash(){
+  const n=parseInt(location.hash.slice(1),10);
+  if(n>=1&&n<=slides.length){i=n-1;step=stepsOf(i);render();}
+}
+addEventListener('hashchange',fromHash);
+render(); fromHash();
+</script>
+</body>
+</html>
