@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wan2.2 TI2V-5B：影像轉影片參數研究</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#526273; --paper:#fbfaf7; --line:#dce3e8; --accent:#146c76; --soft:#e8f3f2; --warn:#fff5df; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#edf1f3; font:17px/1.75 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif; }
+    main { max-width:900px; margin:30px auto; padding:54px clamp(22px,6vw,68px); background:var(--paper); box-shadow:0 8px 32px #12233a14; }
+    h1,h2,h3 { line-height:1.28; letter-spacing:.01em; } h1 { font-size:2.15rem; margin:0 0 .35rem; } h2 { margin:2.7rem 0 .8rem; padding-top:.15rem; color:#103f48; } h3 { margin:1.6rem 0 .45rem; font-size:1.15rem; }
+    p { margin:.72rem 0; } .eyebrow { font-size:.86rem; letter-spacing:.08em; color:var(--accent); font-weight:700; } .date { color:var(--muted); margin:0 0 2rem; }
+    .answer { background:var(--soft); border-left:5px solid var(--accent); padding:1.1rem 1.2rem; margin:1.4rem 0; } .warn { background:var(--warn); border-left:5px solid #bc7d13; padding:1rem 1.2rem; margin:1.25rem 0; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0 1.4rem; font-size:.94rem; } th,td { text-align:left; vertical-align:top; border-bottom:1px solid var(--line); padding:.72rem .6rem; } th { color:#17464e; background:#f0f6f6; }
+    code { font: .88em ui-monospace,SFMono-Regular,Consolas,monospace; background:#eef1f3; border-radius:4px; padding:.12em .28em; overflow-wrap:anywhere; } pre { background:#17242b; color:#e9f5f4; padding:1rem 1.1rem; overflow:auto; border-radius:7px; font-size:.82rem; line-height:1.55; } pre code { padding:0; background:none; color:inherit; }
+    a { color:#066b78; text-decoration-thickness:1px; text-underline-offset:2px; } ul,ol { padding-left:1.3rem; } li { margin:.45rem 0; } .tag { display:inline-block; padding:.13rem .45rem; border-radius:999px; background:#e6eef0; color:#284752; font-size:.78rem; font-weight:700; } .sources li { margin-bottom:.75rem; }
+    @media print { body { background:white; } main { margin:0; max-width:none; box-shadow:none; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">研究報告／官方 generate.py 路徑</div>
+  <h1>Wan2.2 TI2V-5B：影像轉影片參數研究</h1>
+  <p class="date">2026-09-05・對象：1280×704、121 幀、24 fps、首幀 I2V、約 5 秒鏡頭</p>
+
+  <div class="answer">
+    <strong>直接建議：</strong>下一次先固定 seed，將 <code>sample_steps</code> 從 8 提到 <strong>16</strong>，其餘採官方 TI2V-5B 配方：<strong>UniPC、shift 5.0、CFG 5.0</strong>。在「8 步約 9 分鐘、總時間不超過 20 分鐘」的保守線性估算下，16 步約 18 分鐘；它是最有證據、且不同時改動多個變數的改善法。<strong>不要先把 shift 或 solver 當作修臉旋鈕。</strong>
+  </div>
+
+  <p>結論先講清楚：8 步對原生、未蒸餾的 TI2V-5B 是明顯偏低，不是官方品質設定的小幅縮減。官方 config 的 TI2V-5B 是 50 steps／shift 5.0／guidance 5.0／121 幀；官方程式也明說 steps 越高品質越好、但越慢。唯一能在本次時間上限內顯著增加的、且有直接因果依據的旋鈕是 steps。</p>
+
+  <h2>可直接執行的組合</h2>
+  <pre><code>python generate.py \
+  --task ti2v-5B \
+  --size 1280*704 \
+  --frame_num 121 \
+  --ckpt_dir ./Wan2.2-TI2V-5B \
+  --image ./input.png \
+  --sample_steps 16 \
+  --sample_shift 5.0 \
+  --sample_guide_scale 5.0 \
+  --sample_solver unipc \
+  --base_seed 你的固定整數seed \
+  --offload_model True \
+  --convert_model_dtype \
+  --t5_cpu \
+  --prompt "..."</code></pre>
+  <p><code>--convert_model_dtype</code> 是官方 24 GB 單卡 TI2V 指令的一部分；它是把 DiT 轉為設定的參數 dtype，以便省記憶體，不是為了提升臉部品質。<code>--offload_model True</code> 與 <code>--t5_cpu</code> 也是記憶體／速度取捨，不是造成「動作弱、臉變形」的首要品質控制項。</p>
+
+  <table>
+    <thead><tr><th>用途</th><th>steps</th><th>shift</th><th>CFG</th><th>solver</th><th>判斷</th></tr></thead>
+    <tbody>
+      <tr><td>本次首選</td><td><strong>16</strong></td><td><strong>5.0</strong></td><td><strong>5.0</strong></td><td><strong>unipc</strong></td><td>唯一同時有官方預設作錨、又能守住約 20 分鐘的組合。</td></tr>
+      <tr><td>若實測 16 步只需 ≤17 分鐘</td><td>17</td><td>5.0</td><td>5.0</td><td>unipc</td><td>可用餘裕多買一個品質步；不可直接跳到 40/50。</td></tr>
+      <tr><td>診斷 A/B，不是首選</td><td>16</td><td>5.0</td><td>5.0</td><td>dpm++</td><td>同一張圖、同一 prompt、同一 seed，才可判斷它在你的素材上是否較少扭曲。</td></tr>
+      <tr><td>不建議先做</td><td>8</td><td>6–8</td><td>4–6</td><td>任意</td><td>同時換多個參數，結果無法歸因；且沒有 TI2V-5B 證據證明高 shift 可穩定增加動作。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn"><strong>時間預算是估算，不是保證。</strong>若 8 步的 9 分鐘幾乎全是逐步去噪，16 步約 18 分鐘、17 步約 19.1 分鐘、18 步約 20.25 分鐘。VAE decode、載入與 CPU offload 會讓實際曲線不是完全線性，所以先跑 16 步量一次，不要假設 18 步仍在上限內。</div>
+
+  <h2>逐題回答</h2>
+
+  <h3>1. 8 steps 是否太低？品質範圍是多少？</h3>
+  <p><strong>是，對 base TI2V-5B 而言太低。</strong>官方 <a href="https://github.com/Wan-Video/Wan2.2/blob/main/wan/configs/wan_ti2v_5B.py">TI2V-5B config</a> 明定 50 steps；<a href="https://github.com/Wan-Video/Wan2.2/blob/main/wan/textimage2video.py">官方 pipeline 文件／程式</a>也明定「higher values improve quality but slow generation」。所以 8 步是官方品質預設的 16%，不能期待它在 121 幀、720P、人物運動上有完整的去噪餘裕。</p>
+  <p>就「品質而非最快」而言，<strong>40–50 步</strong>是最合理的目標範圍：50 是直接官方配方；第三方的 MLX Wan 實作以同一 TI2V-5B 5B 單模型與 720P 配方，明寫 40 steps「recommended for best quality」。後者不是 Wan 官方 benchmark，故它只能支持「40 是可用的品質實務值」，不能取代官方 50。</p>
+  <p>但你的時限只允許折衷：<strong>16 steps 是時間受限的品質下限改善，不是品質最適值。</strong>若要追求真正的臉部穩定，40–50 步或改用有較強 I2V 能力／控制條件的模型，才是同一問題的另一個解法。</p>
+
+  <h3>2. shift、guide scale 對動作與臉穩定度的方向？</h3>
+  <table>
+    <thead><tr><th>參數</th><th>官方能確認的含義</th><th>可安全推論</th><th>本次建議</th></tr></thead>
+    <tbody>
+      <tr><td><code>sample_shift</code></td><td>noise schedule shift；官方只寫「affects temporal dynamics」。TI2V-5B 的官方值 5.0。</td><td>它改的是整段 flow-matching sigma/timestep 的分配；不是「動作幅度」的直接控制器。官方沒有給出「高一點必然更動／更穩臉」的單調關係。</td><td><strong>保持 5.0。</strong>不要為了動作直接改成 8；那是另一個 scheduler 實驗。</td></tr>
+      <tr><td><code>sample_guide_scale</code></td><td>classifier-free guidance，官方定義為 prompt adherence vs. creativity；TI2V-5B 官方值 5.0。</td><td>提高 CFG 會更強地服從正／負 prompt，可能令指定動作更被遵循；但它不保證動作更大，也不保證臉更穩。過度 guidance 在擴散模型通常會犧牲自然度／引入飽和或扭曲，因此不應無根據地往上推。</td><td><strong>保持 5.0。</strong>若 16 步同 seed 的臉仍明顯被 prompt 拉壞，才獨立試 4.5；這是診斷試驗，非已證實配方。</td></tr>
+    </tbody>
+  </table>
+  <p>社群能找到的 TI2V-5B 具體配方只有低可信度的應用層例子：Draw Things 的「recommended settings」為 81 frames、CFG 4、UniPC Trailing、shift 8。它是不同 runtime／不同 scheduler 變體，且原討論正是在說 reference image 沒被充分使用，<strong>不能拿來直接覆寫官方 generate.py 的 5.0／5.0</strong>。另有 Wan2.2 I2V 使用者指出 shift 必須隨 steps、sampler、scheduler、model type 一起調，正好反駁「只改 shift 就能加大動作」這種說法；但那是 14B I2V 類推，不是 TI2V-5B 實驗。</p>
+
+  <h3>3. UniPC 與 DPM++ 是否已知能解決「動作弱＋臉扭曲」？</h3>
+  <p><strong>沒有找到 TI2V-5B 的可信公開 A/B 證據，能宣稱 DPM++ 比 UniPC 更會保臉或更會做大動作。</strong>官方程式確實實作兩者：<code>unipc</code> 是預設，<code>dpm++</code> 是另一個 flow-matching multistep scheduler；兩者都吃相同的 steps、shift 與 CFG。UniPC 原論文的優勢是以較少 function evaluations 達到高階求解精度，這支持它作為低步數的合理預設，卻不是 Wan 人臉 benchmark。</p>
+  <p>因此本案先選 <strong>UniPC</strong>：它是官方預設，且在 16 步這種仍遠低於原生 50 的預算下，換 solver 的證據不如多給去噪步數強。只有在 16-step UniPC 已跑過後，才用同 seed 做一次 16-step DPM++；若 DPM++ 對同一臉／動作主觀較好，再把它保留。不要用兩個不同 seed 的成片比較 solver。</p>
+
+  <h3>4. 在不超過約 20 分鐘下，什麼組合同時最可能改善？</h3>
+  <p><strong><code>16 / 5.0 / 5.0 / unipc</code></strong>。它的邏輯是先把唯一明確品質瓶頸（8 steps）提高一倍，同時不偏離 TI2V-5B 的官方 temporal schedule 與 CFG。這很可能改善臉部的局部去噪與時間一致性；對「動作明顯度」的改善則是<strong>間接</strong>的——較完整的去噪會讓模型較有機會實現 prompt 已指定的動作，而非卡在保守的近靜止解。</p>
+  <p>動作幅度最該由 prompt 補上，而不是先賭 scheduler。把動作寫成單一、可觀察、連續的 5 秒事件，並指明起點、過程、終點與鏡頭。例如：</p>
+  <pre><code>固定中景、鏡頭不移動。一名女子從靜止站立開始，
+在 5 秒內清楚地把右手由腰側抬到肩高，手掌向鏡頭揮動兩次，
+最後手停在肩高；臉始終朝向鏡頭，表情自然，頭部只有輕微轉動。</code></pre>
+  <p>避免同時要求「走向鏡頭、快速轉頭、雙手跳舞、鏡頭環繞、景別切換」：對一張首幀和 5B 單模型而言，這是在同一段生成中同時施加多個 identity／肢體／鏡頭的高風險變量。先讓鏡頭固定、只做一個動作；需要快動作再明寫「正常速度／清楚可見的動作」，不要只寫「dynamic」。</p>
+
+  <h3>5. 已知臉／身體變形問題的根本原因或限制？</h3>
+  <p>有可觀察到的限制與社群回報，但<strong>沒有「低 steps 必然導致 temporal incoherence」的官方定理或 TI2V-5B 公認根因</strong>。應分成三層看：</p>
+  <ol>
+    <li><strong>低步數是本次最強的可修正風險。</strong>官方明定多 steps 會提升品質。8 步讓 121 幀的人臉、手、肢體在很少的反覆修正下收斂，合理地提高扭曲風險；但「必然」二字沒有來源支持。</li>
+    <li><strong>模型／條件本身沒有身分鎖。</strong>官方 I2V 程式把輸入圖 resize、center-crop 後 VAE encode 成首幀 latent，並在每個 sampling step 把該條件混回 latent；它沒有 FaceID embedding、多張 reference，或姿態／動作控制輸入。這能錨住首幀，卻不能保證後續每一幀的人臉 identity。官方 repo 也已有使用者要求補回多 reference images 的 issue。</li>
+    <li><strong>TI2V-5B 是效率導向的高壓縮、5B dense 模型。</strong>官方模型卡寫明它使用 4×16×16 VAE 壓縮，連同 patchification 的總壓縮為 4×32×32；相較 Wan2.2 A14B 的雙專家 MoE，它不是同一個容量／架構。這是「它不應被期待在所有人物大動作上達到大型受控 I2V 的穩定度」的合理架構推論，<em>不是官方宣稱的臉部缺陷原因</em>。</li>
+  </ol>
+  <p>社群現象與此一致但不能當成定量證明：官方 repo issue 有 TI2V animation 的 pixel jitter／flicker 回報，ComfyUI 討論也有人在預設 5B I2V workflow 見到 artifacts；另有 Wan2.2 I2V 使用者在臉一致性不足時採用後段 face swap。這些證據支持「臉漂移／時間 artifacts 是實務上會發生的已知限制」，不支持「某一個 solver 必定是根因」。</p>
+
+  <h2>實驗順序：用最少生成次數得到可比較答案</h2>
+  <ol>
+    <li>選一張已裁成 <strong>1280×704</strong> 的清晰首幀；人物臉不要太小、不要大角度側臉、不要讓臉碰畫面邊緣。官方程式會先 resize 再 center-crop，不合比例的原圖可能在生成前就改變臉部構圖。</li>
+    <li>固定 prompt、negative prompt、image 與 <code>--base_seed</code>，跑 <strong>16 / 5 / 5 / UniPC</strong>。記錄總時間、臉部是否維持、動作是否完成。</li>
+    <li>若臉已改善、動作仍弱：不要先改 sampler；把 prompt 改為一個具起訖的動作，再跑相同參數。這是在測「指令是否不夠具體」。</li>
+    <li>若臉仍變形：先以同一 seed 試 <strong>CFG 4.5</strong>（只改一項）；若仍不行，再試 <strong>DPM++</strong>（回到 CFG 5.0，只改 solver）。每次都維持 16 steps。</li>
+    <li>若 16 步總時長低於 17 分鐘，且臉在第 16 步已明顯優於 8 步，才試 17 步。不要把一次很差的 seed 誤判為參數失敗；至少比較兩個固定 seed。</li>
+  </ol>
+
+  <h2>證據分級與類推可信度</h2>
+  <table>
+    <thead><tr><th>結論</th><th>來源級別</th><th>可信度／限制</th></tr></thead>
+    <tbody>
+      <tr><td>TI2V-5B 官方值：50 / 5 / 5 / 121</td><td><span class="tag">直接官方</span></td><td>高。直接對應同一 checkpoint 與官方 generate.py。</td></tr>
+      <tr><td>steps 越多品質越好、越慢；CFG 控制遵循度／創意；shift 影響 temporal dynamics</td><td><span class="tag">直接官方</span></td><td>高，但官方未給 shift 對動作、臉的單調方向。</td></tr>
+      <tr><td>40 steps 是 TI2V-5B 品質實務值</td><td><span class="tag">同模型第三方</span></td><td>中。MLX 移植實作的建議，非官方 A/B benchmark。</td></tr>
+      <tr><td>shift 必須和 steps／scheduler 一起調</td><td><span class="tag">Wan2.2 I2V 社群</span></td><td>低至中。14B I2V、ComfyUI 路徑；只能用來反對過度概括，不可當 TI2V 數值配方。</td></tr>
+      <tr><td>CFG 4、shift 8、UniPC Trailing</td><td><span class="tag">同模型、不同 app</span></td><td>低。Draw Things 的推薦設定，不同 runtime，且討論本身出現參考圖失效問題。</td></tr>
+      <tr><td>DPM++ 能修臉或加大動作</td><td><span class="tag">未證實</span></td><td>本次未找到 TI2V-5B 公開 A/B；不應視為已知差異。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>來源與查核範圍</h2>
+  <p>本報告查閱官方 repo／模型卡、GitHub issues／討論、Hugging Face、ComfyUI 文件與 Reddit。未找到直接針對「TI2V-5B、官方 generate.py、UniPC vs DPM++、同 seed 同 steps」的人臉／動作 A/B，所以相關段落明確標成未證實，而未以 Wan2.1／A14B 的經驗偽裝成直接結論。</p>
+  <ul class="sources">
+    <li><strong>官方 TI2V-5B config：</strong><a href="https://github.com/Wan-Video/Wan2.2/blob/main/wan/configs/wan_ti2v_5B.py">wan_ti2v_5B.py</a> — 50 steps、shift 5、CFG 5、121 frames。</li>
+    <li><strong>官方 pipeline 與 scheduler 實作：</strong><a href="https://github.com/Wan-Video/Wan2.2/blob/main/wan/textimage2video.py">textimage2video.py</a>、<a href="https://github.com/Wan-Video/Wan2.2/blob/main/wan/utils/fm_solvers.py">fm_solvers.py</a> — steps／CFG／shift 的文件、UniPC/DPM++ 分支、首幀 latent conditioning 與 center crop。</li>
+    <li><strong>官方模型卡：</strong><a href="https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B">Wan-AI/Wan2.2-TI2V-5B</a> — 720P@24 fps、5B 高壓縮 VAE、4×32×32 總壓縮與官方低 VRAM 指令。</li>
+    <li><strong>同模型第三方實作：</strong><a href="https://github.com/VeryGoodAI/vga-mlx-video/blob/main/mlx_video/models/wan_2/README.md">vga-mlx-video Wan README</a> — TI2V-5B 40 steps「recommended for best quality」。</li>
+    <li><strong>同模型、不同 app 的設定例：</strong><a href="https://www.reddit.com/r/drawthingsapp/comments/1pjy4cg/wan_22_ti2v_5b_image_to_video_not_using_the/">Draw Things TI2V-5B discussion</a> — 推薦值 81f／CFG 4／UniPC Trailing／shift 8；僅作低可信參考。</li>
+    <li><strong>artifact 實務回報：</strong><a href="https://github.com/Wan-Video/Wan2.2/issues/143">官方 repo issue #143</a>、<a href="https://github.com/Comfy-Org/docs/discussions/291">ComfyUI discussion #291</a> — TI2V／I2V flicker、pixel artifacts 的使用者回報。</li>
+    <li><strong>臉一致性社群處理：</strong><a href="https://www.reddit.com/r/comfyui/comments/1q9ku7o/wan_22_i2v_face_consistency_help/">Wan2.2 I2V Face Consistency Help</a> — 使用者以後段 face swap 補救；不是原生參數解。</li>
+    <li><strong>UniPC 一般方法來源：</strong><a href="https://arxiv.org/abs/2302.04867">UniPC paper</a> — 低 function-evaluation 的一般求解器理據，非 Wan 人臉品質實驗。</li>
+  </ul>
+</main>
+</body>
+</html>
