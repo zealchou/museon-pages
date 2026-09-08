@@ -50,18 +50,31 @@
   .rule path{fill:none;stroke:var(--ink-3);stroke-width:1.1;stroke-linecap:round;vector-effect:non-scaling-stroke}
 
   /* ── 指數 ── */
-  .idx{display:grid;gap:1.1rem;margin:0}
+  .screen .fsub{font-family:var(--hand);color:var(--seal);font-size:clamp(.95rem,1.4vw,1.15rem);
+                margin:0 0 1.4rem;letter-spacing:.02em}
+  .screen .fnote{font-family:var(--hand);white-space:pre-line;color:var(--ink-2);
+                 font-size:clamp(.95rem,1.5vw,1.2rem);line-height:1.8;
+                 margin:1.6rem 0 0;padding-top:1.2rem;border-top:1px solid var(--ink-4);max-width:min(30em,58vw)}
+  .idx{display:grid;gap:1.5rem;margin:0}
+  .idx .mrow{display:grid;gap:.3rem}
+  .idx .mnote,.idx .mcalc,.idx .goal{padding-left:6.5rem}
+  .idx .mnote{font-family:var(--hand);font-size:.82rem;color:var(--ink-3);line-height:1.4}
+  .idx .mcalc{font-family:var(--hand);font-size:.95rem;color:var(--ink-2)}
+  .idx .mcalc b{font-weight:400;color:var(--ink)}
   .idx .row{display:grid;grid-template-columns:5.5rem 1fr auto;gap:1rem;align-items:center}
   .idx .nm{font-family:var(--hand);font-size:.95rem;color:var(--ink-2)}
   .idx .bar{height:1.5rem;position:relative;box-shadow:inset 0 0 0 1px var(--ink-4)}
   .idx .bar i{position:absolute;inset:2px auto 2px 2px;display:block;transition:width .8s cubic-bezier(.2,.7,.2,1)}
   .idx .val{font-size:1.5rem;min-width:3.5rem;text-align:right}
-  .idx .row.rev i{background:var(--ink)}
-  .idx .row.trust i{background:var(--kaki)}
-  .idx .row.fric i{background:var(--seal)}
-  .idx .row.fric .val{color:var(--seal)}
+  .idx .mrow.rev .bar i{background:var(--ink)}
+  .idx .mrow.trust .bar i{background:var(--kaki)}
+  .idx .mrow.fric .bar i{background:var(--seal)}
+  .idx .mrow.fric .val{color:var(--seal)}
   .idx .dl{font-family:var(--hand);font-style:normal;font-size:.85rem;color:var(--ink-3);margin-left:.35rem}
-  .idx .goal{font-family:var(--hand);font-size:.78rem;color:var(--ink-3)}
+  .idx .goal{font-family:var(--hand);font-size:.8rem;color:var(--ink-3)}
+  .idx .mrow.rev .mcalc .dd{color:var(--ink)}
+  .idx .mrow.trust .mcalc .dd{color:var(--kaki)}
+  .idx .mrow.fric .mcalc .dd{color:var(--seal)}
 
   /* ── 投影幕 ── */
   .screen{min-height:100vh;display:flex;flex-direction:column;padding:3vh 4vw;position:relative}
@@ -114,15 +127,23 @@
                    100%{transform:rotate(var(--r,0deg)) scale(1)}}
   @media (prefers-reduced-motion:reduce){.tally .stamps i{animation:none}}
 
-  /* 內耗曲線 */
-  .curve{width:100%;height:11rem;overflow:visible}
-  .curve .axis{stroke:var(--ink-4);stroke-width:1;vector-effect:non-scaling-stroke}
-  .curve .ln{fill:none;stroke:var(--seal);stroke-width:2.5;stroke-linecap:round;
+  /* 三項走勢曲線 */
+  .curve{width:100%;height:13rem;overflow:visible}
+  .curve .base{stroke:var(--ink-4);stroke-width:1;vector-effect:non-scaling-stroke}
+  .curve .split{stroke:var(--ink-4);stroke-width:1;stroke-dasharray:3 4;vector-effect:non-scaling-stroke}
+  .curve .goalln{stroke-width:1;stroke-dasharray:2 5;opacity:.55;vector-effect:non-scaling-stroke}
+  .curve .goalln.rev{stroke:var(--ink)} .curve .goalln.trust{stroke:var(--kaki)}
+  .curve .lane{font-size:15px;fill:var(--ink-2)}
+  .curve .gl,.curve .rnd{font-size:12px;fill:var(--ink-3)}
+  .curve .ln{fill:none;stroke-width:2.5;stroke-linecap:round;
              stroke-linejoin:round;vector-effect:non-scaling-stroke}
-  .curve .ln.r2{stroke:var(--kaki)}
-  .curve .dot{fill:var(--seal)}
-  .curve .dot.r2{fill:var(--kaki)}
-  .curve text{font-family:var(--hand);font-size:11px;fill:var(--ink-3)}
+  .curve .ln.rev{stroke:var(--ink)}
+  .curve .ln.trust{stroke:var(--kaki)}
+  .curve .ln.fric{stroke:var(--seal)}
+  .curve .dot.rev{fill:var(--ink)}
+  .curve .dot.trust{fill:var(--kaki)}
+  .curve .dot.fric{fill:var(--seal)}
+  .curve text{font-family:var(--hand);fill:var(--ink-3)}
 
   /* 結果說明 */
   .cq{display:grid;grid-template-columns:1fr 1.15fr;gap:3.5rem;align-items:start}
@@ -311,6 +332,44 @@ const ENDINGS=[
  {id:'lost',t:()=>true,ti:'兩邊都沒有接住',
   bd:'年底結算。營收沒到，信任也掉了。\n\n第三個月，被挪用原料的老客戶轉單，他佔你們去年營收的三成四。\n第四個月，大單的驗收被退回第三次，毛利賠掉六成。\n付款條件是驗收後九十天——那筆錢會在第七個月入帳。\n而帳上的現金，只夠撐兩個月。\n\n你們沒有任何一個人做錯決定。\n每個人都在自己的位置上，做了最合理的判斷。\n\n現在，請把你們的角色卡翻開。'}];
 
+// ── 內耗三級 ──────────────────────────────
+// 滿格 80 點（10 場 × 最分裂的 2-2-1 各 8 點）。低 <40%、中 40-70%、高 >70%。
+// 這三條線是實測出來的：第二輪認真討論才進得了「低」，完全沒改善才會掉到「高」。
+const FMAX=80;
+const FBANDS=[{k:'low',nm:'低',t:p=>p<40},{k:'mid',nm:'中',t:p=>p<=70},{k:'high',nm:'高',t:()=>true}];
+function bandOf(f){const p=f/FMAX*100;return FBANDS.find(b=>b.t(p))}
+
+// 四種結局 × 三種內耗 = 12 種收場。st 是副標，bd 是結局文字後面多出來的那一段。
+const FIN12={
+ held:{
+  low:{st:'這一年的做法，明年可以照著做',
+   bd:'它低，代表同一件事沒有做第二次：圖沒有重畫，料沒有重下，車沒有白跑。\n省下來的不是錢，是力氣——而力氣是唯一能拿去做新東西的東西。\n這一年你們不只把單接住了，還把方法留下來了。'},
+  mid:{st:'結果是好的，過程是硬撐的',
+   bd:'每一張單都做成了，但有一半是靠加班、靠重做、靠某個人多問一句才接住的。\n這些成本不會進損益表，它進的是這一年的加班時數。\n撐得過一年，撐不過三年。'},
+  high:{st:'數字漂亮，人快撐不住了',
+   bd:'同一件事講了三次，同一張圖改了三版，同一個問題每次都要重新協調一次。\n這種公司從外面看是最好的：業績達標、客戶滿意。\n從裡面看，是有幾個人快燒完了——而他們通常不會先講，會直接遞辭呈。'}},
+ hollow:{
+  low:{st:'你們很有默契，只是默契用錯地方',
+   bd:'五個人幾乎每一次都想到一起去，這是真的。\n問題是你們一起想到的，每一次都是對公司比較好、對客戶比較差的那一邊。\n沒有人反對，是因為沒有人站在客戶那一邊。'},
+  mid:{st:'用關係換了數字',
+   bd:'決定做得很快，快是因為沒有人多問一句「這樣客戶會怎麼想」。\n內耗還在可以承受的範圍，代價卻記在客戶名單上。\n明年的營收要從新客戶重新長出來——那比留住舊客戶貴得多。'},
+  high:{st:'對外賠掉客戶，對內賠掉彼此',
+   bd:'客訴變多的同時，內部也在互相補洞：業務怪倉管、倉管怪會計、會計說沒人通知她。\n這是兩條線同時斷：對外沒有回頭客，對內沒有人願意先開口。\n明年最難補的不是營收，是有人要重新開始信任隔壁桌那個人。'}},
+ safe:{
+  low:{st:'你們很同步，只是同步地不敢',
+   bd:'這是三個數字裡最漂亮的一個：五個人幾乎每次都想到一起去，事情做一次就對。\n只是你們一起想到的，每一次都是比較安全的那一邊。\n順暢跟保守，這一年剛好長得一模一樣。'},
+  mid:{st:'守住了，但每一步都走得比需要的久',
+   bd:'該守的都守住了，只是每一件事都多繞了一圈。\n討論多花掉的時間，最後變成沒有接下的那幾張單。\n慢不是問題，慢到市場不等你才是。'},
+  high:{st:'什麼都沒賭，力氣卻花光了',
+   bd:'沒有大單的壓力，卻有大單的內耗：每一件小事都要重新協調一次。\n營收沒有長大，還可以用市場解釋。\n內耗這麼高，只能用「我們自己」解釋。'}},
+ lost:{
+  low:{st:'你們一起走，只是一起走錯了',
+   bd:'五個人幾乎沒有意見不合，所以也沒有人被逼著把話講完。\n一致不等於對，它只代表沒有人提出不一樣的看法。\n最危險的會議，是沒有人反對的那一場。'},
+  mid:{st:'每一件事都晚了一步',
+   bd:'營收沒到、信任也掉了，而內耗吃掉的那些時間，本來剛好夠救回其中一邊。\n不是你們不夠努力，是同樣的力氣花了兩次。'},
+  high:{st:'事情沒做成，人也散了',
+   bd:'三個數字同時走到最壞：錢沒進來、客戶走了、而你們五個人已經不太找彼此了。\n請看第一輪那五場——那時候你們還不能說話。\n第二輪你們可以說話了，這條線卻沒有壓下來。'}}};
+
 // 結局之後的第二張投影片：這樣走下去，對公司、對每個位置各代表什麼。
 // 注意 lost 那一組——每一句都指回那個人自己的角色卡。
 const CONSEQ={
@@ -399,31 +458,53 @@ function tallyOf(sc){
 }
 
 /* ══════════════ 共用片段 ══════════════ */
-function indices(i,showGoal){
-  const bar=(cls,nm,val,max,goal,d)=>`<div class="row ${cls}"><span class="nm">${nm}</span>
-    <span class="bar"><i class="blk" style="width:calc(${Math.max(0,Math.min(100,val/max*100))}% - 4px)"></i></span>
-    <span class="val num">${val}<em class="dl">點</em>${d==null?'':`<em class="dl">${(d>0?'+':'')+d}</em>`}</span></div>
-    ${goal&&showGoal?`<div class="goal" style="grid-column:2">${goal}</div>`:''}`;
+const MEAN={rev:'公司這一季收到的錢',trust:'客戶與同事還願意相信你們多少',fric:'五個人不同調，公司額外多花掉的力氣'};
+// d 給了就顯示「原本→這一場→現在」的算式（結果畫面用）；沒給就只顯示現在的值。
+function indices(i,showGoal,d){
+  const bar=(cls,nm,val,max,goal,dv)=>`<div class="mrow ${cls}">
+    <div class="row"><span class="nm">${nm}</span>
+      <span class="bar"><i class="blk" style="width:calc(${Math.max(0,Math.min(100,val/max*100))}% - 4px)"></i></span>
+      <span class="val num">${val}<em class="dl">點</em></span></div>
+    <div class="mnote">${MEAN[cls]}</div>
+    ${dv==null?'':`<div class="mcalc">原本 <b class="num">${val-dv}</b>　這一場 <b class="num dd">${dv>0?'+':''}${dv}</b>　現在 <b class="num">${val}</b></div>`}
+    ${goal&&showGoal?`<div class="goal">${goal}</div>`:''}
+  </div>`;
   return `<div class="idx">
-    ${bar('rev','營收',i.rev,155,`要到 ${GOAL.rev}`,i.rev-100)}
-    ${bar('trust','信任',i.trust,150,`不能低於 ${GOAL.trust}`,i.trust-100)}
-    ${bar('fric','內耗',i.friction,80,'',null)}
+    ${bar('rev','營收',i.rev,155,`要到 ${GOAL.rev}`,d?d.dr:null)}
+    ${bar('trust','信任',i.trust,150,`不能低於 ${GOAL.trust}`,d?d.dt:null)}
+    ${bar('fric','內耗',i.friction,80,'這一項不設標準　最後會告訴你為什麼',d?d.df:null)}
   </div>`;
 }
+// 三項各佔一格上下排開，避免營收與信任的線疊在一起看不出差別。
+// 每格用自己的刻度（涵蓋開局值與目標值），所以看的是「走勢」，實際點數看旁邊的橫條。
+const SERIES=[{k:'rev',nm:'營收',lo:88,hi:160,goal:GOAL.rev,get:h=>h.rev},
+              {k:'trust',nm:'信任',lo:58,hi:112,goal:GOAL.trust,get:h=>h.trust},
+              {k:'fric',nm:'內耗',lo:0,hi:60,goal:null,get:h=>h.cum}];
 function curve(hist){
   if(!hist.length)return'';
-  const W=520,H=150,P=18,n=Math.max(hist.length,10);
-  const max=Math.max(20,...hist.map(h=>h.cum));
-  const pt=(h,k)=>[P+(W-P*2)*(k/(n-1)),H-P-(H-P*2)*(h.cum/max)];
-  const seg=r=>{const d=hist.map((h,k)=>[h,k]).filter(([h])=>h.r===r);
-    if(!d.length)return'';
-    const path=d.map(([h,k],j)=>`${j?'L':'M'}${pt(h,k).map(v=>v.toFixed(1)).join(' ')}`).join(' ');
-    const dots=d.map(([h,k])=>`<circle class="dot${r===2?' r2':''}" cx="${pt(h,k)[0].toFixed(1)}" cy="${pt(h,k)[1].toFixed(1)}" r="3.5"/>`).join('');
-    return `<path class="ln${r===2?' r2':''}" d="${path}"/>${dots}`;};
-  return `<svg class="curve" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="內耗累積">
-    <line class="axis" x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}"/>
-    ${seg(1)}${seg(2)}
-    <text x="${P}" y="${H-4}">第一輪</text><text x="${W/2}" y="${H-4}">第二輪</text>
+  const W=520,LH=46,GAP=12,L=42,R=8,TOP=4,FOOT=18;
+  const H=TOP+SERIES.length*LH+(SERIES.length-1)*GAP+FOOT;
+  const n=Math.max(hist.length,10);
+  const x=k=>L+(W-L-R)*(k/(n-1));
+  const start={rev:START.rev,trust:START.trust,cum:START.friction};
+  const lane=(s,j)=>{
+    const t=TOP+j*(LH+GAP);
+    const y=v=>t+LH-LH*Math.max(0,Math.min(1,(v-s.lo)/(s.hi-s.lo)));
+    const p=[start,...hist].map((h,k)=>[k===0?L-8:x(k-1),y(s.get(h)??s.lo)]);
+    const path=p.map(([a,b],i)=>`${i?'L':'M'}${a.toFixed(1)} ${b.toFixed(1)}`).join(' ');
+    const dots=p.slice(1).map(([a,b])=>`<circle class="dot ${s.k}" cx="${a.toFixed(1)}" cy="${b.toFixed(1)}" r="3"/>`).join('');
+    return `<line class="base" x1="${L-8}" y1="${t+LH}" x2="${W-R}" y2="${t+LH}"/>
+      ${s.goal?`<line class="goalln ${s.k}" x1="${L-8}" y1="${y(s.goal).toFixed(1)}" x2="${W-R}" y2="${y(s.goal).toFixed(1)}"/>
+        <text class="gl" x="${W-R}" y="${(y(s.goal)-4).toFixed(1)}" text-anchor="end">${s.k==='rev'?'目標 '+s.goal:'底線 '+s.goal}</text>`:''}
+      <text class="lane ${s.k}" x="0" y="${t+LH-2}">${s.nm}</text>
+      <path class="ln ${s.k}" d="${path}"/>${dots}`;
+  };
+  const divX=x(4.5);
+  return `<svg class="curve" viewBox="0 0 ${W} ${H}" role="img" aria-label="營收、信任、內耗三項走勢">
+    ${hist.length>5?`<line class="split" x1="${divX.toFixed(1)}" y1="0" x2="${divX.toFixed(1)}" y2="${H-FOOT}"/>`:''}
+    ${SERIES.map(lane).join('')}
+    <text class="rnd" x="${L-8}" y="${H-4}">第一輪・禁語</text>
+    ${hist.length>5?`<text class="rnd" x="${(divX+6).toFixed(1)}" y="${H-4}">第二輪・可討論</text>`:''}
   </svg>`;
 }
 
@@ -461,6 +542,7 @@ function renderScreen(){
       <p class="sub">已投票</p></div>`;
   }else if(state.phase===PH.RESULT){
     const last=state.hist[state.hist.length-1]||{c:{A:0,B:0,C:0},oc:'',df:0};
+    const prev=state.hist[state.hist.length-2]||START;
     const stamps=k=>Array.from({length:last.c[k]||0},(_,j)=>
       `<i class="blk" style="--r:${(j%2?1:-1)*(1.5+j*.8)}deg;--o:${.72+((j*7)%3)*.14};animation-delay:${j*70}ms"></i>`).join('');
     mid=`<div class="mid"><p class="sceneno">第 ${sc.r} 輪・第 ${sc.no} 場　結果</p>
@@ -468,22 +550,22 @@ function renderScreen(){
         <div><div class="tally">${sc.op.map(o=>
           `<div class="t"><span class="k">${o.k}</span><span class="stamps">${stamps(o.k)}</span><span class="lb">${esc(o.lb)}</span></div>`).join('')}</div>
           <p class="story" style="font-size:clamp(1.15rem,2vw,1.6rem);margin-top:2.5rem">${esc(last.oc)}</p></div>
-        <div>${indices(I,true)}
-          <p class="lede" style="margin-top:1.5rem;font-size:.95rem">這一場的內耗　<span style="color:var(--seal);font-size:1.3rem" class="num">+${last.df}</span></p></div>
+        <div>${indices(I,true,{dr:last.rev==null?null:last.rev-prev.rev,dt:last.trust==null?null:last.trust-prev.trust,df:last.df})}</div>
       </div></div>`;
   }else if(state.phase===PH.BREAK){
     mid=`<div class="mid"><p class="sceneno">第一輪結束</p>
-      <div style="display:grid;grid-template-columns:1fr 24rem;gap:4rem;align-items:center">
-        <div><p class="story" style="font-size:clamp(1.4rem,2.6vw,2.1rem)">這條線，是你們五個人\n在沒有交談的情況下\n累積出來的內耗。\n\n第二輪開始，你們可以說話了。</p></div>
+      <div style="display:grid;grid-template-columns:1fr 34rem;gap:3rem;align-items:center">
+        <div><p class="story" style="font-size:clamp(1.4rem,2.6vw,2.1rem)">下面紅色那條線，是你們五個人\n在沒有交談的情況下\n累積出來的內耗。\n\n第二輪開始，你們可以說話了。</p></div>
         <div>${curve(state.hist)}${indices(I,true)}</div></div></div>`;
   }else if(state.phase===PH.FIN){
-    const e=endingOf(I);
+    const e=endingOf(I),b=bandOf(I.friction),f12=FIN12[e.id][b.k];
     mid=`<div class="mid"><p class="sceneno">結算</p>
       <div style="display:grid;grid-template-columns:1fr 24rem;gap:4rem;align-items:start">
-        <div><h1 style="font-size:clamp(2rem,4.5vw,3.4rem);margin-bottom:1.5rem">${e.ti}</h1>
-          <p class="story" style="font-size:clamp(1.1rem,1.9vw,1.5rem)">${esc(e.bd)}</p></div>
-        <div>${indices(I,true)}<div style="margin-top:2rem">${curve(state.hist)}</div>
-          <p class="lede" style="font-size:.9rem">紅：第一輪（禁語）　褐：第二輪（可討論）</p></div></div></div>`;
+        <div><h1 style="font-size:clamp(1.9rem,4.2vw,3.2rem);margin-bottom:.5rem">${e.ti}</h1>
+          <p class="fsub">內耗 ${I.friction} 點（${Math.round(I.friction/FMAX*100)}%）· ${b.nm}　${esc(f12.st)}</p>
+          <p class="story" style="font-size:clamp(1.05rem,1.75vw,1.4rem)">${esc(e.bd)}</p>
+          <p class="fnote">${esc(f12.bd)}</p></div>
+        <div>${indices(I,true)}<div style="margin-top:2rem">${curve(state.hist)}</div></div></div></div>`;
   }else if(state.phase===PH.CONSEQ){
     const e=endingOf(I),q=CONSEQ[e.id];
     mid=`<div class="mid"><p class="sceneno">這樣走下去</p>
@@ -599,11 +681,12 @@ function renderHost(){
     ${P===PH.RESULT?(()=>{
       const last=state.hist[state.hist.length-1]||{c:{A:0,B:0,C:0},oc:'',df:0};
       const top=['A','B','C'].reduce((a,b)=>last.c[b]>last.c[a]?b:a,'A');
+      const pv=state.hist[state.hist.length-2]||START;
       return `<div class="host-result">
         <p class="st">多數選擇 ${top}（A:${last.c.A}　B:${last.c.B}　C:${last.c.C}）</p>
         <p class="story" style="font-size:1.05rem;margin:.8rem 0 1.2rem">${esc(last.oc)}</p>
-        ${indices({rev:state.rev,trust:state.trust,friction:state.friction})}
-        <p class="lede" style="margin-top:.8rem;font-size:.9rem">這一場的內耗　<span style="color:var(--seal)" class="num">+${last.df}</span></p>
+        ${indices({rev:state.rev,trust:state.trust,friction:state.friction},false,
+          {dr:last.rev==null?null:last.rev-pv.rev,dt:last.trust==null?null:last.trust-pv.trust,df:last.df})}
       </div>`;
     })():''}
     ${next?`<button class="btn" id="adv" style="width:100%;margin:1.5rem 0 0;padding:1.1em">${next}</button>`:''}
@@ -632,7 +715,7 @@ function renderHost(){
       const rev=Math.round(state.rev+dr/5),trust=Math.round(state.trust+dt/5);
       const top=['A','B','C'].reduce((a,b)=>c[b]>c[a]?b:a,'A');
       const friction=state.friction+df;
-      const hist=[...state.hist,{r:sc.r,no:sc.no,c:{...c},df,cum:friction,oc:sc.oc[top]}];
+      const hist=[...state.hist,{r:sc.r,no:sc.no,c:{...c},df,cum:friction,rev,trust,oc:sc.oc[top]}];
       return save({phase:PH.RESULT,rev,trust,friction,hist});
     }
     if(P===PH.RESULT){
