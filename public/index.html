@@ -1,0 +1,632 @@
+<title>這一年</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    color-scheme:light;
+    --paper:#F1EDE4; --ink:#2A2622; --seal:#B2412C; --kaki:#99531C;
+    --ink-2:rgba(42,38,34,.68); --ink-3:rgba(42,38,34,.42); --ink-4:rgba(42,38,34,.16);
+    --grain-op:.07;
+    --hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",cursive;
+    --book:"Noto Serif TC","Songti TC","PMingLiU",Georgia,serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --paper:#1E1B18; --ink:#E4DCCF; --seal:#CF5D45; --kaki:#D08A45;
+      --ink-2:rgba(228,220,207,.68); --ink-3:rgba(228,220,207,.42); --ink-4:rgba(228,220,207,.16);
+      --grain-op:.10;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#1E1B18; --ink:#E4DCCF; --seal:#CF5D45; --kaki:#D08A45;
+    --ink-2:rgba(228,220,207,.68); --ink-3:rgba(228,220,207,.42); --ink-4:rgba(228,220,207,.16);
+    --grain-op:.10;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--book);
+       font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:var(--grain-op);mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .defs{position:absolute;width:0;height:0;overflow:hidden}
+  .hand{font-family:var(--hand)}
+  .num{font-variant-numeric:tabular-nums}
+  h1,h2,h3{font-weight:500;line-height:1.3;margin:0;text-wrap:balance}
+  button{font:inherit;font-family:var(--book);cursor:pointer}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
+  [hidden]{display:none!important}
+
+  /* 墨塊：純色 + rough 位移 = 蓋印的邊 */
+  .blk{filter:url(#rough)}
+
+  .wrap{max-width:60rem;margin-inline:auto;padding:2.5rem 1.25rem 4rem}
+  .lede{font-family:var(--hand);color:var(--ink-2)}
+  .rule{display:block;width:100%;height:8px;overflow:visible;margin:.6rem 0 1.4rem}
+  .rule path{fill:none;stroke:var(--ink-3);stroke-width:1.1;stroke-linecap:round;vector-effect:non-scaling-stroke}
+
+  /* ── 指數 ── */
+  .idx{display:grid;gap:1.1rem;margin:0}
+  .idx .row{display:grid;grid-template-columns:5.5rem 1fr auto;gap:1rem;align-items:center}
+  .idx .nm{font-family:var(--hand);font-size:.95rem;color:var(--ink-2)}
+  .idx .bar{height:1.5rem;position:relative;box-shadow:inset 0 0 0 1px var(--ink-4)}
+  .idx .bar i{position:absolute;inset:2px auto 2px 2px;display:block;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+  .idx .val{font-size:1.5rem;min-width:3.5rem;text-align:right}
+  .idx .row.rev i{background:var(--ink)}
+  .idx .row.trust i{background:var(--kaki)}
+  .idx .row.fric i{background:var(--seal)}
+  .idx .row.fric .val{color:var(--seal)}
+  .idx .dl{font-family:var(--hand);font-style:normal;font-size:.85rem;color:var(--ink-3);margin-left:.35rem}
+  .idx .goal{font-family:var(--hand);font-size:.78rem;color:var(--ink-3)}
+
+  /* ── 投影幕 ── */
+  .screen{min-height:100vh;display:flex;flex-direction:column;padding:3vh 4vw}
+  .screen .top{display:flex;justify-content:space-between;align-items:baseline;
+               font-family:var(--hand);font-size:1.1rem;color:var(--ink-2)}
+  .screen .mid{flex:1;display:flex;flex-direction:column;justify-content:center;padding:3vh 0}
+  .screen .story{font-family:var(--hand);font-size:clamp(1.6rem,3.4vw,2.9rem);line-height:1.75;
+                 white-space:pre-line;max-width:26em}
+  .screen .sceneno{font-family:var(--hand);color:var(--seal);font-size:1.1rem;margin:0 0 1.2rem}
+  .screen .sceneno::before{content:"";display:block;width:2.5rem;height:2px;background:var(--seal);margin:0 0 .8rem}
+  .screen .huge{font-size:clamp(3rem,9vw,7rem);line-height:1.1;font-variant-numeric:tabular-nums}
+  .screen .sub{font-family:var(--hand);font-size:clamp(1.1rem,2vw,1.5rem);color:var(--ink-2);margin-top:1rem}
+  .screen .bot{display:grid;grid-template-columns:1fr 20rem;gap:3rem;align-items:end}
+  @media (max-width:60rem){.screen .bot{grid-template-columns:1fr}}
+
+  /* 座位格 */
+  .seats{display:flex;gap:.9rem;flex-wrap:wrap}
+  .seat{width:5.5rem;height:5.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        gap:.25rem;box-shadow:inset 0 0 0 1px var(--ink-4);color:var(--ink-3);font-size:.85rem}
+  .seat b{font-size:1.15rem;font-weight:400;font-family:var(--hand)}
+  .seat.on{background:var(--kaki);color:var(--paper);box-shadow:none;transform:rotate(var(--r,0deg))}
+  .seats .seat:nth-child(1){--r:-2deg}.seats .seat:nth-child(2){--r:2.5deg}.seats .seat:nth-child(3){--r:-1.5deg}
+  .seats .seat:nth-child(4){--r:2deg}.seats .seat:nth-child(5){--r:-2.5deg}
+
+  /* 票數：一票一個印 */
+  .tally{display:grid;gap:1rem}
+  .tally .t{display:grid;grid-template-columns:2rem 1fr auto;gap:1rem;align-items:center}
+  .tally .k{font-family:var(--hand);font-size:1.5rem;color:var(--ink-2)}
+  .tally .stamps{display:flex;gap:.5rem}
+  .tally .stamps i{width:2.2rem;height:2.2rem;background:var(--ink);display:block;
+                   transform:rotate(var(--r,0deg));opacity:var(--o,1);
+                   animation:stamp .3s cubic-bezier(.2,.9,.3,1.2) both}
+  .tally .lb{font-family:var(--hand);color:var(--ink-2);font-size:1rem}
+  @keyframes stamp{0%{transform:rotate(var(--r,0deg)) scale(1.7);opacity:0}
+                   60%{transform:rotate(var(--r,0deg)) scale(.92);opacity:var(--o,1)}
+                   100%{transform:rotate(var(--r,0deg)) scale(1)}}
+  @media (prefers-reduced-motion:reduce){.tally .stamps i{animation:none}}
+
+  /* 內耗曲線 */
+  .curve{width:100%;height:11rem;overflow:visible}
+  .curve .axis{stroke:var(--ink-4);stroke-width:1;vector-effect:non-scaling-stroke}
+  .curve .ln{fill:none;stroke:var(--seal);stroke-width:2.5;stroke-linecap:round;
+             stroke-linejoin:round;vector-effect:non-scaling-stroke}
+  .curve .ln.r2{stroke:var(--kaki)}
+  .curve .dot{fill:var(--seal)}
+  .curve .dot.r2{fill:var(--kaki)}
+  .curve text{font-family:var(--hand);font-size:11px;fill:var(--ink-3)}
+
+  /* 結果說明 */
+  .cq{display:grid;grid-template-columns:1fr 1.15fr;gap:3.5rem;align-items:start}
+  .cqh{font-family:var(--hand);font-size:1.05rem;color:var(--ink-2);margin:0 0 .6rem}
+  .cqh::before{content:"";display:block;width:2rem;height:1px;background:currentColor;margin:0 0 .6rem;opacity:.5}
+  .cqb{font-size:clamp(1rem,1.5vw,1.25rem);line-height:1.85;margin:0;max-width:30em}
+  .cqr{display:grid;grid-template-columns:3.5rem 1fr;gap:1rem;padding:.7rem 0;
+       border-bottom:1px solid var(--ink-4);font-size:clamp(.92rem,1.25vw,1.05rem);line-height:1.75}
+  .cqr b{font-family:var(--hand);font-weight:400;color:var(--seal)}
+  @media (max-width:64rem){.cq{grid-template-columns:1fr;gap:2rem}}
+
+  /* ── 手機 ── */
+  .play{max-width:32rem;margin-inline:auto;padding:1.75rem 1.25rem 4rem;min-height:100vh}
+  .play .who{font-family:var(--hand);color:var(--ink-2);font-size:.9rem;display:flex;
+             justify-content:space-between;align-items:baseline;gap:1rem}
+  .play h2{font-size:1.35rem;margin:1.2rem 0 .5rem}
+  .pick{display:grid;gap:.9rem;margin:1.5rem 0 0}
+  .pick button{text-align:left;background:transparent;border:0;padding:1.1rem 1.2rem;color:inherit;
+               box-shadow:inset 0 0 0 1px var(--ink-4);display:grid;gap:.4rem}
+  .pick button:hover{box-shadow:inset 0 0 0 1px var(--ink-3)}
+  .pick button[disabled]{opacity:.35;cursor:default}
+  .pick .k{font-family:var(--hand);color:var(--seal);font-size:.85rem}
+  .pick .lb{font-size:1.1rem;line-height:1.5}
+  .pick .sw{font-size:.88rem;color:var(--ink-2);line-height:1.7}
+  .pick .sw b{font-family:var(--hand);font-weight:400;color:var(--ink-3);margin-right:.4rem}
+  .pick button.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+  .btn{background:var(--ink);color:var(--paper);border:0;border-radius:2px;padding:.85em 1.6em;
+       font-size:1rem;font-weight:500}
+  .btn.ghost{background:transparent;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--ink-3)}
+  .btn.seal{background:var(--seal)}
+  .btn[disabled]{opacity:.4;cursor:default}
+  .card{padding:1.3rem 1.4rem;box-shadow:inset 0 0 0 1px var(--ink-4);margin:1.2rem 0 0}
+  .card .kind{font-family:var(--hand);font-size:.78rem;color:var(--seal);letter-spacing:.1em;margin:0 0 .5rem}
+  .card p{margin:0 0 .8rem;line-height:1.85}
+  .card p:last-child{margin:0}
+  .card .pr{font-family:var(--hand);color:var(--ink-2);font-size:.92rem}
+  .wait{text-align:center;padding:3rem 0;font-family:var(--hand);color:var(--ink-2);font-size:1.05rem}
+
+  /* ── 主持 ── */
+  .host{max-width:34rem;margin-inline:auto;padding:1.5rem 1.25rem 4rem}
+  .host .st{font-family:var(--hand);color:var(--ink-2);font-size:.9rem}
+  .host .big{font-size:1.5rem;margin:.3rem 0 1.2rem}
+  .host .grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0}
+  .host .who{display:grid;gap:.4rem;margin:1rem 0}
+  .host .who div{display:flex;justify-content:space-between;align-items:center;gap:1rem;
+                 font-size:.92rem;padding:.4rem 0;border-bottom:1px solid var(--ink-4)}
+  .host .who .no{color:var(--seal);font-family:var(--hand)}
+  .host .who .yes{color:var(--ink-3);font-family:var(--hand)}
+  .host details{margin:1.5rem 0 0;font-size:.9rem}
+  .host summary{font-family:var(--hand);color:var(--ink-2);cursor:pointer;padding:.5rem 0}
+  .host .danger{color:var(--seal)}
+
+  .landing{max-width:34rem;margin-inline:auto;padding:4rem 1.25rem}
+  .landing a{display:block;padding:1.1rem 1.3rem;margin:0 0 .8rem;color:inherit;text-decoration:none;
+             box-shadow:inset 0 0 0 1px var(--ink-4)}
+  .landing a b{display:block;font-weight:500;margin:0 0 .2rem}
+  .landing a span{font-family:var(--hand);font-size:.88rem;color:var(--ink-2)}
+  .off{padding:4rem 1.25rem;text-align:center;font-family:var(--hand);color:var(--ink-2)}
+</style>
+
+<svg class="defs" aria-hidden="true">
+  <filter id="rough" x="-12%" y="-12%" width="124%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<div class="grain" aria-hidden="true"></div>
+<div id="app"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+/* ══════════════ 劇本 ══════════════ */
+const GOAL={rev:128,trust:72};  // 營收要多 28，信任最多少 28
+const START={rev:100,trust:100,friction:0};
+const ROLES=[
+ {id:'sales',n:'業務',t:'門市與訂製顧問',
+  secret:'這張整戶大單是一位室內設計師帶來的，金額是平常的五倍。但你聽同業提過，這位設計師以「反覆改圖、最後砍價」出名。',
+  pressure:'這是你今年最大的一張單。年底考核就看這一季的成交金額。'},
+ {id:'warehouse',n:'倉管',t:'倉儲・物流・安裝',
+  secret:'那組義大利沙發的櫃期已經確定會延一個月。船公司口頭通知了，正式文件還沒發。',
+  pressure:'上一季你被念過一次卡進度。你不想再當那個報壞消息的人。'},
+ {id:'finance',n:'會計',t:'財務與成本',
+  secret:'進口貨款是**預付**的，這一季匯率已經吃掉一截毛利。而這張大單，客戶只付了三成訂金。',
+  pressure:'你不想每次開會都當那個一直說不行的人。'},
+ {id:'service',n:'客服',t:'售後與客訴',
+  secret:'這位客戶的鄰居去年在你們這裡買過，因為安裝刮傷牆面客訴過。這次他是「試試看」。',
+  pressure:'客訴再來一次，第一個被叫去解釋的是你。'},
+ {id:'vp',n:'副總',t:'管理層',
+  secret:'老闆下個月要跟一個建商談整批合作，對方最看重的是「這一季的成交金額」。檯面上的壓力是：一定要接。',
+  pressure:'你要對老闆交代。而且你是唯一被明確告知「兩個指標都要顧」的人。'}];
+
+const SCENES=[
+{r:1,no:1,ti:'整戶的那張單',
+ st:'一位合作過兩次的室內設計師，帶來一張整戶配置的單。\n沙發、餐桌、主臥床組、三間訂製櫃體，金額是平常的五倍。\n他要求交期壓在屋主交屋日之前——只剩五週。',
+ op:[{k:'A',lb:'全部接下，交期照他要求',sw:'這一季的數字一次到位',cs:'訂製櫃體五週幾乎不可能，而且他還會改圖',e:{rev:9,trust:-2}},
+     {k:'B',lb:'接，但交期往後拉兩週，寫進合約',sw:'做得到的承諾，客戶也知道你們有底線',cs:'設計師可能覺得你們不配合，下次不找了',e:{rev:4,trust:3}},
+     {k:'C',lb:'只接沙發跟床組，訂製櫃體不碰',sw:'守住品質，不去賭做不到的事',cs:'整戶單被拆掉，金額少一大半',e:{rev:-2,trust:5}}],
+ oc:{A:'全部接下來了。當天晚上設計師就傳了第一版修改圖。\n倉管看了交期表，什麼都沒說。',
+     B:'交期往後兩週，白紙黑字。\n設計師沉默了一下，說「那我再跟屋主喬」。他還是簽了。',
+     C:'只接了沙發跟床組。\n設計師把櫃體給了另一家。他說：「沒關係，下次再合作。」'}},
+{r:1,no:2,ti:'那三公分',
+ st:'現場丈量回報：主臥那面牆不是垂直的，\n頂部到底部差了將近三公分。\n訂製櫃照原圖做下去，會有一道楔形的縫。',
+ op:[{k:'A',lb:'照原圖做，現場用踢腳板修飾',sw:'不用重畫，交期不動',cs:'那道縫會在屋主入住第一天就被看見',e:{rev:3,trust:-8}},
+     {k:'B',lb:'重畫圖，跟屋主說明並重新確認',sw:'做出來的東西是對的，屋主也知道你們認真',cs:'要多花時間，交期更緊',e:{rev:-1,trust:6}},
+     {k:'C',lb:'現場微調尺寸，不驚動屋主',sw:'縫變小，也沒有多一輪來回',cs:'櫃體跟設計圖對不起來，之後誰都說不清',e:{rev:2,trust:-2}}],
+ oc:{A:'櫃子照原圖做了，踢腳板蓋掉大部分。\n剩下那一小段，安裝當天屋主蹲下去看了很久。',
+     B:'重畫了圖，屋主到現場一起確認。\n他說：「還好你們有講。」交期又緊了三天。',
+     C:'現場改了尺寸，縫幾乎看不見。\n三個月後要加做同款側櫃時，沒有人找得到正確的圖。'}},
+{r:1,no:3,ti:'櫃期',
+ st:'義大利那組沙發，船期延後一個月。\n屋主的入厝日已經發帖，親戚都約好了。\n正式的延誤通知，船公司還沒發出來。',
+ op:[{k:'A',lb:'先不講，賭它會趕上',sw:'不用現在面對屋主的情緒',cs:'如果沒趕上，是在入厝當天爆',e:{rev:3,trust:-8}},
+     {k:'B',lb:'立刻告知，並提出補償方案',sw:'屋主還有時間調整，也記得你們誠實',cs:'要吸收補償成本，這張單利潤變薄',e:{rev:-2,trust:7}},
+     {k:'C',lb:'調一組展示品先讓屋主用',sw:'入厝日有沙發可以坐，問題被接住了',cs:'旗艦店少一組主力陳列，展示效果打折',e:{rev:-1,trust:5}}],
+ oc:{A:'沒有人通知屋主。\n入厝前四天，船公司正式發文：延誤六週。',
+     B:'業務親自打了電話。屋主一開始很不高興，後來說：\n「至少你們現在講，不是當天才講。」',
+     C:'展示品當天送過去了。\n那個位置空了一個月，來看沙發的客人問了三次「那組呢」。'}},
+{r:1,no:4,ti:'電梯',
+ st:'安裝師傅第三次反映同一件事：\n出貨單上沒有現場電梯尺寸這一欄，\n每次都是到了樓下才發現搬不上去。',
+ op:[{k:'A',lb:'先照排程走，到現場再想辦法',sw:'不用停下來改流程，這一季的排程不受影響',cs:'同樣的事會再發生，而且他不會提第四次',e:{rev:4,trust:-7}},
+     {k:'B',lb:'出貨單加一欄電梯尺寸',sw:'成本很低，馬上就能用',cs:'只補了這一個洞，前面丈量那一段還是斷的',e:{rev:2,trust:3}},
+     {k:'C',lb:'停下來，把安裝前確認表整套重做',sw:'從丈量到安裝的交接被真正接起來',cs:'這一週的排程全部往後推',e:{rev:-3,trust:7}}],
+ oc:{A:'他點點頭，回去工作了。\n那之後，他沒有再提過任何建議。',
+     B:'加了一欄。有人填，有人留空。\n下個月又有一次卸到一半才發現得走樓梯。',
+     C:'停了一週。表單從丈量、備料、出貨到安裝全部重排。\n那個月的安裝件數少了四成。'}},
+{r:1,no:5,ti:'展示品',
+ st:'季底剩十天，成交金額還差一段。\n有位客人看上展示間那組主力沙發，\n現貨、今天就能成交——但那是店裡的門面。',
+ op:[{k:'A',lb:'賣掉，這一季的數字就到了',sw:'季底達標，老闆那邊交代得過去',cs:'旗艦店的主視覺空了，新品還沒到',e:{rev:8,trust:-2}},
+     {k:'B',lb:'賣，但說明是展示品並折價',sw:'客人清楚買到什麼，數字也進來一部分',cs:'折價吃掉毛利，而且陳列一樣空了',e:{rev:4,trust:2}},
+     {k:'C',lb:'不賣，請他等新品',sw:'旗艦店的門面守住了',cs:'這一季的目標，明確地達不到',e:{rev:-2,trust:4}}],
+ oc:{A:'當天就成交了。\n接下來三週，那個位置擺了一組次要款。來店的客人少了。',
+     B:'折了一成五賣掉，客人很高興。\n毛利表上，這張單幾乎沒賺。',
+     C:'客人說再看看，走了。\n季底的數字停在差一點的地方。'}},
+{r:2,no:1,ti:'卡住的那張單',
+ st:'一張訂製櫃的單卡了三個禮拜。\n業務說規格早就給了，倉管說收到的沒有五金型號，\n會計說變更加價的事根本沒人告訴她。',
+ op:[{k:'A',lb:'先把這張推出去再說',sw:'眼前這張解決了',cs:'下一張還是會卡在同一個地方',e:{rev:5,trust:-4}},
+     {k:'B',lb:'三方坐下來對一次，當場補齊',sw:'這張通了，也看見斷點在哪',cs:'花掉半天，而且有人要承認自己漏了',e:{rev:2,trust:5}},
+     {k:'C',lb:'訂下交接規則，之後照做',sw:'根本問題被處理，未來省下來的更多',cs:'這張單還要再等，短期什麼都沒解決',e:{rev:-3,trust:7}}],
+ oc:{A:'單子出去了。\n兩週後，另一張單卡在完全一樣的地方。',
+     B:'三個人對了兩小時。\n原來缺的是同一個欄位，三邊都以為是別人要填。',
+     C:'訂了一張交接清單：每一站要收什麼、誰負責填。\n那張卡住的單，又多等了四天。'}},
+{r:2,no:2,ti:'安裝主管',
+ st:'同業來挖你們的安裝主管，開的條件高三成。\n他還沒答應，也還沒拒絕。\n他在你們這裡九年，是唯一能處理老屋現場的人。',
+ op:[{k:'A',lb:'加薪留人',sw:'人留住了，現場經驗不流失',cs:'成本上去，而且其他人會知道',e:{rev:3,trust:2}},
+     {k:'B',lb:'先問他為什麼想走',sw:'可能發現真正的原因不是錢',cs:'要花時間，而且可能聽到不想聽的話',e:{rev:-1,trust:7}},
+     {k:'C',lb:'尊重他的選擇，同時找備援',sw:'風險控管做在前面',cs:'等於默認他會走，關係就此改變',e:{rev:4,trust:-5}}],
+ oc:{A:'他留下來了。\n三個月後，另外兩個人來問為什麼他加薪。',
+     B:'他講了一句：「錢不是問題。是我講了三次的事，沒有人理。」\n有人想起了第四場。',
+     C:'他兩週後離職，工法都交接完了，很體面。\n下一次遇到老屋沒電梯的現場，沒有人知道該怎麼處理。'}},
+{r:2,no:3,ti:'建商',
+ st:'一家建商要談整批合作：三十戶的標準配置。\n量很大，但要求統一規格、單價壓到七折、月結六十天。\n這是老闆下個月要談的那一筆。',
+ op:[{k:'A',lb:'接下來，先把量做起來',sw:'一次墊高整年的營收基期',cs:'七折加月結六十天，等於拿現金換數字',e:{rev:9,trust:-3}},
+     {k:'B',lb:'接，但守住單價底線與付款條件',sw:'量有了，體質不會被拖垮',cs:'建商可能轉向願意讓步的同業',e:{rev:5,trust:2}},
+     {k:'C',lb:'婉拒，專心做直客與設計師通路',sw:'毛利守住，服務品質不被稀釋',cs:'放掉一次規模化的機會，老闆那邊很難交代',e:{rev:-3,trust:4}}],
+ oc:{A:'合約簽了。三十戶排進生產排程，直客的單全部往後挪。\n六十天後的第一筆款，晚了兩週才到。',
+     B:'談到八五折、月結三十天。建商猶豫了兩週，還是簽了。\n量比原本少了十戶。',
+     C:'婉拒了。建商當週就找了另一家。\n老闆在會議上問了一句：「為什麼不接？」'}},
+{r:2,no:4,ti:'那道刮痕',
+ st:'安裝當天，實木地板被刮出一道四十公分的痕。\n屋主是那位「試試看」的客人。\n他站在客廳中央，沒有大聲，只說：「你們看著辦。」',
+ op:[{k:'A',lb:'快速賠錢了事',sw:'兩天內結案，不擴大',cs:'花掉的是錢，換不回他對你們的看法',e:{rev:-2,trust:3}},
+     {k:'B',lb:'安裝師傅親自去道歉並修復，主管陪同',sw:'事情處理了，人也長出來了',cs:'要花好幾天，而且要承擔他講不好的風險',e:{rev:-1,trust:7}},
+     {k:'C',lb:'主張地板本來就有使用痕跡',sw:'省下賠償，這張單的毛利保住',cs:'他會把這件事講給每一個問他的人聽',e:{rev:3,trust:-9}}],
+ oc:{A:'賠了地板修復的錢，兩天結案。\n他收下了，之後沒有再回來過。',
+     B:'師傅自己去道歉，主管在旁邊沒有插話。\n修復完那天，屋主說：「你們是真的在處理。」半年後他介紹了兩組客人。',
+     C:'主張沒有成立。\n他在社區群組貼了照片。那個社區有兩百多戶。'}},
+{r:2,no:5,ti:'明年',
+ st:'年度最後一次會議。\n要決定明年往哪裡走——\n而這一年的數字，就攤在桌上。',
+ op:[{k:'A',lb:'擴大設計裝修，一條龍衝營收',sw:'單價與客單量一起拉高',cs:'服務鏈拉長，現在的交接還接不住',e:{rev:8,trust:-2}},
+     {k:'B',lb:'成長，但先把交接與安裝補起來',sw:'走得慢一點，但每一步踩得到底',cs:'明年的數字不會好看',e:{rev:4,trust:3}},
+     {k:'C',lb:'收斂，把現有客戶與設計師通路做深',sw:'穩，每一個客戶都顧得到',cs:'放棄一整年的機會窗口',e:{rev:-2,trust:5}}],
+ oc:{A:'明年的目標訂得比今年高四成，設計部要再擴編。\n會議結束時，倉管沒有說話。',
+     B:'明年的目標只高一成，但多了三項內部指標：\n交接完整率、安裝一次到位率、客訴回應時數。第一次，這些被寫進考核。',
+     C:'不追新通路了，把現有的客戶與設計師做深。\n業務看著自己的目標數字，沉默了一下，然後點頭。'}}];
+
+const ENDINGS=[
+ {id:'held',t:i=>i.rev>=GOAL.rev&&i.trust>=GOAL.trust,ti:'你們接住了',
+  bd:'年底結算。營收到了，信任也還在。\n\n這一年沒有奇蹟，只是每一次要在數字跟人之間選的時候，你們沒有全部倒向同一邊。\n\n但先別急著高興——請看一下你們的內耗指數。\n那個數字是你們自己造出來的，而且它沒有出現在任何一張報表上。'},
+ {id:'hollow',t:i=>i.rev>=GOAL.rev&&i.trust<GOAL.trust,ti:'數字到了，人沒了',
+  bd:'年底結算。營收超標，慶功宴訂了。\n\n三個月後：兩位資深員工離職，兩個老客戶轉單，\n第四季的客訴量是去年的三倍。\n\n沒有任何一個決定是錯的。每一個都是在當下最合理的判斷。\n\n只是沒有人，在做決定之前，問過旁邊的人手上有什麼。'},
+ {id:'safe',t:i=>i.rev<GOAL.rev&&i.trust>=GOAL.trust,ti:'穩住了，但沒有長大',
+  bd:'年底結算。客戶都還在，團隊也都還在。\n只有營收沒有到。\n\n你們守住了每一件不該犧牲的事，\n卻也錯過了每一個需要冒險的時刻。\n\n穩健跟不敢，中間那條線在哪裡——\n這一年，沒有人真的問出口。'},
+ {id:'lost',t:()=>true,ti:'兩邊都沒有接住',
+  bd:'年底結算。營收沒到，信任也掉了。\n\n第三個月，被挪用原料的老客戶轉單，他佔你們去年營收的三成四。\n第四個月，大單的驗收被退回第三次，毛利賠掉六成。\n付款條件是驗收後九十天——那筆錢會在第七個月入帳。\n而帳上的現金，只夠撐兩個月。\n\n你們沒有任何一個人做錯決定。\n每個人都在自己的位置上，做了最合理的判斷。\n\n現在，請把你們的角色卡翻開。'}];
+
+// 結局之後的第二張投影片：這樣走下去，對公司、對每個位置各代表什麼。
+// 注意 lost 那一組——每一句都指回那個人自己的角色卡。
+const CONSEQ={
+ held:{
+  sweet:'這一年證明了成長跟品質不是二選一。設計師願意再介紹，因為你們沒有讓他難做人。1600 坪的門面，撐得起它的成本。',
+  cost:'你們走得比同業慢。有幾張單真的飛了，而且不會回來。老闆問過不只一次「為什麼不接」。',
+  roles:{
+   sales:'你少賺了幾張快單的獎金。但你手上的名單明年會自己長出來——設計師介紹的客人，成交率是走進門的三倍。',
+   warehouse:'你擋下來的那幾次，不會有人記得。這個位置的成績，永遠是「沒有發生的事」。',
+   finance:'現金流是這一年唯一沒讓你失眠的東西。',
+   service:'你今年接到的客訴比去年少。這是最難被看見、也最值錢的成績。',
+   vp:'你要準備好向老闆解釋，為什麼有些單沒接。那個說法，就是明年的策略。'}},
+ hollow:{
+  sweet:'帳面漂亮，建商合作談成了，老闆很滿意。這一季的成交金額是歷年最高。',
+  cost:'明年你們要用更高的目標，去補今年欠下的信任。而補的成本，遠比當初賺的多。',
+  roles:{
+   sales:'你今年的獎金是史上最好。明年三月你會發現，老客戶不再回你電話。',
+   warehouse:'你每一次說「這樣會出事」都被跳過去。明年你會不想再說第四次。',
+   finance:'應收帳款愈拉愈長，而賠償金額第一次出現在損益表上。',
+   service:'你會是第一個知道出事的人，也會是最後一個被問到意見的人。',
+   vp:'你交出了老闆要的數字。你也要負責解釋，為什麼人開始走。'}},
+ safe:{
+  sweet:'沒有一個客戶因為你們受傷，團隊也還完整。八層樓裡的人，今年沒有人離開。',
+  cost:'你們錯過的那些單，去了對面那家。他們明年會更大，而且會來挖你們的人。',
+  roles:{
+   sales:'客戶都很喜歡你。但你的業績數字，撐不起你想要的位置。',
+   warehouse:'今年很順。順到你可能沒發現，公司沒有在長大。',
+   finance:'帳很乾淨。但乾淨的帳，撐不起 1600 坪的展示間。',
+   service:'你今年幾乎沒事做。這是好事，也是警訊。',
+   vp:'你守住了底線。現在你要回答老闆另一個問題：那成長呢？'}},
+ lost:{
+  sweet:'沒有。這一年沒有留下任何可以帶走的東西。',
+  cost:'客戶走了、人走了、現金卡住了。而每一個決定，在當下都很合理。',
+  roles:{
+   sales:'你簽下的那張整戶大單，最後變成賠錢的單。而那位設計師，已經在跟別家合作。',
+   warehouse:'你早就知道櫃期會延。但從頭到尾，沒有人問你。',
+   finance:'你早就知道現金撐不住。但你不想當那個一直說不行的人——所以你沒說。',
+   service:'你早就知道那位客戶是來試試看的。但沒有人問你。',
+   vp:'你是唯一手上有全局目標的人。但你沒有把它變成大家的目標。'}}};
+
+const PH={LOBBY:'lobby',BRIEF:'brief',ROLE:'role',STORY:'story',VOTE:'vote',RESULT:'result',BREAK:'break',FIN:'fin',CONSEQ:'conseq'};
+const FRIC={'5':0,'4-1':2,'3-2':4,'3-1-1':6,'2-2-1':8};
+function fricOf(c){const s=Object.values(c).filter(n=>n>0).sort((a,b)=>b-a).join('-');return FRIC[s]??4}
+function endingOf(i){return ENDINGS.find(e=>e.t(i))||ENDINGS[3]}
+const sceneKey=s=>`r${s.r}s${s.no}`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ══════════════ 狀態 ══════════════ */
+const DEFAULT={phase:PH.LOBBY,idx:0,rev:START.rev,trust:START.trust,friction:START.friction,hist:[],seq:0};
+let db=null,state={...DEFAULT},seats={},votes={},me=null,pending=null;
+const params=new URLSearchParams(location.search);
+const view=params.get('v')||'';
+const app=document.getElementById('app');
+const curScene=()=>SCENES[Math.min(state.idx,SCENES.length-1)];
+
+let offline=false;
+async function api(path,body){
+  const r=await fetch('/api/'+path,body?{method:'POST',
+    headers:{'content-type':'application/json'},body:JSON.stringify(body)}:{cache:'no-store'});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}
+function apply(room){
+  state={...DEFAULT,...(room&&room.state||{})};
+  seats=(room&&room.seats)||{}; votes=(room&&room.votes)||{};
+  render();
+}
+async function boot(){
+  me=localStorage.getItem('seat')||null;
+  const tick=async()=>{
+    try{apply(await api(''));if(offline){offline=false;render()}}
+    catch(e){if(!offline){offline=true;render()}}
+  };
+  await tick();
+  setInterval(tick,1200);
+}
+const save=async p=>apply((await api('state',{state:{...state,...p,seq:(state.seq||0)+1}})).room);
+function tallyOf(sc){
+  const c={A:0,B:0,C:0},who={};
+  ROLES.forEach(r=>{const v=votes[`${sceneKey(sc)}_${r.id}`];if(v&&c[v.choice]!=null){c[v.choice]++;who[r.id]=v.choice}});
+  return{c,who,n:Object.keys(who).length};
+}
+
+/* ══════════════ 共用片段 ══════════════ */
+function indices(i,showGoal){
+  const bar=(cls,nm,val,max,goal,d)=>`<div class="row ${cls}"><span class="nm">${nm}</span>
+    <span class="bar"><i class="blk" style="width:calc(${Math.max(0,Math.min(100,val/max*100))}% - 4px)"></i></span>
+    <span class="val num">${val}<em class="dl">${d==null?'':(d>0?'+':'')+d}</em></span></div>
+    ${goal&&showGoal?`<div class="goal" style="grid-column:2">${goal}</div>`:''}`;
+  return `<div class="idx">
+    ${bar('rev','營收',i.rev,155,`要到 ${GOAL.rev}`,i.rev-100)}
+    ${bar('trust','信任',i.trust,150,`不能低於 ${GOAL.trust}`,i.trust-100)}
+    ${bar('fric','內耗',i.friction,80,'',null)}
+  </div>`;
+}
+function curve(hist){
+  if(!hist.length)return'';
+  const W=520,H=150,P=18,n=Math.max(hist.length,10);
+  const max=Math.max(20,...hist.map(h=>h.cum));
+  const pt=(h,k)=>[P+(W-P*2)*(k/(n-1)),H-P-(H-P*2)*(h.cum/max)];
+  const seg=r=>{const d=hist.map((h,k)=>[h,k]).filter(([h])=>h.r===r);
+    if(!d.length)return'';
+    const path=d.map(([h,k],j)=>`${j?'L':'M'}${pt(h,k).map(v=>v.toFixed(1)).join(' ')}`).join(' ');
+    const dots=d.map(([h,k])=>`<circle class="dot${r===2?' r2':''}" cx="${pt(h,k)[0].toFixed(1)}" cy="${pt(h,k)[1].toFixed(1)}" r="3.5"/>`).join('');
+    return `<path class="ln${r===2?' r2':''}" d="${path}"/>${dots}`;};
+  return `<svg class="curve" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="內耗累積">
+    <line class="axis" x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}"/>
+    ${seg(1)}${seg(2)}
+    <text x="${P}" y="${H-4}">第一輪</text><text x="${W/2}" y="${H-4}">第二輪</text>
+  </svg>`;
+}
+
+/* ══════════════ 投影幕 ══════════════ */
+function renderScreen(){
+  const sc=curScene(),{c,n}=tallyOf(sc),I={rev:state.rev,trust:state.trust,friction:state.friction};
+  const head=`<div class="top"><span>這一年</span><span>${state.phase===PH.LOBBY?'':`第 ${sc.r} 輪　${sc.r===1?'禁語':'可討論'}`}</span></div>`;
+  let mid='';
+  if(state.phase===PH.LOBBY){
+    const joinUrl=location.origin+location.pathname+'?v=play';
+    mid=`<div class="mid"><div style="display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center">
+      <div><h1 style="font-size:clamp(2.4rem,6vw,4.5rem);margin-bottom:1.5rem">這一年</h1>
+      <p class="lede" style="font-size:1.3rem;max-width:26em">一家做客製化產品的公司。五個部門，一個季度，一個共同的目標。<br>掃描右邊，選一個位置坐下。</p>
+      <div class="seats" style="margin-top:2.5rem">${ROLES.map(r=>
+        `<div class="seat ${seats[r.id]?'on blk':''}"><b>${r.n}</b><span>${seats[r.id]?'已就座':'　'}</span></div>`).join('')}</div></div>
+      <div style="text-align:center"><div id="qr"></div>
+      <p class="lede" style="font-size:.8rem;margin-top:.8rem;max-width:14rem;word-break:break-all">${esc(joinUrl)}</p></div>
+    </div></div>`;
+  }else if(state.phase===PH.BRIEF){
+    mid=`<div class="mid"><p class="sceneno">本季目標</p>
+      <div style="display:grid;grid-template-columns:1fr 22rem;gap:4rem;align-items:start">
+        <div><p class="story" style="font-size:clamp(1.5rem,3vw,2.4rem)">這一年\n營收要多 28\n信任最多只能少 28</p>
+        <p class="sub" style="color:var(--seal)">兩個都做到才算成功。只做到一個，不算。</p></div>
+        <div>${indices(I,true)}</div></div></div>`;
+  }else if(state.phase===PH.ROLE){
+    mid=`<div class="mid"><p class="sceneno">開始之前</p>
+      <p class="story">請讀你手上的角色卡。\n那是只有你知道的事。\n\n第一輪全程禁語。</p></div>`;
+  }else if(state.phase===PH.STORY){
+    mid=`<div class="mid"><p class="sceneno">第 ${sc.r} 輪・第 ${sc.no} 場　${sc.ti}</p>
+      <p class="story">${esc(sc.st)}</p>
+      <p class="sub">請在手機上做出選擇。</p></div>`;
+  }else if(state.phase===PH.VOTE){
+    mid=`<div class="mid"><p class="sceneno">第 ${sc.r} 輪・第 ${sc.no} 場　${sc.ti}</p>
+      <p class="huge">${n} <span style="color:var(--ink-3)">/ 5</span></p>
+      <p class="sub">已投票</p></div>`;
+  }else if(state.phase===PH.RESULT){
+    const last=state.hist[state.hist.length-1]||{c:{A:0,B:0,C:0},oc:'',df:0};
+    const stamps=k=>Array.from({length:last.c[k]||0},(_,j)=>
+      `<i class="blk" style="--r:${(j%2?1:-1)*(1.5+j*.8)}deg;--o:${.72+((j*7)%3)*.14};animation-delay:${j*70}ms"></i>`).join('');
+    mid=`<div class="mid"><p class="sceneno">第 ${sc.r} 輪・第 ${sc.no} 場　結果</p>
+      <div style="display:grid;grid-template-columns:1fr 22rem;gap:4rem;align-items:start">
+        <div><div class="tally">${sc.op.map(o=>
+          `<div class="t"><span class="k">${o.k}</span><span class="stamps">${stamps(o.k)}</span><span class="lb">${esc(o.lb)}</span></div>`).join('')}</div>
+          <p class="story" style="font-size:clamp(1.15rem,2vw,1.6rem);margin-top:2.5rem">${esc(last.oc)}</p></div>
+        <div>${indices(I,true)}
+          <p class="lede" style="margin-top:1.5rem;font-size:.95rem">這一場的內耗　<span style="color:var(--seal);font-size:1.3rem" class="num">+${last.df}</span></p></div>
+      </div></div>`;
+  }else if(state.phase===PH.BREAK){
+    mid=`<div class="mid"><p class="sceneno">第一輪結束</p>
+      <div style="display:grid;grid-template-columns:1fr 24rem;gap:4rem;align-items:center">
+        <div><p class="story" style="font-size:clamp(1.4rem,2.6vw,2.1rem)">這條線，是你們五個人\n在沒有交談的情況下\n累積出來的內耗。\n\n第二輪開始，你們可以說話了。</p></div>
+        <div>${curve(state.hist)}${indices(I,true)}</div></div></div>`;
+  }else if(state.phase===PH.FIN){
+    const e=endingOf(I);
+    mid=`<div class="mid"><p class="sceneno">結算</p>
+      <div style="display:grid;grid-template-columns:1fr 24rem;gap:4rem;align-items:start">
+        <div><h1 style="font-size:clamp(2rem,4.5vw,3.4rem);margin-bottom:1.5rem">${e.ti}</h1>
+          <p class="story" style="font-size:clamp(1.1rem,1.9vw,1.5rem)">${esc(e.bd)}</p></div>
+        <div>${indices(I,true)}<div style="margin-top:2rem">${curve(state.hist)}</div>
+          <p class="lede" style="font-size:.9rem">紅：第一輪（禁語）　褐：第二輪（可討論）</p></div></div></div>`;
+  }else if(state.phase===PH.CONSEQ){
+    const e=endingOf(I),q=CONSEQ[e.id];
+    mid=`<div class="mid"><p class="sceneno">這樣走下去</p>
+      <div class="cq">
+        <div><p class="cqh">對公司的甜頭</p><p class="cqb">${esc(q.sweet)}</p>
+             <p class="cqh" style="margin-top:2rem;color:var(--seal)">對公司的代價</p><p class="cqb">${esc(q.cost)}</p></div>
+        <div><p class="cqh">對你這個位置，代表什麼</p>
+          ${ROLES.map(r=>`<div class="cqr"><b>${r.n}</b><span>${esc(q.roles[r.id])}</span></div>`).join('')}</div>
+      </div></div>`;
+  }
+  app.innerHTML=`<div class="screen">${head}${mid}<div class="bot"></div></div>`;
+  if(state.phase===PH.LOBBY)drawQR(location.origin+location.pathname+'?v=play');
+}
+
+// QR：用 cdnjs 的 qrcode-generator 算出模組矩陣，自己畫成墨色 SVG。
+// 函式庫沒載到就靜靜跳過——畫面上本來就有網址文字，不會開天窗。
+function drawQR(url){
+  const host=document.getElementById('qr');
+  if(!host||typeof window.qrcode!=='function')return;
+  try{
+    const q=window.qrcode(0,'M');q.addData(url);q.make();
+    const n=q.getModuleCount(),pad=2,S=n+pad*2;
+    let d='';
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++)
+      if(q.isDark(r,c))d+=`M${c+pad} ${r+pad}h1v1h-1z`;
+    host.innerHTML=`<svg viewBox="0 0 ${S} ${S}" width="220" height="220" shape-rendering="crispEdges"
+      role="img" aria-label="加入遊戲"><rect width="${S}" height="${S}" fill="var(--paper)"/>
+      <path d="${d}" fill="var(--ink)"/></svg>`;
+  }catch(e){}
+}
+
+/* ══════════════ 手機 ══════════════ */
+function renderPlay(){
+  const sc=curScene(),role=ROLES.find(r=>r.id===me);
+  if(!role||!seats[me]){
+    app.innerHTML=`<div class="play"><p class="lede">選一個位置坐下。</p>
+      <div class="pick">${ROLES.map(r=>{const taken=!!seats[r.id];
+        return `<button data-seat="${r.id}" ${taken?'disabled':''}>
+          <span class="lb">${r.n}</span><span class="sw">${taken?'已經有人了':r.t}</span></button>`}).join('')}</div></div>`;
+    app.querySelectorAll('[data-seat]').forEach(b=>b.onclick=async()=>{
+      const id=b.dataset.seat;
+      const r=await api('seat',{role:id});
+      if(r.ok){me=id;localStorage.setItem('seat',id)}
+      apply(r.room);
+    });
+    return;
+  }
+  const card=`<div class="card"><p class="kind">你的角色・${role.t}</p>
+    <p>${esc(role.secret)}</p><p class="pr">${esc(role.pressure)}</p></div>`;
+  const bar=`<div class="who"><span>${role.n}</span><span>${state.phase===PH.LOBBY?'等待開始':`第 ${sc.r} 輪　${sc.r===1?'禁語':'可討論'}`}</span></div>`;
+  let body='';
+  if(state.phase===PH.LOBBY){body=`<div class="wait">已就座。<br>等其他人坐下。</div>${card}`}
+  else if(state.phase===PH.BRIEF||state.phase===PH.ROLE){body=`<h2>本季目標</h2>
+    <p>營收指數要從 100 到 <b>130 以上</b>，同時信任指數維持在 <b>90 以上</b>。<br>兩個都達標才算成功。</p>${card}`}
+  else if(state.phase===PH.STORY){body=`<div class="wait">請看投影幕。</div>${card}`}
+  else if(state.phase===PH.VOTE){
+    const k=`${sceneKey(sc)}_${me}`,mine=votes[k];
+    if(mine){body=`<div class="wait">已送出：${mine.choice}<br><span style="font-size:.9rem">等其他人。</span></div>${card}`}
+    else{body=`<h2>${sc.ti}</h2><p class="lede" style="white-space:pre-line">${esc(sc.st)}</p>
+      <div class="pick">${sc.op.map(o=>`<button data-k="${o.k}" class="${pending===o.k?'sel':''}">
+        <span class="k">${o.k}</span><span class="lb">${esc(o.lb)}</span>
+        <span class="sw"><b>甜頭</b>${esc(o.sw)}</span><span class="sw"><b>代價</b>${esc(o.cs)}</span></button>`).join('')}</div>
+      <div style="margin:1.5rem 0 0;display:flex;gap:1rem;align-items:center">
+        <button class="btn" id="send" ${pending?'':'disabled'}>確認送出</button>
+        <span class="lede" style="font-size:.85rem">${pending?'送出後不能改':'先選一個'}</span></div>${card}`}
+  }
+  else if(state.phase===PH.RESULT){
+    const mine=votes[`${sceneKey(sc)}_${me}`];
+    body=`<div class="wait">請看投影幕。<br><span style="font-size:.9rem">你剛剛選的是 ${mine?mine.choice:'—'}</span></div>${card}`}
+  else if(state.phase===PH.BREAK){body=`<div class="wait">請看投影幕。<br><span style="font-size:.9rem">第二輪開始，可以說話了。</span></div>${card}`}
+  else if(state.phase===PH.CONSEQ){
+    const e=endingOf({rev:state.rev,trust:state.trust,friction:state.friction});
+    body=`<h2>對你這個位置</h2><div class="card"><p class="kind">${role.n}</p>
+      <p>${esc(CONSEQ[e.id].roles[me])}</p></div>${card}`}
+  else if(state.phase===PH.FIN){
+    const mine=SCENES.map(s=>({s,v:votes[`${sceneKey(s)}_${me}`]})).filter(x=>x.v);
+    body=`<h2>你的十場</h2><div style="display:grid;gap:.5rem;margin:1rem 0 0;font-size:.92rem">
+      ${mine.map(({s,v})=>`<div style="display:flex;gap:.8rem;padding:.4rem 0;border-bottom:1px solid var(--ink-4)">
+        <span class="lede" style="min-width:4.5rem">R${s.r}・${s.no}</span>
+        <span style="color:var(--seal);font-family:var(--hand)">${v.choice}</span>
+        <span>${esc(s.op.find(o=>o.k===v.choice)?.lb||'')}</span></div>`).join('')}</div>${card}`}
+  app.innerHTML=`<div class="play">${bar}${body}</div>`;
+  app.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{pending=b.dataset.k;render()});
+  const s=document.getElementById('send');
+  if(s)s.onclick=async()=>{if(!pending)return;
+    const c=pending; pending=null;
+    apply((await api('vote',{key:`${sceneKey(sc)}_${me}`,choice:c})).room);};
+}
+
+/* ══════════════ 主持 ══════════════ */
+function renderHost(){
+  const sc=curScene(),{c,who,n}=tallyOf(sc);
+  const P=state.phase;
+  const label={[PH.LOBBY]:'等待就座',[PH.BRIEF]:'宣布目標',[PH.ROLE]:'讀角色卡',
+    [PH.STORY]:`第 ${sc.r} 輪・第 ${sc.no} 場　情境`,[PH.VOTE]:`第 ${sc.r} 輪・第 ${sc.no} 場　投票中`,
+    [PH.RESULT]:`第 ${sc.r} 輪・第 ${sc.no} 場　結果`,[PH.BREAK]:'第一輪結束',[PH.FIN]:'結算',[PH.CONSEQ]:'結果說明'}[P];
+  const next={[PH.LOBBY]:'宣布本季目標',[PH.BRIEF]:'請他們讀角色卡',[PH.ROLE]:'開始第一場',
+    [PH.STORY]:'開放投票',[PH.VOTE]:'結算這一場',[PH.RESULT]:sc.no===5&&sc.r===1?'進入第一輪回顧':'下一場',
+    [PH.BREAK]:'開始第二輪',[PH.FIN]:'這樣走下去，代表什麼',[PH.CONSEQ]:''}[P];
+  app.innerHTML=`<div class="host">
+    <p class="st">主持台</p><p class="big">${label}</p>
+    ${P===PH.VOTE||P===PH.LOBBY?`<div class="who">${ROLES.map(r=>{
+      const ok=P===PH.LOBBY?!!seats[r.id]:who[r.id];
+      return `<div><span>${r.n}</span><span class="${ok?'yes':'no'}">${ok?(P===PH.LOBBY?'已就座':who[r.id]):'還沒'}</span></div>`}).join('')}</div>`:''}
+    ${P===PH.VOTE?`<p class="st">${n} / 5 已投票</p>`:''}
+    ${next?`<button class="btn" id="adv" style="width:100%;margin:1.5rem 0 0;padding:1.1em">${next}</button>`:''}
+    <details><summary>緊急處理</summary>
+      ${P===PH.VOTE?`<p class="st">代投（有人手機掛掉時）</p>
+        <div class="grid">${ROLES.filter(r=>!who[r.id]).map(r=>
+          ['A','B','C'].map(k=>`<button class="btn ghost" data-proxy="${r.id}" data-c="${k}">${r.n} → ${k}</button>`).join('')).join('')}</div>`:''}
+      <button class="btn ghost" id="back" style="width:100%;margin:.6rem 0 0">退回上一階段</button>
+      <button class="btn ghost danger" id="reset" style="width:100%;margin:.6rem 0 0">整場重置</button>
+    </details></div>`;
+
+  const adv=document.getElementById('adv');
+  if(adv)adv.onclick=async()=>{
+    if(P===PH.LOBBY)return save({phase:PH.BRIEF});
+    if(P===PH.BRIEF)return save({phase:PH.ROLE});
+    if(P===PH.ROLE)return save({phase:PH.STORY,idx:0});
+    if(P===PH.STORY)return save({phase:PH.VOTE});
+    if(P===PH.VOTE){
+      // 每一場的影響 = 五個人選擇的加權平均，不是加總。
+      // 全員一致選 A 時，這一場就是 A 的完整效果；意見分裂則互相稀釋。
+      const df=fricOf(c);let dr=0,dt=0;
+      sc.op.forEach(o=>{dr+=o.e.rev*c[o.k];dt+=o.e.trust*c[o.k]});
+      const rev=Math.round(state.rev+dr/5),trust=Math.round(state.trust+dt/5);
+      const top=['A','B','C'].reduce((a,b)=>c[b]>c[a]?b:a,'A');
+      const friction=state.friction+df;
+      const hist=[...state.hist,{r:sc.r,no:sc.no,c:{...c},df,cum:friction,oc:sc.oc[top]}];
+      return save({phase:PH.RESULT,rev,trust,friction,hist});
+    }
+    if(P===PH.RESULT){
+      if(sc.r===1&&sc.no===5)return save({phase:PH.BREAK});
+      if(state.idx>=SCENES.length-1)return save({phase:PH.FIN});
+      return save({phase:PH.STORY,idx:state.idx+1});
+    }
+    if(P===PH.BREAK)return save({phase:PH.STORY,idx:state.idx+1});
+    if(P===PH.FIN)return save({phase:PH.CONSEQ});
+  };
+  app.querySelectorAll('[data-proxy]').forEach(b=>b.onclick=async()=>
+    apply((await api('vote',{key:`${sceneKey(sc)}_${b.dataset.proxy}`,choice:b.dataset.c})).room));
+  document.getElementById('back').onclick=()=>{
+    const order=[PH.LOBBY,PH.BRIEF,PH.ROLE,PH.STORY,PH.VOTE,PH.RESULT];
+    const i=order.indexOf(P);if(i>0)save({phase:order[i-1]});
+  };
+  document.getElementById('reset').onclick=async()=>{
+    if(!confirm('整場重置？所有投票與進度都會清空。'))return;
+    apply((await api('reset',{state:{...DEFAULT}})).room);
+  };
+}
+
+function renderLanding(){
+  const u=location.origin+location.pathname;
+  app.innerHTML=`<div class="landing"><h1>這一年</h1>
+    <p class="lede" style="margin:.6rem 0 2rem">三個畫面，各自開在不同裝置上。</p>
+    <a href="?v=screen"><b>投影幕</b><span>接投影機。情境、票數、指數、結局</span></a>
+    <a href="?v=play"><b>玩家</b><span>五支手機各開一個。選角色、讀卡、投票</span></a>
+    <a href="?v=host"><b>主持台</b><span>主持人自己拿。推進流程、代投</span></a>
+    <p class="lede" style="margin-top:2rem;font-size:.85rem">玩家連結：<br>${esc(u)}?v=play</p></div>`;
+}
+
+function render(){
+  if(offline&&view!=='')
+    return app.innerHTML=`<div class="off">連線中斷。<br>檢查網路，畫面會自己接回來。</div>`;
+  if(view==='screen')renderScreen();
+  else if(view==='play')renderPlay();
+  else if(view==='host')renderHost();
+  else renderLanding();
+}
+boot();
+</script>
