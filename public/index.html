@@ -449,7 +449,7 @@ async function boot(){
   setInterval(tick,1200);
   if(view==='screen')[
     ...SCENES.map((sc,i)=>`/art/scene-${String(i+1).padStart(2,'0')}-${sc.ti}.jpg`),
-    '/art/lobby-hero.jpg','/art/friction-reveal.jpg','/art/finale-held.jpg','/art/finale-lost.jpg'
+    '/art/lobby-hero.jpg','/art/friction-reveal.jpg'
   ].forEach(u=>{const im=new Image();im.src=u});
 }
 const save=async p=>apply((await api('state',{state:{...state,...p,seq:(state.seq||0)+1}})).room);
@@ -582,10 +582,14 @@ function renderScreen(){
   if(state.phase===PH.STORY||state.phase===PH.VOTE)art=`/art/scene-${String(state.idx+1).padStart(2,'0')}-${sc.ti}.jpg`;
   else if(state.phase===PH.LOBBY){art='/art/lobby-hero.jpg';artV=true}
   else if(state.phase===PH.BREAK){art='/art/friction-reveal.jpg';artV=true}
-  else if(state.phase===PH.FIN){const id=endingOf(I).id;art=`/art/finale-${id==='held'||id==='safe'?'held':'lost'}.jpg`;artV=true}
+  else if(state.phase===PH.FIN){const e=endingOf(I);art=`/art/finale-${e.id}-${bandOf(I.friction).k}.jpg`;artV=true}
   const artAttr=art?` style="--art-url:url('${encodeURI(art)}')"`:'';
   app.innerHTML=`<div class="screen${art?' has-art':''}${artV?' art-v':''}"${artAttr}><div class="art-bg"></div><div class="art-veil"></div>${head}${mid}<div class="bot"></div></div>`;
   if(state.phase===PH.LOBBY)drawQR(location.origin+location.pathname+'?v=play');
+  // 中場休息時間長，趁這時候把 12 張結局圖載好，結算那一刻才不會等圖
+  if(state.phase===PH.BREAK&&!window.__fin12){window.__fin12=1;
+    ['held','hollow','safe','lost'].forEach(id=>FBANDS.forEach(b=>{
+      const im=new Image();im.src=`/art/finale-${id}-${b.k}.jpg`}));}
 }
 
 // QR：用 cdnjs 的 qrcode-generator 算出模組矩陣，自己畫成墨色 SVG。
