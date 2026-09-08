@@ -152,6 +152,11 @@
   .host .st{font-family:var(--hand);color:var(--ink-2);font-size:.9rem}
   .host .big{font-size:1.5rem;margin:.3rem 0 1.2rem}
   .host .grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0}
+  .proxy-list{margin:1rem 0}
+  .proxy-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--ink-4)}
+  .proxy-name{color:var(--ink-2)}
+  .proxy-btns{display:flex;gap:.4rem}
+  .btn.sm{padding:.4em .9em;min-width:2.6em}
   .host .who{display:grid;gap:.4rem;margin:1rem 0}
   .host .who div{display:flex;justify-content:space-between;align-items:center;gap:1rem;
                  font-size:.92rem;padding:.4rem 0;border-bottom:1px solid var(--ink-4)}
@@ -552,6 +557,7 @@ function renderPlay(){
 
 /* ══════════════ 主持 ══════════════ */
 function renderHost(){
+  const wasOpen=document.querySelector('.host details')?.open;
   const sc=curScene(),{c,who,n}=tallyOf(sc);
   const P=state.phase;
   const label={[PH.LOBBY]:'等待就座',[PH.BRIEF]:'宣布目標',[PH.ROLE]:'讀角色卡',
@@ -566,14 +572,27 @@ function renderHost(){
       const ok=P===PH.LOBBY?!!seats[r.id]:who[r.id];
       return `<div><span>${r.n}</span><span class="${ok?'yes':'no'}">${ok?(P===PH.LOBBY?'已就座':who[r.id]):'還沒'}</span></div>`}).join('')}</div>`:''}
     ${P===PH.VOTE?`<p class="st">${n} / 5 已投票</p>`:''}
+    ${P===PH.RESULT?(()=>{
+      const last=state.hist[state.hist.length-1]||{c:{A:0,B:0,C:0},oc:'',df:0};
+      const top=['A','B','C'].reduce((a,b)=>last.c[b]>last.c[a]?b:a,'A');
+      return `<div class="host-result">
+        <p class="st">多數選擇 ${top}（A:${last.c.A}　B:${last.c.B}　C:${last.c.C}）</p>
+        <p class="story" style="font-size:1.05rem;margin:.8rem 0 1.2rem">${esc(last.oc)}</p>
+        ${indices({rev:state.rev,trust:state.trust,friction:state.friction})}
+        <p class="lede" style="margin-top:.8rem;font-size:.9rem">這一場的內耗　<span style="color:var(--seal)" class="num">+${last.df}</span></p>
+      </div>`;
+    })():''}
     ${next?`<button class="btn" id="adv" style="width:100%;margin:1.5rem 0 0;padding:1.1em">${next}</button>`:''}
     <details><summary>緊急處理</summary>
       ${P===PH.VOTE?`<p class="st">代投（有人手機掛掉時）</p>
-        <div class="grid">${ROLES.filter(r=>!who[r.id]).map(r=>
-          ['A','B','C'].map(k=>`<button class="btn ghost" data-proxy="${r.id}" data-c="${k}">${r.n} → ${k}</button>`).join('')).join('')}</div>`:''}
+        <div class="proxy-list">${ROLES.filter(r=>!who[r.id]).map(r=>
+          `<div class="proxy-row"><span class="proxy-name">${r.n}</span><span class="proxy-btns">${
+            ['A','B','C'].map(k=>`<button class="btn ghost sm" data-proxy="${r.id}" data-c="${k}">${k}</button>`).join('')
+          }</span></div>`).join('')}</div>`:''}
       <button class="btn ghost" id="back" style="width:100%;margin:.6rem 0 0">退回上一階段</button>
       <button class="btn ghost danger" id="reset" style="width:100%;margin:.6rem 0 0">整場重置</button>
     </details></div>`;
+  if(wasOpen)document.querySelector('.host details').open=true;
 
   const adv=document.getElementById('adv');
   if(adv)adv.onclick=async()=>{
