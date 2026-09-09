@@ -45,6 +45,14 @@
        max-width:62%;margin:0 0 calc(1.4*var(--u))}
   .seal{color:var(--seal)}
   .nb{white-space:nowrap}
+  /* 左右兩欄版面：欄內不再受 max-width 限制，字級另外放大 */
+  .two{display:grid;grid-template-columns:1fr 1.05fr;gap:calc(5*var(--u));align-items:center;width:100%}
+  .two h2,.two p,.two table,.two .crit,.two ol,.two .big{max-width:100%}
+  .two h2{font-size:calc(4.4*var(--u))}
+  .two .crit{font-size:calc(2.75*var(--u))}
+  .two table{font-size:calc(2.45*var(--u))}
+  .two p{font-size:calc(2.45*var(--u))}
+  .two p.dim{font-size:calc(2.2*var(--u))}
   .kak{color:var(--kaki)}
   .rule{width:calc(10*var(--u));height:1px;background:var(--ink-4);
         margin:calc(1*var(--u)) 0 calc(2.2*var(--u))}
@@ -213,15 +221,22 @@ const S=[
   <div class="crit">判準：<b>你誇的那句話，\n對方聽完知不知道下次要重複哪個動作？</b>\n\n不知道 ⇒ 那只是客套，不會改變任何事。</div>`},
 
 {n:'⑧ 對自己君親師',im:'s13',m:'15 分',d:1,h:`
-  <p class="kicker">⑧ 在幫別人設目標之前</p>
-  <h2>我如何愛自己，\n就會如何愛別人。</h2>
-  <table>
-    <tr><th>君</th><td>給自己標準與方向</td></tr>
-    <tr><th>親</th><td>無條件接住自己</td></tr>
-    <tr><th>師</th><td>教自己，給自己誠實的回饋</td></tr>
-  </table>
-  <div class="crit">判準：<b>你對自己最缺的那一角，\n就是你帶人時最缺的那一角。</b></div>
-  <p class="dim" style="margin-top:calc(1.6*var(--u))">只有君 → 帶人只會要求　　只有親 → 帶人變鄉願\n只有師 → 只評論、不承擔\n\n現在每個人自評三角，寫下最缺的那一角。</p>`},
+  <div class="two">
+    <div>
+      <p class="kicker">⑧ 在幫別人設目標之前</p>
+      <h2>我如何愛自己，\n就會如何愛別人。</h2>
+      <table>
+        <tr><th>君</th><td>給自己標準與方向</td></tr>
+        <tr><th>親</th><td>無條件接住自己</td></tr>
+        <tr><th>師</th><td>教自己，給自己誠實的回饋</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="crit">判準：\n<b>你對自己最缺的那一角，\n就是你帶人時最缺的那一角。</b></div>
+      <p style="margin-top:calc(1.6*var(--u))">只有君 → 帶人只會要求\n只有親 → 帶人變鄉願\n只有師 → 只評論、不承擔</p>
+      <p class="dim">現在每個人自評三角，\n寫下最缺的那一角。</p>
+    </div>
+  </div>`},
 
 {n:'⑨ 收穫三句',im:'s14',m:'15 分',d:1,h:`
   <p class="kicker">⑨ 帶走的東西</p>
@@ -253,13 +268,22 @@ S.forEach((s,k)=>{
 });
 const slides=[...document.querySelectorAll('.slide')];
 
-// 把這一頁的內容縮到剛好塞得進 16:9 舞台，永遠不會被上下切掉
+// 每一頁自動放到剛好填滿版面：內容少就放大，內容多才縮小，永遠不會被切到
 function fitSlide(el){
   const box=el.querySelector('.body'),inner=el.querySelector('.fit');
   inner.style.transform='none';
-  const avail=box.clientHeight-parseFloat(getComputedStyle(box).paddingTop)*2;
-  const need=inner.scrollHeight;
-  if(need>avail)inner.style.transform=`scale(${(avail/need).toFixed(4)})`;
+  const pad=parseFloat(getComputedStyle(box).paddingTop);
+  const availH=box.clientHeight-pad*2, needH=inner.scrollHeight;
+  // 內容實際佔掉的寬度（取最右邊那個元素），拿來算橫向還能放多大
+  const L=inner.getBoundingClientRect().left;
+  let needW=1;
+  inner.querySelectorAll(':scope > *').forEach(c=>{
+    c.querySelectorAll('*').forEach(g=>{const r=g.getBoundingClientRect().right-L;if(r>needW)needW=r});
+    const r=c.getBoundingClientRect().right-L; if(r>needW)needW=r;
+  });
+  const availW=inner.clientWidth;
+  const k=Math.min(availH/needH, availW/needW, 1.55);
+  inner.style.transform=`scale(${k.toFixed(4)})`;
 }
 function go(n){
   i=Math.max(0,Math.min(S.length-1,n));
