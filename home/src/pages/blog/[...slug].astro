@@ -1,0 +1,14 @@
+---
+import { render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getVisiblePosts } from '../../lib/posts';
+export async function getStaticPaths() {
+  return (await getVisiblePosts()).map((post) => ({ params: { slug: post.id.replace(/\.md$/, '') }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const slug = post.id.replace(/\.md$/, '');
+---
+<BlogLayout title={post.data.title} description={post.data.description} canonical={`https://muse-on.biz/blog/${slug}/`}>
+  <article class="blog-article"><p class="blog-meta">{post.data.category.name} ・ {post.data.publishDate.toLocaleDateString('zh-TW')}</p><h1>{post.data.title}</h1>{post.data.hero && <picture><img src={post.data.hero.src} alt={post.data.hero.alt} /></picture>}<Content /></article>
+</BlogLayout>

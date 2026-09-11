@@ -1,0 +1,12 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getVisiblePosts } from '../../lib/posts';
+const posts = await getVisiblePosts();
+const canonical = 'https://muse-on.biz/blog/';
+---
+<BlogLayout title="部落格" description="周逸達在 Museon 的文章正本。" canonical={canonical}>
+  <section class="blog-intro"><span class="eyebrow">周逸達寫的</span><h1>部落格</h1><p>把思考留在可回來重讀的地方。</p></section>
+  <section class="blog-list" aria-label="文章列表">
+    {posts.length === 0 ? <p class="blog-empty">文章正在準備中。第一篇寫好後，會從這裡開始。</p> : posts.map((post) => <a class="blog-card" href={`/blog/${post.id.replace(/\.md$/, '')}/`}><span>{post.data.category.name} ・ {post.data.publishDate.toLocaleDateString('zh-TW')}</span><h2>{post.data.title}</h2><p>{post.data.description}</p></a>)}
+  </section>
+</BlogLayout>

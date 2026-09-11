@@ -1,0 +1,12 @@
+---
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { getVisiblePosts } from '../../../lib/posts';
+export async function getStaticPaths() {
+  const posts = await getVisiblePosts();
+  return [...new Map(posts.map((post) => [post.data.category.slug, post.data.category])).entries()].map(([slug, category]) => ({ params: { slug }, props: { category, posts: posts.filter((post) => post.data.category.slug === slug) } }));
+}
+const { category, posts } = Astro.props;
+---
+<BlogLayout title={category.name} description={`${category.name}的文章。`} canonical={`https://muse-on.biz/blog/category/${category.slug}/`}>
+  <section class="blog-list"><span class="eyebrow">分類</span><h1>{category.name}</h1>{posts.map((post) => <a class="blog-card" href={`/blog/${post.id.replace(/\.md$/, '')}/`}><h2>{post.data.title}</h2><p>{post.data.description}</p></a>)}</section>
+</BlogLayout>
