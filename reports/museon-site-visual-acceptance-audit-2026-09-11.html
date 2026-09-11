@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MuseON 官網視覺施工驗收｜2026-09-11</title>
+  <style>
+    :root{--paper:#f5f1e6;--paper-soft:#fbf8f0;--ink:#211d16;--soft:#4b4536;--faint:#756d5d;--line:rgba(33,29,22,.16);--accent:#b8452c;--warn:#8f6a24;--ok:#40665c}
+    *{box-sizing:border-box}
+    html{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;line-height:1.75}
+    body{margin:0}
+    main{max-width:980px;margin:0 auto;padding:clamp(48px,8vw,104px) 22px 88px}
+    header{max-width:800px;margin-bottom:64px}
+    .kicker,.meta,.status{font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+    .kicker{color:var(--accent);font-weight:700}
+    h1,h2,h3{font-family:"Noto Serif TC","Songti TC",serif;line-height:1.35;margin:0;color:var(--ink)}
+    h1{font-size:clamp(34px,5.5vw,60px);margin:12px 0 24px}
+    h2{font-size:clamp(25px,3vw,34px);margin-bottom:18px}
+    h3{font-size:20px;margin-bottom:8px}
+    p{margin:0 0 12px}
+    .verdict{font-size:clamp(19px,2.5vw,25px);line-height:1.6;max-width:34em}
+    .meta{color:var(--faint);margin-top:22px;text-transform:none}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:36px 0 64px}
+    .summary div{background:var(--paper-soft);padding:20px}
+    .summary strong{display:block;font:600 30px/1.2 "Noto Serif TC",serif}
+    section.group{border-top:1px solid var(--line);padding-top:34px;margin-top:58px}
+    .item{display:grid;grid-template-columns:minmax(150px,210px) 1fr;gap:30px;padding:34px 0;border-bottom:1px solid var(--line)}
+    .status{font-weight:800;margin-bottom:8px}
+    .done{color:var(--ok)}.partial{color:var(--warn)}.fail{color:var(--accent)}
+    code{font-family:"SFMono-Regular",Consolas,monospace;font-size:.88em;background:rgba(33,29,22,.06);padding:.08em .32em;word-break:break-word}
+    ul{margin:10px 0 0;padding-left:1.25em}li{margin:0 0 8px}
+    .finding{border-left:3px solid var(--accent);padding:2px 0 2px 18px;margin:28px 0}
+    .clear{border-left-color:var(--ok)}
+    table{width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:14px}
+    th,td{text-align:left;vertical-align:top;padding:10px 8px;border-bottom:1px solid var(--line)}
+    th{font-size:12px;letter-spacing:.06em;color:var(--faint)}
+    a{color:var(--accent);text-underline-offset:3px}
+    footer{margin-top:70px;padding-top:24px;border-top:1px solid var(--line);color:var(--faint);font-size:13px}
+    @media(max-width:680px){.summary{grid-template-columns:1fr}.item{grid-template-columns:1fr;gap:12px}.item h3{font-size:22px}table{display:block;overflow-x:auto;white-space:nowrap}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">獨立施工驗收</div>
+    <h1>MuseON 官網視覺修正<br>逐條覆核</h1>
+    <p class="verdict"><strong>整體判定：部分做到、還有破綻。</strong>8 條方向中 5 條做到、3 條部分做到；正式站已部署同一版且基礎渲染正常，但色票／字級尚未收斂到原定目標，卡片語彙仍殘留位移與狀態圓點，另新增 1 個未定義 CSS 變數與 1 組對比問題。</p>
+    <p class="meta">2026-09-11 19:57（Asia/Taipei）｜唯讀審計，不含任何網站施工</p>
+  </header>
+
+  <div class="summary">
+    <div><strong>5 / 8</strong>做到</div>
+    <div><strong>3 / 8</strong>部分做到</div>
+    <div><strong>2 類</strong>新增技術破綻</div>
+  </div>
+
+  <section class="group">
+    <h2>八條修正方向</h2>
+
+    <article class="item">
+      <div><div class="status partial">1｜部分做到</div><h3>砍色</h3></div>
+      <div>
+        <p><code>:root</code> 並未只剩 paper／ink／muted＋單一 cinnabar：仍有三階 paper、三階 ink、<code>--accent-deep</code>、<code>--accent-wash</code>、產品色 <code>--ssa / --kairos / --onemuse</code>、<code>--shadow</code> 與舊相容別名。證據：<code>assets/site.css:2–11</code>。</p>
+        <p>但 teal 已移除；靛紫 <code>#332C5C</code> 與金棕 <code>#8F6A24</code> 只經 <code>--c</code> 用在小型 tag／CTA 文字，沒有再鋪背景。證據：<code>assets/site.css:6, 103–112</code>。因此不是「沒改」，但 token 收斂未達原方向。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status done">2｜做到</div><h3>砍 hero 特效</h3></div>
+      <div>
+        <p>六份 HTML＋共用 CSS 內，<code>radial-gradient</code>、<code>.hero::after</code>、標題背景漸層與 <code>text-shadow</code> 命中皆為 0；<code>.hero</code> 現為單一 <code>background:var(--paper)</code>。證據：<code>assets/site.css:58</code>。</p>
+        <p><code>.hero-art</code> 尚有線性 <code>mask-image</code>（<code>assets/site.css:59–61,72</code>），用途是圖像邊緣遮罩，不是原先要求移除的三層 radial 背景或標題特效。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status done">3｜做到</div><h3>砍假材質</h3></div>
+      <div>
+        <p>在 <code>{index,about,media,blog,kairos,onemuse}.html</code> 全範圍搜尋，<code>.grain</code> 元素共 <strong>0</strong> 個。全域紙紋只剩 <strong>1</strong> 層 <code>body::before</code>，固定滿版、<code>opacity:.14</code>。證據：<code>assets/site.css:31–32</code>。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status partial">4｜部分做到</div><h3>砍卡片語彙</h3></div>
+      <div>
+        <p>主要外觀已拆掉：<code>.card/.rowcard</code> 都是 <code>background:none</code>、<code>border-radius:0</code>，沒有 box-shadow、gradient 或左側彩條。證據：<code>assets/site.css:102,118</code>。</p>
+        <p>但兩個明確要求仍殘留：<code>.status::before</code> 仍畫 5px 圓點（雖已無光暈，<code>assets/site.css:108–109</code>）；<code>.rowcard:hover</code> 仍把左 padding 從 4px 推到 10px，CTA 箭頭也仍 <code>translateX(3px)</code>（<code>assets/site.css:113–114,118–120</code>）。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status done">5｜做到</div><h3>留白節奏</h3></div>
+      <div>
+        <p>已出現可驗證的長短與寬窄差：一般 section 為 <code>96px</code>、tight 為 <code>56px</code>；一般 quote 為 <code>96px</code>、tight 為 <code>58px</code>；內容寬度有 1160px 與 narrow 720px。證據：<code>assets/site.css:63,69,75–76,84–86</code>。</p>
+        <p>1440px 實際渲染：首頁 hero／quote／section 高度約 702／418／1006px；About 的 hero／narrow／quote／tight 約 352／428／342／624px。已不是每段同高同寬。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status partial">6｜部分做到</div><h3>收字級</h3></div>
+      <div>
+        <p><code>assets/site.css</code> 共有 <strong>26 個 font-size 宣告、10 種不同宣告值</strong>，不是目標約 6 階。10 種為：</p>
+        <p><code>11px</code>、<code>13.5px</code>、<code>15px</code>、<code>17px</code>、<code>18px</code>、<code>22px</code>、<code>clamp(25px,3.6vw,36px)</code>、<code>clamp(29px,4.4vw,44px)</code>、<code>clamp(34px,5.6vw,58px)</code>、<code>clamp(56px,8vw,96px)</code>。</p>
+        <p>mono 也未退出普遍使用：<code>.eyebrow</code>、wordmark 小字、scroll cue、credit、waterline、tag、row kind／go 共 8 組選擇器仍用 <code>var(--mono)</code>。證據：<code>assets/site.css:34,42,71,81,95,107,121,124</code>。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status done">7｜做到</div><h3>加不對稱</h3></div>
+      <div>
+        <p><code>.hero</code> 與 <code>.section-head</code> 均不再置中；四個寬度的 computed style 都是 <code>text-align:start</code>，hero copy 左緣為 24px。證據：<code>assets/site.css:58,63,87</code>。</p>
+        <p>首頁下方兩張卡的實際 grid 為 <code>1.15fr .85fr</code>，不是 <code>1fr 1fr</code>；第二張另下移 36px。證據：<code>assets/site.css:98–100</code>。</p>
+      </div>
+    </article>
+
+    <article class="item">
+      <div><div class="status done">8｜做到</div><h3>重做插畫接合</h3></div>
+      <div>
+        <p><code>index.html:30–34</code> 已使用 <code>&lt;picture&gt;</code>＋<code>&lt;source media="(max-width:680px)"&gt;</code>；<code>.hero-art/img</code> 沒有 opacity 或 mix-blend-mode。實機 currentSrc：1440／1024／768 載入 desktop，390 載入 mobile。</p>
+        <p>兩張圖不是同圖裁切：desktop 為 1774×887（2:1），主墨團在右側、左側是大面積乾淨紙面；mobile 為 1086×1448（3:4），主墨團改到右上並另有左下淡墨。兩檔 SHA-256 也不同。1440／1024／768／390 截圖皆未見文字壓到主墨團或橫向溢位。</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="group">
+    <h2>新增技術破綻</h2>
+
+    <div class="finding">
+      <h3>1. 未定義的 <code>--ember</code> 還有 2 處</h3>
+      <p><code>about.html:72</code> 與 <code>media.html:52</code> 的 inline style 都是 <code>color:var(--ember)</code>，但 <code>assets/site.css</code> 沒有定義 <code>--ember</code>。實機 computed color 因宣告失效而繼承父層 <code>rgb(75,69,54)</code>，所以連結不會得到預期重點色。全範圍變數核對只發現這 1 個未定義名稱；<code>--deep-gold</code> 雖是舊名，但目前有定義且未造成斷值。</p>
+    </div>
+
+    <div class="finding">
+      <h3>2. 淡字與 OneMuse 小字對比未達 4.5:1</h3>
+      <table>
+        <thead><tr><th>文字／背景</th><th>對比</th><th>實際用途</th><th>判定</th></tr></thead>
+        <tbody>
+          <tr><td><code>--ink #211D16</code>／<code>--paper #F5F1E6</code></td><td>14.86:1</td><td>正文</td><td>通過</td></tr>
+          <tr><td><code>--ink-soft #4B4536</code>／paper</td><td>8.44:1</td><td>說明文字</td><td>通過</td></tr>
+          <tr><td><code>--ink-faint #8B8270</code>／paper</td><td><strong>3.37:1</strong></td><td>11px status／nav、13.5px footer/meta</td><td>未達 4.5</td></tr>
+          <tr><td><code>--ink-faint</code>／<code>--paper-soft #FBF8F0</code></td><td><strong>3.58:1</strong></td><td>quote credit 等小字</td><td>未達 4.5</td></tr>
+          <tr><td><code>--accent #B8452C</code>／paper</td><td>4.74:1</td><td>eyebrow／SSA</td><td>通過</td></tr>
+          <tr><td><code>--kairos #332C5C</code>／paper</td><td>11.24:1</td><td>Kairos tag／CTA</td><td>通過</td></tr>
+          <tr><td><code>--onemuse #8F6A24</code>／paper</td><td><strong>4.37:1</strong></td><td>11px tag、13.5px CTA</td><td>未達 4.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding clear">
+      <h3>其餘指定漏洞：沒發現</h3>
+      <ul>
+        <li>六頁 hero 文字均為同一結構：<code>.hero-copy &gt; .eyebrow + h1 + p</code>；首頁只額外多一個插畫 sibling，沒有漏包文字。</li>
+        <li>HTML 引用的 <code>hero-wash-desktop.png</code>／<code>hero-wash-mobile.png</code> 與 <code>assets/generated/</code> 實際檔名大小寫、副檔名完全一致；正式站兩檔均 HTTP 200。</li>
+        <li>六頁 footer 全部是「Museon AI/OS ・© 2026 周逸達」；在六份 HTML 搜尋「私有預覽／尚未公開／未公開／preview／private」總命中 0。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>部署與渲染證據</h2>
+    <ul>
+      <li>正式站 <a href="https://muse-on.biz/">首頁</a>、<a href="https://muse-on.biz/about">About</a>、<a href="https://muse-on.biz/kairos">Kairos</a>、<a href="https://muse-on.biz/onemuse">OneMuse</a> 於 2026-09-11 19:57（台北）均 HTTP 200。</li>
+      <li>上述四頁、<code>assets/site.css</code>、desktop/mobile hero PNG 的線上 SHA-256 均與本機逐檔相同，故本報告不是拿尚未部署的本機版冒充正式站。</li>
+      <li>MuseON visual QA：1440 與 390 的 8 組 route/viewport 全數通過；另人工補測 1024 與 768。四寬度均無橫向溢位；四路由均無壞圖與不安全外連。</li>
+      <li>原始修正方向來源：<a href="https://zealchou.github.io/museon-pages/reports/museon-site-visual-audit-2026-09-11.html">MuseON 官網視覺審查｜2026-09-11</a>。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p><strong>檢查範圍：</strong><code>{index,about,media,blog,kairos,onemuse}.html</code>、<code>assets/site.css</code>、兩張 hero PNG、正式站四路由。方法包含原始碼逐行核對、變數／字級／關鍵字機械計數、WCAG 相對亮度公式、線上／本機 SHA-256、Chromium 實際渲染與人工截圖檢視。</p>
+    <p><strong>邊界：</strong>本輪只判斷是否照既定八條方向施工及是否新增技術破綻，不重新提出新的美學方向；未修改任何網站原始檔。</p>
+  </footer>
+</main>
+</body>
+</html>
