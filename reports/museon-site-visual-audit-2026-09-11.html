@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MuseON 官網視覺審查｜Apple × 侘寂方向</title>
+  <style>
+    :root{--paper:#f4f1e9;--ink:#20211f;--soft:#66645d;--line:#d8d2c6;--accent:#9e4937;--deep:#191a18}
+    *{box-sizing:border-box}
+    html{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;line-height:1.8}
+    body{margin:0}
+    main{max-width:960px;margin:0 auto;padding:clamp(56px,9vw,120px) 24px 96px}
+    header{max-width:760px;margin-left:clamp(0px,7vw,72px);padding-bottom:72px}
+    .kicker,.date,.status{font-size:12px;letter-spacing:.14em;color:var(--accent)}
+    h1{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(38px,6vw,68px);font-weight:600;line-height:1.2;letter-spacing:-.02em;margin:14px 0 28px}
+    .summary{font-size:clamp(20px,2.5vw,28px);line-height:1.55;margin:0;max-width:28em}
+    .date{color:var(--soft);margin-top:28px}
+    .criteria{border-top:1px solid var(--line)}
+    .criterion{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:32px;padding:42px 0;border-bottom:1px solid var(--line)}
+    .criterion h2{font-family:"Noto Serif TC","Songti TC",serif;font-size:25px;font-weight:600;line-height:1.45;margin:0}
+    .detail p{margin:0 0 8px}
+    .detail p:last-child{margin-bottom:0}
+    .status{font-weight:700}
+    code{font-family:"SFMono-Regular",Consolas,monospace;font-size:.86em;background:rgba(32,33,31,.06);padding:.08em .34em}
+    .actions{max-width:760px;margin:88px 0 0 auto}
+    .actions h2{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(30px,4vw,46px);line-height:1.3;margin:0 0 34px}
+    .actions ol{margin:0;padding-left:1.4em}
+    .actions li{padding:0 0 18px 8px}
+    .proof{margin-top:80px;padding-top:26px;border-top:1px solid var(--line);color:var(--soft);font-size:13px}
+    .proof a{color:inherit;text-underline-offset:3px}
+    @media(max-width:680px){main{padding-top:48px}.criterion{grid-template-columns:1fr;gap:14px;padding:34px 0}.actions{margin-top:64px}header{padding-bottom:52px}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">獨立視覺審查</div>
+    <h1>MuseON 官網<br>離 Apple × 侘寂有多遠？</h1>
+    <p class="summary">目前仍有一整個設計世代的距離：核心問題不是「不夠漂亮」，而是把精品感拆成漸層、襯線、金色、噪點與卡片後全部疊上，恰好違反 Apple 的減法與侘寂的安靜。</p>
+    <p class="date">2026-09-11｜審查範圍：首頁、About、Kairos、OneMuse</p>
+  </header>
+
+  <div class="criteria">
+    <section class="criterion">
+      <h2>1. 留白比例</h2>
+      <div class="detail">
+        <p class="status">結論：違反，但不是因為空白總量太少。</p>
+        <p>全站已有 <code>.hero padding:128px 24px 138px</code>、<code>.section padding:120px 24px</code>；問題是每段都用同一種等距置中，留白變成模板間隔。手機首頁反而被寬 <code>420px</code> 的絕對定位插畫壓住主標與說明。</p>
+        <p>證據：<code>assets/site.css:46–52, 67–80, 93–96</code>；<code>index.html:29</code>。</p>
+      </div>
+    </section>
+
+    <section class="criterion">
+      <h2>2. 色彩紀律</h2>
+      <div class="detail">
+        <p class="status">結論：違反。</p>
+        <p>字面口徑共有 21 個不重複 hex 與 11 種 rgba；視覺上同時啟用 4 個色相家族：赤陶、金、靛紫、棕。<code>--teal</code> 雖定義未用，插畫又把青綠帶回畫面；赤陶 <code>#C4502A</code>、金 <code>#D9B15C</code>、高亮金 <code>#F0D9A0</code> 並不克制。</p>
+        <p>證據：<code>:root / dark tokens（assets/site.css:1–14）</code>、<code>.hero（46–57）</code>、<code>.card.ssa/.kairos/.onemuse（101–103）</code>。</p>
+      </div>
+    </section>
+
+    <section class="criterion">
+      <h2>3. 裝飾性元素</h2>
+      <div class="detail">
+        <p class="status">結論：違反；多數該砍。</p>
+        <p>四頁放了 9 個 fractal-noise <code>.grain</code>；CSS 有 8 次漸層，再疊 nav 模糊、hero/字體陰影、卡片三層陰影與 hover 浮起。狀態膠囊＋5px 圓點＋光暈、巨型引號、↓／→ 動畫，都在爭著證明「我有設計」。</p>
+        <p>證據：<code>.grain（22–24）</code>、<code>nav.top（27）</code>、<code>.hero（46–64）</code>、<code>.quote-band .mark（70）</code>、<code>.card/.status/.cta（93–113）</code>。</p>
+      </div>
+    </section>
+
+    <section class="criterion">
+      <h2>4. 字體層級</h2>
+      <div class="detail">
+        <p class="status">結論：違反。</p>
+        <p>三種角色字體一起上場：serif、sans、mono；125 行 CSS 內有 27 個 <code>font-size</code> 宣告、21 種不同字級表達。從 hero 88px 跳到 17px，再切成 9.5／10／10.5／11／11.5／12／12.5／13／13.5px 的微型標籤，層級像規格表，不像一個有主次的聲音。</p>
+        <p>證據：<code>body/h1–h3/.eyebrow（assets/site.css:16–18）</code>、<code>29–31, 55–61, 70–84, 105–125</code>。</p>
+      </div>
+    </section>
+
+    <section class="criterion">
+      <h2>5. 不對稱與呼吸感</h2>
+      <div class="detail">
+        <p class="status">結論：違反。</p>
+        <p><code>.hero</code>、quote、section head、單卡、footer 全置中；產品區固定 <code>1fr 1fr</code>，每頁又重複 hero → 窄文 → 狀態區。唯一偏左的插畫只是浮在版面上的方塊，沒有改變閱讀軸線，因此是「偏移」而非有意義的不對稱。</p>
+        <p>證據：<code>assets/site.css:51, 69, 80, 90–92, 124</code>；四頁 hero HTML 結構相同。</p>
+      </div>
+    </section>
+
+    <section class="criterion">
+      <h2>6. 材質誠實</h2>
+      <div class="detail">
+        <p class="status">結論：違反，而且是目前最明顯的破綻。</p>
+        <p>1254×1254 的紙底水彩被硬設成 <code>position:absolute; left:-40px; bottom:-60px; width:420px; opacity:.5; mix-blend-mode:screen</code>。紙張矩形沒有消失，桌機像灰色貼紙；手機寬度還超過 390px，直接墊在文字下方，素材與版面彼此沒有共同光線或紙面。</p>
+        <p>證據：<code>index.html:29</code>；其餘 About／Kairos／OneMuse 各 0 張內容插畫。</p>
+      </div>
+    </section>
+
+    <section class="criterion">
+      <h2>7. 整體 AI 生成感</h2>
+      <div class="detail">
+        <p class="status">結論：明確違反。</p>
+        <p>典型組合全部命中：暖米色 <code>#F7F5F0/#FDFBF6</code>、Cormorant＋Noto Serif、赤陶 <code>#C4502A</code>、到處 8px 圓角卡、膠囊標籤、微漸層與 everything centered；再加深紫＋金的「AI 精品感」，不像 Apple 的產品確定性，也不像侘寂的自然偶然。</p>
+        <p>證據：<code>:root（2–5）</code>、<code>h1–h3（17）</code>、<code>.section-head（80）</code>、<code>.card/.rowcard（93–100, 117–122）</code>。</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="actions">
+    <div class="kicker">修正方向｜最多八刀</div>
+    <h2>砍什麼／留什麼／加什麼</h2>
+    <ol>
+      <li><strong>砍色：</strong>在 <code>:root</code> 只留 paper、ink、muted 與一個 cinnabar；<code>--indigo/--gold/--teal</code> 不再同頁當產品分類色，產品差異交給文字與構圖。</li>
+      <li><strong>砍 hero 特效：</strong>移除 <code>.hero</code> 的三層 radial-gradient、<code>::after</code> 暈影、標題金色漸層與 text-shadow；改成單一紙色或單一近黑平面。</li>
+      <li><strong>砍假材質：</strong>刪除卡片與 quote 內的 9 個 <code>.grain</code>；若保留質地，只允許全頁一層極淡、不可重複的真紙紋。</li>
+      <li><strong>砍卡片語彙：</strong>把 <code>.card/.rowcard</code> 的 gradient、8px radius、三層 shadow、hover 位移、左側彩條與 status 圓點拿掉，改成無框的編輯式段落。</li>
+      <li><strong>留大留白，但重做節奏：</strong>保留 <code>120px</code> 級的大段距；不要每段同高同寬，讓「密集說明 → 一句停頓 → 單一行動 → 空白」有明顯長短變化。</li>
+      <li><strong>收字級：</strong>保留 serif 標題＋sans 內文兩族；移除 mono 的普遍化使用，將 21 種字級表達收斂到約 6 階，10–13.5px 的碎階只留一個 metadata 尺寸。</li>
+      <li><strong>加真正的不對稱：</strong>把 <code>.hero/.section-head</code> 從慣性置中改為偏左的單一閱讀軸；首頁三產品不要再用 <code>1fr 1fr</code> 等分，改用主次尺度與錯位留白。</li>
+      <li><strong>重做插畫接合：</strong>停止在 <code>index.html:29</code> 用 opacity/blend 救圖；重新輸出能與 hero 同紙色、具真 copy-safe 空間的桌機／手機兩個來源，讓畫從邊緣長進版面，而不是貼一張方形 PNG。</li>
+    </ol>
+  </section>
+
+  <footer class="proof">
+    <p><strong>查證範圍：</strong><a href="https://muse-on.biz/" target="_blank" rel="noopener">首頁</a>、<a href="https://muse-on.biz/about" target="_blank" rel="noopener">About</a>、<a href="https://muse-on.biz/kairos" target="_blank" rel="noopener">Kairos</a>、<a href="https://muse-on.biz/onemuse" target="_blank" rel="noopener">OneMuse</a>；線上四份 HTML、共用 CSS 與 PNG 均與本機 SHA-256 一致。</p>
+    <p><strong>渲染驗證：</strong>1440／1024／768／390 CSS px；四路由皆 HTTP 200，無橫向溢位、壞圖或不安全外連。這只證明工程呈現正常；Apple/侘寂距離屬獨立人工視覺判讀。</p>
+  </footer>
+</main>
+</body>
+</html>
