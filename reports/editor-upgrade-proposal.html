@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>寫作頁・編輯器升級提案</title>
+<style>
+  :root{
+    --paper:#F3EEE3; --paper-raised:#FFFDF8; --ink:#211D16; --ink-soft:#4B4536;
+    --line:rgba(33,29,22,.16); --accent:#B03F28; --accent-soft:#f1ddd2;
+    --serif:"Cormorant Garamond","Noto Serif TC",serif; --sans:"Noto Sans TC",system-ui,sans-serif;
+    --good:#5a7a4a; --bad:#a6462f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    padding:0 max(18px,5vw);padding-block:48px 80px;line-height:1.85}
+  main{max-width:680px;margin:0 auto}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(24px,6vw,34px);margin:0 0 6px;text-wrap:balance}
+  .date{color:var(--ink-soft);font-size:14px;margin:0 0 32px;letter-spacing:.02em}
+  .lede{background:var(--paper-raised);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:4px;padding:18px 20px;margin:0 0 36px;font-size:16.5px}
+  .lede b{color:var(--accent)}
+  h2{font-family:var(--serif);font-weight:600;font-size:clamp(19px,4vw,23px);margin:44px 0 12px;
+    color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:8px}
+  h3{font-family:var(--serif);font-weight:600;font-size:18px;margin:0 0 4px;color:var(--accent)}
+  p{margin:0 0 14px;font-size:15.5px}
+  .card{background:var(--paper-raised);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+  .rank{display:inline-block;background:var(--accent);color:var(--paper);font-family:var(--sans);
+    font-size:12.5px;letter-spacing:.05em;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+  .mock{border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:14px 0 16px;background:#fff}
+  .mock-bar{display:flex;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
+  .mock-bar span{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:3px;font-size:13px;font-weight:700;color:var(--ink-soft);background:#f5f1e8}
+  .mock-body{padding:14px;font-family:var(--serif);font-size:15px;color:var(--ink-soft);min-height:40px}
+  .mock-body b{color:var(--ink)}
+  .mock.bare .mock-bar{background:#fafafa}
+  .mock.bare .mock-bar span{background:#eee}
+  .mock.diy .mock-bar{background:var(--paper);border-bottom:1px dashed var(--line)}
+  .mock.diy .mock-bar span{background:var(--accent-soft);color:var(--accent)}
+  .mock.heavy .mock-bar{background:#f0f0f0;padding:10px}
+  .mock.heavy .mock-bar span{background:#fff;border:1px solid #ddd;border-radius:2px}
+  ul.plain{margin:0 0 14px;padding-left:1.3em;font-size:15px}
+  ul.plain li{margin-bottom:6px}
+  .tag{display:inline-block;font-size:12.5px;padding:2px 9px;border-radius:12px;margin:0 6px 6px 0}
+  .tag.good{background:#eaf1e4;color:var(--good)}
+  .tag.bad{background:#f6e6e1;color:var(--bad)}
+  .tag.mid{background:#f1ecda;color:#8a7a3a}
+  .compare{width:100%;border-collapse:collapse;font-size:13.5px;margin:16px 0}
+  .compare th,.compare td{border:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  .compare th{background:var(--paper-raised);font-family:var(--sans);font-weight:700}
+  .compare td.center{text-align:center}
+  .final{background:var(--accent);color:var(--paper);border-radius:8px;padding:22px;margin:36px 0 10px}
+  .final h2{color:var(--paper);border-bottom-color:rgba(255,255,255,.25);margin-top:0}
+  .final p{font-size:15.5px}
+  .final b{color:#fff}
+  footer{margin-top:48px;font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:16px}
+  @media (max-width:420px){ .compare{font-size:12px} .compare th,.compare td{padding:6px 4px} }
+</style>
+</head>
+<body>
+<main>
+  <h1>寫作頁的編輯器，能不能升級？</h1>
+  <p class="date">2026-09-14・研究與提案，還沒動手做</p>
+
+  <div class="lede">
+    結論先講：<b>可以升級，而且有免費、可商用的現成做法</b>。目前那頁是一個最陽春的文字框，
+    這是當初刻意先求「能寫、能存」，設計上早就留了以後升級的空間。下面是三個做法的比較，
+    我建議先做<b>方案一</b>，效果最明顯、風險最小。
+  </div>
+
+  <h2>先說清楚：這頁受什麼限制</h2>
+  <p>
+    我查過了，這個寫作頁背後<b>沒有一套「組裝網頁」的工具鏈</b>——整頁的畫面、樣式、按鈕邏輯，
+    都是直接手寫在一個檔案裡，開了就能跑，不用先「組裝」再上線。這件事本身不是問題，
+    但代表升級編輯器不能挑那種「要先組裝才能用」的套件，只能挑<b>寫好就能直接掛上去用</b>的現成小工具，
+    或是我自己手刻幾個按鈕。這條限制我在下面每個方案都有考慮進去，三個都可行。
+  </p>
+  <p>
+    另外還有一條紅線沒變：不管換成什麼樣子，<b>存檔的時候送出去的東西必須還是一段乾淨的純文字（Markdown 語法）</b>，
+    這樣後面接 GitHub、變成部落格文章的那條路才不用跟著大改。這點我選方案時也已經排除了會有問題的做法
+    （有些「所見即所得」編輯器骨子裡存的是網頁格式，要多一道轉換手續、還可能轉壞，這種我直接不推薦）。
+  </p>
+
+  <h2>三個方案</h2>
+
+  <div class="card">
+    <span class="rank">推薦・方案一</span>
+    <h3>EasyMDE — 打字時直接看到強調效果</h3>
+    <div class="mock">
+      <div class="mock-bar">
+        <span>B</span><span>I</span><span>H</span><span>🔗</span><span>≡</span>
+      </div>
+      <div class="mock-body">今天的<b>重點</b>是……<br>打字的當下，粗體、標題這些格式會用<b>顏色和粗細</b>直接顯示出來，不用切換畫面就看得到效果。</div>
+    </div>
+    <p>
+      現在很多人熟悉的「文字上面一排格式按鈕」就是這種。按下「粗體」按鈕，選取的文字會自動包上標記，
+      而且<b>打字當下就會用粗細、顏色標出來</b>，比現在純白底的文字框有「真的在寫東西」的感覺。
+    </p>
+    <p><b>好處：</b></p>
+    <ul class="plain">
+      <li>完全免費、授權允許商用，沒有法律顧慮</li>
+      <li>存檔內容從頭到尾就是純文字，跟現在的存檔方式完全接得上，不用改後端</li>
+      <li>外觀可以重新上色調字型，能貼近網站現在的宣紙水墨感，只是工具本身的按鈕造型不會變（就是一顆顆小方塊圖示）</li>
+      <li>工程量最小，抓現成的檔案掛上去、接上原本的文字框位置就好</li>
+    </ul>
+    <p><b>要注意：</b>它會帶一點自己的圖示字型，載入時網頁會多一點點重量（跟手機看一張小圖差不多，感覺不出來）。</p>
+  </div>
+
+  <div class="card">
+    <span class="rank">方案二・外觀客製化程度最高</span>
+    <h3>CodeMirror 6 — 完全照網站調性重新設計</h3>
+    <div class="mock bare">
+      <div class="mock-bar">
+        <span style="opacity:.4">（沒有按鈕，要自己加）</span>
+      </div>
+      <div class="mock-body">這款本身只是一塊「更聰明的文字框」，語法會被辨認出來加上顏色，但<b>按鈕列要自己另外做</b>——優點是想長怎樣就怎樣。</div>
+    </div>
+    <p>
+      這是一套「裸的」文字編輯引擎，本身不帶任何按鈕外觀，完全由我們決定長相——
+      也就是說它最能做出「跟網站融為一體、完全不像工具軟體」的效果，是三個方案裡<b>視覺自由度最高</b>的。
+    </p>
+    <p><b>好處：</b></p>
+    <ul class="plain">
+      <li>免費、可商用</li>
+      <li>純文字存檔，不會有格式跑掉的風險</li>
+      <li>檔案本身很輕巧</li>
+      <li>外觀完全客製，最不像「程式設計師的編輯器」</li>
+    </ul>
+    <p><b>要注意：</b>它不附按鈕列，粗體、標題這些按鈕要另外手刻，<b>比方案一多一些工程量</b>（多做幾顆按鈕的份量，不算大工程，但比「掛上去就能用」多一步）。</p>
+  </div>
+
+  <div class="card">
+    <span class="rank">方案三・最快、最省，但效果最保守</span>
+    <h3>手刻幾顆按鈕 — 不裝任何套件</h3>
+    <div class="mock diy">
+      <div class="mock-bar">
+        <span>粗體</span><span>標題</span><span>連結</span>
+      </div>
+      <div class="mock-body">現在的文字框不變，只在上面加幾顆自己畫的按鈕，按下去會在選取的文字前後補上 ** 這種標記，跟現在風格最一致。</div>
+    </div>
+    <p>
+      完全不掛任何外部工具，就是在現在的文字框上方加幾顆手畫的按鈕（粗體／標題／連結），
+      按下去會自動幫你在選取的文字前後補上正確的標記符號。工程量最小、外觀跟現在最一致，
+      但缺點是<b>打字當下看不到粗體效果</b>——文字還是純白底黑字，只是省了自己記標記符號的力氣。
+    </p>
+    <p>這個比較像是「現在這頁的小加強」，感覺升級幅度比較小，比較適合當作「先求有、成本最低」的過渡方案。</p>
+  </div>
+
+  <h2>比較一覽</h2>
+  <table class="compare">
+    <tr><th></th><th>方案一<br>EasyMDE</th><th>方案二<br>CodeMirror 6</th><th>方案三<br>手刻按鈕</th></tr>
+    <tr><td>免費可商用</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓（自己寫的）</td></tr>
+    <tr><td>掛上去就能用，不用先組裝</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td></tr>
+    <tr><td>存檔是純文字，接得上現有流程</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td></tr>
+    <tr><td>打字時看得到格式效果</td><td class="center">✓ 有</td><td class="center">✓ 有</td><td class="center">✗ 沒有</td></tr>
+    <tr><td>外觀能貼近水墨宣紙調性</td><td class="center">部分能</td><td class="center">✓ 完全能</td><td class="center">✓ 完全能（本來就是同一頁）</td></tr>
+    <tr><td>工程量</td><td class="center">小</td><td class="center">中</td><td class="center">最小</td></tr>
+  </table>
+
+  <p style="font-size:14px;color:var(--ink-soft)">
+    順帶一提：市面上還有一款叫「Toast UI Editor」的編輯器，功能更豐富（連即時預覽、圖表都有），
+    授權也免費可商用，但它<span class="tag bad">體積重很多</span>、外觀也比較像「正式軟體」的樣子，
+    跟網站溫暖手感不太搭，所以沒有放進主要推薦。另外有些更花俏的「所見即所得」編輯器（像 Tiptap、Milkdown）
+    因為骨子裡存的是網頁格式、或需要先組裝才能用，跟這頁的限制不合，也先排除了。
+  </p>
+
+  <div class="final">
+    <h2>我的建議</h2>
+    <p><b>先做方案一（EasyMDE）。</b>理由：立刻解決「看起來很陽春」的問題（打字有格式效果、有像樣的按鈕列），
+    完全免費合法，工程量最小、風險最低。外觀能改到多貼近水墨紙感，等真的做出來再一起看效果比較準。</p>
+    <p>如果之後想要「完全看不出來是套件、跟網站融為一體」的更高質感，方案二（CodeMirror 6）是進階選項，
+    可以晚一點再考慮，不急著現在決定。</p>
+  </div>
+
+  <footer>
+    這份是研究與提案，<b>目前還沒有動手改任何東西</b>。要往哪個方向做，等你看完決定。
+  </footer>
+</main>
+</body>
+</html>
