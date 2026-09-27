@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Meta 開發者測試 App：接上 Instagram 留言／私訊 API 的實作步驟</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">@charset "utf-8";
+@page { margin: 18mm 16mm; }
+:root { color-scheme: light; }
+body { max-width: 920px; margin: 0 auto; padding: 36px 22px 72px; color: #18212b; background: #fffdf9; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; line-height: 1.82; }
+h1,h2,h3 { line-height: 1.32; color: #122c4d; }
+h1 { margin: 0 0 .45em; font-size: 2.05em; letter-spacing: -.02em; border-bottom: 4px solid #1877f2; padding-bottom: .42em; }
+h2 { margin-top: 2.55em; font-size: 1.48em; border-left: 5px solid #1877f2; padding-left: .65em; }
+h3 { margin-top: 1.7em; font-size: 1.16em; }
+a { color: #0b5db3; text-decoration-thickness: 1px; overflow-wrap: anywhere; }
+p, li { overflow-wrap: break-word; }
+table { width: 100%; border-collapse: collapse; margin: 1.2em 0 1.5em; font-size: .91em; }
+th { background: #eaf3ff; color: #122c4d; }
+th, td { border: 1px solid #c9d7e5; padding: .65em .75em; vertical-align: top; text-align: left; }
+tr:nth-child(even) td { background: #fff; }
+blockquote { margin: 1.25em 0; padding: .65em 1em; border-left: 4px solid #d89113; background: #fff6dd; }
+code { padding: .08em .28em; background: #edf1f4; color: #25384d; border-radius: 3px; font-size: .9em; }
+strong { color: #0d3f77; }
+hr { border: 0; border-top: 1px solid #ccd7e2; margin: 2em 0; }
+@media (max-width: 640px) { body { padding: 22px 14px 52px; font-size: 16px; } h1 { font-size: 1.67em; } h2 { font-size: 1.3em; } table { display: block; overflow-x: auto; white-space: normal; } }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Meta 開發者測試 App：接上 Instagram 留言／私訊 API
+的實作步驟</h1>
+</header>
+<h1 id="meta-開發者測試-app接上-instagram-留言私訊-api-的實作步驟">Meta
+開發者測試 App：接上 Instagram 留言／私訊 API 的實作步驟</h1>
+<p>查證日期：2026-09-27（Asia/Taipei）<br />
+適用目標：先讓「帳號本人管理的」Instagram
+商業或創作者帳號，測試留言關鍵字回覆、留言私訊回覆與私訊自動回覆。<br />
+資料範圍：僅採 Meta for Developers 與 Meta 官方 Help
+Center；每個產品／介面名稱以本次讀到的官方頁面為準。</p>
+<h2 id="先講結論">先講結論</h2>
+<p>現在的正式產品名稱是 <strong>Instagram API with Instagram
+Login</strong>；繁中開發者網站顯示為「<strong>含有 Instagram 登入的
+Instagram API</strong>」。這條新流程不用把 Facebook 粉絲專頁連到
+IG；不要誤選舊的 <strong>Instagram API with Facebook
+Login</strong>。官方說明這個新產品可處理留言、私訊與私密回覆，且服務帳號本人「擁有或管理」的
+IG 專業帳號時可用 <strong>Standard Access（一般存取權限）</strong>。</p>
+<p>因此，答案是：<strong>可以先測，不必等 App Review。</strong>
+但不是「任何 IG 帳號都能測」。在 App 還在開發中時，測試者必須有此 App
+的角色，並且在目標 IG
+專業帳號上也有角色；目標帳號還必須是公開的專業帳號。若同一人建立 App
+並管理自己的 IG，這些角色通常天然都在同一人身上；仍要在 API 設定頁把該
+IG 加進 App，產生 token。</p>
+<p>這不是三兩下就結束的流程，實際上有 <strong>9 個大階段</strong>：IG
+轉專業帳號 → 登入／註冊開發者 → 建立商家型 App → 加入 Instagram 產品 →
+加入自己的 IG 測試帳號與 token → 設 Webhook → 設 Instagram 商家登入 →
+用留言／私訊做實測 → 需要服務其他商家時才送審。第 6、7
+階段需要工具的開發者有一個可公開連線的 HTTPS
+網址與後端程式；只有手機、沒有工具網站／伺服器時，能完成帳號與 App
+設定，但還不能真正「自動」接收新留言／私訊。</p>
+<h2 id="先備好這些東西">先備好這些東西</h2>
+<table>
+<thead>
+<tr>
+<th>要準備什麼</th>
+<th>為什麼</th>
+<th>需要額外驗證／付款嗎？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可登入的 Meta／Facebook 帳號</td>
+<td>用來登入 developers.facebook.com、擁有 App 角色</td>
+<td>官方建立 App 文件只寫須啟用 App
+Dashboard，<strong>沒有</strong>寫信用卡為本流程必要項。登入／註冊畫面若要求
+email、手機簡訊或身分確認，照畫面完成；官方公開 Instagram
+文件未列出固定的手機號碼或信用卡門檻。</td>
+</tr>
+<tr>
+<td>自己的 IG 帳號與密碼</td>
+<td>要加進 App、登入授權並產生 token</td>
+<td>必須改成「專業帳號」（商業或創作者）且<strong>公開</strong>；不必是
+Meta Verified 付費帳號。</td>
+</tr>
+<tr>
+<td>一個有效聯絡 email</td>
+<td>建立 App 時要填，Meta 用它通知 App 事項</td>
+<td>不要求信用卡；官方建立 App 步驟要求此欄位。</td>
+</tr>
+<tr>
+<td>工具的公開 HTTPS 網址（開發者準備）</td>
+<td>Webhook 的「回呼網址」、商家登入 OAuth redirect URI 都需要它</td>
+<td>不是 Meta
+的商業驗證，但不是純手機可完成的欄位。沒有它就無法即時自動接到留言／私訊。</td>
+</tr>
+<tr>
+<td>第二個 IG 帳號（建議）</td>
+<td>在目標 IG 貼文下真的留一則關鍵字留言，測「偵測留言 → 回覆」</td>
+<td>不是 App Review 的門檻，只是最容易做出真實留言事件的方法。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>不要把 access token、App Secret、Webhook verify token
+截圖傳給別人或貼進聊天。</strong> 它們相當於工具的鑰匙。</p>
+</blockquote>
+<h2 id="階段-1先在-ig-app-把帳號改為公開的專業帳號">階段 1：先在 IG App
+把帳號改為公開的專業帳號</h2>
+<h3 id="11-確認需要哪一種帳號">1.1 確認需要哪一種帳號</h3>
+<p>官方 Instagram API 頁面寫的是 <strong>Instagram professional
+account</strong>，並明確說支援 <strong>business（商業）與
+creator（創作者）</strong>。本案兩者都可以；若是品牌／店家，選「商業」較直觀；個人內容創作者可選「創作者」。關鍵不是選哪一個，而是不要維持「個人帳號」，並要設為公開。</p>
+<ul>
+<li>在 IG App，右下角點自己的大頭貼進「個人檔案」。</li>
+<li>點右上角三條線（選單）。</li>
+<li>找「帳號類型和工具」／<code>Account type and tools</code>（不同版本有時顯示在「為專業人士」區塊）。</li>
+<li>點「切換為專業帳號」／<code>Switch to professional account</code>。</li>
+<li>選一個分類；接著選「商業」或「創作者」，依畫面完成設定。</li>
+<li>到「設定與動態」→「帳號隱私」確認「私人帳號」是關閉狀態，即帳號公開。</li>
+</ul>
+<p><strong>額外門檻：</strong> 官方 API 建立步驟明說加進 App 的 IG
+帳號必須公開；沒有寫此切換需商業驗證、信用卡或手機號碼。帳號本身若因安全／地區情況被
+IG 額外要求驗證，屬帳號畫面的即時要求，不能用本報告略過。</p>
+<p><strong>官方出處：</strong></p>
+<ul>
+<li><a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/">Instagram
+API with Instagram Login 總覽（支援商業與創作者；不需連 Facebook
+Page）</a></li>
+<li><a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App 以使用 Instagram API，第 7 步（新增帳號必須公開）</a></li>
+<li><a href="https://www.facebook.com/help/instagram/2358103564437429">Meta
+官方 Instagram Help Center：建立創作者帳號的 App 內路徑</a></li>
+</ul>
+<blockquote>
+<p>最後一項是 Meta 官方 Instagram Help
+Center，且開發者文件本身連到此官方 Help Center 的「Instagram
+專業帳號」說明；它是本清單中唯一不是 developers.facebook.com
+的手機操作來源。</p>
+</blockquote>
+<h2 id="階段-2登入-meta-for-developers建立可管理-app-的開發者身分">階段
+2：登入 Meta for Developers，建立可管理 App 的開發者身分</h2>
+<ol type="1">
+<li>在手機瀏覽器開 <code>https://developers.facebook.com/</code>，點
+<strong>Log in</strong>。目前登入畫面可能出現「Log in with a managed
+Meta Account」等新字樣；它表示你可以用受管理 Meta
+帳號登入，<strong>不表示要改走舊 Facebook Login API</strong>。</li>
+<li>以擁有／管理目標 IG 的同一個 Meta
+身分登入。第一次進入若出現「Register as a
+developer」或要求同意開發者條款，照頁面完成。</li>
+<li>登入後進入 <strong>My
+Apps</strong>／「我的應用程式」。看不到建立按鈕時，先完成頁面要求的帳號驗證，然後重新開啟
+App Dashboard。</li>
+</ol>
+<p><strong>額外門檻：</strong> 本次查到的 Instagram 建立 App、Getting
+Started、App Review、App Roles 官方頁面，沒有列「建立此測試 App
+必須付信用卡」；也沒有把手機驗證列成 Instagram Standard Access
+的前置條件。它們只要求 App 角色擁有 Meta developer
+account。由於帳號安全檢查會依帳號／地區動態顯示，若實際登入頁要求
+email、手機 OTP 或 2FA，這是該帳號當下的必要畫面，應完成而非跳過。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/development/build-and-test/app-roles">App
+Roles：管理員／開發人員需 Meta developer account</a>、<a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Instagram App，第 1 步</a></p>
+<h2 id="階段-3建立正確類型的-app不要選到舊流程">階段 3：建立正確類型的
+App（不要選到舊流程）</h2>
+<p>在 <strong>My Apps</strong> 畫面：</p>
+<ol type="1">
+<li>點右上角 <strong>Create app</strong>／「建立應用程式」。若已在某個
+App 裡，要先點左上角 App 名稱下拉選單，再點 <strong>Create new
+app</strong>。</li>
+<li>看到「Connect a
+business」／「連結商家」時，先知道這件事：<strong>要發佈 App
+時</strong>官方要求 App
+連到「已完成商家驗證」的商家；可以現在連，也可開發期間到左側 <strong>App
+settings &gt; Basic</strong>
+再連。純測自己的帳號、尚未發佈時，先繼續即可。</li>
+<li>在「選擇使用案例」選 <strong>Other</strong>／「其他」，點
+<strong>Next</strong>。</li>
+<li>在「選擇 App type」選 <strong>Business</strong>／「商家」，點
+<strong>Next</strong>。這一步是必要的：官方說只有商家類型 App 可以加入
+Instagram 產品。</li>
+<li>填 <strong>App name</strong>（只是 Dashboard 裡辨識用的名稱）與
+<strong>Contact email</strong>，點 <strong>Next</strong>。進到新的 App
+Dashboard 即完成。</li>
+</ol>
+<p><strong>額外門檻：</strong></p>
+<ul>
+<li><strong>信用卡：</strong> 官方建立流程未列必填。</li>
+<li><strong>商業驗證：</strong> 此刻可先略過；但官方明示「要發佈
+App」前，必須連結已完成商家驗證的商家。</li>
+<li><strong>App 數量上限：</strong> 未連結已驗證商家的 App，若你已在 15
+個 App
+擔任管理員或開發者，可能不能再建；官方建議連結已驗證商家、移除不用的 App
+或移除角色。</li>
+</ul>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App，第 1–5 步與 15 個 App 限制</a></p>
+<h2 id="階段-4把正確的-instagram-產品加進-app">階段 4：把正確的
+Instagram 產品加進 App</h2>
+<ol type="1">
+<li>留在剛建立的 App Dashboard，向下滑到產品卡片。</li>
+<li>找產品名稱
+<strong>Instagram</strong>。官方對這張卡的描述是可讓創作者／商家管理訊息與留言、發布內容、查看洞察、標籤與提及。</li>
+<li>點這張卡上的 <strong>Set up</strong>／「設定」。</li>
+<li>系統會自動加入 <strong>Instagram API with Instagram
+Login</strong>（繁中：<strong>含有 Instagram 登入的
+API</strong>）。這就是本案要用的產品。</li>
+<li><strong>不要</strong>因為看見 Facebook 就選「Instagram API with
+Facebook
+Login」。那是另一條流程，適用情境與權限名稱不同；本案依官方新流程用
+Instagram Login，且不需要把 Facebook Page 接到 IG。</li>
+</ol>
+<p><strong>額外門檻：</strong>
+官方產品加入步驟沒有列信用卡、手機驗證或商業驗證。若將來要服務「不屬於你／不由你管理」的多個商家，才會進入
+Advanced Access + App Review／商業驗證的門檻（見階段 9）。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App，第 6 步</a>、<a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/">Instagram
+Login API 總覽</a></p>
+<h2 id="階段-5把自己的-ig-專業帳號加為測試帳號產生-token">階段
+5：把自己的 IG 專業帳號加為測試帳號，產生 token</h2>
+<p>這是「讓 App 知道它可操作哪個 IG」的關鍵步驟。</p>
+<ol type="1">
+<li>在 Dashboard 左側選 <strong>Instagram &gt; API setup with Instagram
+login</strong>（繁中約為 <strong>Instagram &gt; 含有 Instagram 登入的
+API 設定</strong>）。</li>
+<li>在「Generate access tokens」／產生權杖的區塊，點 <strong>Add
+Instagram account</strong>／「新增 Instagram 帳號」。</li>
+<li>跳出 IG 登入頁時，登入階段 1
+已設好的<strong>公開專業帳號</strong>；依同意畫面授權本 App
+要求的權限。</li>
+<li>回到 Dashboard 後，在該帳號旁點 <strong>Generate
+token</strong>／「產生權杖」，再登入一次 IG（若要求）。</li>
+<li>複製
+token，立刻交給工具的開發者安全儲存，不要貼到公開文件。Dashboard
+產出的長效 token 官方寫為 <strong>60
+天</strong>；之後需由程式重新整理／換發。</li>
+<li>日後要新增或移除測試帳號，可走 <strong>App roles &gt;
+Roles</strong>，或回到 <strong>Instagram &gt; API setup with Instagram
+login</strong>。</li>
+</ol>
+<p><strong>額外門檻：</strong> 必須是公開專業帳號、必須能登入該
+IG；官方沒有寫信用卡／商業驗證為這一步的必需條件。token
+會過期不是帳號失敗；60 天到期前要由開發者依官方 refresh token
+流程處理。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App，第 7 步</a>、<a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/get-started">Getting
+Started：Dashboard 產生 token 的精確按鈕路徑及 60 天效期</a></p>
+<h2 id="階段-6確認開發模式測試的角色條件">階段
+6：確認「開發模式測試」的角色條件</h2>
+<p>這一段回答「未過 App Review
+可不可以今天測」。<strong>可以，但測試邊界是自己的／已授權管理的帳號，不是公開服務所有人。</strong></p>
+<ol type="1">
+<li>若建立 App 的人就是目標 IG 的擁有人／管理者，先確認自己在 App 裡是
+<strong>Admin</strong> 或 <strong>Developer</strong>。到左側 <strong>App
+roles &gt; Roles</strong> 看得到即可。</li>
+<li>若由不同的人測試，在同一頁的測試人員區塊，輸入對方的 Meta 帳號並送出
+<strong>Tester</strong> 邀請；對方要接受邀請。</li>
+<li>對方也必須在目標 IG 專業帳號有管理角色（不是只有會登入 IG
+就夠）。官方的 Instagram Messaging 文件明定：測試人員必須「有 App
+角色、授予 App 全部必要權限，並且在擁有 App 的 IG
+專業帳號有角色」。</li>
+<li>測試者用自己的 Meta／IG
+登入，授與本案必要權限：<code>instagram_business_basic</code>、<code>instagram_business_manage_comments</code>、<code>instagram_business_manage_messages</code>。舊的
+<code>business_manage_*</code> scope 已停用，別把舊教學複製進工具。</li>
+</ol>
+<p><strong>能測到的範圍：</strong> App Roles 官方文件寫明，測試人員在
+App「處於調整中」（開發模式）可授與 App
+任意權限、使用所有功能；Instagram API 文件則把「本人擁有／管理，且在 App
+管理員中加入的 IG 專業帳號」列為 Standard
+Access。這足以測本案自己的留言、私訊和
+Webhook。<strong>不能據此宣稱可讓任意外部客戶連進來使用</strong>；那是
+Advanced Access／App Review 的範圍。</p>
+<p><strong>額外門檻：</strong> 不需 App
+Review；官方亦未列信用卡。一般未連結 App 最多 50 名
+testers；連結且已驗證商家資產管理組合的 App，管理者加測試者合計上限為
+500。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/development/build-and-test/app-roles">App
+Roles：測試者在開發中可使用所有功能、邀請與人數限制</a>、<a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/messaging-api">Instagram
+Messaging：測試者的雙重角色要求與 Standard/Advanced Access</a>、<a href="https://developers.facebook.com/docs/instagram-platform/app-review">App
+Review：只服務本人管理商家時 Standard Access、不需要審查</a></p>
+<h2 id="階段-7讓工具收到新留言私訊webhook需要開發者">階段
+7：讓工具收到新留言／私訊（Webhook；需要開發者）</h2>
+<p>自動回覆不能靠人手重整 API；工具需要一個伺服器接收 Meta
+推來的新事件。</p>
+<ol type="1">
+<li>請開發者先準備一個可從網際網路存取的 HTTPS callback
+URL，和一段自訂的 <strong>Verify token</strong> 文字。這兩個不是 IG
+密碼。</li>
+<li>Dashboard 左側 <strong>Instagram &gt; API setup with Instagram
+login</strong>，到 Webhooks 區塊點
+<strong>Configure</strong>／「設定」。</li>
+<li>在彈窗填 <strong>Callback URL</strong>（開發者提供的 HTTPS 網址）與
+<strong>Verify token</strong>，按 <strong>Save</strong>。</li>
+<li>點
+<strong>Manage</strong>／「管理」，確認要接的事件有訂閱。留言關鍵字至少要
+<code>comments</code>（直播才另加
+<code>live_comments</code>）；私訊至少要
+<code>messages</code>，並依工具需要加
+<code>messaging_optins</code>、<code>messaging_postbacks</code>、<code>messaging_reactions</code>、<code>messaging_referrals</code>、<code>messaging_seen</code>。</li>
+<li>讓開發者做一次真實事件測試：有人在貼文留言／傳私訊後，伺服器是否收到
+Webhook，再由工具依 keyword 判斷與回覆。</li>
+</ol>
+<p><strong>額外門檻：</strong> 官方要求 callback URL 和 verify
+token，但本設定步驟未列商業驗證、信用卡或手機號碼。真正的門檻是「要有可公開連到的
+HTTPS 後端」；沒有後端不可能做到即時自動化。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App，第 8 步（Webhook 的按鈕、欄位及預設事件）</a>、<a href="https://developers.facebook.com/docs/instagram-platform/comment-moderation">留言審核：comments／live_comments
+Webhook 與回覆流程</a>、<a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/messaging-api">傳訊
+API：所需 Webhook events</a></p>
+<h2 id="階段-8設定instagram-商家登入正式讓帳號授權工具需要開發者">階段
+8：設定「Instagram 商家登入」（正式讓帳號授權工具；需要開發者）</h2>
+<p>Dashboard 產 token 足夠測自己的帳號；但工具若有「連接我的
+IG」按鈕，則要完成 OAuth／商家登入設定。</p>
+<ol type="1">
+<li>在同一個 <strong>Instagram &gt; API setup with Instagram
+login</strong> 頁面，到第 3 段 <strong>Set up Instagram business
+login</strong>／「設定 Instagram 商家登入」。</li>
+<li>點 <strong>Configure</strong>／「設定」，在彈窗填開發者提供的
+<strong>Redirect URL</strong>，按 <strong>Save</strong>。</li>
+<li>複製畫面顯示的 <strong>Embed URL</strong>；開發者把它放到工具網站或
+App 的「連接 Instagram」按鈕上。</li>
+<li>點 <strong>Business login settings</strong>，補齊必要設定：允許的
+<strong>OAuth redirect URI</strong>、<strong>Deauthorize callback
+URL</strong>（使用者解除授權時通知工具的網址）、<strong>Data deletion
+request URL</strong>（資料刪除請求網址），按
+<strong>Save</strong>。</li>
+<li>用自己的 IG 點工具的連接按鈕，完成 Instagram
+登入與同意；開發者用返回的授權碼交換 token。新版 scope 用
+<code>instagram_business_basic</code>、<code>instagram_business_manage_comments</code>、<code>instagram_business_manage_messages</code>（若要發文才加
+content publishing）。</li>
+</ol>
+<p><strong>額外門檻：</strong>
+此步官方沒有列信用卡、手機號碼或商業驗證；但每個 URL
+必須真實存在、能由開發者控制。授權碼只可用一次且有效 1 小時；短期 token
+可換為 60 天長效 token。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App，第 9 步</a>、<a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/business-login">Instagram
+商家登入：scope、redirect URI、token 交換規則</a></p>
+<h2 id="階段-9今天就做的兩種真實測試">階段
+9：今天就做的兩種真實測試</h2>
+<h3 id="a-留言關鍵字--公開留言回覆或私訊回覆">A. 留言關鍵字 →
+公開留言回覆或私訊回覆</h3>
+<ol type="1">
+<li>用目標 IG 專業帳號發一篇公開貼文／Reel。</li>
+<li>用第二個 IG 帳號在那篇貼文底下留言，例如「我要關鍵字」。</li>
+<li>Webhook 收到 <code>comments</code>
+事件後，工具比對文字；若符合，就可：
+<ul>
+<li>對該留言做<strong>公開回覆</strong>：<code>POST /&lt;IG_COMMENT_ID&gt;/replies</code>，需要
+<code>instagram_business_basic</code> +
+<code>instagram_business_manage_comments</code>。</li>
+<li>或做「留言後私訊」：以留言 ID 呼叫
+<code>POST /&lt;APP_USERS_IG_ID&gt;/messages</code>，<code>recipient</code>
+填 <code>comment_id</code>。這正是官方的 <strong>Private
+Replies</strong> 流程；可在留言後 7
+天內發一則私訊。若對方再回覆，才可在其回覆後 24 小時內追發。</li>
+</ul></li>
+<li>留言者確認有收到公開回覆，或在 IG
+收件匣／要求資料夾收到私訊；這就是成功證據。</li>
+</ol>
+<p><strong>重要限制：</strong>
+留言私訊回覆不是無限制廣播；官方限制每位留言者只能收到一則，且需在 7
+天內。它靠的是 <code>comments</code> Webhook
+與留言管理權限，<strong>不是</strong>先要求對方傳 DM。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/comment-moderation">留言審核：讀取
+Webhook、回覆留言</a>、<a href="https://developers.facebook.com/docs/instagram-platform/private-replies">Private
+Replies：留言 → Webhook → 私訊的完整流程與 7 天／一則限制</a></p>
+<h3 id="b-私訊關鍵字--私訊自動回覆">B. 私訊關鍵字 → 私訊自動回覆</h3>
+<ol type="1">
+<li>最貼近真實情境：用第二個 IG 帳號先對目標專業帳號傳一則
+DM，例如「我要資料」。</li>
+<li>Webhook 收到 <code>messages</code> 後，工具依 keyword 呼叫
+<code>/&lt;IG_ID&gt;/messages</code> 回覆。</li>
+<li>官方規則是：對方必須先傳訊息給專業帳號，工具才可主動回；對方傳訊息後有
+<strong>24 小時</strong>可自動回覆。</li>
+<li>若只有一個 IG 專業帳號，官方另提供 <strong>Self Messaging</strong>
+測試：同一專業帳號可同時扮演商家與 IG
+使用者，測預覽／自動化，不必兩個帳號；仍需此帳號已連到 App、訊息權限與
+Webhook 已設好。</li>
+</ol>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/messaging-api">傳訊
+API：先由使用者開啟對話與 24 小時窗口</a>、<a href="https://developers.facebook.com/docs/instagram-platform/self-messaging">Self
+Messaging：單一 IG 專業帳號測私訊</a></p>
+<h2 id="什麼時候才需要-app-review商業驗證">什麼時候才需要 App
+Review／商業驗證？</h2>
+<table>
+<thead>
+<tr>
+<th>情況</th>
+<th>App Review</th>
+<th>商業驗證</th>
+<th>今天的自測是否受影響？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只服務自己擁有或管理、且已加到 App 的 IG 專業帳號</td>
+<td><strong>不需要</strong>（Standard Access）</td>
+<td>官方建立流程只說「發佈
+App」前需連結已驗證商家；本地／開發中自測不是此門檻</td>
+<td>不受影響，可先測。</td>
+</tr>
+<tr>
+<td>工具要讓其他不由你管理的商家／創作者登入使用</td>
+<td><strong>需要</strong> Advanced Access 與 App Review</td>
+<td>Meta 權限文件說所有要求 Advanced Access 的 App 都要商業驗證</td>
+<td>不能拿自己的 tester 身分取代審查。</td>
+</tr>
+<tr>
+<td>要正式發佈 App</td>
+<td>建立 App 頁說要準備 App Review（視權限／用途）</td>
+<td>必須連結已完成商家驗證的商家</td>
+<td>與「只測自己的帳號」是不同關卡。</td>
+</tr>
+</tbody>
+</table>
+<p>送審時，官方要求外部可載入及測試的
+App、逐步使用案例、每個權限的端到端螢幕錄影、隱私政策 URL、App icon、App
+category、商業
+email，以及供審查者測試的登入／測試指示。這些是<strong>將來服務外部客戶</strong>才要準備的，不是今天生成測試
+token 的前提。</p>
+<p><strong>官方出處：</strong> <a href="https://developers.facebook.com/docs/instagram-platform/app-review">Instagram
+API App Review（開發情境表及送審步驟）</a>、<a href="https://developers.facebook.com/docs/permissions">Permissions（Advanced
+Access 需商業驗證）</a></p>
+<h2 id="官方畫面教學輔助資源">官方畫面教學／輔助資源</h2>
+<p>本次逐頁檢查的 Instagram API
+官方設定頁為文字步驟，沒有提供可獨立開啟的「逐格截圖教學」或「官方設定影片」連結；因此沒有自行補造截圖或引用第三方影片。可直接照下列官方、含實際按鈕文字的資源操作：</p>
+<ul>
+<li><a href="https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app">建立
+Meta App 以使用 Instagram API（第 1–10 步，最接近畫面導覽）</a></li>
+<li><a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/get-started">Getting
+Started（Dashboard 產 token）</a></li>
+<li><a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/business-login">Instagram
+商家登入（連接按鈕／OAuth 設定）</a></li>
+<li><a href="https://developers.facebook.com/docs/development/build-and-test/app-roles">App
+Roles（加入與接受測試人員）</a></li>
+<li><a href="https://developers.facebook.com/docs/instagram-platform/app-review">App
+Review（之後送審所需螢幕錄影）</a></li>
+</ul>
+<h2 id="官方沒有明講的查核紀錄">「官方沒有明講」的查核紀錄</h2>
+<p>為避免把「我沒看到」誤寫成「Meta
+絕對不要求」，下列否定結論都有範圍。</p>
+<table>
+<thead>
+<tr>
+<th>問題</th>
+<th>結論的精確說法</th>
+<th>查過的官方頁面與關鍵詞</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>建立此自測 App 是否一定要信用卡？</td>
+<td>在本次查閱的 Instagram
+建立／登入／測試／審查官方頁中，<strong>未列信用卡為建立 App、加入自己的
+IG、產 token 或 Standard Access 測試的必填項</strong>。不等於某個 Meta
+帳號的安全頁永遠不會要求付款方式。</td>
+<td>建立 Instagram App、Getting Started、Business Login、App Roles、App
+Review、Permissions；搜尋／頁內核對：<code>credit card</code>、<code>payment</code>、<code>phone</code>、<code>verification</code>、<code>Standard Access</code>。</td>
+</tr>
+<tr>
+<td>建立測試是否一定要完成商業驗證？</td>
+<td><strong>不需要 App Review 的自有／自管帳號 Standard Access</strong>
+與「Advanced Access 必須商業驗證」是兩件事。建立頁另說「發佈
+App」前要連結已驗證商家。</td>
+<td>建立 Instagram App、App
+Review、Permissions；關鍵詞：<code>business verification</code>、<code>publish</code>、<code>Standard Access</code>、<code>Advanced Access</code>。</td>
+</tr>
+<tr>
+<td>是否有官方逐步影片／截圖 URL？</td>
+<td>本次列出的五個核心頁面都沒有看到可獨立開啟的設定影片或逐格截圖教學連結；所以只列其文字步驟頁，不用第三方影片補數。</td>
+<td>建立 Instagram App、Getting Started、Business Login、App Roles、App
+Review；關鍵詞：<code>video</code>、<code>screenshot</code>、<code>tutorial</code>、<code>image</code>。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="最短可執行清單交給使用者開發者">最短可執行清單（交給使用者／開發者）</h2>
+<ol type="1">
+<li>使用者：把 IG 改成「公開＋商業／創作者」。</li>
+<li>使用者：到 developers.facebook.com → Create app → Other → Business →
+填 App name／email。</li>
+<li>使用者：在產品卡點 Instagram 的 Set up；確認是 <strong>Instagram API
+with Instagram Login</strong>。</li>
+<li>使用者：Instagram &gt; API setup with Instagram login → Add
+Instagram account → 登入自己的 IG → Generate
+token；安全交給開發者。</li>
+<li>開發者：設好 Webhook callback／verify token，訂閱
+<code>comments</code> 和 <code>messages</code>。</li>
+<li>開發者：設好 Business Login 的 redirect URI、deauthorize 與 data
+deletion URLs。</li>
+<li>使用者＋開發者：第二個 IG 留關鍵字、傳 DM；確認 webhook
+收到、工具回覆成功。</li>
+<li><strong>先不要急著送 App
+Review</strong>；只有工具要接外部客戶時，再做 Advanced
+Access、商業驗證與審查。</li>
+</ol>
+</body>
+</html>
